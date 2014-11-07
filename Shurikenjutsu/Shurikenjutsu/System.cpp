@@ -88,7 +88,7 @@ std::string System::CreateTitle(D3D_FEATURE_LEVEL p_version)
 		default:
 		{
 			ConsolePrintError("Creating title from version failed.");
-			break;
+			return "ERROR";
 		}
 	}
 }
