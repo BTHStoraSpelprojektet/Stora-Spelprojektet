@@ -28,6 +28,9 @@
     <Filter Include="Resource Files\Sounds">
       <UniqueIdentifier>{a9cf706c-ff7d-460b-b5f2-f2fca056ae2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Levels">
+      <UniqueIdentifier>{afed157a-bb36-4c04-b704-c8d128c314af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
