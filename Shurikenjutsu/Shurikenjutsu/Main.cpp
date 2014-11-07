@@ -4,12 +4,9 @@ int main()
 {
     System system;
 
-    system.Initiliaze();
+	system.Initiliaze();
 
-    while (system.KeepRunning())
-    {
-        system.Run();
-    }
+	system.Run();
 
     return 0;
 }
