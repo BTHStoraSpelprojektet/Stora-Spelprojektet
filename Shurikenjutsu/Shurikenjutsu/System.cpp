@@ -59,6 +59,9 @@ void System::Update()
 void System::Render()
 {
     // Render game scene.
+	m_directX.Clear();
+
+	m_directX.Present();
 }
 
 std::string System::CreateTitle(D3D_FEATURE_LEVEL p_version)
