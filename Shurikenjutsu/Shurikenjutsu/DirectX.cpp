@@ -2,7 +2,7 @@
 
 bool DirectX::Initialize(HWND p_handle)
 {
-	bool result = true;
+	HRESULT result = S_OK;
 
 	m_clearColor[0] = 0.0f;
 	m_clearColor[1] = 0.0f;
@@ -17,16 +17,6 @@ bool DirectX::Initialize(HWND p_handle)
 	GetClientRect(p_handle, &window);
 	m_width = (window.right - window.left);
 	m_height = (window.bottom - window.top);
-
-	// DirectX versions to try and initialize.
-	D3D_FEATURE_LEVEL versions[] =
-	{
-		D3D_FEATURE_LEVEL_11_1,
-		D3D_FEATURE_LEVEL_11_0,
-		D3D_FEATURE_LEVEL_10_1,
-		D3D_FEATURE_LEVEL_10_0
-	};
-	m_version = versions[0];
 	
 	// Initialize swap chain.
 	DXGI_SWAP_CHAIN_DESC swapChainDescription;
@@ -42,12 +32,21 @@ bool DirectX::Initialize(HWND p_handle)
 	swapChainDescription.SampleDesc.Count = 1;
 	swapChainDescription.SampleDesc.Quality = 0;
 	swapChainDescription.Windowed = TRUE;
+	
+	// DirectX versions to try and initialize.
+	D3D_FEATURE_LEVEL versions[] =
+	{
+		D3D_FEATURE_LEVEL_11_0,
+		D3D_FEATURE_LEVEL_10_1,
+		D3D_FEATURE_LEVEL_10_0
+	};
+	m_version = versions[0];
 
 	// Create the swap chain and device.
-	if (!D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_DEBUG, versions, ARRAYSIZE(versions), D3D11_SDK_VERSION, &swapChainDescription, &m_swapChain, &m_device, &m_version, &m_context))
+	if (FAILED(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_DEBUG, versions, ARRAYSIZE(versions), D3D11_SDK_VERSION, &swapChainDescription, &m_swapChain, &m_device, &m_version, &m_context)))
 	{
-		result = false;
 		ConsolePrintError("DirectX swap chain and device failed to create.");
+		return false;
 	}
 
 	// Retrieve the backbuffer texture from the swap chain.
@@ -55,10 +54,10 @@ bool DirectX::Initialize(HWND p_handle)
 	m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 
 	// Create render target.
-	if (!m_device->CreateRenderTargetView(backBuffer, NULL, &m_renderTarget))
+	if (FAILED(m_device->CreateRenderTargetView(backBuffer, NULL, &m_renderTarget)))
 	{
-		result = false;
 		ConsolePrintError("DirectX render target failed to create.");
+		return false;
 	}
 
 	// Release the back buffer.
@@ -80,10 +79,10 @@ bool DirectX::Initialize(HWND p_handle)
 	depthStencilDescription.MiscFlags = 0;
 
 	// Create depth stencil texture.
-	if (!m_device->CreateTexture2D(&depthStencilDescription, NULL, &m_depthStencil))
+	if (FAILED(m_device->CreateTexture2D(&depthStencilDescription, NULL, &m_depthStencil)))
 	{
-		result = false;
 		ConsolePrintError("DirectX depth stencil failed to create.");
+		return false;
 	}
 
 	// Initialize the depth stencil view.
@@ -94,10 +93,10 @@ bool DirectX::Initialize(HWND p_handle)
 	depthStencilViewDescription.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
-	if (!m_device->CreateDepthStencilView(m_depthStencil, &depthStencilViewDescription, &m_depthStencilView))
+	if (FAILED(m_device->CreateDepthStencilView(m_depthStencil, &depthStencilViewDescription, &m_depthStencilView)))
 	{
-		result = false;
 		ConsolePrintError("DirectX depth stencil view failed to create.");
+		return false;
 	}
 
 	// Set device render target.
@@ -119,7 +118,7 @@ bool DirectX::Initialize(HWND p_handle)
 	// Clear the render target.
 	Clear();
 
-	return result;
+	return true;
 }
 
 void DirectX::Clear()
