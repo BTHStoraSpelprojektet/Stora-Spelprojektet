@@ -5,8 +5,8 @@ bool DirectX::Initialize(HWND p_handle)
 	HRESULT result = S_OK;
 
 	m_clearColor[0] = 0.0f;
-	m_clearColor[1] = 0.0f;
-	m_clearColor[2] = 1.0f;
+	m_clearColor[1] = 0.6f;
+	m_clearColor[2] = 0.9f;
 	m_clearColor[3] = 1.0f;
 
 	m_device = 0;
@@ -36,6 +36,7 @@ bool DirectX::Initialize(HWND p_handle)
 	// DirectX versions to try and initialize.
 	D3D_FEATURE_LEVEL versions[] =
 	{
+		D3D_FEATURE_LEVEL_11_1,
 		D3D_FEATURE_LEVEL_11_0,
 		D3D_FEATURE_LEVEL_10_1,
 		D3D_FEATURE_LEVEL_10_0

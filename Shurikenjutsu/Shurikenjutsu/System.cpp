@@ -18,6 +18,7 @@ bool System::Initiliaze()
 
 	// Initialize directX.
 	m_directX.Initialize(m_window.GetHandle());
+	m_directX.Present();
 	ConsolePrintSuccess("DirectX initialized successfully.");
 	std::string version = "DirectX version: " + CreateTitle(m_directX.GetVersion());
 	ConsolePrintText(version);
