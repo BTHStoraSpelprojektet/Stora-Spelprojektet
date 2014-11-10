@@ -10,7 +10,7 @@ class Window
 public:
 	bool Initialize(WindowRectangle p_window);
 	HWND GetHandle();
-	void SetTitle(LPCSTR p_title);
+	void SetTitle(std::string p_title);
 
 private:
 	HWND m_handle;

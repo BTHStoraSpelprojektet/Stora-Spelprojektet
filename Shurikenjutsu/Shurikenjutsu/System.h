@@ -3,7 +3,10 @@
 
 #include "Window.h"
 #include "DirectX.h"
+#include "Timer.h"
+
 #include "ConsoleFunctions.h"
+#include "Flags.h"
 
 class System
 {
@@ -19,5 +22,9 @@ private:
 
 	Window m_window;
 	DirectX m_directX;
+	Timer m_timer;
+
+	std::string m_title;
+	int m_previousFPS;
 };
 #endif

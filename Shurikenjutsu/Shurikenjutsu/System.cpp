@@ -16,6 +16,10 @@ bool System::Initiliaze()
 	m_window.Initialize(window);
 	ConsolePrintSuccess("Window created successfully.");
 
+	// Update window title.
+	m_title = "Shurikenjutsu";
+	m_window.SetTitle(m_title);
+
 	// Initialize directX.
 	m_directX.Initialize(m_window.GetHandle());
 	m_directX.Present();
@@ -23,15 +27,18 @@ bool System::Initiliaze()
 	std::string version = "DirectX version: " + CreateTitle(m_directX.GetVersion());
 	ConsolePrintText(version);
 
-	// Update window title.
-	std::string title = "Shurikenjitsu [" + CreateTitle(m_directX.GetVersion()) + "]";
-	m_window.SetTitle(title.c_str());
+	// Initialize timer.
+	m_previousFPS = 0;
+	m_timer.Initialize();
+	m_timer.StartTimer();
+	ConsolePrintSuccess("Timer initialized successfully.");
 	
     return result;
 }
 
 void System::Run()
 {
+	// Go through windows message loop.
 	MSG l_message = { 0 };
 
 	while (l_message.message != WM_QUIT)
@@ -51,16 +58,36 @@ void System::Run()
 	}
 }
 
+// Update game logic here.
 void System::Update()
 {
-    // Update game logic.
+	// Update the timer to enable delta time and FPS measurements.
+	m_timer.Update();
+
+	// Get the delta time to use for animation etc.
+	double deltaTime = m_timer.GetDeltaTime();
+
+	if (FLAG_FPS == 1)
+	{
+		// Print the FPS if the flag is set.
+		if (m_timer.GetFPS() != m_previousFPS)
+		{
+			std::string title = m_title + " (FPS: ";
+			title.append(std::to_string(m_timer.GetFPS()) + ") ");
+
+			m_window.SetTitle(title);
+		}
+	}
 }
 
+// Render game scene here.
 void System::Render()
 {
-    // Render game scene.
+	// Clear the scene to begin rendering.
 	m_directX.Clear();
 
+
+	// Present the result.
 	m_directX.Present();
 }
 

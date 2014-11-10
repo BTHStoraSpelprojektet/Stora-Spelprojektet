@@ -60,9 +60,9 @@ LRESULT CALLBACK Window::WndProc(HWND p_windowHandle, UINT p_message, WPARAM p_w
 	return DefWindowProc(p_windowHandle, p_message, p_wParam, p_lParam);
 }
 
-void Window::SetTitle(LPCSTR p_title)
+void Window::SetTitle(std::string p_title)
 {
-	SetWindowTextA(m_handle, p_title);
+	SetWindowTextA(m_handle, p_title.c_str());
 }
 
 HWND Window::GetHandle()
