@@ -16,6 +16,5 @@ private:
 	HWND m_handle;
 
 	static LRESULT CALLBACK WndProc(HWND p_windowHandle, UINT p_message, WPARAM p_wParam, LPARAM p_lParam);
-
 };
 #endif

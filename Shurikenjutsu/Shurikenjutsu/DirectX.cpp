@@ -5,9 +5,9 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	HRESULT result = S_OK;
 
 	m_clearColor[0] = 0.0f;
-	m_clearColor[1] = 0.6f;
-	m_clearColor[2] = 0.9f;
-	m_clearColor[3] = 1.0f;
+	m_clearColor[1] = 0.0f;
+	m_clearColor[2] = 0.0f;
+	m_clearColor[3] = 0.0f;
 
 	m_device = 0;
 	m_context = 0;

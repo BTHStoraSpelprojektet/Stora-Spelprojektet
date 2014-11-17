@@ -1,6 +1,6 @@
 #include "System.h"
 
-bool System::Initiliaze()
+bool System::Initialize()
 {
     bool result = true;
 
@@ -20,12 +20,9 @@ bool System::Initiliaze()
 	m_title = "Shurikenjutsu";
 	m_window.SetTitle(m_title);
 
-	// Initialize directX.
-	m_directX.Initialize(m_window.GetHandle());
-	m_directX.Present();
-	ConsolePrintSuccess("DirectX initialized successfully.");
-	std::string version = "DirectX version: " + CreateTitle(m_directX.GetVersion());
-	ConsolePrintText(version);
+	// Initialize the graphics engine.
+	m_graphicsEngine.Initialize(m_window.GetHandle());
+	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
 
 	// Initialize timer.
 	m_previousFPS = 0;
@@ -84,42 +81,9 @@ void System::Update()
 void System::Render()
 {
 	// Clear the scene to begin rendering.
-	m_directX.Clear();
+	m_graphicsEngine.Clear();
 
 
 	// Present the result.
-	m_directX.Present();
-}
-
-std::string System::CreateTitle(D3D_FEATURE_LEVEL p_version)
-{
-	switch (p_version)
-	{
-		case(D3D_FEATURE_LEVEL_11_1) :
-		{
-			return "DirectX 11.1";
-		}
-
-		case(D3D_FEATURE_LEVEL_11_0) :
-		{
-
-			return "DirectX 11.0";
-		}
-
-		case(D3D_FEATURE_LEVEL_10_1) :
-		{
-			return "DirectX 10.1";
-		}
-
-		case(D3D_FEATURE_LEVEL_10_0) :
-		{
-			return "DirectX 10.0";
-		}
-
-		default:
-		{
-			ConsolePrintError("Creating title from version failed.");
-			return "ERROR";
-		}
-	}
+	m_graphicsEngine.Present();
 }

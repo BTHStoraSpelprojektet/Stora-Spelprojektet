@@ -2,7 +2,7 @@
 #define SYSTEM
 
 #include "Window.h"
-#include "DirectX.h"
+#include "GraphicsEngine.h"
 #include "Timer.h"
 
 #include "ConsoleFunctions.h"
@@ -11,17 +11,15 @@
 class System
 {
 public:
-	bool Initiliaze();
+	bool Initialize();
     void Run();
 
 private:
     void Update();
     void Render();
 
-	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
-
 	Window m_window;
-	DirectXWrapper m_directX;
+	GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
 
 	std::string m_title;
