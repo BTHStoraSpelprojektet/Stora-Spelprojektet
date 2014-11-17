@@ -17,11 +17,11 @@ struct Input
 float4 main(Input p_input) : SV_Target
 {
 	// Set fog color.
-	float4 l_fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
+	float4 fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
 	// Sample texture using texture coordinates.
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
-	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * l_fogColor;
+	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
 
 	// Return shaded pixel.
 	return coloredPixel;
