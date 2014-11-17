@@ -21,7 +21,7 @@ private:
 	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
 
 	Window m_window;
-	DirectX m_directX;
+	DirectXWrapper m_directX;
 	Timer m_timer;
 
 	std::string m_title;

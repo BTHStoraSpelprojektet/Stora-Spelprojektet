@@ -1,6 +1,6 @@
 #include "DirectX.h"
 
-bool DirectX::Initialize(HWND p_handle)
+bool DirectXWrapper::Initialize(HWND p_handle)
 {
 	HRESULT result = S_OK;
 
@@ -51,8 +51,12 @@ bool DirectX::Initialize(HWND p_handle)
 	}
 
 	// Retrieve the backbuffer texture from the swap chain.
-	ID3D11Texture2D* backBuffer;
-	m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+	ID3D11Texture2D* backBuffer = NULL;
+	if (FAILED(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer)))
+	{
+		ConsolePrintError("DirectX back buffer failed to be retrieved.");
+		return false;
+	}
 
 	// Create render target.
 	if (FAILED(m_device->CreateRenderTargetView(backBuffer, NULL, &m_renderTarget)))
@@ -122,34 +126,34 @@ bool DirectX::Initialize(HWND p_handle)
 	return true;
 }
 
-void DirectX::Clear()
+void DirectXWrapper::Clear()
 {
 	// Clear render target.
 	m_context->ClearRenderTargetView(m_renderTarget, m_clearColor);
 	m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void DirectX::Present()
+void DirectXWrapper::Present()
 {
 	m_swapChain->Present(0, 0);
 }
 
-ID3D11Device* DirectX::GetDevice()
+ID3D11Device* DirectXWrapper::GetDevice()
 {
 	return m_device;
 }
 
-ID3D11DeviceContext* DirectX::GetContext()
+ID3D11DeviceContext* DirectXWrapper::GetContext()
 {
 	return m_context;
 }
 
-D3D_FEATURE_LEVEL DirectX::GetVersion()
+D3D_FEATURE_LEVEL DirectXWrapper::GetVersion()
 {
 	return m_version;
 }
 
-void DirectX::SetClearColor(float R, float G, float B, float p_opacity)
+void DirectXWrapper::SetClearColor(float R, float G, float B, float p_opacity)
 {
 	m_clearColor[0] = R;
 	m_clearColor[1] = G;

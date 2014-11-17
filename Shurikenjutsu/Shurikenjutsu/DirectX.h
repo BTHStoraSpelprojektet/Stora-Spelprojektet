@@ -4,7 +4,7 @@
 #include <D3D11.h>
 #include "ConsoleFunctions.h"
 
-class DirectX
+class DirectXWrapper
 {
 public:
 	bool Initialize(HWND p_handle);

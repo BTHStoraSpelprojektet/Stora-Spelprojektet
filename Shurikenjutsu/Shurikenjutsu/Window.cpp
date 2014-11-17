@@ -29,17 +29,21 @@ bool Window::Initialize(WindowRectangle p_window)
 	// Create the window.
 	m_handle = CreateWindow(description.lpszClassName, "Window Created.", WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX, p_window.x, p_window.y, p_window.width, p_window.height, 0, 0, GetModuleHandle(NULL), 0);
 
+	// Show and update the window.
+	if (m_handle != 0)
+	{
+		ShowWindow(m_handle, 1);
+		UpdateWindow(m_handle);
+	}
+
 	// If window creation fails, display an error message.
-	if (m_handle == 0)
+	else
 	{
 		ConsolePrintError("Window failed to create.");
 		result = false;
+		
 	}
-
-	// Show and update the window.
-	ShowWindow(m_handle, 1);
-	UpdateWindow(m_handle);
-
+	
 	return result;
 }
 
