@@ -32,6 +32,10 @@ bool System::Initiliaze()
 	m_timer.Initialize();
 	m_timer.StartTimer();
 	ConsolePrintSuccess("Timer initialized successfully.");
+
+	m_camera.Initialize();
+	m_camera.CreateProjectionMatrix(70.0f, window.height, window.width, 1.0f, 1000.0f);
+	m_camera.UpdateViewMatrix();
 	
     return result;
 }

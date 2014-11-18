@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "DirectX.h"
 #include "Timer.h"
+#include "Camera.h"
 
 #include "ConsoleFunctions.h"
 #include "Flags.h"
@@ -23,6 +24,7 @@ private:
 	Window m_window;
 	DirectXWrapper m_directX;
 	Timer m_timer;
+	Camera m_camera;
 
 	std::string m_title;
 	int m_previousFPS;
