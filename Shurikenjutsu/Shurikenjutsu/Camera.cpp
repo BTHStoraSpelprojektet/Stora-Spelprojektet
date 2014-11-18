@@ -15,7 +15,7 @@ void Camera::Shutdown()
 
 void Camera::Initialize()
 {
-	DirectX::XMVECTOR m_position = DirectX::XMVectorSet(0, 0, 0, 0);
+	DirectX::XMVECTOR m_position = DirectX::XMVectorSet(0, 5, 0, 0);
 	DirectX::XMVECTOR m_rotation = DirectX::XMVectorSet(0, 0, 0, 0);
 }
 
@@ -24,8 +24,8 @@ void Camera::UpdateViewMatrix()
 	// Rotate look and up vectors
 	DirectX::XMMATRIX tempRotMatrix = DirectX::XMMatrixRotationRollPitchYawFromVector(m_position);
 
-	DirectX::XMVECTOR look = DirectX::XMVectorSet(0, 0, 1, 0);
-	DirectX::XMVECTOR up = DirectX::XMVectorSet(0, 1, 0, 0);
+	DirectX::XMVECTOR look = DirectX::XMVectorSet(0, -1, 0, 0);
+	DirectX::XMVECTOR up = DirectX::XMVectorSet(0, 0, 1, 0);
 
 	//look = DirectX::XMVector2Transform(look, tempRotMatrix);
 	//up = DirectX::XMVector2Transform(up, tempRotMatrix);
@@ -37,7 +37,7 @@ void Camera::UpdateViewMatrix()
 // Create a new projection matrix, replacing your current projection matrix
 void Camera::CreateProjectionMatrix(float p_FOV, float p_height, float p_width, float p_nearZ, float p_farZ)
 {
-	m_projection = DirectX::XMMatrixPerspectiveFovLH(p_FOV, p_height/p_width, p_nearZ, p_farZ);
+	m_projection = DirectX::XMMatrixPerspectiveFovLH(p_FOV, p_height / p_width, p_nearZ, p_farZ);
 }
 
 // Typical RTS Camera move

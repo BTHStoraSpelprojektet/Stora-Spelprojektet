@@ -5,9 +5,11 @@
 #include "GraphicsEngine.h"
 #include "Timer.h"
 #include "Camera.h"
+#include "Model.h"
 
 #include "ConsoleFunctions.h"
 #include "Flags.h"
+#include "Enumerations.h"
 
 class System
 {
@@ -26,5 +28,7 @@ private:
 
 	std::string m_title;
 	int m_previousFPS;
+
+	Model m_plane;
 };
 #endif

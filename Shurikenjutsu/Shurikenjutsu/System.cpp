@@ -27,7 +27,7 @@ bool System::Initialize()
 
 	// Initialize the graphics engine.
 	m_graphicsEngine.Initialize(m_window.GetHandle());
-	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
+	m_graphicsEngine.SetClearColor(0.0f, 1.0f, 0.0f, 1.0f);
 	m_graphicsEngine.SetSceneFog(0.0f, 20.0f, 0.25f);
 
 	// Initialize timer.
@@ -36,10 +36,14 @@ bool System::Initialize()
 	m_timer.StartTimer();
 	ConsolePrintSuccess("Timer initialized successfully.");
 
+	// Initialize the camera.
 	m_camera.Initialize();
-	m_camera.CreateProjectionMatrix(70.0f, window.height, window.width, 1.0f, 1000.0f);
+	m_camera.CreateProjectionMatrix(90.0f, (float)window.height, (float)window.width, 0.001f, 100000.0f);
 	m_camera.UpdateViewMatrix();
 	
+	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "lol");
+	m_graphicsEngine.SetSceneMatrices(m_plane.GetWorldMatrix(), m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+
     return result;
 }
 
@@ -91,8 +95,9 @@ void System::Update()
 void System::Render()
 {
 	// Clear the scene to begin rendering.
-	m_graphicsEngine.Clear();
+	//m_graphicsEngine.Clear();
 
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), 18, NULL);
 
 	// Present the result.
 	m_graphicsEngine.Present();

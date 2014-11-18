@@ -75,6 +75,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, HWND p_handle)
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 	ConsoleSkipLines(1);
 
+	vertexShader->Release();
+	vertexShader = 0;
+
 	// Set variables to initial values.
 	ID3D10Blob*	pixelShader = 0;
 	errorMessage = 0;
@@ -109,11 +112,14 @@ bool SceneShader::Initialize(ID3D11Device* p_device, HWND p_handle)
 	ConsolePrintSuccess("Scene pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
 	ConsoleSkipLines(1);
-	
+
+	pixelShader->Release();
+	pixelShader = 0;
+
 	// Create the rasterizer description.
 	D3D11_RASTERIZER_DESC rasterizer;
 	rasterizer.FillMode = D3D11_FILL_SOLID;
-	rasterizer.CullMode = D3D11_CULL_BACK;
+	rasterizer.CullMode = D3D11_CULL_NONE;
 	rasterizer.FrontCounterClockwise = false;
 	rasterizer.DepthBias = 0;
 	rasterizer.SlopeScaledDepthBias = 0.0f;
