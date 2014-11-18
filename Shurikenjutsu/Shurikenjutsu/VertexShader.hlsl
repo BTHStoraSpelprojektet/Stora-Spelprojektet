@@ -12,6 +12,7 @@ cbuffer FogBuffer
 	float m_fogStart;
 	float m_fogEnd;
 	float m_fogDensity;
+	float m_padding;
 };
 
 // Vertex input.

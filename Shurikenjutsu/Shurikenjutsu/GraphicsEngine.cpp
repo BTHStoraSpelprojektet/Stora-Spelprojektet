@@ -12,12 +12,47 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("DirectX initialized successfully.");
 		std::string version = "DirectX version: " + CreateTitle(m_directX.GetVersion());
 		ConsolePrintText(version);
+		ConsoleSkipLines(1);
 	}
 
 	// Initialize scene shader.
-	m_sceneShader.Initialize(m_directX.GetDevice(), p_handle);
+	if (m_sceneShader.Initialize(m_directX.GetDevice(), p_handle))
+	{
+		ConsolePrintSuccess("Scene shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
 
 	return result;
+}
+
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_texture)
+{
+	switch (p_shader)
+	{
+		case(SHADERTYPE_SCENE) :
+		{
+			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_texture);
+
+			break;
+		}
+
+		default:
+		{
+			ConsolePrintError("Invalid shader type passed to Render().");
+
+			break;
+		}
+	}
+}
+
+void GraphicsEngine::SetSceneMatrices(DirectX::XMMATRIX& p_worldMatrix, DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
+{
+	m_sceneShader.UpdateMatrixBuffer(m_directX.GetContext(), p_worldMatrix, p_viewMatrix, p_projectionMatrix);
+}
+
+void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
+{
+	m_sceneShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
 }
 
 void GraphicsEngine::Clear()

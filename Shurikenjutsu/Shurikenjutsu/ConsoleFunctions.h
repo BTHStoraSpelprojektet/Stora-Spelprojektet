@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-static void ConsolePrintSuccess(std::string p_message)
+const static void ConsolePrintSuccess(std::string p_message)
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -15,7 +15,7 @@ static void ConsolePrintSuccess(std::string p_message)
 	SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 }
 
-static void ConsolePrintError(std::string p_message)
+const static void ConsolePrintError(std::string p_message)
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -33,7 +33,7 @@ static void ConsolePrintError(std::string p_message)
 	PostQuitMessage(0);
 }
 
-static void ConsolePrintText(std::string p_message)
+const static void ConsolePrintText(std::string p_message)
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -42,7 +42,7 @@ static void ConsolePrintText(std::string p_message)
 	std::cout << "[CONSOLE] : " << p_message << std::endl;
 }
 
-static void ConsolePrintRequest(std::string p_message)
+const static void ConsolePrintRequest(std::string p_message)
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -53,4 +53,11 @@ static void ConsolePrintRequest(std::string p_message)
 	SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 }
 
+const static void ConsoleSkipLines(int p_numberOfLines)
+{
+	for (int i = 0; i < p_numberOfLines; i++)
+	{
+		std::cout << std::endl;
+	}
+}
 #endif

@@ -4,7 +4,8 @@ bool System::Initialize()
 {
     bool result = true;
 
-	ConsolePrintText("Application initialized.");
+	ConsolePrintSuccess("Application initialized.");
+	ConsoleSkipLines(1);
 
 	// Set console position.
 	HWND console = GetConsoleWindow();
@@ -15,6 +16,10 @@ bool System::Initialize()
 	WindowRectangle window = WindowRectangle(730, 50, 1000, 1000);
 	m_window.Initialize(window);
 	ConsolePrintSuccess("Window created successfully.");
+	std::string size = "Window size: " + std::to_string(window.width);
+	size.append("x" + std::to_string(window.height));
+	ConsolePrintText(size);
+	ConsoleSkipLines(1);
 
 	// Update window title.
 	m_title = "Shurikenjutsu";
@@ -23,6 +28,7 @@ bool System::Initialize()
 	// Initialize the graphics engine.
 	m_graphicsEngine.Initialize(m_window.GetHandle());
 	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
+	m_graphicsEngine.SetSceneFog(0.0f, 20.0f, 0.25f);
 
 	// Initialize timer.
 	m_previousFPS = 0;

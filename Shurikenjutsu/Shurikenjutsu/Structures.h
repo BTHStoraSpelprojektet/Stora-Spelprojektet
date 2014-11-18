@@ -1,6 +1,8 @@
 #ifndef STRUCTURES
 #define STRUCTURES
 
+#include <DirectXMath.h>
+
 struct WindowRectangle
 {
 	// Variables.
@@ -25,6 +27,27 @@ struct WindowRectangle
 
 		width = p_width;
 		height = p_height;
+	}
+};
+
+struct Vertex
+{
+	// Variables.
+	DirectX::XMFLOAT3 m_position;
+	DirectX::XMFLOAT2 m_textureCoordinates;
+	DirectX::XMFLOAT3 m_normal;
+
+	// Constructors.
+	Vertex()
+	{
+		ZeroMemory(this, sizeof(this));
+	}
+
+	Vertex(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal)
+	{
+		m_position = p_position;
+		m_textureCoordinates = p_textureCoordinates;
+		m_normal = p_normal;
 	}
 };
 #endif

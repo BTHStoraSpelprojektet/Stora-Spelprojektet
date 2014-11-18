@@ -1,0 +1,8 @@
+#ifndef ENUMERATIONS
+#define ENUMERATIONS
+
+enum SHADERTYPE
+{
+	SHADERTYPE_SCENE
+};
+#endif

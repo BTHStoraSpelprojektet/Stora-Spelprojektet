@@ -82,6 +82,7 @@
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="ConsoleFunctions.h" />
     <ClInclude Include="DirectX.h" />
+    <ClInclude Include="Enumerations.h" />
     <ClInclude Include="Flags.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="SceneShader.h" />
