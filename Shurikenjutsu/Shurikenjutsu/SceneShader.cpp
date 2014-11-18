@@ -119,7 +119,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, HWND p_handle)
 	// Create the rasterizer description.
 	D3D11_RASTERIZER_DESC rasterizer;
 	rasterizer.FillMode = D3D11_FILL_SOLID;
-	rasterizer.CullMode = D3D11_CULL_NONE;
+	rasterizer.CullMode = D3D11_CULL_BACK;
 	rasterizer.FrontCounterClockwise = false;
 	rasterizer.DepthBias = 0;
 	rasterizer.SlopeScaledDepthBias = 0.0f;
@@ -227,9 +227,9 @@ void SceneShader::UpdateMatrixBuffer(ID3D11DeviceContext* p_context, DirectX::XM
 	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
 
 	// Transpose the matrices.
-	DirectX::XMMatrixTranspose(worldMatrix);
-	DirectX::XMMatrixTranspose(viewMatrix);
-	DirectX::XMMatrixTranspose(projectionMatrix);
+	worldMatrix = DirectX::XMMatrixTranspose(worldMatrix);
+	viewMatrix = DirectX::XMMatrixTranspose(viewMatrix);
+	projectionMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
 
 	// Set matrices in buffer.
 	matrixBuffer->m_worldMatrix = worldMatrix;

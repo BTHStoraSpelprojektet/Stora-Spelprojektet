@@ -8,29 +8,13 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	// Load Mesh.
 	std::vector<Vertex> mesh;
 
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, 1.0f, 2.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 2.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 2.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, 1.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
 
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 2.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, 2.0f), DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 2.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, 1.0f, -2.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, -2.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, -2.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, -2.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, -2.0f), DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, -2.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
 
 	//TODO build mesh here.
 
