@@ -20,6 +20,8 @@ public:
 private:
     void Update();
     void Render();
+	void ResetCamera();
+	void UpdateMovedCamera();
 
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
@@ -30,5 +32,8 @@ private:
 	int m_previousFPS;
 
 	Model m_plane;
+
+	float m_angle;
+	bool m_useCamera;
 };
 #endif

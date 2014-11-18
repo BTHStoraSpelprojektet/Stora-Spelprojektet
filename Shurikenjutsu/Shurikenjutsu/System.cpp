@@ -38,9 +38,12 @@ bool System::Initialize()
 	ConsoleSkipLines(1);
 
 	// Initialize the camera.
+	m_angle = 0.0f;
+	m_useCamera = false;
 	m_camera.Initialize();
-	m_camera.CreateProjectionMatrix(90.0f, (float)window.height, (float)window.width, 0.001f, 100000.0f);
-	m_camera.UpdateViewMatrix();
+	float l_aspectRatio = (float)((window.width - 16) / (window.height - 39));
+	m_camera.UpdateAspectRatio(l_aspectRatio);
+	ResetCamera();
 	ConsolePrintSuccess("Camera initialized successfully.");
 	
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "lol");
@@ -103,4 +106,42 @@ void System::Render()
 
 	// Present the result.
 	m_graphicsEngine.Present();
+}
+
+void System::ResetCamera()
+{
+	// Reset camera.
+	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+
+	m_camera.UpdatePosition(position);
+	m_camera.UpdateTarget(target);
+
+	// Look vector.
+	DirectX::XMVECTOR look = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	look = DirectX::XMVector3Normalize(look);
+	m_camera.UpdateLook(look);
+
+	// Up vector.
+	DirectX::XMVECTOR right = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	up = DirectX::XMVector3Cross(look, right);
+	up = DirectX::XMVector3Normalize(up);
+	m_camera.UpdateUpVector(up);
+
+	// Right vector.
+	right = DirectX::XMVector3Cross(up, look);
+	right = DirectX::XMVector3Normalize(right);
+	m_camera.UpdateRight(right);
+
+	// Projection data.
+	m_camera.UpdateFieldOfView(3.14159265359f * 0.45f);
+	m_camera.UpdateClippingPlanes(0.001f, 1000.0f);
+	m_camera.UpdateViewMatrix();
+	m_camera.UpdateProjectionMatrix();
+}
+
+void System::UpdateMovedCamera()
+{
+	m_camera.UpdateMovedCamera();
 }
