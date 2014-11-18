@@ -2,6 +2,6 @@
 
 int main()
 {	
-	MyFunc();
+	//MyFunc();
 	return 0;
 }
