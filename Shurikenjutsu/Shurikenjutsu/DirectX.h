@@ -15,6 +15,9 @@ public:
 	ID3D11DeviceContext* GetContext();
 	D3D_FEATURE_LEVEL GetVersion();
 
+	void TurnOnAlphaBlending();
+	void TurnOffAlphaBlending();
+
 	void SetClearColor(float R, float G, float B, float p_opacity);
 
 private:
@@ -27,6 +30,12 @@ private:
 	ID3D11RenderTargetView*	m_renderTarget;
 	ID3D11Texture2D* m_depthStencil;
 	ID3D11DepthStencilView*	m_depthStencilView;
+
+	ID3D11BlendState* m_alphaEnabled;
+	ID3D11BlendState* m_alphaDisabled;
+
+	ID3D11DepthStencilState* m_depthEnabled;
+	ID3D11DepthStencilState* m_depthDisabled;
 
 	int	m_width;
 	int m_height;

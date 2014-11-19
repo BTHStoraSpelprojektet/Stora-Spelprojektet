@@ -29,6 +29,7 @@ bool System::Initialize()
 	m_graphicsEngine.Initialize(m_window.GetHandle());
 	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
 	m_graphicsEngine.SetSceneFog(0.0f, 20.0f, 0.25f);
+	m_graphicsEngine.TurnOffAlphaBlending();
 
 	// Initialize timer.
 	m_previousFPS = 0;
@@ -50,6 +51,9 @@ bool System::Initialize()
 	
 	// REMOVE THIS LATER.
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
+	m_character.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
+	DirectX::XMVECTOR translation = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
+	m_character.Translate(translation);
 
 	//Test the collisions
 	TestCollisions();
@@ -113,7 +117,12 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
+	m_graphicsEngine.TurnOnAlphaBlending();
+
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), NULL);
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), NULL);
+
+	m_graphicsEngine.TurnOffAlphaBlending();
 
 	// Present the result.
 	m_graphicsEngine.Present();

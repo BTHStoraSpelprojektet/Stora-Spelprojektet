@@ -5,17 +5,31 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	// Initialize world matrix.
 	m_worldMatrix = DirectX::XMMatrixIdentity();
 
-	// Load Mesh.
-	ModelImporter importer;
-	importer.ImportModel("../Shurikenjutsu/Models/pPipeShape1.SSP");
+	//// Load Mesh.
+	//ModelImporter importer;
+	//importer.ImportModel("../Shurikenjutsu/Models/pPipeShape1.SSP");
+
+	////TODO build mesh here.
+
+	//// Save mesh to buffer.
+	//m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, importer.m_importedMesh.vertices);
+	//m_vertexCount = importer.m_importedMesh.vertices.size();
+
+	std::vector<Vertex> mesh;
+
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
+	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
 
 	//TODO build mesh here.
 
 	// Save mesh to buffer.
-	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, importer.m_importedMesh.vertices);
-	m_vertexCount = importer.m_importedMesh.vertices.size();
-
-
+	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mesh);
+	m_vertexCount = 6;
 
 	return true;
 }
@@ -59,4 +73,30 @@ DirectX::XMMATRIX Model::GetWorldMatrix()
 int Model::GetVertexCount()
 {
 	return m_vertexCount;
+}
+
+void Model::Rotate(DirectX::XMVECTOR p_rotation)
+{
+	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(p_rotation);
+
+	m_worldMatrix = m_worldMatrix * l_matrix;
+}
+
+void Model::Translate(DirectX::XMVECTOR p_translation)
+{
+	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixTranslationFromVector(p_translation);
+
+	m_worldMatrix = m_worldMatrix * l_matrix;
+}
+
+void Model::Scale(DirectX::XMVECTOR p_scale)
+{
+	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixScalingFromVector(p_scale);
+
+	m_worldMatrix = m_worldMatrix * l_matrix;
+}
+
+void Model::ResetModel()
+{
+	m_worldMatrix = DirectX::XMMatrixIdentity();
 }

@@ -12,7 +12,7 @@
 class SceneShader
 {
 public:
-	bool Initialize(ID3D11Device* p_device, HWND p_handle);
+	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
 
 	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 

@@ -21,6 +21,7 @@ struct Input
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
+	float3 m_tangent : TANGENT;
 };
 
 // Vertex output.
@@ -30,6 +31,7 @@ struct Output
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
+	float3 m_tangent : TANGENT;
 
 	float m_fogFactor : FOG;
 };
