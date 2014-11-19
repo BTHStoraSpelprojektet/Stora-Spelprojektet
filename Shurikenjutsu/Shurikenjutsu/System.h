@@ -26,7 +26,6 @@ private:
 	void TestCollisions();
 	void MoveCamera(double p_dt);
 	void ResetCamera();
-	void UpdateMovedCamera();
 
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
@@ -37,11 +36,12 @@ private:
 	int m_previousFPS;
 
 	Model m_plane;
+	Model m_character;
+	Model m_object;
+
 	Collisions m_collision;
 
-
-
-	bool m_useCamera;
+	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
 };

@@ -38,19 +38,21 @@ bool System::Initialize()
 	ConsoleSkipLines(1);
 
 	// Initialize the camera.
-	m_useCamera = false;
+	m_flyCamera = false;
 	m_camera.Initialize();
 	float l_aspectRatio = (float)((window.width - 16) / (window.height - 39));
 	m_camera.UpdateAspectRatio(l_aspectRatio);
-	ResetCamera();
 	ConsolePrintSuccess("Camera initialized successfully.");
+	ConsoleSkipLines(1);
+
+	// Reset the camera for initial use.
+	ResetCamera();
 	
+	// REMOVE THIS LATER.
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
-	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
 	//Test the collisions
 	TestCollisions();
-
 
     return result;
 }
@@ -116,6 +118,7 @@ void System::Render()
 	// Present the result.
 	m_graphicsEngine.Present();
 }
+
 void System::TestCollisions()
 {
 	//Testing Collisions
@@ -236,10 +239,10 @@ void System::TestCollisions()
 void System::MoveCamera(double p_dt)
 {
 	// Start moving the camera with the C key.
-	if ((GetAsyncKeyState('C') & 0x8000) && m_useCamera == false)
+	if ((GetAsyncKeyState('C') & 0x8000) && m_flyCamera == false)
 	{
 		ShowCursor(false);
-		m_useCamera = true;
+		m_flyCamera = true;
 
 		POINT l_position;
 		GetCursorPos(&l_position);
@@ -248,7 +251,7 @@ void System::MoveCamera(double p_dt)
 		m_oldMouseY = (float)l_position.y;
 	}
 
-	if (m_useCamera)
+	if (m_flyCamera)
 	{
 		float deltaTime = (float)p_dt;
 
@@ -294,7 +297,7 @@ void System::MoveCamera(double p_dt)
 		if (GetAsyncKeyState(VK_BACK))
 		{
 			ShowCursor(true);
-			m_useCamera = false;
+			m_flyCamera = false;
 			ResetCamera();
 		}
 	}
@@ -334,9 +337,4 @@ void System::ResetCamera()
 	m_camera.UpdateProjectionMatrix();
 
 	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
-}
-
-void System::UpdateMovedCamera()
-{
-	m_camera.UpdateMovedCamera();
 }
