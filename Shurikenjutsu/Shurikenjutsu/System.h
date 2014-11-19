@@ -20,6 +20,8 @@ public:
 private:
     void Update();
     void Render();
+
+	void MoveCamera(double p_dt);
 	void ResetCamera();
 	void UpdateMovedCamera();
 

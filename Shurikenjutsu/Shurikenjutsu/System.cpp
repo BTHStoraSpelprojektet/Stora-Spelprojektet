@@ -45,7 +45,7 @@ bool System::Initialize()
 	ResetCamera();
 	ConsolePrintSuccess("Camera initialized successfully.");
 	
-	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "lol");
+	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
 	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
     return result;
@@ -94,6 +94,27 @@ void System::Update()
 		}
 	}
 
+	// Enable camera flying if in debug mode.
+	if (FLAG_DEBUG == 1)
+	{
+		MoveCamera(deltaTime);
+	}
+}
+
+// Render game scene here.
+void System::Render()
+{
+	// Clear the scene to begin rendering.
+	m_graphicsEngine.Clear();
+
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), 6, m_plane.GetWorldMatrix(), NULL);
+
+	// Present the result.
+	m_graphicsEngine.Present();
+}
+
+void System::MoveCamera(double p_dt)
+{
 	// Start moving the camera with the C key.
 	if ((GetAsyncKeyState('C') & 0x8000) && m_useCamera == false)
 	{
@@ -112,7 +133,7 @@ void System::Update()
 		// Rotate and pitch the camera.
 		POINT l_position;
 		GetCursorPos(&l_position);
-		
+
 		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(l_position.x - m_oldMouseX));
 		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(l_position.y - m_oldMouseY));
 		m_camera.Pitch(dy);
@@ -123,22 +144,22 @@ void System::Update()
 		// Move the camera using W, S, A, D keys.
 		if (GetAsyncKeyState('W') & 0x8000)
 		{
-			m_camera.Walk(10.0f * deltaTime);
+			m_camera.Walk(10.0f * p_dt);
 		}
 
 		if (GetAsyncKeyState('S') & 0x8000)
 		{
-			m_camera.Walk(-10.0f * deltaTime);
+			m_camera.Walk(-10.0f * p_dt);
 		}
 
 		if (GetAsyncKeyState('A') & 0x8000)
 		{
-			m_camera.Strafe(-10.0f * deltaTime);
+			m_camera.Strafe(-10.0f * p_dt);
 		}
 
 		if (GetAsyncKeyState('D') & 0x8000)
 		{
-			m_camera.Strafe(10.0f * deltaTime);
+			m_camera.Strafe(10.0f * p_dt);
 		}
 
 		// Update the camera.
@@ -155,18 +176,6 @@ void System::Update()
 			ResetCamera();
 		}
 	}
-}
-
-// Render game scene here.
-void System::Render()
-{
-	// Clear the scene to begin rendering.
-	m_graphicsEngine.Clear();
-
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), 6, m_plane.GetWorldMatrix(), NULL);
-
-	// Present the result.
-	m_graphicsEngine.Present();
 }
 
 void System::ResetCamera()

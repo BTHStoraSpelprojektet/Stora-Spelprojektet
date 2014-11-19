@@ -91,6 +91,7 @@
     <ClInclude Include="Flags.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelImporter.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="System.h" />
