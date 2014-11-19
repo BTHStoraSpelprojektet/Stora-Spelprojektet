@@ -11,7 +11,8 @@
 #include "Flags.h"
 #include "Enumerations.h"
 
-#include "Collisions.h"
+#include "Debug.h"
+
 
 class System
 {
@@ -31,6 +32,7 @@ private:
 	GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
 	Camera m_camera;
+	Debug m_debug;
 
 	std::string m_title;
 	int m_previousFPS;
@@ -39,7 +41,6 @@ private:
 	Model m_character;
 	Model m_object;
 
-	Collisions m_collision;
 
 	bool m_flyCamera;
 	float m_oldMouseX;
