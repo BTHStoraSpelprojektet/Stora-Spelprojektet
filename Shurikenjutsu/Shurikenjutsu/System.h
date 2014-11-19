@@ -33,7 +33,8 @@ private:
 
 	Model m_plane;
 
-	float m_angle;
 	bool m_useCamera;
+	float m_oldMouseX;
+	float m_oldMouseY;
 };
 #endif

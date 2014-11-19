@@ -136,6 +136,8 @@ void Camera::UpdateMovedCamera()
 	m_viewMatrix.r[1] = DirectX::XMVectorSet(m_upVector.m128_f32[0], m_upVector.m128_f32[1], m_upVector.m128_f32[2], y);
 	m_viewMatrix.r[2] = DirectX::XMVectorSet(m_look.m128_f32[0], m_look.m128_f32[1], m_look.m128_f32[2], z);
 	m_viewMatrix.r[3] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+
+	m_viewMatrix = DirectX::XMMatrixTranspose(m_viewMatrix);
 }
 
 DirectX::XMVECTOR Camera::GetPosition()

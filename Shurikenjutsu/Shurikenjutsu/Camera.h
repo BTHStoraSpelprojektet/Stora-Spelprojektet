@@ -1,6 +1,7 @@
 #ifndef CAMERA
 #define CAMERA
 
+#include <Windows.h>
 #include <DirectXMath.h>
 
 class Camera

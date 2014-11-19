@@ -38,7 +38,6 @@ bool System::Initialize()
 	ConsoleSkipLines(1);
 
 	// Initialize the camera.
-	m_angle = 0.0f;
 	m_useCamera = false;
 	m_camera.Initialize();
 	float l_aspectRatio = (float)((window.width - 16) / (window.height - 39));
@@ -47,7 +46,7 @@ bool System::Initialize()
 	ConsolePrintSuccess("Camera initialized successfully.");
 	
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "lol");
-	m_graphicsEngine.SetSceneMatrices(m_plane.GetWorldMatrix(), m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
     return result;
 }
@@ -94,6 +93,68 @@ void System::Update()
 			m_window.SetTitle(title);
 		}
 	}
+
+	// Start moving the camera with the C key.
+	if ((GetAsyncKeyState('C') & 0x8000) && m_useCamera == false)
+	{
+		ShowCursor(false);
+		m_useCamera = true;
+
+		POINT l_position;
+		GetCursorPos(&l_position);
+
+		m_oldMouseX = l_position.x;
+		m_oldMouseY = l_position.y;
+	}
+
+	if (m_useCamera)
+	{
+		// Rotate and pitch the camera.
+		POINT l_position;
+		GetCursorPos(&l_position);
+		
+		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(l_position.x - m_oldMouseX));
+		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(l_position.y - m_oldMouseY));
+		m_camera.Pitch(dy);
+		m_camera.Rotate(dx);
+
+		SetCursorPos(m_oldMouseX, m_oldMouseY);
+
+		// Move the camera using W, S, A, D keys.
+		if (GetAsyncKeyState('W') & 0x8000)
+		{
+			m_camera.Walk(10.0f * deltaTime);
+		}
+
+		if (GetAsyncKeyState('S') & 0x8000)
+		{
+			m_camera.Walk(-10.0f * deltaTime);
+		}
+
+		if (GetAsyncKeyState('A') & 0x8000)
+		{
+			m_camera.Strafe(-10.0f * deltaTime);
+		}
+
+		if (GetAsyncKeyState('D') & 0x8000)
+		{
+			m_camera.Strafe(10.0f * deltaTime);
+		}
+
+		// Update the camera.
+		m_camera.UpdateMovedCamera();
+
+		// Set shader variables from the camera.
+		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+
+		// Reset the camera when BACKSPACE key is pressed.
+		if (GetAsyncKeyState(VK_BACK))
+		{
+			ShowCursor(true);
+			m_useCamera = false;
+			ResetCamera();
+		}
+	}
 }
 
 // Render game scene here.
@@ -102,7 +163,7 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), 6, NULL);
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), 6, m_plane.GetWorldMatrix(), NULL);
 
 	// Present the result.
 	m_graphicsEngine.Present();
@@ -111,7 +172,7 @@ void System::Render()
 void System::ResetCamera()
 {
 	// Reset camera.
-	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
 	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 
 	m_camera.UpdatePosition(position);
@@ -135,10 +196,13 @@ void System::ResetCamera()
 	m_camera.UpdateRight(right);
 
 	// Projection data.
-	m_camera.UpdateFieldOfView(3.14159265359f * 0.45f);
+	m_camera.UpdateFieldOfView(3.141592f * 0.45f);
+	m_camera.UpdateAspectRatio(1.0f);
 	m_camera.UpdateClippingPlanes(0.001f, 1000.0f);
 	m_camera.UpdateViewMatrix();
 	m_camera.UpdateProjectionMatrix();
+
+	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 }
 
 void System::UpdateMovedCamera()
