@@ -11,6 +11,8 @@
 #include "Flags.h"
 #include "Enumerations.h"
 
+#include "Collisions.h"
+
 class System
 {
 public:
@@ -21,6 +23,7 @@ private:
     void Update();
     void Render();
 
+	void TestCollisions();
 	void MoveCamera(double p_dt);
 	void ResetCamera();
 	void UpdateMovedCamera();
@@ -34,6 +37,9 @@ private:
 	int m_previousFPS;
 
 	Model m_plane;
+	Collisions m_collision;
+
+
 
 	bool m_useCamera;
 	float m_oldMouseX;

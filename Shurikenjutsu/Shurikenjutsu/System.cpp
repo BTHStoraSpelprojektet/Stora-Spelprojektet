@@ -48,6 +48,10 @@ bool System::Initialize()
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
 	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
+	//Test the collisions
+	TestCollisions();
+
+
     return result;
 }
 
@@ -112,6 +116,122 @@ void System::Render()
 	// Present the result.
 	m_graphicsEngine.Present();
 }
+void System::TestCollisions()
+{
+	//Testing Collisions
+	if (m_collision.SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Sphere(0.0f, 5.0f, 0.0f, 5.0f)))
+	{
+		std::cout << "1. Sphere Sphere true" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (!m_collision.SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Sphere(0.0f, 16.0f, 0.0f, 5.0f)))
+	{
+		std::cout << "2. Sphere Sphere false" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (m_collision.BoxBoxCollision(Box(0.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f), Box(8.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "3. Box Box True" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (!m_collision.BoxBoxCollision(Box(0.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f), Box(11.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "4. Box Box false" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (m_collision.SphereBoxCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Box(11.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "5. Sphere Box true" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (!m_collision.SphereBoxCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Box(16.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "6. Sphere Box false" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (m_collision.FrustrumBoxCollision(Frustum(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f), Box(0.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "7. Frustum Box true" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (!m_collision.FrustrumBoxCollision(Frustum(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f), Box(0.0f, 0.0f, 12.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "8. Frustum Sphere false" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (m_collision.FrustrumSphereCollision(Frustum(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f), Sphere(0.0f, 0.0f, 10.0f, 10.0f)))
+	{
+		std::cout << "9. Frustum Sphere true" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (!m_collision.FrustrumSphereCollision(Frustum(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f), Sphere(0.0f, 0.0f, -10.0f, 10.0f)))
+	{
+		std::cout << "10. Frustum Sphere false" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (m_collision.RayBoxCollision(Ray(0.0f, 0.0f, 0.0f, 8.0f, 0.0f, 0.0f), Box(8.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "11. Ray Box true" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (!m_collision.RayBoxCollision(Ray(0.0f, 0.0f, 0.0f, -8.0f, 0.0f, 0.0f), Box(8.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "12. Ray Box false" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (m_collision.RaySphereCollision(Ray(0.0f, 0.0f, 0.0f, 10.0f, 0.0f, 0.0f), Sphere(10.0f, 0.0f, 0.0f, 5.0f)))
+	{
+		std::cout << "13. Ray Sphere true" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+	if (!m_collision.RaySphereCollision(Ray(0.0f, 0.0f, 0.0f, -10.0f, 0.0f, 0.0f), Sphere(10.0f, 0.0f, 0.0f, 5.0f)))
+	{
+		std::cout << "14. Ray Sphere false" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+}
 
 void System::MoveCamera(double p_dt)
 {
@@ -124,12 +244,14 @@ void System::MoveCamera(double p_dt)
 		POINT l_position;
 		GetCursorPos(&l_position);
 
-		m_oldMouseX = l_position.x;
-		m_oldMouseY = l_position.y;
+		m_oldMouseX = (float)l_position.x;
+		m_oldMouseY = (float)l_position.y;
 	}
 
 	if (m_useCamera)
 	{
+		float deltaTime = (float)p_dt;
+
 		// Rotate and pitch the camera.
 		POINT l_position;
 		GetCursorPos(&l_position);
@@ -139,27 +261,27 @@ void System::MoveCamera(double p_dt)
 		m_camera.Pitch(dy);
 		m_camera.Rotate(dx);
 
-		SetCursorPos(m_oldMouseX, m_oldMouseY);
+		SetCursorPos((int)m_oldMouseX, (int)m_oldMouseY);
 
 		// Move the camera using W, S, A, D keys.
 		if (GetAsyncKeyState('W') & 0x8000)
 		{
-			m_camera.Walk(10.0f * p_dt);
+			m_camera.Walk(10.0f * deltaTime);
 		}
 
 		if (GetAsyncKeyState('S') & 0x8000)
 		{
-			m_camera.Walk(-10.0f * p_dt);
+			m_camera.Walk(-10.0f * deltaTime);
 		}
 
 		if (GetAsyncKeyState('A') & 0x8000)
 		{
-			m_camera.Strafe(-10.0f * p_dt);
+			m_camera.Strafe(-10.0f * deltaTime);
 		}
 
 		if (GetAsyncKeyState('D') & 0x8000)
 		{
-			m_camera.Strafe(10.0f * p_dt);
+			m_camera.Strafe(10.0f * deltaTime);
 		}
 
 		// Update the camera.

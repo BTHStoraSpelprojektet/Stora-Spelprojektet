@@ -47,4 +47,208 @@ struct Vertex
 		m_tangent = p_tangent;
 	}
 };
+
+struct Sphere
+{
+	DirectX::XMFLOAT3 m_position;
+	float m_radius;
+
+	Sphere(){}
+	Sphere(DirectX::XMFLOAT3 p_position, float p_radius)
+	{
+		m_position = p_position;
+		m_radius = p_radius;
+	}
+	Sphere(float p_xPos, float p_yPos, float p_zPos, float p_radius)
+	{
+		m_position = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+		m_radius = p_radius;
+	}
+};
+
+struct Ray
+{
+	DirectX::XMFLOAT3 m_position;
+	DirectX::XMFLOAT4 m_direction;
+	//DirectX::XMVECTOR m_dirVector;
+	float m_distance;
+
+	Ray(){}
+	Ray(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction)
+	{
+		m_position = p_position;
+
+		SetDirection(p_direction.x, p_direction.y, p_direction.z);
+	}
+	Ray(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_direction)
+	{
+		m_position = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+
+		SetDirection(p_direction.x, p_direction.y, p_direction.z);
+	}
+	Ray(DirectX::XMFLOAT3 p_position, float p_xDir, float p_yDir, float p_zDir)
+	{
+		m_position = p_position;
+
+		SetDirection(p_xDir, p_yDir, p_zDir);
+	}
+	Ray(float p_xPos, float p_yPos, float p_zPos, float p_xDir, float p_yDir, float p_zDir)
+	{
+		m_position = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+
+		SetDirection(p_xDir, p_yDir, p_zDir);
+	}
+	void SetDirection(float p_xDir, float p_yDir, float p_zDir)
+	{
+		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		//m_dirVector = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_xDir, p_yDir, p_zDir, 0.0f));
+	}
+};
+
+struct Box
+{
+	DirectX::XMFLOAT3 m_center;
+	DirectX::XMFLOAT3 m_extents;
+
+	Box(){}
+	Box(DirectX::XMFLOAT3 p_center, DirectX::XMFLOAT3 p_extents)
+	{
+		m_center = p_center;
+		m_extents = p_extents;
+	}
+	Box(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent)
+	{
+		m_center = p_center;
+
+		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
+	}
+	Box(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents)
+	{
+		m_center = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+
+		m_extents = p_extents;
+	}
+	Box(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent)
+	{
+		m_center = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+
+		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
+	}
+};
+
+struct OBB
+{
+	DirectX::XMFLOAT3 m_center;
+	DirectX::XMFLOAT3 m_extents;
+	DirectX::XMFLOAT4 m_direction;
+
+	OBB(){}
+	OBB(DirectX::XMFLOAT3 p_center, DirectX::XMFLOAT3 p_extents, DirectX::XMFLOAT4 p_direction)
+	{
+		m_center = p_center;
+		m_extents = p_extents;
+		m_direction = p_direction;
+	}
+	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
+	{
+		m_center = p_center;
+
+		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
+
+		m_direction = p_direction;
+	}
+	OBB(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents, DirectX::XMFLOAT4 p_direction)
+	{
+		m_center = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+
+		m_extents = p_extents;
+
+		m_direction = p_direction;
+	}
+	OBB(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
+	{
+		m_center = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+
+		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
+
+		m_direction = p_direction;
+	}
+	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, float p_xDir, float p_yDir, float p_zDir)
+	{
+		m_center = p_center;
+
+		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
+
+		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+	}
+	OBB(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents, float p_xDir, float p_yDir, float p_zDir)
+	{
+		m_center = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+
+		m_extents = p_extents;
+
+		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+	}
+	OBB(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent, float p_xDir, float p_yDir, float p_zDir)
+	{
+		m_center = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+
+		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
+
+		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+	}
+};
+
+struct Frustum
+{
+	DirectX::XMFLOAT3 m_position;
+	DirectX::XMFLOAT4 m_direction;
+	float m_leftAngle;
+	float m_rightAngle;
+	float m_topAngle;
+	float m_bottomAngle;
+	float m_nearDistance;
+	float m_farDistance;
+
+	Frustum(){}
+	Frustum(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
+	{
+		m_position = p_position;
+		m_direction = DirectX::XMFLOAT4(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
+	}
+	Frustum(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4 p_direction, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
+	{
+		m_position = p_position;
+		m_direction = p_direction;
+		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
+	}
+	Frustum(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_direction, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
+	{
+		m_position = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+		m_direction = DirectX::XMFLOAT4(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
+	}
+	Frustum(DirectX::XMFLOAT3 p_position, float p_xDir, float p_yDir, float p_zDir, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
+	{
+		m_position = p_position;
+		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
+	}
+	Frustum(float p_xPos, float p_yPos, float p_zPos, float p_xDir, float p_yDir, float p_zDir, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
+	{
+		m_position = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
+		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
+	}
+	void SetAngles(float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
+	{
+		m_leftAngle = p_leftAngle;
+		m_rightAngle = p_rightAngle;
+		m_topAngle = p_topAngle;
+		m_bottomAngle = p_bottomAngle;
+		m_nearDistance = p_nearDist;
+		m_farDistance = p_farDist;
+	}
+};
 #endif

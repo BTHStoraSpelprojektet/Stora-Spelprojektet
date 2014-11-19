@@ -7,7 +7,7 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	inputFile.open(p_filepath, std::ios::binary);
 
 	inputFile.seekg(0, std::ios::end);
-	long fileSize = inputFile.tellg();
+	long fileSize = (long)inputFile.tellg();
 	inputFile.seekg(0);
 
 	void* data = malloc(fileSize);
