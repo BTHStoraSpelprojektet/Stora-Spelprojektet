@@ -19,6 +19,9 @@ public:
 	void UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix);
 	void UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity);
 
+	void TurnOnBackFaceCulling(ID3D11DeviceContext* p_context);
+	void TurnOffBackFaceCulling(ID3D11DeviceContext* p_context);
+
 private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
 
@@ -26,8 +29,10 @@ private:
 	ID3D11PixelShader* m_pixelShader;
 
 	ID3D11InputLayout* m_layout;
-	ID3D11RasterizerState* m_rasterizerState;
 	ID3D11SamplerState* m_samplerState;
+	
+	ID3D11RasterizerState* m_rasterizerStateBackCulled;
+	ID3D11RasterizerState* m_rasterizerStateNoneCulled;
 
 	std::string m_VSVersion;
 	std::string m_PSVersion;

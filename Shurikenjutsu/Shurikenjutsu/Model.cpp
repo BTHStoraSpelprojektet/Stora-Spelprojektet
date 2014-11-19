@@ -5,31 +5,13 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	// Initialize world matrix.
 	m_worldMatrix = DirectX::XMMatrixIdentity();
 
-	//// Load Mesh.
-	//ModelImporter importer;
-	//importer.ImportModel("../Shurikenjutsu/Models/pPipeShape1.SSP");
-
-	////TODO build mesh here.
-
-	//// Save mesh to buffer.
-	//m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, importer.m_importedMesh.vertices);
-	//m_vertexCount = importer.m_importedMesh.vertices.size();
-
-	std::vector<Vertex> mesh;
-
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-
-	//TODO build mesh here.
+	// Load Mesh.
+	ModelImporter importer;
+	importer.ImportModel("../Shurikenjutsu/Models/pPipeShape1.SSP");
 
 	// Save mesh to buffer.
-	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mesh);
-	m_vertexCount = 6;
+	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, importer.m_importedMesh.vertices);
+	m_vertexCount = importer.m_importedMesh.vertices.size();
 
 	return true;
 }

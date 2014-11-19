@@ -127,7 +127,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the rasterizer description.
 	D3D11_RASTERIZER_DESC rasterizer;
 	rasterizer.FillMode = D3D11_FILL_SOLID;
-	rasterizer.CullMode = D3D11_CULL_NONE;
+	rasterizer.CullMode = D3D11_CULL_BACK;
 	rasterizer.FrontCounterClockwise = false;
 	rasterizer.DepthBias = 0;
 	rasterizer.SlopeScaledDepthBias = 0.0f;
@@ -137,14 +137,23 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	rasterizer.MultisampleEnable = false;
 	rasterizer.AntialiasedLineEnable = false;
 
-	// Create the rasterizer state.
-	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerState)))
+	// Create the back face culled rasterizer state.
+	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateBackCulled)))
 	{
-		ConsolePrintError("Failed to create scene rasterrizer state.");
+		ConsolePrintError("Failed to create scene back face culled rasterrizer state.");
 		return false;
 	}
 
-	p_context->RSSetState(m_rasterizerState);
+	rasterizer.CullMode = D3D11_CULL_NONE;
+
+	// Create the none culled rasterizer state.
+	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateNoneCulled)))
+	{
+		ConsolePrintError("Failed to create scene none culled rasterrizer state.");
+		return false;
+	}
+
+	TurnOnBackFaceCulling(p_context);
 
 	// Create the sampler state description.
 	D3D11_SAMPLER_DESC sampler;
@@ -288,4 +297,14 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMM
 
 	// Set the matrix buffer.
 	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
+}
+
+void SceneShader::TurnOnBackFaceCulling(ID3D11DeviceContext* p_context)
+{
+	p_context->RSSetState(m_rasterizerStateBackCulled);
+}
+
+void SceneShader::TurnOffBackFaceCulling(ID3D11DeviceContext* p_context)
+{
+	p_context->RSSetState(m_rasterizerStateNoneCulled);
 }
