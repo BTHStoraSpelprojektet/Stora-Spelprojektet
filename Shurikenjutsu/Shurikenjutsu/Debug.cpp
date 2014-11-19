@@ -27,6 +27,7 @@ void Debug::RunTests()
 	CollisionTest13();
 	CollisionTest14();
 	CollisionTest15();
+	CollisionTest16();
 }
 void Debug::CollisionTest1()
 {
@@ -184,7 +185,7 @@ void Debug::CollisionTest14()
 }
 void Debug::CollisionTest15()
 {
-	if (m_collision.SphereSphereCollision(Sphere(0.0f, 5.0f, 0.0f, 5.0f), Sphere(0.0f, -6.0f, 0.0f, 5.0f)))
+	if (m_collision.SphereSphereCollision(Sphere(0.0f, 5.0f, 0.0f, 5.0f), Sphere(0.0f, -5.0f, 0.0f, 5.0f)))
 	{
 		std::cout << "15. Sphere Sphere true" << std::endl;
 	}
@@ -193,3 +194,15 @@ void Debug::CollisionTest15()
 		std::cout << "TestFailed" << std::endl;
 	}
 }
+void Debug::CollisionTest16()
+{
+	if (m_collision.BoxBoxCollision(Box(0.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f), Box(10.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	{
+		std::cout << "16. Box Box True" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+}
+

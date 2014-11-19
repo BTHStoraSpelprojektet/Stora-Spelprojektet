@@ -30,4 +30,5 @@ private:
 	void CollisionTest13();
 	void CollisionTest14();
 	void CollisionTest15();
+	void CollisionTest16();
 };
