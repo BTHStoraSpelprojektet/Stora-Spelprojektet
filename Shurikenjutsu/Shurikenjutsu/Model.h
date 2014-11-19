@@ -25,6 +25,7 @@ public:
 protected:
 	ID3D11Buffer* m_mesh;
 	ID3D11ShaderResourceView* m_texture;
+	ID3D11ShaderResourceView* m_normalMap;
 
 	DirectX::XMMATRIX m_worldMatrix;
 };

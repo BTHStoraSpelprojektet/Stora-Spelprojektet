@@ -25,13 +25,13 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	return result;
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_texture)
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	switch (p_shader)
 	{
 		case(SHADERTYPE_SCENE) :
 		{
-			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_texture);
+			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 
 			break;
 		}
@@ -45,9 +45,9 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 	}
 }
 
-void GraphicsEngine::SetSceneMatrices(DirectX::XMMATRIX& p_worldMatrix, DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
+void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
 {
-	m_sceneShader.UpdateMatrixBuffer(m_directX.GetContext(), p_worldMatrix, p_viewMatrix, p_projectionMatrix);
+	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)

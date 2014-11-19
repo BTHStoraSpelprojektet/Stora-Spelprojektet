@@ -24,6 +24,9 @@ private:
     void Render();
 
 	void TestCollisions();
+	void MoveCamera(double p_dt);
+	void ResetCamera();
+	void UpdateMovedCamera();
 
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
@@ -37,5 +40,9 @@ private:
 	Collisions m_collision;
 
 
+
+	bool m_useCamera;
+	float m_oldMouseX;
+	float m_oldMouseY;
 };
 #endif

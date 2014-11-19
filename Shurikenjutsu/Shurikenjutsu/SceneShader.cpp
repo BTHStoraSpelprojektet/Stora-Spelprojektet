@@ -194,11 +194,13 @@ bool SceneShader::Initialize(ID3D11Device* p_device, HWND p_handle)
 	return true;
 }
 
-void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_texture)
+void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(Vertex);
 	const unsigned int offset = 0;
+
+	UpdateWorldMatrix(p_context, p_worldMatrix);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -209,11 +211,42 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void SceneShader::UpdateMatrixBuffer(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix, DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
+void SceneShader::UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
+{
+	m_viewMatrix = p_viewMatrix;
+	m_projectionMatrix = p_projectionMatrix;
+}
+
+void SceneShader::UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity)
+{
+	// Lock the fog constant buffer so it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_fogBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintError("Failed to map scene fog buffer.");
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	FogBuffer* fogBuffer;
+	fogBuffer = (FogBuffer*)mappedBuffer.pData;
+
+	// Copy the fog information into the fog constant buffer.
+	fogBuffer->m_fogStart = p_fogStart;
+	fogBuffer->m_fogEnd = p_fogEnd;
+	fogBuffer->m_fogDensity = p_fogDensity;
+
+	// Unlock the constant buffer.
+	p_context->Unmap(m_fogBuffer, 0);
+
+	// Set the position of the fog constant buffer in the vertex shader.
+	p_context->VSSetConstantBuffers(1, 1, &m_fogBuffer);
+}
+
+void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix)
 {
 	DirectX::XMMATRIX worldMatrix = p_worldMatrix;
-	DirectX::XMMATRIX viewMatrix = p_viewMatrix;
-	DirectX::XMMATRIX projectionMatrix = p_projectionMatrix;
+	DirectX::XMMATRIX viewMatrix = m_viewMatrix;
+	DirectX::XMMATRIX projectionMatrix = m_projectionMatrix;
 
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
@@ -241,29 +274,4 @@ void SceneShader::UpdateMatrixBuffer(ID3D11DeviceContext* p_context, DirectX::XM
 
 	// Set the matrix buffer.
 	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
-}
-
-void SceneShader::UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity)
-{
-	// Lock the fog constant buffer so it can be written to.
-	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
-	if (FAILED(p_context->Map(m_fogBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
-	{
-		ConsolePrintError("Failed to map scene fog buffer.");
-	}
-
-	// Get a pointer to the data in the constant buffer.
-	FogBuffer* fogBuffer;
-	fogBuffer = (FogBuffer*)mappedBuffer.pData;
-
-	// Copy the fog information into the fog constant buffer.
-	fogBuffer->m_fogStart = p_fogStart;
-	fogBuffer->m_fogEnd = p_fogEnd;
-	fogBuffer->m_fogDensity = p_fogDensity;
-
-	// Unlock the constant buffer.
-	p_context->Unmap(m_fogBuffer, 0);
-
-	// Set the position of the fog constant buffer in the vertex shader.
-	p_context->VSSetConstantBuffers(1, 1, &m_fogBuffer);
 }
