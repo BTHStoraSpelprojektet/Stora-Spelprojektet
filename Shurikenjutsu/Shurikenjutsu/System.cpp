@@ -46,6 +46,10 @@ bool System::Initialize()
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "lol");
 	m_graphicsEngine.SetSceneMatrices(m_plane.GetWorldMatrix(), m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
+	//Test the collisions
+	TestCollisions();
+
+
     return result;
 }
 
