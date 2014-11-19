@@ -29,4 +29,5 @@ private:
 	void CollisionTest12();
 	void CollisionTest13();
 	void CollisionTest14();
+	void CollisionTest15();
 };

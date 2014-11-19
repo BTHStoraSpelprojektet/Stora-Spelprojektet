@@ -53,6 +53,7 @@ bool System::Initialize()
 
 	//Run all tests that are in the debug class
 	m_debug.RunTests();
+
     return result;
 }
 

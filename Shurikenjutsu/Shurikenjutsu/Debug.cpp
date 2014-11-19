@@ -26,6 +26,7 @@ void Debug::RunTests()
 	CollisionTest12();
 	CollisionTest13();
 	CollisionTest14();
+	CollisionTest15();
 }
 void Debug::CollisionTest1()
 {
@@ -175,6 +176,17 @@ void Debug::CollisionTest14()
 	if (!m_collision.RaySphereCollision(Ray(0.0f, 0.0f, 0.0f, -10.0f, 0.0f, 0.0f), Sphere(10.0f, 0.0f, 0.0f, 5.0f)))
 	{
 		std::cout << "14. Ray Sphere false" << std::endl;
+	}
+	else
+	{
+		std::cout << "TestFailed" << std::endl;
+	}
+}
+void Debug::CollisionTest15()
+{
+	if (m_collision.SphereSphereCollision(Sphere(0.0f, 5.0f, 0.0f, 5.0f), Sphere(0.0f, -6.0f, 0.0f, 5.0f)))
+	{
+		std::cout << "15. Sphere Sphere true" << std::endl;
 	}
 	else
 	{
