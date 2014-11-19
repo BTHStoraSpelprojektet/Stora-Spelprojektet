@@ -11,6 +11,8 @@
 #include "Flags.h"
 #include "Enumerations.h"
 
+#include "Collisions.h"
+
 class System
 {
 public:
@@ -21,6 +23,8 @@ private:
     void Update();
     void Render();
 
+	void TestCollisions();
+
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
@@ -30,5 +34,8 @@ private:
 	int m_previousFPS;
 
 	Model m_plane;
+	Collisions m_collision;
+
+
 };
 #endif
