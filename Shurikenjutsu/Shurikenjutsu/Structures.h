@@ -38,11 +38,6 @@ struct Vertex
 	DirectX::XMFLOAT3 m_normal;
 
 	// Constructors.
-	Vertex()
-	{
-		ZeroMemory(this, sizeof(this));
-	}
-
 	Vertex(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal)
 	{
 		m_position = p_position;

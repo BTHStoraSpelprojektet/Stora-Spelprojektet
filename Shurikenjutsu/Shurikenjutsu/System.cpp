@@ -244,12 +244,14 @@ void System::MoveCamera(double p_dt)
 		POINT l_position;
 		GetCursorPos(&l_position);
 
-		m_oldMouseX = l_position.x;
-		m_oldMouseY = l_position.y;
+		m_oldMouseX = (float)l_position.x;
+		m_oldMouseY = (float)l_position.y;
 	}
 
 	if (m_useCamera)
 	{
+		float deltaTime = (float)p_dt;
+
 		// Rotate and pitch the camera.
 		POINT l_position;
 		GetCursorPos(&l_position);
@@ -259,27 +261,27 @@ void System::MoveCamera(double p_dt)
 		m_camera.Pitch(dy);
 		m_camera.Rotate(dx);
 
-		SetCursorPos(m_oldMouseX, m_oldMouseY);
+		SetCursorPos((int)m_oldMouseX, (int)m_oldMouseY);
 
 		// Move the camera using W, S, A, D keys.
 		if (GetAsyncKeyState('W') & 0x8000)
 		{
-			m_camera.Walk(10.0f * p_dt);
+			m_camera.Walk(10.0f * deltaTime);
 		}
 
 		if (GetAsyncKeyState('S') & 0x8000)
 		{
-			m_camera.Walk(-10.0f * p_dt);
+			m_camera.Walk(-10.0f * deltaTime);
 		}
 
 		if (GetAsyncKeyState('A') & 0x8000)
 		{
-			m_camera.Strafe(-10.0f * p_dt);
+			m_camera.Strafe(-10.0f * deltaTime);
 		}
 
 		if (GetAsyncKeyState('D') & 0x8000)
 		{
-			m_camera.Strafe(10.0f * p_dt);
+			m_camera.Strafe(10.0f * deltaTime);
 		}
 
 		// Update the camera.
