@@ -36,18 +36,15 @@ struct Vertex
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT2 m_textureCoordinates;
 	DirectX::XMFLOAT3 m_normal;
+	DirectX::XMFLOAT3 m_tangent;
 
 	// Constructors.
-	Vertex()
-	{
-		ZeroMemory(this, sizeof(this));
-	}
-
-	Vertex(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal)
+	Vertex(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal, DirectX::XMFLOAT3 p_tangent)
 	{
 		m_position = p_position;
 		m_textureCoordinates = p_textureCoordinates;
 		m_normal = p_normal;
+		m_tangent = p_tangent;
 	}
 };
 #endif

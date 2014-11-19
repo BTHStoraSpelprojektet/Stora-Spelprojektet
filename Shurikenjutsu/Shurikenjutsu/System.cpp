@@ -107,7 +107,7 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), 6, m_plane.GetWorldMatrix(), NULL);
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), NULL);
 
 	// Present the result.
 	m_graphicsEngine.Present();
