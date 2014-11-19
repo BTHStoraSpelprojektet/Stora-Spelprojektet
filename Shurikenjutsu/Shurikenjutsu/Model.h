@@ -8,6 +8,7 @@
 #include "GraphicsEngine.h"
 #include "Buffer.h"
 #include "ConsoleFunctions.h"
+#include "ModelImporter.h"
 
 class Model
 {
@@ -21,12 +22,14 @@ public:
 	ID3D11Buffer* GetMesh();
 	ID3D11ShaderResourceView* GetTexture();
 	DirectX::XMMATRIX GetWorldMatrix();
+	int GetVertexCount();
 
 protected:
 	ID3D11Buffer* m_mesh;
 	ID3D11ShaderResourceView* m_texture;
 	ID3D11ShaderResourceView* m_normalMap;
 
+	int m_vertexCount;
 	DirectX::XMMATRIX m_worldMatrix;
 };
 #endif;

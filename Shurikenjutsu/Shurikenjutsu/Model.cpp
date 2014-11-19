@@ -6,20 +6,16 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	m_worldMatrix = DirectX::XMMatrixIdentity();
 
 	// Load Mesh.
-	std::vector<Vertex> mesh;
-
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f)));
-
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
-	mesh.push_back(Vertex(DirectX::XMFLOAT3(-1.0f, -1.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f)));
+	ModelImporter importer;
+	importer.ImportModel("../Shurikenjutsu/Models/pPipeShape1.SSP");
 
 	//TODO build mesh here.
 
 	// Save mesh to buffer.
-	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mesh);
+	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, importer.m_importedMesh.vertices);
+	m_vertexCount = importer.m_importedMesh.vertices.size();
+
+
 
 	return true;
 }
@@ -58,4 +54,9 @@ ID3D11ShaderResourceView* Model::GetTexture()
 DirectX::XMMATRIX Model::GetWorldMatrix()
 {
 	return m_worldMatrix;
+}
+
+int Model::GetVertexCount()
+{
+	return m_vertexCount;
 }

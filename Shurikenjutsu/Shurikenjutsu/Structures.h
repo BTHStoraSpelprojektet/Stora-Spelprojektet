@@ -36,13 +36,15 @@ struct Vertex
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT2 m_textureCoordinates;
 	DirectX::XMFLOAT3 m_normal;
+	DirectX::XMFLOAT3 m_tangent;
 
 	// Constructors.
-	Vertex(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal)
+	Vertex(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal, DirectX::XMFLOAT3 p_tangent)
 	{
 		m_position = p_position;
 		m_textureCoordinates = p_textureCoordinates;
 		m_normal = p_normal;
+		m_tangent = p_tangent;
 	}
 };
 
@@ -63,6 +65,7 @@ struct Sphere
 		m_radius = p_radius;
 	}
 };
+
 struct Ray
 {
 	DirectX::XMFLOAT3 m_position;
@@ -101,6 +104,7 @@ struct Ray
 		//m_dirVector = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_xDir, p_yDir, p_zDir, 0.0f));
 	}
 };
+
 struct Box
 {
 	DirectX::XMFLOAT3 m_center;
@@ -131,6 +135,7 @@ struct Box
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 	}
 };
+
 struct OBB
 {
 	DirectX::XMFLOAT3 m_center;
@@ -193,6 +198,7 @@ struct OBB
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
 	}
 };
+
 struct Frustum
 {
 	DirectX::XMFLOAT3 m_position;
