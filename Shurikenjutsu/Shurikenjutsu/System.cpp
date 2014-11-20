@@ -29,6 +29,7 @@ bool System::Initialize()
 	m_graphicsEngine.Initialize(m_window.GetHandle());
 	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
 	m_graphicsEngine.SetSceneFog(0.0f, 20.0f, 0.25f);
+	m_graphicsEngine.TurnOffAlphaBlending();
 
 	// Initialize timer.
 	m_previousFPS = 0;
@@ -50,6 +51,14 @@ bool System::Initialize()
 	
 	// REMOVE THIS LATER.
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
+
+	m_character.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
+	DirectX::XMVECTOR translation = DirectX::XMVectorSet(2.0f, -1.0f, 0.0f, 0.0f);
+	m_character.Translate(translation);
+
+	m_object.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
+	translation = DirectX::XMVectorSet(-2.0f, 1.0f, 0.0f, 0.0f);
+	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
 	m_debug.RunTests();
@@ -113,7 +122,16 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
+	// Start rendering alpha blended.
+	m_graphicsEngine.TurnOnAlphaBlending();
+
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture());
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture());
+
+	// Stop rendering alpha blended.
+	m_graphicsEngine.TurnOffAlphaBlending();
+
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture());
 
 	// Present the result.
 	m_graphicsEngine.Present();

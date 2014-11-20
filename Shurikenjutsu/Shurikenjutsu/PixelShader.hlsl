@@ -9,6 +9,7 @@ struct Input
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
+	float3 m_tangent : TANGENT;
 
 	float m_fogFactor : FOG;
 };
@@ -24,5 +25,5 @@ float4 main(Input p_input) : SV_Target
 	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
 
 	// Return shaded pixel.
-	return textureColor;
+	return coloredPixel;
 }

@@ -8,9 +8,8 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	// Load Mesh.
 	ModelImporter importer;
 	importer.ImportModel("../Shurikenjutsu/Models/pPipeShape1.SSP");
-	
+
 	MeshData mData = importer.GetMesh();
-	//TODO build mesh here.
 
 	// Save mesh to buffer.
 	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mData.vertices);
@@ -86,4 +85,30 @@ DirectX::XMMATRIX Model::GetWorldMatrix()
 int Model::GetVertexCount()
 {
 	return m_vertexCount;
+}
+
+void Model::Rotate(DirectX::XMVECTOR p_rotation)
+{
+	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(p_rotation);
+
+	m_worldMatrix = m_worldMatrix * l_matrix;
+}
+
+void Model::Translate(DirectX::XMVECTOR p_translation)
+{
+	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixTranslationFromVector(p_translation);
+
+	m_worldMatrix = m_worldMatrix * l_matrix;
+}
+
+void Model::Scale(DirectX::XMVECTOR p_scale)
+{
+	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixScalingFromVector(p_scale);
+
+	m_worldMatrix = m_worldMatrix * l_matrix;
+}
+
+void Model::ResetModel()
+{
+	m_worldMatrix = DirectX::XMMatrixIdentity();
 }

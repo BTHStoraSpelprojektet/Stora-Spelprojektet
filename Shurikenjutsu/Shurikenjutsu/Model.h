@@ -24,6 +24,11 @@ public:
 	DirectX::XMMATRIX GetWorldMatrix();
 	int GetVertexCount();
 
+	void Rotate(DirectX::XMVECTOR p_rotation);
+	void Translate(DirectX::XMVECTOR p_translation);
+	void Scale(DirectX::XMVECTOR p_scale);
+	void ResetModel();
+
 protected:
 	ID3D11Buffer* m_mesh;
 	ID3D11ShaderResourceView* m_texture;

@@ -1,6 +1,6 @@
 #include "SceneShader.h"
 
-bool SceneShader::Initialize(ID3D11Device* p_device, HWND p_handle)
+bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle)
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
@@ -34,7 +34,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, HWND p_handle)
 	}
 
 	// Configure vertex layout.
-	D3D11_INPUT_ELEMENT_DESC layout[3];
+	D3D11_INPUT_ELEMENT_DESC layout[4];
 	unsigned int size;
 	
 	layout[0].SemanticName = "POSITION";
@@ -60,6 +60,14 @@ bool SceneShader::Initialize(ID3D11Device* p_device, HWND p_handle)
 	layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	layout[2].InstanceDataStepRate = 0;
+
+	layout[3].SemanticName = "TANGENT";
+	layout[3].SemanticIndex = 0;
+	layout[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	layout[3].InputSlot = 0;
+	layout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layout[3].InstanceDataStepRate = 0;
 
 	// Compute size of layout.
 	size = sizeof(layout) / sizeof(layout[0]);
@@ -129,12 +137,23 @@ bool SceneShader::Initialize(ID3D11Device* p_device, HWND p_handle)
 	rasterizer.MultisampleEnable = false;
 	rasterizer.AntialiasedLineEnable = false;
 
-	// Create the rasterizer state.
-	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerState)))
+	// Create the back face culled rasterizer state.
+	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateBackCulled)))
 	{
-		ConsolePrintError("Failed to create scene rasterrizer state.");
+		ConsolePrintError("Failed to create scene back face culled rasterrizer state.");
 		return false;
 	}
+
+	rasterizer.CullMode = D3D11_CULL_NONE;
+
+	// Create the none culled rasterizer state.
+	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateNoneCulled)))
+	{
+		ConsolePrintError("Failed to create scene none culled rasterrizer state.");
+		return false;
+	}
+
+	TurnOnBackFaceCulling(p_context);
 
 	// Create the sampler state description.
 	D3D11_SAMPLER_DESC sampler;
@@ -202,12 +221,16 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
+	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
+
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	p_context->IASetInputLayout(m_layout);
+
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
-	p_context->PSSetSamplers(0, 1, &m_samplerState);
+	
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
@@ -274,4 +297,14 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMM
 
 	// Set the matrix buffer.
 	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
+}
+
+void SceneShader::TurnOnBackFaceCulling(ID3D11DeviceContext* p_context)
+{
+	p_context->RSSetState(m_rasterizerStateBackCulled);
+}
+
+void SceneShader::TurnOffBackFaceCulling(ID3D11DeviceContext* p_context)
+{
+	p_context->RSSetState(m_rasterizerStateNoneCulled);
 }

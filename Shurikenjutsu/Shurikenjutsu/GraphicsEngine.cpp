@@ -16,7 +16,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 
 	// Initialize scene shader.
-	if (m_sceneShader.Initialize(m_directX.GetDevice(), p_handle))
+	if (m_sceneShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
 	{
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
@@ -88,31 +88,43 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 {
 	switch (p_version)
 	{
-	case(D3D_FEATURE_LEVEL_11_1) :
-	{
-		return "DirectX 11.1";
-	}
+		case(D3D_FEATURE_LEVEL_11_1) :
+		{
+			return "DirectX 11.1";
+		}
 
-	case(D3D_FEATURE_LEVEL_11_0) :
-	{
+		case(D3D_FEATURE_LEVEL_11_0) :
+		{
 
-		return "DirectX 11.0";
-	}
+			return "DirectX 11.0";
+		}
 
-	case(D3D_FEATURE_LEVEL_10_1) :
-	{
-		return "DirectX 10.1";
-	}
+		case(D3D_FEATURE_LEVEL_10_1) :
+		{
+			return "DirectX 10.1";
+		}
 
-	case(D3D_FEATURE_LEVEL_10_0) :
-	{
-		return "DirectX 10.0";
-	}
+		case(D3D_FEATURE_LEVEL_10_0) :
+		{
+			return "DirectX 10.0";
+		}
 
-	default:
-	{
-		ConsolePrintError("Creating title from version failed.");
-		return "ERROR";
+		default:
+		{
+			ConsolePrintError("Creating title from version failed.");
+			return "ERROR";
+		}
 	}
-	}
+}
+
+void GraphicsEngine::TurnOnAlphaBlending()
+{
+	m_directX.TurnOnAlphaBlending();
+	m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
+}
+
+void GraphicsEngine::TurnOffAlphaBlending()
+{
+	m_directX.TurnOffAlphaBlending();
+	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
 }
