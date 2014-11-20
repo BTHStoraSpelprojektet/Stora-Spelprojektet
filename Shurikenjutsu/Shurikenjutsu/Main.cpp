@@ -4,7 +4,7 @@ int main()
 {
     System system;
 
-	system.Initiliaze();
+	system.Initialize();
 
 	system.Run();
 

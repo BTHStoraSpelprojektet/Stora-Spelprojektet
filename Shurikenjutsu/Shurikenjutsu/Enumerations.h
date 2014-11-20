@@ -1,0 +1,13 @@
+#ifndef ENUMERATIONS
+#define ENUMERATIONS
+
+enum SHADERTYPE
+{
+	SHADERTYPE_SCENE
+};
+
+enum BUFFERTYPE
+{
+	BUFFERTYPE_VERTEX
+};
+#endif

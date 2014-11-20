@@ -12,6 +12,7 @@ cbuffer FogBuffer
 	float m_fogStart;
 	float m_fogEnd;
 	float m_fogDensity;
+	float m_padding;
 };
 
 // Vertex input.
@@ -20,6 +21,7 @@ struct Input
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
+	float3 m_tangent : TANGENT;
 };
 
 // Vertex output.
@@ -29,6 +31,7 @@ struct Output
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
+	float3 m_tangent : TANGENT;
 
 	float m_fogFactor : FOG;
 };

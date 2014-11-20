@@ -43,6 +43,27 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{229dc6aa-8275-4235-8c3a-64bc37a5f5fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{2163f61b-c825-4f28-bcf3-c01a3a91612c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{203b4b95-7f00-4e34-8b05-e5a4d9f26b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Scene">
+      <UniqueIdentifier>{3a375898-de57-4805-995a-5c0d96324108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Models">
+      <UniqueIdentifier>{b6f0930d-5f0b-4253-af33-2cfbbd9bab0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Models">
+      <UniqueIdentifier>{ecef9444-c2bd-478b-a3a8-4d1becfb57b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Debug">
+      <UniqueIdentifier>{10cdd217-927d-4bba-9ee3-51c7526894f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Debug">
+      <UniqueIdentifier>{5ee85993-994a-4779-9555-2810aadce6d0}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Core\Input">
       <UniqueIdentifier>{d6518540-bebd-4645-b9bf-808ccb02fc68}</UniqueIdentifier>
     </Filter>
@@ -60,17 +81,35 @@
     <ClCompile Include="Window.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Collisions.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="DirectX.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsEngine.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneShader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelImporter.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
+      <Filter>Source Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Source Files\Core\Input</Filter>
@@ -95,9 +134,6 @@
     <ClInclude Include="ConsoleFunctions.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX.h">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -107,8 +143,32 @@
     <ClInclude Include="Collisions.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="DirectX.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsEngine.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneShader.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Enumerations.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelImporter.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Header Files\Debug</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Header Files\Core\Input</Filter>
@@ -122,10 +182,10 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Scene</Filter>
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\Scene</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -5,9 +5,9 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	HRESULT result = S_OK;
 
 	m_clearColor[0] = 0.0f;
-	m_clearColor[1] = 0.6f;
-	m_clearColor[2] = 0.9f;
-	m_clearColor[3] = 1.0f;
+	m_clearColor[1] = 0.0f;
+	m_clearColor[2] = 0.0f;
+	m_clearColor[3] = 0.0f;
 
 	m_device = 0;
 	m_context = 0;
@@ -68,6 +68,38 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Release the back buffer.
 	backBuffer->Release();
 
+	D3D11_DEPTH_STENCIL_DESC depthState;
+	depthState.DepthEnable = true;
+	depthState.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthState.DepthFunc = D3D11_COMPARISON_LESS;
+	depthState.StencilEnable = true;
+	depthState.StencilReadMask = 0xFF;
+	depthState.StencilWriteMask = 0xFF;
+	depthState.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthState.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	depthState.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthState.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	depthState.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	depthState.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	depthState.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	depthState.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Create depth stencil state
+	if (FAILED(m_device->CreateDepthStencilState(&depthState, &m_depthEnabled)))
+	{
+		ConsolePrintError("DirectX depth stencil enabled state failed to create.");
+		return false;
+	}
+
+	depthState.DepthEnable = false;
+	depthState.StencilEnable = false;
+
+	if (FAILED(m_device->CreateDepthStencilState(&depthState, &m_depthDisabled)))
+	{
+		ConsolePrintError("DirectX depth stencil disabled state failed to create.");
+		return false;
+	}
+
 	// Initialize the depth stencil.
 	D3D11_TEXTURE2D_DESC depthStencilDescription;
 	ZeroMemory(&depthStencilDescription, sizeof(depthStencilDescription));
@@ -123,6 +155,34 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Clear the render target.
 	Clear();
 
+	// Create an alpha enabled blend state description.
+	D3D11_BLEND_DESC blendState;
+	ZeroMemory(&blendState, sizeof(D3D11_BLEND_DESC));
+
+	blendState.RenderTarget[0].BlendEnable = TRUE;
+	blendState.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendState.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendState.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+
+	// Create the alpha blend state.
+	if (FAILED(m_device->CreateBlendState(&blendState, &m_alphaEnabled)))
+	{
+		ConsolePrintError("DirectX alpha enabled blend state failed to create.");
+		return false;
+	}
+
+	blendState.RenderTarget[0].BlendEnable = FALSE;
+
+	if (FAILED(m_device->CreateBlendState(&blendState, &m_alphaDisabled)))
+	{
+		ConsolePrintError("DirectX alpha disabled blend state failed to create.");
+		return false;
+	}
+
 	return true;
 }
 
@@ -159,4 +219,30 @@ void DirectXWrapper::SetClearColor(float R, float G, float B, float p_opacity)
 	m_clearColor[1] = G;
 	m_clearColor[2] = B;
 	m_clearColor[3] = p_opacity;
+}
+
+void DirectXWrapper::TurnOnAlphaBlending()
+{
+	float blendFactor[4];
+
+	blendFactor[0] = 0.0f;
+	blendFactor[1] = 0.0f;
+	blendFactor[2] = 0.0f;
+	blendFactor[3] = 0.0f;
+
+	m_context->OMSetBlendState(m_alphaEnabled, blendFactor, 0xffffffff);
+	m_context->OMSetDepthStencilState(m_depthDisabled, 1);
+}
+
+void DirectXWrapper::TurnOffAlphaBlending()
+{
+	float blendFactor[4];
+
+	blendFactor[0] = 0.0f;
+	blendFactor[1] = 0.0f;
+	blendFactor[2] = 0.0f;
+	blendFactor[3] = 0.0f;
+
+	m_context->OMSetBlendState(m_alphaDisabled, blendFactor, 0xffffffff);
+	m_context->OMSetDepthStencilState(m_depthEnabled, 1);
 }
