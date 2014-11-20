@@ -89,12 +89,21 @@ void InputManager::UpdateInput(UINT p_message, WPARAM p_wParam, LPARAM p_lParam)
 void InputManager::ClearInput()
 {
 	if (m_leftMouseB.IsClicked())
-	m_leftMouseB.SetState(BUTTON_EVENT_STATE_NONE);
-	m_rightMouseB.SetState(BUTTON_EVENT_STATE_NONE);
+	{
+		m_leftMouseB.SetState(BUTTON_EVENT_STATE_NONE);
+	}
+
+	if (m_rightMouseB.IsClicked())
+	{
+		m_rightMouseB.SetState(BUTTON_EVENT_STATE_NONE);
+	}
 
 	for (unsigned int i = 0; i < m_events.size(); i++)
 	{
-		m_events[i].SetState(BUTTON_EVENT_STATE_NONE);
+		if (m_events[i].IsClicked())
+		{
+			m_events[i].SetState(BUTTON_EVENT_STATE_NONE);
+		}
 	}
 }
 
