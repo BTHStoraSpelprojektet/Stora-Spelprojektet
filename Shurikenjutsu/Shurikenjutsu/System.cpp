@@ -37,6 +37,10 @@ bool System::Initiliaze()
 	m_camera.CreateProjectionMatrix(70.0f, window.height, window.width, 1.0f, 1000.0f);
 	m_camera.UpdateViewMatrix();
 	
+	// Input: Register keys
+	InputManager* input = InputManager::GetInstance();
+	input->RegisterKey(VkKeyScan('w'));
+	
     return result;
 }
 
@@ -45,11 +49,15 @@ void System::Run()
 	// Go through windows message loop.
 	MSG l_message = { 0 };
 
+
 	while (l_message.message != WM_QUIT)
 	{
 		// Translate and dispatch message.
 		if (PeekMessage(&l_message, NULL, 0, 0, PM_REMOVE))
 		{
+			// Update Input
+			InputManager::GetInstance()->UpdateInput(l_message.message, l_message.wParam, l_message.lParam);
+			
 			TranslateMessage(&l_message);
 			DispatchMessage(&l_message);
 		}
@@ -58,8 +66,14 @@ void System::Run()
 		{
 			Update();
 			Render();
+			
+			// Clear Used Input
+			InputManager::GetInstance()->ClearInput();
 		}
 	}
+
+	// Shutdown Input
+	InputManager::GetInstance()->Shutdown();
 }
 
 // Update game logic here.

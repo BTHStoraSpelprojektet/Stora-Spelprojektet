@@ -69,6 +69,9 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collisions.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="ButtonEvent.cpp" />
+    <ClCompile Include="KButtonEvent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="System.cpp" />
@@ -81,6 +84,9 @@
     <ClInclude Include="ConsoleFunctions.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Flags.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="ButtonEvent.h" />
+    <ClInclude Include="KButtonEvent.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Timer.h" />

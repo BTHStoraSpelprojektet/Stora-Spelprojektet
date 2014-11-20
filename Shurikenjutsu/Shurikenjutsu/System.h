@@ -8,6 +8,7 @@
 
 #include "ConsoleFunctions.h"
 #include "Flags.h"
+#include "InputManager.h"
 
 class System
 {
