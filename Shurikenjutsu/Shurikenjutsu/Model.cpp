@@ -7,7 +7,7 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 
 	// Load Mesh.
 	ModelImporter importer;
-	importer.ImportModel("../Shurikenjutsu/Models/pPipeShape1.SSP");
+	importer.ImportModel("../Shurikenjutsu/Models/cubemanWnP.SSP");
 
 	MeshData mData = importer.GetMesh();
 
@@ -15,16 +15,18 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mData.vertices);
 	m_vertexCount = mData.vertices.size();
 
-	LoadTexture(p_device, mData.textureMapSize, mData.textureMap);
+	LoadTexture(p_device, mData.textureMapSize[0], mData.textureMapSize[1], mData.textureMapSize[2], mData.textureMap);
+
+	free(mData.textureMap);
 
 	return true;
 }
 
-bool Model::LoadTexture(ID3D11Device* p_device, unsigned int p_mapSize[3], char* p_pixels)
+bool Model::LoadTexture(ID3D11Device* p_device, unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
 {
 	D3D11_TEXTURE2D_DESC textureDesc;
-	textureDesc.Width = p_mapSize[0];
-	textureDesc.Height = p_mapSize[1];
+	textureDesc.Width = p_width;
+	textureDesc.Height = p_height;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.SampleDesc.Count = 1;
@@ -37,7 +39,7 @@ bool Model::LoadTexture(ID3D11Device* p_device, unsigned int p_mapSize[3], char*
 
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = (void*)p_pixels;
-	data.SysMemPitch = p_mapSize[0] * 4;
+	data.SysMemPitch = p_width * 4;
 	data.SysMemSlicePitch = 0;
 
 	ID3D11Texture2D* texture;

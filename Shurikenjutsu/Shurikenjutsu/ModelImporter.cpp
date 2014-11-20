@@ -35,6 +35,18 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 		m_importedMesh.vertices.push_back(temp);
 	}
 
+	memcpy(&m_importedMesh.textureMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
+	readPosition += (sizeof(unsigned int)* 3);
+	
+	m_importedMesh.textureMap = (char*)malloc(0);
+	int combinedTextureSize = m_importedMesh.textureMapSize[0] * m_importedMesh.textureMapSize[1] * m_importedMesh.textureMapSize[2];
+	if (combinedTextureSize > 0)
+	{
+		m_importedMesh.textureMap = (char*)realloc(m_importedMesh.textureMap, combinedTextureSize);
+		memcpy(m_importedMesh.textureMap, (char*)data + readPosition, combinedTextureSize);
+		readPosition += combinedTextureSize;
+	}
+
 	free(data);
 	return true;
 }
