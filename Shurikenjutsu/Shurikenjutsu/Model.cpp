@@ -15,15 +15,19 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mData.vertices);
 	m_vertexCount = mData.vertices.size();
 
-	LoadTexture(p_device, mData.textureMapSize[0], mData.textureMapSize[1], mData.textureMapSize[2], mData.textureMap);
+	m_texture = LoadTexture(p_device, mData.textureMapSize[0], mData.textureMapSize[1], mData.textureMapSize[2], mData.textureMap);
+	m_normalMap = LoadTexture(p_device, mData.normalMapSize[0], mData.normalMapSize[1], mData.normalMapSize[2], mData.normalMap);
 
 	free(mData.textureMap);
+	free(mData.normalMap);
 
 	return true;
 }
 
-bool Model::LoadTexture(ID3D11Device* p_device, unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
+ID3D11ShaderResourceView* Model::LoadTexture(ID3D11Device* p_device, unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
 {
+	ID3D11ShaderResourceView* textureSRV;
+
 	D3D11_TEXTURE2D_DESC textureDesc;
 	textureDesc.Width = p_width;
 	textureDesc.Height = p_height;
@@ -50,9 +54,9 @@ bool Model::LoadTexture(ID3D11Device* p_device, unsigned int p_width, unsigned i
 	sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 	sRVDesc.Texture2D.MostDetailedMip = 0;
-	p_device->CreateShaderResourceView(texture, &sRVDesc, &m_texture);
+	p_device->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
 
-	return true;
+	return textureSRV;
 }
 
 void Model::Shutdown()
