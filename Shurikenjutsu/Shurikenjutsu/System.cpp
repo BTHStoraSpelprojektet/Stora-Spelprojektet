@@ -51,9 +51,14 @@ bool System::Initialize()
 	
 	// REMOVE THIS LATER.
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
+
 	m_character.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
-	DirectX::XMVECTOR translation = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
+	DirectX::XMVECTOR translation = DirectX::XMVectorSet(2.0f, -1.0f, 0.0f, 0.0f);
 	m_character.Translate(translation);
+
+	m_object.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
+	translation = DirectX::XMVectorSet(-2.0f, 1.0f, 0.0f, 0.0f);
+	m_object.Translate(translation);
 
 	//Test the collisions
 	TestCollisions();
@@ -117,12 +122,16 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
+	// Start rendering alpha blended.
 	m_graphicsEngine.TurnOnAlphaBlending();
 
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), NULL);
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), NULL);
 
+	// Stop rendering alpha blended.
 	m_graphicsEngine.TurnOffAlphaBlending();
+
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), NULL);
 
 	// Present the result.
 	m_graphicsEngine.Present();
