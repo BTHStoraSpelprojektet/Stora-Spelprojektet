@@ -59,6 +59,9 @@ class ModelImporter
 public:
 	bool ImportModel(const char* p_filepath);
 
+	MeshData GetMesh();
+
+private:
 	MeshData m_importedMesh;
 };
 

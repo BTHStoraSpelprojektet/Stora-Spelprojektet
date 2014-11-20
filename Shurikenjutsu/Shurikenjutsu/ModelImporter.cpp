@@ -38,3 +38,8 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	free(data);
 	return true;
 }
+
+MeshData ModelImporter::GetMesh()
+{
+	return m_importedMesh;
+}

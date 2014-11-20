@@ -24,7 +24,5 @@ float4 main(Input p_input) : SV_Target
 	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
 
 	// Return shaded pixel.
-	//return coloredPixel;
-
-	return float4(1.0f, 0.0f, 0.0f, 1.0f);
+	return textureColor;
 }
