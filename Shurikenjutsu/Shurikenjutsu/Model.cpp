@@ -7,7 +7,7 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 
 	// Load Mesh.
 	ModelImporter importer;
-	importer.ImportModel("../Shurikenjutsu/Models/cubemanWnP.SSP");
+	importer.ImportModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
 
 	MeshData mData = importer.GetMesh();
 
