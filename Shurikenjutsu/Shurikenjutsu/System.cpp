@@ -45,7 +45,7 @@ bool System::Initialize()
 	m_camera.UpdateAspectRatio(l_aspectRatio);
 	ConsolePrintSuccess("Camera initialized successfully.");
 	ConsoleSkipLines(1);
-
+	
 	// Reset the camera for initial use.
 	ResetCamera();
 	
@@ -63,6 +63,10 @@ bool System::Initialize()
 	//Run all tests that are in the debug class
 	m_debug.RunTests();
 
+	// Input: Register keys
+	InputManager* input = InputManager::GetInstance();
+	input->RegisterKey(VkKeyScan('w'));
+	
     return result;
 }
 
@@ -71,11 +75,15 @@ void System::Run()
 	// Go through windows message loop.
 	MSG l_message = { 0 };
 
+
 	while (l_message.message != WM_QUIT)
 	{
 		// Translate and dispatch message.
 		if (PeekMessage(&l_message, NULL, 0, 0, PM_REMOVE))
 		{
+			// Update Input
+			InputManager::GetInstance()->UpdateInput(l_message.message, l_message.wParam, l_message.lParam);
+			
 			TranslateMessage(&l_message);
 			DispatchMessage(&l_message);
 		}
@@ -84,8 +92,14 @@ void System::Run()
 		{
 			Update();
 			Render();
+			
+			// Clear Used Input
+			InputManager::GetInstance()->ClearInput();
 		}
 	}
+
+	// Shutdown Input
+	InputManager::GetInstance()->Shutdown();
 }
 
 // Update game logic here.
@@ -113,7 +127,7 @@ void System::Update()
 	if (FLAG_DEBUG == 1)
 	{
 		MoveCamera(deltaTime);
-	}
+}
 }
 
 // Render game scene here.
@@ -200,8 +214,8 @@ void System::MoveCamera(double p_dt)
 			m_flyCamera = false;
 			ResetCamera();
 		}
+		}
 	}
-}
 
 void System::ResetCamera()
 {

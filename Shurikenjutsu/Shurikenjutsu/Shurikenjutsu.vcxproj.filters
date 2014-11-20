@@ -64,6 +64,12 @@
     <Filter Include="Header Files\Debug">
       <UniqueIdentifier>{5ee85993-994a-4779-9555-2810aadce6d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Input">
+      <UniqueIdentifier>{d6518540-bebd-4645-b9bf-808ccb02fc68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Input">
+      <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -104,6 +110,15 @@
     </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>Source Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files\Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonEvent.cpp">
+      <Filter>Source Files\Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="KButtonEvent.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +169,15 @@
     </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Header Files\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Header Files\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonEvent.h">
+      <Filter>Header Files\Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KButtonEvent.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

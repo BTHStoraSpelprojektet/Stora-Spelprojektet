@@ -73,6 +73,9 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="ButtonEvent.cpp" />
+    <ClCompile Include="KButtonEvent.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
@@ -96,6 +99,9 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelImporter.h" />
     <ClInclude Include="SceneShader.h" />
+    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="ButtonEvent.h" />
+    <ClInclude Include="KButtonEvent.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Timer.h" />

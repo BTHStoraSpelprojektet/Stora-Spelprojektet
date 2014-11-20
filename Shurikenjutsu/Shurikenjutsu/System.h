@@ -10,6 +10,7 @@
 #include "ConsoleFunctions.h"
 #include "Flags.h"
 #include "Enumerations.h"
+#include "InputManager.h"
 
 #include "Debug.h"
 
