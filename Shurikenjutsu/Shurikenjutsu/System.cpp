@@ -50,7 +50,7 @@ bool System::Initialize()
 	ResetCamera();
 	
 	// REMOVE THIS LATER.
-	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/Plane.SSP");
+	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
 
 	m_character.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP");
 	DirectX::XMVECTOR translation = DirectX::XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
@@ -212,7 +212,7 @@ void System::MoveCamera(double p_dt)
 		{
 			ShowCursor(true);
 			m_flyCamera = false;
-			ResetCamera();
+			//ResetCamera();
 		}
 		}
 	}
@@ -220,7 +220,7 @@ void System::MoveCamera(double p_dt)
 void System::ResetCamera()
 {
 	// Reset camera.
-	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
+	DirectX::XMVECTOR position = DirectX::XMVectorSet(10.4f, 23.3f, 1.0f, 0.0f);
 	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 
 	m_camera.UpdatePosition(position);
