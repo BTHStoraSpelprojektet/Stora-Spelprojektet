@@ -15,11 +15,12 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mData.vertices);
 	m_vertexCount = mData.vertices.size();
 
-	m_texture = LoadTexture(p_device, mData.textureMapSize[0], mData.textureMapSize[1], mData.textureMapSize[2], mData.textureMap);
-	m_normalMap = LoadTexture(p_device, mData.normalMapSize[0], mData.normalMapSize[1], mData.normalMapSize[2], mData.normalMap);
+	// Load Textures
+	m_texture = LoadTexture(p_device, mData.m_textureMapSize[0], mData.m_textureMapSize[1], mData.m_textureMapSize[2], mData.m_textureMap);
+	m_normalMap = LoadTexture(p_device, mData.m_normalMapSize[0], mData.m_normalMapSize[1], mData.m_normalMapSize[2], mData.m_normalMap);
 
-	free(mData.textureMap);
-	free(mData.normalMap);
+	free(mData.m_textureMap);
+	free(mData.m_normalMap);
 
 	return true;
 }

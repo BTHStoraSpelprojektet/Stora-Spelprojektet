@@ -20,7 +20,7 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	readPosition += 64;
 	readPosition += (sizeof(float) * 16);
 
-	memcpy(&m_importedMesh.animated, (char*)data + readPosition, sizeof(bool));
+	memcpy(&m_importedMesh.m_animated, (char*)data + readPosition, sizeof(bool));
 	readPosition += sizeof(bool);
 
 	int vertexVectorSize = 0;
@@ -35,27 +35,27 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 		m_importedMesh.vertices.push_back(temp);
 	}
 
-	memcpy(&m_importedMesh.textureMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
+	memcpy(&m_importedMesh.m_textureMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
 	readPosition += (sizeof(unsigned int)* 3);
 	
-	m_importedMesh.textureMap = (char*)malloc(0);
-	int combinedTextureSize = m_importedMesh.textureMapSize[0] * m_importedMesh.textureMapSize[1] * m_importedMesh.textureMapSize[2];
+	m_importedMesh.m_textureMap = (char*)malloc(0);
+	int combinedTextureSize = m_importedMesh.m_textureMapSize[0] * m_importedMesh.m_textureMapSize[1] * m_importedMesh.m_textureMapSize[2];
 	if (combinedTextureSize > 0)
 	{
-		m_importedMesh.textureMap = (char*)realloc(m_importedMesh.textureMap, combinedTextureSize);
-		memcpy(m_importedMesh.textureMap, (char*)data + readPosition, combinedTextureSize);
+		m_importedMesh.m_textureMap = (char*)realloc(m_importedMesh.m_textureMap, combinedTextureSize);
+		memcpy(m_importedMesh.m_textureMap, (char*)data + readPosition, combinedTextureSize);
 		readPosition += combinedTextureSize;
 	}
 
-	memcpy(&m_importedMesh.normalMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
+	memcpy(&m_importedMesh.m_normalMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
 	readPosition += (sizeof(unsigned int)* 3);
 
-	m_importedMesh.normalMap = (char*)malloc(0);
-	combinedTextureSize = m_importedMesh.normalMapSize[0] * m_importedMesh.normalMapSize[1] * m_importedMesh.normalMapSize[2];
+	m_importedMesh.m_normalMap = (char*)malloc(0);
+	combinedTextureSize = m_importedMesh.m_normalMapSize[0] * m_importedMesh.m_normalMapSize[1] * m_importedMesh.m_normalMapSize[2];
 	if (combinedTextureSize > 0)
 	{
-		m_importedMesh.normalMap = (char*)realloc(m_importedMesh.normalMap, combinedTextureSize);
-		memcpy(m_importedMesh.normalMap, (char*)data + readPosition, combinedTextureSize);
+		m_importedMesh.m_normalMap = (char*)realloc(m_importedMesh.m_normalMap, combinedTextureSize);
+		memcpy(m_importedMesh.m_normalMap, (char*)data + readPosition, combinedTextureSize);
 		readPosition += combinedTextureSize;
 	}
 
