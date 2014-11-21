@@ -212,7 +212,7 @@ void System::MoveCamera(double p_dt)
 		{
 			ShowCursor(true);
 			m_flyCamera = false;
-			//ResetCamera();
+			ResetCamera();
 		}
 		}
 	}
