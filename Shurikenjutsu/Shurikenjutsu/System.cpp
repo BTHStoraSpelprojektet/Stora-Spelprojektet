@@ -50,14 +50,14 @@ bool System::Initialize()
 	ResetCamera();
 	
 	// REMOVE THIS LATER.
-	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
+	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/Plane.SSP");
 
-	m_character.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
-	DirectX::XMVECTOR translation = DirectX::XMVectorSet(2.0f, -1.0f, 0.0f, 0.0f);
+	m_character.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP");
+	DirectX::XMVECTOR translation = DirectX::XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
 	m_character.Translate(translation);
 
-	m_object.LoadModel(m_graphicsEngine.GetDevice(), "NULL");
-	translation = DirectX::XMVectorSet(-2.0f, 1.0f, 0.0f, 0.0f);
+	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
+	translation = DirectX::XMVectorSet(-2.0f, 0.0f, 0.0f, 0.0f);
 	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
