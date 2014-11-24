@@ -70,7 +70,6 @@ struct Ray
 {
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT4 m_direction;
-	//DirectX::XMVECTOR m_dirVector;
 	float m_distance;
 
 	Ray(){}
@@ -101,7 +100,6 @@ struct Ray
 	void SetDirection(float p_xDir, float p_yDir, float p_zDir)
 	{
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
-		//m_dirVector = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_xDir, p_yDir, p_zDir, 0.0f));
 	}
 };
 

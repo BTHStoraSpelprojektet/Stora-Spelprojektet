@@ -49,9 +49,8 @@ bool Collisions::FrustrumSphereCollision(Frustum p_frustum, Sphere p_sphere)
 {
 	DirectX::BoundingFrustum frustum = DirectX::BoundingFrustum(p_frustum.m_position, p_frustum.m_direction, p_frustum.m_rightAngle, p_frustum.m_leftAngle, p_frustum.m_topAngle, p_frustum.m_bottomAngle, p_frustum.m_nearDistance, p_frustum.m_farDistance);
 	DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_sphere.m_position, p_sphere.m_radius);
-	bool temp = frustum.Intersects(sphere);
 
-	if (temp)
+	if (frustum.Intersects(sphere))
 	{
 		return true;
 	}
@@ -74,13 +73,13 @@ bool Collisions::FrustrumBoxCollision(Frustum p_frustum, Box p_box)
 		return false;
 	}
 }
-bool Collisions::RaySphereCollision(Ray p_ray, Sphere p_sphere)
+bool Collisions::RaySphereCollision(Ray* p_ray, Sphere p_sphere)
 {
 	DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_sphere.m_position, p_sphere.m_radius);
-	DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_ray.m_position.x, p_ray.m_position.y, p_ray.m_position.z, 0.0f);
-	DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_ray.m_direction.x, p_ray.m_direction.y, p_ray.m_direction.z, 0.0f));
+	DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_ray->m_position.x, p_ray->m_position.y, p_ray->m_position.z, 0.0f);
+	DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z, 0.0f));
 
-	if (sphere.Intersects(rayOrigin, rayDirection, p_ray.m_distance))
+	if (sphere.Intersects(rayOrigin, rayDirection, p_ray->m_distance))
 	{
 		return true;
 	}
@@ -89,13 +88,13 @@ bool Collisions::RaySphereCollision(Ray p_ray, Sphere p_sphere)
 		return false;
 	}
 }
-bool Collisions::RayBoxCollision(Ray p_ray, Box p_box)
+bool Collisions::RayBoxCollision(Ray *p_ray, Box p_box)
 {
 	DirectX::BoundingBox box = DirectX::BoundingBox(p_box.m_center, p_box.m_extents);
-	DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_ray.m_position.x, p_ray.m_position.y, p_ray.m_position.z, 0.0f);
-	DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_ray.m_direction.x, p_ray.m_direction.y, p_ray.m_direction.z, 0.0f));
+	DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_ray->m_position.x, p_ray->m_position.y, p_ray->m_position.z, 0.0f);
+	DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z, 0.0f));
 
-	if (box.Intersects(rayOrigin, rayDirection, p_ray.m_distance))
+	if (box.Intersects(rayOrigin, rayDirection, p_ray->m_distance))
 	{
 		return true;
 	}

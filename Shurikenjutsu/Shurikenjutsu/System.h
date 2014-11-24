@@ -13,6 +13,7 @@
 #include "InputManager.h"
 
 #include "Debug.h"
+#include "Globals.h"
 
 
 class System

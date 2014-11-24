@@ -29,6 +29,7 @@ void Debug::RunTests()
 	CollisionTest15();
 	CollisionTest16();
 }
+
 void Debug::CollisionTest1()
 {
 	if (m_collision.SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Sphere(0.0f, 5.0f, 0.0f, 5.0f)))
@@ -141,7 +142,7 @@ void Debug::CollisionTest10()
 }
 void Debug::CollisionTest11()
 {
-	if (m_collision.RayBoxCollision(Ray(0.0f, 0.0f, 0.0f, 8.0f, 0.0f, 0.0f), Box(8.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	if (m_collision.RayBoxCollision(&Ray(0.0f, 0.0f, 0.0f, 8.0f, 0.0f, 0.0f), Box(8.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
 	{
 		std::cout << "11. Ray Box true" << std::endl;
 	}
@@ -152,7 +153,7 @@ void Debug::CollisionTest11()
 }
 void Debug::CollisionTest12()
 {
-	if (!m_collision.RayBoxCollision(Ray(0.0f, 0.0f, 0.0f, -8.0f, 0.0f, 0.0f), Box(8.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
+	if (!m_collision.RayBoxCollision(&Ray(0.0f, 0.0f, 0.0f, -8.0f, 0.0f, 0.0f), Box(8.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)))
 	{
 		std::cout << "12. Ray Box false" << std::endl;
 	}
@@ -163,9 +164,11 @@ void Debug::CollisionTest12()
 }
 void Debug::CollisionTest13()
 {
-	if (m_collision.RaySphereCollision(Ray(0.0f, 0.0f, 0.0f, 10.0f, 0.0f, 0.0f), Sphere(10.0f, 0.0f, 0.0f, 5.0f)))
+	Ray temp = Ray(0.0f, 0.0f, 0.0f, 10.0f, 0.0f, 0.0f);
+	if (m_collision.RaySphereCollision(&temp , Sphere(10.0f, 0.0f, 0.0f, 5.0f)))
 	{
 		std::cout << "13. Ray Sphere true" << std::endl;
+		std::cout << temp.m_distance << std::endl;
 	}
 	else
 	{
@@ -174,7 +177,7 @@ void Debug::CollisionTest13()
 }
 void Debug::CollisionTest14()
 {
-	if (!m_collision.RaySphereCollision(Ray(0.0f, 0.0f, 0.0f, -10.0f, 0.0f, 0.0f), Sphere(10.0f, 0.0f, 0.0f, 5.0f)))
+	if (!m_collision.RaySphereCollision(&Ray(0.0f, 0.0f, 0.0f, -10.0f, 0.0f, 0.0f), Sphere(10.0f, 0.0f, 0.0f, 5.0f)))
 	{
 		std::cout << "14. Ray Sphere false" << std::endl;
 	}
