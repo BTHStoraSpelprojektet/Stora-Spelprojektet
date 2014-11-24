@@ -13,12 +13,10 @@ Player::~Player()
 bool Player::Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
 {
-	if (!Object::Initialize(p_device, p_filepath, p_pos))
+	if (!MovingObject::Initialize(p_device, p_filepath, p_pos, p_direction, p_speed))
 	{
 		return false;
 	}
-	SetDirection(p_direction);
-	SetSpeed(p_speed);
 	SetDamage(p_damage);
 	m_spells = p_spells;
 	SetHealth(p_health);
@@ -29,7 +27,7 @@ bool Player::Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX:
 
 void Player::Shutdown()
 {
-	Object::Shutdown();
+	MovingObject::Shutdown();
 }
 
 void Player::SetDamage(float p_damage)
