@@ -1,6 +1,9 @@
 #ifndef SYSTEM
 #define SYSTEM
 
+#include <Windows.h>
+#include <iostream>
+
 class System
 {
 public:
