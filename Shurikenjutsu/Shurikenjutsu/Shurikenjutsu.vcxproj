@@ -73,6 +73,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DepthShader.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ButtonEvent.cpp" />
     <ClCompile Include="KButtonEvent.cpp" />
@@ -95,6 +96,7 @@
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="ConsoleFunctions.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DepthShader.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Enumerations.h" />
     <ClInclude Include="Flags.h" />

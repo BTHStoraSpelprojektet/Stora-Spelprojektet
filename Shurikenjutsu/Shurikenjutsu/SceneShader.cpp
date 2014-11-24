@@ -149,7 +149,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the none culled rasterizer state.
 	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateNoneCulled)))
 	{
-		ConsolePrintError("Failed to create scene none culled rasterrizer state.");
+		ConsolePrintError("Failed to create scene none culled rasterizer state.");
 		return false;
 	}
 
@@ -347,4 +347,3 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 	// Set the position of the frame constant buffer in the vertex shader.
 	p_context->PSSetConstantBuffers(0, 1, &m_frameBuffer);
 }
-
