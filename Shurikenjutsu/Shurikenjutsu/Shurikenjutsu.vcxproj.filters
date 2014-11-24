@@ -118,7 +118,7 @@
       <Filter>Source Files\Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="KButtonEvent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,7 +177,7 @@
       <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="KButtonEvent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -187,5 +187,10 @@
     <FxCompile Include="PixelShader.hlsl">
       <Filter>Shaders\Scene</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightCalculation.hlsli">
+      <Filter>Shaders\Scene</Filter>
+    </None>
   </ItemGroup>
 </Project>

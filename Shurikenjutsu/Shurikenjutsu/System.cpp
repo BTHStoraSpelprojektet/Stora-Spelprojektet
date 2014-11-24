@@ -66,7 +66,13 @@ bool System::Initialize()
 	// Input: Register keys
 	InputManager* input = InputManager::GetInstance();
 	input->RegisterKey(VkKeyScan('w'));
-	
+
+	// Initialize directional light
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.35f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.3f, 0.3f, 0.23f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+
     return result;
 }
 
@@ -127,7 +133,9 @@ void System::Update()
 	if (FLAG_DEBUG == 1)
 	{
 		MoveCamera(deltaTime);
-}
+	}
+
+	m_graphicsEngine.SetSceneDirectionalLight(m_directionalLight);
 }
 
 // Render game scene here.

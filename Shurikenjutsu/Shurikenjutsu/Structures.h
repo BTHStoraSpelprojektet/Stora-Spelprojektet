@@ -251,4 +251,12 @@ struct Frustum
 		m_farDistance = p_farDist;
 	}
 };
+
+struct DirectionalLight
+{
+	DirectX::XMVECTOR m_ambient;
+	DirectX::XMVECTOR m_diffuse;
+	DirectX::XMVECTOR m_specular;
+	DirectX::XMVECTOR m_direction;
+};
 #endif

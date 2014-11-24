@@ -34,6 +34,7 @@ struct Output
 	float3 m_tangent : TANGENT;
 
 	float m_fogFactor : FOG;
+	float4 m_cameraPosition : CAMERA;
 };
 
 // Vertex shader
@@ -65,6 +66,7 @@ Output main(Input p_input)
 	// Calculate the camera position.
 	cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
+	output.m_cameraPosition = cameraPosition;
 
 	// Calculate linear fog.    
 	output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
