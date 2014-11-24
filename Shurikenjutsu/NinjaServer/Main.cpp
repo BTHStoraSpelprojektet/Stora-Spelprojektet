@@ -1,7 +1,13 @@
 #include "..\CommonLibs\MyHeader.h"
+#include "System.h"
 
 int main()
-{	
-	//MyFunc();
+{
+	System system;
+
+	system.Initialize();
+
+	system.Run();
+
 	return 0;
 }
