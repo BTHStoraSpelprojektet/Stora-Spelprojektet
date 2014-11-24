@@ -15,7 +15,7 @@ public:
 	static bool FrustrumSphereCollision(Frustum p_frustum, Sphere p_sphere);
 	static bool FrustrumBoxCollision(Frustum p_frustum, Box p_box);
 
-	static bool RaySphereCollision(Ray p_ray, Sphere p_sphere);
-	static bool RayBoxCollision(Ray p_ray, Box p_box);
+	static bool RaySphereCollision(Ray *p_ray, Sphere p_sphere);
+	static bool RayBoxCollision(Ray *p_ray, Box p_box);
 };
 
