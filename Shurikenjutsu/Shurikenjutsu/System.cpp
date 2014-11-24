@@ -13,7 +13,7 @@ bool System::Initialize()
 	SetWindowTextA(console, "Shurikenjitsu Debug Console");
 
 	// Initialize the window.
-	WindowRectangle window = WindowRectangle(730, 50, 1000, 1000);
+	WindowRectangle window = WindowRectangle(730, 50, GLOBAL_SCREEN_WIDTH, GLOBAL_SCREEN_HEIGHT);
 	m_window.Initialize(window);
 	ConsolePrintSuccess("Window created successfully.");
 	std::string size = "Window size: " + std::to_string(window.width);
@@ -28,7 +28,7 @@ bool System::Initialize()
 	// Initialize the graphics engine.
 	m_graphicsEngine.Initialize(m_window.GetHandle());
 	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
-	m_graphicsEngine.SetSceneFog(0.0f, 20.0f, 0.25f);
+	m_graphicsEngine.SetSceneFog(0.0f, 100.0f, 0.01f);
 	m_graphicsEngine.TurnOffAlphaBlending();
 
 	// Initialize timer.
@@ -53,11 +53,14 @@ bool System::Initialize()
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
 
 	m_character.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP");
-	DirectX::XMVECTOR translation = DirectX::XMVectorSet(2.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR rotation = DirectX::XMVectorSet(0.0f, 3.141592f / 2.0f, 0.0f, 0.0f);
+	m_character.Rotate(rotation);
+	DirectX::XMVECTOR translation = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
 	m_character.Translate(translation);
 
 	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	translation = DirectX::XMVectorSet(-2.0f, 0.0f, 0.0f, 0.0f);
+	m_object.Rotate(rotation);
+	translation = DirectX::XMVectorSet(0.0f, 0.0f, 2.0f, 0.0f);
 	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
@@ -73,25 +76,30 @@ bool System::Initialize()
 void System::Run()
 {
 	// Go through windows message loop.
-	MSG l_message = { 0 };
+	MSG message = { 0 };
 
 
-	while (l_message.message != WM_QUIT)
+	while (message.message != WM_QUIT)
 	{
 		// Translate and dispatch message.
-		if (PeekMessage(&l_message, NULL, 0, 0, PM_REMOVE))
+		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
 		{
 			// Update Input
-			InputManager::GetInstance()->UpdateInput(l_message.message, l_message.wParam, l_message.lParam);
-			
-			TranslateMessage(&l_message);
-			DispatchMessage(&l_message);
+			InputManager::GetInstance()->UpdateInput(message.message, message.wParam, message.lParam);
+
+			TranslateMessage(&message);
+			DispatchMessage(&message);
 		}
 
 		else
 		{
 			Update();
-			Render();
+			
+			// Render if the window is active.
+			if (GetForegroundWindow() == m_window.GetHandle())
+			{
+				Render();
+			}
 			
 			// Clear Used Input
 			InputManager::GetInstance()->ClearInput();
@@ -214,26 +222,26 @@ void System::MoveCamera(double p_dt)
 			m_flyCamera = false;
 			ResetCamera();
 		}
-		}
 	}
+}
 
 void System::ResetCamera()
 {
 	// Reset camera.
-	DirectX::XMVECTOR position = DirectX::XMVectorSet(10.4f, 23.3f, 1.0f, 0.0f);
-	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 20.0f, -10.0f, 0.0f);
+	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
 	m_camera.UpdatePosition(position);
 	m_camera.UpdateTarget(target);
 
 	// Look vector.
-	DirectX::XMVECTOR look = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	DirectX::XMVECTOR look = DirectX::XMVectorSet(0.0f, -20.0f, 10.0f, 0.0f);
 	look = DirectX::XMVector3Normalize(look);
 	m_camera.UpdateLook(look);
 
 	// Up vector.
 	DirectX::XMVECTOR right = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 10.0f, -20.0f, 0.0f);
 	up = DirectX::XMVector3Cross(look, right);
 	up = DirectX::XMVector3Normalize(up);
 	m_camera.UpdateUpVector(up);
@@ -244,9 +252,9 @@ void System::ResetCamera()
 	m_camera.UpdateRight(right);
 
 	// Projection data.
-	m_camera.UpdateFieldOfView(3.141592f * 0.45f);
-	m_camera.UpdateAspectRatio(1.0f);
-	m_camera.UpdateClippingPlanes(0.001f, 1000.0f);
+	m_camera.UpdateFieldOfView(3.141592f * 0.5f);
+	m_camera.UpdateAspectRatio(GLOBAL_SCREEN_HEIGHT / GLOBAL_SCREEN_WIDTH);
+	m_camera.UpdateClippingPlanes(0.001f, 40.0f);
 	m_camera.UpdateViewMatrix();
 	m_camera.UpdateProjectionMatrix();
 
