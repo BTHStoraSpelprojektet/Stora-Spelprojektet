@@ -80,6 +80,9 @@
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="ModelImporter.cpp" />
+    <ClCompile Include="MovingObject.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="System.cpp" />
@@ -98,6 +101,9 @@
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelImporter.h" />
+    <ClInclude Include="MovingObject.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />
