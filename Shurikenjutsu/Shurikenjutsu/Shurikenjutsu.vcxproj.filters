@@ -121,7 +121,7 @@
       <Filter>Source Files\Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="KButtonEvent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
@@ -189,7 +189,7 @@
       <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="KButtonEvent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Header Files\Utility</Filter>
@@ -217,5 +217,10 @@
     <FxCompile Include="Shaders\Depth\DepthVertexShader.hlsl">
       <Filter>Shaders\Depth</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightCalculation.hlsli">
+      <Filter>Shaders\Scene</Filter>
+    </None>
   </ItemGroup>
 </Project>

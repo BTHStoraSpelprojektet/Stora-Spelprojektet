@@ -22,6 +22,8 @@ public:
 	void TurnOnBackFaceCulling(ID3D11DeviceContext* p_context);
 	void TurnOffBackFaceCulling(ID3D11DeviceContext* p_context);
 
+	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight);
+
 private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
 
@@ -55,6 +57,12 @@ private:
 		float m_fogEnd;
 		float m_fogDensity;
 		float m_padding;
+	};
+
+	ID3D11Buffer* m_frameBuffer;
+	struct FrameBuffer
+	{
+		DirectionalLight m_directionalLight;
 	};
 };
 #endif
