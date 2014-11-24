@@ -66,8 +66,13 @@ Output main(Input p_input)
 	cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
 
+	output.m_tangent = output.m_normal;
+
+	// No fog.
+	output.m_fogFactor = 1.0f;
+
 	// Calculate linear fog.    
-	output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
+	//output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
 
 	// Calculate exponential fog.    
 	//output.m_fogFactor = saturate(1.0 / pow(2.71828, (cameraPosition.z * m_fogDensity)));

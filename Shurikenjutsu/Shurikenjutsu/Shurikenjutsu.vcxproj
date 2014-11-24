@@ -95,6 +95,7 @@
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Enumerations.h" />
     <ClInclude Include="Flags.h" />
+    <ClInclude Include="Globals.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelImporter.h" />
