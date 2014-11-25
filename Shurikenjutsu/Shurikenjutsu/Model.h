@@ -29,6 +29,7 @@ public:
 	void Scale(DirectX::XMFLOAT3 p_scale);
 	void ResetModel();
 	void SetPosition(DirectX::XMFLOAT3 p_position);
+	void UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation);
 
 protected:
 	ID3D11Buffer* m_mesh;

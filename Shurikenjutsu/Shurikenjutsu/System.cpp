@@ -147,7 +147,7 @@ void System::Update()
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 5.0f);
+		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
 	}
 
 	m_objectManager.Update(deltaTime);
@@ -159,15 +159,12 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
-	// Start rendering alpha blended.
-	m_graphicsEngine.TurnOnAlphaBlending();
-
-	// Stop rendering alpha blended.
-	m_graphicsEngine.TurnOffAlphaBlending();
-
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture());
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture());
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture());
+
+	// Start rendering alpha blended.
+	m_graphicsEngine.TurnOnAlphaBlending();
 
 	// Draw Shurikens
 	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
@@ -176,6 +173,9 @@ void System::Render()
 		Model tempModel = tempList[i].GetModel();
 		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture());
 	}
+
+	// Stop rendering alpha blended.
+	m_graphicsEngine.TurnOffAlphaBlending();
 
 	// Present the result.
 	m_graphicsEngine.Present();
