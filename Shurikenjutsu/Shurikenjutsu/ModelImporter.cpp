@@ -59,10 +59,66 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 		readPosition += combinedTextureSize;
 	}
 
+	//Read animation stacks from file.
+	unsigned int stackCount = 0;
+	memcpy(&stackCount, (char*)data + readPosition, sizeof(unsigned int));
+	readPosition += sizeof(unsigned int);
+	m_importedMesh.m_stacks.resize(stackCount);
+
+	for (unsigned int i = 0; i < stackCount; i++)
+	{
+		memcpy(&m_importedMesh.m_stacks[i].m_name, (char*)data + readPosition, 64);
+		readPosition += 64;
+
+		memcpy(&m_importedMesh.m_stacks[i].m_endFrame, (char*)data + readPosition, sizeof(int));
+		readPosition += sizeof(int);
+		memcpy(&m_importedMesh.m_stacks[i].m_jointCount, (char*)data + readPosition, sizeof(int));
+		readPosition += sizeof(int);
+
+		for (int x = 0; x < m_importedMesh.m_stacks[i].m_endFrame - 1; x++)
+		{
+			BoneFrame* root = new BoneFrame;
+			readPosition = ReadHierarchy(root, data, readPosition);
+			m_importedMesh.m_stacks[i].m_root.push_back(root);
+		}
+
+		m_importedMesh.m_stacks[i].m_bindPoses.resize(m_importedMesh.m_stacks[i].m_jointCount);
+		for (int x = 0; x < m_importedMesh.m_stacks[i].m_jointCount; x++)
+		{
+			memcpy(&m_importedMesh.m_stacks[i].m_bindPoses[x], (char*)data + readPosition, sizeof(BindPose));
+			readPosition += sizeof(BindPose);
+		}
+	}
+
 	free(data);
 	return true;
 }
 
+int ModelImporter::ReadHierarchy(BoneFrame* bone, void* data, int readPosition)
+{
+	memcpy(&bone->m_name, (char*)data + readPosition, 64);
+	readPosition += 64;
+	memcpy(&bone->m_translation, (char*)data + readPosition, (sizeof(float)* 3));
+	readPosition += (sizeof(float)* 3);
+	memcpy(&bone->m_quarternion, (char*)data + readPosition, (sizeof(float)* 4));
+	readPosition += (sizeof(float)* 4);
+	memcpy(&bone->m_rotEuler, (char*)data + readPosition, (sizeof(float)* 3));
+	readPosition += (sizeof(float)* 3);
+	memcpy(&bone->m_scale, (char*)data + readPosition, (sizeof(double)* 3));
+	readPosition += (sizeof(double)* 3);
+
+	memcpy(&bone->m_childrenCount, (char*)data + readPosition, (sizeof(int)));
+	readPosition += (sizeof(int));
+
+	for (int y = 0; y < bone->m_childrenCount; y++)
+	{
+		BoneFrame* child = new BoneFrame;
+		readPosition = ReadHierarchy(child, data, readPosition);
+		bone->m_children.push_back(child);
+	}
+
+	return readPosition;
+}
 MeshData ModelImporter::GetMesh()
 {
 	return m_importedMesh;

@@ -58,6 +58,7 @@ class ModelImporter
 {
 public:
 	bool ImportModel(const char* p_filepath);
+	int ReadHierarchy(BoneFrame* bone, void* data, int readPosition);
 
 	MeshData GetMesh();
 

@@ -19,6 +19,9 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	m_texture = LoadTexture(p_device, mData.m_textureMapSize[0], mData.m_textureMapSize[1], mData.m_textureMapSize[2], mData.m_textureMap);
 	m_normalMap = LoadTexture(p_device, mData.m_normalMapSize[0], mData.m_normalMapSize[1], mData.m_normalMapSize[2], mData.m_normalMap);
 
+	// Animation test model
+	importer.ImportModel("../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
+
 	free(mData.m_textureMap);
 	free(mData.m_normalMap);
 
@@ -27,35 +30,39 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 
 ID3D11ShaderResourceView* Model::LoadTexture(ID3D11Device* p_device, unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
 {
-	ID3D11ShaderResourceView* textureSRV;
+	ID3D11ShaderResourceView* textureSRV = NULL;
 
-	D3D11_TEXTURE2D_DESC textureDesc;
-	textureDesc.Width = p_width;
-	textureDesc.Height = p_height;
-	textureDesc.MipLevels = 1;
-	textureDesc.ArraySize = 1;
-	textureDesc.SampleDesc.Count = 1;
-	textureDesc.SampleDesc.Quality = 0;
-	textureDesc.Usage = D3D11_USAGE_DEFAULT;
-	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	textureDesc.CPUAccessFlags = 0;
-	textureDesc.MiscFlags = 0;
+	int combinedSize = p_width * p_height * p_depth;
+	if (combinedSize > 0)
+	{
+		D3D11_TEXTURE2D_DESC textureDesc;
+		textureDesc.Width = p_width;
+		textureDesc.Height = p_height;
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+		textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.CPUAccessFlags = 0;
+		textureDesc.MiscFlags = 0;
 
-	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = (void*)p_pixels;
-	data.SysMemPitch = p_width * 4;
-	data.SysMemSlicePitch = 0;
+		D3D11_SUBRESOURCE_DATA data;
+		data.pSysMem = (void*)p_pixels;
+		data.SysMemPitch = p_width * 4;
+		data.SysMemSlicePitch = 0;
 
-	ID3D11Texture2D* texture;
-	p_device->CreateTexture2D(&textureDesc, &data, &texture);
+		ID3D11Texture2D* texture;
+		p_device->CreateTexture2D(&textureDesc, &data, &texture);
 
-	D3D11_SHADER_RESOURCE_VIEW_DESC sRVDesc;
-	sRVDesc.Format = textureDesc.Format;
-	sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
-	sRVDesc.Texture2D.MostDetailedMip = 0;
-	p_device->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+		D3D11_SHADER_RESOURCE_VIEW_DESC sRVDesc;
+		sRVDesc.Format = textureDesc.Format;
+		sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
+		sRVDesc.Texture2D.MostDetailedMip = 0;
+		p_device->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+	}
 
 	return textureSRV;
 }
