@@ -25,6 +25,7 @@ public:
 	int GetVertexCount();
 
 	void Rotate(DirectX::XMVECTOR p_rotation);
+	void SetRotation(DirectX::XMVECTOR p_rotation);
 	void Translate(DirectX::XMVECTOR p_translation);
 	void Scale(DirectX::XMVECTOR p_scale);
 	void ResetModel();

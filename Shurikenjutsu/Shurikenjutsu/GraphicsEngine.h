@@ -9,6 +9,7 @@ class GraphicsEngine
 {
 public:
 	bool Initialize(HWND p_handle);
+	void Shutdown();
 
 	void SetClearColor(float R, float G, float B, float p_opacity);
 	void Clear();
@@ -26,6 +27,8 @@ public:
 
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
+
+	void ResizeOutputWindow(int p_width, int p_height);
 
 private:
 	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);

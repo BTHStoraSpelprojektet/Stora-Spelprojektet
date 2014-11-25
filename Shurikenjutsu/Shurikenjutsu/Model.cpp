@@ -101,6 +101,15 @@ void Model::Rotate(DirectX::XMVECTOR p_rotation)
 	m_worldMatrix = m_worldMatrix * l_matrix;
 }
 
+void Model::SetRotation(DirectX::XMVECTOR p_rotation)
+{
+	ResetModel();
+
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(p_rotation);
+
+	m_worldMatrix = m_worldMatrix * matrix;
+}
+
 void Model::Translate(DirectX::XMVECTOR p_translation)
 {
 	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixTranslationFromVector(p_translation);

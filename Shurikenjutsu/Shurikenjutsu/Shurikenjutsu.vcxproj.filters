@@ -135,6 +135,9 @@
     <ClCompile Include="DepthShader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Header Files\Utility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">

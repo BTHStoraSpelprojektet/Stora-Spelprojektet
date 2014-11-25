@@ -74,6 +74,7 @@
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DepthShader.cpp" />
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ButtonEvent.cpp" />
     <ClCompile Include="KButtonEvent.cpp" />

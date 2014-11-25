@@ -15,11 +15,11 @@
 #include "Debug.h"
 #include "Globals.h"
 
-
 class System
 {
 public:
 	bool Initialize();
+	void Shutdown();
     void Run();
 
 private:
@@ -42,7 +42,6 @@ private:
 	Model m_plane;
 	Model m_character;
 	Model m_object;
-
 
 	bool m_flyCamera;
 	float m_oldMouseX;

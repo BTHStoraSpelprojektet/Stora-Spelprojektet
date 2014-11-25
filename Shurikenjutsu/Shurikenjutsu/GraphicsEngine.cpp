@@ -25,6 +25,11 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	return result;
 }
 
+void GraphicsEngine::Shutdown()
+{
+
+}
+
 void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	switch (p_shader)
@@ -132,4 +137,9 @@ void GraphicsEngine::TurnOffAlphaBlending()
 {
 	m_directX.TurnOffAlphaBlending();
 	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+}
+
+void GraphicsEngine::ResizeOutputWindow(int p_width, int p_height)
+{
+	m_directX.ResizeOutputWindow(p_width, p_height);
 }
