@@ -1,3 +1,3 @@
 //This is a header
 
-void MyFunc();
+//void MyFunc();
