@@ -3,12 +3,13 @@
 
 #include "DirectX.h"
 #include "SceneShader.h"
+#include "InstancedShader.h"
 #include "Enumerations.h"
 
 class GraphicsEngine
 {
 public:
-	bool Initialize(HWND p_handle);
+	bool Initialize(HWND p_handle, int p_numberOfIUnstances);
 
 	void SetClearColor(float R, float G, float B, float p_opacity);
 	void Clear();
@@ -32,5 +33,6 @@ private:
 	DirectXWrapper m_directX;
 
 	SceneShader m_sceneShader;
+	InstancedShader m_instanceShader;
 };
 #endif;

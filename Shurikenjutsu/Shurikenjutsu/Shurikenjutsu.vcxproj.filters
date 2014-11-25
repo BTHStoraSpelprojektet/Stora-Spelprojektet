@@ -70,6 +70,9 @@
     <Filter Include="Source Files\Core\Input">
       <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Instanced">
+      <UniqueIdentifier>{dc7fe779-c146-488a-83d0-56d87ec51a7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -119,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="KButtonEvent.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedShader.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +185,9 @@
     <ClInclude Include="KButtonEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="InstancedShader.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
@@ -186,6 +195,12 @@
     </FxCompile>
     <FxCompile Include="PixelShader.hlsl">
       <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="InstancedPShader.hlsl">
+      <Filter>Shaders\Instanced</Filter>
+    </FxCompile>
+    <FxCompile Include="InstancedVShader.hlsl">
+      <Filter>Shaders\Instanced</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

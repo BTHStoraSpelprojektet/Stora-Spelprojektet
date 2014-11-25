@@ -1,6 +1,6 @@
 #include "GraphicsEngine.h"
 
-bool GraphicsEngine::Initialize(HWND p_handle)
+bool GraphicsEngine::Initialize(HWND p_handle, int p_numberOfIUnstances)
 {
 	bool result = true;
 
@@ -21,6 +21,11 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle,p_numberOfIUnstances))
+	{
+		ConsolePrintSuccess("Instanced shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
 
 	return result;
 }
@@ -32,6 +37,12 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 		case(SHADERTYPE_SCENE) :
 		{
 			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+
+			break;
+		}
+		case(SHADERTYPE_INSTANCED) :
+		{
+			m_instanceShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 
 			break;
 		}
@@ -48,11 +59,13 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
 {
 	m_sceneShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
+	m_instanceShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
 }
 
 void GraphicsEngine::Clear()
@@ -121,10 +134,12 @@ void GraphicsEngine::TurnOnAlphaBlending()
 {
 	m_directX.TurnOnAlphaBlending();
 	m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
+	m_instanceShader.TurnOffBackFaceCulling(m_directX.GetContext());
 }
 
 void GraphicsEngine::TurnOffAlphaBlending()
 {
 	m_directX.TurnOffAlphaBlending();
 	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+	m_instanceShader.TurnOnBackFaceCulling(m_directX.GetContext());
 }
