@@ -480,6 +480,9 @@
     <ClInclude Include="DefaultReplica.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ReplicaConnection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -813,6 +816,9 @@
       <Filter>RakNet</Filter>
     </ClCompile>
     <ClCompile Include="DefaultReplica.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplicaConnection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
