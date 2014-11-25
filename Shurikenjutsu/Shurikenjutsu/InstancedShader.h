@@ -13,17 +13,19 @@
 class InstancedShader
 {
 public:
-	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle, int p_numberOfIUnstances);
+	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
 
-	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex);
 
 	void UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix);
 	void UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity);
 
 	void TurnOnBackFaceCulling(ID3D11DeviceContext* p_context);
 	void TurnOffBackFaceCulling(ID3D11DeviceContext* p_context);
+	void AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances);
 
 private:
+	ID3D11Buffer* InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances);
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
 
 	ID3D11VertexShader* m_vertexShader;
@@ -58,12 +60,11 @@ private:
 		float m_padding;
 	};
 
-	ID3D11Buffer* m_instanceBuffer;
+	std::vector<ID3D11Buffer*> m_instanceBufferList;
+	std::vector<int> m_numberOfInstanceList;
 	struct InstancePos
 	{
 		DirectX::XMFLOAT3 position;
 	};
-	//std::vector<InstancePos> m_instances;
-	int m_numberOfObjects;
 };
 #endif

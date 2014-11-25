@@ -1,6 +1,6 @@
 #include "InstancedShader.h"
 
-bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle, int p_numberOfIUnstances)
+bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle)
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
@@ -185,37 +185,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 		ConsolePrintError("Failed to create scene sampler state. @InstanceShader");
 		return false;
 	}
-
-	// Create the instance buffer description.
-	m_numberOfObjects = p_numberOfIUnstances;
-
-	//Calculate position of all instanced objects
-	std::vector<InstancePos> m_instances(m_numberOfObjects);
-	for (int i = 0; i < m_numberOfObjects; i++)
-	{
-		DirectX::XMStoreFloat3(&m_instances[i].position, DirectX::XMVectorSet(i * 2.0f, 0.0f, 0.0f, 0.0f));
-	}
-
-	D3D11_BUFFER_DESC instanceBuffer;
-	instanceBuffer.Usage = D3D11_USAGE_DEFAULT;
-	instanceBuffer.ByteWidth = sizeof(InstancePos) * m_numberOfObjects;
-	instanceBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	instanceBuffer.CPUAccessFlags = 0;
-	instanceBuffer.MiscFlags = 0;
-	//instanceBuffer.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA instanceData;
-	instanceData.pSysMem = &m_instances[0];
-	instanceData.SysMemPitch = 0;
-	instanceData.SysMemSlicePitch = 0;
-
-	// Create the matrix buffer.
-	if (FAILED(p_device->CreateBuffer(&instanceBuffer, &instanceData, &m_instanceBuffer)))
-	{
-		ConsolePrintError("Failed to create instance buffer. @InstanceShader");
-		return false;
-	}
-
+	
 	// Create the matrix buffer description.
 	D3D11_BUFFER_DESC matrixBuffer;
 	matrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
@@ -249,10 +219,11 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 		return false;
 	}
 
+	m_instanceBufferList = std::vector<ID3D11Buffer*>();
 	return true;
 }
 
-void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 {
 	// Set parameters and then render.
 	unsigned int stride[2];
@@ -266,7 +237,7 @@ void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mes
 	offset[1] = 0;
 
 	bufferPointers[0] = p_mesh;
-	bufferPointers[1] = m_instanceBuffer;
+	bufferPointers[1] = m_instanceBufferList[p_instanceIndex];
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
@@ -280,8 +251,7 @@ void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mes
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
-	//p_context->Draw(p_numberOfVertices, 0);
-	p_context->DrawInstanced(p_numberOfVertices, m_numberOfObjects, 0, 0);
+	p_context->DrawInstanced(p_numberOfVertices, m_numberOfInstanceList[p_instanceIndex], 0, 0);
 }
 
 void InstancedShader::UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
@@ -357,4 +327,40 @@ void InstancedShader::TurnOnBackFaceCulling(ID3D11DeviceContext* p_context)
 void InstancedShader::TurnOffBackFaceCulling(ID3D11DeviceContext* p_context)
 {
 	p_context->RSSetState(m_rasterizerStateNoneCulled);
+}
+
+void InstancedShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances)
+{
+	m_numberOfInstanceList.push_back(p_numberOfInstances);
+	m_instanceBufferList.push_back(InitializeInstanceBuffer(p_device, p_numberOfInstances));
+}
+ID3D11Buffer* InstancedShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances)
+{
+	ID3D11Buffer* instanceBuffer;
+	// Create the instance buffer description.
+	//Calculate position of all instanced objects
+	std::vector<InstancePos> m_instances(p_numberOfInstances);
+	for (int i = 0; i < p_numberOfInstances; i++)
+	{
+		DirectX::XMStoreFloat3(&m_instances[i].position, DirectX::XMVectorSet(i * 4.0f, 0.0f, 0.0f, 0.0f));
+	}
+
+	D3D11_BUFFER_DESC instanceBufferDesc;
+	instanceBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
+	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instanceBufferDesc.CPUAccessFlags = 0;
+	instanceBufferDesc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA instanceData;
+	instanceData.pSysMem = &m_instances[0];
+	instanceData.SysMemPitch = 0;
+	instanceData.SysMemSlicePitch = 0;
+
+	// Create the Instance buffer.
+	if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
+	{
+		ConsolePrintError("Failed to create instance buffer. @InstanceShader");
+	}
+	return instanceBuffer;
 }

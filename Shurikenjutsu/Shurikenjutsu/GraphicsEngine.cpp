@@ -1,6 +1,6 @@
 #include "GraphicsEngine.h"
 
-bool GraphicsEngine::Initialize(HWND p_handle, int p_numberOfIUnstances)
+bool GraphicsEngine::Initialize(HWND p_handle)
 {
 	bool result = true;
 
@@ -21,7 +21,7 @@ bool GraphicsEngine::Initialize(HWND p_handle, int p_numberOfIUnstances)
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
-	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle,p_numberOfIUnstances))
+	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
 	{
 		ConsolePrintSuccess("Instanced shader initialized successfully.");
 		ConsoleSkipLines(1);
@@ -30,7 +30,7 @@ bool GraphicsEngine::Initialize(HWND p_handle, int p_numberOfIUnstances)
 	return result;
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 {
 	switch (p_shader)
 	{
@@ -42,7 +42,7 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 		}
 		case(SHADERTYPE_INSTANCED) :
 		{
-			m_instanceShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+			m_instanceShader.Render( m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex);
 
 			break;
 		}
@@ -142,4 +142,9 @@ void GraphicsEngine::TurnOffAlphaBlending()
 	m_directX.TurnOffAlphaBlending();
 	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
 	m_instanceShader.TurnOnBackFaceCulling(m_directX.GetContext());
+}
+
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
+{
+	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances);
 }
