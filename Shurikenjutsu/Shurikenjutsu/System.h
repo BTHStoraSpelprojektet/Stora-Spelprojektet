@@ -15,6 +15,7 @@
 #include "InputManager.h"
 
 #include "Debug.h"
+#include "Globals.h"
 
 
 class System
@@ -47,5 +48,7 @@ private:
 	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
+
+	DirectionalLight m_directionalLight;
 };
 #endif
