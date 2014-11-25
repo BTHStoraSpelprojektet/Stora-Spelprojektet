@@ -12,9 +12,7 @@ System::~System()
 
 bool System::Initialize()
 {
-	m_server = Server();
 	m_server.Initialize();
-
 
 	return true;
 }
