@@ -803,6 +803,9 @@
     <ClCompile Include="..\..\..\RakNet\Source\WSAStartupSingleton.cpp">
       <Filter>RakNet</Filter>
     </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\RakNet\Source\RakNet.vcproj">
