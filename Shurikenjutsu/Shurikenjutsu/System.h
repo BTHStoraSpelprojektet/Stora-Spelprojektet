@@ -51,6 +51,5 @@ private:
 
 	DirectionalLight m_directionalLight;
 	ObjectManager m_objectManager;
-	Object m_tempObj;
 };
 #endif

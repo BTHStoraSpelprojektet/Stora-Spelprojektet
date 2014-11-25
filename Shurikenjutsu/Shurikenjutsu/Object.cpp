@@ -31,9 +31,8 @@ void Object::Shutdown()
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	m_position = p_pos;
-	DirectX::XMVECTOR tempPosition = DirectX::XMLoadFloat3(&p_pos);
 
-	m_model.SetPosition(tempPosition);
+	m_model.SetPosition(p_pos);
 }
 
 DirectX::XMFLOAT3 Object::GetPosition() const

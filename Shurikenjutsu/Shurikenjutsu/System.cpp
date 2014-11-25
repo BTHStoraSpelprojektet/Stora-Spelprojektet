@@ -53,14 +53,14 @@ bool System::Initialize()
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
 
 	m_character.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP");
-	DirectX::XMVECTOR rotation = DirectX::XMVectorSet(0.0f, 3.141592f / 2.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	m_character.Rotate(rotation);
-	DirectX::XMVECTOR translation = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
+	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
 	m_character.Translate(translation);
 
 	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
 	m_object.Rotate(rotation);
-	translation = DirectX::XMVectorSet(0.0f, 0.0f, 2.0f, 0.0f);
+	translation = DirectX::XMFLOAT3(0.0f, 0.0f, 2.0f);
 	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
@@ -76,9 +76,6 @@ bool System::Initialize()
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
 	m_graphicsEngine.SetSceneDirectionalLight(m_directionalLight);
-
-
-	m_tempObj.Initialize(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0, 0, 0));
 
     return result;
 }
@@ -150,7 +147,7 @@ void System::Update()
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 1.0f);
+		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 5.0f);
 	}
 
 	m_objectManager.Update(deltaTime);
@@ -172,14 +169,14 @@ void System::Render()
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture());
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture());
 
+	// Draw Shurikens
 	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
-
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
 		Model tempModel = tempList[i].GetModel();
 		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture());
 	}
-	
+
 	// Present the result.
 	m_graphicsEngine.Present();
 }

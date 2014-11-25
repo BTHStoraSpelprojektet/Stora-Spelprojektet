@@ -29,9 +29,9 @@ void Shuriken::Update(double p_deltaTime)
 	DirectX::XMFLOAT3 tempPosition = GetPosition();
 	DirectX::XMFLOAT3 tempDirection = GetDirection();
 
-	tempPosition.x += (float)(tempDirection.x*p_deltaTime);
-	tempPosition.y += (float)(tempDirection.y*p_deltaTime);
-	tempPosition.z += (float)(tempDirection.z*p_deltaTime);
+	tempPosition.x += (float)(tempDirection.x*m_speed*p_deltaTime);
+	tempPosition.y += (float)(tempDirection.y*m_speed*p_deltaTime);
+	tempPosition.z += (float)(tempDirection.z*m_speed*p_deltaTime);
 
 	SetPosition(tempPosition);
 
