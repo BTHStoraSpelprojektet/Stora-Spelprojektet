@@ -7,9 +7,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"VertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
 			ConsolePrintError("Failed to compile scene vertex shader from file.");
 			return false;
@@ -91,9 +91,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	errorMessage = 0;
 
 	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"PixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"PixelShader.hlsl", NULL, NULL, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
 			ConsolePrintError("Failed to compile scene pixel shader from file.");
 			return false;
@@ -210,6 +210,22 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	// Create the cbuffer where "every frame" data is stored
+	D3D11_BUFFER_DESC frameBuffer;
+	frameBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	frameBuffer.ByteWidth = sizeof(FrameBuffer);
+	frameBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	frameBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	frameBuffer.MiscFlags = 0;
+	frameBuffer.StructureByteStride = 0;
+
+	// Create the matrix buffer.
+	if (FAILED(p_device->CreateBuffer(&frameBuffer, NULL, &m_frameBuffer)))
+	{
+		ConsolePrintError("Failed to create scene frame buffer.");
+		return false;
+	}
+
 	return true;
 }
 
@@ -308,3 +324,27 @@ void SceneShader::TurnOffBackFaceCulling(ID3D11DeviceContext* p_context)
 {
 	p_context->RSSetState(m_rasterizerStateNoneCulled);
 }
+
+void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight)
+{
+	// Lock the "every frame" constant buffer so it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_frameBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintError("Failed to map scene fog buffer.");
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	FrameBuffer* frameBuffer;
+	frameBuffer = (FrameBuffer*)mappedBuffer.pData;
+
+	// Copy the fog information into the frame constant buffer.
+	frameBuffer->m_directionalLight = p_dlight;
+
+	// Unlock the constant buffer.
+	p_context->Unmap(m_frameBuffer, 0);
+
+	// Set the position of the frame constant buffer in the vertex shader.
+	p_context->PSSetConstantBuffers(0, 1, &m_frameBuffer);
+}
+

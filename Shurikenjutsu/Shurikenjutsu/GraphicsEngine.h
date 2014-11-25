@@ -22,6 +22,7 @@ public:
 
 	void SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix);
 	void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
+	void SetSceneDirectionalLight(DirectionalLight& p_dLight);
 
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();

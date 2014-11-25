@@ -70,6 +70,9 @@
     <Filter Include="Source Files\Core\Input">
       <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Depth">
+      <UniqueIdentifier>{e9ba412c-e56c-4c47-addb-a20626061ff9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -118,7 +121,7 @@
       <Filter>Source Files\Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="KButtonEvent.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
@@ -186,7 +189,7 @@
       <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="KButtonEvent.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Header Files\Utility</Filter>
@@ -202,11 +205,22 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
+    <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
       <Filter>Shaders\Scene</Filter>
     </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
+    <FxCompile Include="Shaders\Scene\VertexShader.hlsl">
       <Filter>Shaders\Scene</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\Depth\DepthPixelShader.hlsl">
+      <Filter>Shaders\Depth</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Depth\DepthVertexShader.hlsl">
+      <Filter>Shaders\Depth</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightCalculation.hlsli">
+      <Filter>Shaders\Scene</Filter>
+    </None>
   </ItemGroup>
 </Project>
