@@ -4,6 +4,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
+	ID3D10Blob*	animatedVertexShader = 0;
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
@@ -30,6 +31,33 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintError("Failed to create scene vertex shader.");
+		return false;
+	}
+
+	// Compile the animated vertex shader.
+	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
+		{
+			ConsolePrintError("Failed to compile scene animated vertex shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_VSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_VSVersion = "5.0";
+	}
+
+	// Create the animated vertex shader.
+	if (FAILED(p_device->CreateVertexShader(animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), NULL, &m_animatedVertexShader)))
+	{
+		ConsolePrintError("Failed to create scene animated vertex shader.");
 		return false;
 	}
 
@@ -210,6 +238,22 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	// Create the animated matrix buffer description.
+	D3D11_BUFFER_DESC animatedMatrixBuffer;
+	animatedMatrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	animatedMatrixBuffer.ByteWidth = sizeof(AnimationMatrixBuffer);
+	animatedMatrixBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	animatedMatrixBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	animatedMatrixBuffer.MiscFlags = 0;
+	animatedMatrixBuffer.StructureByteStride = 0;
+
+	// Create the animated matrix buffer.
+	if (FAILED(p_device->CreateBuffer(&animatedMatrixBuffer, NULL, &m_animationMatrixBuffer)))
+	{
+		ConsolePrintError("Failed to create scene animated buffer.");
+		return false;
+	}
+
 	// Create the cbuffer where "every frame" data is stored
 	D3D11_BUFFER_DESC frameBuffer;
 	frameBuffer.Usage = D3D11_USAGE_DYNAMIC;
@@ -247,6 +291,27 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
 	
+	p_context->Draw(p_numberOfVertices, 0);
+}
+
+void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+{
+	// Set parameters and then render.
+	unsigned int stride = sizeof(VertexAnimated);
+	const unsigned int offset = 0;
+
+	UpdateWorldMatrix(p_context, p_worldMatrix);
+
+	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
+
+	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetInputLayout(m_layout);
+
+	p_context->VSSetShader(m_vertexShader, NULL, 0);
+	p_context->PSSetShader(m_pixelShader, NULL, 0);
+
 	p_context->Draw(p_numberOfVertices, 0);
 }
 

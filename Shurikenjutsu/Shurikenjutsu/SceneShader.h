@@ -15,6 +15,7 @@ public:
 	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
 
 	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 
 	void UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix);
 	void UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity);
@@ -28,9 +29,13 @@ private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
 
 	ID3D11VertexShader* m_vertexShader;
+	ID3D11VertexShader* m_animatedVertexShader;
+
 	ID3D11PixelShader* m_pixelShader;
 
 	ID3D11InputLayout* m_layout;
+	ID3D11InputLayout* m_animatedLayout;
+
 	ID3D11SamplerState* m_samplerState;
 	
 	ID3D11RasterizerState* m_rasterizerStateBackCulled;
