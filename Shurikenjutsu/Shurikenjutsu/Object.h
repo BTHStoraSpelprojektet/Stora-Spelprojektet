@@ -14,7 +14,7 @@ public:
 	DirectX::XMFLOAT3 GetPosition() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
 	Model* GetModel() const;
-private:
+protected:
 	//void SetModel(const char* p_filepath);
 
 	DirectX::XMFLOAT3 m_position;

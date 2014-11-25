@@ -22,12 +22,40 @@ bool Player::Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX:
 	SetHealth(p_health);
 	SetAgility(p_agility);
 
+	m_inputManager->GetInstance();
+
 	return true;
 }
 
 void Player::Shutdown()
 {
 	MovingObject::Shutdown();
+}
+
+void Player::Update()
+{
+	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
+	{
+		SetSpeed(5.0f);
+		SetDirection(DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f));
+	}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
+	{
+		SetSpeed(5.0f);
+		SetDirection(DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f));
+	}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
+	{
+		SetSpeed(5.0f);
+		SetDirection(DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f));
+	}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
+	{
+		SetSpeed(5.0f);
+		SetDirection(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	}
+
+	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed, m_position.y + m_direction.y * m_speed, m_position.z + m_direction.z * m_speed));
 }
 
 void Player::SetDamage(float p_damage)

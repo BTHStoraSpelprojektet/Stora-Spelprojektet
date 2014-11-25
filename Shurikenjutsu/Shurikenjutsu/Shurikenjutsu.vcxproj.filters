@@ -132,6 +132,9 @@
     <ClCompile Include="MovingObject.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -202,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="MovingObject.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

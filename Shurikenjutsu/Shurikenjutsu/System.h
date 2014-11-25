@@ -15,6 +15,8 @@
 #include "Debug.h"
 #include "Globals.h"
 
+#include "Player.h"
+#include "PlayerManager.h"
 
 class System
 {
@@ -43,6 +45,7 @@ private:
 	Model m_character;
 	Model m_object;
 
+	PlayerManager* m_playerManager;
 
 	bool m_flyCamera;
 	float m_oldMouseX;

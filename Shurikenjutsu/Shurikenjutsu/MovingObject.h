@@ -12,7 +12,7 @@ public:
 	virtual DirectX::XMFLOAT3 GetDirection() const;
 	virtual void SetSpeed(float p_speed);
 	virtual float GetSpeed() const;
-private:
+protected:
 	DirectX::XMFLOAT3 m_direction;
 	float m_speed;
 };

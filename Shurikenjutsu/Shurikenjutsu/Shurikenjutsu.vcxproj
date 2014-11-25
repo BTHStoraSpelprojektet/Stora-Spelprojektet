@@ -83,6 +83,7 @@
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="System.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />

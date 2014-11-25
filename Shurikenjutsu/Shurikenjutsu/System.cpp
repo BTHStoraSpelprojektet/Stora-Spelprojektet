@@ -69,12 +69,19 @@ bool System::Initialize()
 	// Input: Register keys
 	InputManager* input = InputManager::GetInstance();
 	input->RegisterKey(VkKeyScan('w'));
+	input->RegisterKey(VkKeyScan('a'));
+	input->RegisterKey(VkKeyScan('s'));
+	input->RegisterKey(VkKeyScan('d'));
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.35f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.3f, 0.3f, 0.23f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+
+	// Initialize PlayerManager
+	//m_playerManager = new PlayerManager();
+	m_playerManager->Initialize(m_graphicsEngine.GetDevice());
 
     return result;
 }
@@ -144,6 +151,8 @@ void System::Update()
 	}
 
 	m_graphicsEngine.SetSceneDirectionalLight(m_directionalLight);
+
+	m_playerManager->Update(deltaTime);
 }
 
 // Render game scene here.
@@ -161,6 +170,8 @@ void System::Render()
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture());
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture());
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture());
+	
+	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_playerManager[0].GetModel(0)->GetMesh(), m_playerManager[0].GetModel(0)->GetVertexCount(), m_playerManager[0].GetModel(0)->GetWorldMatrix(), m_playerManager[0].GetModel(0)->GetTexture());
 
 	// Present the result.
 	m_graphicsEngine.Present();
@@ -174,11 +185,11 @@ void System::MoveCamera(double p_dt)
 		ShowCursor(false);
 		m_flyCamera = true;
 
-		POINT l_position;
-		GetCursorPos(&l_position);
+		POINT position;
+		GetCursorPos(&position);
 
-		m_oldMouseX = (float)l_position.x;
-		m_oldMouseY = (float)l_position.y;
+		m_oldMouseX = (float)position.x;
+		m_oldMouseY = (float)position.y;
 	}
 
 	if (m_flyCamera)
@@ -186,11 +197,11 @@ void System::MoveCamera(double p_dt)
 		float deltaTime = (float)p_dt;
 
 		// Rotate and pitch the camera.
-		POINT l_position;
-		GetCursorPos(&l_position);
+		POINT position;
+		GetCursorPos(&position);
 
-		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(l_position.x - m_oldMouseX));
-		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(l_position.y - m_oldMouseY));
+		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(position.x - m_oldMouseX));
+		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(position.y - m_oldMouseY));
 		m_camera.Pitch(dy);
 		m_camera.Rotate(dx);
 
