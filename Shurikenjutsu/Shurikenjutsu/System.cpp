@@ -58,6 +58,10 @@ bool System::Initialize()
 	DirectX::XMVECTOR translation = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
 	m_character.Translate(translation);
 
+	m_animatedCharacter.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
+	translation = DirectX::XMVectorSet(0.0f, 0.0f, -4.0f, 0.0f);
+	m_animatedCharacter.Translate(translation);
+
 	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
 	m_object.Rotate(rotation);
 	translation = DirectX::XMVectorSet(0.0f, 0.0f, 2.0f, 0.0f);

@@ -9,6 +9,7 @@
 #include "Buffer.h"
 #include "ConsoleFunctions.h"
 #include "ModelImporter.h"
+#include "AnimationControl.h"
 
 class Model
 {
@@ -33,6 +34,8 @@ protected:
 	ID3D11Buffer* m_mesh;
 	ID3D11ShaderResourceView* m_texture;
 	ID3D11ShaderResourceView* m_normalMap;
+
+	AnimationControl m_animationController;
 
 	int m_vertexCount;
 	DirectX::XMMATRIX m_worldMatrix;

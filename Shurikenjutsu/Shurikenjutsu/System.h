@@ -41,6 +41,7 @@ private:
 
 	Model m_plane;
 	Model m_character;
+	Model m_animatedCharacter;
 	Model m_object;
 
 

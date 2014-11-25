@@ -132,6 +132,9 @@
     <ClCompile Include="MovingObject.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationControl.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -203,6 +206,9 @@
     <ClInclude Include="MovingObject.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationControl.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -216,6 +222,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\Depth\DepthVertexShader.hlsl">
       <Filter>Shaders\Depth</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\AnimatedVertexShader.hlsl">
+      <Filter>Shaders\Scene</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,15 +12,28 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	MeshData mData = importer.GetMesh();
 
 	// Save mesh to buffer.
-	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mData.vertices);
-	m_vertexCount = mData.vertices.size();
+	if (!mData.m_animated)
+	{
+		std::vector<VertexAnimated> nullVector;
+		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mData.m_vertices, nullVector);
+		m_vertexCount = mData.m_vertices.size();
+	}
+	else
+	{
+		std::vector<Vertex> nullVector;
+		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEXANIMATED, p_device, nullVector, mData.m_verticesAnimated);
+		m_vertexCount = mData.m_vertices.size();
+	}
 
 	// Load Textures
 	m_texture = LoadTexture(p_device, mData.m_textureMapSize[0], mData.m_textureMapSize[1], mData.m_textureMapSize[2], mData.m_textureMap);
 	m_normalMap = LoadTexture(p_device, mData.m_normalMapSize[0], mData.m_normalMapSize[1], mData.m_normalMapSize[2], mData.m_normalMap);
 
-	// Animation test model
-	importer.ImportModel("../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
+	// Store animation stacks
+	for (unsigned int i = 0; i < mData.m_stacks.size(); i++)
+	{
+		m_animationController.CreateNewStack(mData.m_stacks[i]);
+	}
 
 	free(mData.m_textureMap);
 	free(mData.m_normalMap);

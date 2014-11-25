@@ -27,13 +27,22 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	memcpy(&vertexVectorSize, (char*)data + readPosition, sizeof(unsigned int));
 	readPosition += sizeof(unsigned int);
 	
-	for (int i = 0; i < vertexVectorSize; i++)
-	{
-		Vertex temp(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-		memcpy(&temp, (char*)data + readPosition, sizeof(Vertex));
-		readPosition += sizeof(Vertex);
-		m_importedMesh.vertices.push_back(temp);
-	}
+	if (!m_importedMesh.m_animated)
+		for (int i = 0; i < vertexVectorSize; i++)
+		{
+			Vertex temp(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+			memcpy(&temp, (char*)data + readPosition, sizeof(Vertex));
+			readPosition += sizeof(Vertex);
+			m_importedMesh.m_vertices.push_back(temp);
+		}
+	else
+		for (int i = 0; i < vertexVectorSize; i++)
+		{
+			VertexAnimated temp(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0, 0 ,0);
+			memcpy(&temp, (char*)data + readPosition, sizeof(VertexAnimated));
+			readPosition += sizeof(VertexAnimated);
+			m_importedMesh.m_verticesAnimated.push_back(temp);
+		}
 
 	memcpy(&m_importedMesh.m_textureMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
 	readPosition += (sizeof(unsigned int)* 3);
