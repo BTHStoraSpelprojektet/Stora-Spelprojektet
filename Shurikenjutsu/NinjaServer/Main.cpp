@@ -1,4 +1,3 @@
-#include "..\CommonLibs\MyHeader.h"
 #include "System.h"
 
 int main()

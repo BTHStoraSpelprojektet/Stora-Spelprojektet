@@ -12,7 +12,9 @@ System::~System()
 
 bool System::Initialize()
 {
-	
+	m_server = Server();
+	m_server.Initialize();
+
 
 	return true;
 }
@@ -39,8 +41,11 @@ void System::Run()
 			{
 				message.message = WM_QUIT;
 			}
+
+			m_server.Update();
 		}
 	}
 
 	// Shutdown
+	m_server.Shutdown();
 }

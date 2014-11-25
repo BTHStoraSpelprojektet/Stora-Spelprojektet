@@ -1,8 +1,9 @@
 #ifndef SYSTEM
 #define SYSTEM
 
+#include "Server.h"
 #include <Windows.h>
-#include <iostream>
+//#include <iostream>
 
 class System
 {

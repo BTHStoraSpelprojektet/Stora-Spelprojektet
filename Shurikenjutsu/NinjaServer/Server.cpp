@@ -12,8 +12,8 @@ Server::~Server()
 
 bool Server::Initialize()
 {
-	m_serverPeer = RakNet::RakPeerInterface::GetInstance();
-	m_socketDesc = RakNet::SocketDescriptor(SERVER_PORT, 0);
+	//m_serverPeer = RakNet::RakPeerInterface::GetInstance();
+	//m_socketDesc = RakNet::SocketDescriptor(SERVER_PORT, 0);
 
 	m_serverPeer->Startup(MAX_CLIENTS, &m_socketDesc, 1);
 
