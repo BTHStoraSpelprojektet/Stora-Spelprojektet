@@ -11,6 +11,8 @@ public:
 	~System();
 	bool Initialize();
 	void Run();
+private:
+	Server m_server;
 };
 
 #endif SYSTEM

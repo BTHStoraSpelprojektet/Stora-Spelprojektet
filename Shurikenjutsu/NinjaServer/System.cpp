@@ -12,6 +12,8 @@ System::~System()
 
 bool System::Initialize()
 {
+	
+
 	return true;
 }
 
@@ -33,6 +35,10 @@ void System::Run()
 		else
 		{
 			// Update();
+			if (GetAsyncKeyState(VK_ESCAPE))
+			{
+				message.message = WM_QUIT;
+			}
 		}
 	}
 
