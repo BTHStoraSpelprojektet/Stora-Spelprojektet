@@ -22,7 +22,7 @@ bool Player::Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX:
 	SetHealth(p_health);
 	SetAgility(p_agility);
 
-	m_inputManager->GetInstance();
+	m_inputManager = InputManager::GetInstance();
 
 	return true;
 }
@@ -32,12 +32,13 @@ void Player::Shutdown()
 	MovingObject::Shutdown();
 }
 
-void Player::Update()
+void Player::Update(double p_deltaTime)
 {
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
 		SetSpeed(5.0f);
-		SetDirection(DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f));
+		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		std::cout << "W TRYCKT!" << std::endl;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
@@ -55,7 +56,7 @@ void Player::Update()
 		SetDirection(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 	}
 
-	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed, m_position.y + m_direction.y * m_speed, m_position.z + m_direction.z * m_speed));
+	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed*p_deltaTime, m_position.y + m_direction.y * m_speed*p_deltaTime, m_position.z + m_direction.z * m_speed*p_deltaTime));
 }
 
 void Player::SetDamage(float p_damage)

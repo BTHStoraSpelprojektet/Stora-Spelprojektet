@@ -81,8 +81,8 @@ bool System::Initialize()
 	m_graphicsEngine.SetSceneDirectionalLight(m_directionalLight);
 
 	// Initialize PlayerManager
-	//m_playerManager = new PlayerManager();
-	m_playerManager->Initialize(m_graphicsEngine.GetDevice());
+//	m_playerManager = new PlayerManager();
+	m_playerManager.Initialize(m_graphicsEngine.GetDevice());
 
     return result;
 }
@@ -151,14 +151,15 @@ void System::Update()
 		MoveCamera(deltaTime);
 	}
 
-	m_playerManager->Update(deltaTime);
+	
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 5.0f);
-}
+	}
 
 	m_objectManager.Update(deltaTime);
+	m_playerManager.Update(deltaTime);
 }
 
 // Render game scene here.
@@ -177,7 +178,13 @@ void System::Render()
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture());
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture());
 
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_playerManager[0].GetModel(0)->GetMesh(), m_playerManager[0].GetModel(0)->GetVertexCount(), m_playerManager[0].GetModel(0)->GetWorldMatrix(), m_playerManager[0].GetModel(0)->GetTexture());
+	//m_graphicsEngine.Render(SHADERTYPE_SCENE, m_playerManager.GetModel(0).GetMesh(), m_playerManager.GetModel(0).GetVertexCount(), m_playerManager.GetModel(0).GetWorldMatrix(), m_playerManager.GetModel(0).GetTexture());
+	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
+	for (unsigned int i = 0; i < tempList1.size(); i++)
+	{
+		Model tempModel1 = tempList1[i].GetModel();
+		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture());
+	}
 
 	// Draw Shurikens
 	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();

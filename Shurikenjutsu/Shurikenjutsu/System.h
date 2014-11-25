@@ -46,7 +46,7 @@ private:
 	Model m_character;
 	Model m_object;
 
-	PlayerManager* m_playerManager;
+	PlayerManager m_playerManager;
 
 	bool m_flyCamera;
 	float m_oldMouseX;
