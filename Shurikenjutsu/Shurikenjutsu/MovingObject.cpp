@@ -31,6 +31,7 @@ void MovingObject::Shutdown()
 void MovingObject::SetDirection(DirectX::XMFLOAT3 p_direction)
 {
 	m_direction = p_direction;
+	
 }
 
 DirectX::XMFLOAT3 MovingObject::GetDirection() const

@@ -34,26 +34,30 @@ void Player::Shutdown()
 
 void Player::Update(double p_deltaTime)
 {
+	float x, y, z;
+	x = 0;
+	y = 0;
+	z = 0;
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
 		SetSpeed(5.0f);
-		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-		std::cout << "W TRYCKT!" << std::endl;
+		z += 1;
 	}
+
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		SetSpeed(5.0f);
-		SetDirection(DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f));
+		x += -1;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		SetSpeed(5.0f);
-		SetDirection(DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f));
+		z += -1;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		SetSpeed(5.0f);
-		SetDirection(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+		x += 1;
 	}
 
 	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed*p_deltaTime, m_position.y + m_direction.y * m_speed*p_deltaTime, m_position.z + m_direction.z * m_speed*p_deltaTime));
