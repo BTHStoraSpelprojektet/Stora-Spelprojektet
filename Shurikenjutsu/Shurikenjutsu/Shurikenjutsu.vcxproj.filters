@@ -70,13 +70,11 @@
     <Filter Include="Source Files\Core\Input">
       <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
     </Filter>
-<<<<<<< HEAD
     <Filter Include="Shaders\Instanced">
       <UniqueIdentifier>{dc7fe779-c146-488a-83d0-56d87ec51a7b}</UniqueIdentifier>
-=======
+    </Filter>
     <Filter Include="Shaders\Depth">
       <UniqueIdentifier>{e9ba412c-e56c-4c47-addb-a20626061ff9}</UniqueIdentifier>
->>>>>>> origin/master
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -131,16 +129,14 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="InstancedShader.cpp">
       <Filter>Source Files\Graphics</Filter>
-=======
+    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="MovingObject.cpp">
       <Filter>Source Files\Core</Filter>
->>>>>>> origin/master
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,16 +203,14 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-<<<<<<< HEAD
     <ClInclude Include="InstancedShader.h">
       <Filter>Header Files\Graphics</Filter>
-=======
+    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="MovingObject.h">
       <Filter>Header Files\Core</Filter>
->>>>>>> origin/master
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -226,14 +220,12 @@
     <FxCompile Include="Shaders\Scene\VertexShader.hlsl">
       <Filter>Shaders\Scene</Filter>
     </FxCompile>
-<<<<<<< HEAD
     <FxCompile Include="InstancedPShader.hlsl">
       <Filter>Shaders\Instanced</Filter>
     </FxCompile>
     <FxCompile Include="InstancedVShader.hlsl">
       <Filter>Shaders\Instanced</Filter>
     </FxCompile>
-=======
     <FxCompile Include="Shaders\Depth\DepthPixelShader.hlsl">
       <Filter>Shaders\Depth</Filter>
     </FxCompile>
@@ -245,6 +237,5 @@
     <None Include="LightCalculation.hlsli">
       <Filter>Shaders\Scene</Filter>
     </None>
->>>>>>> origin/master
   </ItemGroup>
 </Project>
