@@ -14,7 +14,8 @@ bool Object::Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX:
 {
 	SetPosition(p_pos);
 
-	if (!m_model->LoadModel(p_device, p_filepath))
+
+	if (!m_model.LoadModel(p_device, p_filepath))
 	{
 		return false;
 	}
@@ -24,12 +25,14 @@ bool Object::Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX:
 
 void Object::Shutdown()
 {
-	m_model->Shutdown();
+	m_model.Shutdown();
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	m_position = p_pos;
+
+	m_model.SetPosition(p_pos);
 }
 
 DirectX::XMFLOAT3 Object::GetPosition() const
@@ -37,7 +40,7 @@ DirectX::XMFLOAT3 Object::GetPosition() const
 	return m_position;
 }
 
-Model* Object::GetModel() const
+Model Object::GetModel()
 {
 	return m_model;
 }

@@ -70,6 +70,12 @@
     <Filter Include="Source Files\Core\Input">
       <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Object">
+      <UniqueIdentifier>{fefb1194-3e7f-4004-a760-76dc6ad184ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Object">
+      <UniqueIdentifier>{7a2a3659-2882-443f-a527-65bf04ec2d3e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Shaders\Depth">
       <UniqueIdentifier>{e9ba412c-e56c-4c47-addb-a20626061ff9}</UniqueIdentifier>
     </Filter>
@@ -124,13 +130,19 @@
       <Filter>Source Files\Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="MovingObject.cpp">
-      <Filter>Source Files\Core</Filter>
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Shuriken.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectManager.cpp">
+      <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="PlayerManager.cpp">
       <Filter>Source Files</Filter>
@@ -197,14 +209,20 @@
     <ClInclude Include="Globals.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
-      <Filter>Header Files\Core</Filter>
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="MovingObject.h">
-      <Filter>Header Files\Core</Filter>
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Shuriken.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectManager.h">
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="PlayerManager.h">
       <Filter>Header Files</Filter>
@@ -225,7 +243,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LightCalculation.hlsli">
+    <None Include="Shaders\Scene\LightCalculation.hlsli">
       <Filter>Shaders\Scene</Filter>
     </None>
   </ItemGroup>
