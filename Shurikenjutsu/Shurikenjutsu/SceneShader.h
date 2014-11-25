@@ -59,6 +59,13 @@ private:
 		float m_padding;
 	};
 
+	// Animation matrix buffer.
+	ID3D11Buffer* m_animationMatrixBuffer;
+	struct AnimationMatrixBuffer
+	{
+		DirectX::XMMATRIX m_boneTransforms[25];
+	};
+
 	ID3D11Buffer* m_frameBuffer;
 	struct FrameBuffer
 	{

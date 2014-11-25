@@ -91,7 +91,8 @@ void Model::Shutdown()
 
 void Model::Update(double p_dt)
 {
-	
+	if (m_animationController.IsAnimated())
+		m_animationController.UpdateAnimation(p_dt);
 }
 
 ID3D11Buffer* Model::GetMesh()

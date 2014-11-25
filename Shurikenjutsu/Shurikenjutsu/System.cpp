@@ -129,6 +129,9 @@ void System::Update()
 	// Get the delta time to use for animation etc.
 	double deltaTime = m_timer.GetDeltaTime();
 
+	// Update animation
+	m_animatedCharacter.Update(deltaTime);
+
 	if (FLAG_FPS == 1)
 	{
 		// Print the FPS if the flag is set.

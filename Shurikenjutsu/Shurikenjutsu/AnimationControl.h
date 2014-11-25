@@ -38,10 +38,16 @@ class AnimationControl
 {
 public:
 	bool CreateNewStack(AnimationStack p_newStack);
-	void UpdateAnimation();
+	std::vector<DirectX::XMMATRIX> UpdateAnimation(double p_dT);
+
+	bool IsAnimated();
 
 private:
+	void CombineMatrices(int* p_index, BoneFrame* p_joint, DirectX::XMMATRIX& p_parentTransform);
+
 	std::vector<AnimationStack> m_animationStacks;
+
+	std::vector<DirectX::XMMATRIX> m_boneTransforms;
 };
 
 #endif;
