@@ -1,7 +1,7 @@
 #ifndef SHURIKEN_H_
 #define SHURIKEN_H_
 #include "MovingObject.h"
-class Shuriken : MovingObject
+class Shuriken : public MovingObject
 {
 public:
 	Shuriken();

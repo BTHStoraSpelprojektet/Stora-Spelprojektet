@@ -8,20 +8,24 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize()
 {
-
+	return true;
 }
 
 void ObjectManager::Shutdown()
 {
-
+	m_shurikens.clear();
 }
 
 void ObjectManager::Update(double p_deltaTime)
 {
-
+	// Update all the shurikens
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		m_shurikens[i].Update(p_deltaTime);
+	}
 }
 
-std::vector<Shuriken> ObjectManager::GetListOfShurikens(int i) const
+std::vector<Shuriken> ObjectManager::GetListOfShurikens() const
 {
 	return m_shurikens;
 }

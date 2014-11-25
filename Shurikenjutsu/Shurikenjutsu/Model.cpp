@@ -96,26 +96,35 @@ int Model::GetVertexCount()
 
 void Model::Rotate(DirectX::XMVECTOR p_rotation)
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(p_rotation);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(p_rotation);
 
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	m_worldMatrix = m_worldMatrix * matrix;
 }
 
 void Model::Translate(DirectX::XMVECTOR p_translation)
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixTranslationFromVector(p_translation);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(p_translation);
 
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	m_worldMatrix = m_worldMatrix * matrix;
 }
 
 void Model::Scale(DirectX::XMVECTOR p_scale)
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixScalingFromVector(p_scale);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixScalingFromVector(p_scale);
 
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	m_worldMatrix = m_worldMatrix * matrix;
 }
 
 void Model::ResetModel()
 {
 	m_worldMatrix = DirectX::XMMatrixIdentity();
+}
+
+void Model::SetPosition(DirectX::XMVECTOR p_position)
+{
+	ResetModel();
+
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(p_position);
+
+	m_worldMatrix = m_worldMatrix * matrix;
 }

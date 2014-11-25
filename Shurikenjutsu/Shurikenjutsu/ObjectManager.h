@@ -14,7 +14,7 @@ public:
 
 	void Update(double p_deltaTime);
 
-	std::vector<Shuriken> GetListOfShurikens(int i) const;
+	std::vector<Shuriken> GetListOfShurikens() const;
 	void AddShuriken(ID3D11Device* p_device, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed);
 
 private:

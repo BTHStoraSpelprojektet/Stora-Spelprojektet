@@ -6,11 +6,12 @@
 #include "Timer.h"
 #include "Camera.h"
 #include "Model.h"
+#include "InputManager.h"
+#include "ObjectManager.h"
 
 #include "ConsoleFunctions.h"
 #include "Flags.h"
 #include "Enumerations.h"
-#include "InputManager.h"
 
 #include "Debug.h"
 #include "Globals.h"
@@ -49,5 +50,7 @@ private:
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
+	ObjectManager m_objectManager;
+	Object m_tempObj;
 };
 #endif

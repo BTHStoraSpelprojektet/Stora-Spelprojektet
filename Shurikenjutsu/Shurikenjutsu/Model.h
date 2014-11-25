@@ -28,6 +28,7 @@ public:
 	void Translate(DirectX::XMVECTOR p_translation);
 	void Scale(DirectX::XMVECTOR p_scale);
 	void ResetModel();
+	void SetPosition(DirectX::XMVECTOR p_position);
 
 protected:
 	ID3D11Buffer* m_mesh;

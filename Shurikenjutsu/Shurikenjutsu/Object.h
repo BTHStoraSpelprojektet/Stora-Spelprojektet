@@ -13,12 +13,12 @@ public:
 	virtual void Shutdown();
 	DirectX::XMFLOAT3 GetPosition() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
-	Model* GetModel() const;
-private:
+	Model GetModel();
+protected:
 	//void SetModel(const char* p_filepath);
 
 	DirectX::XMFLOAT3 m_position;
-	Model* m_model;
+	Model m_model;
 
 };
 

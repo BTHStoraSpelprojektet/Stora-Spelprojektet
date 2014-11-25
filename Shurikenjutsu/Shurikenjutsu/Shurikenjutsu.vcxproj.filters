@@ -76,6 +76,9 @@
     <Filter Include="Header Files\Object">
       <UniqueIdentifier>{7a2a3659-2882-443f-a527-65bf04ec2d3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Depth">
+      <UniqueIdentifier>{e9ba412c-e56c-4c47-addb-a20626061ff9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -220,15 +223,21 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
+    <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
       <Filter>Shaders\Scene</Filter>
     </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
+    <FxCompile Include="Shaders\Scene\VertexShader.hlsl">
       <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Depth\DepthPixelShader.hlsl">
+      <Filter>Shaders\Depth</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Depth\DepthVertexShader.hlsl">
+      <Filter>Shaders\Depth</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LightCalculation.hlsli">
+    <None Include="Shaders\Scene\LightCalculation.hlsli">
       <Filter>Shaders\Scene</Filter>
     </None>
   </ItemGroup>

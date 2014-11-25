@@ -29,11 +29,14 @@ void Shuriken::Update(double p_deltaTime)
 	DirectX::XMFLOAT3 tempPosition = GetPosition();
 	DirectX::XMFLOAT3 tempDirection = GetDirection();
 
-	tempPosition.x += tempDirection.x*p_deltaTime;
-	tempPosition.y += tempDirection.y*p_deltaTime;
-	tempPosition.z += tempDirection.z*p_deltaTime;
+	tempPosition.x += (float)(tempDirection.x*p_deltaTime);
+	tempPosition.y += (float)(tempDirection.y*p_deltaTime);
+	tempPosition.z += (float)(tempDirection.z*p_deltaTime);
 
 	SetPosition(tempPosition);
+
+	// Update lifetime
+	SetLifetime((float)(GetLifetime() - p_deltaTime));
 }
 
 void Shuriken::SetLifetime(float p_lifetime)
