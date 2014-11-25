@@ -60,6 +60,11 @@ void Player::Update(double p_deltaTime)
 		x += 1;
 	}
 
+	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
+	tempVector = DirectX::XMVector3Normalize(tempVector);
+	DirectX::XMFLOAT3 tempFloat;
+	DirectX::XMStoreFloat3(&tempFloat, tempVector);
+	SetDirection(tempFloat);
 	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed*p_deltaTime, m_position.y + m_direction.y * m_speed*p_deltaTime, m_position.z + m_direction.z * m_speed*p_deltaTime));
 }
 
