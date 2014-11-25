@@ -51,8 +51,15 @@ bool System::Initialize()
 	
 	// REMOVE THIS LATER.
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
+	m_graphicsEngine.AddInstanceBuffer(1);
 
 	m_character.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP");
+	m_graphicsEngine.AddInstanceBuffer(5);
+	
+	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
+	m_graphicsEngine.AddInstanceBuffer(3);
+	//m_graphicsEngine.AddInstanceBuffer(1000);
+
 	DirectX::XMVECTOR rotation = DirectX::XMVectorSet(0.0f, 3.141592f / 2.0f, 0.0f, 0.0f);
 	m_character.Rotate(rotation);
 	DirectX::XMVECTOR translation = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
@@ -64,7 +71,7 @@ bool System::Initialize()
 	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
-	m_debug.RunTests();
+	//m_debug.RunTests();
 
 	// Input: Register keys
 	InputManager* input = InputManager::GetInstance();
@@ -152,16 +159,15 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
+	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture(), 0);
+	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture(), 1);
+	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 2);
+
 	// Start rendering alpha blended.
 	m_graphicsEngine.TurnOnAlphaBlending();
 
 	// Stop rendering alpha blended.
 	m_graphicsEngine.TurnOffAlphaBlending();
-
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture());
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture());
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture());
-
 	// Present the result.
 	m_graphicsEngine.Present();
 }
