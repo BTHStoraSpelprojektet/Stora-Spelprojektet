@@ -70,7 +70,7 @@ void ComputeDirectionalLight(Material p_material, DirectionalLight p_light, floa
 
 	p_ambient += p_material.m_ambient * p_light.m_ambient;
 
-	float3 lightVec = p_light.m_direction.xyz;
+	float3 lightVec = -p_light.m_direction.xyz;
 
 	float diffuseFactor = dot(lightVec, p_normal);
 

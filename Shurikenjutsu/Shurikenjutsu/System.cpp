@@ -72,9 +72,9 @@ bool System::Initialize()
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.35f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.3f, 0.3f, 0.23f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+	m_directionalLight.m_direction = DirectX::XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f);
 
     return result;
 }
@@ -161,7 +161,7 @@ void System::Render()
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture());
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture());
 	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture());
-
+	
 	// Present the result.
 	m_graphicsEngine.Present();
 }
