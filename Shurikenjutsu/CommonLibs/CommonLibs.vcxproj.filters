@@ -282,12 +282,6 @@
     <ClInclude Include="RakNet\PluginInterface2.h">
       <Filter>RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="RakNet\PS3Includes.h">
-      <Filter>RakNet</Filter>
-    </ClInclude>
-    <ClInclude Include="RakNet\PS4Includes.h">
-      <Filter>RakNet</Filter>
-    </ClInclude>
     <ClInclude Include="RakNet\Rackspace.h">
       <Filter>RakNet</Filter>
     </ClInclude>
@@ -480,7 +474,7 @@
     <ClInclude Include="RakNet\WSAStartupSingleton.h">
       <Filter>RakNet</Filter>
     </ClInclude>
-    <ClInclude Include="RakNet\XBox360Includes.h">
+    <ClInclude Include="..\..\..\RakNet\Source\XBox360Includes.h">
       <Filter>RakNet</Filter>
     </ClInclude>
   </ItemGroup>
@@ -645,9 +639,6 @@
       <Filter>RakNet</Filter>
     </ClCompile>
     <ClCompile Include="RakNet\PluginInterface2.cpp">
-      <Filter>RakNet</Filter>
-    </ClCompile>
-    <ClCompile Include="RakNet\PS4Includes.cpp">
       <Filter>RakNet</Filter>
     </ClCompile>
     <ClCompile Include="RakNet\Rackspace.cpp">
@@ -818,11 +809,6 @@
     <ClCompile Include="RakNet\WSAStartupSingleton.cpp">
       <Filter>RakNet</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="RakNet\CMakeLists.txt">
-      <Filter>RakNet</Filter>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="RakNet\RakNet.vcproj">

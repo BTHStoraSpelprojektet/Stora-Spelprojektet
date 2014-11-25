@@ -19,14 +19,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -68,6 +68,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\RakNet\Source\XBox360Includes.h" />
     <ClInclude Include="MyHeader.h" />
     <ClInclude Include="RakNet\AutopatcherPatchContext.h" />
     <ClInclude Include="RakNet\AutopatcherRepositoryInterface.h" />
@@ -155,8 +156,6 @@
     <ClInclude Include="RakNet\PacketPool.h" />
     <ClInclude Include="RakNet\PacketPriority.h" />
     <ClInclude Include="RakNet\PluginInterface2.h" />
-    <ClInclude Include="RakNet\PS3Includes.h" />
-    <ClInclude Include="RakNet\PS4Includes.h" />
     <ClInclude Include="RakNet\Rackspace.h" />
     <ClInclude Include="RakNet\RakAlloca.h" />
     <ClInclude Include="RakNet\RakAssert.h" />
@@ -221,7 +220,6 @@
     <ClInclude Include="RakNet\VitaIncludes.h" />
     <ClInclude Include="RakNet\WindowsIncludes.h" />
     <ClInclude Include="RakNet\WSAStartupSingleton.h" />
-    <ClInclude Include="RakNet\XBox360Includes.h" />
     <ClInclude Include="RakNet\_FindFirst.h" />
   </ItemGroup>
   <ItemGroup>
@@ -278,7 +276,6 @@
     <ClCompile Include="RakNet\PacketLogger.cpp" />
     <ClCompile Include="RakNet\PacketOutputWindowLogger.cpp" />
     <ClCompile Include="RakNet\PluginInterface2.cpp" />
-    <ClCompile Include="RakNet\PS4Includes.cpp" />
     <ClCompile Include="RakNet\Rackspace.cpp" />
     <ClCompile Include="RakNet\RakMemoryOverride.cpp" />
     <ClCompile Include="RakNet\RakNetCommandParser.cpp" />
@@ -336,9 +333,6 @@
     <ClCompile Include="RakNet\VitaIncludes.cpp" />
     <ClCompile Include="RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="RakNet\_FindFirst.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="RakNet\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RakNet\RakNet.vcproj" />

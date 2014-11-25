@@ -2,10 +2,22 @@
 #define SERVER
 
 #include <iostream>
+/*
+#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\RakPeerInterface.h"
+#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\MessageIdentifiers.h"
+#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\RakNetTypes.h"  // MessageID
+#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\GetTime.h"
+#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\NetworkIDManager.h"
+#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\RakPeer.h"
+#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\BitStream.h"
+*/
 #include "RakPeerInterface.h"
+#include "RakNetTypes.h"
 #include "MessageIdentifiers.h"
+#include "GetTime.h"
+#include "NetworkIDManager.h"
+#include "RakPeer.h"
 #include "BitStream.h"
-#include "RakNetTypes.h"  // MessageID
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 60000

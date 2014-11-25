@@ -16,6 +16,7 @@ bool Server::Initialize()
 	m_socketDesc = RakNet::SocketDescriptor(SERVER_PORT, 0);
 
 	m_serverPeer->Startup(MAX_CLIENTS, &m_socketDesc, 1);
+	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
 	return true;
 }
