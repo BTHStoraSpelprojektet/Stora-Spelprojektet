@@ -27,6 +27,7 @@ public:
 
 private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
+	void UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11VertexShader* m_animatedVertexShader;
