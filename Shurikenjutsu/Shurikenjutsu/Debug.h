@@ -10,9 +10,6 @@ public:
 	void RunTests();
 
 private:
-
-	//Collision Tests
-
 	Collisions m_collision;
 
 	void CollisionTest1();

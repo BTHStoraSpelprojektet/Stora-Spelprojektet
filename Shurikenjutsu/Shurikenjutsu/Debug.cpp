@@ -34,6 +34,7 @@ void Debug::CollisionTest1()
 {
 	if (m_collision.SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Sphere(0.0f, 5.0f, 0.0f, 5.0f)))
 	{
+		
 		std::cout << "1. Sphere Sphere true" << std::endl;
 	}
 	else
@@ -168,7 +169,6 @@ void Debug::CollisionTest13()
 	if (m_collision.RaySphereCollision(&temp , Sphere(10.0f, 0.0f, 0.0f, 5.0f)))
 	{
 		std::cout << "13. Ray Sphere true" << std::endl;
-		std::cout << temp.m_distance << std::endl;
 	}
 	else
 	{

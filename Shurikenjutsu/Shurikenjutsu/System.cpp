@@ -71,7 +71,7 @@ bool System::Initialize()
 	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
-	//m_debug.RunTests();
+	m_debug.RunTests();
 
 	// Input: Register keys
 	InputManager* input = InputManager::GetInstance();
