@@ -57,7 +57,6 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	ConsolePrintSuccess("Depth vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
-	ConsoleSkipLines(1);
 
 	vertexShader->Release();
 	vertexShader = 0;
@@ -95,7 +94,6 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	ConsolePrintSuccess("Depth pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-	ConsoleSkipLines(1);
 
 	pixelShader->Release();
 	pixelShader = 0;
@@ -142,7 +140,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix)
 {
 	// Set parameters and then render.
-	unsigned int stride = sizeof(DirectX::XMVECTOR);
+	unsigned int stride = sizeof(Vertex);
 	const unsigned int offset = 0;
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);

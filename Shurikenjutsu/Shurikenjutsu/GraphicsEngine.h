@@ -4,6 +4,7 @@
 #include "DirectX.h"
 #include "SceneShader.h"
 #include "InstancedShader.h"
+#include "DepthShader.h"
 #include "Enumerations.h"
 #include "Globals.h"
 
@@ -41,5 +42,6 @@ private:
 
 	SceneShader m_sceneShader;
 	InstancedShader m_instanceShader;
+	DepthShader m_depthShader;
 };
 #endif;

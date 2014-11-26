@@ -89,7 +89,6 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 
 	ConsolePrintSuccess("Instance vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
-	ConsoleSkipLines(1);
 
 	vertexShader->Release();
 	vertexShader = 0;
@@ -127,7 +126,6 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 
 	ConsolePrintSuccess("Instance pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-	ConsoleSkipLines(1);
 
 	pixelShader->Release();
 	pixelShader = 0;

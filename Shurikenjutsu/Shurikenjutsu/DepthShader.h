@@ -6,6 +6,7 @@
 #include <DirectXMath.h>
 #include <Windows.h>
 
+#include "Structures.h"
 #include "ConsoleFunctions.h"
 
 class DepthShader

@@ -15,15 +15,24 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
-	// Initialize scene shader.
+	// Initialize the scene shader.
 	if (m_sceneShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
 	{
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+
+	// Initialize the instance shader
 	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
 	{
 		ConsolePrintSuccess("Instanced shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+
+	// Initialize the depth buffer.
+	if (m_depthShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
+	{
+		ConsolePrintSuccess("Depth shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
 
@@ -57,6 +66,12 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 
 			break;
 		}
+		case(SHADERTYPE_DEPTH) :
+		{
+			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix);
+
+			break;
+		}
 
 		default:
 		{
@@ -71,6 +86,7 @@ void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, 
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)

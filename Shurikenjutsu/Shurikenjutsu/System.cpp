@@ -8,16 +8,18 @@ bool System::Initialize()
 	GLOBAL::GetInstance().FULLSCREEN = false;
 	GLOBAL::GetInstance().MAX_SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 	GLOBAL::GetInstance().MAX_SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+	GLOBAL::GetInstance().MIN_SCREEN_WIDTH = 1280;
+	GLOBAL::GetInstance().MIN_SCREEN_HEIGHT = 1024;
 
 	if (GLOBAL::GetInstance().FULLSCREEN)
 	{
-		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	}
 	else
 	{
-		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}
 
 	ConsolePrintSuccess("Application initialized.");
@@ -25,7 +27,7 @@ bool System::Initialize()
 
 	// Set console position.
 	HWND console = GetConsoleWindow();
-	MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().SCREEN_HEIGHT, true);
+	MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, true);
 	SetWindowTextA(console, "Shurikenjitsu Debug Console");
 
 	// Hide the console if we are not debugging.
@@ -35,7 +37,7 @@ bool System::Initialize()
 	}
 
 	// Initialize the window.
-	WindowRectangle window = WindowRectangle(0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT);
+	WindowRectangle window = WindowRectangle(0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	m_window.Initialize(window);
 	ConsolePrintSuccess("Window created successfully.");
 	std::string size = "Window size: " + std::to_string(window.width);
@@ -361,7 +363,7 @@ void System::ResetCamera()
 	m_camera.UpdateRight(right);
 
 	// Projection data.
-	float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+	float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	m_camera.UpdateAspectRatio(aspectRatio);
 	m_camera.UpdateFieldOfView(3.141592f * 0.5f);
 	m_camera.UpdateClippingPlanes(0.001f, 40.0f);
@@ -378,20 +380,20 @@ void System::ToggleFullscreen(bool p_fullscreen)
 		m_render = false;
 
 		// Go to fullscreen
-		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
 		m_graphicsEngine.ToggleFullscreen(true);
 
 		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		m_camera.UpdateAspectRatio(aspectRatio);
 		m_camera.UpdateProjectionMatrix();
 		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().SCREEN_HEIGHT, true);
+		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, true);
 
 		m_render = true;
 	}
@@ -401,20 +403,20 @@ void System::ToggleFullscreen(bool p_fullscreen)
 		m_render = false;
 
 		// Go to windowed mode.
-		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 		m_graphicsEngine.ToggleFullscreen(false);
 
 		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		m_camera.UpdateAspectRatio(aspectRatio);
 		m_camera.UpdateProjectionMatrix();
 		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().SCREEN_HEIGHT, true);
-		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, true);
+		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
 
 		m_render = true;
 	}
