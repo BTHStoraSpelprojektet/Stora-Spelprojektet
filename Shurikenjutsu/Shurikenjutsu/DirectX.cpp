@@ -192,6 +192,21 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
+	IDXGIDevice* device;
+	m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&device);
+
+	IDXGIAdapter* adapter;
+	device->GetParent(__uuidof(IDXGIAdapter), (void **)&adapter);
+
+	IDXGIFactory * factory;
+	adapter->GetParent(__uuidof(IDXGIFactory), (void **)&factory);
+
+	if (FAILED(factory->MakeWindowAssociation(p_handle, DXGI_MWA_NO_ALT_ENTER)))
+	{
+		ConsolePrintError("Failed to disable alt enter.");
+		return false;
+	}
+
 	return true;
 }
 
@@ -207,9 +222,9 @@ void DirectXWrapper::Present()
 	m_swapChain->Present(0, 0);
 }
 
-void DirectXWrapper::ResizeOutputWindow(int p_width, int p_height)
+IDXGISwapChain* DirectXWrapper::GetSwapChain()
 {
-	m_swapChain->ResizeBuffers(0, p_width, p_height, DXGI_FORMAT_UNKNOWN, 0);
+	return m_swapChain;
 }
 
 ID3D11Device* DirectXWrapper::GetDevice()

@@ -139,7 +139,29 @@ void GraphicsEngine::TurnOffAlphaBlending()
 	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
 }
 
-void GraphicsEngine::ResizeOutputWindow(int p_width, int p_height)
-{
-	m_directX.ResizeOutputWindow(p_width, p_height);
+bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
+{    
+	if (p_fullscreen)
+	{               
+		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(true, nullptr)))
+		{            
+			ConsolePrintError("Setting fullscreen mode failed.");
+			return false;
+		}        
+
+		GLOBAL::GetInstance().FULLSCREEN = true;
+	}    
+	
+	else    
+	{        
+		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(false, nullptr)))
+		{
+			ConsolePrintError("Setting windowed mode failed.");
+			return false;
+		}    
+		
+		GLOBAL::GetInstance().FULLSCREEN = false;
+	}    
+
+	return true;
 }

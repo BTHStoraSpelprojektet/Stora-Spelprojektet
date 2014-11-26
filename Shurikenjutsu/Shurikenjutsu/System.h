@@ -30,6 +30,8 @@ private:
 	void MoveCamera(double p_dt);
 	void ResetCamera();
 
+	void ToggleFullscreen(bool p_fullscreen);
+
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
@@ -48,5 +50,7 @@ private:
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
+	
+	bool m_render;
 };
 #endif

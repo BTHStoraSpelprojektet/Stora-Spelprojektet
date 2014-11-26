@@ -15,12 +15,12 @@ public:
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 	D3D_FEATURE_LEVEL GetVersion();
+	IDXGISwapChain* GetSwapChain();
 
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
 
 	void SetClearColor(float R, float G, float B, float p_opacity);
-	void ResizeOutputWindow(int p_width, int p_height);
 
 private:
 	ID3D11Device* m_device;

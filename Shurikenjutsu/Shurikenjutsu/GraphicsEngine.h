@@ -4,6 +4,7 @@
 #include "DirectX.h"
 #include "SceneShader.h"
 #include "Enumerations.h"
+#include "Globals.h"
 
 class GraphicsEngine
 {
@@ -28,7 +29,7 @@ public:
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
 
-	void ResizeOutputWindow(int p_width, int p_height);
+	bool ToggleFullscreen(bool p_fullscreen);
 
 private:
 	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
