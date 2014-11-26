@@ -22,7 +22,7 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	{
 		std::vector<Vertex> nullVector;
 		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEXANIMATED, p_device, nullVector, mData.m_verticesAnimated);
-		m_vertexCount = mData.m_vertices.size();
+		m_vertexCount = mData.m_verticesAnimated.size();
 	}
 
 	// Load Textures
@@ -87,12 +87,15 @@ void Model::Shutdown()
 
 	m_texture->Release();
 	m_texture = 0;
+
+	m_normalMap->Release();
+	m_normalMap = 0;
 }
 
 void Model::Update(double p_dt)
 {
 	if (m_animationController.IsAnimated())
-		m_animationController.UpdateAnimation(p_dt);
+		boneTransforms = m_animationController.UpdateAnimation(p_dt);
 }
 
 ID3D11Buffer* Model::GetMesh()
@@ -113,6 +116,11 @@ DirectX::XMMATRIX Model::GetWorldMatrix()
 int Model::GetVertexCount()
 {
 	return m_vertexCount;
+}
+
+std::vector<DirectX::XMMATRIX> Model::GetAnimation()
+{
+	return boneTransforms;
 }
 
 void Model::Rotate(DirectX::XMVECTOR p_rotation)

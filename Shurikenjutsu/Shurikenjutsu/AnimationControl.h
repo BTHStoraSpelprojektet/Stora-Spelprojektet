@@ -11,6 +11,7 @@ struct BoneFrame
 
 	float m_translation[3];
 	float m_quarternion[4];
+	float m_orientQuarternion[4];
 	float m_rotEuler[3];
 	double m_scale[3];
 
@@ -46,6 +47,8 @@ private:
 	void CombineMatrices(int* p_index, BoneFrame* p_joint, DirectX::XMMATRIX& p_parentTransform);
 
 	std::vector<AnimationStack> m_animationStacks;
+
+	float m_frame;
 
 	std::vector<DirectX::XMMATRIX> m_boneTransforms;
 };

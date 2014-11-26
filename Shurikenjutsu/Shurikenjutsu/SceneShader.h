@@ -5,6 +5,7 @@
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>
 #include <Windows.h>
+#include <vector>
 
 #include "Structures.h"
 #include "ConsoleFunctions.h"
@@ -15,7 +16,7 @@ public:
 	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
 
 	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMMATRIX> p_boneTransforms);
 
 	void UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix);
 	void UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity);
@@ -27,7 +28,7 @@ public:
 
 private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
-	void UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
+	void UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMMATRIX> p_boneTransforms);
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11VertexShader* m_animatedVertexShader;

@@ -303,22 +303,6 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
-	// Create the animated matrix buffer description.
-	D3D11_BUFFER_DESC animatedMatrixBuffer;
-	animatedMatrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
-	animatedMatrixBuffer.ByteWidth = sizeof(AnimationMatrixBuffer);
-	animatedMatrixBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	animatedMatrixBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	animatedMatrixBuffer.MiscFlags = 0;
-	animatedMatrixBuffer.StructureByteStride = 0;
-
-	// Create the animated matrix buffer.
-	if (FAILED(p_device->CreateBuffer(&animatedMatrixBuffer, NULL, &m_animationMatrixBuffer)))
-	{
-		ConsolePrintError("Failed to create scene animated buffer.");
-		return false;
-	}
-
 	// Create the cbuffer where "every frame" data is stored
 	D3D11_BUFFER_DESC frameBuffer;
 	frameBuffer.Usage = D3D11_USAGE_DYNAMIC;
@@ -332,6 +316,22 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	if (FAILED(p_device->CreateBuffer(&frameBuffer, NULL, &m_frameBuffer)))
 	{
 		ConsolePrintError("Failed to create scene frame buffer.");
+		return false;
+	}
+
+	// Create the animated matrix buffer description.
+	D3D11_BUFFER_DESC animatedMatrixBuffer;
+	animatedMatrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	animatedMatrixBuffer.ByteWidth = sizeof(AnimationMatrixBuffer);
+	animatedMatrixBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	animatedMatrixBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	animatedMatrixBuffer.MiscFlags = 0;
+	animatedMatrixBuffer.StructureByteStride = 0;
+
+	// Create the animated matrix buffer.
+	if (FAILED(p_device->CreateBuffer(&animatedMatrixBuffer, NULL, &m_animationMatrixBuffer)))
+	{
+		ConsolePrintError("Failed to create scene animated buffer.");
 		return false;
 	}
 
@@ -359,14 +359,14 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMMATRIX> p_boneTransforms)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(VertexAnimated);
 	const unsigned int offset = 0;
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
-	UpdateAnimatedBuffer(p_context, p_worldMatrix);
+	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
@@ -446,10 +446,8 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMM
 	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
 }
 
-void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix)
+void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMMATRIX> p_boneTransforms)
 {
-	DirectX::XMMATRIX worldMatrix = p_worldMatrix;
-
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_animationMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
@@ -462,13 +460,14 @@ void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, DirectX::
 	animatedMatrixBuffer = (AnimationMatrixBuffer*)mappedBuffer.pData;
 
 	// Set matrices in buffer.
-	//animatedMatrixBuffer->m_boneTransforms = worldMatrix;
+	for (unsigned int i = 0; i < p_boneTransforms.size(); i++)
+		animatedMatrixBuffer->m_boneTransforms[i] = p_boneTransforms[i];
 
 	// Unlock the matrix buffer after it has been written to.
 	p_context->Unmap(m_animationMatrixBuffer, 0);
 
 	// Set the matrix buffer.
-	p_context->VSSetConstantBuffers(0, 1, &m_animationMatrixBuffer);
+	p_context->VSSetConstantBuffers(2, 1, &m_animationMatrixBuffer);
 }
 
 void SceneShader::TurnOnBackFaceCulling(ID3D11DeviceContext* p_context)

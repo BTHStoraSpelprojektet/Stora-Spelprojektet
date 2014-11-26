@@ -111,6 +111,8 @@ int ModelImporter::ReadHierarchy(BoneFrame* bone, void* data, int readPosition)
 	readPosition += (sizeof(float)* 3);
 	memcpy(&bone->m_quarternion, (char*)data + readPosition, (sizeof(float)* 4));
 	readPosition += (sizeof(float)* 4);
+	memcpy(&bone->m_orientQuarternion, (char*)data + readPosition, (sizeof(float)* 4));
+	readPosition += (sizeof(float)* 4);
 	memcpy(&bone->m_rotEuler, (char*)data + readPosition, (sizeof(float)* 3));
 	readPosition += (sizeof(float)* 3);
 	memcpy(&bone->m_scale, (char*)data + readPosition, (sizeof(double)* 3));

@@ -30,7 +30,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	return result;
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex, std::vector<DirectX::XMMATRIX> p_boneTransforms)
 {
 	switch (p_shader)
 	{
@@ -43,6 +43,12 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 		case(SHADERTYPE_INSTANCED) :
 		{
 			m_instanceShader.Render( m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex);
+
+			break;
+		}
+		case(SHADERTYPE_ANIMATED) :
+		{
+			m_sceneShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_boneTransforms);
 
 			break;
 		}
