@@ -17,7 +17,7 @@ public:
 	DefaultReplica(bool p_isServer);
 	~DefaultReplica();
 
-	virtual RakNet::RakString GetType() const = 0;
+	virtual RakNet::RakString GetTypeName() const = 0;
 	void NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID p_guid, uint32_t p_receiptId, bool p_messageArrived);
 	void WriteAllocationID(RakNet::Connection_RM3 *p_destinationConnection, RakNet::BitStream *p_allocationIdBitstream) const;
 	void PrintStringInBitsream(RakNet::BitStream *p_bitStream);
@@ -33,7 +33,7 @@ public:
 	RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *p_serializeParameters);
 	void Deserialize(RakNet::DeserializeParameters *p_deserializeParameters);
 
-private:
+protected:
 	RakNet::VariableDeltaSerializer m_variableDeltaSerializer;
 	bool m_isServer;
 };

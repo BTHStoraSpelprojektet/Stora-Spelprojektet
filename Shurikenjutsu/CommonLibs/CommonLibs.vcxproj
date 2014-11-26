@@ -72,7 +72,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\RakNet\Source\XBox360Includes.h" />
     <ClInclude Include="DefaultReplica.h" />
-    <ClInclude Include="MyHeader.h" />
+    <ClInclude Include="PlayerSerializer.h" />
     <ClInclude Include="RakNet\AutopatcherPatchContext.h" />
     <ClInclude Include="RakNet\AutopatcherRepositoryInterface.h" />
     <ClInclude Include="RakNet\Base64Encoder.h" />
@@ -230,6 +230,7 @@
   <ItemGroup>
     <ClCompile Include="DefaultReplica.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PlayerSerializer.cpp" />
     <ClCompile Include="RakNet\Base64Encoder.cpp" />
     <ClCompile Include="RakNet\BitStream.cpp" />
     <ClCompile Include="RakNet\CCRakNetSlidingWindow.cpp" />

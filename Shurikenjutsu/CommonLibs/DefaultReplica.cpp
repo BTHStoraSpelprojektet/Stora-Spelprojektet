@@ -18,7 +18,7 @@ void DefaultReplica::NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID p_g
 
 void DefaultReplica::WriteAllocationID(RakNet::Connection_RM3 *p_destinationConnection, RakNet::BitStream *p_allocationIdBitstream) const
 {
-	p_allocationIdBitstream->Write(GetType());
+	p_allocationIdBitstream->Write(GetTypeName());
 }
 
 void DefaultReplica::PrintStringInBitsream(RakNet::BitStream *p_bitStream)
@@ -45,7 +45,7 @@ void DefaultReplica::SerializeConstruction(RakNet::BitStream *p_constructionBits
 {
 	m_variableDeltaSerializer.AddRemoteSystemVariableHistory(p_destinationConnection->GetRakNetGUID());
 
-	p_constructionBitstream->Write(GetType() + " SerializeConstruction");
+	p_constructionBitstream->Write(GetTypeName() + " SerializeConstruction");
 }
 
 bool DefaultReplica::DeserializeConstruction(RakNet::BitStream *p_constructionBitstream, RakNet::Connection_RM3 *p_sourceConnection)
@@ -58,7 +58,7 @@ void DefaultReplica::SerializeDestruction(RakNet::BitStream *p_destructionBitstr
 {
 	m_variableDeltaSerializer.RemoveRemoteSystemVariableHistory(p_destinationConnection->GetRakNetGUID());
 
-	p_destructionBitstream->Write(GetType() + " SerializeDestruction");
+	p_destructionBitstream->Write(GetTypeName() + " SerializeDestruction");
 }
 
 bool DefaultReplica::DeserializeDestruction(RakNet::BitStream *p_destructionBitstream, RakNet::Connection_RM3 *p_sourceConnection)

@@ -16,11 +16,14 @@
     <Filter Include="RakNet">
       <UniqueIdentifier>{39eb0f58-76f4-49a7-bada-900e29d7ae74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{ae1f94cc-e733-4c86-b2bb-b833798173ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects">
+      <UniqueIdentifier>{ea1cb3f3-92ad-4bfd-8c59-e693ecef00a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyHeader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RakNet\_FindFirst.h">
       <Filter>RakNet</Filter>
     </ClInclude>
@@ -486,6 +489,9 @@
     <ClInclude Include="ReplicaManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PlayerSerializer.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -826,6 +832,9 @@
     </ClCompile>
     <ClCompile Include="ReplicaManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSerializer.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
