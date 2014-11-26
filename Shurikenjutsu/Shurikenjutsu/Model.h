@@ -21,7 +21,7 @@ public:
 
 	ID3D11Buffer* GetMesh();
 	ID3D11ShaderResourceView* GetTexture();
-	DirectX::XMMATRIX GetWorldMatrix();
+	DirectX::XMFLOAT4X4 GetWorldMatrix();
 	int GetVertexCount();
 
 	void Rotate(DirectX::XMFLOAT3 p_rotation);

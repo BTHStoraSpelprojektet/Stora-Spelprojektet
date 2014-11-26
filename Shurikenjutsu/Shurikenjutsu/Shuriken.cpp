@@ -9,7 +9,7 @@ bool Shuriken::Initialize(ID3D11Device* p_device, const char* p_filepath, Direct
 {
 	if (MovingObject::Initialize(p_device, p_filepath, p_pos, p_dir, p_speed))
 	{
-		SetLifetime(5.0f);
+		SetLifetime(2.0f);
 		SetDamage(0);
 
 		return true;
@@ -26,7 +26,6 @@ void Shuriken::Shutdown()
 void Shuriken::Update(double p_deltaTime)
 {
 	// Update position
-
 	m_position.x += (float)(m_direction.x*m_speed*p_deltaTime);
 	m_position.y += (float)(m_direction.y*m_speed*p_deltaTime);
 	m_position.z += (float)(m_direction.z*m_speed*p_deltaTime);
@@ -58,4 +57,9 @@ void Shuriken::SetDamage(int p_damage)
 int Shuriken::GetDamage() const
 {
 	return m_damage;
+}
+
+bool Shuriken::IsDead()
+{
+	return (m_lifetime <= 0);
 }

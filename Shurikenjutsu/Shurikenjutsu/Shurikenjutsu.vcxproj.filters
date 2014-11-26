@@ -151,7 +151,7 @@
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="PlayerManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -229,7 +229,7 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Core</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Shuriken.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
@@ -237,7 +237,7 @@
       <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="PlayerManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

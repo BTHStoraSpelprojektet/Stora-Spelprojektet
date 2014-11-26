@@ -46,9 +46,6 @@ bool System::Initialize()
 	ConsolePrintSuccess("Camera initialized successfully.");
 	ConsoleSkipLines(1);
 	
-	// Reset the camera for initial use.
-	ResetCamera();
-	
 	// REMOVE THIS LATER.
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
 	m_graphicsEngine.AddInstanceBuffer(1);
@@ -90,6 +87,9 @@ bool System::Initialize()
 	// Initialize PlayerManager
 //	m_playerManager = new PlayerManager();
 	m_playerManager.Initialize(m_graphicsEngine.GetDevice());
+
+	// Reset the camera for initial use.
+	ResetCamera();
 
     return result;
 }
@@ -210,7 +210,7 @@ void System::Render()
 void System::MoveCamera(double p_dt)
 {
 	// Start moving the camera with the C key.
-	if ((GetAsyncKeyState('C') & 0x8000) && m_flyCamera == false)
+	if (GetAsyncKeyState('C') & 0x8000 && !m_flyCamera)
 	{
 		ShowCursor(false);
 		m_flyCamera = true;
@@ -238,22 +238,22 @@ void System::MoveCamera(double p_dt)
 		SetCursorPos((int)m_oldMouseX, (int)m_oldMouseY);
 
 		// Move the camera using W, S, A, D keys.
-		if (GetAsyncKeyState('W') & 0x8000)
+		if (GetAsyncKeyState(VK_UP) & 0x8000)
 		{
 			m_camera.Walk(10.0f * deltaTime);
 		}
 
-		if (GetAsyncKeyState('S') & 0x8000)
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000)
 		{
 			m_camera.Walk(-10.0f * deltaTime);
 		}
 
-		if (GetAsyncKeyState('A') & 0x8000)
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000)
 		{
 			m_camera.Strafe(-10.0f * deltaTime);
 		}
 
-		if (GetAsyncKeyState('D') & 0x8000)
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)
 		{
 			m_camera.Strafe(10.0f * deltaTime);
 		}
@@ -272,33 +272,25 @@ void System::MoveCamera(double p_dt)
 			ResetCamera();
 		}
 	}
+
+	else
+	{
+		ResetCamera();
+	}
+
 }
 
 void System::ResetCamera()
 {
 	// Reset camera.
-	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 20.0f, -10.0f, 0.0f);
-	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 playerPosition = m_playerManager.GetPosition(0);
+
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 20.0f, playerPosition.z - 10.0f);
+
+	DirectX::XMFLOAT3 target = playerPosition;
 
 	m_camera.UpdatePosition(position);
 	m_camera.UpdateTarget(target);
-
-	// Look vector.
-	DirectX::XMVECTOR look = DirectX::XMVectorSet(0.0f, -20.0f, 10.0f, 0.0f);
-	look = DirectX::XMVector3Normalize(look);
-	m_camera.UpdateLook(look);
-
-	// Up vector.
-	DirectX::XMVECTOR right = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 10.0f, -20.0f, 0.0f);
-	up = DirectX::XMVector3Cross(look, right);
-	up = DirectX::XMVector3Normalize(up);
-	m_camera.UpdateUpVector(up);
-
-	// Right vector.
-	right = DirectX::XMVector3Cross(up, look);
-	right = DirectX::XMVector3Normalize(right);
-	m_camera.UpdateRight(right);
 
 	// Projection data.
 	m_camera.UpdateFieldOfView(3.141592f * 0.5f);

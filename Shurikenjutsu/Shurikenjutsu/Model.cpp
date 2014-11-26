@@ -84,9 +84,9 @@ ID3D11ShaderResourceView* Model::GetTexture()
 	return m_texture;
 }
 
-DirectX::XMMATRIX Model::GetWorldMatrix()
+DirectX::XMFLOAT4X4 Model::GetWorldMatrix()
 {
-	return DirectX::XMLoadFloat4x4(&m_worldMatrix);
+	return m_worldMatrix;
 }
 
 int Model::GetVertexCount()

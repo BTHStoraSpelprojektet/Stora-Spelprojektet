@@ -14,9 +14,9 @@ class SceneShader
 public:
 	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
 
-	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 
-	void UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix);
+	void UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	void UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity);
 
 	void TurnOnBackFaceCulling(ID3D11DeviceContext* p_context);
@@ -25,7 +25,7 @@ public:
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight);
 
 private:
-	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix);
+	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix);
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
@@ -39,8 +39,8 @@ private:
 	std::string m_VSVersion;
 	std::string m_PSVersion;
 
-	DirectX::XMMATRIX m_viewMatrix;
-	DirectX::XMMATRIX m_projectionMatrix;
+	DirectX::XMFLOAT4X4 m_viewMatrix;
+	DirectX::XMFLOAT4X4 m_projectionMatrix;
 
 	ID3D11Buffer* m_matrixBuffer;
 	struct MatrixBuffer
