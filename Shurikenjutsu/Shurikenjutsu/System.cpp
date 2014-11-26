@@ -1,6 +1,6 @@
 #include "System.h"
 
-bool System::Initialize()
+bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
     bool result = true;
 
@@ -71,7 +71,7 @@ bool System::Initialize()
 	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
-	m_debug.RunTests();
+	m_debug.RunTests(p_argc, p_argv);
 
 	// Input: Register keys
 	InputManager* input = InputManager::GetInstance();

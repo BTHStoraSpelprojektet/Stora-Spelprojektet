@@ -1,8 +1,6 @@
 #include "Collisions.h"
 
 
-Collisions::Collisions(){}
-Collisions::~Collisions(){}
 bool Collisions::SphereSphereCollision(Sphere p_sphere1, Sphere p_sphere2)
 {
 	DirectX::BoundingSphere sphere1 = DirectX::BoundingSphere(p_sphere1.m_position, p_sphere1.m_radius);

@@ -5,8 +5,6 @@
 class Collisions
 {
 public:
-	Collisions();
-	~Collisions();
 
 	static bool SphereSphereCollision(Sphere p_sphere1, Sphere p_sphere2);
 	static bool BoxBoxCollision(Box p_box1, Box p_box2);

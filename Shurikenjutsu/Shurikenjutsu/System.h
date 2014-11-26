@@ -21,7 +21,7 @@
 class System
 {
 public:
-	bool Initialize();
+	bool Initialize(int p_argc, _TCHAR* p_argv[]);
     void Run();
 
 private:

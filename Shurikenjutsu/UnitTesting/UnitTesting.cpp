@@ -3,15 +3,21 @@
 
 #include "stdafx.h"
 #include "include\gtest\gtest.h"
-#include "Collisions.h"
+#include "..\Shurikenjutsu\Collisions.h"
+
+//bool Collisions::SphereSphereCollision(Sphere a, Sphere s);
+//bool Collisions::SphereSphereCollision(Sphere p_sphere1, Sphere p_sphere2);
 
 
-
+Collisions c;
 TEST(testing, temp)
 {
-	Collisions* temp = new Collisions();
-	//bool temp = Collisions::SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Sphere(0.0f, 5.0f, 0.0f, 5.0f));
-	EXPECT_EQ(true,true);
+	//bool t = c->SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 0.0f), Sphere(0.0f, 0.0f, 0.0f, 0.0f));
+	//Collisions::SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Sphere(0.0f, 5.0f, 0.0f, 5.0f));
+	//c.SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Sphere(0.0f, 5.0f, 0.0f, 5.0f));
+	bool temp = c.SphereSphereCollision(Sphere(0.0f, 0.0f, 0.0f, 10.0f), Sphere(0.0f, 5.0f, 0.0f, 5.0f));
+  	EXPECT_EQ(true,temp);
+
 }
 
 int _tmain(int argc, _TCHAR* argv[])
