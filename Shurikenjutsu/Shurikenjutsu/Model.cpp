@@ -3,7 +3,7 @@
 bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 {
 	// Initialize world matrix.
-	m_worldMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 
 	// Load Mesh.
 	ModelImporter importer;
@@ -48,33 +48,33 @@ ID3D11ShaderResourceView* Model::LoadTexture(ID3D11Device* p_device, unsigned in
 	int combinedSize = p_width * p_height * p_depth;
 	if (combinedSize > 0)
 	{
-		D3D11_TEXTURE2D_DESC textureDesc;
-		textureDesc.Width = p_width;
-		textureDesc.Height = p_height;
-		textureDesc.MipLevels = 1;
-		textureDesc.ArraySize = 1;
-		textureDesc.SampleDesc.Count = 1;
-		textureDesc.SampleDesc.Quality = 0;
-		textureDesc.Usage = D3D11_USAGE_DEFAULT;
-		textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		textureDesc.CPUAccessFlags = 0;
-		textureDesc.MiscFlags = 0;
+	D3D11_TEXTURE2D_DESC textureDesc;
+	textureDesc.Width = p_width;
+	textureDesc.Height = p_height;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA data;
-		data.pSysMem = (void*)p_pixels;
-		data.SysMemPitch = p_width * 4;
-		data.SysMemSlicePitch = 0;
+	D3D11_SUBRESOURCE_DATA data;
+	data.pSysMem = (void*)p_pixels;
+	data.SysMemPitch = p_width * 4;
+	data.SysMemSlicePitch = 0;
 
-		ID3D11Texture2D* texture;
-		p_device->CreateTexture2D(&textureDesc, &data, &texture);
+	ID3D11Texture2D* texture;
+	p_device->CreateTexture2D(&textureDesc, &data, &texture);
 
-		D3D11_SHADER_RESOURCE_VIEW_DESC sRVDesc;
-		sRVDesc.Format = textureDesc.Format;
-		sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
-		sRVDesc.Texture2D.MostDetailedMip = 0;
-		p_device->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+	D3D11_SHADER_RESOURCE_VIEW_DESC sRVDesc;
+	sRVDesc.Format = textureDesc.Format;
+	sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
+	sRVDesc.Texture2D.MostDetailedMip = 0;
+	p_device->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
 	}
 
 	return textureSRV;
@@ -110,7 +110,7 @@ ID3D11ShaderResourceView* Model::GetTexture()
 
 DirectX::XMMATRIX Model::GetWorldMatrix()
 {
-	return m_worldMatrix;
+	return DirectX::XMLoadFloat4x4(&m_worldMatrix);
 }
 
 int Model::GetVertexCount()
@@ -123,28 +123,45 @@ std::vector<DirectX::XMMATRIX> Model::GetAnimation()
 	return boneTransforms;
 }
 
-void Model::Rotate(DirectX::XMVECTOR p_rotation)
+void Model::Rotate(DirectX::XMFLOAT3 p_rotation)
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(p_rotation);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation));
 
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
 }
 
-void Model::Translate(DirectX::XMVECTOR p_translation)
+void Model::Translate(DirectX::XMFLOAT3 p_translation)
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixTranslationFromVector(p_translation);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_translation));
 
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
 }
 
-void Model::Scale(DirectX::XMVECTOR p_scale)
+void Model::Scale(DirectX::XMFLOAT3 p_scale)
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixScalingFromVector(p_scale);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_scale));
 
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
 }
 
 void Model::ResetModel()
 {
-	m_worldMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&m_worldMatrix,DirectX::XMMatrixIdentity());
 }
+
+void Model::SetPosition(DirectX::XMFLOAT3 p_position)
+{
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position));
+
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
+}
+
+void Model::UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation)
+{
+	DirectX::XMMATRIX matrix =	DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&p_scale)) *
+								DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation)) *
+								DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position));
+								
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, matrix);
+}
+

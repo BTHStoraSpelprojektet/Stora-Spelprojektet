@@ -30,6 +30,11 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	return result;
 }
 
+void GraphicsEngine::Shutdown()
+{
+
+}
+
 void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex, std::vector<DirectX::XMMATRIX> p_boneTransforms)
 {
 	switch (p_shader)
@@ -144,18 +149,45 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 void GraphicsEngine::TurnOnAlphaBlending()
 {
 	m_directX.TurnOnAlphaBlending();
-	m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
-	m_instanceShader.TurnOffBackFaceCulling(m_directX.GetContext());
+	//m_instanceShader.TurnOffBackFaceCulling(m_directX.GetContext());
+	//m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
 }
 
 void GraphicsEngine::TurnOffAlphaBlending()
 {
 	m_directX.TurnOffAlphaBlending();
-	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
-	m_instanceShader.TurnOnBackFaceCulling(m_directX.GetContext());
+	//m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+	//m_instanceShader.TurnOnBackFaceCulling(m_directX.GetContext());
 }
 
 void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
 {
 	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances);
+}
+
+bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
+{    
+	if (p_fullscreen)
+	{               
+		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(true, nullptr)))
+		{            
+			ConsolePrintError("Setting fullscreen mode failed.");
+			return false;
+		}        
+
+		GLOBAL::GetInstance().FULLSCREEN = true;
+	}    
+	
+	else    
+	{        
+		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(false, nullptr)))
+		{
+			ConsolePrintError("Setting windowed mode failed.");
+			return false;
+		}    
+		
+		GLOBAL::GetInstance().FULLSCREEN = false;
+	}    
+
+	return true;
 }
