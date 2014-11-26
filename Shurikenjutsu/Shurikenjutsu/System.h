@@ -1,6 +1,8 @@
 #ifndef SYSTEM
 #define SYSTEM
 
+#include <vector>
+
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "Timer.h"
@@ -43,7 +45,6 @@ private:
 	Model m_character;
 	Model m_animatedCharacter;
 	Model m_object;
-
 
 	bool m_flyCamera;
 	float m_oldMouseX;
