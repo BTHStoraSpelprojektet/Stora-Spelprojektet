@@ -84,6 +84,11 @@ ID3D11ShaderResourceView* Model::GetTexture()
 	return m_texture;
 }
 
+ID3D11ShaderResourceView* Model::GetNormalMap()
+{
+	return m_normalMap;
+}
+
 DirectX::XMMATRIX Model::GetWorldMatrix()
 {
 	return m_worldMatrix;

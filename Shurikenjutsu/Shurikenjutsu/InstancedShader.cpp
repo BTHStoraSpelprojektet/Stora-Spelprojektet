@@ -223,7 +223,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	return true;
 }
 
-void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
+void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
 	// Set parameters and then render.
 	unsigned int stride[2];
@@ -242,6 +242,7 @@ void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mes
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetShaderResources(1, 1, &p_normalMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 
 	p_context->IASetVertexBuffers(0, 2, bufferPointers, stride, offset);
