@@ -6,7 +6,7 @@
 class PlayerSerializer : public DefaultReplica
 {
 public:
-	PlayerSerializer(bool p_isServer);
+	PlayerSerializer();
 	~PlayerSerializer();
 
 	RakNet::RakString GetTypeName();

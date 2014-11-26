@@ -226,6 +226,7 @@
     <ClInclude Include="RakNet\_FindFirst.h" />
     <ClInclude Include="ReplicaConnection.h" />
     <ClInclude Include="ReplicaManager.h" />
+    <ClInclude Include="ServerGlobals.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DefaultReplica.cpp" />
@@ -342,6 +343,7 @@
     <ClCompile Include="RakNet\_FindFirst.cpp" />
     <ClCompile Include="ReplicaConnection.cpp" />
     <ClCompile Include="ReplicaManager.cpp" />
+    <ClCompile Include="ServerGlobals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RakNet\RakNet.vcproj" />

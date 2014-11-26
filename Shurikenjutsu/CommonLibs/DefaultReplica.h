@@ -1,20 +1,14 @@
 #ifndef DEFAULTREPLICA_H_
 #define DEFAULTREPLICA_H
 
-//#include "RakPeerInterface.h"
-//#include "MessageIdentifiers.h"
-//#include "BitStream.h"
-//#include "RakNetTypes.h"
-//#include "GetTime.h"
-//#include "NetworkIDManager.h"
-
 #include "ReplicaManager3.h"
 #include "VariableDeltaSerializer.h"
+#include "ServerGlobals.h"
 
 class DefaultReplica : public RakNet::Replica3
 {
 public:
-	DefaultReplica(bool p_isServer);
+	DefaultReplica();
 	~DefaultReplica();
 
 	virtual RakNet::RakString GetTypeName() const = 0;

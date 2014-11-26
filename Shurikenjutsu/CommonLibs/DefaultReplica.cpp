@@ -1,9 +1,9 @@
 #include "DefaultReplica.h"
 
 
-DefaultReplica::DefaultReplica(bool p_isServer)
+DefaultReplica::DefaultReplica()
 {
-	m_isServer = p_isServer;
+	m_isServer = ServerGlobals::GetIsServer();
 }
 
 
