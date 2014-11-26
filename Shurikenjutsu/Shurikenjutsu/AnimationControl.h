@@ -48,7 +48,7 @@ private:
 
 	std::vector<AnimationStack> m_animationStacks;
 
-	float m_frame;
+	double m_frame;
 
 	std::vector<DirectX::XMMATRIX> m_boneTransforms;
 };
