@@ -11,36 +11,31 @@
 #include "ReplicaManager3.h"
 #include "VariableDeltaSerializer.h"
 
-enum
-{
-	CLIENT,
-	SERVER
-} topology;
-
 class DefaultReplica : public RakNet::Replica3
 {
 public:
-	DefaultReplica();
+	DefaultReplica(bool p_isServer);
 	~DefaultReplica();
 
 	virtual RakNet::RakString GetType() const = 0;
-	void NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived);
-	void WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const;
-	void PrintStringInBitsream(RakNet::BitStream *bitStream);
-	RakNet::RM3ConstructionState QueryConstruction(RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3);
-	bool QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection);
-	void SerializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection);
-	bool DeserializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection);
-	void SerializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *destinationConnection);
-	bool DeserializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection);
-	RakNet::RM3ActionOnPopConnection QueryActionOnPopConnection(RakNet::Connection_RM3 *droppedConnection) const;
-	void DeallocReplica(RakNet::Connection_RM3 *sourceConnection);
-	RakNet::RM3QuerySerializationResult QuerySerialization(RakNet::Connection_RM3 *destinationConnection);
-	RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *serializeParameters);
-	void Deserialize(RakNet::DeserializeParameters *deserializeParameters);
+	void NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID p_guid, uint32_t p_receiptId, bool p_messageArrived);
+	void WriteAllocationID(RakNet::Connection_RM3 *p_destinationConnection, RakNet::BitStream *p_allocationIdBitstream) const;
+	void PrintStringInBitsream(RakNet::BitStream *p_bitStream);
+	RakNet::RM3ConstructionState QueryConstruction(RakNet::Connection_RM3 *p_destinationConnection, RakNet::ReplicaManager3 *p_replicaManager3);
+	bool QueryRemoteConstruction(RakNet::Connection_RM3 *p_sourceConnection);
+	void SerializeConstruction(RakNet::BitStream *p_constructionBitstream, RakNet::Connection_RM3 *p_destinationConnection);
+	bool DeserializeConstruction(RakNet::BitStream *p_constructionBitstream, RakNet::Connection_RM3 *p_sourceConnection);
+	void SerializeDestruction(RakNet::BitStream *p_destructionBitstream, RakNet::Connection_RM3 *p_destinationConnection);
+	bool DeserializeDestruction(RakNet::BitStream *p_destructionBitstream, RakNet::Connection_RM3 *p_sourceConnection);
+	RakNet::RM3ActionOnPopConnection QueryActionOnPopConnection(RakNet::Connection_RM3 *p_droppedConnection) const;
+	void DeallocReplica(RakNet::Connection_RM3 *p_sourceConnection);
+	RakNet::RM3QuerySerializationResult QuerySerialization(RakNet::Connection_RM3 *p_destinationConnection);
+	RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *p_serializeParameters);
+	void Deserialize(RakNet::DeserializeParameters *p_deserializeParameters);
 
 private:
 	RakNet::VariableDeltaSerializer m_variableDeltaSerializer;
+	bool m_isServer;
 };
 
 #endif

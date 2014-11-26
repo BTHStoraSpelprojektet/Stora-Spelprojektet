@@ -6,11 +6,11 @@
 class ReplicaConnection : public RakNet::Connection_RM3
 {
 public:
-	ReplicaConnection(const RakNet::SystemAddress &systemAddress, RakNet::RakNetGUID guid);
+	ReplicaConnection(const RakNet::SystemAddress &p_systemAddress, RakNet::RakNetGUID p_guid);
 	~ReplicaConnection();
 
 	bool QueryGroupDownloadMessages() const;
-	RakNet::Replica3* AllocReplica(RakNet::BitStream *allocationId, RakNet::ReplicaManager3 *replicaManager3);
+	RakNet::Replica3* AllocReplica(RakNet::BitStream *p_allocationId, RakNet::ReplicaManager3 *p_replicaManager3);
 private:
 
 };

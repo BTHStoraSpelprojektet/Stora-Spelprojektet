@@ -11,8 +11,8 @@ public:
 	ReplicaManager();
 	~ReplicaManager();
 
-	RakNet::Connection_RM3* AllocConnection(const RakNet::SystemAddress &systemAddress, RakNet::RakNetGUID rakNetGUID) const;
-	void DeallocConnection(RakNet::Connection_RM3* connection) const;
+	RakNet::Connection_RM3* AllocConnection(const RakNet::SystemAddress &p_systemAddress, RakNet::RakNetGUID p_rakNetGUID) const;
+	void DeallocConnection(RakNet::Connection_RM3* p_connection) const;
 };
 
 #endif

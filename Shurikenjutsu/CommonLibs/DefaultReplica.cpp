@@ -1,8 +1,9 @@
 #include "DefaultReplica.h"
 
 
-DefaultReplica::DefaultReplica()
+DefaultReplica::DefaultReplica(bool p_isServer)
 {
+	m_isServer = p_isServer;
 }
 
 
@@ -10,79 +11,79 @@ DefaultReplica::~DefaultReplica()
 {
 }
 
-void DefaultReplica::NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID guid, uint32_t receiptId, bool messageArrived)
+void DefaultReplica::NotifyReplicaOfMessageDeliveryStatus(RakNet::RakNetGUID p_guid, uint32_t p_receiptId, bool p_messageArrived)
 {
-	m_variableDeltaSerializer.OnMessageReceipt(guid, receiptId, messageArrived);
+	m_variableDeltaSerializer.OnMessageReceipt(p_guid, p_receiptId, p_messageArrived);
 }
 
-void DefaultReplica::WriteAllocationID(RakNet::Connection_RM3 *destinationConnection, RakNet::BitStream *allocationIdBitstream) const
+void DefaultReplica::WriteAllocationID(RakNet::Connection_RM3 *p_destinationConnection, RakNet::BitStream *p_allocationIdBitstream) const
 {
-	allocationIdBitstream->Write(GetType());
+	p_allocationIdBitstream->Write(GetType());
 }
 
-void DefaultReplica::PrintStringInBitsream(RakNet::BitStream *bitStream)
+void DefaultReplica::PrintStringInBitsream(RakNet::BitStream *p_bitStream)
 {
-	if (!(bitStream->GetNumberOfBitsUsed() == 0))
+	if (!(p_bitStream->GetNumberOfBitsUsed() == 0))
 	{
 		RakNet::RakString rakString;
-		bitStream->Read(rakString);
+		p_bitStream->Read(rakString);
 		printf("Receive: %s\n", rakString.C_String());
 	}
 }
 
-RakNet::RM3ConstructionState DefaultReplica::QueryConstruction(RakNet::Connection_RM3 *destinationConnection, RakNet::ReplicaManager3 *replicaManager3)
+RakNet::RM3ConstructionState DefaultReplica::QueryConstruction(RakNet::Connection_RM3 *p_destinationConnection, RakNet::ReplicaManager3 *p_replicaManager3)
 {
-	return QueryConstruction_ClientConstruction(destinationConnection, topology != CLIENT);
+	return QueryConstruction_ClientConstruction(p_destinationConnection, m_isServer);
 }
 
-bool DefaultReplica::QueryRemoteConstruction(RakNet::Connection_RM3 *sourceConnection)
+bool DefaultReplica::QueryRemoteConstruction(RakNet::Connection_RM3 *p_sourceConnection)
 {
-	return QueryRemoteConstruction_ClientConstruction(sourceConnection, topology != CLIENT);
+	return QueryRemoteConstruction_ClientConstruction(p_sourceConnection, m_isServer);
 }
 
-void DefaultReplica::SerializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *destinationConnection)
+void DefaultReplica::SerializeConstruction(RakNet::BitStream *p_constructionBitstream, RakNet::Connection_RM3 *p_destinationConnection)
 {
-	m_variableDeltaSerializer.AddRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
+	m_variableDeltaSerializer.AddRemoteSystemVariableHistory(p_destinationConnection->GetRakNetGUID());
 
-	constructionBitstream->Write(GetType() + " SerializeConstruction");
+	p_constructionBitstream->Write(GetType() + " SerializeConstruction");
 }
 
-bool DefaultReplica::DeserializeConstruction(RakNet::BitStream *constructionBitstream, RakNet::Connection_RM3 *sourceConnection)
+bool DefaultReplica::DeserializeConstruction(RakNet::BitStream *p_constructionBitstream, RakNet::Connection_RM3 *p_sourceConnection)
 {
-	PrintStringInBitsream(constructionBitstream);
+	PrintStringInBitsream(p_constructionBitstream);
 	return true;
 }
 
-void DefaultReplica::SerializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *destinationConnection)
+void DefaultReplica::SerializeDestruction(RakNet::BitStream *p_destructionBitstream, RakNet::Connection_RM3 *p_destinationConnection)
 {
-	m_variableDeltaSerializer.RemoveRemoteSystemVariableHistory(destinationConnection->GetRakNetGUID());
+	m_variableDeltaSerializer.RemoveRemoteSystemVariableHistory(p_destinationConnection->GetRakNetGUID());
 
-	destructionBitstream->Write(GetType() + " SerializeDestruction");
+	p_destructionBitstream->Write(GetType() + " SerializeDestruction");
 }
 
-bool DefaultReplica::DeserializeDestruction(RakNet::BitStream *destructionBitstream, RakNet::Connection_RM3 *sourceConnection)
+bool DefaultReplica::DeserializeDestruction(RakNet::BitStream *p_destructionBitstream, RakNet::Connection_RM3 *p_sourceConnection)
 {
-	PrintStringInBitsream(destructionBitstream);
+	PrintStringInBitsream(p_destructionBitstream);
 	return true;
 }
 
-RakNet::RM3ActionOnPopConnection DefaultReplica::QueryActionOnPopConnection(RakNet::Connection_RM3 *droppedConnection) const
+RakNet::RM3ActionOnPopConnection DefaultReplica::QueryActionOnPopConnection(RakNet::Connection_RM3 *p_droppedConnection) const
 {
-	return QueryActionOnPopConnection_Client(droppedConnection);
+	return QueryActionOnPopConnection_Client(p_droppedConnection);
 }
 
-void DefaultReplica::DeallocReplica(RakNet::Connection_RM3 *sourceConnection)
+void DefaultReplica::DeallocReplica(RakNet::Connection_RM3 *p_sourceConnection)
 {
 	delete this;
 }
 
-RakNet::RM3QuerySerializationResult DefaultReplica::QuerySerialization(RakNet::Connection_RM3 *destinationConnection)
+RakNet::RM3QuerySerializationResult DefaultReplica::QuerySerialization(RakNet::Connection_RM3 *p_destinationConnection)
 {
-	return QuerySerialization_ServerSerializable(destinationConnection, topology != CLIENT);
+	return QuerySerialization_ServerSerializable(p_destinationConnection, m_isServer);
 }
 
 // This is for example, don't run the commented code
-RakNet::RM3SerializationResult DefaultReplica::Serialize(RakNet::SerializeParameters *serializeParameters)
+RakNet::RM3SerializationResult DefaultReplica::Serialize(RakNet::SerializeParameters *p_serializeParameters)
 {
 	// How to write function
 
@@ -107,7 +108,7 @@ RakNet::RM3SerializationResult DefaultReplica::Serialize(RakNet::SerializeParame
 
 
 // This is just for example, don't run the commented code
-void DefaultReplica::Deserialize(RakNet::DeserializeParameters *deserializeParameters)
+void DefaultReplica::Deserialize(RakNet::DeserializeParameters *p_deserializeParameters)
 {
 	// How to write function
 

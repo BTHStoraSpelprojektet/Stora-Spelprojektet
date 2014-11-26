@@ -10,12 +10,12 @@ ReplicaManager::~ReplicaManager()
 {
 }
 
-RakNet::Connection_RM3* ReplicaManager::AllocConnection(const RakNet::SystemAddress &systemAddress, RakNet::RakNetGUID rakNetGUID) const
+RakNet::Connection_RM3* ReplicaManager::AllocConnection(const RakNet::SystemAddress &p_systemAddress, RakNet::RakNetGUID p_rakNetGUID) const
 {
-	return new ReplicaConnection(systemAddress, rakNetGUID);
+	return new ReplicaConnection(p_systemAddress, p_rakNetGUID);
 }
 
-void ReplicaManager::DeallocConnection(RakNet::Connection_RM3* connection) const
+void ReplicaManager::DeallocConnection(RakNet::Connection_RM3* p_connection) const
 {
-	delete connection;
+	delete p_connection;
 }
