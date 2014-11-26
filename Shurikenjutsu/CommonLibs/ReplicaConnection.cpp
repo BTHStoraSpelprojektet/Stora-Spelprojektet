@@ -22,7 +22,7 @@ RakNet::Replica3* ReplicaConnection::AllocReplica(RakNet::BitStream *p_allocatio
 
 	if (typeName == "Player")
 	{
-		// return new PlayerSerializer
+		return new PlayerReplica;
 	}
 
 	return 0;

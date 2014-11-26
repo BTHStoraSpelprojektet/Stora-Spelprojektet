@@ -15,7 +15,7 @@ PlayerReplica::~PlayerReplica()
 
 RakNet::RakString PlayerReplica::GetTypeName() const
 {
-	return "PlayerType";
+	return "Player";
 }
 
 RakNet::RM3SerializationResult PlayerReplica::Serialize(RakNet::SerializeParameters *p_serializeParameters)

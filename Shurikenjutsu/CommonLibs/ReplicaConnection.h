@@ -2,6 +2,7 @@
 #define REPLICACONNECTION_H
 
 #include "ReplicaManager3.h"
+#include "PlayerReplica.h"
 
 class ReplicaConnection : public RakNet::Connection_RM3
 {
