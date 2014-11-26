@@ -4,16 +4,32 @@ bool System::Initialize()
 {
     bool result = true;
 
+	// Set starting window values.
+	GLOBAL::GetInstance().FULLSCREEN = false;
+	GLOBAL::GetInstance().MAX_SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
+	GLOBAL::GetInstance().MAX_SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+
+	if (GLOBAL::GetInstance().FULLSCREEN)
+	{
+		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	}
+	else
+	{
+		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
+		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
+	}
+
 	ConsolePrintSuccess("Application initialized.");
 	ConsoleSkipLines(1);
 
 	// Set console position.
 	HWND console = GetConsoleWindow();
-	MoveWindow(console, 50, 50, 670, 1000, true);
+	MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
 	SetWindowTextA(console, "Shurikenjitsu Debug Console");
 
 	// Initialize the window.
-	WindowRectangle window = WindowRectangle(730, 50, GLOBAL_SCREEN_WIDTH, GLOBAL_SCREEN_HEIGHT);
+	WindowRectangle window = WindowRectangle(0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT);
 	m_window.Initialize(window);
 	ConsolePrintSuccess("Window created successfully.");
 	std::string size = "Window size: " + std::to_string(window.width);
@@ -30,6 +46,7 @@ bool System::Initialize()
 	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
 	m_graphicsEngine.SetSceneFog(0.0f, 100.0f, 0.01f);
 	m_graphicsEngine.TurnOffAlphaBlending();
+	m_render = true;
 
 	// Initialize timer.
 	m_previousFPS = 0;
@@ -41,8 +58,6 @@ bool System::Initialize()
 	// Initialize the camera.
 	m_flyCamera = false;
 	m_camera.Initialize();
-	float l_aspectRatio = (float)((window.width - 16) / (window.height - 39));
-	m_camera.UpdateAspectRatio(l_aspectRatio);
 	ConsolePrintSuccess("Camera initialized successfully.");
 	ConsoleSkipLines(1);
 	
@@ -79,6 +94,7 @@ bool System::Initialize()
 	input->RegisterKey(VkKeyScan('a'));
 	input->RegisterKey(VkKeyScan('s'));
 	input->RegisterKey(VkKeyScan('d'));
+	input->RegisterKey(VkKeyScan('f'));
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
@@ -92,6 +108,15 @@ bool System::Initialize()
 	m_playerManager.Initialize(m_graphicsEngine.GetDevice());
 
     return result;
+}
+
+void System::Shutdown()
+{
+	// Shutdown input.
+	InputManager::GetInstance()->Shutdown();
+
+	// Shutdown graphics engine.
+	m_graphicsEngine.Shutdown(); // TODO, this does nothing so far.
 }
 
 void System::Run()
@@ -115,9 +140,7 @@ void System::Run()
 		else
 		{
 			Update();
-			
-			// Render if the window is active.
-			if (GetForegroundWindow() == m_window.GetHandle())
+			if (m_render)
 			{
 				Render();
 			}
@@ -127,8 +150,8 @@ void System::Run()
 		}
 	}
 
-	// Shutdown Input
-	InputManager::GetInstance()->Shutdown();
+	// Shutdown.
+	Shutdown();
 }
 
 // Update game logic here.
@@ -158,7 +181,24 @@ void System::Update()
 		MoveCamera(deltaTime);
 	}
 
-	
+	// Quick escape.
+	if (GetAsyncKeyState(VK_ESCAPE))
+	{
+		PostQuitMessage(0);
+	}
+
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
+	{
+		if (GLOBAL::GetInstance().FULLSCREEN)
+		{
+			ToggleFullscreen(false);
+		}
+		else
+		{
+			ToggleFullscreen(true);
+		}
+	}
+
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
@@ -201,7 +241,7 @@ void System::Render()
 	// Stop rendering alpha blended.
 	m_graphicsEngine.TurnOffAlphaBlending();
 
-	
+
 
 	// Present the result.
 	m_graphicsEngine.Present();
@@ -301,11 +341,61 @@ void System::ResetCamera()
 	m_camera.UpdateRight(right);
 
 	// Projection data.
+	float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+	m_camera.UpdateAspectRatio(aspectRatio);
 	m_camera.UpdateFieldOfView(3.141592f * 0.5f);
-	m_camera.UpdateAspectRatio(GLOBAL_SCREEN_HEIGHT / GLOBAL_SCREEN_WIDTH);
 	m_camera.UpdateClippingPlanes(0.001f, 40.0f);
 	m_camera.UpdateViewMatrix();
 	m_camera.UpdateProjectionMatrix();
 
 	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+}
+
+void System::ToggleFullscreen(bool p_fullscreen)
+{
+	if (p_fullscreen)
+	{
+		m_render = false;
+
+		// Go to fullscreen
+		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		m_graphicsEngine.ToggleFullscreen(true);
+
+		// Update aspect ratio.
+		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		m_camera.UpdateAspectRatio(aspectRatio);
+		m_camera.UpdateProjectionMatrix();
+	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+
+		// Set both window positions.
+		HWND console = GetConsoleWindow();
+		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+
+		m_render = true;
+	}
+
+	else
+	{
+		m_render = false;
+
+		// Go to windowed mode.
+		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
+		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
+		m_graphicsEngine.ToggleFullscreen(false);
+
+		// Update aspect ratio.
+		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		m_camera.UpdateAspectRatio(aspectRatio);
+		m_camera.UpdateProjectionMatrix();
+		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+
+		// Set both window positions.
+		HWND console = GetConsoleWindow();
+		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+
+		m_render = true;
+	}
 }

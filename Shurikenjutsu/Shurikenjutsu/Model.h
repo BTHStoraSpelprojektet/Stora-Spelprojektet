@@ -27,9 +27,11 @@ public:
 	void Rotate(DirectX::XMFLOAT3 p_rotation);
 	void Translate(DirectX::XMFLOAT3 p_translation);
 	void Scale(DirectX::XMFLOAT3 p_scale);
-	void ResetModel();
+
 	void SetPosition(DirectX::XMFLOAT3 p_position);
-	void UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation);
+	void UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation); 
+
+	void ResetModel();
 
 protected:
 	ID3D11Buffer* m_mesh;

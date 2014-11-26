@@ -5,11 +5,13 @@
 #include "SceneShader.h"
 #include "InstancedShader.h"
 #include "Enumerations.h"
+#include "Globals.h"
 
 class GraphicsEngine
 {
 public:
 	bool Initialize(HWND p_handle);
+	void Shutdown();
 
 	void SetClearColor(float R, float G, float B, float p_opacity);
 	void Clear();
@@ -27,6 +29,8 @@ public:
 
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
+
+	bool ToggleFullscreen(bool p_fullscreen);
 
 	void AddInstanceBuffer(int p_numberOfInstances);
 

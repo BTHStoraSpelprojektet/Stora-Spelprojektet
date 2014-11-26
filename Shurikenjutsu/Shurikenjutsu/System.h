@@ -25,6 +25,7 @@ class System
 {
 public:
 	bool Initialize();
+	void Shutdown();
     void Run();
 
 private:
@@ -34,6 +35,8 @@ private:
 	void TestCollisions();
 	void MoveCamera(double p_dt);
 	void ResetCamera();
+
+	void ToggleFullscreen(bool p_fullscreen);
 
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
@@ -56,5 +59,7 @@ private:
 
 	DirectionalLight m_directionalLight;
 	ObjectManager m_objectManager;
+	
+	bool m_render;
 };
 #endif
