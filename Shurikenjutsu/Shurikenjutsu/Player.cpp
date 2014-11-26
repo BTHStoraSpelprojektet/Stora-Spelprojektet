@@ -66,6 +66,7 @@ void Player::Update(double p_deltaTime)
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
 	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed*p_deltaTime, m_position.y + m_direction.y * m_speed*p_deltaTime, m_position.z + m_direction.z * m_speed*p_deltaTime));
+	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
 }
 
 void Player::SetDamage(float p_damage)

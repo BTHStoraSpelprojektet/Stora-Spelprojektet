@@ -179,13 +179,6 @@ void System::Render()
 	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture(), 1);
 	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 2);
 
-	// Start rendering alpha blended.
-	m_graphicsEngine.TurnOnAlphaBlending();
-
-	// Stop rendering alpha blended.
-	m_graphicsEngine.TurnOffAlphaBlending();
-
-
 	//m_graphicsEngine.Render(SHADERTYPE_SCENE, m_playerManager.GetModel(0).GetMesh(), m_playerManager.GetModel(0).GetVertexCount(), m_playerManager.GetModel(0).GetWorldMatrix(), m_playerManager.GetModel(0).GetTexture());
 	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
 	for (unsigned int i = 0; i < tempList1.size(); i++)
@@ -193,6 +186,9 @@ void System::Render()
 		Model tempModel1 = tempList1[i].GetModel();
 		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture(), 1);
 	}
+
+	// Start rendering alpha blended.
+	m_graphicsEngine.TurnOnAlphaBlending();
 
 	// Draw Shurikens
 	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
