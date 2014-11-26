@@ -20,6 +20,10 @@ bool Server::Initialize()
 	m_serverPeer->Startup(MAX_CLIENTS, &m_socketDesc, 1);
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
+	RakNet::NetworkIDManager networkIdManager;
+	m_replicaManager.SetNetworkIDManager(&networkIdManager);
+	m_serverPeer->AttachPlugin(&m_replicaManager);
+
 	return true;
 }
 

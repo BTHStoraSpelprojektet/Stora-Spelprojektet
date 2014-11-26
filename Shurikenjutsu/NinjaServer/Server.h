@@ -19,6 +19,7 @@
 #include "RakPeer.h"
 #include "BitStream.h"
 #include "..\CommonLibs\ServerGlobals.h"
+#include "..\CommonLibs\ReplicaManager.h"
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 60000
@@ -36,7 +37,7 @@ private:
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
-
+	ReplicaManager m_replicaManager;
 };
 
 #endif SERVER
