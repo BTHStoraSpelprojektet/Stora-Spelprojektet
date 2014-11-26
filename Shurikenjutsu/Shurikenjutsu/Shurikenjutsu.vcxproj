@@ -73,6 +73,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ButtonEvent.cpp" />
     <ClCompile Include="InstancedShader.cpp" />
@@ -86,6 +87,7 @@
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
+    <ClCompile Include="PlayingState.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Shuriken.cpp" />
@@ -102,6 +104,7 @@
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Enumerations.h" />
     <ClInclude Include="Flags.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="InstancedShader.h" />
@@ -112,6 +115,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
+    <ClInclude Include="PlayingState.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />

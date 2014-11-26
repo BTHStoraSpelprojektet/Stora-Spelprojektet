@@ -153,6 +153,12 @@
     <ClCompile Include="PlayerManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayingState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -229,7 +235,7 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Core</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Shuriken.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
@@ -237,6 +243,12 @@
       <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="PlayerManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayingState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

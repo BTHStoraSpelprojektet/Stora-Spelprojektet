@@ -1,8 +1,11 @@
 #include "System.h"
-
+PlayingState System::playingState;
 bool System::Initialize()
 {
     bool result = true;
+	playingState = PlayingState();
+	//m_gameState = &m_playingState;
+	gameState = &System::playingState;
 
 	ConsolePrintSuccess("Application initialized.");
 	ConsoleSkipLines(1);
@@ -38,19 +41,21 @@ bool System::Initialize()
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
+	gameState->Initialize(m_graphicsEngine.GetDevice(), &m_graphicsEngine);
+
 	// Initialize the camera.
 	m_flyCamera = false;
-	m_camera.Initialize();
-	float l_aspectRatio = (float)((window.width - 16) / (window.height - 39));
-	m_camera.UpdateAspectRatio(l_aspectRatio);
+	/*m_camera.Initialize();
+	float aspectRatio = (float)((window.width - 16) / (window.height - 39));
+	m_camera.UpdateAspectRatio(aspectRatio);
 	ConsolePrintSuccess("Camera initialized successfully.");
-	ConsoleSkipLines(1);
+	ConsoleSkipLines(1);*/
 	
 	// Reset the camera for initial use.
-	ResetCamera();
+	//ResetCamera();
 	
 	// REMOVE THIS LATER.
-	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
+	/*m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
 	m_graphicsEngine.AddInstanceBuffer(1);
 
 	m_character.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP");
@@ -68,17 +73,17 @@ bool System::Initialize()
 	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
 	m_object.Rotate(rotation);
 	translation = DirectX::XMFLOAT3(0.0f, 0.0f, 2.0f);
-	m_object.Translate(translation);
+	m_object.Translate(translation);*/
 
 	//Run all tests that are in the debug class
 	//m_debug.RunTests();
 
 	// Input: Register keys
-	InputManager* input = InputManager::GetInstance();
-	input->RegisterKey(VkKeyScan('w'));
-	input->RegisterKey(VkKeyScan('a'));
-	input->RegisterKey(VkKeyScan('s'));
-	input->RegisterKey(VkKeyScan('d'));
+	//InputManager* input = InputManager::GetInstance();
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('s'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('d'));
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
@@ -89,7 +94,7 @@ bool System::Initialize()
 
 	// Initialize PlayerManager
 //	m_playerManager = new PlayerManager();
-	m_playerManager.Initialize(m_graphicsEngine.GetDevice());
+	//m_playerManager.Initialize(m_graphicsEngine.GetDevice());
 
     return result;
 }
@@ -152,21 +157,23 @@ void System::Update()
 		}
 	}
 
+	gameState->Update(deltaTime, m_graphicsEngine.GetDevice());
+
 	// Enable camera flying if in debug mode.
-	if (FLAG_DEBUG == 1)
+	/*if (FLAG_DEBUG == 1)
 	{
 		MoveCamera(deltaTime);
-	}
+	}*/
 
 	
-	// Temporary "Shuriken" spawn
+	/*// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPosition(0), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
 	}
 
 	m_objectManager.Update(deltaTime);
-	m_playerManager.Update(deltaTime);
+	m_playerManager.Update(deltaTime);*/
 }
 
 // Render game scene here.
@@ -175,33 +182,17 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
-	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture(), 0);
+/*	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture(), 0);
 	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture(), 1);
 	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 2);
-
-	//m_graphicsEngine.Render(SHADERTYPE_SCENE, m_playerManager.GetModel(0).GetMesh(), m_playerManager.GetModel(0).GetVertexCount(), m_playerManager.GetModel(0).GetWorldMatrix(), m_playerManager.GetModel(0).GetTexture());
-	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
-	for (unsigned int i = 0; i < tempList1.size(); i++)
-	{
-		Model tempModel1 = tempList1[i].GetModel();
-		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture(), 1);
-	}
+*/
+	gameState->Render(&m_graphicsEngine);
 
 	// Start rendering alpha blended.
 	m_graphicsEngine.TurnOnAlphaBlending();
 
-	// Draw Shurikens
-	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
-	for (unsigned int i = 0; i < tempList.size(); i++)
-	{
-		Model tempModel = tempList[i].GetModel();
-		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), 0);
-	}
-
 	// Stop rendering alpha blended.
 	m_graphicsEngine.TurnOffAlphaBlending();
-
-	
 
 	// Present the result.
 	m_graphicsEngine.Present();
@@ -209,7 +200,7 @@ void System::Render()
 
 void System::MoveCamera(double p_dt)
 {
-	// Start moving the camera with the C key.
+	/*// Start moving the camera with the C key.
 	if ((GetAsyncKeyState('C') & 0x8000) && m_flyCamera == false)
 	{
 		ShowCursor(false);
@@ -271,12 +262,12 @@ void System::MoveCamera(double p_dt)
 			m_flyCamera = false;
 			ResetCamera();
 		}
-	}
+	}*/
 }
 
 void System::ResetCamera()
 {
-	// Reset camera.
+	/*// Reset camera.
 	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 20.0f, -10.0f, 0.0f);
 	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -308,4 +299,5 @@ void System::ResetCamera()
 	m_camera.UpdateProjectionMatrix();
 
 	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+	*/
 }

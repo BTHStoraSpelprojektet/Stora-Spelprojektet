@@ -21,12 +21,16 @@
 #include "Player.h"
 #include "PlayerManager.h"
 
+#include "PlayingState.h"
+
 class System
 {
 public:
 	bool Initialize();
     void Run();
 
+	
+	static PlayingState playingState;
 private:
     void Update();
     void Render();
@@ -38,7 +42,7 @@ private:
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
-	Camera m_camera;
+	//Camera m_camera;
 	Debug m_debug;
 
 	std::string m_title;
@@ -48,13 +52,17 @@ private:
 	Model m_character;
 	Model m_object;
 
-	PlayerManager m_playerManager;
-
 	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
-	ObjectManager m_objectManager;
+	//ObjectManager m_objectManager;
+	//PlayerManager m_playerManager;
+	
+	GameState *m_gameState;
+	//PlayingState m_playingState;
+
+	GameState* gameState;
 };
 #endif
