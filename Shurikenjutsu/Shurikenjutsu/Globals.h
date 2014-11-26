@@ -1,7 +1,24 @@
+#pragma once
+
 #ifndef GLOBALS
 #define GLOBALS
 
-#define GLOBAL_SCREEN_WIDTH 1000
-#define GLOBAL_SCREEN_HEIGHT 1000
+class GLOBAL
+{
+public:
+	static GLOBAL& GetInstance();
 
-#endif;
+	bool FULLSCREEN;
+
+	int MAX_SCREEN_HEIGHT;
+	int MAX_SCREEN_WIDTH;
+
+	int SCREEN_HEIGHT;
+	int SCREEN_WIDTH;
+
+private:
+	GLOBAL() {};
+	GLOBAL(GLOBAL const&);              
+	void operator=(GLOBAL const&);
+};
+#endif

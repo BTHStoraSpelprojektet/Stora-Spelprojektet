@@ -9,6 +9,7 @@
 #include "Buffer.h"
 #include "ConsoleFunctions.h"
 #include "ModelImporter.h"
+#include "AnimationControl.h"
 
 class Model
 {
@@ -23,18 +24,24 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 	int GetVertexCount();
+	std::vector<DirectX::XMMATRIX> GetAnimation();
 
 	void Rotate(DirectX::XMFLOAT3 p_rotation);
 	void Translate(DirectX::XMFLOAT3 p_translation);
 	void Scale(DirectX::XMFLOAT3 p_scale);
-	void ResetModel();
+
 	void SetPosition(DirectX::XMFLOAT3 p_position);
-	void UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation);
+	void UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation); 
+
+	void ResetModel();
 
 protected:
 	ID3D11Buffer* m_mesh;
 	ID3D11ShaderResourceView* m_texture;
 	ID3D11ShaderResourceView* m_normalMap;
+
+	AnimationControl m_animationController;
+	std::vector<DirectX::XMMATRIX> boneTransforms;
 
 	int m_vertexCount;
 	DirectX::XMFLOAT4X4 m_worldMatrix;

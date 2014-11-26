@@ -153,6 +153,15 @@
     <ClCompile Include="PlayerManager.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="DepthShader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Header Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationControl.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -239,6 +248,12 @@
     <ClInclude Include="PlayerManager.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
+    <ClInclude Include="DepthShader.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationControl.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -258,6 +273,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\Depth\DepthVertexShader.hlsl">
       <Filter>Shaders\Depth</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\AnimatedVertexShader.hlsl">
+      <Filter>Shaders\Scene</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

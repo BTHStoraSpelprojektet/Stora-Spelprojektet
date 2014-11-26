@@ -22,6 +22,7 @@ public:
 
 	void TurnOnBackFaceCulling(ID3D11DeviceContext* p_context);
 	void TurnOffBackFaceCulling(ID3D11DeviceContext* p_context);
+
 	void AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances);
 
 private:
