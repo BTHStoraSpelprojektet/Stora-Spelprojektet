@@ -25,8 +25,14 @@ bool System::Initialize()
 
 	// Set console position.
 	HWND console = GetConsoleWindow();
-	MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+	MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().SCREEN_HEIGHT, true);
 	SetWindowTextA(console, "Shurikenjitsu Debug Console");
+
+	// Hide the console if we are not debugging.
+	if (FLAG_DEBUG != 1)
+	{
+		ShowWindow(console, SW_HIDE);
+	}
 
 	// Initialize the window.
 	WindowRectangle window = WindowRectangle(0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT);
@@ -381,11 +387,11 @@ void System::ToggleFullscreen(bool p_fullscreen)
 		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
 		m_camera.UpdateAspectRatio(aspectRatio);
 		m_camera.UpdateProjectionMatrix();
-	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().SCREEN_HEIGHT, true);
 
 		m_render = true;
 	}
@@ -407,7 +413,7 @@ void System::ToggleFullscreen(bool p_fullscreen)
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().SCREEN_HEIGHT, true);
 		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
 
 		m_render = true;
