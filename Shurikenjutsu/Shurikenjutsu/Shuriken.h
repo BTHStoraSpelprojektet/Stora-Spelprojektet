@@ -24,6 +24,8 @@ public:
 	void SetDamage(int p_damage);
 	int GetDamage() const;
 
+	bool IsDead();
+
 private:
 	float m_lifetime;
 	int m_damage;

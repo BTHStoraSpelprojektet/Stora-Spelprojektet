@@ -68,7 +68,7 @@ Output main(Input p_input)
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
 	output.m_cameraPosition = cameraPosition;
 
-	output.m_tangent = output.m_normal;
+	output.m_tangent = p_input.m_tangent;
 
 	// No fog.
 	output.m_fogFactor = 1.0f;

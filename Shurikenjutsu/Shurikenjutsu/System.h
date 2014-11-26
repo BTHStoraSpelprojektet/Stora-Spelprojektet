@@ -27,6 +27,7 @@ class System
 {
 public:
 	bool Initialize();
+	void Shutdown();
     void Run();
 
 	
@@ -39,6 +40,8 @@ private:
 	void MoveCamera(double p_dt);
 	void ResetCamera();
 
+	void ToggleFullscreen(bool p_fullscreen);
+
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
@@ -50,11 +53,14 @@ private:
 
 	Model m_plane;
 	Model m_character;
+	Model m_animatedCharacter;
 	Model m_object;
 
 	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
+
+	bool m_render;
 
 	DirectionalLight m_directionalLight;
 	//ObjectManager m_objectManager;

@@ -18,27 +18,23 @@ bool PlayingStateTest::Initialize(ID3D11Device* p_device, GraphicsEngine *p_grap
 
 	m_playerManager.Initialize(p_device);
 
-	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 20.0f, -10.0f, 0.0f);
-	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.0f, 20.0f, -10.0f);
+	DirectX::XMFLOAT3 target = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	m_camera.UpdatePosition(position);
 	m_camera.UpdateTarget(target);
 
 	// Look vector.
-	DirectX::XMVECTOR look = DirectX::XMVectorSet(0.0f, -20.0f, 10.0f, 0.0f);
-	look = DirectX::XMVector3Normalize(look);
+	DirectX::XMFLOAT3 look = DirectX::XMFLOAT3(0.0f, -20.0f, 10.0f);
 	m_camera.UpdateLook(look);
 
 	// Up vector.
-	DirectX::XMVECTOR right = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 10.0f, -20.0f, 0.0f);
-	up = DirectX::XMVector3Cross(look, right);
-	up = DirectX::XMVector3Normalize(up);
+	DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.0f, 10.0f, -20.0f);
+
 	m_camera.UpdateUpVector(up);
 
-	// Right vector.
-	right = DirectX::XMVector3Cross(up, look);
-	right = DirectX::XMVector3Normalize(right);
+
 	m_camera.UpdateRight(right);
 
 	// Projection data.
@@ -71,7 +67,7 @@ void PlayingStateTest::Render(GraphicsEngine* p_graphicsEngine)
 	for (unsigned int i = 0; i < tempList1.size(); i++)
 	{
 		Model tempModel1 = tempList1[i].GetModel();
-		p_graphicsEngine->Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture(), 1);
+		p_graphicsEngine->Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture());
 	}
 
 	// Draw Shurikens
@@ -79,6 +75,6 @@ void PlayingStateTest::Render(GraphicsEngine* p_graphicsEngine)
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
 		Model tempModel = tempList[i].GetModel();
-		p_graphicsEngine->Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), 0);
+		p_graphicsEngine->Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture());
 	}
 }

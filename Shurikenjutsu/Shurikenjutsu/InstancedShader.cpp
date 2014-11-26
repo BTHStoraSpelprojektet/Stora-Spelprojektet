@@ -223,7 +223,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	return true;
 }
 
-void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
+void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 {
 	// Set parameters and then render.
 	unsigned int stride[2];
@@ -254,7 +254,7 @@ void InstancedShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mes
 	p_context->DrawInstanced(p_numberOfVertices, m_numberOfInstanceList[p_instanceIndex], 0, 0);
 }
 
-void InstancedShader::UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
+void InstancedShader::UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_viewMatrix = p_viewMatrix;
 	m_projectionMatrix = p_projectionMatrix;
@@ -285,11 +285,11 @@ void InstancedShader::UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fo
 	p_context->VSSetConstantBuffers(1, 1, &m_fogBuffer);
 }
 
-void InstancedShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix)
+void InstancedShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix)
 {
-	DirectX::XMMATRIX worldMatrix = p_worldMatrix;
-	DirectX::XMMATRIX viewMatrix = m_viewMatrix;
-	DirectX::XMMATRIX projectionMatrix = m_projectionMatrix;
+	DirectX::XMFLOAT4X4 worldMatrix = p_worldMatrix;
+	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
+	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
 
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
@@ -303,14 +303,14 @@ void InstancedShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX:
 	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
 
 	// Transpose the matrices.
-	worldMatrix = DirectX::XMMatrixTranspose(worldMatrix);
-	viewMatrix = DirectX::XMMatrixTranspose(viewMatrix);
-	projectionMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
+	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
+	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
+	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
 
 	// Set matrices in buffer.
-	matrixBuffer->m_worldMatrix = worldMatrix;
-	matrixBuffer->m_viewMatrix = viewMatrix;
-	matrixBuffer->m_projectionMatrix = projectionMatrix;
+	matrixBuffer->m_worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix);
+	matrixBuffer->m_viewMatrix = DirectX::XMLoadFloat4x4(&viewMatrix);
+	matrixBuffer->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projectionMatrix);
 
 	// Unlock the matrix buffer after it has been written to.
 	p_context->Unmap(m_matrixBuffer, 0);
