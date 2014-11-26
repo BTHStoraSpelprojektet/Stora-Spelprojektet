@@ -140,7 +140,7 @@ void System::Run()
 		else
 		{
 			Update();
-			if (m_render && GetForegroundWindow() == m_window.GetHandle())
+			if (m_render)
 			{
 				Render();
 			}
