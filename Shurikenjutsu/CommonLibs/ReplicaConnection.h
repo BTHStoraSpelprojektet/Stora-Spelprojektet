@@ -3,7 +3,7 @@
 
 #include "ReplicaManager3.h"
 
-class ReplicaConnection : RakNet::Connection_RM3
+class ReplicaConnection : public RakNet::Connection_RM3
 {
 public:
 	ReplicaConnection(const RakNet::SystemAddress &systemAddress, RakNet::RakNetGUID guid);

@@ -225,6 +225,7 @@
     <ClInclude Include="RakNet\WSAStartupSingleton.h" />
     <ClInclude Include="RakNet\_FindFirst.h" />
     <ClInclude Include="ReplicaConnection.h" />
+    <ClInclude Include="ReplicaManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DefaultReplica.cpp" />
@@ -339,6 +340,7 @@
     <ClCompile Include="RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="RakNet\_FindFirst.cpp" />
     <ClCompile Include="ReplicaConnection.cpp" />
+    <ClCompile Include="ReplicaManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RakNet\RakNet.vcproj" />

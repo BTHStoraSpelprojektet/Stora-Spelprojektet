@@ -17,5 +17,13 @@ bool ReplicaConnection::QueryGroupDownloadMessages() const
 
 RakNet::Replica3* ReplicaConnection::AllocReplica(RakNet::BitStream *allocationId, RakNet::ReplicaManager3 *replicaManager3)
 {
+	RakNet::RakString typeName;
+	allocationId->Read(typeName);
+
+	if (typeName == "Player")
+	{
+		// return new PlayerSerializer
+	}
+
 	return 0;
 }
