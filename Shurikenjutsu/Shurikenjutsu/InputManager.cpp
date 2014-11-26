@@ -124,7 +124,10 @@ bool InputManager::IsKeyPressed(int p_vkey) const
 {
 	for (unsigned int i = 0; i < m_events.size(); i++)
 	{
-		return m_events[i].IsPressed();
+		if (m_events[i].GetButton() == p_vkey)
+		{
+			return m_events[i].IsPressed();
+		}
 	}
 
 	return false;

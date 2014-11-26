@@ -175,7 +175,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	blendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 	blendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	blendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendState.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+	blendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	// Create the alpha blend state.
 	if (FAILED(m_device->CreateBlendState(&blendState, &m_alphaEnabled)))

@@ -24,10 +24,13 @@ public:
 	DirectX::XMMATRIX GetWorldMatrix();
 	int GetVertexCount();
 
-	void Rotate(DirectX::XMVECTOR p_rotation);
-	void SetRotation(DirectX::XMVECTOR p_rotation);
-	void Translate(DirectX::XMVECTOR p_translation);
-	void Scale(DirectX::XMVECTOR p_scale);
+	void Rotate(DirectX::XMFLOAT3 p_rotation);
+	void Translate(DirectX::XMFLOAT3 p_translation);
+	void Scale(DirectX::XMFLOAT3 p_scale);
+
+	void SetPosition(DirectX::XMFLOAT3 p_position);
+	void UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation); 
+
 	void ResetModel();
 
 protected:
@@ -36,6 +39,6 @@ protected:
 	ID3D11ShaderResourceView* m_normalMap;
 
 	int m_vertexCount;
-	DirectX::XMMATRIX m_worldMatrix;
+	DirectX::XMFLOAT4X4 m_worldMatrix;
 };
 #endif;

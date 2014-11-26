@@ -21,6 +21,11 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
+	{
+		ConsolePrintSuccess("Instanced shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
 
 	return result;
 }
@@ -30,13 +35,19 @@ void GraphicsEngine::Shutdown()
 
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 {
 	switch (p_shader)
 	{
 		case(SHADERTYPE_SCENE) :
 		{
 			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+
+			break;
+		}
+		case(SHADERTYPE_INSTANCED) :
+		{
+			m_instanceShader.Render( m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex);
 
 			break;
 		}
@@ -53,11 +64,13 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
 {
 	m_sceneShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
+	m_instanceShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
 }
 
 void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
@@ -130,13 +143,20 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 void GraphicsEngine::TurnOnAlphaBlending()
 {
 	m_directX.TurnOnAlphaBlending();
-	m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
+	//m_instanceShader.TurnOffBackFaceCulling(m_directX.GetContext());
+	//m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
 }
 
 void GraphicsEngine::TurnOffAlphaBlending()
 {
 	m_directX.TurnOffAlphaBlending();
-	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+	//m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+	//m_instanceShader.TurnOnBackFaceCulling(m_directX.GetContext());
+}
+
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
+{
+	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances);
 }
 
 bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
