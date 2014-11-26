@@ -87,7 +87,7 @@
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
-    <ClCompile Include="PlayingState.cpp" />
+    <ClCompile Include="PlayingStateTest.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Shuriken.cpp" />
@@ -115,7 +115,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
-    <ClInclude Include="PlayingState.h" />
+    <ClInclude Include="PlayingStateTest.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />

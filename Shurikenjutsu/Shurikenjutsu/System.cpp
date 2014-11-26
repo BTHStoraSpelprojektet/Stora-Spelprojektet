@@ -1,9 +1,9 @@
 #include "System.h"
-PlayingState System::playingState;
+PlayingStateTest System::playingState;
 bool System::Initialize()
 {
     bool result = true;
-	playingState = PlayingState();
+	playingState = PlayingStateTest();
 	//m_gameState = &m_playingState;
 	gameState = &System::playingState;
 

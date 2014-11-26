@@ -156,7 +156,7 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PlayingState.cpp">
+    <ClCompile Include="PlayingStateTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -248,7 +248,7 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PlayingState.h">
+    <ClInclude Include="PlayingStateTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

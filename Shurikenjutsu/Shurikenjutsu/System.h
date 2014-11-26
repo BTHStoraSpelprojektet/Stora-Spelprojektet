@@ -21,7 +21,7 @@
 #include "Player.h"
 #include "PlayerManager.h"
 
-#include "PlayingState.h"
+#include "PlayingStateTest.h"
 
 class System
 {
@@ -30,7 +30,7 @@ public:
     void Run();
 
 	
-	static PlayingState playingState;
+	static PlayingStateTest playingState;
 private:
     void Update();
     void Render();
@@ -61,7 +61,7 @@ private:
 	//PlayerManager m_playerManager;
 	
 	GameState *m_gameState;
-	//PlayingState m_playingState;
+	//PlayingStateTest m_playingState;
 
 	GameState* gameState;
 };

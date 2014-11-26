@@ -1,16 +1,16 @@
-#include "PlayingState.h"
+#include "PlayingStateTest.h"
 
 
-PlayingState::PlayingState()
+PlayingStateTest::PlayingStateTest()
 {
 }
 
 
-PlayingState::~PlayingState()
+PlayingStateTest::~PlayingStateTest()
 {
 }
 
-bool PlayingState::Initialize(ID3D11Device* p_device, GraphicsEngine *p_graphicsEngine)
+bool PlayingStateTest::Initialize(ID3D11Device* p_device, GraphicsEngine *p_graphicsEngine)
 {
 	m_camera.Initialize();
 	//float aspectRatio = .0f//(float)((window.width - 16) / (window.height - 39));
@@ -53,7 +53,7 @@ bool PlayingState::Initialize(ID3D11Device* p_device, GraphicsEngine *p_graphics
 	return true;
 }
 
-void PlayingState::Update(double p_deltaTime, ID3D11Device* p_device)
+void PlayingStateTest::Update(double p_deltaTime, ID3D11Device* p_device)
 {
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
@@ -65,7 +65,7 @@ void PlayingState::Update(double p_deltaTime, ID3D11Device* p_device)
 	m_playerManager.Update(p_deltaTime);
 }
 
-void PlayingState::Render(GraphicsEngine* p_graphicsEngine)
+void PlayingStateTest::Render(GraphicsEngine* p_graphicsEngine)
 {
 	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
 	for (unsigned int i = 0; i < tempList1.size(); i++)
