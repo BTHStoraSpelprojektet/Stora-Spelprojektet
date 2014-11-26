@@ -226,6 +226,7 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Core</Filter>
+	</ClInclude>
     <ClInclude Include="Shuriken.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
