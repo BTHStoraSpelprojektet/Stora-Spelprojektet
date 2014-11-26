@@ -60,14 +60,14 @@ bool System::Initialize()
 	m_graphicsEngine.AddInstanceBuffer(3);
 	//m_graphicsEngine.AddInstanceBuffer(1000);
 
-	DirectX::XMVECTOR rotation = DirectX::XMVectorSet(0.0f, 3.141592f / 2.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	m_character.Rotate(rotation);
-	DirectX::XMVECTOR translation = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
+	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
 	m_character.Translate(translation);
 
 	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
 	m_object.Rotate(rotation);
-	translation = DirectX::XMVectorSet(0.0f, 0.0f, 2.0f, 0.0f);
+	translation = DirectX::XMFLOAT3(0.0f, 0.0f, 2.0f);
 	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
@@ -76,12 +76,20 @@ bool System::Initialize()
 	// Input: Register keys
 	InputManager* input = InputManager::GetInstance();
 	input->RegisterKey(VkKeyScan('w'));
+	input->RegisterKey(VkKeyScan('a'));
+	input->RegisterKey(VkKeyScan('s'));
+	input->RegisterKey(VkKeyScan('d'));
 
 	// Initialize directional light
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.35f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.3f, 0.3f, 0.23f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
+	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
+	m_graphicsEngine.SetSceneDirectionalLight(m_directionalLight);
+
+	// Initialize PlayerManager
+//	m_playerManager = new PlayerManager();
+	m_playerManager.Initialize(m_graphicsEngine.GetDevice());
 
     return result;
 }
@@ -150,7 +158,15 @@ void System::Update()
 		MoveCamera(deltaTime);
 	}
 
-	m_graphicsEngine.SetSceneDirectionalLight(m_directionalLight);
+	
+	// Temporary "Shuriken" spawn
+	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	{
+		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPosition(0), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
+	}
+
+	m_objectManager.Update(deltaTime);
+	m_playerManager.Update(deltaTime);
 }
 
 // Render game scene here.
@@ -163,11 +179,30 @@ void System::Render()
 	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture(), 1);
 	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 2);
 
+	//m_graphicsEngine.Render(SHADERTYPE_SCENE, m_playerManager.GetModel(0).GetMesh(), m_playerManager.GetModel(0).GetVertexCount(), m_playerManager.GetModel(0).GetWorldMatrix(), m_playerManager.GetModel(0).GetTexture());
+	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
+	for (unsigned int i = 0; i < tempList1.size(); i++)
+	{
+		Model tempModel1 = tempList1[i].GetModel();
+		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture(), 1);
+	}
+
 	// Start rendering alpha blended.
 	m_graphicsEngine.TurnOnAlphaBlending();
 
+	// Draw Shurikens
+	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
+	for (unsigned int i = 0; i < tempList.size(); i++)
+	{
+		Model tempModel = tempList[i].GetModel();
+		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), 0);
+	}
+
 	// Stop rendering alpha blended.
 	m_graphicsEngine.TurnOffAlphaBlending();
+
+	
+
 	// Present the result.
 	m_graphicsEngine.Present();
 }
@@ -180,11 +215,11 @@ void System::MoveCamera(double p_dt)
 		ShowCursor(false);
 		m_flyCamera = true;
 
-		POINT l_position;
-		GetCursorPos(&l_position);
+		POINT position;
+		GetCursorPos(&position);
 
-		m_oldMouseX = (float)l_position.x;
-		m_oldMouseY = (float)l_position.y;
+		m_oldMouseX = (float)position.x;
+		m_oldMouseY = (float)position.y;
 	}
 
 	if (m_flyCamera)
@@ -192,11 +227,11 @@ void System::MoveCamera(double p_dt)
 		float deltaTime = (float)p_dt;
 
 		// Rotate and pitch the camera.
-		POINT l_position;
-		GetCursorPos(&l_position);
+		POINT position;
+		GetCursorPos(&position);
 
-		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(l_position.x - m_oldMouseX));
-		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(l_position.y - m_oldMouseY));
+		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(position.x - m_oldMouseX));
+		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(position.y - m_oldMouseY));
 		m_camera.Pitch(dy);
 		m_camera.Rotate(dx);
 

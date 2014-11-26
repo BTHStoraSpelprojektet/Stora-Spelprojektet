@@ -138,14 +138,14 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 void GraphicsEngine::TurnOnAlphaBlending()
 {
 	m_directX.TurnOnAlphaBlending();
-	m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
 	m_instanceShader.TurnOffBackFaceCulling(m_directX.GetContext());
+	//m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
 }
 
 void GraphicsEngine::TurnOffAlphaBlending()
 {
 	m_directX.TurnOffAlphaBlending();
-	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+	//m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
 	m_instanceShader.TurnOnBackFaceCulling(m_directX.GetContext());
 }
 

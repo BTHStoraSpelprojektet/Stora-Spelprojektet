@@ -8,15 +8,18 @@
 #include "Timer.h"
 #include "Camera.h"
 #include "Model.h"
+#include "InputManager.h"
+#include "ObjectManager.h"
 
 #include "ConsoleFunctions.h"
 #include "Flags.h"
 #include "Enumerations.h"
-#include "InputManager.h"
 
 #include "Debug.h"
 #include "Globals.h"
 
+#include "Player.h"
+#include "PlayerManager.h"
 
 class System
 {
@@ -45,10 +48,13 @@ private:
 	Model m_character;
 	Model m_object;
 
+	PlayerManager m_playerManager;
+
 	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
+	ObjectManager m_objectManager;
 };
 #endif

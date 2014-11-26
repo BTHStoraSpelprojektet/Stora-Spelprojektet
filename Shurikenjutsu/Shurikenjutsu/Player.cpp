@@ -22,12 +22,51 @@ bool Player::Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX:
 	SetHealth(p_health);
 	SetAgility(p_agility);
 
+	m_inputManager = InputManager::GetInstance();
+
 	return true;
 }
 
 void Player::Shutdown()
 {
 	MovingObject::Shutdown();
+}
+
+void Player::Update(double p_deltaTime)
+{
+	float x, y, z;
+	x = 0;
+	y = 0;
+	z = 0;
+	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
+	{
+		SetSpeed(5.0f);
+		z += 1;
+	}
+
+	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
+	{
+		SetSpeed(5.0f);
+		x += -1;
+	}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
+	{
+		SetSpeed(5.0f);
+		z += -1;
+	}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
+	{
+		SetSpeed(5.0f);
+		x += 1;
+	}
+
+	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
+	tempVector = DirectX::XMVector3Normalize(tempVector);
+	DirectX::XMFLOAT3 tempFloat;
+	DirectX::XMStoreFloat3(&tempFloat, tempVector);
+	SetDirection(tempFloat);
+	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed*p_deltaTime, m_position.y + m_direction.y * m_speed*p_deltaTime, m_position.z + m_direction.z * m_speed*p_deltaTime));
+	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
 }
 
 void Player::SetDamage(float p_damage)
