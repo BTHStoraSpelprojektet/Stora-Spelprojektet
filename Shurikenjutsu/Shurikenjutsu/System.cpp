@@ -99,6 +99,8 @@ bool System::Initialize()
 	input->RegisterKey(VkKeyScan('s'));
 	input->RegisterKey(VkKeyScan('d'));
 	input->RegisterKey(VkKeyScan('f'));
+	ConsolePrintSuccess("Input now accepted.");
+	ConsoleSkipLines(1);
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
@@ -172,13 +174,16 @@ void System::Update()
 
 	if (FLAG_FPS == 1)
 	{
-		// Print the FPS if the flag is set.
-		if (m_timer.GetFPS() != m_previousFPS)
+		int fps = m_timer.GetFPS();
+
+		if (fps != m_previousFPS)
 		{
 			std::string title = m_title + " (FPS: ";
 			title.append(std::to_string(m_timer.GetFPS()) + ") ");
 
 			m_window.SetTitle(title);
+
+			m_previousFPS = fps;
 		}
 	}
 
