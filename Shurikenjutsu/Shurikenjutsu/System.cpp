@@ -51,8 +51,15 @@ bool System::Initialize()
 	
 	// REMOVE THIS LATER.
 	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
+	m_graphicsEngine.AddInstanceBuffer(1);
 
 	m_character.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP");
+	m_graphicsEngine.AddInstanceBuffer(5);
+	
+	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
+	m_graphicsEngine.AddInstanceBuffer(3);
+	//m_graphicsEngine.AddInstanceBuffer(1000);
+
 	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	m_character.Rotate(rotation);
 	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
@@ -64,7 +71,7 @@ bool System::Initialize()
 	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
-	m_debug.RunTests();
+	//m_debug.RunTests();
 
 	// Input: Register keys
 	InputManager* input = InputManager::GetInstance();
@@ -155,7 +162,7 @@ void System::Update()
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 5.0f);
+		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPosition(0), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
 	}
 
 	m_objectManager.Update(deltaTime);
@@ -168,22 +175,23 @@ void System::Render()
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
+	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture(), 0);
+	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture(), 1);
+	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 2);
+
 	// Start rendering alpha blended.
 	m_graphicsEngine.TurnOnAlphaBlending();
 
 	// Stop rendering alpha blended.
 	m_graphicsEngine.TurnOffAlphaBlending();
 
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture());
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture());
-	m_graphicsEngine.Render(SHADERTYPE_SCENE, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture());
 
 	//m_graphicsEngine.Render(SHADERTYPE_SCENE, m_playerManager.GetModel(0).GetMesh(), m_playerManager.GetModel(0).GetVertexCount(), m_playerManager.GetModel(0).GetWorldMatrix(), m_playerManager.GetModel(0).GetTexture());
 	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
 	for (unsigned int i = 0; i < tempList1.size(); i++)
 	{
 		Model tempModel1 = tempList1[i].GetModel();
-		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture());
+		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture(), 1);
 	}
 
 	// Draw Shurikens
@@ -191,8 +199,13 @@ void System::Render()
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
 		Model tempModel = tempList[i].GetModel();
-		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture());
+		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), 0);
 	}
+
+	// Stop rendering alpha blended.
+	m_graphicsEngine.TurnOffAlphaBlending();
+
+	
 
 	// Present the result.
 	m_graphicsEngine.Present();

@@ -16,6 +16,7 @@ public:
 		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
 	Model GetModel(int p_index);
 	std::vector<Player> GetListOfPlayers() const;
+	DirectX::XMFLOAT3 GetPosition(int p_index);
 private:
 	std::vector<Player> m_playerList;
 };

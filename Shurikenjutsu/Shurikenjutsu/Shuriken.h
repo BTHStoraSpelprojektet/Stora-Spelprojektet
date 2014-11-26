@@ -1,6 +1,9 @@
 #ifndef SHURIKEN_H_
 #define SHURIKEN_H_
 #include "MovingObject.h"
+
+const float ShurikenSpeed = 15.70f;
+
 class Shuriken : public MovingObject
 {
 public:

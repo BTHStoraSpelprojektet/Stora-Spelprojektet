@@ -26,17 +26,18 @@ void Shuriken::Shutdown()
 void Shuriken::Update(double p_deltaTime)
 {
 	// Update position
-	DirectX::XMFLOAT3 tempPosition = GetPosition();
-	DirectX::XMFLOAT3 tempDirection = GetDirection();
 
-	tempPosition.x += (float)(tempDirection.x*m_speed*p_deltaTime);
-	tempPosition.y += (float)(tempDirection.y*m_speed*p_deltaTime);
-	tempPosition.z += (float)(tempDirection.z*m_speed*p_deltaTime);
+	m_position.x += (float)(m_direction.x*m_speed*p_deltaTime);
+	m_position.y += (float)(m_direction.y*m_speed*p_deltaTime);
+	m_position.z += (float)(m_direction.z*m_speed*p_deltaTime);
 
-	SetPosition(tempPosition);
+	m_rotation.y += (float)(ShurikenSpeed*p_deltaTime);
 
 	// Update lifetime
 	SetLifetime((float)(GetLifetime() - p_deltaTime));
+
+	// Update World Matrix
+	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
 }
 
 void Shuriken::SetLifetime(float p_lifetime)

@@ -3,6 +3,7 @@
 
 #include "DirectX.h"
 #include "SceneShader.h"
+#include "InstancedShader.h"
 #include "Enumerations.h"
 
 class GraphicsEngine
@@ -18,7 +19,7 @@ public:
 	ID3D11DeviceContext* GetContext();
 	D3D_FEATURE_LEVEL GetVersion();
 
-	void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_numberOfInstances);
 
 	void SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix);
 	void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
@@ -27,11 +28,14 @@ public:
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
 
+	void AddInstanceBuffer(int p_numberOfInstances);
+
 private:
 	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
 
 	DirectXWrapper m_directX;
 
 	SceneShader m_sceneShader;
+	InstancedShader m_instanceShader;
 };
 #endif;

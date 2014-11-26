@@ -122,9 +122,17 @@ void Model::ResetModel()
 
 void Model::SetPosition(DirectX::XMFLOAT3 p_position)
 {
-	ResetModel();
-
 	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position));
 
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
 }
+
+void Model::UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation)
+{
+	DirectX::XMMATRIX matrix =	DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&p_scale)) *
+								DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation)) *
+								DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position));
+								
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, matrix);
+}
+

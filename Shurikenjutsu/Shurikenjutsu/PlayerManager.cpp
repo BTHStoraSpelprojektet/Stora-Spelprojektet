@@ -47,3 +47,8 @@ std::vector<Player> PlayerManager::GetListOfPlayers() const
 {
 	return m_playerList;
 }
+
+DirectX::XMFLOAT3 PlayerManager::GetPosition(int p_index)
+{
+	return m_playerList[p_index].GetPosition();
+}

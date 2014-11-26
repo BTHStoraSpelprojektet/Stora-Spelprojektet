@@ -1,6 +1,8 @@
 #ifndef SYSTEM
 #define SYSTEM
 
+#include <vector>
+
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "Timer.h"
