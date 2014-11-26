@@ -16,13 +16,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -72,7 +72,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\RakNet\Source\XBox360Includes.h" />
     <ClInclude Include="DefaultReplica.h" />
-    <ClInclude Include="PlayerSerializer.h" />
+    <ClInclude Include="PlayerReplica.h" />
     <ClInclude Include="RakNet\AutopatcherPatchContext.h" />
     <ClInclude Include="RakNet\AutopatcherRepositoryInterface.h" />
     <ClInclude Include="RakNet\Base64Encoder.h" />
@@ -230,8 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DefaultReplica.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="PlayerSerializer.cpp" />
+    <ClCompile Include="PlayerReplica.cpp" />
     <ClCompile Include="RakNet\Base64Encoder.cpp" />
     <ClCompile Include="RakNet\BitStream.cpp" />
     <ClCompile Include="RakNet\CCRakNetSlidingWindow.cpp" />

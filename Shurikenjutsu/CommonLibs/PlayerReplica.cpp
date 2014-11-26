@@ -1,7 +1,7 @@
-#include "PlayerSerializer.h"
+#include "PlayerReplica.h"
 
 
-PlayerSerializer::PlayerSerializer(bool p_isServer) : DefaultReplica(p_isServer)
+PlayerReplica::PlayerReplica() : DefaultReplica()
 {
 	m_posX = 0;
 	m_posY = 0;
@@ -9,11 +9,16 @@ PlayerSerializer::PlayerSerializer(bool p_isServer) : DefaultReplica(p_isServer)
 }
 
 
-PlayerSerializer::~PlayerSerializer()
+PlayerReplica::~PlayerReplica()
 {
 }
 
-RakNet::RM3SerializationResult PlayerSerializer::Serialize(RakNet::SerializeParameters *p_serializeParameters)
+RakNet::RakString PlayerReplica::GetTypeName() const
+{
+	return "PlayerType";
+}
+
+RakNet::RM3SerializationResult PlayerReplica::Serialize(RakNet::SerializeParameters *p_serializeParameters)
 {
 	if (!m_isServer)
 	{
@@ -38,7 +43,7 @@ RakNet::RM3SerializationResult PlayerSerializer::Serialize(RakNet::SerializePara
 	return RakNet::RM3SR_SERIALIZED_UNIQUELY;
 }
 
-void PlayerSerializer::Deserialize(RakNet::DeserializeParameters *p_deserializeParameters)
+void PlayerReplica::Deserialize(RakNet::DeserializeParameters *p_deserializeParameters)
 {
 	RakNet::VariableDeltaSerializer::DeserializationContext deserializationContext;
 

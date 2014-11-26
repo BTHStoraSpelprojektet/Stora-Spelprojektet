@@ -6,11 +6,7 @@ public:
 	ServerGlobals();
 	~ServerGlobals();
 
-	static void SetIsServer(bool p_isServer);
-	static bool GetIsServer();
-
-private:
-	static bool m_isServer;
+	static bool IS_SERVER;
 
 };
 

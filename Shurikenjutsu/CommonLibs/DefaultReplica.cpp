@@ -3,7 +3,7 @@
 
 DefaultReplica::DefaultReplica()
 {
-	m_isServer = ServerGlobals::GetIsServer();
+	m_isServer = ServerGlobals::IS_SERVER;
 }
 
 

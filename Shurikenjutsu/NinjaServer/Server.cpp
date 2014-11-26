@@ -1,5 +1,5 @@
 #include "Server.h"
-
+bool ServerGlobals::IS_SERVER;
 
 Server::Server()
 {
@@ -12,6 +12,8 @@ Server::~Server()
 
 bool Server::Initialize()
 {
+	ServerGlobals::IS_SERVER = true;
+
 	m_serverPeer = RakNet::RakPeerInterface::GetInstance();
 	m_socketDesc = RakNet::SocketDescriptor(SERVER_PORT, 0);
 

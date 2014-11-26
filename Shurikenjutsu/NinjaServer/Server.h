@@ -18,6 +18,7 @@
 #include "NetworkIDManager.h"
 #include "RakPeer.h"
 #include "BitStream.h"
+#include "..\CommonLibs\ServerGlobals.h"
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 60000

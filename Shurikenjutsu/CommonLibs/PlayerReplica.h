@@ -1,15 +1,15 @@
-#ifndef PLAYERSERIALIZER_H_
-#define PLAYERSERIALIZER_H_
+#ifndef PLAYERREPLICA_H_
+#define PLAYERREPLICA_H_
 
 #include "DefaultReplica.h"
 
-class PlayerSerializer : public DefaultReplica
+class PlayerReplica : public DefaultReplica
 {
 public:
-	PlayerSerializer();
-	~PlayerSerializer();
+	PlayerReplica();
+	~PlayerReplica();
 
-	RakNet::RakString GetTypeName();
+	RakNet::RakString GetTypeName() const;
 	RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *p_serializeParameters);
 	void Deserialize(RakNet::DeserializeParameters *p_deserializeParameters);
 private:
