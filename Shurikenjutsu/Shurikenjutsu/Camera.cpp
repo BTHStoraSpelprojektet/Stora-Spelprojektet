@@ -4,7 +4,6 @@ bool Camera::Initialize()
 {
 	m_position = DirectX::XMFLOAT3(0, 0, 0);
 	m_target = DirectX::XMFLOAT3(0, 0, 0);
-	m_upVector = DirectX::XMFLOAT3(0, 0, 0);
 
 	m_fieldOfView = 0;
 	m_aspectRatio = 0;
@@ -250,6 +249,15 @@ void Camera::MoveCamera(double p_deltaTime)
 
 		m_oldMouseX = (float)position.x;
 		m_oldMouseY = (float)position.y;
+
+		m_upVector = DirectX::XMFLOAT3(0.0f, 20.0f, 10.0f);
+		DirectX::XMStoreFloat3(&m_upVector, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_upVector)));
+
+		m_look = DirectX::XMFLOAT3(0.0f, -20.0f, 10.0f);
+		DirectX::XMStoreFloat3(&m_look, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_look)));
+
+		m_right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		DirectX::XMStoreFloat3(&m_right, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_right)));
 	}
 
 	if (GLOBAL::GetInstance().flyingCamera)
@@ -320,14 +328,20 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 void Camera::ResetCamera()
 {
 	// Reset camera.
-	DirectX::XMFLOAT3 nullPos = DirectX::XMFLOAT3(0,0,0);
-
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(nullPos.x, nullPos.y + 20.0f, nullPos.z - 10.0f);
-
-	DirectX::XMFLOAT3 target = nullPos;
+	DirectX::XMFLOAT3 target = DirectX::XMFLOAT3(0, 0, 0);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(target.x, target.y + 20.0f, target.z - 10.0f);
 
 	UpdatePosition(position);
 	UpdateTarget(target);
+
+	m_upVector = DirectX::XMFLOAT3(0.0f, 20.0f, 10.0f);
+	DirectX::XMStoreFloat3(&m_upVector, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_upVector)));
+
+	m_look = DirectX::XMFLOAT3(0.0f, -20.0f, 10.0f);
+	DirectX::XMStoreFloat3(&m_look, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_look)));
+
+	m_right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	DirectX::XMStoreFloat3(&m_right, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_right)));
 
 	// Projection data.
 	float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
