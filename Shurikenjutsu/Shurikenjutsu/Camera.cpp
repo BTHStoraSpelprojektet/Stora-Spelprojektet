@@ -203,7 +203,7 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix();
-		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
@@ -225,7 +225,7 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix();
-		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
@@ -300,7 +300,7 @@ void Camera::MoveCamera(double p_deltaTime)
 		UpdateMovedCamera();
 
 		// Set shader variables from the camera.
-		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Reset the camera when BACKSPACE key is pressed.
 		if (GetAsyncKeyState(VK_BACK))
@@ -322,7 +322,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	UpdatePosition(position);
 	UpdateTarget(target);
 	UpdateViewMatrix();
-	GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }
 
 void Camera::ResetCamera()
@@ -346,10 +346,10 @@ void Camera::ResetCamera()
 	// Projection data.
 	float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	UpdateAspectRatio(aspectRatio);
-	UpdateFieldOfView(3.141592f * 0.5f);
+	UpdateFieldOfView(3.141592f * 0.25f);
 	UpdateClippingPlanes(0.001f, 40.0f);
 	UpdateViewMatrix();
 	UpdateProjectionMatrix();
 
-	GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }

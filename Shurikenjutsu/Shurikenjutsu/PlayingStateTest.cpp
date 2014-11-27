@@ -66,6 +66,20 @@ void PlayingStateTest::Update(double p_deltaTime)
 
 void PlayingStateTest::Render()
 {
+	// Render shadow map first.
+	GraphicsEngine::BeginRenderToShadowMap();
+
+	std::vector<Model> tempModelList = m_objectManager.GetListOfStaticModels();
+	for (unsigned int i = 0; i < tempModelList.size(); i++)
+	{
+		Model tempModel = tempModelList[i];
+		//std::cout << "VtxCount: " << tempModel.GetVertexCount() << "\n";
+		GraphicsEngine::Render(SHADERTYPE_DEPTH, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), 0, tempModel.GetAnimation());
+	}
+
+	GraphicsEngine::SetShadowMap();
+	GraphicsEngine::ResetRenderTarget();
+
 	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
 	for (unsigned int i = 0; i < tempList1.size(); i++)
 	{
@@ -73,8 +87,7 @@ void PlayingStateTest::Render()
 		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture());
 	}
 
-	//Draw level objects
-	std::vector<Model> tempModelList = m_objectManager.GetListOfStaticModels();
+	// Draw level objects
 	for (unsigned int i = 0; i < tempModelList.size(); i++)
 	{
 		Model tempModel = tempModelList[i];

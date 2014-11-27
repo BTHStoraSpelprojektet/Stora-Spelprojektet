@@ -41,11 +41,11 @@ Level::Level(ObjectManager* p_objectManager, std::string level){
 	infile.close();
 
 	float x, y, z, rotateX, rotateY, rotateZ, rotateW;
-	for (int currentLineTemp = 0; currentLineTemp < stringVector2.size(); currentLineTemp++)
+	for (unsigned int currentLineTemp = 0; currentLineTemp < stringVector2.size(); currentLineTemp++)
 	{
 		Model model;
 		std::vector<std::string> temp = stringVector2.at(currentLineTemp);
-		for (int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
+		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			if (currentLineTemp > 1){
 				if (currentWordTemp == 0){
@@ -69,25 +69,25 @@ Level::Level(ObjectManager* p_objectManager, std::string level){
 				}
 
 				else if (currentWordTemp == 1){
-					x = atof(s.c_str());
+					x = (float)atof(s.c_str());
 				}
 				else if (currentWordTemp == 2){
-					y = atof(s.c_str());
+					y = (float)atof(s.c_str());
 				}
 				else if (currentWordTemp == 3){
-					z = atof(s.c_str());
+					z = (float)atof(s.c_str());
 				}
 				else if (currentWordTemp == 4){
-					rotateX = atof(s.c_str());
+					rotateX = (float)atof(s.c_str());
 				}
 				else if (currentWordTemp == 5){
-					rotateY = atof(s.c_str());
+					rotateY = (float)atof(s.c_str());
 				}
 				else if (currentWordTemp == 6){
-					rotateZ = atof(s.c_str());
+					rotateZ = (float)atof(s.c_str());
 				}
 				else if (currentWordTemp == 7){
-					rotateW = atof(s.c_str());
+					rotateW = (float)atof(s.c_str());
 
 					//TODO: Read rotation from file
 					DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);

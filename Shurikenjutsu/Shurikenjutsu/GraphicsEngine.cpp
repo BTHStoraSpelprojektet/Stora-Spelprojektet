@@ -113,11 +113,27 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 		}
 	}
 }
-void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+
+void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+}
+
+void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+{
+	m_sceneShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
+}
+
+void GraphicsEngine::SetShadowMap()
+{
+	if (m_shadowMap.GetShadowMap() == nullptr)
+	{
+		ConsolePrintError("Shadow map is a null pointer.");
+	}
+
+	m_sceneShader.UpdateShadowMap(m_shadowMap.GetShadowMap());
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
@@ -129,6 +145,11 @@ void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDe
 void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
 {
 	m_sceneShader.UpdateFrameBuffer(m_directX.GetContext(), p_dLight);
+}
+
+void GraphicsEngine::SetLightPosition(DirectX::XMFLOAT3 p_position)
+{
+	m_sceneShader.UpdateLightBuffer(m_directX.GetContext(), p_position);
 }
 
 void GraphicsEngine::Clear()

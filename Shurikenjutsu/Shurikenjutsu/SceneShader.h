@@ -19,12 +19,15 @@ public:
 	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMMATRIX> p_boneTransforms);
 
 	void UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
+	void UpdateLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	void UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity);
 
 	void TurnOnBackFaceCulling(ID3D11DeviceContext* p_context);
 	void TurnOffBackFaceCulling(ID3D11DeviceContext* p_context);
 
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight);
+	void UpdateLightBuffer(ID3D11DeviceContext* p_context, DirectX::XMFLOAT3 p_lightPosition);
+	void UpdateShadowMap(ID3D11ShaderResourceView* p_shadowMap);
 
 private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix);
@@ -32,13 +35,13 @@ private:
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11VertexShader* m_animatedVertexShader;
-
 	ID3D11PixelShader* m_pixelShader;
 
 	ID3D11InputLayout* m_layout;
 	ID3D11InputLayout* m_animatedLayout;
 
 	ID3D11SamplerState* m_samplerState;
+	ID3D11SamplerState* m_samplerShadowMapState;
 	
 	ID3D11RasterizerState* m_rasterizerStateBackCulled;
 	ID3D11RasterizerState* m_rasterizerStateNoneCulled;
@@ -49,12 +52,19 @@ private:
 	DirectX::XMFLOAT4X4 m_viewMatrix;
 	DirectX::XMFLOAT4X4 m_projectionMatrix;
 
+	DirectX::XMFLOAT4X4 m_lightViewMatrix;
+	DirectX::XMFLOAT4X4 m_lightProjectionMatrix;
+	ID3D11ShaderResourceView* m_shadowMap;
+
 	ID3D11Buffer* m_matrixBuffer;
 	struct MatrixBuffer
 	{
 		DirectX::XMMATRIX m_worldMatrix;
 		DirectX::XMMATRIX m_viewMatrix;
 		DirectX::XMMATRIX m_projectionMatrix;
+
+		DirectX::XMMATRIX m_lightViewMatrix;
+		DirectX::XMMATRIX m_lightProjectionMatrix;
 	};
 
 	ID3D11Buffer* m_fogBuffer;
@@ -64,6 +74,12 @@ private:
 		float m_fogEnd;
 		float m_fogDensity;
 		float m_padding;
+	};
+
+	ID3D11Buffer* m_lightBuffer;
+	struct LightBuffer
+	{
+		DirectX::XMVECTOR m_lightPosition;
 	};
 
 	// Animation matrix buffer.
