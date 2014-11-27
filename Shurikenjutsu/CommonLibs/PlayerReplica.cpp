@@ -3,9 +3,9 @@
 
 PlayerReplica::PlayerReplica() : DefaultReplica()
 {
-	m_posX = 0;
-	m_posY = 0;
-	m_posZ = 0;
+	m_posX = 0.0f;
+	m_posY = 0.0f;
+	m_posZ = 0.0f;
 }
 
 
@@ -20,10 +20,8 @@ RakNet::RakString PlayerReplica::GetTypeName() const
 
 RakNet::RM3SerializationResult PlayerReplica::Serialize(RakNet::SerializeParameters *p_serializeParameters)
 {
-	if (!m_isServer)
-	{
+	if (!ServerGlobals::IS_SERVER)
 		return RakNet::RM3SR_DO_NOT_SERIALIZE;
-	}
 
 	RakNet::VariableDeltaSerializer::SerializationContext serializeContext;
 	
@@ -57,4 +55,26 @@ void PlayerReplica::Deserialize(RakNet::DeserializeParameters *p_deserializePara
 
 	// End deserialize
 	m_variableDeltaSerializer.EndDeserialize(&deserializationContext);
+}
+
+void PlayerReplica::SetPosition(float p_x, float p_y, float p_z)
+{
+	m_posX = p_x;
+	m_posY = p_y;
+	m_posZ = p_z;
+}
+
+float PlayerReplica::GetPosX()
+{
+	return m_posX;
+}
+
+float PlayerReplica::GetPosY()
+{
+	return m_posY;
+}
+
+float PlayerReplica::GetPosZ()
+{
+	return m_posZ;
 }

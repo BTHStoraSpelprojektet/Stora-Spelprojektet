@@ -35,7 +35,12 @@ public:
 
 	static void Update();
 
+	static void AddReference(DefaultReplica* p_replica);
+	static void RemoveReference(DefaultReplica* p_replica);
+	//static void RemoveObject(DefaultReplica* p_replica);
+
 	static std::vector<PlayerReplica*> GetOtherPlayers();
+	static bool ConnectedNow();
 	static bool IsConnected();
 private:
 	Network() {};
@@ -47,6 +52,7 @@ private:
 	static ReplicaManager* m_replicaManager;
 
 	static bool m_connected;
+	static bool m_prevConnected;
 };
 
 #endif

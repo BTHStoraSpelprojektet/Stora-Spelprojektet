@@ -1,6 +1,7 @@
 #ifndef PLAYER
 #define PLAYER
 
+#include "Network.h"
 #include "MovingObject.h"
 #include "InputManager.h"
 
@@ -20,13 +21,14 @@ public:
 	unsigned int GetHealth() const;
 	void SetAgility(float p_agility);
 	float GetAgility() const;
-
+	void SetPosition(DirectX::XMFLOAT3 p_pos);
 private:
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	int m_spells; // antalet spells om det behövs - skapa lista
 	unsigned int m_health; // Player health
 	float m_agility; // Speed på attacker och rullning m.m
 	InputManager* m_inputManager;
+	PlayerReplica* m_playerNetworkCopy; // Används för att uppdatera spelarens position på servern
 };
 
 #endif PLAYER

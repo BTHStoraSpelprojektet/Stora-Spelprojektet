@@ -6,11 +6,13 @@ RakNet::Packet* Network::m_packet;
 ReplicaManager* Network::m_replicaManager;
 
 bool Network::m_connected;
+bool Network::m_prevConnected;
 
 bool Network::Initialize()
 {
 	ServerGlobals::IS_SERVER = false;
 	m_connected = false;
+	m_prevConnected = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 
@@ -36,8 +38,8 @@ void Network::Shutdown()
 
 void Network::Update()
 {
+	m_prevConnected = m_connected;
 	ReceviePacket();
-	std::vector<PlayerReplica*> tmp = GetOtherPlayers();
 }
 
 void Network::ReceviePacket()
@@ -72,6 +74,9 @@ std::vector<PlayerReplica*> Network::GetOtherPlayers()
 {
 	std::vector<PlayerReplica*> players = std::vector<PlayerReplica*>();
 
+	DataStructures::List<RakNet::Replica3*> replicaList2;
+	m_replicaManager->GetReplicasCreatedByMe(replicaList2);
+
 	unsigned int conCount = m_replicaManager->GetConnectionCount();
 
 	for (unsigned int i = 0; i < conCount; i++)
@@ -97,7 +102,28 @@ std::vector<PlayerReplica*> Network::GetOtherPlayers()
 	return players;
 }
 
+void Network::AddReference(DefaultReplica* p_replica)
+{
+	m_replicaManager->Reference(p_replica);
+}
+
+void Network::RemoveReference(DefaultReplica* p_replica)
+{
+	m_replicaManager->Dereference(p_replica);
+}
+
+//void Network::RemoveObject(DefaultReplica* p_replica)
+//{
+//	//m_replicaManager->BroadcastDestruction(p_replica);
+//}
+
+
 bool Network::IsConnected()
 {
 	return m_connected;
+}
+
+bool Network::ConnectedNow()
+{
+	return (!m_prevConnected && m_connected);
 }
