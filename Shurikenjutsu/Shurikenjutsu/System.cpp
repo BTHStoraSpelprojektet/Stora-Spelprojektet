@@ -89,6 +89,10 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
+	// Initialize network
+	m_network = Network();
+	m_network.Initialize();
+
 	return result;
 }
 
@@ -102,6 +106,9 @@ void System::Shutdown()
 
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
+
+	// Shutdown network
+	m_network.Shutdown();
 }
 
 void System::Run()
@@ -161,6 +168,9 @@ void System::Update()
 	}
 
 	gameState->Update(deltaTime);
+
+	// Update network
+	m_network.Update();
 
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))

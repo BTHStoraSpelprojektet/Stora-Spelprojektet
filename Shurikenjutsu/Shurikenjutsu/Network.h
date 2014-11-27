@@ -23,6 +23,9 @@
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ReplicaManager.h"
 #include <vector>
+
+#include "ConsoleFunctions.h"
+
 class Network
 {
 public:
@@ -35,6 +38,7 @@ public:
 	void Update();
 
 	std::vector<PlayerReplica*> GetOtherPlayers();
+	bool IsConnected();
 private:
 	void ReceviePacket();
 
@@ -42,6 +46,8 @@ private:
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
 	ReplicaManager* m_replicaManager;
+
+	bool m_connected;
 };
 
 #endif

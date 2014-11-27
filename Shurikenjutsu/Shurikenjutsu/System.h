@@ -4,7 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <vector>
-
+#include "Network.h"
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "Timer.h"
@@ -45,6 +45,8 @@ private:
 	Timer m_timer;
 	//Camera m_camera;
 	Debug m_debug;
+
+	Network m_network;
 
 	std::string m_title;
 	int m_previousFPS;
