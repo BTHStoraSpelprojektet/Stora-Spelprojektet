@@ -146,6 +146,7 @@ struct OBB
 		m_center = p_center;
 		m_extents = p_extents;
 		m_direction = p_direction;
+		//NormalizeDirction();
 	}
 	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
 	{
@@ -154,6 +155,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = p_direction;
+		//NormalizeDirction();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents, DirectX::XMFLOAT4 p_direction)
 	{
@@ -162,6 +164,7 @@ struct OBB
 		m_extents = p_extents;
 
 		m_direction = p_direction;
+		//NormalizeDirction();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
 	{
@@ -170,6 +173,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = p_direction;
+		//NormalizeDirction();
 	}
 	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -178,6 +182,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		//NormalizeDirction();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -186,6 +191,7 @@ struct OBB
 		m_extents = p_extents;
 
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		//NormalizeDirction();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -193,7 +199,17 @@ struct OBB
 
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
-		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f); 
+		//NormalizeDirction();
+	}
+	void NormalizeDirction()
+	{
+		float x = m_direction.x;
+		float y = m_direction.y;
+		float z = m_direction.z;
+		float w = m_direction.w;
+		float l = sqrt(x*x + y*y + z*z + w*w);
+		m_direction = DirectX::XMFLOAT4(x/l, y/l, z/l, w/l);
 	}
 };
 
