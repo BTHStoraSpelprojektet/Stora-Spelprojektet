@@ -118,12 +118,12 @@ void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, Dire
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetShadowMap()

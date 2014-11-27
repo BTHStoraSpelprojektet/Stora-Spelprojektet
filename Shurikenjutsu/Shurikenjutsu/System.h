@@ -56,6 +56,6 @@ private:
 
 	DirectionalLight m_directionalLight;
 	
-	GameState* gameState;
+	GameState* m_gameState;
 };
 #endif

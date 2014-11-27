@@ -5,7 +5,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	bool result = true;
 	playingState = PlayingStateTest();
 	//m_gameState = &m_playingState;
-	gameState = &System::playingState;
+	m_gameState = &System::playingState;
 
 	GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
 
@@ -70,7 +70,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 
 	// Initialize current GameState
-	gameState->Initialize();
+	m_gameState->Initialize();
 
 	// Initialize the camera.
 	m_flyCamera = false;
@@ -121,7 +121,7 @@ void System::Shutdown()
 	InputManager::GetInstance()->Shutdown();
 
 	//Shutdown current state
-	gameState->Shutdown();
+	m_gameState->Shutdown();
 
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
@@ -189,7 +189,7 @@ void System::Update()
 		}
 	}
 
-	gameState->Update(deltaTime);
+	m_gameState->Update(deltaTime);
 
 	// Update network
 	m_network.Update();
@@ -208,12 +208,12 @@ void System::Render()
 	GraphicsEngine::Clear();
 	
 	// Render Current GameState
-	gameState->Render();
+	m_gameState->Render();
 
 	// Start rendering alpha blended.
 	GraphicsEngine::TurnOnAlphaBlending();
 
-	gameState->RenderAlpha();
+	m_gameState->RenderAlpha();
 
 	// Stop rendering alpha blended.
 	GraphicsEngine::TurnOffAlphaBlending();
