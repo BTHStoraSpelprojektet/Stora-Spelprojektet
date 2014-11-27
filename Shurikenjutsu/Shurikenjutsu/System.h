@@ -49,11 +49,6 @@ private:
 	std::string m_title;
 	int m_previousFPS;
 
-	Model m_plane;
-	Model m_character;
-	Model m_animatedCharacter;
-	Model m_object;
-
 	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;

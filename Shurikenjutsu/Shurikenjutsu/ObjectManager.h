@@ -13,12 +13,17 @@ public:
 	void Shutdown();
 
 	void Update(double p_deltaTime);
+	void Render();
 
 	std::vector<Shuriken> GetListOfShurikens() const;
 	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed);
 
 private:
 	std::vector<Shuriken> m_shurikens;
+
+	Model m_plane;
+	Model m_animatedCharacter;
+	Model m_object;
 	
 };
 

@@ -12,6 +12,7 @@ public:
 	virtual void Shutdown();	
 	virtual void Update(double p_deltaTime);
 	virtual void Render();
+	virtual void RenderAlpha();
 	virtual void ToggleFullscreen(bool p_fullscreen);
 };
 

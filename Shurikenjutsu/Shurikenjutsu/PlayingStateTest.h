@@ -16,8 +16,10 @@ public:
 	PlayingStateTest();
 	~PlayingStateTest();
 	virtual bool Initialize();
+	void Shutdown();
 	virtual void Update(double p_deltaTime);
 	virtual void Render();
+	void RenderAlpha();
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:

@@ -13,46 +13,26 @@ PlayingStateTest::~PlayingStateTest()
 bool PlayingStateTest::Initialize()
 {
 	m_camera.Initialize();
-	//float aspectRatio = .0f//(float)((window.width - 16) / (window.height - 39));
-	m_camera.UpdateAspectRatio(1.0f);
 
 	m_playerManager.Initialize();
 
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.0f, 20.0f, -10.0f);
-	DirectX::XMFLOAT3 target = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-
-	m_camera.UpdatePosition(position);
-	m_camera.UpdateTarget(target);
-
-	// Look vector.
-	DirectX::XMFLOAT3 look = DirectX::XMFLOAT3(0.0f, -20.0f, 10.0f);
-	m_camera.UpdateLook(look);
-
-	// Up vector.
-	DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.0f, 10.0f, -20.0f);
-
-	m_camera.UpdateUpVector(up);
-
-
-	m_camera.UpdateRight(right);
-
-	// Projection data.
-	m_camera.UpdateFieldOfView(3.141592f * 0.5f);
-	m_camera.UpdateAspectRatio(1.0f);
-	m_camera.UpdateClippingPlanes(0.001f, 40.0f);
-	m_camera.UpdateViewMatrix();
-	m_camera.UpdateProjectionMatrix();
-
-	GraphicsEngine::SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+	m_objectManager.Initialize();
 
 	m_camera.ResetCamera();
 
 	return true;
 }
 
+void PlayingStateTest::Shutdown()
+{
+	m_camera.Shutdown();
+	m_playerManager.Shutdown();
+	m_objectManager.Shutdown();
+}
+
 void PlayingStateTest::Update(double p_deltaTime)
 {
+
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
@@ -75,6 +55,10 @@ void PlayingStateTest::Update(double p_deltaTime)
 	}
 
 	m_camera.MoveCamera(p_deltaTime);
+	if (!GLOBAL::GetInstance().flyingCamera)
+	{
+		m_camera.FollowCharacter(m_playerManager.GetPosition(0));
+	}
 }
 
 void PlayingStateTest::Render()
@@ -86,6 +70,11 @@ void PlayingStateTest::Render()
 		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture());
 	}
 
+	m_objectManager.Render();
+}
+
+void PlayingStateTest::RenderAlpha()
+{
 	// Draw Shurikens
 	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
 	for (unsigned int i = 0; i < tempList.size(); i++)
