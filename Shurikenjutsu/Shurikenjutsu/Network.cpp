@@ -1,14 +1,11 @@
 #include "Network.h"
 
+RakNet::RakPeerInterface* Network::m_clientPeer;
+RakNet::SocketDescriptor Network::m_socketDesc;
+RakNet::Packet* Network::m_packet;
+ReplicaManager* Network::m_replicaManager;
 
-Network::Network()
-{
-}
-
-
-Network::~Network()
-{
-}
+bool Network::m_connected;
 
 bool Network::Initialize()
 {

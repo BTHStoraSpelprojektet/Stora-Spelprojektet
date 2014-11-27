@@ -29,25 +29,24 @@
 class Network
 {
 public:
-	Network();
-	~Network();
 
-	bool Initialize();
-	void Shutdown();
+	static bool Initialize();
+	static void Shutdown();
 
-	void Update();
+	static void Update();
 
-	std::vector<PlayerReplica*> GetOtherPlayers();
-	bool IsConnected();
+	static std::vector<PlayerReplica*> GetOtherPlayers();
+	static bool IsConnected();
 private:
-	void ReceviePacket();
+	Network() {};
+	static void ReceviePacket();
 
-	RakNet::RakPeerInterface *m_clientPeer;
-	RakNet::SocketDescriptor m_socketDesc;
-	RakNet::Packet *m_packet;
-	ReplicaManager* m_replicaManager;
+	static RakNet::RakPeerInterface *m_clientPeer;
+	static RakNet::SocketDescriptor m_socketDesc;
+	static RakNet::Packet *m_packet;
+	static ReplicaManager* m_replicaManager;
 
-	bool m_connected;
+	static bool m_connected;
 };
 
 #endif
