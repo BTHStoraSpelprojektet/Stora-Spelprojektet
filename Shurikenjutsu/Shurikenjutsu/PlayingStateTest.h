@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include "GraphicsEngine.h"
 #include "Camera.h"
+#include "Level.h"
 
 class PlayingStateTest :
 	public GameState

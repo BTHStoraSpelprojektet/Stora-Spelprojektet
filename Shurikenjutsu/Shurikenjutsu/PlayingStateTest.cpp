@@ -20,6 +20,9 @@ bool PlayingStateTest::Initialize()
 
 	m_camera.ResetCamera();
 
+	//Load level
+	Level level(&m_objectManager, "../Shurikenjutsu/Levels/testBana.SSPL");
+
 	return true;
 }
 
@@ -68,6 +71,15 @@ void PlayingStateTest::Render()
 	{
 		Model tempModel1 = tempList1[i].GetModel();
 		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture());
+	}
+
+	//Draw level objects
+	std::vector<Model> tempModelList = m_objectManager.GetListOfStaticModels();
+	for (unsigned int i = 0; i < tempModelList.size(); i++)
+	{
+		Model tempModel = tempModelList[i];
+		//std::cout << "VtxCount: " << tempModel.GetVertexCount() << "\n";
+		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), 0, tempModel.GetAnimation());
 	}
 
 	m_objectManager.Render();

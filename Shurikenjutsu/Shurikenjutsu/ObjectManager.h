@@ -16,14 +16,15 @@ public:
 	void Render();
 
 	std::vector<Shuriken> GetListOfShurikens() const;
+	std::vector<Model> GetListOfStaticModels() const;
 	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed);
 
+	void AddStaticModel(Model model);
 private:
 	std::vector<Shuriken> m_shurikens;
+	std::vector<Model> m_staticmodels;
 
-	Model m_plane;
 	Model m_animatedCharacter;
-	Model m_object;
 	
 };
 
