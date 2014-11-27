@@ -1,7 +1,7 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include <Windows.h>
+#include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include <DirectXMath.h>
 #include "Globals.h"
 #include "GraphicsEngine.h"

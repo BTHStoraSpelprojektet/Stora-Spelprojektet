@@ -2,7 +2,7 @@
 PlayingStateTest System::playingState;
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
-    bool result = true;
+	bool result = true;
 	playingState = PlayingStateTest();
 	//m_gameState = &m_playingState;
 	gameState = &System::playingState;
@@ -74,7 +74,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize the camera.
 	m_flyCamera = false;
-	
+
 	//Run all tests that are in the debug class
 	m_debug.RunTests(p_argc, p_argv);
 
@@ -97,7 +97,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
-    return result;
+	// Initialize network
+	m_network = Network();
+	m_network.Initialize();
+
+	return result;
 }
 
 void System::Shutdown()
@@ -110,6 +114,9 @@ void System::Shutdown()
 
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
+
+	// Shutdown network
+	m_network.Shutdown();
 }
 
 void System::Run()
@@ -173,12 +180,15 @@ void System::Update()
 
 	gameState->Update(deltaTime);
 
+	// Update network
+	m_network.Update();
+
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))
 	{
 		PostQuitMessage(0);
 	}
-		}
+}
 
 // Render game scene here.
 void System::Render()
@@ -189,7 +199,7 @@ void System::Render()
 
 	// Clear the scene to begin rendering.
 	GraphicsEngine::Clear();
-
+	
 	// Render Current GameState
 	gameState->Render();
 
