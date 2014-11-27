@@ -1,6 +1,8 @@
 #ifndef SYSTEM
 #define SYSTEM
 
+#define WIN32_LEAN_AND_MEAN
+
 #include <vector>
 
 #include "Window.h"
@@ -21,27 +23,27 @@
 #include "Player.h"
 #include "PlayerManager.h"
 
+#include "PlayingStateTest.h"
+
 class System
 {
 public:
-	bool Initialize();
+	bool Initialize(int p_argc, _TCHAR* p_argv[]);
 	void Shutdown();
-    void Run();
+	void Run();
+	
+	static PlayingStateTest playingState;
 
 private:
-    void Update();
-    void Render();
+	void Update();
+	void Render();
 
 	void TestCollisions();
-	void MoveCamera(double p_dt);
-	void ResetCamera();
-
-	void ToggleFullscreen(bool p_fullscreen);
 
 	Window m_window;
-	GraphicsEngine m_graphicsEngine;
+	//GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
-	Camera m_camera;
+	//Camera m_camera;
 	Debug m_debug;
 
 	std::string m_title;
@@ -49,17 +51,15 @@ private:
 
 	Model m_plane;
 	Model m_character;
+	Model m_animatedCharacter;
 	Model m_object;
-
-	PlayerManager m_playerManager;
 
 	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
-	ObjectManager m_objectManager;
-	
-	bool m_render;
+
+	GameState* gameState;
 };
 #endif

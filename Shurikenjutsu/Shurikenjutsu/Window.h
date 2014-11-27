@@ -1,7 +1,7 @@
 #ifndef WINDOW
 #define WINDOW
 
-#include "..\CommonLibs\RakNet\WindowsIncludes.h"
+#include <Windows.h>
 #include "Structures.h"
 #include "ConsoleFunctions.h"
 
