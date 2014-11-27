@@ -275,3 +275,8 @@ void DirectXWrapper::TurnOffAlphaBlending()
 	m_context->OMSetBlendState(m_alphaDisabled, blendFactor, 0xffffffff);
 	m_context->OMSetDepthStencilState(m_depthEnabled, 1);
 }
+
+void DirectXWrapper::ResetRenderTarget()
+{
+	m_context->OMSetRenderTargets(1, &m_renderTarget, m_depthStencilView);
+}

@@ -36,6 +36,13 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
+	// Initialize shadow map.
+	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
+	{
+		ConsolePrintSuccess("Shadow map initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+	
 	return result;
 }
 
@@ -129,6 +136,11 @@ void GraphicsEngine::SetClearColor(float R, float G, float B, float p_opacity)
 	m_directX.SetClearColor(R, G, B, p_opacity);
 }
 
+ID3D11ShaderResourceView* GraphicsEngine::GetShadowMap()
+{
+	return m_shadowMap.GetShadowMap();
+}
+
 std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 {
 	switch (p_version)
@@ -206,4 +218,15 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 	}    
 
 	return true;
+}
+
+void GraphicsEngine::BeginRenderToShadowMap()
+{
+	m_shadowMap.SetAsRenderTarget(m_directX.GetContext());
+	m_shadowMap.Clear(m_directX.GetContext());
+}
+
+void GraphicsEngine::ResetRenderTarget()
+{
+	m_directX.ResetRenderTarget();
 }

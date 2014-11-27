@@ -22,6 +22,8 @@ public:
 
 	void SetClearColor(float R, float G, float B, float p_opacity);
 
+	void ResetRenderTarget();
+
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_context;

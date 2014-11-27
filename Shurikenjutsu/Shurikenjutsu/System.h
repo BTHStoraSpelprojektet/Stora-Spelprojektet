@@ -36,6 +36,8 @@ private:
 	void MoveCamera(double p_dt);
 	void ResetCamera();
 
+	void RenderToShadowMap();
+
 	void ToggleFullscreen(bool p_fullscreen);
 
 	Window m_window;

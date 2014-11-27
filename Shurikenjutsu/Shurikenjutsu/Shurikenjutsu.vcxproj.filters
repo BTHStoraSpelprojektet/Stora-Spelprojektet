@@ -162,6 +162,9 @@
     <ClCompile Include="AnimationControl.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="ShadowMap.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -238,7 +241,7 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Core</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Shuriken.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="AnimationControl.h">
       <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMap.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

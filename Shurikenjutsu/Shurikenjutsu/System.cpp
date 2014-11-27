@@ -232,6 +232,10 @@ void System::Update()
 // Render game scene here.
 void System::Render()
 {
+	// First we render depth to the shadow map.
+	RenderToShadowMap();
+	m_graphicsEngine.ResetRenderTarget();
+
 	// Clear the scene to begin rendering.
 	m_graphicsEngine.Clear();
 
@@ -267,6 +271,18 @@ void System::Render()
 
 	// Present the result.
 	m_graphicsEngine.Present();
+}
+
+void System::RenderToShadowMap()
+{
+	m_graphicsEngine.BeginRenderToShadowMap();
+
+	std::vector<DirectX::XMMATRIX> empty;
+	empty.clear();
+
+	m_graphicsEngine.Render(SHADERTYPE_DEPTH, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), nullptr, 0, empty);
+	m_graphicsEngine.Render(SHADERTYPE_DEPTH, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), nullptr, 0, empty);
+	m_graphicsEngine.Render(SHADERTYPE_DEPTH, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), nullptr, 0, empty);
 }
 
 void System::MoveCamera(double p_dt)

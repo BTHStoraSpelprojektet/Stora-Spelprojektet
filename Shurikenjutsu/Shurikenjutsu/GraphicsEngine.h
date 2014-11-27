@@ -5,6 +5,8 @@
 #include "SceneShader.h"
 #include "InstancedShader.h"
 #include "DepthShader.h"
+#include "ShadowMap.h"
+
 #include "Enumerations.h"
 #include "Globals.h"
 
@@ -35,6 +37,11 @@ public:
 
 	void AddInstanceBuffer(int p_numberOfInstances);
 
+	void BeginRenderToShadowMap();
+	void ResetRenderTarget();
+
+	ID3D11ShaderResourceView* GetShadowMap();
+
 private:
 	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
 
@@ -43,5 +50,7 @@ private:
 	SceneShader m_sceneShader;
 	InstancedShader m_instanceShader;
 	DepthShader m_depthShader;
+
+	ShadowMap m_shadowMap;
 };
 #endif;
