@@ -8,20 +8,24 @@
 #include "Timer.h"
 #include "Camera.h"
 #include "Model.h"
+#include "InputManager.h"
+#include "ObjectManager.h"
 
 #include "ConsoleFunctions.h"
 #include "Flags.h"
 #include "Enumerations.h"
-#include "InputManager.h"
 
 #include "Debug.h"
 #include "Globals.h"
 
+#include "Player.h"
+#include "PlayerManager.h"
 
 class System
 {
 public:
 	bool Initialize(int p_argc, _TCHAR* p_argv[]);
+	void Shutdown();
     void Run();
 
 private:
@@ -31,6 +35,8 @@ private:
 	void TestCollisions();
 	void MoveCamera(double p_dt);
 	void ResetCamera();
+
+	void ToggleFullscreen(bool p_fullscreen);
 
 	Window m_window;
 	GraphicsEngine m_graphicsEngine;
@@ -43,12 +49,18 @@ private:
 
 	Model m_plane;
 	Model m_character;
+	Model m_animatedCharacter;
 	Model m_object;
+
+	PlayerManager m_playerManager;
 
 	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
+	ObjectManager m_objectManager;
+	
+	bool m_render;
 };
 #endif

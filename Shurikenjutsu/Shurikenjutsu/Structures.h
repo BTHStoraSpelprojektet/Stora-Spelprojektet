@@ -48,6 +48,30 @@ struct Vertex
 	}
 };
 
+struct VertexAnimated
+{
+	// Variables.
+	DirectX::XMFLOAT3 m_position;
+	DirectX::XMFLOAT2 m_textureCoordinates;
+	DirectX::XMFLOAT3 m_normal;
+	DirectX::XMFLOAT3 m_tangent;
+	DirectX::XMFLOAT3 m_weight;
+	unsigned char m_boneIndex[3];
+
+	// Constructors.
+	VertexAnimated(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal, DirectX::XMFLOAT3 p_tangent, DirectX::XMFLOAT3 p_weight, unsigned char p_boneIndexX, unsigned char p_boneIndexY, unsigned char p_boneIndexZ)
+	{
+		m_position = p_position;
+		m_textureCoordinates = p_textureCoordinates;
+		m_normal = p_normal;
+		m_tangent = p_tangent;
+		m_weight = p_weight;
+		m_boneIndex[0] = p_boneIndexX;
+		m_boneIndex[0] = p_boneIndexY;
+		m_boneIndex[0] = p_boneIndexZ;
+	}
+};
+
 struct Sphere
 {
 	DirectX::XMFLOAT3 m_position;

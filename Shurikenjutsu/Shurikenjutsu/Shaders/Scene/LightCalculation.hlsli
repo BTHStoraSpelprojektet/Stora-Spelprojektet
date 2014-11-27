@@ -64,13 +64,13 @@ void ComputePointLight(Material p_material, PointLight p_light, float3 p_positio
 
 void ComputeDirectionalLight(Material p_material, DirectionalLight p_light, float3 p_normal, float3 p_toEye, out float4 p_ambient, out float4 p_diffuse, out float4 p_specular)
 {
-	p_ambient = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	p_diffuse = float4(0.0f, 0.0f, 0.0f, 0.0f);
-	p_specular = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	p_ambient = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	p_diffuse = float4(0.0f, 0.0f, 0.0f, 1.0f);
+	p_specular = float4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	p_ambient += p_material.m_ambient * p_light.m_ambient;
 
-	float3 lightVec = p_light.m_direction.xyz;
+	float3 lightVec = -p_light.m_direction.xyz;
 
 	float diffuseFactor = dot(lightVec, p_normal);
 

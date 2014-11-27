@@ -3,6 +3,7 @@
 
 #include <D3D11.h>
 #include "ConsoleFunctions.h"
+#include "Globals.h"
 
 class DirectXWrapper
 {
@@ -14,6 +15,7 @@ public:
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 	D3D_FEATURE_LEVEL GetVersion();
+	IDXGISwapChain* GetSwapChain();
 
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
@@ -27,6 +29,7 @@ private:
 	D3D_FEATURE_LEVEL m_version;
 
 	IDXGISwapChain*	m_swapChain;
+	D3D11_VIEWPORT m_viewPort;
 	ID3D11RenderTargetView*	m_renderTarget;
 	ID3D11Texture2D* m_depthStencil;
 	ID3D11DepthStencilView*	m_depthStencilView;

@@ -17,13 +17,13 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	GetClientRect(p_handle, &window);
 	m_width = (window.right - window.left);
 	m_height = (window.bottom - window.top);
-	
+
 	// Initialize swap chain.
 	DXGI_SWAP_CHAIN_DESC swapChainDescription;
 	ZeroMemory(&swapChainDescription, sizeof(swapChainDescription));
 	swapChainDescription.BufferCount = 1;
-	swapChainDescription.BufferDesc.Width = m_width;
-	swapChainDescription.BufferDesc.Height = m_height;
+	swapChainDescription.BufferDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	swapChainDescription.BufferDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	swapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDescription.BufferDesc.RefreshRate.Numerator = 60;
 	swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
@@ -31,8 +31,17 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	swapChainDescription.OutputWindow = p_handle;
 	swapChainDescription.SampleDesc.Count = 1;
 	swapChainDescription.SampleDesc.Quality = 0;
-	swapChainDescription.Windowed = TRUE;
-	swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
+	if (GLOBAL::GetInstance().FULLSCREEN)
+	{
+		swapChainDescription.Windowed = FALSE;
+	}
+
+	else
+	{
+		swapChainDescription.Windowed = TRUE;
+	}
+	
 	
 	// DirectX versions to try and initialize.
 	D3D_FEATURE_LEVEL versions[] =
@@ -104,8 +113,8 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Initialize the depth stencil.
 	D3D11_TEXTURE2D_DESC depthStencilDescription;
 	ZeroMemory(&depthStencilDescription, sizeof(depthStencilDescription));
-	depthStencilDescription.Width = m_width;
-	depthStencilDescription.Height = m_height;
+	depthStencilDescription.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	depthStencilDescription.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	depthStencilDescription.MipLevels = 1;
 	depthStencilDescription.ArraySize = 1;
 	depthStencilDescription.Format = DXGI_FORMAT_D32_FLOAT;
@@ -141,17 +150,16 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	m_context->OMSetRenderTargets(1, &m_renderTarget, m_depthStencilView);
 
 	// Initialize the view port.
-	D3D11_VIEWPORT viewPort;
-	ZeroMemory(&viewPort, sizeof(viewPort));
-	viewPort.Width = (float)m_width;
-	viewPort.Height = (float)m_height;
-	viewPort.MinDepth = 0.0f;
-	viewPort.MaxDepth = 1.0f;
-	viewPort.TopLeftX = 0;
-	viewPort.TopLeftY = 0;
+	ZeroMemory(&m_viewPort, sizeof(m_viewPort));
+	m_viewPort.Width = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	m_viewPort.Height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	m_viewPort.MinDepth = 0.0f;
+	m_viewPort.MaxDepth = 1.0f;
+	m_viewPort.TopLeftX = 0;
+	m_viewPort.TopLeftY = 0;
 
 	// Create the view port.
-	m_context->RSSetViewports(1, &viewPort);
+	m_context->RSSetViewports(1, &m_viewPort);
 
 	// Clear the render target.
 	Clear();
@@ -167,7 +175,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	blendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 	blendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	blendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendState.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+	blendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
 	// Create the alpha blend state.
 	if (FAILED(m_device->CreateBlendState(&blendState, &m_alphaEnabled)))
@@ -184,6 +192,21 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
+	IDXGIDevice* device;
+	m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&device);
+
+	IDXGIAdapter* adapter;
+	device->GetParent(__uuidof(IDXGIAdapter), (void **)&adapter);
+
+	IDXGIFactory * factory;
+	adapter->GetParent(__uuidof(IDXGIFactory), (void **)&factory);
+
+	if (FAILED(factory->MakeWindowAssociation(p_handle, DXGI_MWA_NO_ALT_ENTER)))
+	{
+		ConsolePrintError("Failed to disable alt enter.");
+		return false;
+	}
+
 	return true;
 }
 
@@ -197,6 +220,11 @@ void DirectXWrapper::Clear()
 void DirectXWrapper::Present()
 {
 	m_swapChain->Present(0, 0);
+}
+
+IDXGISwapChain* DirectXWrapper::GetSwapChain()
+{
+	return m_swapChain;
 }
 
 ID3D11Device* DirectXWrapper::GetDevice()
