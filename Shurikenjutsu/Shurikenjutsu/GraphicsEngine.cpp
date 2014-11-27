@@ -1,9 +1,18 @@
 #include "GraphicsEngine.h"
 
+//static std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
+
+DirectXWrapper GraphicsEngine::m_directX;
+
+SceneShader GraphicsEngine::m_sceneShader;
+InstancedShader GraphicsEngine::m_instanceShader;
+
+HWND* GraphicsEngine::m_windowHandle;
+
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
 	bool result = true;
-
+	m_windowHandle = &p_handle;
 	// Initialize directX.
 	result = m_directX.Initialize(p_handle);
 	if (result)
@@ -35,7 +44,7 @@ void GraphicsEngine::Shutdown()
 
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex, std::vector<DirectX::XMMATRIX> p_boneTransforms)
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex, std::vector<DirectX::XMMATRIX> p_boneTransforms)
 {
 	switch (p_shader)
 	{
@@ -67,7 +76,19 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 	}
 }
 
-void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+{
+	switch (p_shader)
+	{
+	case(SHADERTYPE_SCENE) :
+	{
+		m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+
+		break;
+	}
+	}
+}
+void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
@@ -190,4 +211,9 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 	}    
 
 	return true;
+}
+
+HWND* GraphicsEngine::GetWindowHandle()
+{
+	return m_windowHandle;
 }

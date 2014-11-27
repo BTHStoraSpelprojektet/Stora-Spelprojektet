@@ -1,8 +1,13 @@
 #include "System.h"
-
-bool System::Initialize()
+PlayingStateTest System::playingState;
+bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
-    bool result = true;
+	bool result = true;
+	playingState = PlayingStateTest();
+	//m_gameState = &m_playingState;
+	gameState = &System::playingState;
+
+	GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
 
 	// Set starting window values.
 	GLOBAL::GetInstance().FULLSCREEN = false;
@@ -42,11 +47,11 @@ bool System::Initialize()
 	m_window.SetTitle(m_title);
 
 	// Initialize the graphics engine.
-	m_graphicsEngine.Initialize(m_window.GetHandle());
-	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
-	m_graphicsEngine.SetSceneFog(0.0f, 100.0f, 0.01f);
-	m_graphicsEngine.TurnOffAlphaBlending();
-	m_render = true;
+	GraphicsEngine::Initialize(m_window.GetHandle());
+	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
+	GraphicsEngine::SetSceneFog(0.0f, 100.0f, 0.01f);
+	GraphicsEngine::TurnOffAlphaBlending();
+	GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 
 	// Initialize timer.
 	m_previousFPS = 0;
@@ -55,63 +60,36 @@ bool System::Initialize()
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
+
+	// Initialize current GameState
+	gameState->Initialize();
+
 	// Initialize the camera.
 	m_flyCamera = false;
-	m_camera.Initialize();
-	ConsolePrintSuccess("Camera initialized successfully.");
-	ConsoleSkipLines(1);
-	
-	// Reset the camera for initial use.
-	ResetCamera();
-	
-	// REMOVE THIS LATER.
-	m_plane.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/FloorShape.SSP");
-	m_graphicsEngine.AddInstanceBuffer(1);
-
-	m_character.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/cubemanWnP.SSP");
-	m_graphicsEngine.AddInstanceBuffer(5);
-	
-	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	m_graphicsEngine.AddInstanceBuffer(3);
-	//m_graphicsEngine.AddInstanceBuffer(1000);
-
-	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
-	m_character.Rotate(rotation);
-	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
-	m_character.Translate(translation);
-
-	m_animatedCharacter.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
-	translation = DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f);
-	m_animatedCharacter.Translate(translation);
-
-	m_object.LoadModel(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	m_object.Rotate(rotation);
-	translation = DirectX::XMFLOAT3(0.0f, 0.0f, 2.0f);
-	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
-	//m_debug.RunTests();
+	m_debug.RunTests(p_argc, p_argv);
 
 	// Input: Register keys
-	InputManager* input = InputManager::GetInstance();
-	input->RegisterKey(VkKeyScan('w'));
-	input->RegisterKey(VkKeyScan('a'));
-	input->RegisterKey(VkKeyScan('s'));
-	input->RegisterKey(VkKeyScan('d'));
-	input->RegisterKey(VkKeyScan('f'));
+	//InputManager* input = InputManager::GetInstance();
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('s'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('d'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('c'));
+	InputManager::GetInstance()->RegisterKey(VK_UP);
+	InputManager::GetInstance()->RegisterKey(VK_LEFT);
+	InputManager::GetInstance()->RegisterKey(VK_DOWN);
+	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
-	m_graphicsEngine.SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
-	// Initialize PlayerManager
-//	m_playerManager = new PlayerManager();
-	m_playerManager.Initialize(m_graphicsEngine.GetDevice());
-
-    return result;
+	return result;
 }
 
 void System::Shutdown()
@@ -119,8 +97,11 @@ void System::Shutdown()
 	// Shutdown input.
 	InputManager::GetInstance()->Shutdown();
 
+	//Shutdown current state
+	gameState->Shutdown();
+
 	// Shutdown graphics engine.
-	m_graphicsEngine.Shutdown(); // TODO, this does nothing so far.
+	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
 }
 
 void System::Run()
@@ -144,7 +125,7 @@ void System::Run()
 		else
 		{
 			Update();
-			if (m_render)
+			if (GLOBAL::GetInstance().isNotSwitchingFullscreen)
 			{
 				Render();
 			}
@@ -167,9 +148,6 @@ void System::Update()
 	// Get the delta time to use for animation etc.
 	double deltaTime = m_timer.GetDeltaTime();
 
-	// Update animation
-	m_animatedCharacter.Update(deltaTime);
-
 	if (FLAG_FPS == 1)
 	{
 		// Print the FPS if the flag is set.
@@ -182,229 +160,32 @@ void System::Update()
 		}
 	}
 
-	// Enable camera flying if in debug mode.
-	if (FLAG_DEBUG == 1)
-	{
-		MoveCamera(deltaTime);
-	}
+	gameState->Update(deltaTime);
 
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))
 	{
 		PostQuitMessage(0);
 	}
-
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
-	{
-		if (GLOBAL::GetInstance().FULLSCREEN)
-		{
-			ToggleFullscreen(false);
-		}
-		else
-		{
-			ToggleFullscreen(true);
-		}
-	}
-
-	// Temporary "Shuriken" spawn
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
-	{
-		m_objectManager.AddShuriken(m_graphicsEngine.GetDevice(), "../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPosition(0), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
-	}
-
-	m_objectManager.Update(deltaTime);
-	m_playerManager.Update(deltaTime);
 }
 
 // Render game scene here.
 void System::Render()
 {
 	// Clear the scene to begin rendering.
-	m_graphicsEngine.Clear();
-
-	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture(), 0, m_plane.GetAnimation());
-	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture(), 1, m_character.GetAnimation());
-	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 2, m_object.GetAnimation());
-
-	m_graphicsEngine.Render(SHADERTYPE_ANIMATED, m_animatedCharacter.GetMesh(), m_animatedCharacter.GetVertexCount(), m_animatedCharacter.GetWorldMatrix(), m_animatedCharacter.GetTexture(), 0, m_animatedCharacter.GetAnimation());
-
-	//m_graphicsEngine.Render(SHADERTYPE_SCENE, m_playerManager.GetModel(0).GetMesh(), m_playerManager.GetModel(0).GetVertexCount(), m_playerManager.GetModel(0).GetWorldMatrix(), m_playerManager.GetModel(0).GetTexture());
-	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
-	for (unsigned int i = 0; i < tempList1.size(); i++)
-	{
-		Model tempModel1 = tempList1[i].GetModel();
-		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture(), 1, tempModel1.GetAnimation());
-	}
+	GraphicsEngine::Clear();
+	
+	// Render Current GameState
+	gameState->Render();
 
 	// Start rendering alpha blended.
-	m_graphicsEngine.TurnOnAlphaBlending();
+	GraphicsEngine::TurnOnAlphaBlending();
 
-	// Draw Shurikens
-	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
-	for (unsigned int i = 0; i < tempList.size(); i++)
-	{
-		Model tempModel = tempList[i].GetModel();
-		m_graphicsEngine.Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), 0, tempModel.GetAnimation());
-	}
+	gameState->RenderAlpha();
 
 	// Stop rendering alpha blended.
-	m_graphicsEngine.TurnOffAlphaBlending();
-
-
+	GraphicsEngine::TurnOffAlphaBlending();
 
 	// Present the result.
-	m_graphicsEngine.Present();
-}
-
-void System::MoveCamera(double p_dt)
-{
-	// Start moving the camera with the C key.
-	if ((GetAsyncKeyState('C') & 0x8000) && m_flyCamera == false)
-	{
-		ShowCursor(false);
-		m_flyCamera = true;
-
-		POINT position;
-		GetCursorPos(&position);
-
-		m_oldMouseX = (float)position.x;
-		m_oldMouseY = (float)position.y;
-	}
-
-	if (m_flyCamera)
-	{
-		float deltaTime = (float)p_dt;
-
-		// Rotate and pitch the camera.
-		POINT position;
-		GetCursorPos(&position);
-
-		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(position.x - m_oldMouseX));
-		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(position.y - m_oldMouseY));
-		m_camera.Pitch(dy);
-		m_camera.Rotate(dx);
-
-		SetCursorPos((int)m_oldMouseX, (int)m_oldMouseY);
-
-		// Move the camera using W, S, A, D keys.
-		if (GetAsyncKeyState('W') & 0x8000)
-		{
-			m_camera.Walk(10.0f * deltaTime);
-		}
-
-		if (GetAsyncKeyState('S') & 0x8000)
-		{
-			m_camera.Walk(-10.0f * deltaTime);
-		}
-
-		if (GetAsyncKeyState('A') & 0x8000)
-		{
-			m_camera.Strafe(-10.0f * deltaTime);
-		}
-
-		if (GetAsyncKeyState('D') & 0x8000)
-		{
-			m_camera.Strafe(10.0f * deltaTime);
-		}
-
-		// Update the camera.
-		m_camera.UpdateMovedCamera();
-
-		// Set shader variables from the camera.
-		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
-
-		// Reset the camera when BACKSPACE key is pressed.
-		if (GetAsyncKeyState(VK_BACK))
-		{
-			ShowCursor(true);
-			m_flyCamera = false;
-			ResetCamera();
-		}
-	}
-}
-
-void System::ResetCamera()
-{
-	// Reset camera.
-	DirectX::XMVECTOR position = DirectX::XMVectorSet(0.0f, 20.0f, -10.0f, 0.0f);
-	DirectX::XMVECTOR target = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-
-	m_camera.UpdatePosition(position);
-	m_camera.UpdateTarget(target);
-
-	// Look vector.
-	DirectX::XMVECTOR look = DirectX::XMVectorSet(0.0f, -20.0f, 10.0f, 0.0f);
-	look = DirectX::XMVector3Normalize(look);
-	m_camera.UpdateLook(look);
-
-	// Up vector.
-	DirectX::XMVECTOR right = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
-	DirectX::XMVECTOR up = DirectX::XMVectorSet(0.0f, 10.0f, -20.0f, 0.0f);
-	up = DirectX::XMVector3Cross(look, right);
-	up = DirectX::XMVector3Normalize(up);
-	m_camera.UpdateUpVector(up);
-
-	// Right vector.
-	right = DirectX::XMVector3Cross(up, look);
-	right = DirectX::XMVector3Normalize(right);
-	m_camera.UpdateRight(right);
-
-	// Projection data.
-	float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
-	m_camera.UpdateAspectRatio(aspectRatio);
-	m_camera.UpdateFieldOfView(3.141592f * 0.5f);
-	m_camera.UpdateClippingPlanes(0.001f, 40.0f);
-	m_camera.UpdateViewMatrix();
-	m_camera.UpdateProjectionMatrix();
-
-	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
-}
-
-void System::ToggleFullscreen(bool p_fullscreen)
-{
-	if (p_fullscreen)
-	{
-		m_render = false;
-
-		// Go to fullscreen
-		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
-		m_graphicsEngine.ToggleFullscreen(true);
-
-		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
-		m_camera.UpdateAspectRatio(aspectRatio);
-		m_camera.UpdateProjectionMatrix();
-	m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
-
-		// Set both window positions.
-		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
-
-		m_render = true;
-	}
-
-	else
-	{
-		m_render = false;
-
-		// Go to windowed mode.
-		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
-		m_graphicsEngine.ToggleFullscreen(false);
-
-		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
-		m_camera.UpdateAspectRatio(aspectRatio);
-		m_camera.UpdateProjectionMatrix();
-		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
-
-		// Set both window positions.
-		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
-		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
-
-		m_render = true;
-	}
+	GraphicsEngine::Present();
 }
