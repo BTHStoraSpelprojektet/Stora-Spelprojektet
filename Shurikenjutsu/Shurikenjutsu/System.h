@@ -28,22 +28,19 @@ class System
 public:
 	bool Initialize();
 	void Shutdown();
-    void Run();
+	void Run();
 
 	
 	static PlayingStateTest playingState;
+
 private:
-    void Update();
-    void Render();
+	void Update();
+	void Render();
 
 	void TestCollisions();
-	void MoveCamera(double p_dt);
-	void ResetCamera();
-
-	void ToggleFullscreen(bool p_fullscreen);
 
 	Window m_window;
-	GraphicsEngine m_graphicsEngine;
+	//GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
 	//Camera m_camera;
 	Debug m_debug;
@@ -60,14 +57,7 @@ private:
 	float m_oldMouseX;
 	float m_oldMouseY;
 
-	bool m_render;
-
 	DirectionalLight m_directionalLight;
-	//ObjectManager m_objectManager;
-	//PlayerManager m_playerManager;
-	
-	GameState *m_gameState;
-	//PlayingStateTest m_playingState;
 
 	GameState* gameState;
 };

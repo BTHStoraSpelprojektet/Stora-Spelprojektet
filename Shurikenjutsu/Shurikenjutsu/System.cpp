@@ -2,10 +2,12 @@
 PlayingStateTest System::playingState;
 bool System::Initialize()
 {
-    bool result = true;
+	bool result = true;
 	playingState = PlayingStateTest();
 	//m_gameState = &m_playingState;
 	gameState = &System::playingState;
+
+	GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
 
 	// Set starting window values.
 	GLOBAL::GetInstance().FULLSCREEN = false;
@@ -45,11 +47,11 @@ bool System::Initialize()
 	m_window.SetTitle(m_title);
 
 	// Initialize the graphics engine.
-	m_graphicsEngine.Initialize(m_window.GetHandle());
-	m_graphicsEngine.SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
-	m_graphicsEngine.SetSceneFog(0.0f, 100.0f, 0.01f);
-	m_graphicsEngine.TurnOffAlphaBlending();
-	m_render = true;
+	GraphicsEngine::Initialize(m_window.GetHandle());
+	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
+	GraphicsEngine::SetSceneFog(0.0f, 100.0f, 0.01f);
+	GraphicsEngine::TurnOffAlphaBlending();
+	GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 
 	// Initialize timer.
 	m_previousFPS = 0;
@@ -58,7 +60,7 @@ bool System::Initialize()
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
-	gameState->Initialize(m_graphicsEngine.GetDevice(), &m_graphicsEngine);
+	gameState->Initialize();
 
 	// Initialize the camera.
 	m_flyCamera = false;
@@ -75,9 +77,9 @@ bool System::Initialize()
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
-	m_graphicsEngine.SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
-    return result;
+	return result;
 }
 
 void System::Shutdown()
@@ -85,8 +87,11 @@ void System::Shutdown()
 	// Shutdown input.
 	InputManager::GetInstance()->Shutdown();
 
+	//Shutdown current state
+	gameState->Shutdown();
+
 	// Shutdown graphics engine.
-	m_graphicsEngine.Shutdown(); // TODO, this does nothing so far.
+	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
 }
 
 void System::Run()
@@ -110,7 +115,7 @@ void System::Run()
 		else
 		{
 			Update();
-			if (m_render)
+			if (GLOBAL::GetInstance().isNotSwitchingFullscreen)
 			{
 				Render();
 			}
@@ -148,24 +153,12 @@ void System::Update()
 		}
 	}
 
-	gameState->Update(deltaTime, m_graphicsEngine.GetDevice());
+	gameState->Update(deltaTime);
 
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))
 	{
 		PostQuitMessage(0);
-	}
-	
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
-	{
-		/*if (GLOBAL::GetInstance().FULLSCREEN)
-		{
-			ToggleFullscreen(false);
-		}
-		else
-		{
-			ToggleFullscreen(true);
-		}*/
 	}
 }
 
@@ -173,69 +166,17 @@ void System::Update()
 void System::Render()
 {
 	// Clear the scene to begin rendering.
-	m_graphicsEngine.Clear();
+	GraphicsEngine::Clear();
 
-/*	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture(), 0);
-	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture(), 1);
-	m_graphicsEngine.Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 2);
-*/
-	gameState->Render(&m_graphicsEngine);
+	// Render Current GameState
+	gameState->Render();
 
 	// Start rendering alpha blended.
-	m_graphicsEngine.TurnOnAlphaBlending();
+	GraphicsEngine::TurnOnAlphaBlending();
 
 	// Stop rendering alpha blended.
-	m_graphicsEngine.TurnOffAlphaBlending();
+	GraphicsEngine::TurnOffAlphaBlending();
 
 	// Present the result.
-	m_graphicsEngine.Present();
+	GraphicsEngine::Present();
 }
-
-/*void System::ToggleFullscreen(bool p_fullscreen)
-{
-	if (p_fullscreen)
-	{
-		m_render = false;
-
-		// Go to fullscreen
-		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
-		m_graphicsEngine.ToggleFullscreen(true);
-
-		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
-		m_camera.UpdateAspectRatio(aspectRatio);
-		m_camera.UpdateProjectionMatrix();
-		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
-
-		// Set both window positions.
-		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
-
-		m_render = true;
-	}
-
-	else
-	{
-		m_render = false;
-
-		// Go to windowed mode.
-		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
-		m_graphicsEngine.ToggleFullscreen(false);
-
-		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
-		m_camera.UpdateAspectRatio(aspectRatio);
-		m_camera.UpdateProjectionMatrix();
-		m_graphicsEngine.SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
-
-		// Set both window positions.
-		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
-		SetWindowPos(m_window.GetHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
-
-		m_render = true;
-	}
-}*/

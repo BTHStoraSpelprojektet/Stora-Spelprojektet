@@ -10,7 +10,7 @@ class Player :
 public:
 	Player();
 	~Player();
-	bool Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
+	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
 	void Shutdown();
 	void Update(double p_deltaTime);

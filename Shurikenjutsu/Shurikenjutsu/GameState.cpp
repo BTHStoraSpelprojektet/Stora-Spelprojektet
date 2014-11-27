@@ -10,7 +10,7 @@ GameState::~GameState()
 {
 }
 
-bool GameState::Initialize(ID3D11Device* p_device, GraphicsEngine *p_graphicsEngine)
+bool GameState::Initialize()
 {
 	return true;
 }
@@ -20,12 +20,17 @@ void GameState::Shutdown()
 
 }
 
-void GameState::Update(double p_deltaTime, ID3D11Device* p_device)
+void GameState::Update(double p_deltaTime)
 {
 
 }
 
-void GameState::Render(GraphicsEngine* p_graphicsEngine)
+void GameState::Render()
+{
+
+}
+
+void GameState::ToggleFullscreen(bool p_fullscreen)
 {
 
 }

@@ -14,8 +14,8 @@
 class Model
 {
 public:
-	bool LoadModel(ID3D11Device* p_device, const char* p_filepath);
-	ID3D11ShaderResourceView* LoadTexture(ID3D11Device* p_device, unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
+	bool LoadModel(const char* p_filepath);
+	ID3D11ShaderResourceView* LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
 	void Shutdown();
 
 	void Update(double p_dt);

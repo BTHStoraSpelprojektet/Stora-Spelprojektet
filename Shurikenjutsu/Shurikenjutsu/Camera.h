@@ -3,6 +3,8 @@
 
 #include <Windows.h>
 #include <DirectXMath.h>
+#include "Globals.h"
+#include "GraphicsEngine.h"
 
 class Camera
 {
@@ -31,6 +33,9 @@ public:
 	DirectX::XMFLOAT3 GetPosition();
 	DirectX::XMFLOAT4X4 GetViewMatrix();
 	DirectX::XMFLOAT4X4 GetProjectionMatrix();
+
+	
+	void ToggleFullscreen(bool p_fullscreen);
 
 private:
 	DirectX::XMFLOAT3 m_position;

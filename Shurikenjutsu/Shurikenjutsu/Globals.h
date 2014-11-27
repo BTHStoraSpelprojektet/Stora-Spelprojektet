@@ -16,6 +16,8 @@ public:
 	int SCREEN_HEIGHT;
 	int SCREEN_WIDTH;
 
+	bool isNotSwitchingFullscreen;
+
 private:
 	GLOBAL() {};
 	GLOBAL(GLOBAL const&);              

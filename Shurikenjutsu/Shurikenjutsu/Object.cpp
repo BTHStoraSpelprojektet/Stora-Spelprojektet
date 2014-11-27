@@ -10,13 +10,13 @@ Object::~Object()
 {
 }
 
-bool Object::Initialize(ID3D11Device* p_device, const char* p_filepath, DirectX::XMFLOAT3 p_pos)
+bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 {
 	SetPosition(p_pos);
 	SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	SetRotation(DirectX::XMFLOAT3(0.0f,0.0f, 0.0f));
 
-	if (!m_model.LoadModel(p_device, p_filepath))
+	if (!m_model.LoadModel(p_filepath))
 	{
 		return false;
 	}

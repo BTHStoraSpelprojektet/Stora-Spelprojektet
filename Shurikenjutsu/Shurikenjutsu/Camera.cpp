@@ -182,3 +182,52 @@ DirectX::XMFLOAT4X4 Camera::GetProjectionMatrix()
 	// Return projection matrix.
 	return m_projectionMatrix;
 }
+
+void Camera::ToggleFullscreen(bool p_fullscreen)
+{
+	if (p_fullscreen)
+	{
+		GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
+
+		// Go to fullscreen
+		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		GraphicsEngine::ToggleFullscreen(true);
+
+		// Update aspect ratio.
+		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		UpdateAspectRatio(aspectRatio);
+		UpdateProjectionMatrix();
+		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+
+		// Set both window positions.
+		HWND console = GetConsoleWindow();
+		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+
+		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
+	}
+
+	else
+	{
+		GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
+
+		// Go to windowed mode.
+		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
+		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
+		GraphicsEngine::ToggleFullscreen(false);
+
+		// Update aspect ratio.
+		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		UpdateAspectRatio(aspectRatio);
+		UpdateProjectionMatrix();
+		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+
+		// Set both window positions.
+		HWND console = GetConsoleWindow();
+		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+
+		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
+	}
+}

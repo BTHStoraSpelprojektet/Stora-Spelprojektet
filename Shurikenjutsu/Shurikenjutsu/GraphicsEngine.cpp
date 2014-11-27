@@ -1,9 +1,18 @@
 #include "GraphicsEngine.h"
 
+//static std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
+
+DirectXWrapper GraphicsEngine::m_directX;
+
+SceneShader GraphicsEngine::m_sceneShader;
+InstancedShader GraphicsEngine::m_instanceShader;
+
+HWND* GraphicsEngine::m_windowHandle;
+
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
 	bool result = true;
-
+	m_windowHandle = &p_handle;
 	// Initialize directX.
 	result = m_directX.Initialize(p_handle);
 	if (result)
@@ -201,4 +210,9 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 	}    
 
 	return true;
+}
+
+HWND* GraphicsEngine::GetWindowHandle()
+{
+	return m_windowHandle;
 }

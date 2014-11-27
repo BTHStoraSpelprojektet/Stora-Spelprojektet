@@ -82,6 +82,9 @@
     <Filter Include="Shaders\Depth">
       <UniqueIdentifier>{e9ba412c-e56c-4c47-addb-a20626061ff9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{2a8bd72b-33f9-4cd6-a3ee-24d34b8eba48}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -156,9 +159,6 @@
     <ClCompile Include="DepthShader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Globals.cpp">
-      <Filter>Header Files\Utility</Filter>
-    </ClCompile>
     <ClCompile Include="AnimationControl.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
@@ -167,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="PlayingStateTest.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
