@@ -60,34 +60,12 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
+
+	// Initialize current GameState
 	gameState->Initialize();
 
 	// Initialize the camera.
 	m_flyCamera = false;
-	
-	// REMOVE THIS LATER.
-	m_plane.LoadModel("../Shurikenjutsu/Models/FloorShape.SSP");
-	GraphicsEngine::AddInstanceBuffer(1);
-
-	m_character.LoadModel("../Shurikenjutsu/Models/cubemanWnP.SSP");
-	GraphicsEngine::AddInstanceBuffer(5);
-	
-	m_object.LoadModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	GraphicsEngine::AddInstanceBuffer(3);
-
-	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
-	m_character.Rotate(rotation);
-	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
-	m_character.Translate(translation);
-
-	m_animatedCharacter.LoadModel("../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
-	translation = DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f);
-	m_animatedCharacter.Translate(translation);
-
-	m_object.LoadModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	m_object.Rotate(rotation);
-	translation = DirectX::XMFLOAT3(0.0f, 0.0f, 2.0f);
-	m_object.Translate(translation);
 
 	//Run all tests that are in the debug class
 	m_debug.RunTests(p_argc, p_argv);
@@ -170,9 +148,6 @@ void System::Update()
 	// Get the delta time to use for animation etc.
 	double deltaTime = m_timer.GetDeltaTime();
 
-	// Update animation
-	m_animatedCharacter.Update(deltaTime);
-
 	if (FLAG_FPS == 1)
 	{
 		// Print the FPS if the flag is set.
@@ -192,25 +167,21 @@ void System::Update()
 	{
 		PostQuitMessage(0);
 	}
-		}
+}
 
 // Render game scene here.
 void System::Render()
 {
 	// Clear the scene to begin rendering.
 	GraphicsEngine::Clear();
-
-	GraphicsEngine::Render(SHADERTYPE_INSTANCED, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture(), 0, m_plane.GetAnimation());
-	GraphicsEngine::Render(SHADERTYPE_INSTANCED, m_character.GetMesh(), m_character.GetVertexCount(), m_character.GetWorldMatrix(), m_character.GetTexture(), 1, m_character.GetAnimation());
-	GraphicsEngine::Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 2, m_object.GetAnimation());
-
-	GraphicsEngine::Render(SHADERTYPE_ANIMATED, m_animatedCharacter.GetMesh(), m_animatedCharacter.GetVertexCount(), m_animatedCharacter.GetWorldMatrix(), m_animatedCharacter.GetTexture(), 0, m_animatedCharacter.GetAnimation());
-
+	
 	// Render Current GameState
 	gameState->Render();
 
 	// Start rendering alpha blended.
 	GraphicsEngine::TurnOnAlphaBlending();
+
+	gameState->RenderAlpha();
 
 	// Stop rendering alpha blended.
 	GraphicsEngine::TurnOffAlphaBlending();

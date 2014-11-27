@@ -22,6 +22,11 @@ bool Camera::Initialize()
 	return true;
 }
 
+void Camera::Shutdown()
+{
+
+}
+
 void Camera::UpdatePosition(DirectX::XMFLOAT3 p_position)
 {
 	// Set the camera position.
@@ -297,22 +302,19 @@ void Camera::MoveCamera(double p_deltaTime)
 			ResetCamera();
 		}
 	}
+}
 
-	else
-	{
-		// Lock Camera
-		DirectX::XMFLOAT3 nullPos = DirectX::XMFLOAT3(0, 0, 0);
+void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
+{
+	// Lock Camera on player
+	DirectX::XMFLOAT3 playerPosition = p_playerPos;
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 20.0f, playerPosition.z - 10.0f);
+	DirectX::XMFLOAT3 target = playerPosition;
 
-		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(nullPos.x, nullPos.y + 20.0f, nullPos.z - 10.0f);
-
-		DirectX::XMFLOAT3 target = nullPos;
-
-		UpdatePosition(position);
-		UpdateTarget(target);
-		UpdateViewMatrix();
-		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
-	}
-
+	UpdatePosition(position);
+	UpdateTarget(target);
+	UpdateViewMatrix();
+	GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }
 
 void Camera::ResetCamera()
