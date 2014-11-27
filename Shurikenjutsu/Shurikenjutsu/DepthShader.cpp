@@ -57,7 +57,6 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	ConsolePrintSuccess("Depth vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
-	ConsoleSkipLines(1);
 
 	vertexShader->Release();
 	vertexShader = 0;
@@ -95,7 +94,6 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	ConsolePrintSuccess("Depth pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-	ConsoleSkipLines(1);
 
 	pixelShader->Release();
 	pixelShader = 0;
@@ -139,10 +137,10 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	return true;
 }
 
-void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix)
+void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix)
 {
 	// Set parameters and then render.
-	unsigned int stride = sizeof(DirectX::XMVECTOR);
+	unsigned int stride = sizeof(Vertex);
 	const unsigned int offset = 0;
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
@@ -157,17 +155,17 @@ void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void DepthShader::UpdateViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
+void DepthShader::UpdateViewAndProjection(DirectX::XMFLOAT4X4& p_viewMatrix, DirectX::XMFLOAT4X4& p_projectionMatrix)
 {
 	m_viewMatrix = p_viewMatrix;
 	m_projectionMatrix = p_projectionMatrix;
 }
 
-void DepthShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMMATRIX& p_worldMatrix)
+void DepthShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4& p_worldMatrix)
 {
-	DirectX::XMMATRIX worldMatrix = p_worldMatrix;
-	DirectX::XMMATRIX viewMatrix = m_viewMatrix;
-	DirectX::XMMATRIX projectionMatrix = m_projectionMatrix;
+	DirectX::XMFLOAT4X4 worldMatrix = p_worldMatrix;
+	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
+	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
 
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
@@ -181,9 +179,9 @@ void DepthShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMM
 	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
 
 	// Transpose the matrices.
-	worldMatrix = DirectX::XMMatrixTranspose(worldMatrix);
-	viewMatrix = DirectX::XMMatrixTranspose(viewMatrix);
-	projectionMatrix = DirectX::XMMatrixTranspose(projectionMatrix);
+	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
+	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
+	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
 
 	// Set matrices in buffer.
 	matrixBuffer->m_worldMatrix = worldMatrix;

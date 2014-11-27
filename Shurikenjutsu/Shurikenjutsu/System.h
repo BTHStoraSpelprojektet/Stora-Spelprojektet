@@ -30,20 +30,19 @@ class System
 public:
 	bool Initialize(int p_argc, _TCHAR* p_argv[]);
 	void Shutdown();
-	void Run();
-	
+    void Run();
+
 	static PlayingStateTest playingState;
 
 private:
-	void Update();
-	void Render();
+    void Update();
+    void Render();
 
 	void TestCollisions();
 
+	void RenderToShadowMap();
 	Window m_window;
-	//GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
-	//Camera m_camera;
 	Debug m_debug;
 
 	Network m_network;
@@ -56,7 +55,7 @@ private:
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
-
+	
 	GameState* gameState;
 };
 #endif

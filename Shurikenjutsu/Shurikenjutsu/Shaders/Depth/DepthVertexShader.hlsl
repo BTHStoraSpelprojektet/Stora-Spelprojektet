@@ -12,18 +12,20 @@ struct Input
 
 struct Output
 {
-	float4 m_position : POSITION;
+	float4 m_position : SV_POSITION;
 };
 
+// Vertex depth shader function.
 Output main(Input p_input)
 {
 	// Setup vertex output.
 	Output output;
+
 	output.m_position = p_input.m_position;
 	output.m_position.w = 1.0f;
 
 	// Transform vertex position to homogenous clip space.
-	output.m_position = mul(output.m_position, m_worldMatrix);
+	output.m_position = mul(p_input.m_position, m_worldMatrix);
 	output.m_position = mul(output.m_position, m_viewMatrix);
 	output.m_position = mul(output.m_position, m_projectionMatrix);
 

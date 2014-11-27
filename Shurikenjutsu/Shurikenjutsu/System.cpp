@@ -13,16 +13,18 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GLOBAL::GetInstance().FULLSCREEN = false;
 	GLOBAL::GetInstance().MAX_SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 	GLOBAL::GetInstance().MAX_SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
+	GLOBAL::GetInstance().MIN_SCREEN_WIDTH = 1280;
+	GLOBAL::GetInstance().MIN_SCREEN_HEIGHT = 1024;
 
 	if (GLOBAL::GetInstance().FULLSCREEN)
 	{
-		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	}
 	else
 	{
-		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}
 
 	ConsolePrintSuccess("Application initialized.");
@@ -30,11 +32,17 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Set console position.
 	HWND console = GetConsoleWindow();
-	MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+	MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH + 5, 0, 670, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, true);
 	SetWindowTextA(console, "Shurikenjitsu Debug Console");
 
+	// Hide the console if we are not debugging.
+	if (FLAG_DEBUG != 1)
+	{
+		ShowWindow(console, SW_HIDE);
+	}
+
 	// Initialize the window.
-	WindowRectangle window = WindowRectangle(0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT);
+	WindowRectangle window = WindowRectangle(0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	m_window.Initialize(window);
 	ConsolePrintSuccess("Window created successfully.");
 	std::string size = "Window size: " + std::to_string(window.width);
@@ -71,12 +79,12 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_debug.RunTests(p_argc, p_argv);
 
 	// Input: Register keys
-	//InputManager* input = InputManager::GetInstance();
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('s'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('d'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('c'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('f'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
@@ -157,13 +165,16 @@ void System::Update()
 
 	if (FLAG_FPS == 1)
 	{
-		// Print the FPS if the flag is set.
-		if (m_timer.GetFPS() != m_previousFPS)
+		int fps = m_timer.GetFPS();
+
+		if (fps != m_previousFPS)
 		{
 			std::string title = m_title + " (FPS: ";
 			title.append(std::to_string(m_timer.GetFPS()) + ") ");
 
 			m_window.SetTitle(title);
+
+			m_previousFPS = fps;
 		}
 	}
 
@@ -182,6 +193,10 @@ void System::Update()
 // Render game scene here.
 void System::Render()
 {
+	// First we render depth to the shadow map.
+	RenderToShadowMap();
+	GraphicsEngine::ResetRenderTarget();
+
 	// Clear the scene to begin rendering.
 	GraphicsEngine::Clear();
 	
@@ -198,4 +213,9 @@ void System::Render()
 
 	// Present the result.
 	GraphicsEngine::Present();
+}
+
+void System::RenderToShadowMap()
+{
+	GraphicsEngine::BeginRenderToShadowMap();
 }

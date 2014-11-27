@@ -13,8 +13,11 @@ public:
 	int MAX_SCREEN_HEIGHT;
 	int MAX_SCREEN_WIDTH;
 
-	int SCREEN_HEIGHT;
-	int SCREEN_WIDTH;
+	int MIN_SCREEN_HEIGHT;
+	int MIN_SCREEN_WIDTH;
+
+	int CURRENT_SCREEN_HEIGHT;
+	int CURRENT_SCREEN_WIDTH;
 
 	bool isNotSwitchingFullscreen;
 	bool flyingCamera;

@@ -195,20 +195,20 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
 
 		// Go to fullscreen
-		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
 		GraphicsEngine::ToggleFullscreen(true);
 
 		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix();
 		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0, 670, 1000, true);
 
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 	}
@@ -218,20 +218,20 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
 
 		// Go to windowed mode.
-		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 		GraphicsEngine::ToggleFullscreen(false);
 
 		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix();
 		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
-		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0, 670, 1000, true);
+		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
 
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 	}
@@ -330,7 +330,7 @@ void Camera::ResetCamera()
 	UpdateTarget(target);
 
 	// Projection data.
-	float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+	float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	UpdateAspectRatio(aspectRatio);
 	UpdateFieldOfView(3.141592f * 0.5f);
 	UpdateClippingPlanes(0.001f, 40.0f);

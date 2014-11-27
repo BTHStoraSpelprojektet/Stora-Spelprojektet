@@ -171,7 +171,6 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	ConsolePrintSuccess("Scene vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
-	ConsoleSkipLines(1);
 
 	animatedVertexShader->Release();
 	animatedVertexShader = 0;
@@ -212,7 +211,6 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	ConsolePrintSuccess("Scene pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-	ConsoleSkipLines(1);
 
 	pixelShader->Release();
 	pixelShader = 0;

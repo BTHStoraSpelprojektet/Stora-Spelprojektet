@@ -6,8 +6,11 @@ DirectXWrapper GraphicsEngine::m_directX;
 
 SceneShader GraphicsEngine::m_sceneShader;
 InstancedShader GraphicsEngine::m_instanceShader;
+DepthShader GraphicsEngine::m_depthShader;
 
 HWND* GraphicsEngine::m_windowHandle;
+
+ShadowMap GraphicsEngine::m_shadowMap;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -24,18 +27,34 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
-	// Initialize scene shader.
+	// Initialize the scene shader.
 	if (m_sceneShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
 	{
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+
+	// Initialize the instance shader
 	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
 	{
 		ConsolePrintSuccess("Instanced shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
 
+	// Initialize the depth buffer.
+	if (m_depthShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
+	{
+		ConsolePrintSuccess("Depth shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+
+	// Initialize shadow map.
+	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
+	{
+		ConsolePrintSuccess("Shadow map initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+	
 	return result;
 }
 
@@ -66,6 +85,12 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 
 			break;
 		}
+		case(SHADERTYPE_DEPTH) :
+		{
+			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix);
+
+			break;
+		}
 
 		default:
 		{
@@ -80,18 +105,19 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 {
 	switch (p_shader)
 	{
-	case(SHADERTYPE_SCENE) :
-	{
-		m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+		case(SHADERTYPE_SCENE) :
+		{
+			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 
-		break;
-	}
+			break;
+		}
 	}
 }
 void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
@@ -132,6 +158,11 @@ D3D_FEATURE_LEVEL GraphicsEngine::GetVersion()
 void GraphicsEngine::SetClearColor(float R, float G, float B, float p_opacity)
 {
 	m_directX.SetClearColor(R, G, B, p_opacity);
+}
+
+ID3D11ShaderResourceView* GraphicsEngine::GetShadowMap()
+{
+	return m_shadowMap.GetShadowMap();
 }
 
 std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
@@ -211,6 +242,17 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 	}    
 
 	return true;
+}
+
+void GraphicsEngine::BeginRenderToShadowMap()
+{
+	m_shadowMap.SetAsRenderTarget(m_directX.GetContext());
+	m_shadowMap.Clear(m_directX.GetContext());
+}
+
+void GraphicsEngine::ResetRenderTarget()
+{
+	m_directX.ResetRenderTarget();
 }
 
 HWND* GraphicsEngine::GetWindowHandle()

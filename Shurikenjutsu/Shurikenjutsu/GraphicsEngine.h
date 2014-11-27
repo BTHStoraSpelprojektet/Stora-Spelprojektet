@@ -4,6 +4,9 @@
 #include "DirectX.h"
 #include "SceneShader.h"
 #include "InstancedShader.h"
+#include "DepthShader.h"
+#include "ShadowMap.h"
+
 #include "Enumerations.h"
 #include "Globals.h"
 
@@ -29,12 +32,17 @@ public:
 
 	static void TurnOnAlphaBlending();
 	static void TurnOffAlphaBlending();
-	
+
 	static bool ToggleFullscreen(bool p_fullscreen);
 
 	static void AddInstanceBuffer(int p_numberOfInstances);
 
 	static HWND* GetWindowHandle();
+
+	static void BeginRenderToShadowMap();
+	static void ResetRenderTarget();
+
+	ID3D11ShaderResourceView* GetShadowMap();
 
 private:
 	GraphicsEngine(){};
@@ -45,7 +53,10 @@ private:
 
 	static SceneShader m_sceneShader;
 	static InstancedShader m_instanceShader;
+	static DepthShader m_depthShader;
 
 	static HWND* m_windowHandle;
+
+	static ShadowMap m_shadowMap;
 };
 #endif;
