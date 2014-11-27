@@ -5,7 +5,7 @@
 #include <DirectXMath.h>
 #include "Globals.h"
 #include "GraphicsEngine.h"
-
+#include "InputManager.h"
 class Camera
 {
 public:
@@ -34,7 +34,8 @@ public:
 	DirectX::XMFLOAT4X4 GetViewMatrix();
 	DirectX::XMFLOAT4X4 GetProjectionMatrix();
 
-	
+	void ResetCamera();
+	void MoveCamera(double p_deltaTime);
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:
@@ -56,6 +57,9 @@ private:
 	int m_newY;
 	int m_oldX;
 	int m_oldY;
+
+	float m_oldMouseX;
+	float m_oldMouseY;
 
 	DirectX::XMFLOAT4X4 m_positionMatrix;
 	DirectX::XMFLOAT4X4 m_rotationX;

@@ -71,6 +71,11 @@ bool System::Initialize()
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('s'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('d'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('c'));
+	InputManager::GetInstance()->RegisterKey(VK_UP);
+	InputManager::GetInstance()->RegisterKey(VK_LEFT);
+	InputManager::GetInstance()->RegisterKey(VK_DOWN);
+	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);

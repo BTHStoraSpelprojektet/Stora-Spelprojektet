@@ -231,3 +231,109 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 	}
 }
+
+void Camera::MoveCamera(double p_deltaTime)
+{
+	// Start moving the camera with the C key.
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')) && !GLOBAL::GetInstance().flyingCamera)
+	{
+		ShowCursor(false);
+		GLOBAL::GetInstance().flyingCamera = true;
+
+		POINT position;
+		GetCursorPos(&position);
+
+		m_oldMouseX = (float)position.x;
+		m_oldMouseY = (float)position.y;
+	}
+
+	if (GLOBAL::GetInstance().flyingCamera)
+	{
+		float deltaTime = (float)p_deltaTime;
+
+		// Rotate and pitch the camera.
+		POINT position;
+		GetCursorPos(&position);
+
+		float dx = DirectX::XMConvertToRadians(0.25f * static_cast<float>(position.x - m_oldMouseX));
+		float dy = DirectX::XMConvertToRadians(0.25f * static_cast<float>(position.y - m_oldMouseY));
+		Pitch(dy);
+		Rotate(dx);
+
+		SetCursorPos((int)m_oldMouseX, (int)m_oldMouseY);
+
+		// Move the camera using W, S, A, D keys.
+		if (InputManager::GetInstance()->IsKeyPressed(VK_UP))
+		{
+			Walk(10.0f * deltaTime);
+		}
+
+		if (InputManager::GetInstance()->IsKeyPressed(VK_DOWN))
+		{
+			Walk(-10.0f * deltaTime);
+		}
+
+		if (InputManager::GetInstance()->IsKeyPressed(VK_LEFT))
+		{
+			Strafe(-10.0f * deltaTime);
+		}
+
+		if (InputManager::GetInstance()->IsKeyPressed(VK_RIGHT))
+		{
+			Strafe(10.0f * deltaTime);
+		}
+
+		// Update the camera.
+		UpdateMovedCamera();
+
+		// Set shader variables from the camera.
+		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+
+		// Reset the camera when BACKSPACE key is pressed.
+		if (GetAsyncKeyState(VK_BACK))
+		{
+			ShowCursor(true);
+			GLOBAL::GetInstance().flyingCamera = false;
+			ResetCamera();
+		}
+	}
+
+	else
+	{
+		// Lock Camera
+		DirectX::XMFLOAT3 nullPos = DirectX::XMFLOAT3(0, 0, 0);
+
+		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(nullPos.x, nullPos.y + 20.0f, nullPos.z - 10.0f);
+
+		DirectX::XMFLOAT3 target = nullPos;
+
+		UpdatePosition(position);
+		UpdateTarget(target);
+		UpdateViewMatrix();
+		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	}
+
+}
+
+void Camera::ResetCamera()
+{
+	// Reset camera.
+	DirectX::XMFLOAT3 nullPos = DirectX::XMFLOAT3(0,0,0);
+
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(nullPos.x, nullPos.y + 20.0f, nullPos.z - 10.0f);
+
+	DirectX::XMFLOAT3 target = nullPos;
+
+	UpdatePosition(position);
+	UpdateTarget(target);
+
+	// Projection data.
+	float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+	UpdateAspectRatio(aspectRatio);
+	UpdateFieldOfView(3.141592f * 0.5f);
+	UpdateClippingPlanes(0.001f, 40.0f);
+	UpdateViewMatrix();
+	UpdateProjectionMatrix();
+
+	GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+}

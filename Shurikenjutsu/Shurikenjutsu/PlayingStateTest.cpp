@@ -46,6 +46,8 @@ bool PlayingStateTest::Initialize()
 
 	GraphicsEngine::SetSceneViewAndProjection(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
+	m_camera.ResetCamera();
+
 	return true;
 }
 
@@ -64,13 +66,15 @@ void PlayingStateTest::Update(double p_deltaTime)
 	{
 		if (GLOBAL::GetInstance().FULLSCREEN)
 		{
-		m_camera.ToggleFullscreen(false);
+			m_camera.ToggleFullscreen(false);
 		}
 		else
 		{
-		m_camera.ToggleFullscreen(true);
+			m_camera.ToggleFullscreen(true);
 		}
 	}
+
+	m_camera.MoveCamera(p_deltaTime);
 }
 
 void PlayingStateTest::Render()
