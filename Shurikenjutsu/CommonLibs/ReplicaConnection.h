@@ -1,7 +1,8 @@
 #ifndef REPLICACONNECTION_H_
 #define REPLICACONNECTION_H
 
-#include "ReplicaManager3.h"
+#include "..\CommonLibs\RakNet\WindowsIncludes.h"
+#include "..\CommonLibs\RakNet\ReplicaManager3.h"
 #include "PlayerReplica.h"
 
 class ReplicaConnection : public RakNet::Connection_RM3

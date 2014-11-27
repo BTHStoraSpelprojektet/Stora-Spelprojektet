@@ -1,5 +1,4 @@
 #include "Server.h"
-bool ServerGlobals::IS_SERVER;
 
 Server::Server()
 {
@@ -20,16 +19,20 @@ bool Server::Initialize()
 	m_serverPeer->Startup(MAX_CLIENTS, &m_socketDesc, 1);
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
-	RakNet::NetworkIDManager networkIdManager;
-	m_replicaManager.SetNetworkIDManager(&networkIdManager);
-	m_serverPeer->AttachPlugin(&m_replicaManager);
+	RakNet::NetworkIDManager* networkIdManager = RakNet::NetworkIDManager::GetInstance();
+	m_replicaManager = new ReplicaManager();
+	m_replicaManager->SetNetworkIDManager(networkIdManager);
+	m_serverPeer->AttachPlugin(m_replicaManager);
 
 	return true;
 }
 
 void Server::Shutdown()
 {
+	m_serverPeer->Shutdown(1000);
+	m_serverPeer->DetachPlugin(m_replicaManager);
 	RakNet::RakPeerInterface::DestroyInstance(m_serverPeer);
+	delete m_replicaManager;
 }
 
 void Server::Update()

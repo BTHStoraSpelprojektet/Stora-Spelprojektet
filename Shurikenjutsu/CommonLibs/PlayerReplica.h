@@ -1,6 +1,7 @@
 #ifndef PLAYERREPLICA_H_
 #define PLAYERREPLICA_H_
 
+#include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "DefaultReplica.h"
 
 class PlayerReplica : public DefaultReplica

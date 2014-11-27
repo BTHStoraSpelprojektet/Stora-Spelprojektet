@@ -5,7 +5,7 @@ bool Window::Initialize(WindowRectangle p_window)
 	bool result = true;
 
 	m_handle = 0;
-
+	
 	// Register window.
 	WNDCLASS description;
 	description.style = CS_HREDRAW | CS_VREDRAW;
@@ -18,17 +18,18 @@ bool Window::Initialize(WindowRectangle p_window)
 	description.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	description.lpszMenuName = 0;
 	description.lpszClassName = "Window Registered.";
-
+	
 	// If window registration fails, output an error message.
 	if (!RegisterClass(&description))
 	{
 		ConsolePrintError("Window failed to register.");
 		result = false;
 	}
-
+	
 	// Create the window.
+	
 	m_handle = CreateWindow(description.lpszClassName, "Window Created.", WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX, p_window.x, p_window.y, p_window.width, p_window.height, 0, 0, GetModuleHandle(NULL), 0);
-
+	
 	// Show and update the window.
 	if (m_handle != 0)
 	{

@@ -1,8 +1,9 @@
 #ifndef DEFAULTREPLICA_H_
 #define DEFAULTREPLICA_H
 
-#include "ReplicaManager3.h"
-#include "VariableDeltaSerializer.h"
+#include "..\CommonLibs\RakNet\WindowsIncludes.h"
+#include "..\CommonLibs\RakNet\ReplicaManager3.h"
+#include "..\CommonLibs\RakNet\VariableDeltaSerializer.h"
 #include "ServerGlobals.h"
 
 class DefaultReplica : public RakNet::Replica3

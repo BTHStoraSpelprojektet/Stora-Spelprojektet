@@ -82,6 +82,12 @@
     <Filter Include="Shaders\Depth">
       <UniqueIdentifier>{e9ba412c-e56c-4c47-addb-a20626061ff9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Network">
+      <UniqueIdentifier>{99f0e2c2-a633-404a-af94-7e7e34cb1b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Network">
+      <UniqueIdentifier>{9ef4ccbe-277c-4caf-bff6-3c2e4f8e7ba5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -159,6 +165,9 @@
     <ClCompile Include="Globals.cpp">
       <Filter>Header Files\Utility</Filter>
     </ClCompile>
+    <ClCompile Include="Network.cpp">
+      <Filter>Source Files\Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -235,7 +244,7 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Core</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Shuriken.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
@@ -247,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="DepthShader.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Network.h">
+      <Filter>Header Files\Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
