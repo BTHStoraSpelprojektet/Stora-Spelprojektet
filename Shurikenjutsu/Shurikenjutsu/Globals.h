@@ -19,6 +19,9 @@ public:
 	int CURRENT_SCREEN_HEIGHT;
 	int CURRENT_SCREEN_WIDTH;
 
+	bool isNotSwitchingFullscreen;
+	bool flyingCamera;
+
 private:
 	GLOBAL() {};
 	GLOBAL(GLOBAL const&);              
