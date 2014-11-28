@@ -119,7 +119,7 @@ float Player::GetAgility() const
 
 void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
-	Object::SetPosition(p_pos);
+	MovingObject::SetPosition(p_pos);
 
 	if (Network::IsConnected())
 	{

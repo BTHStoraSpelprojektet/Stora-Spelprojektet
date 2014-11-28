@@ -40,6 +40,7 @@ public:
 	//static void RemoveObject(DefaultReplica* p_replica);
 
 	static std::vector<PlayerReplica*> GetOtherPlayers();
+	static std::vector<ShurikenReplica*> GetShurikens();
 	static bool ConnectedNow();
 	static bool IsConnected();
 private:

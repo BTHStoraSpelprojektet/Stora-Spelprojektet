@@ -10,9 +10,17 @@ bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Direc
 	if (MovingObject::Initialize(p_filepath, p_pos, p_dir, p_speed))
 	{
 		SetLifetime(2.0f);
-		SetDamage(0);
+		SetDamage(10);
 
 		return true;
+	}
+
+	m_shurikenReplica = new ShurikenReplica();
+	m_shurikenReplica->SetPosition(GetPosition().x, GetPosition().y, GetPosition().z);
+
+	if (Network::ConnectedNow())
+	{
+		Network::AddReference(m_shurikenReplica);
 	}
 
 	return false;
@@ -20,6 +28,9 @@ bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Direc
 
 void Shuriken::Shutdown()
 {
+	Network::RemoveReference(m_shurikenReplica);
+	delete m_shurikenReplica;
+
 	MovingObject::Shutdown();
 }
 
@@ -37,6 +48,17 @@ void Shuriken::Update(double p_deltaTime)
 
 	// Update World Matrix
 	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
+}
+
+void Shuriken::SetPosition(DirectX::XMFLOAT3 p_pos)
+{
+	MovingObject::SetPosition(p_pos);
+
+	if (Network::IsConnected())
+	{
+		DirectX::XMFLOAT3 pos = GetPosition();
+		m_shurikenReplica->SetPosition(pos.x, pos.y, pos.z);
+	}
 }
 
 void Shuriken::SetLifetime(float p_lifetime)
@@ -63,3 +85,4 @@ bool Shuriken::IsDead()
 {
 	return (m_lifetime <= 0);
 }
+

@@ -4,6 +4,7 @@
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "..\CommonLibs\RakNet\ReplicaManager3.h"
 #include "PlayerReplica.h"
+#include "ShurikenReplica.h"
 
 class ReplicaConnection : public RakNet::Connection_RM3
 {

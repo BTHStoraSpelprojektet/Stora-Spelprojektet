@@ -1,6 +1,7 @@
 #ifndef SHURIKEN_H_
 #define SHURIKEN_H_
 #include "MovingObject.h"
+#include "Network.h"
 
 const float ShurikenSpeed = 15.70f;
 
@@ -14,6 +15,8 @@ public:
 	void Shutdown();
 
 	void Update(double p_deltaTime);
+
+	void SetPosition(DirectX::XMFLOAT3 p_pos);
 
 	void SetRotation(float p_angle);
 	float GetRotation() const;
@@ -29,5 +32,7 @@ public:
 private:
 	float m_lifetime;
 	int m_damage;
+
+	ShurikenReplica* m_shurikenReplica;
 };
 #endif

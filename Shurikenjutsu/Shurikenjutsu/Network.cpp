@@ -102,6 +102,35 @@ std::vector<PlayerReplica*> Network::GetOtherPlayers()
 	return players;
 }
 
+std::vector<ShurikenReplica*> Network::GetShurikens()
+{
+	std::vector<ShurikenReplica*> shurikens = std::vector<ShurikenReplica*>();
+
+	DataStructures::List<RakNet::Replica3*> replicaList2;
+	m_replicaManager->GetReplicasCreatedByMe(replicaList2);
+
+	unsigned int conCount = m_replicaManager->GetConnectionCount();
+
+	for (unsigned int i = 0; i < conCount; i++)
+	{
+		RakNet::RakNetGUID guid = m_replicaManager->GetConnectionAtIndex(i)->GetRakNetGUID();
+
+		DataStructures::List<RakNet::Replica3*> replicaList;
+
+		m_replicaManager->GetReplicasCreatedByGuid(guid, replicaList);
+
+		for (int i = 0; i < replicaList.Size(); i++)
+		{
+			if (((DefaultReplica*)replicaList[i])->GetTypeName() == "Shuriken")
+			{
+				shurikens.push_back((ShurikenReplica*)replicaList[i]);
+			}
+		}
+	}
+
+	return shurikens;
+}
+
 void Network::AddReference(DefaultReplica* p_replica)
 {
 	m_replicaManager->Reference(p_replica);

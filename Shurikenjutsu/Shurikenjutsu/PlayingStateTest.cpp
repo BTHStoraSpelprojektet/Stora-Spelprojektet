@@ -41,6 +41,13 @@ void PlayingStateTest::Update(double p_deltaTime)
 	{
 		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPosition(0), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
 	}
+	
+	m_networkShurikens = Network::GetShurikens();
+
+	for (int i = 0; i < m_networkShurikens.size(); i++)
+	{
+
+	}
 
 	m_objectManager.Update(p_deltaTime);
 	m_playerManager.Update(p_deltaTime);
