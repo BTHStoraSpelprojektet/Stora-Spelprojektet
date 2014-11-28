@@ -2,7 +2,7 @@
 PlayingStateTest System::playingState;
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
-	bool result = true;
+    bool result = true;
 	playingState = PlayingStateTest();
 	//m_gameState = &m_playingState;
 	gameState = &System::playingState;
@@ -74,10 +74,10 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize the camera.
 	m_flyCamera = false;
-
+	
 	//Run all tests that are in the debug class
 	m_debug.RunTests(p_argc, p_argv);
-
+	
 	// Input: Register keys
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
@@ -89,7 +89,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
-
+	
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
@@ -198,7 +198,7 @@ void System::Render()
 
 	// Clear the scene to begin rendering.
 	GraphicsEngine::Clear();
-	
+
 	// Render Current GameState
 	gameState->Render();
 

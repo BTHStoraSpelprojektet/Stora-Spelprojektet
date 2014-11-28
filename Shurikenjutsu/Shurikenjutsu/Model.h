@@ -22,6 +22,7 @@ public:
 
 	ID3D11Buffer* GetMesh();
 	ID3D11ShaderResourceView* GetTexture();
+	ID3D11ShaderResourceView* GetNormalMap();
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 	int GetVertexCount();
 	std::vector<DirectX::XMMATRIX> GetAnimation();

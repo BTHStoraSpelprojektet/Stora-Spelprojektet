@@ -7,6 +7,7 @@ cbuffer FrameBuffer
 };
 
 Texture2D m_texture;
+Texture2D m_normalMap;
 
 SamplerState m_sampler;
 
@@ -18,6 +19,8 @@ struct Input
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
+
+	float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
 	float4 m_cameraPosition : CAMERA;
@@ -35,6 +38,14 @@ float4 main(Input p_input) : SV_Target
 	material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.m_specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
+	// Sample NormalMap
+	/*float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
+	// Uncompress NormalMap - to get it into the right range
+	float3 normalT = 2.0f * normalMapSample - 1.0f;
+	// Transforms from tangetspace to world space
+	float3 bumpedNormalW = mul(normalT, p_input.m_tBN);*/
+	//end of normalmap stuff
+
 	float3 normal = normalize(p_input.m_normal);
 
 	float3 toEye = normalize(p_input.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
@@ -45,7 +56,7 @@ float4 main(Input p_input) : SV_Target
 
 	// Sample texture using texture coordinates.
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
-	
+
 	// Add light
 	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz) + S.xyz);
 	

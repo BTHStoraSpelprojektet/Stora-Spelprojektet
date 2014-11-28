@@ -99,8 +99,8 @@ void Model::Update(double p_dt)
 	if (m_animationController.IsAnimated())
 	{
 		boneTransforms = m_animationController.UpdateAnimation(p_dt);
-
-	}
+	
+}
 }
 
 ID3D11Buffer* Model::GetMesh()
@@ -111,6 +111,11 @@ ID3D11Buffer* Model::GetMesh()
 ID3D11ShaderResourceView* Model::GetTexture()
 {
 	return m_texture;
+}
+
+ID3D11ShaderResourceView* Model::GetNormalMap()
+{
+	return m_normalMap;
 }
 
 DirectX::XMFLOAT4X4 Model::GetWorldMatrix()
