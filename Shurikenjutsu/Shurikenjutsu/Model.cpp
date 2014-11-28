@@ -35,6 +35,9 @@ bool Model::LoadModel(const char* p_filepath)
 		m_animationController.CreateNewStack(mData.m_stacks[i]);
 	}
 
+	// Store bounding box
+	m_boundingBoxes = mData.m_boundingBoxes;
+
 	free(mData.m_textureMap);
 	free(mData.m_normalMap);
 
@@ -97,8 +100,8 @@ void Model::Update(double p_dt)
 	if (m_animationController.IsAnimated())
 	{
 		boneTransforms = m_animationController.UpdateAnimation(p_dt);
-
-	}
+	
+}
 }
 
 ID3D11Buffer* Model::GetMesh()
@@ -109,6 +112,11 @@ ID3D11Buffer* Model::GetMesh()
 ID3D11ShaderResourceView* Model::GetTexture()
 {
 	return m_texture;
+}
+
+ID3D11ShaderResourceView* Model::GetNormalMap()
+{
+	return m_normalMap;
 }
 
 DirectX::XMFLOAT4X4 Model::GetWorldMatrix()
@@ -167,4 +175,3 @@ void Model::UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_
 								
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, matrix);
 }
-
