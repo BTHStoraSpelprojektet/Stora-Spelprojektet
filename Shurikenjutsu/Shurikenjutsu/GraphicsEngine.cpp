@@ -6,6 +6,7 @@ DirectXWrapper GraphicsEngine::m_directX;
 
 SceneShader GraphicsEngine::m_sceneShader;
 InstancedShader GraphicsEngine::m_instanceShader;
+GUIShader GraphicsEngine::m_GUIShader;
 
 HWND* GraphicsEngine::m_windowHandle;
 
@@ -35,6 +36,8 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Instanced shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+
+	m_GUIShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle);
 
 	return result;
 }
@@ -87,6 +90,12 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 	}
 	}
 }
+
+void GraphicsEngine::RenderUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+{
+	m_GUIShader.Render(m_directX.GetContext(), p_worldMatrix, p_texture);
+}
+
 void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
