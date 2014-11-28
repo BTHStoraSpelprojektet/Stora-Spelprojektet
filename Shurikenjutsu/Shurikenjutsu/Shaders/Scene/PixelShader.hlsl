@@ -39,11 +39,11 @@ float4 main(Input p_input) : SV_Target
 	material.m_specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Sample NormalMap
-	float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
+	/*float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
 	// Uncompress NormalMap - to get it into the right range
-	float3 normalT = 2.0f*normalMapSample - 1.0f;
+	float3 normalT = 2.0f * normalMapSample - 1.0f;
 	// Transforms from tangetspace to world space
-	float3 bumpedNormalW = mul(normalT, p_input.m_tBN);
+	float3 bumpedNormalW = mul(normalT, p_input.m_tBN);*/
 	//end of normalmap stuff
 
 	float3 normal = normalize(p_input.m_normal);
@@ -52,7 +52,7 @@ float4 main(Input p_input) : SV_Target
 
 	float4 A, D, S;
 
-	ComputeDirectionalLight(material, m_directionalLight, bumpedNormalW, toEye, A, D, S);
+	ComputeDirectionalLight(material, m_directionalLight, normal, toEye, A, D, S);
 
 	// Sample texture using texture coordinates.
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);

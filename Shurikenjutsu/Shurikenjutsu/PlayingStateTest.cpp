@@ -79,7 +79,7 @@ void PlayingStateTest::Render()
 	{
 		Model tempModel = tempModelList[i];
 		//std::cout << "VtxCount: " << tempModel.GetVertexCount() << "\n";
-		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), 0, tempModel.GetAnimation());
+		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture());
 	}
 
 	m_objectManager.Render();

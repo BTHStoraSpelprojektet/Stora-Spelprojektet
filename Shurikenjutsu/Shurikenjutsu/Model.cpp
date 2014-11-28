@@ -116,7 +116,7 @@ ID3D11ShaderResourceView* Model::GetNormalMap()
 	return m_normalMap;
 }
 
-DirectX::XMMATRIX Model::GetWorldMatrix()
+DirectX::XMFLOAT4X4 Model::GetWorldMatrix()
 {
 	return m_worldMatrix;
 }
