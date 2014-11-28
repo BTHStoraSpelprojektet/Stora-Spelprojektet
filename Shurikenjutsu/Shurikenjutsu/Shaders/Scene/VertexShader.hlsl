@@ -92,9 +92,9 @@ Output main(Input p_input)
 	output.m_lightPositionWorld = normalize(output.m_lightPositionWorld);
 
 	// Calculate the position of the vertice as viewed by the light source.
-	output.m_positionHomogenous = mul(output.m_positionHomogenous, m_worldMatrix);
-	output.m_positionHomogenous = mul(output.m_positionHomogenous, m_lightViewMatrix);
-	output.m_positionHomogenous = mul(output.m_positionHomogenous, m_lightProjectionMatrix);
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
 	// No fog.
 	output.m_fogFactor = 1.0f;

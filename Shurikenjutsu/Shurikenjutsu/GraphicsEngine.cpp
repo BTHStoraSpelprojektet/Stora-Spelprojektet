@@ -111,6 +111,13 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 
 			break;
 		}
+
+		case(SHADERTYPE_DEPTH) :
+		{
+			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix);
+
+			break;
+		}
 	}
 }
 
