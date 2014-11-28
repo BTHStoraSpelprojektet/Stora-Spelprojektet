@@ -48,7 +48,10 @@ void LevelImporter::loadLevelFile(){
 	levelData = stringVector2;
 }
 
-void LevelImporter::readData(ObjectManager* p_objectManager){
+bool LevelImporter::readData(ObjectManager* p_objectManager){
+	if (levelData.size() == 0){
+		return false;
+	}
 	float x, y, z, rotateX, rotateY, rotateZ, rotateW;
 	for (int currentLineTemp = 0; currentLineTemp < levelData.size(); currentLineTemp++)
 	{
@@ -113,6 +116,7 @@ void LevelImporter::readData(ObjectManager* p_objectManager){
 		std::cout << "\n";
 	}
 	levelData.clear();
+	return true;
 }
 
 LevelImporter::~LevelImporter(){

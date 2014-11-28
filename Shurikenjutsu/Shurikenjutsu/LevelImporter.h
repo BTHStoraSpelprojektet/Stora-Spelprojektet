@@ -13,7 +13,7 @@ public:
 	~LevelImporter();
 
 	void loadLevelFile();
-	void readData(ObjectManager* p_objectManager);
+	bool readData(ObjectManager* p_objectManager);
 protected:
 	ObjectManager* m_objectManager;
 	std::string m_level;
