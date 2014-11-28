@@ -15,7 +15,7 @@ cbuffer FogBuffer
 	float m_fogStart;
 	float m_fogEnd;
 	float m_fogDensity;
-	float m_padding1;
+	float m_padding;
 };
 
 cbuffer LightBuffer
