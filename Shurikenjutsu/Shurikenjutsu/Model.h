@@ -45,5 +45,6 @@ protected:
 
 	int m_vertexCount;
 	DirectX::XMFLOAT4X4 m_worldMatrix;
+	std::vector<Box> m_boundingBoxes;
 };
 #endif;
