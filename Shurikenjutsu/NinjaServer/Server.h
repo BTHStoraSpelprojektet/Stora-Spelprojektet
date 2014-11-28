@@ -2,15 +2,7 @@
 #define SERVER
 
 #include <iostream>
-/*
-#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\RakPeerInterface.h"
-#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\MessageIdentifiers.h"
-#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\RakNetTypes.h"  // MessageID
-#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\GetTime.h"
-#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\NetworkIDManager.h"
-#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\RakPeer.h"
-#include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\BitStream.h"
-*/
+
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\RakNetTypes.h"
 #include "..\CommonLibs\RakNet\MessageIdentifiers.h"
@@ -38,7 +30,7 @@ private:
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
-	//ReplicaManager* m_replicaManager;
+
 	int m_nrOfConnections;
 	std::vector<PlayerNet> m_players;
 };

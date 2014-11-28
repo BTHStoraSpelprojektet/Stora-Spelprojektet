@@ -3,7 +3,6 @@
 RakNet::RakPeerInterface* Network::m_clientPeer;
 RakNet::SocketDescriptor Network::m_socketDesc;
 RakNet::Packet* Network::m_packet;
-//ReplicaManager* Network::m_replicaManager;
 
 bool Network::m_connected;
 bool Network::m_prevConnected;
@@ -22,12 +21,6 @@ bool Network::Initialize()
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 	m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 
-	
-	//RakNet::NetworkIDManager *networkIdManager = RakNet::NetworkIDManager::GetInstance();
-	//m_replicaManager = new ReplicaManager();
-	//m_replicaManager->SetNetworkIDManager(networkIdManager);
-	//m_clientPeer->AttachPlugin(m_replicaManager);
-
 	m_enemyPlayers = std::vector<PlayerNet>();
 
 	return true;
@@ -36,23 +29,13 @@ bool Network::Initialize()
 void Network::Shutdown()
 {
 	m_clientPeer->Shutdown(300);
-	//m_clientPeer->DetachPlugin(m_replicaManager);
 	RakNet::RakPeerInterface::DestroyInstance(m_clientPeer);
-	//delete m_replicaManager;
 }
 
 void Network::Update()
 {
 	m_prevConnected = m_connected;
 	ReceviePacket();
-
-	//DataStructures::List<RakNet::Replica3*> replicaList2;
-	//m_replicaManager->GetReplicasCreatedByMe(replicaList2);
-
-	//for (int i = 0; i < replicaList2.Size(); i++)
-	//{
-	//	//std::cout << ((PlayerReplica*)replicaList2[i])->GetPosX() << " : " <<((PlayerReplica*)replicaList2[i])->GetPosZ() << std::endl;
-	//}
 }
 
 void Network::ReceviePacket()
@@ -120,8 +103,6 @@ void Network::ReceviePacket()
 			bitStream.Read(z);
 
 			UpdatePlayerPos(guid, x, y, z);
-
-			//std::cout << "Position: " << x << ", " << y << ", " << z << " from " << guid.ToString() << std::endl;
 			break;
 		}
 		default:
@@ -131,59 +112,6 @@ void Network::ReceviePacket()
 		}
 	}
 }
-
-//std::vector<PlayerReplica*> Network::GetOtherPlayers()
-//{
-//	std::vector<PlayerReplica*> players = std::vector<PlayerReplica*>();
-
-	//unsigned int conCount = m_replicaManager->GetConnectionCount();
-	//RakNet::SystemAddress remoteAddresses[MAX_CLIENTS];
-	//unsigned short nrAddresses = MAX_CLIENTS;
-	//m_clientPeer->GetConnectionList((RakNet::SystemAddress*)&remoteAddresses, &nrAddresses);
-	//
-	//
-	////unsigned int conCount = m_connectionCount;
-	////std::cout << "Nr of connections: " << conCount << std::endl;
-
-	//for (unsigned int i = 0; i < conCount; i++)
-	//{
-	//	RakNet::RakNetGUID guid = m_replicaManager->GetConnectionAtIndex(i)->GetRakNetGUID();
-
-	//	if (guid != m_clientPeer->GetMyGUID())
-	//	{
-	//		DataStructures::List<RakNet::Replica3*> replicaList;
-
-	//		m_replicaManager->GetReplicasCreatedByGuid(guid, replicaList);
-
-	//		for (unsigned int j = 0; j < replicaList.Size(); j++)
-	//		{
-	//			if (((DefaultReplica*)replicaList[j])->GetTypeName() == "Player")
-	//			{
-	//				std::cout << ((PlayerReplica*)replicaList[j])->GetPosX() << " : " << ((PlayerReplica*)replicaList[j])->GetPosZ() << std::endl;
-	//				players.push_back((PlayerReplica*)replicaList[j]);
-	//			}
-	//		}
-	//	}
-	//}
-
-//	return players;
-//}
-
-//void Network::AddReference(DefaultReplica* p_replica)
-//{
-//	m_replicaManager->Reference(p_replica);
-//}
-//
-//void Network::RemoveReference(DefaultReplica* p_replica)
-//{
-//	m_replicaManager->Dereference(p_replica);
-//}
-
-//void Network::RemoveObject(DefaultReplica* p_replica)
-//{
-//	//m_replicaManager->BroadcastDestruction(p_replica);
-//}
-
 
 bool Network::IsConnected()
 {

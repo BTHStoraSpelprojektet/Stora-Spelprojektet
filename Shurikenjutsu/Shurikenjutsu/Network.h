@@ -36,11 +36,6 @@ public:
 
 	static void Update();
 
-	//static void AddReference(DefaultReplica* p_replica);
-	//static void RemoveReference(DefaultReplica* p_replica);
-	//static void RemoveObject(DefaultReplica* p_replica);
-
-	//static std::vector<PlayerReplica*> GetOtherPlayers();
 	static bool ConnectedNow();
 	static bool IsConnected();
 
@@ -56,7 +51,6 @@ private:
 	static RakNet::RakPeerInterface *m_clientPeer;
 	static RakNet::SocketDescriptor m_socketDesc;
 	static RakNet::Packet *m_packet;
-	//static ReplicaManager* m_replicaManager;
 
 	static bool m_connected;
 	static bool m_prevConnected;
