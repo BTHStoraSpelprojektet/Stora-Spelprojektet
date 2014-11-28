@@ -77,6 +77,7 @@ float4 main(Input p_input) : SV_Target
 			// Transforms from tangetspace to world space
 			float3 bumpedNormalW = mul(normalT, p_input.m_tBN);*/
 			//end of normalmap stuff
+
 			// Normalize normals.
 			float3 normal = normalize(p_input.m_normal);
 
