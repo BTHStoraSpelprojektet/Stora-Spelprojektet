@@ -1,8 +1,10 @@
 #ifndef SYSTEM
 #define SYSTEM
 
-#include <vector>
+#define WIN32_LEAN_AND_MEAN
 
+#include <vector>
+#include "Network.h"
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "Timer.h"
@@ -28,36 +30,30 @@ class System
 public:
 	bool Initialize(int p_argc, _TCHAR* p_argv[]);
 	void Shutdown();
-	void Run();
-	
+    void Run();
+
 	static PlayingStateTest playingState;
 
 private:
-	void Update();
-	void Render();
+    void Update();
+    void Render();
 
 	void TestCollisions();
 
+	void RenderToShadowMap();
 	Window m_window;
-	//GraphicsEngine m_graphicsEngine;
 	Timer m_timer;
-	//Camera m_camera;
 	Debug m_debug;
 
 	std::string m_title;
 	int m_previousFPS;
-
-	Model m_plane;
-	Model m_character;
-	Model m_animatedCharacter;
-	Model m_object;
 
 	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
-
+	
 	GameState* gameState;
 };
 #endif

@@ -1,7 +1,7 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include <Windows.h>
+#include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include <DirectXMath.h>
 #include "Globals.h"
 #include "GraphicsEngine.h"
@@ -10,6 +10,7 @@ class Camera
 {
 public:
 	bool Initialize();
+	void Shutdown();
 
 	void UpdateViewMatrix();
 	void UpdateProjectionMatrix();
@@ -37,6 +38,7 @@ public:
 	void ResetCamera();
 	void MoveCamera(double p_deltaTime);
 	void ToggleFullscreen(bool p_fullscreen);
+	void FollowCharacter(DirectX::XMFLOAT3 p_playerPos);
 
 private:
 	DirectX::XMFLOAT3 m_position;

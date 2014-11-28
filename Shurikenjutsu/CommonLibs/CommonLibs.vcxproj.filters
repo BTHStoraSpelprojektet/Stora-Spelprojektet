@@ -16,11 +16,20 @@
     <Filter Include="RakNet">
       <UniqueIdentifier>{39eb0f58-76f4-49a7-bada-900e29d7ae74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{ae1f94cc-e733-4c86-b2bb-b833798173ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects">
+      <UniqueIdentifier>{ea1cb3f3-92ad-4bfd-8c59-e693ecef00a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ReplicaManager">
+      <UniqueIdentifier>{597d2b98-215e-4a42-b624-34d7936af211}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ReplicaManager">
+      <UniqueIdentifier>{d2e3d66e-45ef-4983-a8bc-a0c6e691c89f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyHeader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="RakNet\_FindFirst.h">
       <Filter>RakNet</Filter>
     </ClInclude>
@@ -477,11 +486,23 @@
     <ClInclude Include="..\..\..\RakNet\Source\XBox360Includes.h">
       <Filter>RakNet</Filter>
     </ClInclude>
+    <ClInclude Include="DefaultReplica.h">
+      <Filter>Header Files\ReplicaManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplicaConnection.h">
+      <Filter>Header Files\ReplicaManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplicaManager.h">
+      <Filter>Header Files\ReplicaManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerGlobals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerReplica.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="RakNet\_FindFirst.cpp">
       <Filter>RakNet</Filter>
     </ClCompile>
@@ -808,6 +829,21 @@
     </ClCompile>
     <ClCompile Include="RakNet\WSAStartupSingleton.cpp">
       <Filter>RakNet</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultReplica.cpp">
+      <Filter>Source Files\ReplicaManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplicaConnection.cpp">
+      <Filter>Source Files\ReplicaManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplicaManager.cpp">
+      <Filter>Source Files\ReplicaManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerGlobals.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerReplica.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

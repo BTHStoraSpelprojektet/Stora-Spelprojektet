@@ -22,6 +22,11 @@ bool Camera::Initialize()
 	return true;
 }
 
+void Camera::Shutdown()
+{
+
+}
+
 void Camera::UpdatePosition(DirectX::XMFLOAT3 p_position)
 {
 	// Set the camera position.
@@ -190,20 +195,20 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
 
 		// Go to fullscreen
-		GLOBAL::GetInstance().SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
 		GraphicsEngine::ToggleFullscreen(true);
 
 		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix();
 		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
+		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0, 670, 1000, true);
 
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 	}
@@ -213,20 +218,20 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
 
 		// Go to windowed mode.
-		GLOBAL::GetInstance().SCREEN_WIDTH = 1000;
-		GLOBAL::GetInstance().SCREEN_HEIGHT = 1000;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 		GraphicsEngine::ToggleFullscreen(false);
 
 		// Update aspect ratio.
-		float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix();
 		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
-		MoveWindow(console, GLOBAL::GetInstance().SCREEN_WIDTH, 0, 670, 1000, true);
-		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().SCREEN_WIDTH, GLOBAL::GetInstance().SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0, 670, 1000, true);
+		SetWindowPos(*GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
 
 		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 	}
@@ -297,22 +302,19 @@ void Camera::MoveCamera(double p_deltaTime)
 			ResetCamera();
 		}
 	}
+}
 
-	else
-	{
-		// Lock Camera
-		DirectX::XMFLOAT3 nullPos = DirectX::XMFLOAT3(0, 0, 0);
+void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
+{
+	// Lock Camera on player
+	DirectX::XMFLOAT3 playerPosition = p_playerPos;
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 20.0f, playerPosition.z - 10.0f);
+	DirectX::XMFLOAT3 target = playerPosition;
 
-		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(nullPos.x, nullPos.y + 20.0f, nullPos.z - 10.0f);
-
-		DirectX::XMFLOAT3 target = nullPos;
-
-		UpdatePosition(position);
-		UpdateTarget(target);
-		UpdateViewMatrix();
-		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
-	}
-
+	UpdatePosition(position);
+	UpdateTarget(target);
+	UpdateViewMatrix();
+	GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }
 
 void Camera::ResetCamera()
@@ -328,7 +330,7 @@ void Camera::ResetCamera()
 	UpdateTarget(target);
 
 	// Projection data.
-	float aspectRatio = (float)GLOBAL::GetInstance().SCREEN_WIDTH / (float)GLOBAL::GetInstance().SCREEN_HEIGHT;
+	float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	UpdateAspectRatio(aspectRatio);
 	UpdateFieldOfView(3.141592f * 0.5f);
 	UpdateClippingPlanes(0.001f, 40.0f);

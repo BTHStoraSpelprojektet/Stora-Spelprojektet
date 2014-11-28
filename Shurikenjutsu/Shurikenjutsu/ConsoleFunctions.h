@@ -33,6 +33,17 @@ const static void ConsolePrintError(std::string p_message)
 	PostQuitMessage(0);
 }
 
+const static void ConsolePrintFailed(std::string p_message)
+{
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_INTENSITY);
+
+	std::cout << "[FAILURE] : " << p_message << std::endl;
+
+	SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+}
+
 const static void ConsolePrintText(std::string p_message)
 {
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);

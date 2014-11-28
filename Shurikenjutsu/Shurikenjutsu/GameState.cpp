@@ -30,7 +30,14 @@ void GameState::Render()
 
 }
 
+void GameState::RenderAlpha()
+{
+
+}
+
 void GameState::ToggleFullscreen(bool p_fullscreen)
 {
 
 }
+
+

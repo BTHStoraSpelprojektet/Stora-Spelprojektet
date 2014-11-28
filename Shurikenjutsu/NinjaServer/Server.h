@@ -11,16 +11,15 @@
 #include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\RakPeer.h"
 #include "C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\CommonLibs\RakNet\BitStream.h"
 */
-#include "RakPeerInterface.h"
-#include "RakNetTypes.h"
-#include "MessageIdentifiers.h"
-#include "GetTime.h"
-#include "NetworkIDManager.h"
-#include "RakPeer.h"
-#include "BitStream.h"
-
-#define MAX_CLIENTS 10
-#define SERVER_PORT 60000
+#include "..\CommonLibs\RakNet\RakPeerInterface.h"
+#include "..\CommonLibs\RakNet\RakNetTypes.h"
+#include "..\CommonLibs\RakNet\MessageIdentifiers.h"
+#include "..\CommonLibs\RakNet\GetTime.h"
+#include "..\CommonLibs\RakNet\NetworkIDManager.h"
+#include "..\CommonLibs\RakNet\RakPeer.h"
+#include "..\CommonLibs\RakNet\BitStream.h"
+#include "..\CommonLibs\ServerGlobals.h"
+#include "..\CommonLibs\ReplicaManager.h"
 
 class Server
 {
@@ -35,7 +34,7 @@ private:
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
-
+	ReplicaManager* m_replicaManager;
 };
 
 #endif SERVER
