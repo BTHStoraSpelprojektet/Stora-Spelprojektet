@@ -120,6 +120,7 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix);
 
 			break;
+		}
 	}
 }
 
@@ -128,7 +129,7 @@ void GraphicsEngine::RenderUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderRes
 	m_GUIShader.Render(m_directX.GetContext(), p_worldMatrix, p_texture);
 }
 
-void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
