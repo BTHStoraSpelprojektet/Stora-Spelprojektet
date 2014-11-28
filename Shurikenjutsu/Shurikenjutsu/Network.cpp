@@ -8,7 +8,8 @@ RakNet::Packet* Network::m_packet;
 bool Network::m_connected;
 bool Network::m_prevConnected;
 int Network::m_connectionCount;
-std::vector<PlayerNet> Network::m_players;
+PlayerNet Network::m_myPlayer;
+std::vector<PlayerNet> Network::m_enemyPlayers;
 
 bool Network::Initialize()
 {
@@ -27,7 +28,7 @@ bool Network::Initialize()
 	//m_replicaManager->SetNetworkIDManager(networkIdManager);
 	//m_clientPeer->AttachPlugin(m_replicaManager);
 
-	m_players = std::vector<PlayerNet>();
+	m_enemyPlayers = std::vector<PlayerNet>();
 
 	return true;
 }
@@ -208,55 +209,47 @@ void Network::SendPlayerPos(float p_x, float p_y, float p_z)
 
 void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z)
 {
-	bool found = false;
-	for (unsigned int i = 0; i < m_players.size(); i++)
+	if (p_owner == m_clientPeer->GetMyGUID())
 	{
-		if (m_players[i].guid == p_owner)
+		m_myPlayer.guid = p_owner;
+		m_myPlayer.x = p_x;
+		m_myPlayer.y = p_y;
+		m_myPlayer.z = p_z;
+	}
+	else
+	{
+		bool found = false;
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 		{
-			found = true;
-			m_players[i].x = p_x;
-			m_players[i].y = p_y;
-			m_players[i].z = p_z;
-			break;
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				found = true;
+				m_enemyPlayers[i].x = p_x;
+				m_enemyPlayers[i].y = p_y;
+				m_enemyPlayers[i].z = p_z;
+				break;
+			}
+		}
+		if (!found)
+		{
+			PlayerNet player;
+			player.guid = p_owner;
+			player.x = p_x;
+			player.y = p_y;
+			player.z = p_z;
+			m_enemyPlayers.push_back(player);
+			std::cout << "New player added in the network list" << std::endl;
 		}
 	}
-	if (!found)
-	{
-		PlayerNet player;
-		player.guid = p_owner;
-		player.x = p_x;
-		player.y = p_y;
-		player.z = p_z;
-		m_players.push_back(player);
-		std::cout << "New player added in the network list" << std::endl;
-	}
+	
 }
 
 std::vector<PlayerNet> Network::GetOtherPlayers()
 {
-	std::vector<PlayerNet> players = std::vector<PlayerNet>();
-
-	for (unsigned int i = 0; i < m_players.size(); i++)
-	{
-		if (m_players[i].guid != m_clientPeer->GetMyGUID())
-		{
-			players.push_back(m_players[i]);
-		}
-	}
-
-	return players;
+	return m_enemyPlayers;
 }
 
 PlayerNet Network::GetMyPlayer()
 {
-	PlayerNet tmp;
-	for (unsigned int i = 0; i < m_players.size(); i++)
-	{
-		if (m_players[i].guid == m_clientPeer->GetMyGUID())
-		{
-			return m_players[i];
-		}
-	}
-
-	return tmp;
+	return m_myPlayer;
 }

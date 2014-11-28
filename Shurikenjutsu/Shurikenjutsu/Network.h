@@ -61,7 +61,8 @@ private:
 	static bool m_connected;
 	static bool m_prevConnected;
 	static int m_connectionCount;
-	static std::vector<PlayerNet> m_players;
+	static PlayerNet m_myPlayer;
+	static std::vector<PlayerNet> m_enemyPlayers;
 	
 };
 

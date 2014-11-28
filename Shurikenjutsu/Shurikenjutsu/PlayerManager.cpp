@@ -24,11 +24,10 @@ void PlayerManager::Shutdown()
 
 void PlayerManager::Update(double p_deltaTime)
 {
-	m_player.Update(p_deltaTime);
+	m_player.UpdateMe(p_deltaTime);
 	
 	if (Network::IsConnected())
 	{
-		//std::vector<PlayerStruct> enemyPlayers = Network::GetOtherPlayers();
 		std::vector<PlayerNet> enemyPlayers = Network::GetOtherPlayers();
 		if (m_enemyList.size() < enemyPlayers.size())
 		{
@@ -37,8 +36,8 @@ void PlayerManager::Update(double p_deltaTime)
 
 		for (int i = 0; i < m_enemyList.size(); i++)
 		{
-			m_enemyList[i].SetPosition2(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
-			m_enemyList[i].Update2(p_deltaTime);
+			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
+			m_enemyList[i].Update(p_deltaTime);
 		}
 	}
 }
