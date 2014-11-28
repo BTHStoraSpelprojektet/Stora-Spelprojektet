@@ -1,7 +1,11 @@
 #include "Level.h"
 
-Level::Level(ObjectManager* p_objectManager, std::string level){
-	std::ifstream infile(level,std::ifstream::in);
+Level::Level(ObjectManager* p_objectManager, std::string p_level){
+	loadLevel(p_objectManager, p_level);
+}
+
+std::vector<std::vector<std::string>> Level::loadLevelFile(std::string p_level){
+	std::ifstream infile(p_level, std::ifstream::in);
 	std::string line;
 
 	int currentLine = 0;
@@ -29,7 +33,7 @@ Level::Level(ObjectManager* p_objectManager, std::string level){
 			stringVector.push_back(s);
 			stringVector2.push_back(stringVector);
 			stringVector.clear();
-			
+
 			ss.str("");
 			ss.clear();
 
@@ -40,6 +44,10 @@ Level::Level(ObjectManager* p_objectManager, std::string level){
 
 	infile.close();
 
+	return stringVector2;
+}
+
+void Level::readData(ObjectManager* p_objectManager, std::vector<std::vector<std::string>> stringVector2){
 	float x, y, z, rotateX, rotateY, rotateZ, rotateW;
 	for (int currentLineTemp = 0; currentLineTemp < stringVector2.size(); currentLineTemp++)
 	{
@@ -48,46 +56,46 @@ Level::Level(ObjectManager* p_objectManager, std::string level){
 		for (int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			if (currentLineTemp > 1){
+				std::string tmpStr = temp.at(currentWordTemp);
 				if (currentWordTemp == 0){
 					std::string filePathToModel = "";
 					filePathToModel.append("../Shurikenjutsu/Models/");
-					std::string tmpStr = temp.at(currentWordTemp);
 					int pos = tmpStr.find('_');
 
 					if (pos == -1){
-						filePathToModel.append(tmpStr.substr(0, tmpStr.size()-1));
+						filePathToModel.append(tmpStr.substr(0, tmpStr.size() - 1));
 					}
 					else{
 						filePathToModel.append(tmpStr.substr(0, pos));
 					}
 					filePathToModel.append("Shape.SSP");
 
-					std::cout <<  filePathToModel << "\n";
+					std::cout << filePathToModel << "\n";
 
 					model.LoadModel(filePathToModel.c_str());
 
 				}
 
 				else if (currentWordTemp == 1){
-					x = atof(s.c_str());
+					x = atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 2){
-					y = atof(s.c_str());
+					y = atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 3){
-					z = atof(s.c_str());
+					z = atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 4){
-					rotateX = atof(s.c_str());
+					rotateX = atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 5){
-					rotateY = atof(s.c_str());
+					rotateY = atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 6){
-					rotateZ = atof(s.c_str());
+					rotateZ = atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 7){
-					rotateW = atof(s.c_str());
+					rotateW = atof(tmpStr.c_str());
 
 					//TODO: Read rotation from file
 					DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
@@ -103,6 +111,17 @@ Level::Level(ObjectManager* p_objectManager, std::string level){
 		}
 		std::cout << "\n";
 	}
+}
+
+bool Level::loadLevel(ObjectManager* p_objectManager, std::string p_level){
+	bool loaded = false;
+	std::vector<std::vector<std::string>> levelData;
+	levelData = loadLevelFile(p_level);
+	if (levelData.size() > 0){
+		readData(p_objectManager, levelData);
+		loaded = true;
+	}
+	return loaded;
 }
 
 Level::~Level(){
