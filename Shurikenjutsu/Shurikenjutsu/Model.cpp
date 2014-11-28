@@ -35,6 +35,7 @@ bool Model::LoadModel(const char* p_filepath)
 		m_animationController.CreateNewStack(mData.m_stacks[i]);
 	}
 
+	// Store bounding box
 	m_boundingBoxes = mData.m_boundingBoxes;
 
 	free(mData.m_textureMap);

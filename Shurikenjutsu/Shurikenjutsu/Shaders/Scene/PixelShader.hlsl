@@ -20,7 +20,7 @@ struct Input
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
 
-	float3x3 m_tBN : TBN;
+	//float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
 	float4 m_cameraPosition : CAMERA;
