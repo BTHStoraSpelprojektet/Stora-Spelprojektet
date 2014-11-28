@@ -1,10 +1,9 @@
-#ifndef SHURIKENREPLICA
-#define SHURIKENREPLICA
+/*#ifndef SHURIKENREPLICA_H_
+#define SHURIKENREPLICA_H_
 
-#include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "DefaultReplica.h"
-class ShurikenReplica :
-	public DefaultReplica
+
+class ShurikenReplica : public DefaultReplica
 {
 public:
 	ShurikenReplica();
@@ -22,4 +21,4 @@ private:
 	float m_posX, m_posY, m_posZ;
 };
 
-#endif SHURIKENREPLICA
+#endif SHURIKENREPLICA_H_*/

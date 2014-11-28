@@ -1,7 +1,7 @@
-#include "ShurikenReplica.h"
+/*#include "ShurikenReplica.h"
 
 
-ShurikenReplica::ShurikenReplica()
+ShurikenReplica::ShurikenReplica() : DefaultReplica()
 {
 	m_posX = 0.0f;
 	m_posY = 0.0f;
@@ -77,4 +77,4 @@ float ShurikenReplica::GetPosY()
 float ShurikenReplica::GetPosZ()
 {
 	return m_posZ;
-}
+}*/

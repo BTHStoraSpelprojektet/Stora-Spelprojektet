@@ -8,14 +8,6 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize()
 {
-	/*m_plane.LoadModel("../Shurikenjutsu/Models/FloorShape.SSP");
-	GraphicsEngine::AddInstanceBuffer(1);
-
-	m_object.LoadModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	GraphicsEngine::AddInstanceBuffer(3);*/
-
-	
-
 	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
 
@@ -23,10 +15,7 @@ bool ObjectManager::Initialize()
 	translation = DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f);
 	m_animatedCharacter.Translate(translation);
 
-	/*m_object.LoadModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	m_object.Rotate(rotation);
-	translation = DirectX::XMFLOAT3(0.0f, 0.0f, 2.0f);
-	m_object.Translate(translation);*/
+	
 
 	return true;
 }
@@ -72,7 +61,11 @@ void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 {
 	Shuriken tempShuriken;
 	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_speed);
+	tempShuriken.SetNetworkIDManager(&m_networkIDManger);
+	tempShuriken.SetNetworkID(tempShuriken.GetNetworkID());
+
 	m_shurikens.push_back(tempShuriken);
+
 }
 
 std::vector<Model> ObjectManager::GetListOfStaticModels() const

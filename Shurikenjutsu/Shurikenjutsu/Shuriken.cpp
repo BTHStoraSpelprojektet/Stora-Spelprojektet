@@ -15,21 +15,27 @@ bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Direc
 		return true;
 	}
 
-	m_shurikenReplica = new ShurikenReplica();
+	// Replica3Manager code, unused for now.
+	/*m_shurikenReplica = new ShurikenReplica();
 	m_shurikenReplica->SetPosition(GetPosition().x, GetPosition().y, GetPosition().z);
+	*/
 
-	if (Network::ConnectedNow())
+	// Replica3Manager code, unused for now.
+	/*if (Network::ConnectedNow())
 	{
 		Network::AddReference(m_shurikenReplica);
-	}
+	}*/
+
+	// Create ID for the network on the object
 
 	return false;
 }
 
 void Shuriken::Shutdown()
 {
-	Network::RemoveReference(m_shurikenReplica);
+	/*Network::RemoveReference(m_shurikenReplica);
 	delete m_shurikenReplica;
+	*/
 
 	MovingObject::Shutdown();
 }
@@ -55,9 +61,11 @@ void Shuriken::SetPosition(DirectX::XMFLOAT3 p_pos)
 	MovingObject::SetPosition(p_pos);
 
 	if (Network::IsConnected())
-	{
-		DirectX::XMFLOAT3 pos = GetPosition();
+	{ 
+		// Replica3Manager code, unused for now.
+		/*DirectX::XMFLOAT3 pos = GetPosition();
 		m_shurikenReplica->SetPosition(pos.x, pos.y, pos.z);
+		*/
 	}
 }
 

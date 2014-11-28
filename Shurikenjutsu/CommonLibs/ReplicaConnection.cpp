@@ -26,7 +26,7 @@ RakNet::Replica3* ReplicaConnection::AllocReplica(RakNet::BitStream *p_allocatio
 	}
 	if (typeName == "Shuriken")
 	{
-		return new ShurikenReplica;
+		//return new ShurikenReplica;
 	}
 	return 0;
 }

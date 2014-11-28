@@ -35,6 +35,7 @@ private:
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
 	ReplicaManager* m_replicaManager;
+	RakNet::NetworkIDManager* m_networkIDManager;
 };
 
 #endif SERVER

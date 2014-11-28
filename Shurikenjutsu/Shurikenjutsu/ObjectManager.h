@@ -25,6 +25,9 @@ private:
 	std::vector<Model> m_staticmodels;
 
 	Model m_animatedCharacter;
+
+	// unique ID for the network
+	RakNet::NetworkIDManager m_networkIDManger;
 	
 };
 

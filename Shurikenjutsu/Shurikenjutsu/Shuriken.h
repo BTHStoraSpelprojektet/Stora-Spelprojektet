@@ -3,9 +3,10 @@
 #include "MovingObject.h"
 #include "Network.h"
 
+
 const float ShurikenSpeed = 15.70f;
 
-class Shuriken : public MovingObject
+class Shuriken : public MovingObject, public RakNet::NetworkIDObject
 {
 public:
 	Shuriken();
@@ -32,7 +33,10 @@ public:
 private:
 	float m_lifetime;
 	int m_damage;
+	RakNet::NetworkID m_networkID;
 
-	ShurikenReplica* m_shurikenReplica;
+	// Replica3 unused
+	//ShurikenReplica* m_shurikenReplica;
+	
 };
 #endif
