@@ -1,6 +1,9 @@
 Map size: 100 100
-Number of objects: 4
-DecoratedObject_2 0 0 2 0 0 0 1
-DecoratedObject_1 -4.12335 0.827398 -3.84716 0 0.173648 0 0.984808
-DecoratedObject 2.86825 1.27395 -2.56569 0 0.422618 0 0.906308
-Floor 0 0 0 0 0 0 1
+Number of objects: 7
+Floor -0.276767 0 -0.282327 0 0 0 0
+DecoratedObject_1 0 0 10.4601 0 1.5708 0 0
+DecoratedObject_5 0 0 -12.1954 0 1.5708 0 0
+DecoratedObject_2 8.52073 0 0 0 1.5708 0 0
+DecoratedObject_4 -7.28474 0 0 0 1.5708 0 0
+DecoratedObject_6 0 0 -19.4045 0 0.785398 0 0
+DecoratedObject_3 0 0 0 0 1.5708 0 0
