@@ -355,18 +355,18 @@ void Camera::ResetCameraToLight()
 {
 	// Reset camera.
 	DirectX::XMFLOAT3 target = DirectX::XMFLOAT3(0, 0, 0);
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(30.0f, 60.0f, 30.0f);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(10.0f, 20.0f, 10.0f);
 
 	UpdatePosition(position);
 	UpdateTarget(target);
 
-	m_upVector = DirectX::XMFLOAT3(-30.0f, 60.0f, -30.0f);
+	m_upVector = DirectX::XMFLOAT3(-10.0f, 20.0f, -10.0f);
 	DirectX::XMStoreFloat3(&m_upVector, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_upVector)));
 
-	m_look = DirectX::XMFLOAT3(-30.0f, -60.0f, -30.0f);
+	m_look = DirectX::XMFLOAT3(-10.0f, -20.0f, -10.0f);
 	DirectX::XMStoreFloat3(&m_look, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_look)));
 
-	m_right = DirectX::XMFLOAT3(30.0f, 0.0f, -30.0f);
+	m_right = DirectX::XMFLOAT3(10.0f, 0.0f, -10.0f);
 	DirectX::XMStoreFloat3(&m_right, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_right)));
 
 	// Projection data.
