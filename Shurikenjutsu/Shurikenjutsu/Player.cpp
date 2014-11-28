@@ -24,16 +24,27 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_inputManager = InputManager::GetInstance();
 
+	// Create copy for network
+	m_playerNetworkCopy = new PlayerReplica();
+	m_playerNetworkCopy->SetPosition(GetPosition().x, GetPosition().y, GetPosition().z);
+
 	return true;
 }
 
 void Player::Shutdown()
 {
+	Network::RemoveReference(m_playerNetworkCopy);
+	delete m_playerNetworkCopy;
+
 	MovingObject::Shutdown();
 }
 
 void Player::Update(double p_deltaTime)
 {
+	if (Network::ConnectedNow())
+	{
+		Network::AddReference(m_playerNetworkCopy);
+	}
 	float x, y, z;
 	x = 0;
 	y = 0;
@@ -104,4 +115,15 @@ void Player::SetAgility(float p_agility)
 float Player::GetAgility() const
 {
 	return m_agility;
+}
+
+void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
+{
+	Object::SetPosition(p_pos);
+
+	if (Network::IsConnected())
+	{
+		DirectX::XMFLOAT3 pos = GetPosition();
+		m_playerNetworkCopy->SetPosition(pos.x, pos.y, pos.z);
+	}
 }

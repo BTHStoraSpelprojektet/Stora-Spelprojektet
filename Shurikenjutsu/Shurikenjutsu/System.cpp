@@ -77,7 +77,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	
 	//Run all tests that are in the debug class
 	m_debug.RunTests(p_argc, p_argv);
-
+	
 	// Input: Register keys
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
@@ -89,7 +89,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
-
+	
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
@@ -97,7 +97,10 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
-    return result;
+	// Initialize network
+	Network::Initialize();
+
+	return result;
 }
 
 void System::Shutdown()
@@ -110,6 +113,9 @@ void System::Shutdown()
 
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
+
+	// Shutdown network
+	Network::Shutdown();
 }
 
 void System::Run()
@@ -173,12 +179,15 @@ void System::Update()
 
 	gameState->Update(deltaTime);
 
+	// Update network
+	Network::Update();
+
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))
 	{
 		PostQuitMessage(0);
 	}
-		}
+}
 
 // Render game scene here.
 void System::Render()

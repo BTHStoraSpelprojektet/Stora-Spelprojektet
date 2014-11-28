@@ -28,6 +28,20 @@ void PlayerManager::Update(double p_deltaTime)
 	{
 		m_playerList[i].Update(p_deltaTime);
 	}
+
+	if (Network::IsConnected())
+	{
+		std::vector<PlayerReplica*> enemyPlayers = Network::GetOtherPlayers();
+		if (m_playerList.size() - 1 < enemyPlayers.size())
+		{
+			m_playerList.push_back(Player());
+		}
+
+		for (int i = 1; i < m_playerList.size(); i++)
+		{
+			m_playerList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i - 1]->GetPosX(), enemyPlayers[i - 1]->GetPosY(), enemyPlayers[i - 1]->GetPosZ()));
+		}
+	}
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,

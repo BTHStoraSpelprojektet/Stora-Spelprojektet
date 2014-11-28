@@ -1,8 +1,10 @@
 #ifndef SYSTEM
 #define SYSTEM
 
-#include <vector>
+#define WIN32_LEAN_AND_MEAN
 
+#include <vector>
+#include "Network.h"
 #include "Window.h"
 #include "GraphicsEngine.h"
 #include "Timer.h"

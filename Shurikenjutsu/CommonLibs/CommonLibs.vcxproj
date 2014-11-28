@@ -16,13 +16,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -71,7 +71,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\RakNet\Source\XBox360Includes.h" />
-    <ClInclude Include="MyHeader.h" />
+    <ClInclude Include="DefaultReplica.h" />
+    <ClInclude Include="PlayerReplica.h" />
     <ClInclude Include="RakNet\AutopatcherPatchContext.h" />
     <ClInclude Include="RakNet\AutopatcherRepositoryInterface.h" />
     <ClInclude Include="RakNet\Base64Encoder.h" />
@@ -223,9 +224,13 @@
     <ClInclude Include="RakNet\WindowsIncludes.h" />
     <ClInclude Include="RakNet\WSAStartupSingleton.h" />
     <ClInclude Include="RakNet\_FindFirst.h" />
+    <ClInclude Include="ReplicaConnection.h" />
+    <ClInclude Include="ReplicaManager.h" />
+    <ClInclude Include="ServerGlobals.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="DefaultReplica.cpp" />
+    <ClCompile Include="PlayerReplica.cpp" />
     <ClCompile Include="RakNet\Base64Encoder.cpp" />
     <ClCompile Include="RakNet\BitStream.cpp" />
     <ClCompile Include="RakNet\CCRakNetSlidingWindow.cpp" />
@@ -335,6 +340,9 @@
     <ClCompile Include="RakNet\VitaIncludes.cpp" />
     <ClCompile Include="RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="RakNet\_FindFirst.cpp" />
+    <ClCompile Include="ReplicaConnection.cpp" />
+    <ClCompile Include="ReplicaManager.cpp" />
+    <ClCompile Include="ServerGlobals.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RakNet\RakNet.vcproj" />
