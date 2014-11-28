@@ -85,8 +85,12 @@ void PlayingStateTest::Render()
 	m_objectManager.Render();
 
 	DirectX::XMFLOAT4X4 world;
-	DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixTranspose(DirectX::XMMatrixScaling(100.0f, 100.0f, 100.0f) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, -0.78f) * DirectX::XMMatrixTranslation(500.0f, 0.0f, 0.0f)));
+	DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixTranspose(DirectX::XMMatrixScaling(100.0f, 100.0f, 1.0f) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f) * DirectX::XMMatrixTranslation(-500.0f, -370.0f, 0.0f)));
 	GraphicsEngine::RenderUI(world, m_playerManager.GetListOfPlayers()[0].GetModel().GetTexture());
+
+	DirectX::XMFLOAT4X4 world2;
+	DirectX::XMStoreFloat4x4(&world2, DirectX::XMMatrixTranspose(DirectX::XMMatrixScaling(100.0f, 100.0f, 1.0f) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f) * DirectX::XMMatrixTranslation(-280.0f, -370.0f, 0.0f)));
+	GraphicsEngine::RenderUI(world2, m_playerManager.GetListOfPlayers()[0].GetModel().GetTexture());
 }
 
 void PlayingStateTest::RenderAlpha()
