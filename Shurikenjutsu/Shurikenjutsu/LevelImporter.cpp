@@ -102,7 +102,9 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 					rotateW = atof(tmpStr.c_str());
 
 					//TODO: Read rotation from file
-					DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
+					//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
+
+					DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
 					model.Rotate(rotation);
 
 					DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);

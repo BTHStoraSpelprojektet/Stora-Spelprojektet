@@ -12,5 +12,4 @@ public:
 protected:
 	int m_mapsizeX;
 	int m_mapsizeY;
-
 };

@@ -6,8 +6,6 @@ Level::Level(ObjectManager* p_objectManager, std::string p_level){
 	}
 }
 
-
-
 bool Level::loadLevel(ObjectManager* p_objectManager, std::string p_level){
 	LevelImporter levelImporter(p_objectManager, p_level);
 
