@@ -20,6 +20,8 @@
 #include "..\CommonLibs\RakNet\BitStream.h"
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ReplicaManager.h"
+#include "..\CommonLibs\ServerMessages.h"
+#include <vector>
 
 class Server
 {
@@ -31,11 +33,14 @@ public:
 	void Update();
 	void ReceviePacket();
 private:
+	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z);
+	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
-	ReplicaManager* m_replicaManager;
-	RakNet::NetworkIDManager* m_networkIDManager;
+	//ReplicaManager* m_replicaManager;
+	int m_nrOfConnections;
+	std::vector<PlayerNet> m_players;
 };
 
 #endif SERVER

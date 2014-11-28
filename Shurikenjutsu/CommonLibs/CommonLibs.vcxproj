@@ -227,6 +227,7 @@
     <ClInclude Include="ReplicaConnection.h" />
     <ClInclude Include="ReplicaManager.h" />
     <ClInclude Include="ServerGlobals.h" />
+    <ClInclude Include="ServerMessages.h" />
     <ClInclude Include="ShurikenReplica.h" />
   </ItemGroup>
   <ItemGroup>

@@ -28,7 +28,7 @@ private:
 	PlayerManager m_playerManager;
 	ObjectManager m_objectManager;
 	Camera m_camera;
-	std::vector<ShurikenReplica*> m_networkShurikens;
+//	std::vector<ShurikenReplica*> m_networkShurikens;
 };
 
 #endif PLAYINGSTATE
