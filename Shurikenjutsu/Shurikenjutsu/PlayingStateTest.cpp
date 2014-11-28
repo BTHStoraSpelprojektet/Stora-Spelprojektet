@@ -39,7 +39,7 @@ void PlayingStateTest::Update(double p_deltaTime)
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPosition(0), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
+		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPlayerPosition(), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
 	}
 
 	m_objectManager.Update(p_deltaTime);
@@ -60,18 +60,13 @@ void PlayingStateTest::Update(double p_deltaTime)
 	m_camera.MoveCamera(p_deltaTime);
 	if (!GLOBAL::GetInstance().flyingCamera)
 	{
-		m_camera.FollowCharacter(m_playerManager.GetPosition(0));
+		m_camera.FollowCharacter(m_playerManager.GetPlayerPosition());
 	}
 }
 
 void PlayingStateTest::Render()
 {
-	std::vector<Player> tempList1 = m_playerManager.GetListOfPlayers();
-	for (unsigned int i = 0; i < tempList1.size(); i++)
-	{
-		Model tempModel1 = tempList1[i].GetModel();
-		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel1.GetMesh(), tempModel1.GetVertexCount(), tempModel1.GetWorldMatrix(), tempModel1.GetTexture());
-	}
+	m_playerManager.Render();
 
 	//Draw level objects
 	std::vector<Model> tempModelList = m_objectManager.GetListOfStaticModels();

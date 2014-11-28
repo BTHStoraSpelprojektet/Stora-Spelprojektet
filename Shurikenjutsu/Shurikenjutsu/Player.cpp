@@ -24,18 +24,11 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_inputManager = InputManager::GetInstance();
 
-	// Create copy for network
-	m_playerNetworkCopy = new PlayerReplica();
-	m_playerNetworkCopy->SetPosition(GetPosition().x, GetPosition().y, GetPosition().z);
-
 	return true;
 }
 
 void Player::Shutdown()
 {
-	Network::RemoveReference(m_playerNetworkCopy);
-	delete m_playerNetworkCopy;
-
 	MovingObject::Shutdown();
 }
 
@@ -43,8 +36,9 @@ void Player::Update(double p_deltaTime)
 {
 	if (Network::ConnectedNow())
 	{
-		Network::AddReference(m_playerNetworkCopy);
+		//Network::AddReference(m_playerNetworkCopy);
 	}
+	bool moved = false;
 	float x, y, z;
 	x = 0;
 	y = 0;
@@ -53,22 +47,26 @@ void Player::Update(double p_deltaTime)
 	{
 		SetSpeed(5.0f);
 		z += 1;
+		moved = true;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		SetSpeed(5.0f);
 		x += -1;
+		moved = true;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		SetSpeed(5.0f);
 		z += -1;
+		moved = true;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		SetSpeed(5.0f);
 		x += 1;
+		moved = true;
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -76,7 +74,15 @@ void Player::Update(double p_deltaTime)
 	DirectX::XMFLOAT3 tempFloat;
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
-	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
+	if (moved)
+	{
+		SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
+	}
+	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
+}
+
+void Player::Update2(double p_deltaTime)
+{
 	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
 }
 
@@ -124,6 +130,12 @@ void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 	if (Network::IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
-		m_playerNetworkCopy->SetPosition(pos.x, pos.y, pos.z);
+		//m_playerNetworkCopy->SetPosition(pos.x, pos.y, pos.z);
+		Network::SendPlayerPos(pos.x, pos.y, pos.z);
 	}
+}
+
+void Player::SetPosition2(DirectX::XMFLOAT3 p_pos)
+{
+	Object::SetPosition(p_pos);
 }
