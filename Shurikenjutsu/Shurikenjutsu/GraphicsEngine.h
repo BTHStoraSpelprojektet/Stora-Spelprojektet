@@ -33,7 +33,6 @@ public:
 	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
 	static void SetSceneDirectionalLight(DirectionalLight& p_dLight);
-	static void SetLightPosition(DirectX::XMFLOAT3 p_position);
 
 	static void SetShadowMap();
 

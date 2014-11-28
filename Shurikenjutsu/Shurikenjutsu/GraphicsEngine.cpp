@@ -162,11 +162,6 @@ void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
 	m_sceneShader.UpdateFrameBuffer(m_directX.GetContext(), p_dLight);
 }
 
-void GraphicsEngine::SetLightPosition(DirectX::XMFLOAT3 p_position)
-{
-	m_sceneShader.UpdateLightBuffer(m_directX.GetContext(), p_position);
-}
-
 void GraphicsEngine::Clear()
 {
 	m_directX.Clear();
