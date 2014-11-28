@@ -11,8 +11,9 @@ public:
 	~Object();
 	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos);
 	virtual void Shutdown();
+	virtual void Render();
 	DirectX::XMFLOAT3 GetPosition() const;
-	void SetPosition(DirectX::XMFLOAT3 p_pos);
+	virtual void SetPosition(DirectX::XMFLOAT3 p_pos);
 
 	DirectX::XMFLOAT3 GetScale() const;
 	void SetScale(DirectX::XMFLOAT3 p_scale);

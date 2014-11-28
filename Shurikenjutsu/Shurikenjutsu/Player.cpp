@@ -32,8 +32,9 @@ void Player::Shutdown()
 	MovingObject::Shutdown();
 }
 
-void Player::Update(double p_deltaTime)
+void Player::UpdateMe(double p_deltaTime)
 {
+	bool moved = false;
 	float x, y, z;
 	x = 0;
 	y = 0;
@@ -42,22 +43,26 @@ void Player::Update(double p_deltaTime)
 	{
 		SetSpeed(5.0f);
 		z += 1;
+		moved = true;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		SetSpeed(5.0f);
 		x += -1;
+		moved = true;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		SetSpeed(5.0f);
 		z += -1;
+		moved = true;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		SetSpeed(5.0f);
 		x += 1;
+		moved = true;
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -65,7 +70,15 @@ void Player::Update(double p_deltaTime)
 	DirectX::XMFLOAT3 tempFloat;
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
-	SetPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
+	if (moved)
+	{
+		SetMyPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
+	}
+	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
+}
+
+void Player::Update(double p_deltaTime)
+{
 	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
 }
 
@@ -104,4 +117,20 @@ void Player::SetAgility(float p_agility)
 float Player::GetAgility() const
 {
 	return m_agility;
+}
+
+void Player::SetMyPosition(DirectX::XMFLOAT3 p_pos)
+{
+	Object::SetPosition(p_pos);
+
+	if (Network::IsConnected())
+	{
+		DirectX::XMFLOAT3 pos = GetPosition();
+		Network::SendPlayerPos(pos.x, pos.y, pos.z);
+	}
+}
+
+void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
+{
+	Object::SetPosition(p_pos);
 }

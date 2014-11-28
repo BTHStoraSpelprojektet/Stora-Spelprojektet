@@ -7,6 +7,7 @@ cbuffer FrameBuffer
 };
 
 Texture2D m_texture;
+Texture2D m_normalMap;
 Texture2D m_shadowMap;
 
 SamplerState m_sampler;
@@ -20,6 +21,8 @@ struct Input
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
+
+	//float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
 	float4 m_cameraPosition : CAMERA;
@@ -67,6 +70,13 @@ float4 main(Input p_input) : SV_Target
 		// Compare the depth of the shadow map and the depth of the light to determine whether to shadow or to light this pixel.
 		if (lightDepth < depth)
 		{
+			// Sample NormalMap
+			/*float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
+			// Uncompress NormalMap - to get it into the right range
+			float3 normalT = 2.0f * normalMapSample - 1.0f;
+			// Transforms from tangetspace to world space
+			float3 bumpedNormalW = mul(normalT, p_input.m_tBN);*/
+			//end of normalmap stuff
 			// Normalize normals.
 			float3 normal = normalize(p_input.m_normal);
 
@@ -81,6 +91,14 @@ float4 main(Input p_input) : SV_Target
 	// If the point is "behind" the shadow map, light it normally.
 	else
 	{
+		// Sample NormalMap
+		/*float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
+		// Uncompress NormalMap - to get it into the right range
+		float3 normalT = 2.0f * normalMapSample - 1.0f;
+		// Transforms from tangetspace to world space
+		float3 bumpedNormalW = mul(normalT, p_input.m_tBN);*/
+		//end of normalmap stuff
+
 		// Normalize normals.
 		float3 normal = normalize(p_input.m_normal);
 

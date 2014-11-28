@@ -20,6 +20,7 @@ struct MeshData
 	char* m_normalMap;
 
 	std::vector<AnimationStack> m_stacks;
+	std::vector<Box> m_boundingBoxes;
 };
 
 class ModelImporter

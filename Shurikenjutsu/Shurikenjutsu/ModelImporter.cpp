@@ -99,6 +99,21 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 		}
 	}
 
+	unsigned int boundingBoxCount = 0;
+	memcpy(&boundingBoxCount, (char*)data + readPosition, sizeof(unsigned int));
+	readPosition += sizeof(unsigned int);
+
+	if (boundingBoxCount < 10)
+	{
+		m_importedMesh.m_boundingBoxes.resize(boundingBoxCount);
+
+		for (unsigned int i = 0; i < boundingBoxCount; i++)
+		{
+			memcpy(&m_importedMesh.m_boundingBoxes[i], (char*)data + readPosition, sizeof(Box));
+			readPosition += sizeof(Box);
+		}
+	}
+
 	free(data);
 	return true;
 }

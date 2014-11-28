@@ -22,6 +22,7 @@
 #include "..\CommonLibs\RakNet\BitStream.h"
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ReplicaManager.h"
+#include "..\CommonLibs\ServerMessages.h"
 #include <vector>
 
 #include "ConsoleFunctions.h"
@@ -29,25 +30,34 @@
 class Network
 {
 public:
-	Network();
-	~Network();
 
-	bool Initialize();
-	void Shutdown();
+	static bool Initialize();
+	static void Shutdown();
 
-	void Update();
+	static void Update();
 
-	std::vector<PlayerReplica*> GetOtherPlayers();
-	bool IsConnected();
+	static bool ConnectedNow();
+	static bool IsConnected();
+
+	static void SendPlayerPos(float p_x, float p_y, float p_z);
+	static std::vector<PlayerNet> GetOtherPlayers();
+	static PlayerNet GetMyPlayer();
+
 private:
-	void ReceviePacket();
+	Network() {};
+	static void ReceviePacket();
+	static void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
 
-	RakNet::RakPeerInterface *m_clientPeer;
-	RakNet::SocketDescriptor m_socketDesc;
-	RakNet::Packet *m_packet;
-	ReplicaManager* m_replicaManager;
+	static RakNet::RakPeerInterface *m_clientPeer;
+	static RakNet::SocketDescriptor m_socketDesc;
+	static RakNet::Packet *m_packet;
 
-	bool m_connected;
+	static bool m_connected;
+	static bool m_prevConnected;
+	static int m_connectionCount;
+	static PlayerNet m_myPlayer;
+	static std::vector<PlayerNet> m_enemyPlayers;
+	
 };
 
 #endif

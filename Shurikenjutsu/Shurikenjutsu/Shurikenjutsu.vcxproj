@@ -95,6 +95,7 @@
     <ClCompile Include="InstancedShader.cpp" />
     <ClCompile Include="KButtonEvent.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelImporter.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
@@ -130,6 +131,7 @@
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelImporter.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelImporter.h" />
     <ClInclude Include="MovingObject.h" />

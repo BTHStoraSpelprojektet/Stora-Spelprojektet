@@ -45,8 +45,6 @@ private:
 	Timer m_timer;
 	Debug m_debug;
 
-	Network m_network;
-
 	std::string m_title;
 	int m_previousFPS;
 

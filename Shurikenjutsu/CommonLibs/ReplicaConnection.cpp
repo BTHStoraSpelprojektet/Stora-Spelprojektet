@@ -24,6 +24,5 @@ RakNet::Replica3* ReplicaConnection::AllocReplica(RakNet::BitStream *p_allocatio
 	{
 		return new PlayerReplica;
 	}
-
 	return 0;
 }

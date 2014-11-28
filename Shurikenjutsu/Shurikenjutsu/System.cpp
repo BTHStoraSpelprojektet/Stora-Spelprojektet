@@ -100,8 +100,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_lightCamera.ResetCameraToLight();
 
 	// Initialize network
-	m_network = Network();
-	m_network.Initialize();
+	Network::Initialize();
 
 	return result;
 }
@@ -118,7 +117,7 @@ void System::Shutdown()
 	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
 
 	// Shutdown network
-	m_network.Shutdown();
+	Network::Shutdown();
 }
 
 void System::Run()
@@ -183,7 +182,7 @@ void System::Update()
 	m_gameState->Update(deltaTime);
 
 	// Update network
-	m_network.Update();
+	Network::Update();
 
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))
