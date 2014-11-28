@@ -11,7 +11,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile scene vertex shader from file. @GUIShader");
+			ConsolePrintError("Failed to compile GUI vertex shader from file. @GUIShader");
 			return false;
 		}
 
@@ -108,47 +108,31 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	pixelShader->Release();
 	pixelShader = 0;
 
-	// Create the matrix buffer description.
-	D3D11_BUFFER_DESC matrixBuffer;
-	matrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
-	matrixBuffer.ByteWidth = sizeof(MatrixBuffer);
-	matrixBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	matrixBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	matrixBuffer.MiscFlags = 0;
-	matrixBuffer.StructureByteStride = 0;
-
-	// Create the matrix buffer.
-	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
-	{
-		ConsolePrintError("Failed to create scene matrix buffer. @GUIShader");
-		return false;
-	}
-
 	std::vector<GUIVertex> quad;
 	
 	GUIVertex vertex;
-	vertex.m_position = DirectX::XMFLOAT3(-1, -1, 0);
-	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 0);
-	quad.push_back(vertex);
-
-	vertex.m_position = DirectX::XMFLOAT3(-1, 1, 0);
-	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 1);
-	quad.push_back(vertex);
-
-	vertex.m_position = DirectX::XMFLOAT3(1, -1, 0);
-	vertex.m_textureCoordinates = DirectX::XMFLOAT2(1, 0);
-	quad.push_back(vertex);
-
-	vertex.m_position = DirectX::XMFLOAT3(-1, 1, 0);
-	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 1);
-	quad.push_back(vertex);
-
-	vertex.m_position = DirectX::XMFLOAT3(1, 1, 0);
+	vertex.m_position = DirectX::XMFLOAT3(1.0f, -1.0f, 0);
 	vertex.m_textureCoordinates = DirectX::XMFLOAT2(1, 1);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(1, -1, 0);
+	vertex.m_position = DirectX::XMFLOAT3(-1.0f, -1.0f, 0);
+	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 1);
+	quad.push_back(vertex);
+
+	vertex.m_position = DirectX::XMFLOAT3(-1.0f, 1.0f, 0);
+	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 0);
+	quad.push_back(vertex);
+
+	vertex.m_position = DirectX::XMFLOAT3(-1.0f, 1.0f, 0);
+	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 0);
+	quad.push_back(vertex);
+
+	vertex.m_position = DirectX::XMFLOAT3(1.0f, 1.0f, 0);
 	vertex.m_textureCoordinates = DirectX::XMFLOAT2(1, 0);
+	quad.push_back(vertex);
+
+	vertex.m_position = DirectX::XMFLOAT3(1.0f, -1.0f, 0);
+	vertex.m_textureCoordinates = DirectX::XMFLOAT2(1, 1);
 	quad.push_back(vertex);
 
 	// Setup vertex buffer description.
@@ -169,6 +153,45 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	// Create the vertex buffer.
 	p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_quadBuffer);
 
+	// Create the matrix buffer description.
+	D3D11_BUFFER_DESC matrixBuffer;
+	matrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBuffer.ByteWidth = sizeof(MatrixBuffer);
+	matrixBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBuffer.MiscFlags = 0;
+	matrixBuffer.StructureByteStride = 0;
+
+	// Create the matrix buffer.
+	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
+	{
+		ConsolePrintError("Failed to create scene matrix buffer.");
+		return false;
+	}
+
+	// Create the sampler state description.
+	D3D11_SAMPLER_DESC sampler;
+	sampler.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampler.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler.MipLODBias = 0.0f;
+	sampler.MaxAnisotropy = 1;
+	sampler.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	sampler.BorderColor[0] = 0;
+	sampler.BorderColor[1] = 0;
+	sampler.BorderColor[2] = 0;
+	sampler.BorderColor[3] = 0;
+	sampler.MinLOD = 0;
+	sampler.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	if (FAILED(p_device->CreateSamplerState(&sampler, &m_samplerState)))
+	{
+		ConsolePrintError("Failed to create scene sampler state.");
+		return false;
+	}
+
 	return true;
 }
 
@@ -177,20 +200,37 @@ void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_wor
 	// Set parameters and then render.
 	unsigned int stride;
 	unsigned int offset;
-	ID3D11Buffer* bufferPointer;
 
 	stride = sizeof(GUIVertex);
-
 	offset = 0;
 
-	bufferPointer = m_quadBuffer;
+	// Lock the "every frame" constant buffer so it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintError("Failed to map GUI matrix buffer.");
+	}
 
-	p_context->IASetVertexBuffers(0, 1, &bufferPointer, &stride, &offset);
+	// Get a pointer to the data in the constant buffer.
+	MatrixBuffer* matrixBuffer;
+	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
+
+	// Copy the fog information into the frame constant buffer.
+	matrixBuffer->m_worldMatrix = p_worldMatrix;
+
+	DirectX::XMStoreFloat4x4(&matrixBuffer->m_projectionMatrix, DirectX::XMMatrixOrthographicLH((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, 1.0f, 2.0f));
+
+	// Unlock the constant buffer.
+	p_context->Unmap(m_matrixBuffer, 0);
+
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
+	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->IASetVertexBuffers(0, 1, &m_quadBuffer, &stride, &offset);
+	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	p_context->IASetInputLayout(m_layout);
-
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
-	p_context->Draw(1, 0);
+	p_context->Draw(6, 0);
 }

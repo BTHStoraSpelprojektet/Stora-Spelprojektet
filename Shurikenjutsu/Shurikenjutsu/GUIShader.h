@@ -9,6 +9,7 @@
 
 #include "Structures.h"
 #include "ConsoleFunctions.h"
+#include "Globals.h"
 
 class GUIShader
 {
@@ -24,26 +25,16 @@ private:
 	ID3D11PixelShader* m_pixelShader;
 
 	ID3D11InputLayout* m_layout;
+	ID3D11SamplerState* m_samplerState;
 
 	std::string m_VSVersion;
 	std::string m_PSVersion;
 
-	DirectX::XMFLOAT4X4 m_projectionMatrix;
-
 	ID3D11Buffer* m_matrixBuffer;
 	struct MatrixBuffer
 	{
-		DirectX::XMMATRIX m_worldMatrix;
-		DirectX::XMMATRIX m_viewMatrix;
-		DirectX::XMMATRIX m_projectionMatrix;
-	};
-
-	ID3D11Buffer* m_instanceBuffer;
-	struct InstanceBuffer
-	{
-		DirectX::XMFLOAT2 m_position;
-		DirectX::XMFLOAT4X4 m_scale;
-		DirectX::XMFLOAT4X4 m_rotation;
+		DirectX::XMFLOAT4X4 m_worldMatrix;
+		DirectX::XMFLOAT4X4 m_projectionMatrix;
 	};
 
 	ID3D11Buffer* m_quadBuffer;

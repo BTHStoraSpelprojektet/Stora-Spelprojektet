@@ -89,7 +89,7 @@ std::vector<PlayerReplica*> Network::GetOtherPlayers()
 
 			m_replicaManager->GetReplicasCreatedByGuid(guid, replicaList);
 
-			for (int i = 0; i < replicaList.Size(); i++)
+			for (unsigned int i = 0; i < replicaList.Size(); i++)
 			{
 				if (((DefaultReplica*)replicaList[i])->GetTypeName() == "Player")
 				{

@@ -37,7 +37,7 @@ void PlayerManager::Update(double p_deltaTime)
 			m_playerList.push_back(Player());
 		}
 
-		for (int i = 1; i < m_playerList.size(); i++)
+		for (unsigned int i = 1; i < m_playerList.size(); i++)
 		{
 			m_playerList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i - 1]->GetPosX(), enemyPlayers[i - 1]->GetPosY(), enemyPlayers[i - 1]->GetPosZ()));
 		}
