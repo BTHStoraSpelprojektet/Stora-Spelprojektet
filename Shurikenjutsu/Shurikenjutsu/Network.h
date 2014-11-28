@@ -24,6 +24,7 @@
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include <vector>
+#include <map>
 
 #include "ConsoleFunctions.h"
 
@@ -42,6 +43,8 @@ public:
 	static void SendPlayerPos(float p_x, float p_y, float p_z);
 	static std::vector<PlayerNet> GetOtherPlayers();
 	static PlayerNet GetMyPlayer();
+	static bool IsPlayerListUpdated();
+	static void SetHaveUpdatedPlayerList();
 
 private:
 	Network() {};
@@ -55,9 +58,9 @@ private:
 	static bool m_connected;
 	static bool m_prevConnected;
 	static int m_connectionCount;
+	static bool m_newOrRemovedPlayers;
 	static PlayerNet m_myPlayer;
 	static std::vector<PlayerNet> m_enemyPlayers;
-	
 };
 
 #endif
