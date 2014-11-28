@@ -4,38 +4,59 @@
 #include "DirectX.h"
 #include "SceneShader.h"
 #include "InstancedShader.h"
+#include "DepthShader.h"
+#include "ShadowMap.h"
+
 #include "Enumerations.h"
+#include "Globals.h"
 
 class GraphicsEngine
 {
 public:
-	bool Initialize(HWND p_handle);
+	static bool Initialize(HWND p_handle);
+	static void Shutdown();
 
-	void SetClearColor(float R, float G, float B, float p_opacity);
-	void Clear();
-	void Present();
+	static void SetClearColor(float R, float G, float B, float p_opacity);
+	static void Clear();
+	static void Present();
 
-	ID3D11Device* GetDevice();
-	ID3D11DeviceContext* GetContext();
-	D3D_FEATURE_LEVEL GetVersion();
+	static ID3D11Device* GetDevice();
+	static ID3D11DeviceContext* GetContext();
+	static D3D_FEATURE_LEVEL GetVersion();
 
-	void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_numberOfInstances);
+	static void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_numberOfInstances, std::vector<DirectX::XMMATRIX> p_boneTransforms);
+	static void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	static void SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
+	static void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
+	static void SetSceneDirectionalLight(DirectionalLight& p_dLight);
 
-	void SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix);
-	void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
-	void SetSceneDirectionalLight(DirectionalLight& p_dLight);
+	static void TurnOnAlphaBlending();
+	static void TurnOffAlphaBlending();
 
-	void TurnOnAlphaBlending();
-	void TurnOffAlphaBlending();
+	static bool ToggleFullscreen(bool p_fullscreen);
 
-	void AddInstanceBuffer(int p_numberOfInstances);
+	static void AddInstanceBuffer(int p_numberOfInstances);
+
+	static HWND* GetWindowHandle();
+
+	static void BeginRenderToShadowMap();
+	static void ResetRenderTarget();
+
+	ID3D11ShaderResourceView* GetShadowMap();
 
 private:
-	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
+	GraphicsEngine(){};
 
-	DirectXWrapper m_directX;
+	static std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
 
-	SceneShader m_sceneShader;
-	InstancedShader m_instanceShader;
+	static DirectXWrapper m_directX;
+
+	static SceneShader m_sceneShader;
+	static InstancedShader m_instanceShader;
+	static DepthShader m_depthShader;
+
+	static HWND* m_windowHandle;
+
+	static ShadowMap m_shadowMap;
 };
 #endif;

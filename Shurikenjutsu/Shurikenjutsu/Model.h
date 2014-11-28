@@ -9,12 +9,13 @@
 #include "Buffer.h"
 #include "ConsoleFunctions.h"
 #include "ModelImporter.h"
+#include "AnimationControl.h"
 
 class Model
 {
 public:
-	bool LoadModel(ID3D11Device* p_device, const char* p_filepath);
-	ID3D11ShaderResourceView* LoadTexture(ID3D11Device* p_device, unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
+	bool LoadModel(const char* p_filepath);
+	ID3D11ShaderResourceView* LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
 	void Shutdown();
 
 	void Update(double p_dt);
@@ -24,10 +25,15 @@ public:
 	ID3D11ShaderResourceView* GetNormalMap();
 	DirectX::XMMATRIX GetWorldMatrix();
 	int GetVertexCount();
+	std::vector<DirectX::XMMATRIX> GetAnimation();
 
-	void Rotate(DirectX::XMVECTOR p_rotation);
-	void Translate(DirectX::XMVECTOR p_translation);
-	void Scale(DirectX::XMVECTOR p_scale);
+	void Rotate(DirectX::XMFLOAT3 p_rotation);
+	void Translate(DirectX::XMFLOAT3 p_translation);
+	void Scale(DirectX::XMFLOAT3 p_scale);
+
+	void SetPosition(DirectX::XMFLOAT3 p_position);
+	void UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation); 
+
 	void ResetModel();
 
 protected:
@@ -35,7 +41,10 @@ protected:
 	ID3D11ShaderResourceView* m_texture;
 	ID3D11ShaderResourceView* m_normalMap;
 
+	AnimationControl m_animationController;
+	std::vector<DirectX::XMMATRIX> boneTransforms;
+
 	int m_vertexCount;
-	DirectX::XMMATRIX m_worldMatrix;
+	DirectX::XMFLOAT4X4 m_worldMatrix;
 };
 #endif;

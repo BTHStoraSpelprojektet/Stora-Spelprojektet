@@ -1,9 +1,9 @@
 #include "Model.h"
 
-bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
+bool Model::LoadModel(const char* p_filepath)
 {
 	// Initialize world matrix.
-	m_worldMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 
 	// Load Mesh.
 	ModelImporter importer;
@@ -12,12 +12,28 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	MeshData mData = importer.GetMesh();
 
 	// Save mesh to buffer.
-	m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, p_device, mData.vertices);
-	m_vertexCount = mData.vertices.size();
+	if (!mData.m_animated)
+	{
+		std::vector<VertexAnimated> nullVector;
+		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, GraphicsEngine::GetDevice(), mData.m_vertices, nullVector);
+		m_vertexCount = mData.m_vertices.size();
+	}
+	else
+	{
+		std::vector<Vertex> nullVector;
+		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEXANIMATED, GraphicsEngine::GetDevice(), nullVector, mData.m_verticesAnimated);
+		m_vertexCount = mData.m_verticesAnimated.size();
+	}
 
 	// Load Textures
-	m_texture = LoadTexture(p_device, mData.m_textureMapSize[0], mData.m_textureMapSize[1], mData.m_textureMapSize[2], mData.m_textureMap);
-	m_normalMap = LoadTexture(p_device, mData.m_normalMapSize[0], mData.m_normalMapSize[1], mData.m_normalMapSize[2], mData.m_normalMap);
+	m_texture = LoadTexture(mData.m_textureMapSize[0], mData.m_textureMapSize[1], mData.m_textureMapSize[2], mData.m_textureMap);
+	m_normalMap = LoadTexture(mData.m_normalMapSize[0], mData.m_normalMapSize[1], mData.m_normalMapSize[2], mData.m_normalMap);
+
+	// Store animation stacks
+	for (unsigned int i = 0; i < mData.m_stacks.size(); i++)
+	{
+		m_animationController.CreateNewStack(mData.m_stacks[i]);
+	}
 
 	free(mData.m_textureMap);
 	free(mData.m_normalMap);
@@ -25,10 +41,13 @@ bool Model::LoadModel(ID3D11Device* p_device, const char* p_filepath)
 	return true;
 }
 
-ID3D11ShaderResourceView* Model::LoadTexture(ID3D11Device* p_device, unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
+ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
 {
-	ID3D11ShaderResourceView* textureSRV;
+	ID3D11ShaderResourceView* textureSRV = NULL;
 
+	int combinedSize = p_width * p_height * p_depth;
+	if (combinedSize > 0)
+	{
 	D3D11_TEXTURE2D_DESC textureDesc;
 	textureDesc.Width = p_width;
 	textureDesc.Height = p_height;
@@ -48,14 +67,15 @@ ID3D11ShaderResourceView* Model::LoadTexture(ID3D11Device* p_device, unsigned in
 	data.SysMemSlicePitch = 0;
 
 	ID3D11Texture2D* texture;
-	p_device->CreateTexture2D(&textureDesc, &data, &texture);
+	GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC sRVDesc;
 	sRVDesc.Format = textureDesc.Format;
 	sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 	sRVDesc.Texture2D.MostDetailedMip = 0;
-	p_device->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+	GraphicsEngine::GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+	}
 
 	return textureSRV;
 }
@@ -67,11 +87,18 @@ void Model::Shutdown()
 
 	m_texture->Release();
 	m_texture = 0;
+
+	m_normalMap->Release();
+	m_normalMap = 0;
 }
 
 void Model::Update(double p_dt)
 {
+	if (m_animationController.IsAnimated())
+	{
+		boneTransforms = m_animationController.UpdateAnimation(p_dt);
 	
+}
 }
 
 ID3D11Buffer* Model::GetMesh()
@@ -99,28 +126,50 @@ int Model::GetVertexCount()
 	return m_vertexCount;
 }
 
-void Model::Rotate(DirectX::XMVECTOR p_rotation)
+std::vector<DirectX::XMMATRIX> Model::GetAnimation()
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(p_rotation);
-
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	return boneTransforms;
 }
 
-void Model::Translate(DirectX::XMVECTOR p_translation)
+void Model::Rotate(DirectX::XMFLOAT3 p_rotation)
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixTranslationFromVector(p_translation);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation));
 
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
 }
 
-void Model::Scale(DirectX::XMVECTOR p_scale)
+void Model::Translate(DirectX::XMFLOAT3 p_translation)
 {
-	DirectX::XMMATRIX l_matrix = DirectX::XMMatrixScalingFromVector(p_scale);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_translation));
 
-	m_worldMatrix = m_worldMatrix * l_matrix;
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
+}
+
+void Model::Scale(DirectX::XMFLOAT3 p_scale)
+{
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_scale));
+
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
 }
 
 void Model::ResetModel()
 {
-	m_worldMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&m_worldMatrix,DirectX::XMMatrixIdentity());
 }
+
+void Model::SetPosition(DirectX::XMFLOAT3 p_position)
+{
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position));
+
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
+}
+
+void Model::UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation)
+{
+	DirectX::XMMATRIX matrix =	DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&p_scale)) *
+								DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation)) *
+								DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position));
+								
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, matrix);
+}
+

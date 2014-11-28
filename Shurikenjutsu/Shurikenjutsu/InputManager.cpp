@@ -55,6 +55,8 @@ void InputManager::UpdateInput(UINT p_message, WPARAM p_wParam, LPARAM p_lParam)
 		// Update mouse
 		case WM_MOUSEMOVE:
 		{
+			m_mousePositionX_prev = m_mousePositionX;
+			m_mousePositionY_prev = m_mousePositionY;
 			m_mousePositionX = GET_X_LPARAM(p_lParam);
 			m_mousePositionY = GET_Y_LPARAM(p_lParam);
 			break;
@@ -124,7 +126,10 @@ bool InputManager::IsKeyPressed(int p_vkey) const
 {
 	for (unsigned int i = 0; i < m_events.size(); i++)
 	{
-		return m_events[i].IsPressed();
+		if (m_events[i].GetButton() == p_vkey)
+		{
+			return m_events[i].IsPressed();
+		}
 	}
 
 	return false;
@@ -154,6 +159,16 @@ int InputManager::GetMousePositionX() const
 int InputManager::GetMousePositionY() const
 {
 	return m_mousePositionY;
+}
+
+int InputManager::GetMousePositionX_prev() const
+{
+	return m_mousePositionX_prev;
+}
+
+int InputManager::GetMousePositionY_prev() const
+{
+	return m_mousePositionY_prev;
 }
 
 bool InputManager::IsLeftMousePressed() const

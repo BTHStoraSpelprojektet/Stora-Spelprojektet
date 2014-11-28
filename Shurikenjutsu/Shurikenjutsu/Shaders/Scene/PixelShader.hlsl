@@ -58,7 +58,7 @@ float4 main(Input p_input) : SV_Target
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
 
 	// Add light
-	textureColor = textureColor*((A + D) + S);
+	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz) + S.xyz);
 	
 	// Add fog
 	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;

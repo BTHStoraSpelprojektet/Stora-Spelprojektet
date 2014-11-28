@@ -35,6 +35,7 @@ struct Output
 	float3 m_tangent : TANGENT;
 
 	float m_fogFactor : FOG;
+	float4 m_cameraPosition : CAMERA;
 };
 
 // Vertex shader
@@ -44,7 +45,6 @@ Output main(Input p_input)
 	p_input.m_positionWorld.y += p_input.instancePosition.y;
 	p_input.m_positionWorld.z += p_input.instancePosition.z;
 	p_input.m_positionWorld.w = 1.0f;
-
 
 	Output output;
 
@@ -72,9 +72,15 @@ Output main(Input p_input)
 	// Calculate the camera position.
 	cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
+	output.m_cameraPosition = cameraPosition;
+
+	output.m_tangent = p_input.m_tangent;
+
+	// No fog.
+	output.m_fogFactor = 1.0f;
 
 	// Calculate linear fog.    
-	output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
+	//output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
 
 	// Calculate exponential fog.    
 	//output.m_fogFactor = saturate(1.0 / pow(2.71828, (cameraPosition.z * m_fogDensity)));

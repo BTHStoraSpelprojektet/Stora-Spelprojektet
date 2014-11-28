@@ -2,7 +2,7 @@
 #define SYSTEM
 
 #include "Server.h"
-#include <Windows.h>
+#include "..\CommonLibs\RakNet\WindowsIncludes.h"
 //#include <iostream>
 
 class System
