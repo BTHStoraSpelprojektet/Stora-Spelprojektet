@@ -121,6 +121,39 @@ void Server::ReceviePacket()
 
 			break;
 		}
+		case ID_SHURIKEN_THROWN:
+		{
+			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
+
+			rBitStream.Read(messageID);
+			float x, y, z;
+			float dirX, dirY, dirZ;
+			unsigned int shurikenId;
+
+			rBitStream.Read(x);
+			rBitStream.Read(y);
+			rBitStream.Read(z);
+			rBitStream.Read(dirX);
+			rBitStream.Read(dirY);
+			rBitStream.Read(dirZ);
+			rBitStream.Read(shurikenId);
+
+			// Can player move?
+			MovePlayer(m_packet->guid, x, y, z);
+
+			// Get player pos
+			PlayerNet player = GetPlayer(m_packet->guid);
+
+			RakNet::BitStream wBitStream;
+			wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
+			wBitStream.Write(player.guid);
+			wBitStream.Write(player.x);
+			wBitStream.Write(player.y);
+			wBitStream.Write(player.z);
+
+			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			break;
+		}
 		default:
 			break;
 		}

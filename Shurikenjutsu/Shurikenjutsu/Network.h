@@ -48,6 +48,7 @@ public:
 	static void SendPlayerPos(float p_x, float p_y, float p_z);
 	static std::vector<PlayerNet> GetOtherPlayers();
 	static PlayerNet GetMyPlayer();
+	static void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_owner);
 
 private:
 	Network() {};

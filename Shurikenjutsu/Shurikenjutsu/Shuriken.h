@@ -30,10 +30,10 @@ public:
 
 	bool IsDead();
 
+	void AddNetworkShuriken(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_owner);
 private:
 	float m_lifetime;
 	int m_damage;
-	RakNet::NetworkID m_networkID;
 
 	// Replica3 unused
 	//ShurikenReplica* m_shurikenReplica;

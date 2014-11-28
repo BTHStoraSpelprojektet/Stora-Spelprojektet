@@ -124,6 +124,11 @@ void Network::ReceviePacket()
 			//std::cout << "Position: " << x << ", " << y << ", " << z << " from " << guid.ToString() << std::endl;
 			break;
 		}
+		case ID_SHURIKEN_THROWN:
+		{
+			
+			break;
+		}
 		default:
 				{
 			break;
@@ -153,10 +158,10 @@ void Network::ReceviePacket()
 	//	{
 	//		DataStructures::List<RakNet::Replica3*> replicaList;
 
-void Network::AddReference(DefaultReplica* p_replica)
+/*void Network::AddReference(DefaultReplica* p_replica)
 {
 	m_replicaManager->Reference(p_replica);
-}
+}*/
 
 	//		for (unsigned int j = 0; j < replicaList.Size(); j++)
 	//		{
@@ -255,4 +260,21 @@ std::vector<PlayerNet> Network::GetOtherPlayers()
 PlayerNet Network::GetMyPlayer()
 {
 	return m_myPlayer;
+}
+
+void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_owner)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
+	bitStream.Write(p_x);
+	bitStream.Write(p_y);
+	bitStream.Write(p_z);
+	bitStream.Write(p_dirX);
+	bitStream.Write(p_dirY);
+	bitStream.Write(p_dirZ);
+	bitStream.Write(p_id);
+	bitStream.Write(p_owner);
+	
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }
