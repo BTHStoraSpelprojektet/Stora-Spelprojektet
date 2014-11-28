@@ -1,9 +1,21 @@
 #include "GraphicsEngine.h"
 
+//static std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
+
+DirectXWrapper GraphicsEngine::m_directX;
+
+SceneShader GraphicsEngine::m_sceneShader;
+InstancedShader GraphicsEngine::m_instanceShader;
+DepthShader GraphicsEngine::m_depthShader;
+
+HWND* GraphicsEngine::m_windowHandle;
+
+ShadowMap GraphicsEngine::m_shadowMap;
+
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
 	bool result = true;
-
+	m_windowHandle = &p_handle;
 	// Initialize directX.
 	result = m_directX.Initialize(p_handle);
 	if (result)
@@ -15,23 +27,67 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
-	// Initialize scene shader.
+	// Initialize the scene shader.
 	if (m_sceneShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
 	{
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
 
+	// Initialize the instance shader
+	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
+	{
+		ConsolePrintSuccess("Instanced shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+
+	// Initialize the depth buffer.
+	if (m_depthShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
+	{
+		ConsolePrintSuccess("Depth shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+
+	// Initialize shadow map.
+	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
+	{
+		ConsolePrintSuccess("Shadow map initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+	
 	return result;
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMMATRIX& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void GraphicsEngine::Shutdown()
+{
+
+}
+
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex, std::vector<DirectX::XMMATRIX> p_boneTransforms)
 {
 	switch (p_shader)
 	{
 		case(SHADERTYPE_SCENE) :
 		{
 			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+
+			break;
+		}
+		case(SHADERTYPE_INSTANCED) :
+		{
+			m_instanceShader.Render( m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex);
+
+			break;
+		}
+		case(SHADERTYPE_ANIMATED) :
+		{
+			m_sceneShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_boneTransforms);
+
+			break;
+		}
+		case(SHADERTYPE_DEPTH) :
+		{
+			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix);
 
 			break;
 		}
@@ -45,14 +101,29 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 	}
 }
 
-void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMMATRIX& p_viewMatrix, DirectX::XMMATRIX& p_projectionMatrix)
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+{
+	switch (p_shader)
+	{
+		case(SHADERTYPE_SCENE) :
+		{
+			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+
+			break;
+		}
+	}
+}
+void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
 {
 	m_sceneShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
+	m_instanceShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
 }
 
 void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
@@ -87,6 +158,11 @@ D3D_FEATURE_LEVEL GraphicsEngine::GetVersion()
 void GraphicsEngine::SetClearColor(float R, float G, float B, float p_opacity)
 {
 	m_directX.SetClearColor(R, G, B, p_opacity);
+}
+
+ID3D11ShaderResourceView* GraphicsEngine::GetShadowMap()
+{
+	return m_shadowMap.GetShadowMap();
 }
 
 std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
@@ -125,11 +201,61 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 void GraphicsEngine::TurnOnAlphaBlending()
 {
 	m_directX.TurnOnAlphaBlending();
-	m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
+	//m_instanceShader.TurnOffBackFaceCulling(m_directX.GetContext());
+	//m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
 }
 
 void GraphicsEngine::TurnOffAlphaBlending()
 {
 	m_directX.TurnOffAlphaBlending();
-	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+	//m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+	//m_instanceShader.TurnOnBackFaceCulling(m_directX.GetContext());
+}
+
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
+{
+	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances);
+}
+
+bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
+{    
+	if (p_fullscreen)
+	{               
+		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(true, nullptr)))
+		{            
+			ConsolePrintError("Setting fullscreen mode failed.");
+			return false;
+		}        
+
+		GLOBAL::GetInstance().FULLSCREEN = true;
+	}    
+	
+	else    
+	{        
+		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(false, nullptr)))
+		{
+			ConsolePrintError("Setting windowed mode failed.");
+			return false;
+		}    
+		
+		GLOBAL::GetInstance().FULLSCREEN = false;
+	}    
+
+	return true;
+}
+
+void GraphicsEngine::BeginRenderToShadowMap()
+{
+	m_shadowMap.SetAsRenderTarget(m_directX.GetContext());
+	m_shadowMap.Clear(m_directX.GetContext());
+}
+
+void GraphicsEngine::ResetRenderTarget()
+{
+	m_directX.ResetRenderTarget();
+}
+
+HWND* GraphicsEngine::GetWindowHandle()
+{
+	return m_windowHandle;
 }

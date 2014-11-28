@@ -30,6 +30,8 @@ public:
 
 	int GetMousePositionX() const;
 	int GetMousePositionY() const;
+	int GetMousePositionX_prev() const;
+	int GetMousePositionY_prev() const;
 
 	bool IsLeftMousePressed() const;
 	bool IsLeftMouseClicked() const;
@@ -51,6 +53,8 @@ private:
 
 	int m_mousePositionX;
 	int m_mousePositionY;
+	int m_mousePositionX_prev;
+	int m_mousePositionY_prev;
 };
 
 #endif

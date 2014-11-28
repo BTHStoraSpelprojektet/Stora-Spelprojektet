@@ -48,6 +48,30 @@ struct Vertex
 	}
 };
 
+struct VertexAnimated
+{
+	// Variables.
+	DirectX::XMFLOAT3 m_position;
+	DirectX::XMFLOAT2 m_textureCoordinates;
+	DirectX::XMFLOAT3 m_normal;
+	DirectX::XMFLOAT3 m_tangent;
+	DirectX::XMFLOAT3 m_weight;
+	unsigned char m_boneIndex[3];
+
+	// Constructors.
+	VertexAnimated(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal, DirectX::XMFLOAT3 p_tangent, DirectX::XMFLOAT3 p_weight, unsigned char p_boneIndexX, unsigned char p_boneIndexY, unsigned char p_boneIndexZ)
+	{
+		m_position = p_position;
+		m_textureCoordinates = p_textureCoordinates;
+		m_normal = p_normal;
+		m_tangent = p_tangent;
+		m_weight = p_weight;
+		m_boneIndex[0] = p_boneIndexX;
+		m_boneIndex[0] = p_boneIndexY;
+		m_boneIndex[0] = p_boneIndexZ;
+	}
+};
+
 struct Sphere
 {
 	DirectX::XMFLOAT3 m_position;
@@ -146,6 +170,7 @@ struct OBB
 		m_center = p_center;
 		m_extents = p_extents;
 		m_direction = p_direction;
+		//NormalizeDirction();
 	}
 	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
 	{
@@ -154,6 +179,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = p_direction;
+		//NormalizeDirction();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents, DirectX::XMFLOAT4 p_direction)
 	{
@@ -162,6 +188,7 @@ struct OBB
 		m_extents = p_extents;
 
 		m_direction = p_direction;
+		//NormalizeDirction();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
 	{
@@ -170,6 +197,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = p_direction;
+		//NormalizeDirction();
 	}
 	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -178,6 +206,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		//NormalizeDirction();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -186,6 +215,7 @@ struct OBB
 		m_extents = p_extents;
 
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		//NormalizeDirction();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -193,7 +223,17 @@ struct OBB
 
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
-		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f); 
+		//NormalizeDirction();
+	}
+	void NormalizeDirction()
+	{
+		float x = m_direction.x;
+		float y = m_direction.y;
+		float z = m_direction.z;
+		float w = m_direction.w;
+		float l = sqrt(x*x + y*y + z*z + w*w);
+		m_direction = DirectX::XMFLOAT4(x/l, y/l, z/l, w/l);
 	}
 };
 
