@@ -4,7 +4,6 @@ bool Camera::Initialize()
 {
 	m_position = DirectX::XMFLOAT3(0, 0, 0);
 	m_target = DirectX::XMFLOAT3(0, 0, 0);
-	m_upVector = DirectX::XMFLOAT3(0, 0, 0);
 
 	m_fieldOfView = 0;
 	m_aspectRatio = 0;
@@ -76,8 +75,6 @@ void Camera::UpdateLook(DirectX::XMFLOAT3 p_look)
 
 void Camera::UpdateViewMatrix()
 {
-	m_upVector = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-
 	// Update view matrix.
 	DirectX::XMStoreFloat4x4(&m_viewMatrix, DirectX::XMMatrixLookAtLH(DirectX::XMLoadFloat3(&m_position), DirectX::XMLoadFloat3(&m_target), DirectX::XMLoadFloat3(&m_upVector)));
 }
@@ -167,7 +164,6 @@ void Camera::UpdateMovedCamera()
 	m_viewMatrix._24 = 0.0f;
 	m_viewMatrix._34 = 0.0f;
 	m_viewMatrix._44 = 1.0f;
-
 }
 
 DirectX::XMFLOAT3 Camera::GetPosition()
@@ -204,7 +200,7 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix();
-		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
@@ -226,7 +222,7 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix();
-		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
@@ -250,6 +246,15 @@ void Camera::MoveCamera(double p_deltaTime)
 
 		m_oldMouseX = (float)position.x;
 		m_oldMouseY = (float)position.y;
+
+		m_upVector = DirectX::XMFLOAT3(0.0f, 20.0f, 10.0f);
+		DirectX::XMStoreFloat3(&m_upVector, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_upVector)));
+
+		m_look = DirectX::XMFLOAT3(0.0f, -20.0f, 10.0f);
+		DirectX::XMStoreFloat3(&m_look, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_look)));
+
+		m_right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		DirectX::XMStoreFloat3(&m_right, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_right)));
 	}
 
 	if (GLOBAL::GetInstance().flyingCamera)
@@ -292,7 +297,7 @@ void Camera::MoveCamera(double p_deltaTime)
 		UpdateMovedCamera();
 
 		// Set shader variables from the camera.
-		GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Reset the camera when BACKSPACE key is pressed.
 		if (GetAsyncKeyState(VK_BACK))
@@ -314,28 +319,63 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	UpdatePosition(position);
 	UpdateTarget(target);
 	UpdateViewMatrix();
-	GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }
 
 void Camera::ResetCamera()
 {
 	// Reset camera.
-	DirectX::XMFLOAT3 nullPos = DirectX::XMFLOAT3(0,0,0);
-
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(nullPos.x, nullPos.y + 20.0f, nullPos.z - 10.0f);
-
-	DirectX::XMFLOAT3 target = nullPos;
+	DirectX::XMFLOAT3 target = DirectX::XMFLOAT3(0, 0, 0);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(target.x, target.y + 20.0f, target.z - 10.0f);
 
 	UpdatePosition(position);
 	UpdateTarget(target);
 
+	m_upVector = DirectX::XMFLOAT3(0.0f, 20.0f, 10.0f);
+	DirectX::XMStoreFloat3(&m_upVector, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_upVector)));
+
+	m_look = DirectX::XMFLOAT3(0.0f, -20.0f, 10.0f);
+	DirectX::XMStoreFloat3(&m_look, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_look)));
+
+	m_right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	DirectX::XMStoreFloat3(&m_right, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_right)));
+
 	// Projection data.
 	float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	UpdateAspectRatio(aspectRatio);
-	UpdateFieldOfView(3.141592f * 0.5f);
-	UpdateClippingPlanes(0.001f, 40.0f);
+	UpdateFieldOfView(3.141592f * 0.25f);
+	UpdateClippingPlanes(0.001f, 1000.0f);
 	UpdateViewMatrix();
 	UpdateProjectionMatrix();
 
-	GraphicsEngine::SetSceneViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+}
+
+void Camera::ResetCameraToLight()
+{
+	// Reset camera.
+	DirectX::XMFLOAT3 target = DirectX::XMFLOAT3(0, 0, 0);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(30.0f, 60.0f, 30.0f);
+
+	UpdatePosition(position);
+	UpdateTarget(target);
+
+	m_upVector = DirectX::XMFLOAT3(-30.0f, 60.0f, -30.0f);
+	DirectX::XMStoreFloat3(&m_upVector, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_upVector)));
+
+	m_look = DirectX::XMFLOAT3(-30.0f, -60.0f, -30.0f);
+	DirectX::XMStoreFloat3(&m_look, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_look)));
+
+	m_right = DirectX::XMFLOAT3(30.0f, 0.0f, -30.0f);
+	DirectX::XMStoreFloat3(&m_right, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_right)));
+
+	// Projection data.
+	float aspectRatio = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH / (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	UpdateAspectRatio(aspectRatio);
+	UpdateFieldOfView(3.141592f * 0.25f);
+	UpdateClippingPlanes(0.001f, 1000.0f);
+	UpdateViewMatrix();
+	UpdateProjectionMatrix();
+
+	GraphicsEngine::SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }

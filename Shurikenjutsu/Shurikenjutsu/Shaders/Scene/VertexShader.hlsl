@@ -4,6 +4,9 @@ cbuffer MatrixBuffer
 	matrix m_worldMatrix;
 	matrix m_viewMatrix;
 	matrix m_projectionMatrix;
+
+	matrix m_lightViewMatrix;
+	matrix m_lightProjectionMatrix;
 };
 
 // Fog calculation buffer.
@@ -13,6 +16,11 @@ cbuffer FogBuffer
 	float m_fogEnd;
 	float m_fogDensity;
 	float m_padding;
+};
+
+cbuffer LightBuffer
+{
+	float4 m_lightPosition;
 };
 
 // Vertex input.
@@ -33,8 +41,13 @@ struct Output
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
 
+	//float3x3 m_tBN : TBN;
+
 	float m_fogFactor : FOG;
 	float4 m_cameraPosition : CAMERA;
+
+	float4 m_lightPositionHomogenous : TEXCOORD1;
+	float3 m_lightPositionWorld : TEXCOORD2;
 };
 
 // Vertex shader
@@ -46,6 +59,10 @@ Output main(Input p_input)
 	output.m_positionWorld = p_input.m_positionWorld;
 	output.m_positionWorld.w = 1.0f;
 	output.m_positionWorld = mul(output.m_positionWorld, m_worldMatrix);
+
+	output.m_lightPositionWorld = p_input.m_positionWorld.xyz;
+	output.m_lightPositionHomogenous = p_input.m_positionWorld;
+	output.m_lightPositionHomogenous.w = 1.0f;
 
 	// Transform vertex position to homogenous clip space.
 	output.m_positionHomogenous = p_input.m_positionWorld;
@@ -61,14 +78,32 @@ Output main(Input p_input)
 	output.m_normal = p_input.m_normal;
 	output.m_normal = mul(output.m_normal, (float3x3)m_worldMatrix);
 
-	float4 cameraPosition;
-
 	// Calculate the camera position.
+	float4 cameraPosition;
 	cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
 	output.m_cameraPosition = cameraPosition;
 
+	// Pass on tangent.
 	output.m_tangent = p_input.m_tangent;
+
+	// Determine the light position based on the position of the light and the position of the vertex in the world.
+	output.m_lightPositionWorld = m_lightPosition.xyz - output.m_positionWorld.xyz;
+
+	// Normalize the light position vector.
+	output.m_lightPositionWorld = normalize(output.m_lightPositionWorld);
+
+	// Calculate the position of the vertice as viewed by the light source.
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
+
+	// Normalmap TBN matrix
+	/*float3 N = output.m_normal;
+	float3 T = normalize(output.m_tangent - dot(output.m_tangent, N)*N);
+	float3 B = cross(N, T);
+
+	output.m_tBN = float3x3(T, B, N);*/
 
 	// No fog.
 	output.m_fogFactor = 1.0f;

@@ -9,6 +9,7 @@
 #include "GraphicsEngine.h"
 #include "Camera.h"
 #include "Level.h"
+#include "Collisions.h"
 #include "Network.h"
 
 class PlayingStateTest :
@@ -25,10 +26,11 @@ public:
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:
+	void MeleeAttack();
+
 	PlayerManager m_playerManager;
 	ObjectManager m_objectManager;
 	Camera m_camera;
-//	std::vector<ShurikenReplica*> m_networkShurikens;
 };
 
 #endif PLAYINGSTATE

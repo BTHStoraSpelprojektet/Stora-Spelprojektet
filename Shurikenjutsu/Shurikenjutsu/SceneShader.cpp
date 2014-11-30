@@ -269,6 +269,17 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	sampler.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampler.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sampler.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+
+	// Create the shadow map sampler state.
+	if (FAILED(p_device->CreateSamplerState(&sampler, &m_samplerShadowMapState)))
+	{
+		ConsolePrintError("Failed to create scene shadow sampler state.");
+		return false;
+	}
+
 	// Create the matrix buffer description.
 	D3D11_BUFFER_DESC matrixBuffer;
 	matrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
@@ -301,6 +312,22 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	// Create the cbuffer where light data is stored
+	D3D11_BUFFER_DESC lightBuffer;
+	lightBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	lightBuffer.ByteWidth = sizeof(FrameBuffer);
+	lightBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	lightBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	lightBuffer.MiscFlags = 0;
+	lightBuffer.StructureByteStride = 0;
+
+	// Create the light buffer.
+	if (FAILED(p_device->CreateBuffer(&lightBuffer, NULL, &m_lightBuffer)))
+	{
+		ConsolePrintError("Failed to create scene light buffer.");
+		return false;
+	}
+
 	// Create the cbuffer where "every frame" data is stored
 	D3D11_BUFFER_DESC frameBuffer;
 	frameBuffer.Usage = D3D11_USAGE_DYNAMIC;
@@ -310,7 +337,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	frameBuffer.MiscFlags = 0;
 	frameBuffer.StructureByteStride = 0;
 
-	// Create the matrix buffer.
+	// Create the frame buffer.
 	if (FAILED(p_device->CreateBuffer(&frameBuffer, NULL, &m_frameBuffer)))
 	{
 		ConsolePrintError("Failed to create scene frame buffer.");
@@ -345,7 +372,9 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetShaderResources(1, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
+	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -367,7 +396,9 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetShaderResources(1, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
+	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -383,6 +414,17 @@ void SceneShader::UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, Dire
 {
 	m_viewMatrix = p_viewMatrix;
 	m_projectionMatrix = p_projectionMatrix;
+}
+
+void SceneShader::UpdateLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+{
+	m_lightViewMatrix = p_viewMatrix;
+	m_lightProjectionMatrix = p_projectionMatrix;
+}
+
+void SceneShader::UpdateShadowMap(ID3D11ShaderResourceView* p_shadowMap)
+{
+	m_shadowMap = p_shadowMap;
 }
 
 void SceneShader::UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity)
@@ -416,6 +458,9 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
 	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
 
+	DirectX::XMFLOAT4X4 lightViewMatrix = m_lightViewMatrix;
+	DirectX::XMFLOAT4X4 lightProjectionMatrix = m_lightProjectionMatrix;
+
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
@@ -432,10 +477,16 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
 	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
 
+	DirectX::XMStoreFloat4x4(&lightViewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightViewMatrix)));
+	DirectX::XMStoreFloat4x4(&lightProjectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightProjectionMatrix)));
+
 	// Set matrices in buffer.
 	matrixBuffer->m_worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix);
 	matrixBuffer->m_viewMatrix = DirectX::XMLoadFloat4x4(&viewMatrix);
 	matrixBuffer->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projectionMatrix);
+
+	matrixBuffer->m_lightViewMatrix = DirectX::XMLoadFloat4x4(&lightViewMatrix);
+	matrixBuffer->m_lightProjectionMatrix = DirectX::XMLoadFloat4x4(&lightProjectionMatrix);
 
 	// Unlock the matrix buffer after it has been written to.
 	p_context->Unmap(m_matrixBuffer, 0);
@@ -484,7 +535,7 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_frameBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map scene fog buffer.");
+		ConsolePrintError("Failed to map scene frame buffer.");
 	}
 
 	// Get a pointer to the data in the constant buffer.
@@ -499,4 +550,28 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 
 	// Set the position of the frame constant buffer in the vertex shader.
 	p_context->PSSetConstantBuffers(0, 1, &m_frameBuffer);
+}
+
+void SceneShader::UpdateLightBuffer(ID3D11DeviceContext* p_context, DirectX::XMFLOAT3 p_lightPosition)
+{
+	// Lock the light constant buffer so it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintError("Failed to map scene light buffer.");
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	LightBuffer* lightBuffer;
+	lightBuffer = (LightBuffer*)mappedBuffer.pData;
+
+	// Copy the fog information into the frame constant buffer.
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_lightPosition.x, p_lightPosition.y, p_lightPosition.z);;
+	lightBuffer->m_lightPosition = DirectX::XMLoadFloat3(&position);
+
+	// Unlock the constant buffer.
+	p_context->Unmap(m_lightBuffer, 0);
+
+	// Set the position of the frame constant buffer in the vertex shader.
+	p_context->VSSetConstantBuffers(2, 1, &m_lightBuffer);
 }

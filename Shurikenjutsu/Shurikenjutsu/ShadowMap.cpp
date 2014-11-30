@@ -137,7 +137,7 @@ void ShadowMap::SetAsRenderTarget(ID3D11DeviceContext* p_deviceContext)
 void ShadowMap::Clear(ID3D11DeviceContext* p_deviceContext)
 {
 	// Set color to clear the back buffer to.
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 	// Clear back and depth buffers.
 	p_deviceContext->ClearRenderTargetView(m_shadowMapTargetView, color);
