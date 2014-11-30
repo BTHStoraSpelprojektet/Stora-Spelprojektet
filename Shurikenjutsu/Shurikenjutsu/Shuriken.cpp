@@ -94,7 +94,7 @@ bool Shuriken::IsDead()
 	return (m_lifetime <= 0);
 }
 
-void Shuriken::AddNetworkShuriken(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_owner)
+void Shuriken::AddNetworkShuriken(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id)
 {
-	Network::UpdateShurikens( p_x,  p_y,  p_z,  p_dirX,  p_dirY,  p_dirZ, p_id, p_owner);
+	Network::AddShurikens( p_x,  p_y,  p_z,  p_dirX,  p_dirY,  p_dirZ, p_id);
 }

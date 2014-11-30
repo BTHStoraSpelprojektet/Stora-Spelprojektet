@@ -25,9 +25,8 @@
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include <vector>
-
 #include "ConsoleFunctions.h"
-
+#include "Shuriken.h"
 class Network
 {
 public:
@@ -43,12 +42,15 @@ public:
 	static void SendPlayerPos(float p_x, float p_y, float p_z);
 	static std::vector<PlayerNet> GetOtherPlayers();
 	static PlayerNet GetMyPlayer();
-	static void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_owner);
+	static void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID);
+	static std::vector <ShurikenNet> GetShurikens();
+	static std::vector < ShurikenNet > m_shurikensList;
 
 private:
 	Network() {};
 	static void ReceviePacket();
 	static void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
+	static void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid);
 
 	static RakNet::RakPeerInterface *m_clientPeer;
 	static RakNet::SocketDescriptor m_socketDesc;
@@ -59,6 +61,7 @@ private:
 	static int m_connectionCount;
 	static PlayerNet m_myPlayer;
 	static std::vector<PlayerNet> m_enemyPlayers;
+	
 	
 };
 

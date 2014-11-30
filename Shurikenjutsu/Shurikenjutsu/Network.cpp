@@ -107,7 +107,25 @@ void Network::ReceviePacket()
 		}
 		case ID_SHURIKEN_THROWN:
 		{
-			
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float x, y, z;
+			float dirX, dirY, dirZ;
+			unsigned int shurikenID;
+
+			bitStream.Read(messageID);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+			bitStream.Read(dirX);
+			bitStream.Read(dirY);
+			bitStream.Read(dirZ);
+			bitStream.Read(shurikenID);
+			bitStream.Read(guid);
+
+			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid);
+			UpdatePlayerPos(guid, x, y, z);
 			break;
 		}
 		default:
@@ -187,10 +205,10 @@ PlayerNet Network::GetMyPlayer()
 	return m_myPlayer;
 }
 
-void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_owner)
+void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID)
 {
 	RakNet::BitStream bitStream;
-
+	RakNet::RakNetGUID owner = m_clientPeer->GetMyGUID();
 	bitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
 	bitStream.Write(p_x);
 	bitStream.Write(p_y);
@@ -198,8 +216,30 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	bitStream.Write(p_dirX);
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
-	bitStream.Write(p_id);
-	bitStream.Write(p_owner);
+	bitStream.Write(p_shurikenID);
+	bitStream.Write(owner);
 	
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+}
+
+void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid)
+{
+	ShurikenNet tempShuriken;
+	tempShuriken = ShurikenNet();
+	tempShuriken.x = p_x;
+	tempShuriken.y = p_y;
+	tempShuriken.z = p_z;
+	tempShuriken.dirX = p_dirX;
+	tempShuriken.dirY = p_dirY;
+	tempShuriken.dirZ = p_dirZ;
+	tempShuriken.shurikenId = p_shurikenID;
+	tempShuriken.guid = p_guid;
+
+	m_shurikensList.push_back(tempShuriken);
+
+}
+
+std::vector<ShurikenNet> Network::GetShurikens()
+{
+	return m_shurikensList;
 }

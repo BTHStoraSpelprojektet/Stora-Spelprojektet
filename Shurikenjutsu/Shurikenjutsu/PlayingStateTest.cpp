@@ -44,6 +44,7 @@ void PlayingStateTest::Update(double p_deltaTime)
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPlayerPosition(), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
+		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f, 0.0f, 1.0f, 0);
 	}
 	
 	//m_networkShurikens = Network::GetShurikens();
@@ -138,10 +139,10 @@ void PlayingStateTest::MeleeAttack()
 
 	if (Collisions::MeleeAttackCollision(sphere, box, attackDirection))
 	{
-		std::cout << "Ouch!!!" << std::endl;
+		std::cout << "HIT" << std::endl;
 	}
 	else
 	{
-		std::cout << "Missed muthafocker!!! MUHAHAHAHAHAHA" << std::endl;
+		std::cout << "MISS" << std::endl;
 	}
 }

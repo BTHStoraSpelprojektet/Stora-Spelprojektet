@@ -131,18 +131,15 @@ void Server::ReceviePacket()
 			rBitStream.Read(dirZ);
 			rBitStream.Read(shurikenId);
 
-			// Can player move?
-			MovePlayer(m_packet->guid, x, y, z);
-
-			// Get player pos
-			PlayerNet player = GetPlayer(m_packet->guid);
-
 			RakNet::BitStream wBitStream;
-			wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
-			wBitStream.Write(player.guid);
-			wBitStream.Write(player.x);
-			wBitStream.Write(player.y);
-			wBitStream.Write(player.z);
+			wBitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
+			wBitStream.Write(x);
+			wBitStream.Write(y);
+			wBitStream.Write(z);
+			wBitStream.Write(dirX);
+			wBitStream.Write(dirY);
+			wBitStream.Write(dirZ);
+			wBitStream.Write(shurikenId);
 
 			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			break;

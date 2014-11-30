@@ -39,6 +39,8 @@ void ObjectManager::Update(double p_deltaTime)
 			i--;
 		}
 	}
+
+	std::vector<ShurikenNet> tempNetShurikens
 }
 
 void ObjectManager::Render()
@@ -69,11 +71,8 @@ void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 {
 	Shuriken tempShuriken;
 	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_speed);
-	tempShuriken.SetNetworkIDManager(&m_networkIDManger);
-	tempShuriken.SetNetworkID(tempShuriken.GetNetworkID());
-
+	tempShuriken.AddNetworkShuriken(p_pos.x, p_pos.y, p_pos.z, p_dir.x, p_dir.y, p_dir.z, 0);
 	m_shurikens.push_back(tempShuriken);
-
 }
 
 std::vector<Model> ObjectManager::GetListOfStaticModels() const
@@ -85,3 +84,5 @@ void ObjectManager::AddStaticModel(Model model)
 {
 	m_staticmodels.push_back(model);
 }
+
+
