@@ -151,12 +151,12 @@ void Network::ReceviePacket()
 			break;
 		}
 		default:
-			{
+		{
 			break;
-				}
-			}
+		}
 		}
 	}
+}
 
 bool Network::IsConnected()
 {

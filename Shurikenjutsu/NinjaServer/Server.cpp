@@ -88,7 +88,7 @@ void Server::ReceviePacket()
 		}
 		case ID_PLAYER_MOVED:
 		{
-			std::cout << "A player moved" << std::endl;
+			//std::cout << "A player moved" << std::endl;
 
 			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
 
