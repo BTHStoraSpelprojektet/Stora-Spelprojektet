@@ -9,7 +9,7 @@ DepthShader GraphicsEngine::m_depthShader;
 
 HWND* GraphicsEngine::m_windowHandle;
 
-ShadowMap GraphicsEngine::m_shadowMap;
+RenderTarget GraphicsEngine::m_shadowMap;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -55,7 +55,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Shadow map initialized successfully.");
 		ConsoleSkipLines(1);
 	}
-	
+
 	return result;
 }
 
@@ -141,12 +141,12 @@ void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix,
 
 void GraphicsEngine::SetShadowMap()
 {
-	if (m_shadowMap.GetShadowMap() == nullptr)
+	if (m_shadowMap.GetRenderTarget() == nullptr)
 	{
 		ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
 	}
 
-	m_sceneShader.UpdateShadowMap(m_shadowMap.GetShadowMap());
+	m_sceneShader.UpdateShadowMap(m_shadowMap.GetRenderTarget());
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
@@ -191,7 +191,7 @@ void GraphicsEngine::SetClearColor(float R, float G, float B, float p_opacity)
 
 ID3D11ShaderResourceView* GraphicsEngine::GetShadowMap()
 {
-	return m_shadowMap.GetShadowMap();
+	return m_shadowMap.GetRenderTarget();
 }
 
 std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)

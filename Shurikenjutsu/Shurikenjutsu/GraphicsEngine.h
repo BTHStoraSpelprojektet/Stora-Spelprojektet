@@ -6,7 +6,7 @@
 #include "InstancedShader.h"
 #include "GUIShader.h"
 #include "DepthShader.h"
-#include "ShadowMap.h"
+#include "RenderTarget.h"
 
 #include "Enumerations.h"
 #include "Globals.h"
@@ -64,6 +64,6 @@ private:
 
 	static HWND* m_windowHandle;
 
-	static ShadowMap m_shadowMap;
+	static RenderTarget m_shadowMap;
 };
 #endif;
