@@ -43,7 +43,7 @@ void ObjectManager::Update(double p_deltaTime)
 	std::vector<ShurikenNet> tempNetShurikens = Network::GetShurikens();
 	for (unsigned int i = 0; i < tempNetShurikens.size(); i++)
 	{
-		if (tempNetShurikens[i].guid != Network::GetMyGUID() && tempNetShurikens[i].shurikenId == 0)
+		if (tempNetShurikens[i].guid != Network::GetMyGUID())
 		{
 			AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), 10);
 		}

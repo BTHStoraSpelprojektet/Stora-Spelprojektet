@@ -22,7 +22,7 @@ bool PlayingStateTest::Initialize()
 
 	//Load level
 	Level level(&m_objectManager, "../Shurikenjutsu/Levels/testBana.SSPL");
-
+	GLOBAL::GetInstance().shurikenThrownID = 0;
 	return true;
 }
 
@@ -44,7 +44,8 @@ void PlayingStateTest::Update(double p_deltaTime)
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPlayerPosition(), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
-		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f, 0.0f, 1.0f, 0);
+		GLOBAL::GetInstance().shurikenThrownID += 1;
+		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f, 0.0f, 1.0f, GLOBAL::GetInstance().shurikenThrownID);
 	}
 	
 	//m_networkShurikens = Network::GetShurikens();
