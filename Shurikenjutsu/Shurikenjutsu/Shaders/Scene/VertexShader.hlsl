@@ -1,5 +1,5 @@
 // Matrix buffer.
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix m_worldMatrix;
 	matrix m_viewMatrix;
@@ -10,7 +10,7 @@ cbuffer MatrixBuffer
 };
 
 // Fog calculation buffer.
-cbuffer FogBuffer
+cbuffer FogBuffer : register(b1)
 {
 	float m_fogStart;
 	float m_fogEnd;

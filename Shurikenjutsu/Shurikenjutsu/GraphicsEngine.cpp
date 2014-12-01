@@ -1,20 +1,18 @@
 #include "GraphicsEngine.h"
 
 DirectXWrapper GraphicsEngine::m_directX;
-
 SceneShader GraphicsEngine::m_sceneShader;
 InstancedShader GraphicsEngine::m_instanceShader;
 GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
-
 HWND* GraphicsEngine::m_windowHandle;
-
 RenderTarget GraphicsEngine::m_shadowMap;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
 	bool result = true;
 	m_windowHandle = &p_handle;
+
 	// Initialize directX.
 	result = m_directX.Initialize(p_handle);
 	if (result)
