@@ -208,6 +208,8 @@ PlayerNet Server::GetPlayer(RakNet::RakNetGUID p_guid)
 			return m_players[i];
 		}
 	}
+
+	return PlayerNet();
 }
 
 void Server::RemovePlayer(RakNet::RakNetGUID p_guid)
