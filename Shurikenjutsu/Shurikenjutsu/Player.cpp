@@ -70,7 +70,7 @@ void Player::UpdateMe(double p_deltaTime)
 	DirectX::XMFLOAT3 tempFloat;
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
-	if (moved)
+	if (moved || Network::ConnectedNow())
 	{
 		SetMyPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
 	}
@@ -133,4 +133,14 @@ void Player::SetMyPosition(DirectX::XMFLOAT3 p_pos)
 void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	Object::SetPosition(p_pos);
+}
+
+RakNet::RakNetGUID Player::GetGuID()
+{
+	return m_guid;
+}
+
+void Player::SetGuID(RakNet::RakNetGUID p_guid)
+{
+	m_guid = p_guid;
 }

@@ -6,6 +6,7 @@ RakNet::Packet* Network::m_packet;
 
 bool Network::m_connected;
 bool Network::m_prevConnected;
+bool Network::m_newOrRemovedPlayers;
 int Network::m_connectionCount;
 PlayerNet Network::m_myPlayer;
 std::vector<PlayerNet> Network::m_enemyPlayers;
@@ -16,15 +17,16 @@ bool Network::Initialize()
 	ServerGlobals::IS_SERVER = false;
 	m_connected = false;
 	m_prevConnected = false;
+	m_newOrRemovedPlayers = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
-	
+
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 	m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
-
+	
 	return true;
 }
 
@@ -52,6 +54,12 @@ void Network::ReceviePacket()
 			ConsolePrintSuccess("Connected to the server");
 			
 			m_connected = true;
+
+			RakNet::BitStream bitStream;
+
+			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
+
+			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
 			break;
 		}
 		case ID_CONNECTION_ATTEMPT_FAILED:
@@ -59,26 +67,6 @@ void Network::ReceviePacket()
 			ConsolePrintFailed("Connection to server failed, trying to reconnect");
 
 			m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
-			break;
-		}
-		case ID_REPLICA_MANAGER_SERIALIZE:
-		{
-			std::cout << "Serialize in replica manager" << std::endl;
-			break;
-		}
-		case ID_REPLICA_MANAGER_CONSTRUCTION:
-		{
-			std::cout << "Constructed replica manager" << std::endl;
-			break;
-		}
-		case ID_REPLICA_MANAGER_DOWNLOAD_STARTED:
-		{
-			std::cout << "Replica manager started downloading objects " << std::endl;
-			break;
-		}
-		case ID_REPLICA_MANAGER_DOWNLOAD_COMPLETE:
-		{
-			std::cout << "Replica manager completed downloading objects" << std::endl;
 			break;
 		}
 		case ID_NR_CONNECTIONS:
@@ -91,8 +79,41 @@ void Network::ReceviePacket()
 			std::cout << m_connectionCount << " A new client connected or disconnected to the server" << std::endl;
 			break;
 		}
-		case ID_PLAYER_MOVED:
+		case ID_DOWNLOAD_PLAYERS:
 		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int nrOfPlayers = 0;
+			float x, y, z;
+			RakNet::RakNetGUID guid;
+			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
+			bitStream.Read(messageID);
+			bitStream.Read(nrOfPlayers);
+
+			for (int i = 0; i < nrOfPlayers; i++)
+		{
+				bitStream.Read(guid);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				// (Add and) update players position
+				UpdatePlayerPos(guid, x, y, z);
+
+				playerGuids.push_back(guid);				
+	}
+
+			// Check for removed players
+			CheckForRemovedPlayers(playerGuids);
+
+
+			m_newOrRemovedPlayers = true;
+
+			std::cout << "Downloaded new players" << std::endl;
+			break;
+		}
+		case ID_PLAYER_MOVED:
+	{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID guid;
@@ -130,12 +151,12 @@ void Network::ReceviePacket()
 			break;
 		}
 		default:
-		{
+			{
 			break;
-		}
+				}
+			}
 		}
 	}
-}
 
 bool Network::IsConnected()
 {
@@ -172,16 +193,18 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 	{
 		bool found = false;
 		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-		{
-			if (m_enemyPlayers[i].guid == p_owner)
 			{
-				found = true;
+			if (m_enemyPlayers[i].guid == p_owner)
+				{
 				m_enemyPlayers[i].x = p_x;
 				m_enemyPlayers[i].y = p_y;
 				m_enemyPlayers[i].z = p_z;
+
+				found = true;
 				break;
 			}
-		}
+				}
+
 		if (!found)
 		{
 			PlayerNet player;
@@ -189,12 +212,12 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 			player.x = p_x;
 			player.y = p_y;
 			player.z = p_z;
+
 			m_enemyPlayers.push_back(player);
-			std::cout << "New player added in the network list" << std::endl;
+			}
 		}
+
 	}
-	
-}
 
 std::vector<PlayerNet> Network::GetOtherPlayers()
 {
@@ -248,4 +271,38 @@ std::vector<ShurikenNet> Network::GetShurikens()
 RakNet::RakNetGUID Network::GetMyGUID()
 {
 	return m_clientPeer->GetMyGUID();
+}
+
+bool Network::IsPlayerListUpdated()
+{
+	return m_newOrRemovedPlayers;
+}
+
+void Network::SetHaveUpdatedPlayerList()
+{
+	m_newOrRemovedPlayers = false;
+}
+
+void Network::CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids)
+{
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (!(IsGuidInList(p_playerGuids, m_enemyPlayers[i].guid)))
+		{
+			m_enemyPlayers.erase(m_enemyPlayers.begin() + i);
+			i--;
+		}
+	}
+}
+
+bool Network::IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < p_playerGuids.size(); i++)
+	{
+		if (p_guid == p_playerGuids[i])
+		{
+			return true;
+		}
+	}
+	return false;
 }

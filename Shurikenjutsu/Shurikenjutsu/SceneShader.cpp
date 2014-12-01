@@ -312,22 +312,6 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
-	// Create the cbuffer where light data is stored
-	D3D11_BUFFER_DESC lightBuffer;
-	lightBuffer.Usage = D3D11_USAGE_DYNAMIC;
-	lightBuffer.ByteWidth = sizeof(FrameBuffer);
-	lightBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	lightBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	lightBuffer.MiscFlags = 0;
-	lightBuffer.StructureByteStride = 0;
-
-	// Create the light buffer.
-	if (FAILED(p_device->CreateBuffer(&lightBuffer, NULL, &m_lightBuffer)))
-	{
-		ConsolePrintError("Failed to create scene light buffer.");
-		return false;
-	}
-
 	// Create the cbuffer where "every frame" data is stored
 	D3D11_BUFFER_DESC frameBuffer;
 	frameBuffer.Usage = D3D11_USAGE_DYNAMIC;
@@ -372,7 +356,7 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetShaderResources(1, 1, &m_shadowMap);
+	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 
@@ -396,7 +380,7 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetShaderResources(1, 1, &m_shadowMap);
+	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 
@@ -550,28 +534,4 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 
 	// Set the position of the frame constant buffer in the vertex shader.
 	p_context->PSSetConstantBuffers(0, 1, &m_frameBuffer);
-}
-
-void SceneShader::UpdateLightBuffer(ID3D11DeviceContext* p_context, DirectX::XMFLOAT3 p_lightPosition)
-{
-	// Lock the light constant buffer so it can be written to.
-	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
-	if (FAILED(p_context->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
-	{
-		ConsolePrintError("Failed to map scene light buffer.");
-	}
-
-	// Get a pointer to the data in the constant buffer.
-	LightBuffer* lightBuffer;
-	lightBuffer = (LightBuffer*)mappedBuffer.pData;
-
-	// Copy the fog information into the frame constant buffer.
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_lightPosition.x, p_lightPosition.y, p_lightPosition.z);;
-	lightBuffer->m_lightPosition = DirectX::XMLoadFloat3(&position);
-
-	// Unlock the constant buffer.
-	p_context->Unmap(m_lightBuffer, 0);
-
-	// Set the position of the frame constant buffer in the vertex shader.
-	p_context->VSSetConstantBuffers(2, 1, &m_lightBuffer);
 }

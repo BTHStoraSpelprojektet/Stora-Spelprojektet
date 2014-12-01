@@ -24,12 +24,15 @@ public:
 	float GetAgility() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
 	void SetMyPosition(DirectX::XMFLOAT3 p_pos);
+	RakNet::RakNetGUID GetGuID();
+	void SetGuID(RakNet::RakNetGUID p_guid);
 private:
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	int m_spells; // antalet spells om det behövs - skapa lista
 	unsigned int m_health; // Player health
 	float m_agility; // Speed på attacker och rullning m.m
 	InputManager* m_inputManager;
+	RakNet::RakNetGUID m_guid;
 };
 
 #endif PLAYER

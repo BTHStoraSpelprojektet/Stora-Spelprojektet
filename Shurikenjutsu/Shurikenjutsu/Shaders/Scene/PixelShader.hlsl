@@ -28,7 +28,6 @@ struct Input
 	float4 m_cameraPosition : CAMERA;
 
 	float4 m_lightPositionHomogenous : TEXCOORD1;
-	float3 m_lightPositionWorld : TEXCOORD2;
 };
 
 // Pixel shader function.

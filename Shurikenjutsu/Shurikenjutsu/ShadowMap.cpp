@@ -128,7 +128,7 @@ void ShadowMap::SetAsRenderTarget(ID3D11DeviceContext* p_deviceContext)
 {
 	// Set pixel shader shadow map to NULL.
 	ID3D11ShaderResourceView* nullPointer = NULL;
-	p_deviceContext->PSSetShaderResources(1, 1, &nullPointer);
+	p_deviceContext->PSSetShaderResources(2, 1, &nullPointer);
 
 	// Bind the shadow map as the new render target.
 	p_deviceContext->OMSetRenderTargets(1, &m_shadowMapTargetView, m_depthStencilView);

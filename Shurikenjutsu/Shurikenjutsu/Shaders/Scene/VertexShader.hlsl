@@ -18,11 +18,6 @@ cbuffer FogBuffer
 	float m_padding;
 };
 
-cbuffer LightBuffer
-{
-	float4 m_lightPosition;
-};
-
 // Vertex input.
 struct Input
 {
@@ -47,7 +42,6 @@ struct Output
 	float4 m_cameraPosition : CAMERA;
 
 	float4 m_lightPositionHomogenous : TEXCOORD1;
-	float3 m_lightPositionWorld : TEXCOORD2;
 };
 
 // Vertex shader
@@ -60,7 +54,6 @@ Output main(Input p_input)
 	output.m_positionWorld.w = 1.0f;
 	output.m_positionWorld = mul(output.m_positionWorld, m_worldMatrix);
 
-	output.m_lightPositionWorld = p_input.m_positionWorld.xyz;
 	output.m_lightPositionHomogenous = p_input.m_positionWorld;
 	output.m_lightPositionHomogenous.w = 1.0f;
 
@@ -86,12 +79,6 @@ Output main(Input p_input)
 
 	// Pass on tangent.
 	output.m_tangent = p_input.m_tangent;
-
-	// Determine the light position based on the position of the light and the position of the vertex in the world.
-	output.m_lightPositionWorld = m_lightPosition.xyz - output.m_positionWorld.xyz;
-
-	// Normalize the light position vector.
-	output.m_lightPositionWorld = normalize(output.m_lightPositionWorld);
 
 	// Calculate the position of the vertice as viewed by the light source.
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);

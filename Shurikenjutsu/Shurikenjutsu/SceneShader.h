@@ -26,7 +26,6 @@ public:
 	void TurnOffBackFaceCulling(ID3D11DeviceContext* p_context);
 
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight);
-	void UpdateLightBuffer(ID3D11DeviceContext* p_context, DirectX::XMFLOAT3 p_lightPosition);
 	void UpdateShadowMap(ID3D11ShaderResourceView* p_shadowMap);
 
 private:
@@ -74,12 +73,6 @@ private:
 		float m_fogEnd;
 		float m_fogDensity;
 		float m_padding;
-	};
-
-	ID3D11Buffer* m_lightBuffer;
-	struct LightBuffer
-	{
-		DirectX::XMVECTOR m_lightPosition;
 	};
 
 	// Animation matrix buffer.
