@@ -27,12 +27,15 @@ public:
 
 	DirectX::XMFLOAT3 GetFacingDirection();
 	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);
+	DirectX::XMFLOAT3 GetAttackDirection();
+	void SetAttackDirection(DirectX::XMFLOAT3 p_attackDir);
 private:
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	int m_spells; // antalet spells om det behövs - skapa lista
 	unsigned int m_health; // Player health
 	float m_agility; // Speed på attacker och rullning m.m
 	InputManager* m_inputManager;
+	DirectX::XMFLOAT3 m_attackDir;
 };
 
 #endif PLAYER

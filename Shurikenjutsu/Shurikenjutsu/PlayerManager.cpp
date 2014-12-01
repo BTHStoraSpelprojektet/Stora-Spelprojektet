@@ -92,3 +92,11 @@ void PlayerManager::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
 {
 	m_player.SetFacingDirection(p_facingDirection);
 }
+DirectX::XMFLOAT3 PlayerManager::GetAttackDirection()
+{
+	return m_player.GetAttackDirection();
+}
+void PlayerManager::SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection)
+{
+	m_player.SetAttackDirection(p_attackDirection);
+}
