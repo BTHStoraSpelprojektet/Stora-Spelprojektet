@@ -57,7 +57,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	// Initialize the graphics engine.
 	GraphicsEngine::Initialize(m_window.GetHandle());
 	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
-	GraphicsEngine::SetSceneFog(0.0f, 100.0f, 0.01f);
+	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::TurnOffAlphaBlending();
 	GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 

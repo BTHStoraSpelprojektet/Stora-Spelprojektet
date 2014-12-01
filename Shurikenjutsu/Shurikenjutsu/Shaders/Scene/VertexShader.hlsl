@@ -93,10 +93,10 @@ Output main(Input p_input)
 	output.m_tBN = float3x3(T, B, N);*/
 
 	// No fog.
-	output.m_fogFactor = 1.0f;
+	//output.m_fogFactor = 1.0f;
 
 	// Calculate linear fog.    
-	//output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
+	output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
 
 	// Calculate exponential fog.    
 	//output.m_fogFactor = saturate(1.0 / pow(2.71828, (cameraPosition.z * m_fogDensity)));
