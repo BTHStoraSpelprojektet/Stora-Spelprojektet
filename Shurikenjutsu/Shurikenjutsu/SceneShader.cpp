@@ -356,7 +356,7 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetShaderResources(1, 1, &m_shadowMap);
+	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 
@@ -380,7 +380,7 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetShaderResources(1, 1, &m_shadowMap);
+	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 
