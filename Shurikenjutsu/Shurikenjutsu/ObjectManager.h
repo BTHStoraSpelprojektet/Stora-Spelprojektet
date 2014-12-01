@@ -1,8 +1,11 @@
 #ifndef OBJECTMANAGER_H_
 #define OBJECTMANAGER_H_
 
-#include "Shuriken.h"
+
+#define WIN32_LEAN_AND_MEAN
 #include <vector>
+#include "Shuriken.h"
+
 class ObjectManager
 {
 public:

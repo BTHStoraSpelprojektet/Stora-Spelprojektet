@@ -86,7 +86,7 @@ void Server::ReceviePacket()
 		}
 		case ID_PLAYER_MOVED:
 		{
-			//std::cout << "A player moved" << std::endl;
+			std::cout << "A player moved" << std::endl;
 
 			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
 
@@ -116,6 +116,7 @@ void Server::ReceviePacket()
 		}
 		case ID_SHURIKEN_THROWN:
 		{
+			std::cout << "Shuriken thrown \n";
 			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
 
 			rBitStream.Read(messageID);
@@ -142,6 +143,7 @@ void Server::ReceviePacket()
 			wBitStream.Write(shurikenId);
 
 			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			std::cout << "Shuriken thrown \n";
 			break;
 		}
 		default:

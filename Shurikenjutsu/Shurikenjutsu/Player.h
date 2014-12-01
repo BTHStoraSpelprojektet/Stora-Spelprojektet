@@ -1,7 +1,7 @@
 #ifndef PLAYER
 #define PLAYER
 
-#include "Network.h"
+#define WIN32_LEAN_AND_MEAN
 #include "MovingObject.h"
 #include "InputManager.h"
 

@@ -1,4 +1,7 @@
-#pragma once
+#ifndef OBJECT_H_
+#define OBJECT_H_
+
+#define WIN32_LEAN_AND_MEAN
 #include "Object.h"
 class MovingObject :
 	public Object
@@ -17,3 +20,4 @@ protected:
 	float m_speed;
 };
 
+#endif OBJECT_H_

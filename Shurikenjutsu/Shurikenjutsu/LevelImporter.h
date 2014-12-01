@@ -1,3 +1,7 @@
+#ifndef LEVELIMPORTER_H_
+#define LEVELIMPORTER_H_
+
+#define WIN32_LEAN_AND_MEAN
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -19,3 +23,5 @@ protected:
 	std::string m_level;
 	std::vector<std::vector<std::string>> levelData;
 };
+
+#endif LEVELIMPORTER_H_

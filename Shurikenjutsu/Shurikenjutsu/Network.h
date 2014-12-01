@@ -4,18 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <iostream>
-
-//#include "..\CommonLibs\RakNet\RakPeerInterface.h"
-//#include "..\CommonLibs\RakNet\NetworkIDManager.h"
-//
-//#include "..\CommonLibs\ServerGlobals.h"
-//#include "..\CommonLibs\ReplicaManager.h"
-//#include "..\CommonLibs\PlayerReplica.h"
-
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
-
-#include "..\CommonLibs\RakNet\RakPeerInterface.h"
-#include "..\CommonLibs\RakNet\RakNetTypes.h"
 #include "..\CommonLibs\RakNet\MessageIdentifiers.h"
 #include "..\CommonLibs\RakNet\GetTime.h"
 #include "..\CommonLibs\RakNet\NetworkIDManager.h"
@@ -26,7 +15,9 @@
 #include "..\CommonLibs\ServerMessages.h"
 #include <vector>
 #include "ConsoleFunctions.h"
-#include "Shuriken.h"
+
+#include "..\CommonLibs\RakNet\RakPeerInterface.h"
+#include "..\CommonLibs\RakNet\RakNetTypes.h"
 class Network
 {
 public:
@@ -45,6 +36,8 @@ public:
 	static void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID);
 	static std::vector <ShurikenNet> GetShurikens();
 	static std::vector < ShurikenNet > m_shurikensList;
+
+	static RakNet::RakNetGUID GetMyGUID();
 
 private:
 	Network() {};

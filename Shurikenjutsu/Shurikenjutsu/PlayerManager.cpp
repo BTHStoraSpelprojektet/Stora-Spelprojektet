@@ -34,7 +34,7 @@ void PlayerManager::Update(double p_deltaTime)
 			AddEnemy("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0, 0, -2.0f), DirectX::XMFLOAT3(0, 0, 0), 0.1f, 100, 5, 100, 20);
 		}
 
-		for (int i = 0; i < m_enemyList.size(); i++)
+		for (unsigned int i = 0; i < m_enemyList.size(); i++)
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 			m_enemyList[i].Update(p_deltaTime);

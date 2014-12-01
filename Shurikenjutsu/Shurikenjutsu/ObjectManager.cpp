@@ -40,7 +40,14 @@ void ObjectManager::Update(double p_deltaTime)
 		}
 	}
 
-	std::vector<ShurikenNet> tempNetShurikens
+	std::vector<ShurikenNet> tempNetShurikens = Network::GetShurikens();
+	for (unsigned int i = 0; i < tempNetShurikens.size(); i++)
+	{
+		if (tempNetShurikens[i].guid != Network::GetMyGUID() && tempNetShurikens[i].shurikenId == 0)
+		{
+			AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), 10);
+		}
+	}
 }
 
 void ObjectManager::Render()
@@ -71,7 +78,7 @@ void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 {
 	Shuriken tempShuriken;
 	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_speed);
-	tempShuriken.AddNetworkShuriken(p_pos.x, p_pos.y, p_pos.z, p_dir.x, p_dir.y, p_dir.z, 0);
+	//tempShuriken.AddNetworkShuriken(p_pos.x, p_pos.y, p_pos.z, p_dir.x, p_dir.y, p_dir.z, 0);
 	m_shurikens.push_back(tempShuriken);
 }
 

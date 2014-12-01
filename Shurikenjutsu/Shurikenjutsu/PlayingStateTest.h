@@ -1,8 +1,8 @@
 #ifndef PLAYINGSTATE
 #define PLAYINGSTATE
 
-#define WIN32_LEAN_AND_MEAN
 
+#define WIN32_LEAN_AND_MEAN
 #include "GameState.h"
 #include "PlayerManager.h"
 #include "ObjectManager.h"
@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "Level.h"
 #include "Collisions.h"
-#include "Network.h"
+
 
 class PlayingStateTest :
 	public GameState

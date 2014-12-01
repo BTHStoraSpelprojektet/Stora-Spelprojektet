@@ -1,3 +1,6 @@
+#ifndef LEVEL_H_
+#define LEVEL_H_
+
 #include <string>
 #include "ObjectManager.h"
 #include "LevelImporter.h"
@@ -13,3 +16,5 @@ protected:
 	int m_mapsizeX;
 	int m_mapsizeY;
 };
+
+#endif LEVEL_H_

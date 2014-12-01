@@ -1,12 +1,14 @@
 #ifndef SHURIKEN_H_
 #define SHURIKEN_H_
+
+#define WIN32_LEAN_AND_MEAN
 #include "MovingObject.h"
-#include "Network.h"
+
 
 
 const float ShurikenSpeed = 15.70f;
 
-class Shuriken : public MovingObject, public RakNet::NetworkIDObject
+class Shuriken : public MovingObject
 {
 public:
 	Shuriken();
@@ -39,4 +41,4 @@ private:
 	//ShurikenReplica* m_shurikenReplica;
 	
 };
-#endif
+#endif SHURIKEN_H_

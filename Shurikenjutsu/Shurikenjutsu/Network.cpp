@@ -9,6 +9,7 @@ bool Network::m_prevConnected;
 int Network::m_connectionCount;
 PlayerNet Network::m_myPlayer;
 std::vector<PlayerNet> Network::m_enemyPlayers;
+std::vector < ShurikenNet > Network::m_shurikensList;
 
 bool Network::Initialize()
 {
@@ -22,6 +23,7 @@ bool Network::Initialize()
 	m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 
 	m_enemyPlayers = std::vector<PlayerNet>();
+	m_shurikensList = std::vector<ShurikenNet>();
 
 	return true;
 }
@@ -125,7 +127,6 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 
 			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid);
-			UpdatePlayerPos(guid, x, y, z);
 			break;
 		}
 		default:
@@ -242,4 +243,9 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 std::vector<ShurikenNet> Network::GetShurikens()
 {
 	return m_shurikensList;
+}
+
+RakNet::RakNetGUID Network::GetMyGUID()
+{
+	return m_clientPeer->GetMyGUID();
 }
