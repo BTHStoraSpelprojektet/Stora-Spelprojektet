@@ -40,6 +40,7 @@ void PlayingStateTest::Update(double p_deltaTime)
 	{
 		MeleeAttack();
 	}
+
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		BasicPicking();
@@ -72,7 +73,7 @@ void PlayingStateTest::Render()
 {
 	m_playerManager.Render();
 
-	//Draw level objects
+	// Draw level objects
 	std::vector<Model> tempModelList = m_objectManager.GetListOfStaticModels();
 	for (unsigned int i = 0; i < tempModelList.size(); i++)
 	{
