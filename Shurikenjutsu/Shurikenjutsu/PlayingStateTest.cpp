@@ -40,10 +40,73 @@ void PlayingStateTest::Update(double p_deltaTime)
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		MeleeAttack();
+
+		
+		DirectX::XMFLOAT3 facingDir = m_playerManager.GetFacingDirection();
+		facingDir = DirectX::XMFLOAT3(facingDir.x, facingDir.y - (0.5f / (6.28)), facingDir.z);
+		std::cout << facingDir.y << std::endl;
+		m_playerManager.SetFacingDirection(facingDir);
 	}
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPlayerPosition(), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
+
+
+		DirectX::XMFLOAT3 facingDir = m_playerManager.GetFacingDirection();
+		facingDir = DirectX::XMFLOAT3(facingDir.x, facingDir.y + (0.5f/(6.28)), facingDir.z);
+		std::cout << facingDir.y << std::endl;
+		m_playerManager.SetFacingDirection(facingDir);
+
+		
+		/*if (m_playerManager.GetFacingDirection().y == 0)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 1.0f, 0));
+		}
+		else if (m_playerManager.GetFacingDirection().y == 1.0f)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 2.0f, 0));
+		}
+		else if (m_playerManager.GetFacingDirection().y == 2.0f)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 3.0f, 0));
+		}
+		else if (m_playerManager.GetFacingDirection().y == 3.0f)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 4.0f, 0));
+		}
+		else if (m_playerManager.GetFacingDirection().y == 2.0f)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 6.0f, 0));
+		}
+		else if (m_playerManager.GetFacingDirection().y == 6.0f)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 7.0f, 0));
+		}
+		else if (m_playerManager.GetFacingDirection().y == 7.0f)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 0.0f, 0));
+		}
+		if (m_playerManager.GetFacingDirection().x == 0 && m_playerManager.GetFacingDirection().z == 0)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(1.0f, 0, 0));
+		}
+		else if (m_playerManager.GetFacingDirection().x == 1 && m_playerManager.GetFacingDirection().z == 0)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0.0f, 1, 1.0f));
+		}
+		else if (m_playerManager.GetFacingDirection().x == 0 && m_playerManager.GetFacingDirection().z == 1.0f)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(-1.0f, 2, 0));
+		}
+		else if (m_playerManager.GetFacingDirection().x == -1.0f && m_playerManager.GetFacingDirection().z == 0)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 3, -1.0f));
+		}
+		else if (m_playerManager.GetFacingDirection().x == 0 && m_playerManager.GetFacingDirection().z == -1.0f)
+		{
+			m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(0, 4, 0));
+		}	
+		*/
 	}
 
 	m_objectManager.Update(p_deltaTime);
@@ -124,7 +187,7 @@ void PlayingStateTest::MeleeAttack()
 	m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x + box.m_extents.x, box.m_center.y + box.m_extents.y, box.m_center.z - box.m_extents.z), shurikenDir, 0.0f);
 	DirectX::XMFLOAT3 playerPos = m_playerManager.GetPlayerPosition();
 	Sphere sphere = Sphere(playerPos, 5.0f);
-	DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 attackDirection = m_playerManager.GetFacingDirection();
 
 	m_objectManager.AddShuriken(shurikenFile,
 		DirectX::XMFLOAT3(playerPos.x + attackDirection.x*sphere.m_radius,playerPos.y + attackDirection.y*sphere.m_radius,playerPos.z + attackDirection.z*sphere.m_radius),	shurikenDir, 0.0f);

@@ -134,3 +134,13 @@ void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	Object::SetPosition(p_pos);
 }
+
+
+DirectX::XMFLOAT3 Player::GetFacingDirection()
+{
+	return Object::GetRotation();
+}
+void Player::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
+{
+	Object::SetRotation(p_facingDirection);
+}

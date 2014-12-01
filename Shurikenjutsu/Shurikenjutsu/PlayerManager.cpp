@@ -72,3 +72,23 @@ DirectX::XMFLOAT3 PlayerManager::GetPlayerPosition()
 {
 	return m_player.GetPosition();
 }
+DirectX::XMFLOAT3 PlayerManager::GetPlayerDirection()
+{
+	return m_player.GetDirection();
+}
+void PlayerManager::SetPlayerDirection(DirectX::XMFLOAT3 p_direction)
+{
+	DirectX::XMVECTOR tempVector = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+	tempVector = DirectX::XMVector3Normalize(tempVector);
+	DirectX::XMFLOAT3 tempFloat;
+	DirectX::XMStoreFloat3(&tempFloat, tempVector);
+	m_player.SetDirection(tempFloat);
+}
+DirectX::XMFLOAT3 PlayerManager::GetFacingDirection()
+{
+	return m_player.GetFacingDirection();
+}
+void PlayerManager::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
+{
+	m_player.SetFacingDirection(p_facingDirection);
+}

@@ -24,6 +24,9 @@ public:
 	float GetAgility() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
 	void SetMyPosition(DirectX::XMFLOAT3 p_pos);
+
+	DirectX::XMFLOAT3 GetFacingDirection();
+	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);
 private:
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	int m_spells; // antalet spells om det behövs - skapa lista

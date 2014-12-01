@@ -14,6 +14,11 @@ public:
 	void Update(double p_deltaTime);
 	void Render();
 	DirectX::XMFLOAT3 GetPlayerPosition();
+	DirectX::XMFLOAT3 GetPlayerDirection();
+	void SetPlayerDirection(DirectX::XMFLOAT3 p_direction); 
+
+	DirectX::XMFLOAT3 GetFacingDirection();
+	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);
 private:
 	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
