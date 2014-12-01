@@ -57,26 +57,49 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 	{
 		Model model;
 		std::vector<std::string> temp = levelData.at(currentLineTemp);
+		bool isSpawnPoint = false;
+		int currentTeam;
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			if (currentLineTemp > 1){
 				std::string tmpStr = temp.at(currentWordTemp);
 				if (currentWordTemp == 0){
-					std::string filePathToModel = "";
-					filePathToModel.append("../Shurikenjutsu/Models/");
+
+					std::string objectName = "";
 					int pos = tmpStr.find('_');
 
 					if (pos == -1){
-						filePathToModel.append(tmpStr.substr(0, tmpStr.size() - 1));
+						objectName = tmpStr.substr(0, tmpStr.size() - 1);
 					}
 					else{
-						filePathToModel.append(tmpStr.substr(0, pos));
+						objectName = tmpStr.substr(0, pos);
 					}
-					filePathToModel.append("Shape.SSP");
 
-					std::cout << filePathToModel << "\n";
+					if (strcmp(objectName.c_str(), "spawnPoint") == 0){
+						isSpawnPoint = true;
+						if (m_print)
+						{
+							std::cout << objectName << " ";
+						}
+						std::string cTeam = tmpStr.substr(tmpStr.size()-2, 1);
+						currentTeam = atoi(cTeam.c_str());
+						if (m_print){
+							std::cout << "Team: " << cTeam << " | ";
+						}
+					}
+					else{
+						std::string filePathToModel = "";
+						filePathToModel.append("../Shurikenjutsu/Models/");
+						filePathToModel.append(objectName);
+						filePathToModel.append("Shape.SSP");
 
-					model.LoadModel(filePathToModel.c_str());
+						if (m_print)
+						{
+							std::cout << filePathToModel << "\n";
+						}
+
+						model.LoadModel(filePathToModel.c_str());
+					}
 
 				}
 
@@ -104,21 +127,45 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 					//TODO: Read rotation from file
 					//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 
-					DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
-					model.Rotate(rotation);
+					if (isSpawnPoint){
+						SpawnPoint spawnPoint;
+						spawnPoint.m_team = currentTeam;
+						spawnPoint.m_translationX = x;
+						spawnPoint.m_translationY = y;
+						spawnPoint.m_translationZ = z;
+						spawnPoint.m_rotationX = rotateX;
+						spawnPoint.m_rotationY = -rotateY;
+						spawnPoint.m_rotationZ = rotateZ;
+						m_spawnPoints.push_back(spawnPoint);
+						if (m_print)
+						{
+							std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ;
+						}
+					}
+					else{
+						DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
+						model.Rotate(rotation);
 
-					DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
-					model.Translate(translation);
+						DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
+						model.Translate(translation);
 
-					p_objectManager->AddStaticModel(model);
+						p_objectManager->AddStaticModel(model);
+					}
 				}
 
 			}
 		}
-		std::cout << "\n";
+		if (m_print)
+		{
+			std::cout << "\n";
+		}
 	}
 	levelData.clear();
 	return true;
+}
+
+std::vector<LevelImporter::SpawnPoint> LevelImporter::getSpawnPoints(){
+	return m_spawnPoints;
 }
 
 LevelImporter::~LevelImporter(){

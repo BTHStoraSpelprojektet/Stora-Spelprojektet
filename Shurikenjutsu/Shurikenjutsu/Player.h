@@ -29,6 +29,8 @@ public:
 	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);
 	DirectX::XMFLOAT3 GetAttackDirection();
 	void SetAttackDirection(DirectX::XMFLOAT3 p_attackDir);
+	RakNet::RakNetGUID GetGuID();
+	void SetGuID(RakNet::RakNetGUID p_guid);
 private:
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	int m_spells; // antalet spells om det behövs - skapa lista
@@ -36,6 +38,7 @@ private:
 	float m_agility; // Speed på attacker och rullning m.m
 	InputManager* m_inputManager;
 	DirectX::XMFLOAT3 m_attackDir;
+	RakNet::RakNetGUID m_guid;
 };
 
 #endif PLAYER

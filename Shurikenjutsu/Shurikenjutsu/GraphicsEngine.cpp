@@ -63,7 +63,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 
 void GraphicsEngine::Shutdown()
 {
-
+	m_shadowMap.Shutdown();
 }
 
 void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex, std::vector<DirectX::XMMATRIX> p_boneTransforms)
