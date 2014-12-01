@@ -31,4 +31,6 @@ protected:
 	std::vector<std::vector<std::string>> levelData;
 	
 	std::vector<SpawnPoint> m_spawnPoints;
+
+	bool m_print = false;
 };

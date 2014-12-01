@@ -77,10 +77,15 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 
 					if (strcmp(objectName.c_str(), "spawnPoint") == 0){
 						isSpawnPoint = true;
-						std::cout << objectName << " ";
+						if (m_print)
+						{
+							std::cout << objectName << " ";
+						}
 						std::string cTeam = tmpStr.substr(tmpStr.size()-2, 1);
 						currentTeam = atoi(cTeam.c_str());
-						std::cout << "Team: " << cTeam << " | ";
+						if (m_print){
+							std::cout << "Team: " << cTeam << " | ";
+						}
 					}
 					else{
 						std::string filePathToModel = "";
@@ -88,7 +93,10 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 						filePathToModel.append(objectName);
 						filePathToModel.append("Shape.SSP");
 
-						std::cout << filePathToModel << "\n";
+						if (m_print)
+						{
+							std::cout << filePathToModel << "\n";
+						}
 
 						model.LoadModel(filePathToModel.c_str());
 					}
@@ -129,7 +137,10 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 						spawnPoint.m_rotationY = -rotateY;
 						spawnPoint.m_rotationZ = rotateZ;
 						m_spawnPoints.push_back(spawnPoint);
-						std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ;
+						if (m_print)
+						{
+							std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ;
+						}
 					}
 					else{
 						DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
@@ -144,7 +155,10 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 
 			}
 		}
-		std::cout << "\n";
+		if (m_print)
+		{
+			std::cout << "\n";
+		}
 	}
 	levelData.clear();
 	return true;
