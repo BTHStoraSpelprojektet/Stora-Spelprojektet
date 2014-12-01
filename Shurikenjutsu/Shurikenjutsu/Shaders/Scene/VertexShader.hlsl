@@ -4,6 +4,9 @@ cbuffer MatrixBuffer
 	matrix m_worldMatrix;
 	matrix m_viewMatrix;
 	matrix m_projectionMatrix;
+
+	matrix m_lightViewMatrix;
+	matrix m_lightProjectionMatrix;
 };
 
 // Fog calculation buffer.
@@ -37,6 +40,8 @@ struct Output
 
 	float m_fogFactor : FOG;
 	float4 m_cameraPosition : CAMERA;
+
+	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
 // Vertex shader
@@ -48,6 +53,9 @@ Output main(Input p_input)
 	output.m_positionWorld = p_input.m_positionWorld;
 	output.m_positionWorld.w = 1.0f;
 	output.m_positionWorld = mul(output.m_positionWorld, m_worldMatrix);
+
+	output.m_lightPositionHomogenous = p_input.m_positionWorld;
+	output.m_lightPositionHomogenous.w = 1.0f;
 
 	// Transform vertex position to homogenous clip space.
 	output.m_positionHomogenous = p_input.m_positionWorld;
@@ -63,14 +71,19 @@ Output main(Input p_input)
 	output.m_normal = p_input.m_normal;
 	output.m_normal = mul(output.m_normal, (float3x3)m_worldMatrix);
 
-	float4 cameraPosition;
-
 	// Calculate the camera position.
+	float4 cameraPosition;
 	cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
 	output.m_cameraPosition = cameraPosition;
 
+	// Pass on tangent.
 	output.m_tangent = p_input.m_tangent;
+
+	// Calculate the position of the vertice as viewed by the light source.
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
 	// Normalmap TBN matrix
 	/*float3 N = output.m_normal;

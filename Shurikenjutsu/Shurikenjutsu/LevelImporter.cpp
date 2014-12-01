@@ -53,11 +53,11 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 		return false;
 	}
 	float x, y, z, rotateX, rotateY, rotateZ, rotateW;
-	for (int currentLineTemp = 0; currentLineTemp < levelData.size(); currentLineTemp++)
+	for (unsigned int currentLineTemp = 0; currentLineTemp < levelData.size(); currentLineTemp++)
 	{
 		Model model;
 		std::vector<std::string> temp = levelData.at(currentLineTemp);
-		for (int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
+		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			if (currentLineTemp > 1){
 				std::string tmpStr = temp.at(currentWordTemp);

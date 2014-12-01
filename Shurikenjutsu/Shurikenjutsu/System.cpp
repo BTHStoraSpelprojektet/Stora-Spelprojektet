@@ -2,10 +2,10 @@
 PlayingStateTest System::playingState;
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
-    bool result = true;
+	bool result = true;
 	playingState = PlayingStateTest();
 	//m_gameState = &m_playingState;
-	gameState = &System::playingState;
+	m_gameState = &System::playingState;
 
 	GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
 
@@ -68,16 +68,15 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
-
 	// Initialize current GameState
-	gameState->Initialize();
+	m_gameState->Initialize();
 
 	// Initialize the camera.
 	m_flyCamera = false;
-	
+
 	//Run all tests that are in the debug class
 	m_debug.RunTests(p_argc, p_argv);
-	
+
 	// Input: Register keys
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
@@ -89,13 +88,16 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
-	
+
 	// Initialize directional light
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.25f, 0.25f, 0.25f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
-	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f);
+	m_directionalLight.m_direction = DirectX::XMVectorSet(-1.0f, -2.0f, -1.0f, 0.0f);
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
+
+	m_lightCamera.Initialize();
+	m_lightCamera.ResetCameraToLight();
 
 	// Initialize network
 	Network::Initialize();
@@ -109,7 +111,7 @@ void System::Shutdown()
 	InputManager::GetInstance()->Shutdown();
 
 	//Shutdown current state
-	gameState->Shutdown();
+	m_gameState->Shutdown();
 
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
@@ -177,7 +179,7 @@ void System::Update()
 		}
 	}
 
-	gameState->Update(deltaTime);
+	m_gameState->Update(deltaTime);
 
 	// Update network
 	Network::Update();
@@ -192,29 +194,20 @@ void System::Update()
 // Render game scene here.
 void System::Render()
 {
-	// First we render depth to the shadow map.
-	RenderToShadowMap();
-	GraphicsEngine::ResetRenderTarget();
-
 	// Clear the scene to begin rendering.
 	GraphicsEngine::Clear();
-
+	
 	// Render Current GameState
-	gameState->Render();
+	m_gameState->Render();
 
 	// Start rendering alpha blended.
 	GraphicsEngine::TurnOnAlphaBlending();
 
-	gameState->RenderAlpha();
+	m_gameState->RenderAlpha();
 
 	// Stop rendering alpha blended.
 	GraphicsEngine::TurnOffAlphaBlending();
 
 	// Present the result.
 	GraphicsEngine::Present();
-}
-
-void System::RenderToShadowMap()
-{
-	GraphicsEngine::BeginRenderToShadowMap();
 }

@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 7
+Number of objects: 11
 Floor -0.276767 0 -0.282327 0 0 0 0
 DecoratedObject_1 0 0 10.4601 0 1.5708 0 0
 DecoratedObject_5 0 0 -12.1954 0 1.5708 0 0
@@ -7,3 +7,7 @@ DecoratedObject_2 8.52073 0 0 0 1.5708 0 0
 DecoratedObject_4 -7.28474 0 0 0 1.5708 0 0
 DecoratedObject_6 0 0 -19.4045 0 0.785398 0 0
 DecoratedObject_3 0 0 0 0 1.5708 0 0
+sakuraTree_alpha_1 -22.9073 0 18.095 0 0 0 0
+sakuraTree_alpha_2 4.73917 0 -23.0593 0 0 0 0
+pillar_1 -8.18833 0 -9.17788 0 0 0 0
+pillar_2 -5.22007 0 -9.17788 0 0 0 0

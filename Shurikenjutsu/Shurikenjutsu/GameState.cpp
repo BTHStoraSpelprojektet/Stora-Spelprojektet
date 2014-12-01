@@ -39,5 +39,3 @@ void GameState::ToggleFullscreen(bool p_fullscreen)
 {
 
 }
-
-

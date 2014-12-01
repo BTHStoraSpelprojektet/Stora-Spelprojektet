@@ -54,9 +54,17 @@ void ObjectManager::Update(double p_deltaTime)
 
 void ObjectManager::Render()
 {
-	//GraphicsEngine::Render(SHADERTYPE_INSTANCED, m_plane.GetMesh(), m_plane.GetVertexCount(), m_plane.GetWorldMatrix(), m_plane.GetTexture(), 0, m_plane.GetAnimation());
-	//GraphicsEngine::Render(SHADERTYPE_INSTANCED, m_object.GetMesh(), m_object.GetVertexCount(), m_object.GetWorldMatrix(), m_object.GetTexture(), 1, m_object.GetAnimation());
-	for (int i = 0; i < m_staticmodels.size(); i++)
+	GraphicsEngine::BeginRenderToShadowMap();
+
+	for (unsigned int i = 0; i < m_staticmodels.size(); i++)
+	{
+		GraphicsEngine::Render(SHADERTYPE_DEPTH, m_staticmodels[i].GetMesh(), m_staticmodels[i].GetVertexCount(), m_staticmodels[i].GetWorldMatrix(), m_staticmodels[i].GetTexture());
+	}
+
+	GraphicsEngine::SetShadowMap();
+	GraphicsEngine::ResetRenderTarget();
+
+	for (unsigned int i = 0; i < m_staticmodels.size(); i++)
 	{
 		GraphicsEngine::Render(SHADERTYPE_SCENE, m_staticmodels[i].GetMesh(), m_staticmodels[i].GetVertexCount(), m_staticmodels[i].GetWorldMatrix(), m_staticmodels[i].GetTexture(), m_staticmodels[i].GetNormalMap(), 0, m_staticmodels[i].GetAnimation());
 	}

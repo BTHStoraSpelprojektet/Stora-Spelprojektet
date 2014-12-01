@@ -53,7 +53,8 @@ private:
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
+	Camera m_lightCamera;
 	
-	GameState* gameState;
+	GameState* m_gameState;
 };
 #endif

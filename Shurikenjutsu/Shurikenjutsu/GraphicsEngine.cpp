@@ -6,6 +6,7 @@ DirectXWrapper GraphicsEngine::m_directX;
 
 SceneShader GraphicsEngine::m_sceneShader;
 InstancedShader GraphicsEngine::m_instanceShader;
+GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
 
 HWND* GraphicsEngine::m_windowHandle;
@@ -41,6 +42,8 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
+	m_GUIShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle);
+
 	// Initialize the depth buffer.
 	if (m_depthShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
 	{
@@ -60,7 +63,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 
 void GraphicsEngine::Shutdown()
 {
-
+	m_shadowMap.Shutdown();
 }
 
 void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex, std::vector<DirectX::XMMATRIX> p_boneTransforms)
@@ -111,13 +114,41 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 
 			break;
 		}
+
+		case(SHADERTYPE_DEPTH) :
+		{
+			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix);
+
+			break;
+		}
 	}
 }
-void GraphicsEngine::SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+
+void GraphicsEngine::RenderUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+{
+	m_GUIShader.Render(m_directX.GetContext(), p_worldMatrix, p_texture);
+}
+
+void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+}
+
+void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+{
+	m_sceneShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+}
+
+void GraphicsEngine::SetShadowMap()
+{
+	if (m_shadowMap.GetShadowMap() == nullptr)
+	{
+		ConsolePrintError("Shadow map is a null pointer.");
+	}
+
+	m_sceneShader.UpdateShadowMap(m_shadowMap.GetShadowMap());
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)

@@ -19,5 +19,6 @@ public:
 	static bool RayOBBCollision(Ray *p_ray, OBB p_OBB);
 	static bool OBBOBBCollision(OBB p_OBB1, OBB p_OBB2);
 	static bool OBBSphereCollision(OBB p_OBB, Sphere p_sphere);
+	static bool MeleeAttackCollision(Sphere p_sphere, Box p_box, DirectX::XMFLOAT3 p_direction);
 };
 

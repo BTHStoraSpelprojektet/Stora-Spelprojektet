@@ -4,6 +4,7 @@
 #include "DirectX.h"
 #include "SceneShader.h"
 #include "InstancedShader.h"
+#include "GUIShader.h"
 #include "DepthShader.h"
 #include "ShadowMap.h"
 
@@ -26,9 +27,14 @@ public:
 
 	static void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_numberOfInstances, std::vector<DirectX::XMMATRIX> p_boneTransforms);
 	static void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-	static void SetSceneViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
+	static void RenderUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+
+	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
+	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
 	static void SetSceneDirectionalLight(DirectionalLight& p_dLight);
+
+	static void SetShadowMap();
 
 	static void TurnOnAlphaBlending();
 	static void TurnOffAlphaBlending();
@@ -42,7 +48,7 @@ public:
 	static void BeginRenderToShadowMap();
 	static void ResetRenderTarget();
 
-	ID3D11ShaderResourceView* GetShadowMap();
+	static ID3D11ShaderResourceView* GetShadowMap();
 
 private:
 	GraphicsEngine(){};
@@ -53,6 +59,7 @@ private:
 
 	static SceneShader m_sceneShader;
 	static InstancedShader m_instanceShader;
+	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 
 	static HWND* m_windowHandle;

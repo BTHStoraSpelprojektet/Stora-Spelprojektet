@@ -9,6 +9,7 @@
 #include "GraphicsEngine.h"
 #include "Camera.h"
 #include "Level.h"
+#include "Collisions.h"
 
 class PlayingStateTest :
 	public GameState
@@ -24,6 +25,8 @@ public:
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:
+	void MeleeAttack();
+
 	PlayerManager m_playerManager;
 	ObjectManager m_objectManager;
 	Camera m_camera;

@@ -25,7 +25,7 @@ void PlayerManager::Shutdown()
 void PlayerManager::Update(double p_deltaTime)
 {
 	m_player.UpdateMe(p_deltaTime);
-	
+
 	if (Network::IsConnected())
 	{
 		std::vector<PlayerNet> enemyPlayers = Network::GetOtherPlayers();
@@ -69,7 +69,7 @@ void PlayerManager::Update(double p_deltaTime)
 			m_enemyList[i].Update(p_deltaTime);
 		}
 	}
-}
+		}
 
 void PlayerManager::Render()
 {

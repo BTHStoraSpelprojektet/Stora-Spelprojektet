@@ -128,7 +128,7 @@ void ShadowMap::SetAsRenderTarget(ID3D11DeviceContext* p_deviceContext)
 {
 	// Set pixel shader shadow map to NULL.
 	ID3D11ShaderResourceView* nullPointer = NULL;
-	p_deviceContext->PSSetShaderResources(1, 1, &nullPointer);
+	p_deviceContext->PSSetShaderResources(2, 1, &nullPointer);
 
 	// Bind the shadow map as the new render target.
 	p_deviceContext->OMSetRenderTargets(1, &m_shadowMapTargetView, m_depthStencilView);
@@ -137,7 +137,7 @@ void ShadowMap::SetAsRenderTarget(ID3D11DeviceContext* p_deviceContext)
 void ShadowMap::Clear(ID3D11DeviceContext* p_deviceContext)
 {
 	// Set color to clear the back buffer to.
-	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 	// Clear back and depth buffers.
 	p_deviceContext->ClearRenderTargetView(m_shadowMapTargetView, color);
