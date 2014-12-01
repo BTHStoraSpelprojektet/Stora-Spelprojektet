@@ -6,12 +6,12 @@ cbuffer FrameBuffer
 	DirectionalLight m_directionalLight;
 };
 
-Texture2D m_texture;
-Texture2D m_normalMap;
-Texture2D m_shadowMap;
+Texture2D m_texture : register(t0);
+Texture2D m_normalMap  : register(t1);
+Texture2D m_shadowMap : register(t2);
 
-SamplerState m_sampler;
-SamplerState m_samplerShadowMap;
+SamplerState m_sampler : register(s0);
+SamplerState m_samplerShadowMap  : register(s1);
 
 // Vertex structure.
 struct Input
