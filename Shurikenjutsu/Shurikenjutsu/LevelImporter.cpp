@@ -61,22 +61,33 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 		{
 			if (currentLineTemp > 1){
 				std::string tmpStr = temp.at(currentWordTemp);
+				bool isSpawnPoint = false;
 				if (currentWordTemp == 0){
-					std::string filePathToModel = "";
-					filePathToModel.append("../Shurikenjutsu/Models/");
+
+					std::string objectName = "";
 					int pos = tmpStr.find('_');
 
 					if (pos == -1){
-						filePathToModel.append(tmpStr.substr(0, tmpStr.size() - 1));
+						objectName = tmpStr.substr(0, tmpStr.size() - 1);
 					}
 					else{
-						filePathToModel.append(tmpStr.substr(0, pos));
+						objectName = tmpStr.substr(0, pos);
 					}
-					filePathToModel.append("Shape.SSP");
 
-					std::cout << filePathToModel << "\n";
+					if (strcmp(objectName.c_str(), "spawnPoint") == 0){
+						std::cout << objectName << "\n";
+						isSpawnPoint = true;
+					}
+					else{
+						std::string filePathToModel = "";
+						filePathToModel.append("../Shurikenjutsu/Models/");
+						filePathToModel.append(objectName);
+						filePathToModel.append("Shape.SSP");
 
-					model.LoadModel(filePathToModel.c_str());
+						std::cout << filePathToModel << "\n";
+
+						model.LoadModel(filePathToModel.c_str());
+					}
 
 				}
 
@@ -104,13 +115,22 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 					//TODO: Read rotation from file
 					//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 
-					DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
-					model.Rotate(rotation);
+					if (isSpawnPoint){
+						SpawnPoint spawnPoint;
+						spawnPoint.team = 0; ///FIX
+						spawnPoint.translation = DirectX::XMFLOAT3(x, y, -z);
+						spawnPoint.rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
+						m_spawnPoints.push_back(spawnPoint);
+					}
+					else{
+						DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
+						model.Rotate(rotation);
 
-					DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
-					model.Translate(translation);
+						DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
+						model.Translate(translation);
 
-					p_objectManager->AddStaticModel(model);
+						p_objectManager->AddStaticModel(model);
+					}
 				}
 
 			}
@@ -119,6 +139,10 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 	}
 	levelData.clear();
 	return true;
+}
+
+std::vector<LevelImporter::SpawnPoint> LevelImporter::getSpawnPoints(){
+	return m_spawnPoints;
 }
 
 LevelImporter::~LevelImporter(){
