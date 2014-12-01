@@ -5,7 +5,7 @@ Shuriken::Shuriken(){}
 
 Shuriken::~Shuriken(){}
 
-bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed)
+bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id)
 {
 	if (MovingObject::Initialize(p_filepath, p_pos, p_dir, p_speed))
 	{
@@ -14,6 +14,8 @@ bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Direc
 
 		return true;
 	}
+
+	m_shurikenID = p_id;
 
 	// Replica3Manager code, unused for now.
 	/*m_shurikenReplica = new ShurikenReplica();

@@ -20,7 +20,7 @@ public:
 
 	std::vector<Shuriken> GetListOfShurikens() const;
 	std::vector<Model> GetListOfStaticModels() const;
-	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed);
+	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id);
 
 	void AddStaticModel(Model model);
 private:
