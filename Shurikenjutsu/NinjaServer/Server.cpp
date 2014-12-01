@@ -61,13 +61,13 @@ void Server::ReceviePacket()
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 		{
 			std::cout << "A new connections has connected" << std::endl;
-			
-			
+
 			break;
 		}
 		case ID_DISCONNECTION_NOTIFICATION:
 		{
 			std::cout << "A client has disconnected" << std::endl;
+			RemovePlayer(m_packet->guid);
 			m_nrOfConnections--;
 
 			RakNet::BitStream bitStream;
@@ -77,11 +77,13 @@ void Server::ReceviePacket()
 
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
 			break;
 		}
 		case ID_CONNECTION_LOST:
 		{
 			std::cout << "A client lost the connection" << std::endl;
+			RemovePlayer(m_packet->guid);
 			break;
 		}
 		case ID_PLAYER_MOVED:
@@ -112,6 +114,11 @@ void Server::ReceviePacket()
 
 			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
+			break;
+		}
+		case ID_DOWNLOAD_PLAYERS:
+		{
+			BroadcastPlayers();
 			break;
 		}
 		default:
@@ -151,6 +158,11 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 		player.y = p_y;
 		player.z = p_z;
 		m_players.push_back(player);
+
+		std::cout << "Player added" << std::endl;
+
+		// Broadcast new player
+		BroadcastPlayers();
 	}
 }
 
@@ -163,4 +175,39 @@ PlayerNet Server::GetPlayer(RakNet::RakNetGUID p_guid)
 			return m_players[i];
 		}
 	}
+}
+
+void Server::RemovePlayer(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			m_players.erase(m_players.begin() + i);
+			i--;
+			std::cout << "Player removed" << std::endl;
+			BroadcastPlayers();
+			break;
+		}
+	}
+}
+
+void Server::BroadcastPlayers()
+{
+	int nrOfPlayers = m_players.size();
+
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
+	bitStream.Write(nrOfPlayers);
+
+	for (int i = 0; i < nrOfPlayers; i++)
+	{
+		bitStream.Write(m_players[i].guid);
+		bitStream.Write(m_players[i].x);
+		bitStream.Write(m_players[i].y);
+		bitStream.Write(m_players[i].z);
+	}
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

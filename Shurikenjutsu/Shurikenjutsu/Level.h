@@ -9,7 +9,9 @@ public:
 	~Level();
 
 	bool loadLevel(ObjectManager* p_objectManager, std::string p_level);
+	std::vector<LevelImporter::SpawnPoint> getSpawnPoints();
 protected:
 	int m_mapsizeX;
 	int m_mapsizeY;
+	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
 };

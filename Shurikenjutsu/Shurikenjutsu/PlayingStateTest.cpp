@@ -3,8 +3,8 @@
 
 PlayingStateTest::PlayingStateTest()
 {
+	twoPi = 6.28318530718;
 }
-
 
 PlayingStateTest::~PlayingStateTest()
 {
@@ -35,15 +35,16 @@ void PlayingStateTest::Shutdown()
 
 void PlayingStateTest::Update(double p_deltaTime)
 {
-
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		MeleeAttack();
 	}
+
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
-		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPlayerPosition(), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f);
+		BasicPicking();
+		CalculateFacingAngle();		
 	}
 
 	m_objectManager.Update(p_deltaTime);
@@ -124,10 +125,10 @@ void PlayingStateTest::MeleeAttack()
 	m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x + box.m_extents.x, box.m_center.y + box.m_extents.y, box.m_center.z - box.m_extents.z), shurikenDir, 0.0f);
 	DirectX::XMFLOAT3 playerPos = m_playerManager.GetPlayerPosition();
 	Sphere sphere = Sphere(playerPos, 5.0f);
-	DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 attackDirection = m_playerManager.GetAttackDirection();
 
-	m_objectManager.AddShuriken(shurikenFile,
-		DirectX::XMFLOAT3(playerPos.x + attackDirection.x*sphere.m_radius,playerPos.y + attackDirection.y*sphere.m_radius,playerPos.z + attackDirection.z*sphere.m_radius),	shurikenDir, 0.0f);
+	DirectX::XMFLOAT3 tempFloat = DirectX::XMFLOAT3(playerPos.x + attackDirection.x*sphere.m_radius, playerPos.y + attackDirection.y*sphere.m_radius, playerPos.z + attackDirection.z*sphere.m_radius);
+	m_objectManager.AddShuriken(shurikenFile, tempFloat, shurikenDir, 0.0f);
 
 	if (Collisions::MeleeAttackCollision(sphere, box, attackDirection))
 	{
@@ -137,4 +138,50 @@ void PlayingStateTest::MeleeAttack()
 	{
 		std::cout << "Missed muthafocker!!! MUHAHAHAHAHAHA" << std::endl;
 	}
+}
+
+void PlayingStateTest::BasicPicking()
+{
+	int mousePosX = InputManager::GetInstance()->GetMousePositionX();
+	int mousePosY = InputManager::GetInstance()->GetMousePositionY();
+
+	DirectX::XMFLOAT3 rayDir;
+	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	DirectX::XMFLOAT4X4 proj = m_camera.GetProjectionMatrix();
+	float viewSpaceX = (2.0f * (float)mousePosX / (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 1) / proj._11;
+	float viewSpaceY = -((2.0f * (float)mousePosY / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT - 1) / proj._22);
+	float viewSpaceZ = 1.0f;
+
+	rayDir = DirectX::XMFLOAT3(viewSpaceX, viewSpaceY, viewSpaceZ);
+
+	DirectX::XMFLOAT4X4 viewInverse;
+	DirectX::XMVECTOR determinant;
+	DirectX::XMStoreFloat4x4(&viewInverse, DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&m_camera.GetViewMatrix())));
+
+	DirectX::XMStoreFloat3(&rayPos,DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&rayPos), DirectX::XMLoadFloat4x4(&viewInverse)));
+	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&rayDir), DirectX::XMLoadFloat4x4(&viewInverse)));
+
+	float t = -rayPos.y / rayDir.y;
+
+	DirectX::XMFLOAT3 shurPos = DirectX::XMFLOAT3(rayPos.x + t*rayDir.x, rayPos.y + t*rayDir.y, rayPos.z + t*rayDir.z);
+	DirectX::XMFLOAT3 shurDir = DirectX::XMFLOAT3(-(m_playerManager.GetPlayerPosition().x - shurPos.x), -(m_playerManager.GetPlayerPosition().y - shurPos.y), -(m_playerManager.GetPlayerPosition().z - shurPos.z));
+	
+	m_playerManager.SetAttackDirection(NormalizeFloat3(NormalizeFloat3(shurDir)));
+}
+DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
+{
+	float t2 = sqrt(p_f.x * p_f.x + p_f.y * p_f.y + p_f.z * p_f.z);
+	return DirectX::XMFLOAT3(p_f.x / t2, p_f.y / t2, p_f.z/t2);
+}
+void PlayingStateTest::CalculateFacingAngle()
+{
+	DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f,0.0f,0.0f);
+	DirectX::XMFLOAT3 v2 = m_playerManager.GetAttackDirection();
+
+	float x = (v1.x * v2.z) - (v2.x * v1.z);
+	float y = (v1.x * v2.x) - (v1.z * v2.z);
+
+	float faceAngle = atan2(y, x) - 1.57079632679;
+	m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(m_playerManager.GetFacingDirection().x, faceAngle, m_playerManager.GetFacingDirection().z));
 }

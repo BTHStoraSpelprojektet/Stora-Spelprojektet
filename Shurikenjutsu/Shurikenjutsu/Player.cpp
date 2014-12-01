@@ -21,6 +21,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_spells = p_spells;
 	SetHealth(p_health);
 	SetAgility(p_agility);
+	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 
 	m_inputManager = InputManager::GetInstance();
 
@@ -70,7 +71,7 @@ void Player::UpdateMe(double p_deltaTime)
 	DirectX::XMFLOAT3 tempFloat;
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
-	if (moved)
+	if (moved || Network::ConnectedNow())
 	{
 		SetMyPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
 	}
@@ -133,4 +134,30 @@ void Player::SetMyPosition(DirectX::XMFLOAT3 p_pos)
 void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	Object::SetPosition(p_pos);
+}
+DirectX::XMFLOAT3 Player::GetFacingDirection()
+{
+	return Object::GetRotation();
+}
+void Player::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
+{
+	Object::SetRotation(p_facingDirection);
+}
+
+DirectX::XMFLOAT3 Player::GetAttackDirection()
+{
+	return m_attackDir;
+}
+void Player::SetAttackDirection(DirectX::XMFLOAT3 p_attackDir)
+{
+	m_attackDir = p_attackDir;
+}
+RakNet::RakNetGUID Player::GetGuID()
+{
+	return m_guid;
+}
+
+void Player::SetGuID(RakNet::RakNetGUID p_guid)
+{
+	m_guid = p_guid;
 }
