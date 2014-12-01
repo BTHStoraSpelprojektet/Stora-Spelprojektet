@@ -11,7 +11,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile depth vertex shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile depth vertex shader from file.");
 			return false;
 		}
 
@@ -29,7 +29,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the vertex shader.
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
-		ConsolePrintError("Failed to create depth vertex shader.");
+		ConsolePrintErrorAndQuit("Failed to create depth vertex shader.");
 		return false;
 	}
 
@@ -51,7 +51,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the vertex input layout.
 	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
 	{
-		ConsolePrintError("Failed to create depth vertex input layout.");
+		ConsolePrintErrorAndQuit("Failed to create depth vertex input layout.");
 		return false;
 	}
 
@@ -70,7 +70,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile depth pixel shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile depth pixel shader from file.");
 			return false;
 		}
 
@@ -88,7 +88,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the pixel shader.
 	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
 	{
-		ConsolePrintError("Failed to create depth pixel shader");
+		ConsolePrintErrorAndQuit("Failed to create depth pixel shader");
 		return false;
 	}
 
@@ -114,7 +114,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the back face culled rasterizer state.
 	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizer)))
 	{
-		ConsolePrintError("Failed to create depth rasterizer state.");
+		ConsolePrintErrorAndQuit("Failed to create depth rasterizer state.");
 		return false;
 	}
 
@@ -130,7 +130,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the matrix buffer.
 	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
 	{
-		ConsolePrintError("Failed to create depth matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to create depth matrix buffer.");
 		return false;
 	}
 
@@ -171,7 +171,7 @@ void DepthShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map depth matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to map depth matrix buffer.");
 	}
 
 	// Get pointer to the matrix buffer data.

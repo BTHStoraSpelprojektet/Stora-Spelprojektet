@@ -54,7 +54,7 @@ void Network::ReceviePacket()
 		}
 		case ID_CONNECTION_ATTEMPT_FAILED:
 		{
-			ConsolePrintFailed("Connection to server failed, trying to reconnect");
+			ConsolePrintError("Connection to server failed, trying to reconnect");
 
 			m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 			break;

@@ -21,7 +21,7 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	// Create the shadow map texture, if this fails an error message is displayed.
 	if (FAILED(p_device->CreateTexture2D(&textureDescription, NULL, &m_shadowMap)))
 	{
-		ConsolePrintError("Failed to create shadow map texture.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map texture.");
 		return false;
 	}
 
@@ -34,7 +34,7 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	// Create the shadow map target view, if this fails an error message is displayed.
 	if (FAILED(p_device->CreateRenderTargetView(m_shadowMap, &targetViewDescription, &m_shadowMapTargetView)))
 	{
-		ConsolePrintError("Failed to create shadow map render target.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map render target.");
 		return false;
 	}
 
@@ -48,7 +48,7 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	// Create the shadow map shader resource view, if this fails an error message is displayed.
 	if (FAILED(p_device->CreateShaderResourceView(m_shadowMap, &resourceViewDescription, &m_shadowMapResourceView)))
 	{
-		ConsolePrintError("Failed to create shadow map shader resource.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map shader resource.");
 		return false;
 	}
 
@@ -70,7 +70,7 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	// Create depth stencil texture. If this fails, display an error message.
 	if (FAILED(p_device->CreateTexture2D(&depthStencilDescription, NULL, &m_depthStencil)))
 	{
-		ConsolePrintError("Failed to create shadow map depth stencil.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map depth stencil.");
 		return false;
 	}
 
@@ -84,7 +84,7 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	// Create depth stencil view. If this fails, display an error message.
 	if (FAILED(p_device->CreateDepthStencilView(m_depthStencil, &depthStencilViewDescription, &m_depthStencilView)))
 	{
-		ConsolePrintError("Failed to create shadow map depth stencil view.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map depth stencil view.");
 		return false;
 	}
 

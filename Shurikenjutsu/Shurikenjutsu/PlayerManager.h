@@ -12,7 +12,7 @@ public:
 	bool Initialize();
 	void Shutdown();
 	void Update(double p_deltaTime);
-	void Render();
+	void Render(SHADERTYPE p_shader);
 	DirectX::XMFLOAT3 GetPlayerPosition();
 private:
 	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,

@@ -11,7 +11,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	{
 		if (FAILED(D3DCompileFromFile(L"InstancedVShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile instance vertex shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile instance vertex shader from file.");
 			return false;
 		}
 
@@ -29,7 +29,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	// Create the vertex shader.
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
-		ConsolePrintError("Failed to create instance vertex shader.");
+		ConsolePrintErrorAndQuit("Failed to create instance vertex shader.");
 		return false;
 	}
 
@@ -83,7 +83,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	// Create the vertex input layout.
 	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
 	{
-		ConsolePrintError("Failed to create instance vertex input layout.");
+		ConsolePrintErrorAndQuit("Failed to create instance vertex input layout.");
 		return false;
 	}
 
@@ -102,7 +102,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	{
 		if (FAILED(D3DCompileFromFile(L"InstancedPShader.hlsl", NULL, NULL, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile instance pixel shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile instance pixel shader from file.");
 			return false;
 		}
 
@@ -120,7 +120,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	// Create the pixel shader.
 	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
 	{
-		ConsolePrintError("Failed to create instance pixel shader.");
+		ConsolePrintErrorAndQuit("Failed to create instance pixel shader.");
 		return false;
 	}
 
@@ -146,7 +146,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	// Create the back face culled rasterizer state.
 	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateBackCulled)))
 	{
-		ConsolePrintError("Failed to create instance back face culled rasterrizer state.");
+		ConsolePrintErrorAndQuit("Failed to create instance back face culled rasterrizer state.");
 		return false;
 	}
 
@@ -155,7 +155,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	// Create the none culled rasterizer state.
 	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateNoneCulled)))
 	{
-		ConsolePrintError("Failed to create instance none culled rasterrizer state.");
+		ConsolePrintErrorAndQuit("Failed to create instance none culled rasterrizer state.");
 		return false;
 	}
 
@@ -180,7 +180,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	// Create the texture sampler state.
 	if (FAILED(p_device->CreateSamplerState(&sampler, &m_samplerState)))
 	{
-		ConsolePrintError("Failed to create instance sampler state.");
+		ConsolePrintErrorAndQuit("Failed to create instance sampler state.");
 		return false;
 	}
 	
@@ -196,7 +196,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	// Create the matrix buffer.
 	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
 	{
-		ConsolePrintError("Failed to create instance matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to create instance matrix buffer.");
 		return false;
 	}
 
@@ -213,7 +213,7 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	// Create the fog buffer.
 	if (FAILED(p_device->CreateBuffer(&fogBuffer, NULL, &m_fogBuffer)))
 	{
-		ConsolePrintError("Failed to create instance fog buffer.");
+		ConsolePrintErrorAndQuit("Failed to create instance fog buffer.");
 		return false;
 	}
 
@@ -265,7 +265,7 @@ void InstancedShader::UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fo
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_fogBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map instance fog buffer.");
+		ConsolePrintErrorAndQuit("Failed to map instance fog buffer.");
 	}
 
 	// Get a pointer to the data in the constant buffer.
@@ -294,7 +294,7 @@ void InstancedShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX:
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map instance matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to map instance matrix buffer.");
 	}
 
 	// Get pointer to the matrix buffer data.
@@ -359,7 +359,7 @@ ID3D11Buffer* InstancedShader::InitializeInstanceBuffer(ID3D11Device* p_device, 
 	// Create the Instance buffer.
 	if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
 	{
-		ConsolePrintError("Failed to create instance buffer.");
+		ConsolePrintErrorAndQuit("Failed to create instance buffer.");
 	}
 	return instanceBuffer;
 }

@@ -85,7 +85,7 @@ Output main(Input p_input)
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
-	// Normalmap TBN matrix
+	// Normalmap TBN matrix.
 	/*float3 N = output.m_normal;
 	float3 T = normalize(output.m_tangent - dot(output.m_tangent, N)*N);
 	float3 B = cross(N, T);

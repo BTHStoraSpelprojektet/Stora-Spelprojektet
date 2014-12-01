@@ -1,7 +1,5 @@
 #include "GraphicsEngine.h"
 
-//static std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
-
 DirectXWrapper GraphicsEngine::m_directX;
 
 SceneShader GraphicsEngine::m_sceneShader;
@@ -97,7 +95,7 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 
 		default:
 		{
-			ConsolePrintError("Invalid shader type passed to Render().");
+			ConsolePrintErrorAndQuit("Invalid shader type passed to Render().");
 
 			break;
 		}
@@ -145,7 +143,7 @@ void GraphicsEngine::SetShadowMap()
 {
 	if (m_shadowMap.GetShadowMap() == nullptr)
 	{
-		ConsolePrintError("Shadow map is a null pointer.");
+		ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
 	}
 
 	m_sceneShader.UpdateShadowMap(m_shadowMap.GetShadowMap());
@@ -223,7 +221,7 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 
 		default:
 		{
-			ConsolePrintError("Creating title from version failed.");
+			ConsolePrintErrorAndQuit("Creating title from version failed.");
 			return "ERROR";
 		}
 	}
@@ -254,7 +252,7 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 	{               
 		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(true, nullptr)))
 		{            
-			ConsolePrintError("Setting fullscreen mode failed.");
+			ConsolePrintErrorAndQuit("Setting fullscreen mode failed.");
 			return false;
 		}        
 
@@ -265,7 +263,7 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 	{        
 		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(false, nullptr)))
 		{
-			ConsolePrintError("Setting windowed mode failed.");
+			ConsolePrintErrorAndQuit("Setting windowed mode failed.");
 			return false;
 		}    
 		

@@ -14,8 +14,6 @@ bool ObjectManager::Initialize()
 	m_object.LoadModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
 	GraphicsEngine::AddInstanceBuffer(3);*/
 
-	
-
 	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
 
@@ -52,23 +50,18 @@ void ObjectManager::Update(double p_deltaTime)
 	}
 }
 
-void ObjectManager::Render()
+void ObjectManager::Render(SHADERTYPE p_shader)
 {
-	GraphicsEngine::BeginRenderToShadowMap();
-
 	for (unsigned int i = 0; i < m_staticmodels.size(); i++)
 	{
-		GraphicsEngine::Render(SHADERTYPE_DEPTH, m_staticmodels[i].GetMesh(), m_staticmodels[i].GetVertexCount(), m_staticmodels[i].GetWorldMatrix(), m_staticmodels[i].GetTexture());
+		GraphicsEngine::Render(p_shader, m_staticmodels[i].GetMesh(), m_staticmodels[i].GetVertexCount(), m_staticmodels[i].GetWorldMatrix(), m_staticmodels[i].GetTexture(), m_staticmodels[i].GetNormalMap(), 0, m_staticmodels[i].GetAnimation());
 	}
 
-	GraphicsEngine::SetShadowMap();
-	GraphicsEngine::ResetRenderTarget();
-
-	for (unsigned int i = 0; i < m_staticmodels.size(); i++)
+	// TODO, move this.
+	if (p_shader != SHADERTYPE_DEPTH)
 	{
-		GraphicsEngine::Render(SHADERTYPE_SCENE, m_staticmodels[i].GetMesh(), m_staticmodels[i].GetVertexCount(), m_staticmodels[i].GetWorldMatrix(), m_staticmodels[i].GetTexture(), m_staticmodels[i].GetNormalMap(), 0, m_staticmodels[i].GetAnimation());
+		GraphicsEngine::Render(SHADERTYPE_ANIMATED, m_animatedCharacter.GetMesh(), m_animatedCharacter.GetVertexCount(), m_animatedCharacter.GetWorldMatrix(), m_animatedCharacter.GetTexture(), m_animatedCharacter.GetNormalMap(), 0, m_animatedCharacter.GetAnimation());
 	}
-	GraphicsEngine::Render(SHADERTYPE_ANIMATED, m_animatedCharacter.GetMesh(), m_animatedCharacter.GetVertexCount(), m_animatedCharacter.GetWorldMatrix(), m_animatedCharacter.GetTexture(), m_animatedCharacter.GetNormalMap(), 0, m_animatedCharacter.GetAnimation());
 }
 
 std::vector<Shuriken> ObjectManager::GetListOfShurikens() const
