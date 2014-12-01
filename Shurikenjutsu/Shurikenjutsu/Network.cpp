@@ -45,73 +45,57 @@ void Network::ReceviePacket()
 	{
 		switch (m_packet->data[0])
 		{
-		case ID_CONNECTION_REQUEST_ACCEPTED:
-		{
-			ConsolePrintSuccess("Connected to the server");
-			
-			m_connected = true;
-			break;
-		}
-		case ID_CONNECTION_ATTEMPT_FAILED:
-		{
-			ConsolePrintError("Connection to server failed, trying to reconnect");
-
-			m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
-			break;
-		}
-		case ID_REPLICA_MANAGER_SERIALIZE:
-		{
-			std::cout << "Serialize in replica manager" << std::endl;
-			break;
-		}
-		case ID_REPLICA_MANAGER_CONSTRUCTION:
-		{
-			std::cout << "Constructed replica manager" << std::endl;
-			break;
-		}
-		case ID_REPLICA_MANAGER_DOWNLOAD_STARTED:
-		{
-			std::cout << "Replica manager started downloading objects " << std::endl;
-			break;
-	}
-		case ID_REPLICA_MANAGER_DOWNLOAD_COMPLETE:
-		{
-			std::cout << "Replica manager completed downloading objects" << std::endl;
-			break;
-}
-		case ID_NR_CONNECTIONS:
-{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			bitStream.Read(messageID);
-			bitStream.Read(m_connectionCount);
-
-			std::cout << m_connectionCount << " A new client connected or disconnected to the server" << std::endl;
-			break;
-		}
-		case ID_PLAYER_MOVED:
-	{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float x, y, z;
-
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-
-			UpdatePlayerPos(guid, x, y, z);
-			break;
-		}
-		default:
+			case ID_CONNECTION_REQUEST_ACCEPTED:
 			{
-			break;
-				}
+				ConsolePrintSuccess("Connected to the server");
+			
+				m_connected = true;
+				break;
+			}
+
+			case ID_CONNECTION_ATTEMPT_FAILED:
+			{
+				ConsolePrintError("Connection to server failed, trying to reconnect");
+
+				m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
+				break;
+			}
+
+			case ID_NR_CONNECTIONS:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				bitStream.Read(messageID);
+				bitStream.Read(m_connectionCount);
+
+				std::cout << m_connectionCount << " A new client connected or disconnected to the server" << std::endl;
+				break;
+			}
+
+			case ID_PLAYER_MOVED:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				float x, y, z;
+
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				UpdatePlayerPos(guid, x, y, z);
+				break;
+			}
+
+			default:
+			{
+				break;
 			}
 		}
 	}
+}
 
 bool Network::IsConnected()
 {
