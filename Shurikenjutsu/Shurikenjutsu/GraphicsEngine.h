@@ -49,6 +49,7 @@ public:
 	static void ResetRenderTarget();
 
 	static ID3D11ShaderResourceView* GetShadowMap();
+	static ID3D11ShaderResourceView* GetSceneShaderShadowMap();
 
 private:
 	GraphicsEngine(){};

@@ -535,3 +535,8 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 	// Set the position of the frame constant buffer in the vertex shader.
 	p_context->PSSetConstantBuffers(0, 1, &m_frameBuffer);
 }
+
+ID3D11ShaderResourceView* SceneShader::GetShadowMap()
+{
+	return m_shadowMap;
+}

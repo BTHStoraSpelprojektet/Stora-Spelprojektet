@@ -194,6 +194,11 @@ ID3D11ShaderResourceView* GraphicsEngine::GetShadowMap()
 	return m_shadowMap.GetRenderTarget();
 }
 
+ID3D11ShaderResourceView* GraphicsEngine::GetSceneShaderShadowMap()
+{
+	return m_sceneShader.GetShadowMap();
+}
+
 std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 {
 	switch (p_version)

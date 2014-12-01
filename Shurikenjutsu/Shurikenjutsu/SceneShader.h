@@ -28,6 +28,8 @@ public:
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight);
 	void UpdateShadowMap(ID3D11ShaderResourceView* p_shadowMap);
 
+	ID3D11ShaderResourceView* GetShadowMap();
+
 private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix);
 	void UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMMATRIX> p_boneTransforms);
