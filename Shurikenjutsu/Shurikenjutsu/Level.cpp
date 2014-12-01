@@ -11,9 +11,11 @@ bool Level::loadLevel(ObjectManager* p_objectManager, std::string p_level){
 
 	levelImporter.loadLevelFile();
 
+	bool loaded = levelImporter.readData(p_objectManager);
+
 	m_spawnPoints = levelImporter.getSpawnPoints();
 
-	return levelImporter.readData(p_objectManager);
+	return loaded;
 }
 
 std::vector<LevelImporter::SpawnPoint> Level::getSpawnPoints(){

@@ -10,9 +10,13 @@ class LevelImporter
 {
 public:
 	struct SpawnPoint{
-		int team;
-		DirectX::XMFLOAT3 translation;
-		DirectX::XMFLOAT3 rotation;
+		int m_team;
+		float m_translationX;
+		float m_translationY;
+		float m_translationZ;
+		float m_rotationX;
+		float m_rotationY;
+		float m_rotationZ;
 	};
 
 	LevelImporter::LevelImporter(ObjectManager* p_objectManager, std::string p_level);

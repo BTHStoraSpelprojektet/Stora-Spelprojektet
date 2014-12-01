@@ -57,11 +57,12 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 	{
 		Model model;
 		std::vector<std::string> temp = levelData.at(currentLineTemp);
+		bool isSpawnPoint = false;
+		int currentTeam;
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			if (currentLineTemp > 1){
 				std::string tmpStr = temp.at(currentWordTemp);
-				bool isSpawnPoint = false;
 				if (currentWordTemp == 0){
 
 					std::string objectName = "";
@@ -75,8 +76,11 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 					}
 
 					if (strcmp(objectName.c_str(), "spawnPoint") == 0){
-						std::cout << objectName << "\n";
 						isSpawnPoint = true;
+						std::cout << objectName << " ";
+						std::string cTeam = tmpStr.substr(tmpStr.size()-2, 1);
+						currentTeam = atoi(cTeam.c_str());
+						std::cout << "Team: " << cTeam << " | ";
 					}
 					else{
 						std::string filePathToModel = "";
@@ -117,10 +121,15 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 
 					if (isSpawnPoint){
 						SpawnPoint spawnPoint;
-						spawnPoint.team = 0; ///FIX
-						spawnPoint.translation = DirectX::XMFLOAT3(x, y, -z);
-						spawnPoint.rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
+						spawnPoint.m_team = currentTeam;
+						spawnPoint.m_translationX = x;
+						spawnPoint.m_translationY = y;
+						spawnPoint.m_translationZ = z;
+						spawnPoint.m_rotationX = rotateX;
+						spawnPoint.m_rotationY = -rotateY;
+						spawnPoint.m_rotationZ = rotateZ;
 						m_spawnPoints.push_back(spawnPoint);
+						std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ;
 					}
 					else{
 						DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
