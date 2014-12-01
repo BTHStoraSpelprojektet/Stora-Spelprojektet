@@ -39,18 +39,14 @@ void ObjectManager::Update(double p_deltaTime)
 			i--;
 		}
 	}
-
+	unsigned int storlek = m_shurikens.size();
 	std::vector<ShurikenNet> tempNetShurikens = Network::GetShurikens();
 	for (unsigned int i = 0; i < tempNetShurikens.size(); i++)
 	{
-		for (unsigned int j = 0; j < m_shurikens.size(); j++)
-		{
-			if (tempNetShurikens[i].guid != Network::GetMyGUID() && tempNetShurikens[i].shurikenId != m_shurikens[j].m_shurikenID)
+			if (!isShurikenInList(tempNetShurikens[i].guid, tempNetShurikens[i].shurikenId))
 			{
-				AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), 10, tempNetShurikens[i].shurikenId);
-			}
-		}
-		
+				AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), 10, tempNetShurikens[i].shurikenId, tempNetShurikens[i].guid);
+			}		
 	}
 }
 
@@ -78,10 +74,10 @@ std::vector<Shuriken> ObjectManager::GetListOfShurikens() const
 	return m_shurikens;
 }
 
-void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id)
+void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_guid)
 {
 	Shuriken tempShuriken;
-	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_speed, p_id);
+	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_speed, p_id, p_guid);
 	//tempShuriken.AddNetworkShuriken(p_pos.x, p_pos.y, p_pos.z, p_dir.x, p_dir.y, p_dir.z, 0);
 	m_shurikens.push_back(tempShuriken);
 }
@@ -96,4 +92,15 @@ void ObjectManager::AddStaticModel(Model model)
 	m_staticmodels.push_back(model);
 }
 
+bool ObjectManager::isShurikenInList(RakNet::RakNetGUID p_guid, unsigned int p_shurikenId)
+{
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		if (p_shurikenId == m_shurikens[i].m_shurikenID && p_guid == m_shurikens[i].m_guid)
+		{
+			return true;
+		}
+	}
 
+	return false;
+}

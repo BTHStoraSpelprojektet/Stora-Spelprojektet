@@ -14,7 +14,7 @@ public:
 	Shuriken();
 	~Shuriken();
 
-	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id);
+	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_guid);
 	void Shutdown();
 
 	void Update(double p_deltaTime);
@@ -34,6 +34,7 @@ public:
 
 	void AddNetworkShuriken(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id);
 
+	RakNet::RakNetGUID m_guid;
 	unsigned int m_shurikenID;
 private:
 	float m_lifetime;

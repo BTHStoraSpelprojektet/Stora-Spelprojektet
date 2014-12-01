@@ -259,6 +259,11 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 	tempShuriken.shurikenId = p_shurikenID;
 	tempShuriken.guid = p_guid;
 
+	/*for (unsigned int i = 0; i < m_shurikensList.size(); i++)
+	{
+		if (m_shurikensList[i].guid != tempShuriken.guid && m_shurikensList[i])
+	}*/
+
 	m_shurikensList.push_back(tempShuriken);
 
 }
