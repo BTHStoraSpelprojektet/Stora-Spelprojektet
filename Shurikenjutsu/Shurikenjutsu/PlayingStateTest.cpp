@@ -42,10 +42,10 @@ void PlayingStateTest::Update(double p_deltaTime)
 		MeleeAttack();
 	}
 	if (InputManager::GetInstance()->IsRightMouseClicked())
-	{
-		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPlayerPosition(), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 10.0f, GLOBAL::GetInstance().shurikenThrownID, Network::GetMyGUID());
-		GLOBAL::GetInstance().shurikenThrownID += 1;
-		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f, 0.0f, 1.0f, GLOBAL::GetInstance().shurikenThrownID);
+	{GLOBAL::GetInstance().shurikenThrownID += 1;
+		m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPlayerPosition(), DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), 10.0f, GLOBAL::GetInstance().shurikenThrownID, Network::GetMyGUID());
+		
+		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f, 0.0f, 0.0f, GLOBAL::GetInstance().shurikenThrownID);
 	}
 	
 	//m_networkShurikens = Network::GetShurikens();

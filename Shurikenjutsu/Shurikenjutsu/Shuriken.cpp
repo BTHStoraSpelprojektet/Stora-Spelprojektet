@@ -11,8 +11,10 @@ bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Direc
 	{
 		SetLifetime(2.0f);
 		SetDamage(10);
-
-		return true;
+	}
+	else
+	{
+		return false;
 	}
 
 	m_shurikenID = p_id;
@@ -30,7 +32,7 @@ bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Direc
 
 	// Create ID for the network on the object
 
-	return false;
+	return true;
 }
 
 void Shuriken::Shutdown()

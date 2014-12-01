@@ -241,13 +241,14 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
 	bitStream.Write(p_shurikenID);
-	bitStream.Write(owner);
+	//bitStream.Write(owner);
 	
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }
 
 void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid)
 {
+	bool addShuriken = true;
 	ShurikenNet tempShuriken;
 	tempShuriken = ShurikenNet();
 	tempShuriken.x = p_x;
@@ -259,13 +260,18 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 	tempShuriken.shurikenId = p_shurikenID;
 	tempShuriken.guid = p_guid;
 
-	/*for (unsigned int i = 0; i < m_shurikensList.size(); i++)
+	for (unsigned int i = 0; i < m_shurikensList.size(); i++)
 	{
-		if (m_shurikensList[i].guid != tempShuriken.guid && m_shurikensList[i])
-	}*/
-
-	m_shurikensList.push_back(tempShuriken);
-
+		if (m_shurikensList[i].guid == tempShuriken.guid && m_shurikensList[i].shurikenId == tempShuriken.shurikenId)
+		{
+			addShuriken = false;
+			break;
+		}
+	}
+	if (addShuriken)
+	{
+		m_shurikensList.push_back(tempShuriken);
+	}
 }
 
 std::vector<ShurikenNet> Network::GetShurikens()

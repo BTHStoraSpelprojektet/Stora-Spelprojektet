@@ -96,7 +96,7 @@ bool ObjectManager::isShurikenInList(RakNet::RakNetGUID p_guid, unsigned int p_s
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		if (p_shurikenId == m_shurikens[i].m_shurikenID && p_guid == m_shurikens[i].m_guid)
+		if (p_shurikenId == m_shurikens[i].m_shurikenID && Network::GetMyGUID() == Network::GetMyGUID())//m_shurikens[i].m_guid)
 		{
 			return true;
 		}

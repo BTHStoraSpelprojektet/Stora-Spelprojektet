@@ -138,7 +138,7 @@ void Server::ReceviePacket()
 			wBitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
 			wBitStream.Write(x);
 			wBitStream.Write(y);
-			wBitStream.Write(z);
+			wBitStream.Write(z); 
 			wBitStream.Write(dirX);
 			wBitStream.Write(dirY);
 			wBitStream.Write(dirZ);
