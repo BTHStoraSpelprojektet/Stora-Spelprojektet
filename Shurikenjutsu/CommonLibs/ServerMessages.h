@@ -13,6 +13,7 @@ struct PlayerNet
 enum Messages
 {
 	ID_NR_CONNECTIONS = ID_USER_PACKET_ENUM + 1,
+	ID_DOWNLOAD_PLAYERS,
 	ID_PLAYER_MOVED
 };
 

@@ -175,4 +175,3 @@ void Model::UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_
 								
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, matrix);
 }
-
