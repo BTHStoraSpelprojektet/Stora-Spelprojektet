@@ -26,6 +26,7 @@ public:
 
 private:
 	void MeleeAttack();
+	void BasicPicking();
 
 	PlayerManager m_playerManager;
 	ObjectManager m_objectManager;
