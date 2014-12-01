@@ -7,6 +7,7 @@ RakNet::Packet* Network::m_packet;
 bool Network::m_connected;
 bool Network::m_prevConnected;
 bool Network::m_newOrRemovedPlayers;
+bool Network::m_shurikenListUpdated;
 int Network::m_connectionCount;
 PlayerNet Network::m_myPlayer;
 std::vector<PlayerNet> Network::m_enemyPlayers;
@@ -18,6 +19,7 @@ bool Network::Initialize()
 	m_connected = false;
 	m_prevConnected = false;
 	m_newOrRemovedPlayers = false;
+	m_shurikenListUpdated = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 
@@ -150,6 +152,18 @@ void Network::ReceviePacket()
 			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid);
 			break;
 		}
+		case ID_SHURIKEN_REMOVE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int shurikenId;
+			bitStream.Read(messageID);
+			bitStream.Read(shurikenId);
+
+			RemoveShuriken(shurikenId);
+
+			break;
+		}
 		default:
 		{
 			break;
@@ -229,7 +243,7 @@ PlayerNet Network::GetMyPlayer()
 	return m_myPlayer;
 }
 
-void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID)
+void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ)
 {
 	RakNet::BitStream bitStream;
 	RakNet::RakNetGUID owner = m_clientPeer->GetMyGUID();
@@ -240,7 +254,7 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	bitStream.Write(p_dirX);
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
-	bitStream.Write(p_shurikenID);
+	//bitStream.Write(p_shurikenID);
 	//bitStream.Write(owner);
 	
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
@@ -271,6 +285,7 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 	if (addShuriken)
 	{
 		m_shurikensList.push_back(tempShuriken);
+		m_shurikenListUpdated = true;
 	}
 }
 
@@ -316,4 +331,27 @@ bool Network::IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet
 		}
 	}
 	return false;
+}
+
+void Network::RemoveShuriken(unsigned int p_shurikenID)
+{
+	for (unsigned int i = 0; i < m_shurikensList.size(); i++)
+	{
+		if (m_shurikensList[i].shurikenId == p_shurikenID)
+		{
+			m_shurikensList.erase(m_shurikensList.begin() + i);
+			m_shurikenListUpdated = true;
+			break;
+		}
+	}
+}
+
+bool Network::IsShurikenListUpdated()
+{
+	return m_shurikenListUpdated;
+}
+
+void Network::SetHaveUpdateShurikenList()
+{
+	m_shurikenListUpdated = false;
 }

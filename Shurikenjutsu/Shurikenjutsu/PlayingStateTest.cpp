@@ -45,7 +45,7 @@ void PlayingStateTest::Update(double p_deltaTime)
 	{
 		GLOBAL::GetInstance().shurikenThrownID += 1;
 		//m_objectManager.AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", m_playerManager.GetPlayerPosition(), DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f), 10.0f, GLOBAL::GetInstance().shurikenThrownID, Network::GetMyGUID());
-		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f, 0.0f, 0.0f, GLOBAL::GetInstance().shurikenThrownID);
+		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f, 0.0f, 0.0f);
 	}
 	
 	//m_networkShurikens = Network::GetShurikens();

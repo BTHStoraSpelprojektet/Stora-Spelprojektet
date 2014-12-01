@@ -20,7 +20,9 @@ bool Server::Initialize()
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
 	m_nrOfConnections = 0;
+	m_shurikenId = 0;
 	m_players = std::vector<PlayerNet>();
+	m_shurikens = std::vector<ShurikenNet>();
 
 	return true;
 }
@@ -31,9 +33,11 @@ void Server::Shutdown()
 	RakNet::RakPeerInterface::DestroyInstance(m_serverPeer);
 }
 
-void Server::Update()
+void Server::Update(double p_deltaTime)
 {
 	ReceviePacket();
+
+	UpdateShurikens(p_deltaTime);
 }
 
 void Server::ReceviePacket()
@@ -124,7 +128,6 @@ void Server::ReceviePacket()
 			rBitStream.Read(messageID);
 			float x, y, z;
 			float dirX, dirY, dirZ;
-			unsigned int shurikenId;
 
 			rBitStream.Read(x);
 			rBitStream.Read(y);
@@ -132,20 +135,8 @@ void Server::ReceviePacket()
 			rBitStream.Read(dirX);
 			rBitStream.Read(dirY);
 			rBitStream.Read(dirZ);
-			rBitStream.Read(shurikenId);
 
-			RakNet::BitStream wBitStream;
-			wBitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
-			wBitStream.Write(x);
-			wBitStream.Write(y);
-			wBitStream.Write(z); 
-			wBitStream.Write(dirX);
-			wBitStream.Write(dirY);
-			wBitStream.Write(dirZ);
-			wBitStream.Write(shurikenId);
-			wBitStream.Write(m_packet->guid);
-
-			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
 			break;
 		}
 		case ID_DOWNLOAD_PLAYERS:
@@ -244,4 +235,57 @@ void Server::BroadcastPlayers()
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)
+{
+	// Check if you can add shuriken
+	// Add code
+
+	// If true then add shuriken
+	ShurikenNet shuriken;
+	shuriken.x = p_posX;
+	shuriken.y = p_posY;
+	shuriken.z = p_posZ;
+	shuriken.dirX = p_dirX;
+	shuriken.dirY = p_dirY;
+	shuriken.dirZ = p_dirZ;
+	shuriken.shurikenId = m_shurikenId++;
+	shuriken.guid = p_guid;
+	shuriken.lifeTime = 2.0f;
+
+	m_shurikens.push_back(shuriken);
+
+	RakNet::BitStream wBitStream;
+	wBitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
+	wBitStream.Write(shuriken.x);
+	wBitStream.Write(shuriken.y);
+	wBitStream.Write(shuriken.z);
+	wBitStream.Write(shuriken.dirX);
+	wBitStream.Write(shuriken.dirY);
+	wBitStream.Write(shuriken.dirZ);
+	wBitStream.Write(shuriken.shurikenId);
+	wBitStream.Write(shuriken.guid);
+
+	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void Server::UpdateShurikens(double p_deltaTime)
+{
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		m_shurikens[i].lifeTime -= (float)p_deltaTime;
+		if (m_shurikens[i].lifeTime <= 0)
+		{
+			// Send removal of shuriken to clients
+			RakNet::BitStream bitStream;
+			bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
+			bitStream.Write(m_shurikens[i].shurikenId);
+
+			m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+			m_shurikens.erase(m_shurikens.begin() + i);
+			i--;
+		}
+	}
 }

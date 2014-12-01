@@ -5,7 +5,7 @@ Shuriken::Shuriken(){}
 
 Shuriken::~Shuriken(){}
 
-bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_guid)
+bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
 {
 	if (MovingObject::Initialize(p_filepath, p_pos, p_dir, p_speed))
 	{
@@ -17,8 +17,8 @@ bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Direc
 		return false;
 	}
 
-	m_shurikenID = p_id;
-	m_guid = p_guid;
+	m_shurikenID = p_shurikenID;
+
 	// Replica3Manager code, unused for now.
 	/*m_shurikenReplica = new ShurikenReplica();
 	m_shurikenReplica->SetPosition(GetPosition().x, GetPosition().y, GetPosition().z);
@@ -93,12 +93,7 @@ int Shuriken::GetDamage() const
 	return m_damage;
 }
 
-bool Shuriken::IsDead()
+unsigned int Shuriken::GetID()
 {
-	return (m_lifetime <= 0);
-}
-
-void Shuriken::AddNetworkShuriken(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id)
-{
-	Network::AddShurikens( p_x,  p_y,  p_z,  p_dirX,  p_dirY,  p_dirZ, p_id);
+	return m_shurikenID;
 }

@@ -20,7 +20,7 @@ public:
 
 	std::vector<Shuriken> GetListOfShurikens() const;
 	std::vector<Model> GetListOfStaticModels() const;
-	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_guid);
+	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);
 
 	void AddStaticModel(Model model);
 private:
@@ -31,8 +31,8 @@ private:
 
 	// unique ID for the network
 	RakNet::NetworkIDManager m_networkIDManger;
-	bool isShurikenInList(RakNet::RakNetGUID p_guid, unsigned int p_id);
-	
+	bool IsShurikenInList(unsigned int p_shurikenId);
+	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
 };
 
 #endif
