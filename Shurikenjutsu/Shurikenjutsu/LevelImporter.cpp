@@ -132,8 +132,8 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 						std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ;
 					}
 					else{
-						DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
-						model.Rotate(rotation);
+						DirectX::XMFLOAT3 rotation2 = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
+						model.Rotate(rotation2);
 
 						DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
 						model.Translate(translation);
