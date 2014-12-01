@@ -27,6 +27,7 @@ public:
 private:
 	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
+	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 
 	RakNet::RakPeerInterface *m_serverPeer;

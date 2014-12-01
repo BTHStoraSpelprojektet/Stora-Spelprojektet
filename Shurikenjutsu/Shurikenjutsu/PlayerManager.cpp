@@ -33,37 +33,37 @@ void PlayerManager::Update(double p_deltaTime)
 		// The player list have added or removed an object
 		if (Network::IsPlayerListUpdated())
 		{
-			std::cout << "Cheking enemyplayerlist for updates" << std::endl;
-			// Lägg till eller ta bort från listan?
-			// atm finns bara lägga till i servern
-			
+			// Add or remove an object
+
+			// Go through the list to see if any player needs to be removed
 			for (unsigned int i = 0; i < m_enemyList.size(); i++)
 			{
 				RakNet::RakNetGUID guid = m_enemyList[i].GetGuID();
 
-				//if (!(enemyPlayers.find(guid) == enemyPlayers.end()))
-				//{
-				//	// remove player
-				//	m_enemyList.erase(m_enemyList.begin() + i);
-				//	i--;
-				//	std::cout << "Removed enemy player in playermanager" << std::endl;
-				//}
+				if (!(IsGuidInNetworkList(guid)))
+				{
+					// Remove player
+					m_enemyList.erase(m_enemyList.begin() + i);
+					i--;
+					ConsolePrintText("Removed enemy player in playermanager");
+				}
 			}
 
+			// Go through the list to see if any new players need to be added
 			for (unsigned int i = 0; i < enemyPlayers.size(); i++)
 			{
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
 					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(0, 0, 0), 0.1f, 100, 5, 100, 20);
-					std::cout << "Added enemy player in playermanager" << std::endl;
+					ConsolePrintText("Added enemy player in playermanager");
 				}
 			}
 
 			Network::SetHaveUpdatedPlayerList();
 		}
 
-		for (int i = 0; i < m_enemyList.size(); i++)
+		for (unsigned int i = 0; i < m_enemyList.size(); i++)
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 			m_enemyList[i].Update(p_deltaTime);
@@ -108,6 +108,19 @@ bool PlayerManager::IsGuidInEnemyList(RakNet::RakNetGUID p_guid)
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
 		if (m_enemyList[i].GetGuID() == p_guid)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool PlayerManager::IsGuidInNetworkList(RakNet::RakNetGUID p_guid)
+{
+	std::vector<PlayerNet> enemyPlayers = Network::GetOtherPlayers();
+	for (unsigned int i = 0; i < enemyPlayers.size(); i++)
+	{
+		if (enemyPlayers[i].guid == p_guid)
 		{
 			return true;
 		}

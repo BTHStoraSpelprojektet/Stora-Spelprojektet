@@ -104,6 +104,7 @@ void Network::ReceviePacket()
 			int nrOfPlayers = 0;
 			float x, y, z;
 			RakNet::RakNetGUID guid;
+			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
 			bitStream.Read(messageID);
 			bitStream.Read(nrOfPlayers);
 
@@ -113,9 +114,16 @@ void Network::ReceviePacket()
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
-				
+
+				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
+
+				playerGuids.push_back(guid);				
 			}
+
+			// Check for removed players
+			CheckForRemovedPlayers(playerGuids);
+
 
 			m_newOrRemovedPlayers = true;
 
@@ -225,4 +233,28 @@ bool Network::IsPlayerListUpdated()
 void Network::SetHaveUpdatedPlayerList()
 {
 	m_newOrRemovedPlayers = false;
+}
+
+void Network::CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids)
+{
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (!(IsGuidInList(p_playerGuids, m_enemyPlayers[i].guid)))
+		{
+			m_enemyPlayers.erase(m_enemyPlayers.begin() + i);
+			i--;
+		}
+	}
+}
+
+bool Network::IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < p_playerGuids.size(); i++)
+	{
+		if (p_guid == p_playerGuids[i])
+		{
+			return true;
+		}
+	}
+	return false;
 }

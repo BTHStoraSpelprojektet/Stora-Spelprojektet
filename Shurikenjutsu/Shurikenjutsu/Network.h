@@ -50,6 +50,8 @@ private:
 	Network() {};
 	static void ReceviePacket();
 	static void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
+	static void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
+	static bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 
 	static RakNet::RakPeerInterface *m_clientPeer;
 	static RakNet::SocketDescriptor m_socketDesc;
