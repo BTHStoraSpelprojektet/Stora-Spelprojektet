@@ -1,4 +1,3 @@
-// Matrix buffer.
 cbuffer MatrixBuffer : register(b0)
 {
 	matrix m_worldMatrix;
@@ -9,14 +8,27 @@ cbuffer MatrixBuffer : register(b0)
 	matrix m_lightProjectionMatrix;
 };
 
-float4 main(float3 p_position : POSITION) : SV_POSITION
+cbuffer ColorBuffer : register(b3)
 {
-	float4 output = float4(p_position.xyz, 1.0f);
+	float4 m_color;
+};
 
-	// Transform vertex position to homogenous clip space.
-	output = mul(output, m_worldMatrix);
-	output = mul(output, m_viewMatrix);
-	output = mul(output, m_projectionMatrix);
+struct Output
+{
+	float4 m_position : SV_POSITION;
+	float4 m_color : COLOR;
+};
+
+Output main(float3 p_position : POSITION)
+{
+	Output output;
+	
+	output.m_position = float4(p_position.xyz, 1.0f);
+	output.m_position = mul(output.m_position, m_worldMatrix);
+	output.m_position = mul(output.m_position, m_viewMatrix);
+	output.m_position = mul(output.m_position, m_projectionMatrix);
+
+	output.m_color = m_color;
 
 	return output;
 }
