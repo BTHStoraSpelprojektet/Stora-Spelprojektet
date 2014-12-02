@@ -151,6 +151,7 @@ DirectX::XMFLOAT3 Player::GetAttackDirection()
 void Player::SetAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 {
 	m_attackDir = p_attackDir;
+	CalculateFacingAngle();
 }
 RakNet::RakNetGUID Player::GetGuID()
 {
@@ -160,4 +161,16 @@ RakNet::RakNetGUID Player::GetGuID()
 void Player::SetGuID(RakNet::RakNetGUID p_guid)
 {
 	m_guid = p_guid;
+}
+
+void Player::CalculateFacingAngle()
+{
+	DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 v2 = GetAttackDirection();
+
+	float x = (v1.x * v2.z) - (v2.x * v1.z);
+	float y = (v1.x * v2.x) - (v1.z * v2.z);
+
+	float faceAngle = atan2(y, x) - 1.57079632679f;
+	SetFacingDirection(DirectX::XMFLOAT3(GetFacingDirection().x, faceAngle, GetFacingDirection().z));
 }

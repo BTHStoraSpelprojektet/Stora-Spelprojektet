@@ -44,7 +44,7 @@ void PlayingStateTest::Update(double p_deltaTime)
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		BasicPicking();
-		CalculateFacingAngle();
+		//CalculateFacingAngle();
 		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
 	}
 
@@ -175,16 +175,4 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 {
 	float t2 = sqrt(p_f.x * p_f.x + p_f.y * p_f.y + p_f.z * p_f.z);
 	return DirectX::XMFLOAT3(p_f.x / t2, p_f.y / t2, p_f.z/t2);
-}
-
-void PlayingStateTest::CalculateFacingAngle()
-{
-	DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f,0.0f,0.0f);
-	DirectX::XMFLOAT3 v2 = m_playerManager.GetAttackDirection();
-
-	float x = (v1.x * v2.z) - (v2.x * v1.z);
-	float y = (v1.x * v2.x) - (v1.z * v2.z);
-
-	float faceAngle = atan2(y, x) - 1.57079632679f;
-	m_playerManager.SetFacingDirection(DirectX::XMFLOAT3(m_playerManager.GetFacingDirection().x, faceAngle, m_playerManager.GetFacingDirection().z));
 }
