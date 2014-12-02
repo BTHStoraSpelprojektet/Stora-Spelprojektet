@@ -97,13 +97,17 @@ void Server::ReceviePacket()
 
 			rBitStream.Read(messageID);
 			float x, y, z;
+			float dirX, dirY, dirZ;
 
 			rBitStream.Read(x);
 			rBitStream.Read(y);
 			rBitStream.Read(z);
+			rBitStream.Read(dirX);
+			rBitStream.Read(dirY);
+			rBitStream.Read(dirZ);
 
 			// Can player move?
-			MovePlayer(m_packet->guid, x, y, z);
+			MovePlayer(m_packet->guid, x, y, z, dirX, dirY, dirZ);
 
 			// Get player pos
 			PlayerNet player = GetPlayer(m_packet->guid);
@@ -114,6 +118,9 @@ void Server::ReceviePacket()
 			wBitStream.Write(player.x);
 			wBitStream.Write(player.y);
 			wBitStream.Write(player.z);
+			wBitStream.Write(player.dirX);
+			wBitStream.Write(player.dirY);
+			wBitStream.Write(player.dirZ);
 
 			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
@@ -148,7 +155,7 @@ void Server::ReceviePacket()
 	}
 }
 
-void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z)
+void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ)
 {
 
 
@@ -163,6 +170,9 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 			m_players[i].x = p_x;
 			m_players[i].y = p_y;
 			m_players[i].z = p_z;
+			m_players[i].dirX = p_dirX;
+			m_players[i].dirY = p_dirY;
+			m_players[i].dirZ = p_dirZ;
 
 			found = true;
 			break;
@@ -178,6 +188,9 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 		player.x = p_x;
 		player.y = p_y;
 		player.z = p_z;
+		player.dirX = p_dirX;
+		player.dirY = p_dirY;
+		player.dirZ = p_dirZ;
 		m_players.push_back(player);
 
 		std::cout << "Player added" << std::endl;
@@ -230,6 +243,9 @@ void Server::BroadcastPlayers()
 		bitStream.Write(m_players[i].x);
 		bitStream.Write(m_players[i].y);
 		bitStream.Write(m_players[i].z);
+		bitStream.Write(m_players[i].dirX);
+		bitStream.Write(m_players[i].dirY);
+		bitStream.Write(m_players[i].dirZ);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);

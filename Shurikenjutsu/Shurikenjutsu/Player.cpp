@@ -127,7 +127,8 @@ void Player::SetMyPosition(DirectX::XMFLOAT3 p_pos)
 	if (Network::IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
-		Network::SendPlayerPos(pos.x, pos.y, pos.z);
+		DirectX::XMFLOAT3 dir = GetAttackDirection();
+		Network::SendPlayerPos(pos.x, pos.y, pos.z, dir.x, dir.y, dir.z);
 	}
 }
 

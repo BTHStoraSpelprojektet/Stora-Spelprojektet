@@ -7,6 +7,7 @@
 struct PlayerNet
 {
 	float x, y, z;
+	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
 };
 
