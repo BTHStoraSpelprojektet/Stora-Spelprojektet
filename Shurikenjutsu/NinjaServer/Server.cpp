@@ -20,6 +20,7 @@ bool Server::Initialize()
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
 	m_nrOfConnections = 0;
+	m_shurikenSetTimeLeft = 2.0f;
 	m_players = std::vector<PlayerNet>();
 	m_shurikens = std::vector<ShurikenNet>();
 
@@ -266,7 +267,7 @@ void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, 
 	shuriken.dirZ = p_dirZ;
 	shuriken.shurikenId = GetShurikenUniqueId();
 	shuriken.guid = p_guid;
-	shuriken.lifeTime = 2.0f;
+	shuriken.lifeTime = m_shurikenSetTimeLeft;
 	shuriken.speed = 10.0f;
 	m_shurikens.push_back(shuriken);
 
@@ -289,8 +290,16 @@ void Server::UpdateShurikens(double p_deltaTime)
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		// Check if the time has run out for the shuriken and remove it
 		m_shurikens[i].lifeTime -= (float)p_deltaTime;
+
+		// Calculate the shurikens position
+		float lifeTime = m_shurikenSetTimeLeft - m_shurikens[i].lifeTime;
+		float newPosX = m_shurikens[i].x + m_shurikens[i].dirX * m_shurikens[i].speed * lifeTime;
+		float newPosY = m_shurikens[i].y + m_shurikens[i].dirY * m_shurikens[i].speed * lifeTime;
+		float newPosZ = m_shurikens[i].z + m_shurikens[i].dirZ * m_shurikens[i].speed * lifeTime;
+
+
+		// Check if the time has run out for the shuriken and remove it
 		if (m_shurikens[i].lifeTime <= 0)
 		{
 			// Send removal of shuriken to clients
