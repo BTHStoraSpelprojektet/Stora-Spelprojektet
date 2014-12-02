@@ -138,6 +138,7 @@ void Network::ReceviePacket()
 			float x, y, z;
 			float dirX, dirY, dirZ;
 			unsigned int shurikenID;
+			float speed;
 
 			bitStream.Read(messageID);
 			bitStream.Read(x);
@@ -148,8 +149,9 @@ void Network::ReceviePacket()
 			bitStream.Read(dirZ);
 			bitStream.Read(shurikenID);
 			bitStream.Read(guid);
+			bitStream.Read(speed);
 
-			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid);
+			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed);
 			break;
 		}
 		case ID_SHURIKEN_REMOVE:
@@ -260,7 +262,7 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }
 
-void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid)
+void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed)
 {
 	bool addShuriken = true;
 	ShurikenNet tempShuriken;
@@ -273,6 +275,7 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 	tempShuriken.dirZ = p_dirZ;
 	tempShuriken.shurikenId = p_shurikenID;
 	tempShuriken.guid = p_guid;
+	tempShuriken.speed = p_speed;
 
 	for (unsigned int i = 0; i < m_shurikensList.size(); i++)
 	{

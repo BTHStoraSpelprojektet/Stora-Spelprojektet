@@ -61,7 +61,7 @@ private:
 	static void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
 	static void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	static bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
-	static void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid);
+	static void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed);
 	static void RemoveShuriken(unsigned int p_shurikenID);
 
 	static RakNet::RakPeerInterface *m_clientPeer;

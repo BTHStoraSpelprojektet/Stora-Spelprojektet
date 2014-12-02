@@ -122,7 +122,6 @@ void Server::ReceviePacket()
 		}
 		case ID_SHURIKEN_THROWN:
 		{
-			std::cout << "Shuriken thrown \n";
 			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
 
 			rBitStream.Read(messageID);
@@ -253,6 +252,7 @@ void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, 
 	shuriken.shurikenId = m_shurikenId++;
 	shuriken.guid = p_guid;
 	shuriken.lifeTime = 2.0f;
+	shuriken.speed = 10.0f;
 
 	m_shurikens.push_back(shuriken);
 
@@ -266,6 +266,7 @@ void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, 
 	wBitStream.Write(shuriken.dirZ);
 	wBitStream.Write(shuriken.shurikenId);
 	wBitStream.Write(shuriken.guid);
+	wBitStream.Write(shuriken.speed);
 
 	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
@@ -274,6 +275,7 @@ void Server::UpdateShurikens(double p_deltaTime)
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
+		// Check if the time has run out for the shuriken and remove it
 		m_shurikens[i].lifeTime -= (float)p_deltaTime;
 		if (m_shurikens[i].lifeTime <= 0)
 		{

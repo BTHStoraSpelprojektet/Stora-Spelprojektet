@@ -17,6 +17,7 @@ struct ShurikenNet
 	unsigned int shurikenId;
 	RakNet::RakNetGUID guid;
 	float lifeTime;
+	float speed;
 };
 
 enum Messages
