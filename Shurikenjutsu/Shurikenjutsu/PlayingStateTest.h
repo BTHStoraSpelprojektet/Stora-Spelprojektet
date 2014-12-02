@@ -27,10 +27,15 @@ public:
 
 private:
 	void MeleeAttack();
+	void BasicPicking();
+	void CalculateFacingAngle();
+	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
 	PlayerManager m_playerManager;
 	ObjectManager m_objectManager;
 	Camera m_camera;
+
+	float twoPi;
 };
 
 #endif PLAYINGSTATE

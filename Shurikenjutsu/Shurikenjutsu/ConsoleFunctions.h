@@ -19,7 +19,7 @@ const static void ConsolePrintSuccess(std::string p_message)
 	}
 }
 
-const static void ConsolePrintError(std::string p_message)
+const static void ConsolePrintErrorAndQuit(std::string p_message)
 {
 	if (FLAG_DEBUG == 1)
 	{
@@ -40,7 +40,7 @@ const static void ConsolePrintError(std::string p_message)
 	}
 }
 
-const static void ConsolePrintFailed(std::string p_message)
+const static void ConsolePrintError(std::string p_message)
 {
 	if (FLAG_DEBUG == 1)
 	{
@@ -50,7 +50,7 @@ const static void ConsolePrintFailed(std::string p_message)
 
 		std::cout << "[FAILURE] : " << p_message << std::endl;
 
-		SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+		SetConsoleTextAttribute(console, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 	}
 }
 

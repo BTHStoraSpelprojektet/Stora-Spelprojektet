@@ -1,22 +1,18 @@
 #include "GraphicsEngine.h"
 
-//static std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
-
 DirectXWrapper GraphicsEngine::m_directX;
-
 SceneShader GraphicsEngine::m_sceneShader;
 InstancedShader GraphicsEngine::m_instanceShader;
 GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
-
 HWND* GraphicsEngine::m_windowHandle;
-
-ShadowMap GraphicsEngine::m_shadowMap;
+RenderTarget GraphicsEngine::m_shadowMap;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
 	bool result = true;
 	m_windowHandle = &p_handle;
+
 	// Initialize directX.
 	result = m_directX.Initialize(p_handle);
 	if (result)
@@ -57,7 +53,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Shadow map initialized successfully.");
 		ConsoleSkipLines(1);
 	}
-	
+
 	return result;
 }
 
@@ -97,7 +93,7 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 
 		default:
 		{
-			ConsolePrintError("Invalid shader type passed to Render().");
+			ConsolePrintErrorAndQuit("Invalid shader type passed to Render().");
 
 			break;
 		}
@@ -143,12 +139,12 @@ void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix,
 
 void GraphicsEngine::SetShadowMap()
 {
-	if (m_shadowMap.GetShadowMap() == nullptr)
+	if (m_shadowMap.GetRenderTarget() == nullptr)
 	{
-		ConsolePrintError("Shadow map is a null pointer.");
+		ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
 	}
 
-	m_sceneShader.UpdateShadowMap(m_shadowMap.GetShadowMap());
+	m_sceneShader.UpdateShadowMap(m_shadowMap.GetRenderTarget());
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
@@ -193,7 +189,12 @@ void GraphicsEngine::SetClearColor(float R, float G, float B, float p_opacity)
 
 ID3D11ShaderResourceView* GraphicsEngine::GetShadowMap()
 {
-	return m_shadowMap.GetShadowMap();
+	return m_shadowMap.GetRenderTarget();
+}
+
+ID3D11ShaderResourceView* GraphicsEngine::GetSceneShaderShadowMap()
+{
+	return m_sceneShader.GetShadowMap();
 }
 
 std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
@@ -223,7 +224,7 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 
 		default:
 		{
-			ConsolePrintError("Creating title from version failed.");
+			ConsolePrintErrorAndQuit("Creating title from version failed.");
 			return "ERROR";
 		}
 	}
@@ -254,7 +255,7 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 	{               
 		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(true, nullptr)))
 		{            
-			ConsolePrintError("Setting fullscreen mode failed.");
+			ConsolePrintErrorAndQuit("Setting fullscreen mode failed.");
 			return false;
 		}        
 
@@ -265,7 +266,7 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 	{        
 		if (FAILED(m_directX.GetSwapChain()->SetFullscreenState(false, nullptr)))
 		{
-			ConsolePrintError("Setting windowed mode failed.");
+			ConsolePrintErrorAndQuit("Setting windowed mode failed.");
 			return false;
 		}    
 		

@@ -1,6 +1,6 @@
-#include "ShadowMap.h"
+#include "RenderTarget.h"
 
-bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
+bool RenderTarget::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 {
 	// Initialize the shadow map texture desdcription, and clear memory.
 	D3D11_TEXTURE2D_DESC textureDescription;
@@ -19,9 +19,9 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	textureDescription.MiscFlags = 0;
 
 	// Create the shadow map texture, if this fails an error message is displayed.
-	if (FAILED(p_device->CreateTexture2D(&textureDescription, NULL, &m_shadowMap)))
+	if (FAILED(p_device->CreateTexture2D(&textureDescription, NULL, &m_renderTarget)))
 	{
-		ConsolePrintError("Failed to create shadow map texture.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map texture.");
 		return false;
 	}
 
@@ -32,9 +32,9 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	targetViewDescription.Texture2D.MipSlice = 0;
 
 	// Create the shadow map target view, if this fails an error message is displayed.
-	if (FAILED(p_device->CreateRenderTargetView(m_shadowMap, &targetViewDescription, &m_shadowMapTargetView)))
+	if (FAILED(p_device->CreateRenderTargetView(m_renderTarget, &targetViewDescription, &m_renderTargetView)))
 	{
-		ConsolePrintError("Failed to create shadow map render target.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map render target.");
 		return false;
 	}
 
@@ -46,9 +46,9 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	resourceViewDescription.Texture2D.MipLevels = 1;
 
 	// Create the shadow map shader resource view, if this fails an error message is displayed.
-	if (FAILED(p_device->CreateShaderResourceView(m_shadowMap, &resourceViewDescription, &m_shadowMapResourceView)))
+	if (FAILED(p_device->CreateShaderResourceView(m_renderTarget, &resourceViewDescription, &m_resourceView)))
 	{
-		ConsolePrintError("Failed to create shadow map shader resource.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map shader resource.");
 		return false;
 	}
 
@@ -70,7 +70,7 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	// Create depth stencil texture. If this fails, display an error message.
 	if (FAILED(p_device->CreateTexture2D(&depthStencilDescription, NULL, &m_depthStencil)))
 	{
-		ConsolePrintError("Failed to create shadow map depth stencil.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map depth stencil.");
 		return false;
 	}
 
@@ -84,31 +84,31 @@ bool ShadowMap::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	// Create depth stencil view. If this fails, display an error message.
 	if (FAILED(p_device->CreateDepthStencilView(m_depthStencil, &depthStencilViewDescription, &m_depthStencilView)))
 	{
-		ConsolePrintError("Failed to create shadow map depth stencil view.");
+		ConsolePrintErrorAndQuit("Failed to create shadow map depth stencil view.");
 		return false;
 	}
 
 	return true;
 }
 
-void ShadowMap::Shutdown()
+void RenderTarget::Shutdown()
 {
-	if (m_shadowMapResourceView)
+	if (m_resourceView)
 	{
-		m_shadowMapResourceView->Release();
-		m_shadowMapResourceView = 0;
+		m_resourceView->Release();
+		m_resourceView = 0;
 	}
 
-	if (m_shadowMapTargetView)
+	if (m_renderTargetView)
 	{
-		m_shadowMapTargetView->Release();
-		m_shadowMapTargetView = 0;
+		m_renderTargetView->Release();
+		m_renderTargetView = 0;
 	}
 
-	if (m_shadowMap)
+	if (m_renderTarget)
 	{
-		m_shadowMap->Release();
-		m_shadowMap = 0;
+		m_renderTarget->Release();
+		m_renderTarget = 0;
 	}
 
 	if (m_depthStencil)
@@ -124,27 +124,27 @@ void ShadowMap::Shutdown()
 	}
 }
 
-void ShadowMap::SetAsRenderTarget(ID3D11DeviceContext* p_deviceContext)
+void RenderTarget::SetAsRenderTarget(ID3D11DeviceContext* p_deviceContext)
 {
 	// Set pixel shader shadow map to NULL.
 	ID3D11ShaderResourceView* nullPointer = NULL;
 	p_deviceContext->PSSetShaderResources(2, 1, &nullPointer);
 
 	// Bind the shadow map as the new render target.
-	p_deviceContext->OMSetRenderTargets(1, &m_shadowMapTargetView, m_depthStencilView);
+	p_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 }
 
-void ShadowMap::Clear(ID3D11DeviceContext* p_deviceContext)
+void RenderTarget::Clear(ID3D11DeviceContext* p_deviceContext)
 {
 	// Set color to clear the back buffer to.
 	float color[4] = {0.0f, 0.0f, 0.0f, 1.0f};
 
 	// Clear back and depth buffers.
-	p_deviceContext->ClearRenderTargetView(m_shadowMapTargetView, color);
+	p_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
 	p_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-ID3D11ShaderResourceView* ShadowMap::GetShadowMap()
+ID3D11ShaderResourceView* RenderTarget::GetRenderTarget()
 {
-	return m_shadowMapResourceView;
+	return m_resourceView;
 }

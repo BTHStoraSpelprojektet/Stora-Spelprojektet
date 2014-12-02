@@ -12,7 +12,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile scene vertex shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
 			return false;
 		}
 
@@ -30,7 +30,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the vertex shader.
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
-		ConsolePrintError("Failed to create scene vertex shader.");
+		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
 		return false;
 	}
 
@@ -39,7 +39,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile scene animated vertex shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile scene animated vertex shader from file.");
 			return false;
 		}
 
@@ -57,7 +57,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the animated vertex shader.
 	if (FAILED(p_device->CreateVertexShader(animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), NULL, &m_animatedVertexShader)))
 	{
-		ConsolePrintError("Failed to create scene animated vertex shader.");
+		ConsolePrintErrorAndQuit("Failed to create scene animated vertex shader.");
 		return false;
 	}
 
@@ -103,7 +103,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the vertex input layout.
 	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
 	{
-		ConsolePrintError("Failed to create scene vertex input layout.");
+		ConsolePrintErrorAndQuit("Failed to create scene vertex input layout.");
 		return false;
 	}
 
@@ -165,7 +165,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the vertex input layout.
 	if (FAILED(p_device->CreateInputLayout(animationLayout, animationSize, animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), &m_animatedLayout)))
 	{
-		ConsolePrintError("Failed to create scene animated vertex input layout.");
+		ConsolePrintErrorAndQuit("Failed to create scene animated vertex input layout.");
 		return false;
 	}
 
@@ -187,7 +187,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile scene pixel shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile scene pixel shader from file.");
 			return false;
 		}
 
@@ -205,7 +205,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the pixel shader.
 	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
 	{
-		ConsolePrintError("Failed to create scene pixel shader");
+		ConsolePrintErrorAndQuit("Failed to create scene pixel shader");
 		return false;
 	}
 
@@ -231,7 +231,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the back face culled rasterizer state.
 	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateBackCulled)))
 	{
-		ConsolePrintError("Failed to create scene back face culled rasterrizer state.");
+		ConsolePrintErrorAndQuit("Failed to create scene back face culled rasterrizer state.");
 		return false;
 	}
 
@@ -240,7 +240,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the none culled rasterizer state.
 	if (FAILED(p_device->CreateRasterizerState(&rasterizer, &m_rasterizerStateNoneCulled)))
 	{
-		ConsolePrintError("Failed to create scene none culled rasterizer state.");
+		ConsolePrintErrorAndQuit("Failed to create scene none culled rasterizer state.");
 		return false;
 	}
 
@@ -265,7 +265,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the texture sampler state.
 	if (FAILED(p_device->CreateSamplerState(&sampler, &m_samplerState)))
 	{
-		ConsolePrintError("Failed to create scene sampler state.");
+		ConsolePrintErrorAndQuit("Failed to create scene sampler state.");
 		return false;
 	}
 
@@ -276,7 +276,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the shadow map sampler state.
 	if (FAILED(p_device->CreateSamplerState(&sampler, &m_samplerShadowMapState)))
 	{
-		ConsolePrintError("Failed to create scene shadow sampler state.");
+		ConsolePrintErrorAndQuit("Failed to create scene shadow sampler state.");
 		return false;
 	}
 
@@ -292,7 +292,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the matrix buffer.
 	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
 	{
-		ConsolePrintError("Failed to create scene matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to create scene matrix buffer.");
 		return false;
 	}
 
@@ -308,7 +308,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the fog buffer.
 	if (FAILED(p_device->CreateBuffer(&fogBuffer, NULL, &m_fogBuffer)))
 	{
-		ConsolePrintError("Failed to create scene fog buffer.");
+		ConsolePrintErrorAndQuit("Failed to create scene fog buffer.");
 		return false;
 	}
 
@@ -324,7 +324,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the frame buffer.
 	if (FAILED(p_device->CreateBuffer(&frameBuffer, NULL, &m_frameBuffer)))
 	{
-		ConsolePrintError("Failed to create scene frame buffer.");
+		ConsolePrintErrorAndQuit("Failed to create scene frame buffer.");
 		return false;
 	}
 
@@ -340,7 +340,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Create the animated matrix buffer.
 	if (FAILED(p_device->CreateBuffer(&animatedMatrixBuffer, NULL, &m_animationMatrixBuffer)))
 	{
-		ConsolePrintError("Failed to create scene animated buffer.");
+		ConsolePrintErrorAndQuit("Failed to create scene animated buffer.");
 		return false;
 	}
 
@@ -417,7 +417,7 @@ void SceneShader::UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogSta
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_fogBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map scene fog buffer.");
+		ConsolePrintErrorAndQuit("Failed to map scene fog buffer.");
 	}
 
 	// Get a pointer to the data in the constant buffer.
@@ -449,7 +449,7 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map scene matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to map scene matrix buffer.");
 	}
 
 	// Get pointer to the matrix buffer data.
@@ -485,7 +485,7 @@ void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vect
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_animationMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map scene animated matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to map scene animated matrix buffer.");
 	}
 
 	// Get pointer to the matrix buffer data.
@@ -519,7 +519,7 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_frameBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map scene frame buffer.");
+		ConsolePrintErrorAndQuit("Failed to map scene frame buffer.");
 	}
 
 	// Get a pointer to the data in the constant buffer.
@@ -534,4 +534,9 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 
 	// Set the position of the frame constant buffer in the vertex shader.
 	p_context->PSSetConstantBuffers(0, 1, &m_frameBuffer);
+}
+
+ID3D11ShaderResourceView* SceneShader::GetShadowMap()
+{
+	return m_shadowMap;
 }

@@ -100,6 +100,12 @@
     <Filter Include="Shaders\GUI">
       <UniqueIdentifier>{e1b0cabd-87fb-488e-8f37-545216a64ab1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Levels">
+      <UniqueIdentifier>{5d0ac21a-8e64-485b-8c3e-f4551ea10ade}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Levels">
+      <UniqueIdentifier>{87f6fab0-c446-4d64-a712-31172b192dad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -192,14 +198,14 @@
     <ClCompile Include="Network.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="ShadowMap.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Level.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Levels</Filter>
     </ClCompile>
     <ClCompile Include="LevelImporter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -305,14 +311,14 @@
     <ClInclude Include="GUIShader.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="ShadowMap.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Level.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Levels</Filter>
     </ClInclude>
     <ClInclude Include="LevelImporter.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTarget.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

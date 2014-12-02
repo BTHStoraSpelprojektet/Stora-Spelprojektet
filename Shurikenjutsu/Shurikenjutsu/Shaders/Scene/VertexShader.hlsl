@@ -1,5 +1,5 @@
 // Matrix buffer.
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix m_worldMatrix;
 	matrix m_viewMatrix;
@@ -10,7 +10,7 @@ cbuffer MatrixBuffer
 };
 
 // Fog calculation buffer.
-cbuffer FogBuffer
+cbuffer FogBuffer : register(b1)
 {
 	float m_fogStart;
 	float m_fogEnd;
@@ -85,7 +85,7 @@ Output main(Input p_input)
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
-	// Normalmap TBN matrix
+	// Normalmap TBN matrix.
 	/*float3 N = output.m_normal;
 	float3 T = normalize(output.m_tangent - dot(output.m_tangent, N)*N);
 	float3 B = cross(N, T);
@@ -93,10 +93,10 @@ Output main(Input p_input)
 	output.m_tBN = float3x3(T, B, N);*/
 
 	// No fog.
-	output.m_fogFactor = 1.0f;
+	//output.m_fogFactor = 1.0f;
 
 	// Calculate linear fog.    
-	//output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
+	output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
 
 	// Calculate exponential fog.    
 	//output.m_fogFactor = saturate(1.0 / pow(2.71828, (cameraPosition.z * m_fogDensity)));

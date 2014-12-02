@@ -54,14 +54,14 @@ ID3D11Buffer* Buffer::CreateBuffer(BUFFERTYPE P_type, ID3D11Device* p_device, st
 		
 		default:
 		{
-			ConsolePrintError("Invalid buffer type passed to CreateBuffer().");
+			ConsolePrintErrorAndQuit("Invalid buffer type passed to CreateBuffer().");
 			break;
 		}
 	}
 
 	if (!buffer)
 	{
-		ConsolePrintError("Failed to create buffer.");
+		ConsolePrintErrorAndQuit("Failed to create buffer.");
 		return NULL;
 	}
 

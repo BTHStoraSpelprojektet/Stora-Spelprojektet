@@ -56,7 +56,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Create the swap chain and device.
 	if (FAILED(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_DEBUG, versions, ARRAYSIZE(versions), D3D11_SDK_VERSION, &swapChainDescription, &m_swapChain, &m_device, &m_version, &m_context)))
 	{
-		ConsolePrintError("DirectX swap chain and device failed to create.");
+		ConsolePrintErrorAndQuit("DirectX swap chain and device failed to create.");
 		return false;
 	}
 
@@ -64,14 +64,14 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	ID3D11Texture2D* backBuffer = NULL;
 	if (FAILED(m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer)))
 	{
-		ConsolePrintError("DirectX back buffer failed to be retrieved.");
+		ConsolePrintErrorAndQuit("DirectX back buffer failed to be retrieved.");
 		return false;
 	}
 
 	// Create render target.
 	if (FAILED(m_device->CreateRenderTargetView(backBuffer, NULL, &m_renderTarget)))
 	{
-		ConsolePrintError("DirectX render target failed to create.");
+		ConsolePrintErrorAndQuit("DirectX render target failed to create.");
 		return false;
 	}
 
@@ -97,7 +97,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Create depth stencil state
 	if (FAILED(m_device->CreateDepthStencilState(&depthState, &m_depthEnabled)))
 	{
-		ConsolePrintError("DirectX depth stencil enabled state failed to create.");
+		ConsolePrintErrorAndQuit("DirectX depth stencil enabled state failed to create.");
 		return false;
 	}
 
@@ -106,7 +106,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 
 	if (FAILED(m_device->CreateDepthStencilState(&depthState, &m_depthDisabled)))
 	{
-		ConsolePrintError("DirectX depth stencil disabled state failed to create.");
+		ConsolePrintErrorAndQuit("DirectX depth stencil disabled state failed to create.");
 		return false;
 	}
 
@@ -128,7 +128,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Create depth stencil texture.
 	if (FAILED(m_device->CreateTexture2D(&depthStencilDescription, NULL, &m_depthStencil)))
 	{
-		ConsolePrintError("DirectX depth stencil failed to create.");
+		ConsolePrintErrorAndQuit("DirectX depth stencil failed to create.");
 		return false;
 	}
 
@@ -142,7 +142,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Create the depth stencil view.
 	if (FAILED(m_device->CreateDepthStencilView(m_depthStencil, &depthStencilViewDescription, &m_depthStencilView)))
 	{
-		ConsolePrintError("DirectX depth stencil view failed to create.");
+		ConsolePrintErrorAndQuit("DirectX depth stencil view failed to create.");
 		return false;
 	}
 
@@ -180,7 +180,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Create the alpha blend state.
 	if (FAILED(m_device->CreateBlendState(&blendState, &m_alphaEnabled)))
 	{
-		ConsolePrintError("DirectX alpha enabled blend state failed to create.");
+		ConsolePrintErrorAndQuit("DirectX alpha enabled blend state failed to create.");
 		return false;
 	}
 
@@ -188,7 +188,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 
 	if (FAILED(m_device->CreateBlendState(&blendState, &m_alphaDisabled)))
 	{
-		ConsolePrintError("DirectX alpha disabled blend state failed to create.");
+		ConsolePrintErrorAndQuit("DirectX alpha disabled blend state failed to create.");
 		return false;
 	}
 
@@ -203,7 +203,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 
 	if (FAILED(factory->MakeWindowAssociation(p_handle, DXGI_MWA_NO_ALT_ENTER)))
 	{
-		ConsolePrintError("Failed to disable alt enter.");
+		ConsolePrintErrorAndQuit("Failed to disable alt enter.");
 		return false;
 	}
 

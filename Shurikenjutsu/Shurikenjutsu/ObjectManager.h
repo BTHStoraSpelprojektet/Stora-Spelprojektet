@@ -16,7 +16,7 @@ public:
 	void Shutdown();
 
 	void Update(double p_deltaTime);
-	void Render();
+	void Render(SHADERTYPE p_shader);
 
 	std::vector<Shuriken> GetListOfShurikens() const;
 	std::vector<Model> GetListOfStaticModels() const;

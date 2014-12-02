@@ -22,7 +22,7 @@ bool Window::Initialize(WindowRectangle p_window)
 	// If window registration fails, output an error message.
 	if (!RegisterClass(&description))
 	{
-		ConsolePrintError("Window failed to register.");
+		ConsolePrintErrorAndQuit("Window failed to register.");
 		result = false;
 	}
 	
@@ -40,7 +40,7 @@ bool Window::Initialize(WindowRectangle p_window)
 	// If window creation fails, display an error message.
 	else
 	{
-		ConsolePrintError("Window failed to create.");
+		ConsolePrintErrorAndQuit("Window failed to create.");
 		result = false;
 		
 	}
