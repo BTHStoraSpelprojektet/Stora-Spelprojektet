@@ -10,7 +10,7 @@
 #include "Camera.h"
 #include "Level.h"
 #include "Collisions.h"
-
+#include <d3d9.h>
 
 class PlayingStateTest :
 	public GameState

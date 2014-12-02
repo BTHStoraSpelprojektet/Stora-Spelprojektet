@@ -41,6 +41,8 @@ void PlayingStateTest::Update(double p_deltaTime)
 		MeleeAttack();
 	}
 
+	BasicPicking();
+
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		BasicPicking();

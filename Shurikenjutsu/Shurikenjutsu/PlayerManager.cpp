@@ -75,7 +75,12 @@ void PlayerManager::Update(double p_deltaTime)
 void PlayerManager::Render(SHADERTYPE p_shader)
 {
 	m_player.Render(p_shader);
-	
+
+	if (p_shader == SHADERTYPE_SCENE)
+	{
+		Lines::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetAttackDirection().x * 100.0f, 3.0f, m_player.GetAttackDirection().z * 100.0f));
+	}
+
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
 		m_enemyList[i].Render(p_shader);

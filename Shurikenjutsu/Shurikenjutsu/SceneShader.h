@@ -17,6 +17,7 @@ public:
 
 	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMMATRIX> p_boneTransforms);
+	void RenderLine(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices);
 
 	void UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	void UpdateLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
@@ -38,8 +39,12 @@ private:
 	ID3D11VertexShader* m_animatedVertexShader;
 	ID3D11PixelShader* m_pixelShader;
 
+	ID3D11VertexShader* m_lineVertexShader;
+	ID3D11PixelShader* m_linePixelShader;
+
 	ID3D11InputLayout* m_layout;
 	ID3D11InputLayout* m_animatedLayout;
+	ID3D11InputLayout* m_lineLayout;
 
 	ID3D11SamplerState* m_samplerState;
 	ID3D11SamplerState* m_samplerShadowMapState;

@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef GLOBALS
 #define GLOBALS
 
