@@ -305,11 +305,7 @@ void Server::UpdateShurikens(double p_deltaTime)
 		if (m_shurikens[i].lifeTime <= 0)
 		{
 			// Send removal of shuriken to clients
-			RakNet::BitStream bitStream;
-			bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
-			bitStream.Write(m_shurikens[i].shurikenId);
-
-			m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			BroadcastDestoyedShuriken(m_shurikens[i].shurikenId);
 
 			m_shurikens.erase(m_shurikens.begin() + i);
 			i--;
@@ -361,11 +357,7 @@ void Server::CheckCollisions()
 			if ((m_players[j].x < newPosX + radius && m_players[j].x > newPosX - radius) && (m_players[j].z < newPosZ + radius && m_players[j].z > newPosZ - radius))
 			{
 				//std::cout << "Shuriken hit a player\n";
-				RakNet::BitStream bitStream;
-				bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
-				bitStream.Write(m_shurikens[i].shurikenId);
-
-				m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+				BroadcastDestoyedShuriken(m_shurikens[i].shurikenId);
 
 				m_shurikens.erase(m_shurikens.begin() + i);
 				i--;
@@ -373,4 +365,14 @@ void Server::CheckCollisions()
 			}
 		}
 	}
+}
+
+void Server::BroadcastDestoyedShuriken(unsigned int p_id)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
+	bitStream.Write(p_id);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

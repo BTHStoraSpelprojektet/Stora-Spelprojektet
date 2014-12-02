@@ -32,6 +32,7 @@ private:
 
 	void AddShuriken(RakNet::RakNetGUID, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdateShurikens(double p_deltaTime);
+	void BroadcastDestoyedShuriken(unsigned int p_id);
 	unsigned int GetShurikenUniqueId();
 
 	void CheckCollisions();
