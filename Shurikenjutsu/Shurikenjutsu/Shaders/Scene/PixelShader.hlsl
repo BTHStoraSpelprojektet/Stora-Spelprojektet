@@ -46,9 +46,6 @@ float4 main(Input p_input) : SV_Target
 	float4 D = 0.0f;
 	float4 S = 0.0f;
 
-	// Set the bias adjustment to counteract the low floating point precision.
-	float bias = 0.001f;
-
 	// Calculate projected shadow map coordinates.
 	float2 shadowMapCoordinates;
 	shadowMapCoordinates.x = p_input.m_lightPositionHomogenous.x / p_input.m_lightPositionHomogenous.w / 2.0f + 0.5f;
@@ -64,7 +61,7 @@ float4 main(Input p_input) : SV_Target
 		float lightDepth = p_input.m_lightPositionHomogenous.z / p_input.m_lightPositionHomogenous.w;
 
 		// Subtract the bias from the depth value of the light.
-		lightDepth = lightDepth - bias;
+		lightDepth = lightDepth - 0.001f;
 
 		// Compare the depth of the shadow map and the depth of the light to determine whether to shadow or to light this pixel.
 		if (lightDepth < depth)

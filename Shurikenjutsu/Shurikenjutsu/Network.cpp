@@ -22,13 +22,13 @@ bool Network::Initialize()
 	m_shurikenListUpdated = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
-
+	
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 	m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
-	
+
 	return true;
 }
 
@@ -64,9 +64,10 @@ void Network::ReceviePacket()
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
 			break;
 		}
+
 		case ID_CONNECTION_ATTEMPT_FAILED:
 		{
-			ConsolePrintFailed("Connection to server failed, trying to reconnect");
+				ConsolePrintError("Connection to server failed, trying to reconnect");
 
 			m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 			break;
@@ -93,7 +94,7 @@ void Network::ReceviePacket()
 			bitStream.Read(nrOfPlayers);
 
 			for (int i = 0; i < nrOfPlayers; i++)
-		{
+			{
 				bitStream.Read(guid);
 				bitStream.Read(x);
 				bitStream.Read(y);
@@ -103,7 +104,7 @@ void Network::ReceviePacket()
 				UpdatePlayerPos(guid, x, y, z);
 
 				playerGuids.push_back(guid);				
-	}
+			}
 
 			// Check for removed players
 			CheckForRemovedPlayers(playerGuids);
@@ -114,8 +115,9 @@ void Network::ReceviePacket()
 			std::cout << "Downloaded new players" << std::endl;
 			break;
 		}
+
 		case ID_PLAYER_MOVED:
-	{
+		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID guid;
@@ -209,9 +211,9 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 	{
 		bool found = false;
 		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-			{
+		{
 			if (m_enemyPlayers[i].guid == p_owner)
-				{
+			{
 				m_enemyPlayers[i].x = p_x;
 				m_enemyPlayers[i].y = p_y;
 				m_enemyPlayers[i].z = p_z;
@@ -219,7 +221,7 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 				found = true;
 				break;
 			}
-				}
+		}
 
 		if (!found)
 		{
@@ -230,10 +232,10 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 			player.z = p_z;
 
 			m_enemyPlayers.push_back(player);
-			}
 		}
-
 	}
+	
+}
 
 std::vector<PlayerNet> Network::GetOtherPlayers()
 {
