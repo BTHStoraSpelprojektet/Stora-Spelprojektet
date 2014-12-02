@@ -83,7 +83,7 @@ namespace IntersectionTests
 
 		return obb.Intersects(sphere);
 	}
-	bool Intersections::MeleeAttackCollision(DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents, DirectX::XMFLOAT3 p_direction)
+	bool Intersections::MeleeAttackCollision(DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents, DirectX::XMFLOAT3 p_attDirection)
 	{
 		float tempBoxRadius;
 		if (p_boxExtents.x > p_boxExtents.z)
@@ -98,9 +98,9 @@ namespace IntersectionTests
 		if (SphereSphereCollision(p_spherePosition, p_sphereRadius, p_boxCenter, tempBoxRadius))
 		{
 			DirectX::XMFLOAT3 temp;
-			temp.x = p_spherePosition.x + p_direction.x * p_sphereRadius;
-			temp.y = p_spherePosition.y + p_direction.y * p_sphereRadius;
-			temp.z = p_spherePosition.z + p_direction.z * p_sphereRadius;
+			temp.x = p_spherePosition.x + p_attDirection.x * p_sphereRadius;
+			temp.y = p_spherePosition.y + p_attDirection.y * p_sphereRadius;
+			temp.z = p_spherePosition.z + p_attDirection.z * p_sphereRadius;
 			if (SphereBoxCollision(temp, p_sphereRadius, p_boxCenter, p_boxExtents))
 			{
 				return true;
