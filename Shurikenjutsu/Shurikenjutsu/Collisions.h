@@ -1,6 +1,8 @@
 #pragma once
 #include <DirectXCollision.h>
 #include "Structures.h"
+#pragma comment(lib, "PhysicsDll.lib")
+#include "PhysicsDll.h"
 
 class Collisions
 {

@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NinjaServer", "NinjaServer\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommonLibs", "CommonLibs\CommonLibs.vcxproj", "{08098CFA-42E0-4D98-BB87-CF14F6D264F7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsDll", "Physics\Physics.vcxproj", "{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -34,6 +36,10 @@ Global
 		{08098CFA-42E0-4D98-BB87-CF14F6D264F7}.Debug|Win32.Build.0 = Debug|Win32
 		{08098CFA-42E0-4D98-BB87-CF14F6D264F7}.Release|Win32.ActiveCfg = Release|Win32
 		{08098CFA-42E0-4D98-BB87-CF14F6D264F7}.Release|Win32.Build.0 = Release|Win32
+		{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}.Debug|Win32.Build.0 = Debug|Win32
+		{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}.Release|Win32.ActiveCfg = Release|Win32
+		{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
