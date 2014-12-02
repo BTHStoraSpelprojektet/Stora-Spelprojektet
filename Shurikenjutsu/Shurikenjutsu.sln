@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shurikenjutsu", "Shurikenjutsu\Shurikenjutsu.vcxproj", "{06153634-8859-4B86-97DF-0471AAEB4044}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FAA6550E-9BA7-40A7-A10A-AA493DE3DD9B} = {FAA6550E-9BA7-40A7-A10A-AA493DE3DD9B}
+		{08098CFA-42E0-4D98-BB87-CF14F6D264F7} = {08098CFA-42E0-4D98-BB87-CF14F6D264F7}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NinjaServer", "NinjaServer\NinjaServer.vcxproj", "{FAA6550E-9BA7-40A7-A10A-AA493DE3DD9B}"
 	ProjectSection(ProjectDependencies) = postProject

@@ -33,4 +33,4 @@ protected:
 	bool m_isServer;
 };
 
-#endif
+#endif DEFAULTREPLICA_H

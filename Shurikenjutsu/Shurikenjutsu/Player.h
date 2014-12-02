@@ -1,7 +1,7 @@
 #ifndef PLAYER
 #define PLAYER
 
-#include "Network.h"
+#define WIN32_LEAN_AND_MEAN
 #include "MovingObject.h"
 #include "InputManager.h"
 
@@ -29,9 +29,12 @@ public:
 	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);
 	DirectX::XMFLOAT3 GetAttackDirection();
 	void SetAttackDirection(DirectX::XMFLOAT3 p_attackDir);
+	void SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir);
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
 private:
+	void CalculateFacingAngle();
+
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	int m_spells; // antalet spells om det behövs - skapa lista
 	unsigned int m_health; // Player health

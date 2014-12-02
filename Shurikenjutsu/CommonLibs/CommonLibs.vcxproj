@@ -228,6 +228,8 @@
     <ClInclude Include="ReplicaManager.h" />
     <ClInclude Include="ServerGlobals.h" />
     <ClInclude Include="ServerMessages.h" />
+    <ClInclude Include="ShurikenReplica.h" />
+    <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DefaultReplica.cpp" />
@@ -344,6 +346,8 @@
     <ClCompile Include="ReplicaConnection.cpp" />
     <ClCompile Include="ReplicaManager.cpp" />
     <ClCompile Include="ServerGlobals.cpp" />
+    <ClCompile Include="ShurikenReplica.cpp" />
+    <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="RakNet\RakNet.vcproj" />

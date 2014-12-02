@@ -7,11 +7,11 @@ cbuffer FrameBuffer
 };
 
 Texture2D m_texture : register(t0);
-Texture2D m_normalMap : register(t1);
+Texture2D m_normalMap  : register(t1);
 Texture2D m_shadowMap : register(t2);
 
-SamplerState m_sampler;
-SamplerState m_samplerShadowMap;
+SamplerState m_sampler : register(s0);
+SamplerState m_samplerShadowMap  : register(s1);
 
 // Vertex structure.
 struct Input
@@ -108,7 +108,7 @@ float4 main(Input p_input) : SV_Target
 
 	// Sample texture using texture coordinates.
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
-
+	
 	// Add light.
 	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz) + S.xyz);
 	

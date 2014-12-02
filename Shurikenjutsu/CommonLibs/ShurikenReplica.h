@@ -1,13 +1,13 @@
-#ifndef PLAYERREPLICA_H_
-#define PLAYERREPLICA_H_
+/*#ifndef SHURIKENREPLICA_H_
+#define SHURIKENREPLICA_H_
 
 #include "DefaultReplica.h"
 
-class PlayerReplica : public DefaultReplica
+class ShurikenReplica : public DefaultReplica
 {
 public:
-	PlayerReplica();
-	~PlayerReplica();
+	ShurikenReplica();
+	~ShurikenReplica();
 
 	RakNet::RakString GetTypeName() const;
 	RakNet::RM3SerializationResult Serialize(RakNet::SerializeParameters *p_serializeParameters);
@@ -21,4 +21,4 @@ private:
 	float m_posX, m_posY, m_posZ;
 };
 
-#endif PLAYERREPLICA_H_
+#endif SHURIKENREPLICA_H_*/

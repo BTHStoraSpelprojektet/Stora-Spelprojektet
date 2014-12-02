@@ -5,6 +5,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
 	ID3D10Blob*	animatedVertexShader = 0;
+	ID3D10Blob* lineVertexShader = 0;
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
@@ -58,6 +59,23 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	if (FAILED(p_device->CreateVertexShader(animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), NULL, &m_animatedVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene animated vertex shader.");
+		return false;
+	}
+
+	// Compile the line vertex shader.
+	if (FAILED(D3DCompileFromFile(L"Shaders/Line/LineVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &lineVertexShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/Line/LineVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &lineVertexShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile line vertex shader from file.");
+			return false;
+		}
+	}
+
+	// Create the line vertex shader.
+	if (FAILED(p_device->CreateVertexShader(lineVertexShader->GetBufferPointer(), lineVertexShader->GetBufferSize(), NULL, &m_lineVertexShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create line vertex shader.");
 		return false;
 	}
 
@@ -169,17 +187,40 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	D3D11_INPUT_ELEMENT_DESC lineLayout[1];
+	unsigned int lineSize;
+
+	lineLayout[0].SemanticName = "POSITION";
+	lineLayout[0].SemanticIndex = 0;
+	lineLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	lineLayout[0].InputSlot = 0;
+	lineLayout[0].AlignedByteOffset = 0;
+	lineLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	lineLayout[0].InstanceDataStepRate = 0;
+
+	// Compute size of layout.
+	lineSize = sizeof(lineLayout) / sizeof(lineLayout[0]);
+
+	// Create the vertex input layout.
+	if (FAILED(p_device->CreateInputLayout(lineLayout, lineSize, lineVertexShader->GetBufferPointer(), lineVertexShader->GetBufferSize(), &m_lineLayout)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create line vertex input layout.");
+		return false;
+	}
+
 	ConsolePrintSuccess("Scene vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
-	animatedVertexShader->Release();
-	animatedVertexShader = 0;
-
 	vertexShader->Release();
 	vertexShader = 0;
+	animatedVertexShader->Release();
+	animatedVertexShader = 0;
+	lineVertexShader->Release();
+	lineVertexShader = 0;
 
 	// Set variables to initial values.
 	ID3D10Blob*	pixelShader = 0;
+	ID3D10Blob*	linePixelShader = 0;
 	errorMessage = 0;
 
 	// Compile the pixel shader.
@@ -209,11 +250,30 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	// Compile the line pixel shader.
+	if (FAILED(D3DCompileFromFile(L"Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile line pixel shader from file.");
+			return false;
+		}
+	}
+
+	// Create the line pixel shader.
+	if (FAILED(p_device->CreatePixelShader(linePixelShader->GetBufferPointer(), linePixelShader->GetBufferSize(), NULL, &m_linePixelShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create line pixel shader");
+		return false;
+	}
+
 	ConsolePrintSuccess("Scene pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
 
 	pixelShader->Release();
 	pixelShader = 0;
+	linePixelShader->Release();
+	linePixelShader = 0;
 
 	// Create the rasterizer description.
 	D3D11_RASTERIZER_DESC rasterizer;
@@ -390,6 +450,27 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 
 	p_context->VSSetShader(m_animatedVertexShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
+
+	p_context->Draw(p_numberOfVertices, 0);
+}
+
+void SceneShader::RenderLine(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices)
+{
+	// Set parameters and then render.
+	unsigned int stride = sizeof(DirectX::XMFLOAT3);
+	const unsigned int offset = 0;
+
+	DirectX::XMFLOAT4X4 worldMatrix;
+	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixIdentity());
+
+	UpdateWorldMatrix(p_context, worldMatrix);
+
+	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	p_context->IASetInputLayout(m_lineLayout);
+
+	p_context->VSSetShader(m_lineVertexShader, NULL, 0);
+	p_context->PSSetShader(m_linePixelShader, NULL, 0);
 
 	p_context->Draw(p_numberOfVertices, 0);
 }

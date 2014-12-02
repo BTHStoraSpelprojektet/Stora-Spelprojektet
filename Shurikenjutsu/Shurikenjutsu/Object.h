@@ -1,8 +1,10 @@
 #ifndef OBJECT
 #define OBJECT
 
+#define WIN32_LEAN_AND_MEAN
 #include "Model.h"
 #include <DirectXMath.h>
+#include "Network.h"
 
 class Object
 {

@@ -196,7 +196,7 @@ void System::Render()
 {
 	// Clear the scene to begin rendering.
 	GraphicsEngine::Clear();
-	
+
 	// Render Current GameState
 	m_gameState->Render();
 

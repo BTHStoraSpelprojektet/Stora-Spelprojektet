@@ -1,12 +1,11 @@
 #ifndef INPUTMANAGER_H_
 #define INPUTMANAGER_H_
 
-#include "KButtonEvent.h"
 #include <vector>
 #include "Windows.h"
 #include "Windowsx.h"
 #include "ConsoleFunctions.h"
-
+#include "KButtonEvent.h"
 enum MouseButtonState
 {
 

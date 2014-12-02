@@ -55,7 +55,7 @@ void PlayerManager::Update(double p_deltaTime)
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(0, 0, 0), 0.1f, 100, 5, 100, 20);
+					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, 100, 20);
 					ConsolePrintText("Added enemy player in playermanager");
 				}
 			}
@@ -66,18 +66,29 @@ void PlayerManager::Update(double p_deltaTime)
 		for (unsigned int i = 0; i < m_enemyList.size(); i++)
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
+			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].Update(p_deltaTime);
 		}
 	}
-		}
+}
 
 void PlayerManager::Render(SHADERTYPE p_shader)
 {
 	m_player.Render(p_shader);
-	
+
+	if (p_shader == SHADERTYPE_SCENE)
+	{
+		Lines::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x + m_player.GetAttackDirection().x  * 100.0f, 3.0f, m_player.GetPosition().z + m_player.GetAttackDirection().z * 100.0f));
+	}
+
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
 		m_enemyList[i].Render(p_shader);
+
+		if (p_shader == SHADERTYPE_SCENE)
+		{
+			Lines::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x, 3.0f, m_enemyList[i].GetPosition().z), DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x + m_enemyList[i].GetAttackDirection().x  * 100.0f, 3.0f, m_enemyList[i].GetPosition().z + m_enemyList[i].GetAttackDirection().z * 100.0f));
+		}
 	}
 }
 
@@ -128,7 +139,7 @@ DirectX::XMFLOAT3 PlayerManager::GetAttackDirection()
 }
 void PlayerManager::SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection)
 {
-	m_player.SetAttackDirection(p_attackDirection);
+	m_player.SetMyAttackDirection(p_attackDirection);
 }
 
 bool PlayerManager::IsGuidInEnemyList(RakNet::RakNetGUID p_guid)
