@@ -13,6 +13,7 @@ struct Input
 struct Output
 {
 	float4 m_position : SV_POSITION;
+	float4 m_depthPosition : TEXCOORD0;
 };
 
 // Vertex depth shader function.
@@ -28,6 +29,8 @@ Output main(Input p_input)
 	output.m_position = mul(p_input.m_position, m_worldMatrix);
 	output.m_position = mul(output.m_position, m_viewMatrix);
 	output.m_position = mul(output.m_position, m_projectionMatrix);
+
+	output.m_depthPosition = output.m_position;
 
 	// Return output.
 	return output;

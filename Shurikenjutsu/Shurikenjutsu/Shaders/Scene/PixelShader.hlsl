@@ -58,7 +58,7 @@ float4 main(Input p_input) : SV_Target
 		float depth = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates).r;
 
 		// Calculate the depth of the light.
-		float lightDepth = p_input.m_lightPositionHomogenous.z / p_input.m_lightPositionHomogenous.w;
+		float lightDepth = p_input.m_lightPositionHomogenous.z;
 
 		// Subtract the bias from the depth value of the light.
 		lightDepth = lightDepth - 0.001f;
