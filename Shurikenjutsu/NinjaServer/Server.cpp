@@ -38,6 +38,8 @@ void Server::Update(double p_deltaTime)
 	ReceviePacket();
 
 	UpdateShurikens(p_deltaTime);
+
+	CheckCollisions();
 }
 
 void Server::ReceviePacket()
@@ -337,4 +339,38 @@ unsigned int Server::GetShurikenUniqueId()
 	} while (found);
 	
 	return ID;
+}
+
+void Server::CheckCollisions()
+{
+	float radius = 1.0f;
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		// Calculate the shurikens position
+		float lifeTime = m_shurikenSetTimeLeft - m_shurikens[i].lifeTime;
+		float newPosX = m_shurikens[i].x + m_shurikens[i].dirX * m_shurikens[i].speed * lifeTime;
+		float newPosY = m_shurikens[i].y + m_shurikens[i].dirY * m_shurikens[i].speed * lifeTime;
+		float newPosZ = m_shurikens[i].z + m_shurikens[i].dirZ * m_shurikens[i].speed * lifeTime;
+
+		for (unsigned int j = 0; j < m_players.size(); j++)
+		{
+			if (m_players[j].guid == m_shurikens[i].guid)
+			{
+				continue;
+			}
+			if ((m_players[j].x < newPosX + radius && m_players[j].x > newPosX - radius) && (m_players[j].z < newPosZ + radius && m_players[j].z > newPosZ - radius))
+			{
+				//std::cout << "Shuriken hit a player\n";
+				RakNet::BitStream bitStream;
+				bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
+				bitStream.Write(m_shurikens[i].shurikenId);
+
+				m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+				m_shurikens.erase(m_shurikens.begin() + i);
+				i--;
+				break;
+			}
+		}
+	}
 }

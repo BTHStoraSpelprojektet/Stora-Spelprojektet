@@ -34,6 +34,8 @@ private:
 	void UpdateShurikens(double p_deltaTime);
 	unsigned int GetShurikenUniqueId();
 
+	void CheckCollisions();
+
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
