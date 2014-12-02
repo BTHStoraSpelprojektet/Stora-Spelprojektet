@@ -13,7 +13,7 @@ PlayerManager::~PlayerManager()
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0,0,-2.0f), DirectX::XMFLOAT3(0,0,0), 0.1f, 100, 5, 100, 20);
+	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.1f, 100, 5, 100, 20);
 	return true;
 }
 
@@ -78,7 +78,7 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 
 	if (p_shader == SHADERTYPE_SCENE)
 	{
-		Lines::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x + m_player.GetAttackDirection().x  * 100.0f, 3.0f, m_player.GetPosition().z + m_player.GetAttackDirection().z * 100.0f));
+		DebugDraw::GetInstance().RenderLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x + m_player.GetAttackDirection().x  * 100.0f, 3.0f, m_player.GetPosition().z + m_player.GetAttackDirection().z * 100.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	}
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
@@ -87,7 +87,7 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 
 		if (p_shader == SHADERTYPE_SCENE)
 		{
-			Lines::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x, 3.0f, m_enemyList[i].GetPosition().z), DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x + m_enemyList[i].GetAttackDirection().x  * 100.0f, 3.0f, m_enemyList[i].GetPosition().z + m_enemyList[i].GetAttackDirection().z * 100.0f));
+			DebugDraw::GetInstance().RenderLine(DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x, 3.0f, m_enemyList[i].GetPosition().z), DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x + m_enemyList[i].GetAttackDirection().x  * 100.0f, 3.0f, m_enemyList[i].GetPosition().z + m_enemyList[i].GetAttackDirection().z * 100.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 		}
 	}
 }

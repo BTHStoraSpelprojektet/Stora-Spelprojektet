@@ -19,7 +19,6 @@
 
 #include "Debug.h"
 #include "Globals.h"
-#include "Lines.h"
 
 #include "Player.h"
 #include "PlayerManager.h"

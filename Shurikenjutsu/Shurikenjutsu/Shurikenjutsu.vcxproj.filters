@@ -210,7 +210,7 @@
     <ClCompile Include="RenderTarget.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Lines.cpp">
+    <ClCompile Include="DebugDraw.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
@@ -326,7 +326,7 @@
     <ClInclude Include="RenderTarget.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Lines.h">
+    <ClInclude Include="DebugDraw.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
   </ItemGroup>
