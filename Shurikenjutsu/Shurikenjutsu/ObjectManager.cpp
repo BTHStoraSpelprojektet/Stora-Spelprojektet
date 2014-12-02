@@ -21,10 +21,7 @@ bool ObjectManager::Initialize()
 	translation = DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f);
 	m_animatedCharacter.Translate(translation);
 
-	/*m_object.LoadModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	m_object.Rotate(rotation);
-	translation = DirectX::XMFLOAT3(0.0f, 0.0f, 2.0f);
-	m_object.Translate(translation);*/
+
 
 	return true;
 }
@@ -42,11 +39,35 @@ void ObjectManager::Update(double p_deltaTime)
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		m_shurikens[i].Update(p_deltaTime);
-		if (m_shurikens[i].IsDead())
+		//if (m_shurikens[i].IsDead())
+		//{
+		//	m_shurikens.erase(m_shurikens.begin()+i);
+		//	i--;
+		//}
+	}
+
+	if (Network::IsShurikenListUpdated())
 		{
-			m_shurikens.erase(m_shurikens.begin()+i);
+		std::vector<ShurikenNet> tempNetShurikens = Network::GetShurikens();
+		for (unsigned int i = 0; i < tempNetShurikens.size(); i++)
+		{
+			if (!IsShurikenInList(tempNetShurikens[i].shurikenId))
+			{
+				// Add shuriken
+				AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].speed, tempNetShurikens[i].shurikenId);
+			}
+		}
+
+		for (unsigned int i = 0; i < m_shurikens.size(); i++)
+		{
+			if (!IsShurikenInNetworkList(m_shurikens[i].GetID()))
+			{
+				// Remove shuriken
+				m_shurikens.erase(m_shurikens.begin() + i);
 			i--;
 		}
+		}
+		Network::SetHaveUpdateShurikenList();
 	}
 }
 
@@ -69,10 +90,10 @@ std::vector<Shuriken> ObjectManager::GetListOfShurikens() const
 	return m_shurikens;
 }
 
-void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed)
+void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
 {
 	Shuriken tempShuriken;
-	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_speed);
+	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_speed, p_shurikenID);
 	m_shurikens.push_back(tempShuriken);
 }
 
@@ -84,4 +105,32 @@ std::vector<Model> ObjectManager::GetListOfStaticModels() const
 void ObjectManager::AddStaticModel(Model model)
 {
 	m_staticmodels.push_back(model);
+}
+
+bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
+{
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		if (p_shurikenId == m_shurikens[i].GetID())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
+{
+	std::vector<ShurikenNet> shurikenList = Network::GetShurikens();
+
+	for (unsigned int i = 0; i < shurikenList.size(); i++)
+	{
+		if (p_shurikenId == shurikenList[i].shurikenId)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

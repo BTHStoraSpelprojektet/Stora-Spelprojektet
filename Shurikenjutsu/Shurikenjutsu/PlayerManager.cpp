@@ -55,7 +55,7 @@ void PlayerManager::Update(double p_deltaTime)
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(0, 0, 0), 0.1f, 100, 5, 100, 20);
+					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, 100, 20);
 					ConsolePrintText("Added enemy player in playermanager");
 				}
 			}
@@ -66,10 +66,11 @@ void PlayerManager::Update(double p_deltaTime)
 		for (unsigned int i = 0; i < m_enemyList.size(); i++)
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
+			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].Update(p_deltaTime);
 		}
 	}
-		}
+}
 
 void PlayerManager::Render(SHADERTYPE p_shader)
 {
@@ -128,7 +129,7 @@ DirectX::XMFLOAT3 PlayerManager::GetAttackDirection()
 }
 void PlayerManager::SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection)
 {
-	m_player.SetAttackDirection(p_attackDirection);
+	m_player.SetMyAttackDirection(p_attackDirection);
 }
 
 bool PlayerManager::IsGuidInEnemyList(RakNet::RakNetGUID p_guid)

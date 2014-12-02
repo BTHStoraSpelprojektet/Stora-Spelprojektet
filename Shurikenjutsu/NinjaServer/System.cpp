@@ -14,6 +14,10 @@ bool System::Initialize()
 {
 	m_server.Initialize();
 
+	// Initialize timer.
+	m_timer.Initialize();
+	m_timer.StartTimer();
+
 	return true;
 }
 
@@ -40,10 +44,20 @@ void System::Run()
 				message.message = WM_QUIT;
 			}
 
-			m_server.Update();
+			Update();
 		}
 	}
 
 	// Shutdown
 	m_server.Shutdown();
+}
+
+void System::Update()
+{
+	//Update timer
+	m_timer.Update();
+
+	double deltaTime = m_timer.GetDeltaTime();
+
+	m_server.Update(deltaTime);
 }
