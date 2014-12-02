@@ -347,7 +347,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	return true;
 }
 
-void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(Vertex);
@@ -356,6 +356,7 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetShaderResources(1, 1, &p_normalMap);
 	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
@@ -370,7 +371,7 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMMATRIX> p_boneTransforms)
+void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMMATRIX> p_boneTransforms)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(VertexAnimated);
@@ -380,6 +381,7 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetShaderResources(1, 1, &p_normalMap);
 	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);

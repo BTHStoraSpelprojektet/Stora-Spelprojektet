@@ -101,7 +101,7 @@ void PlayingStateTest::RenderAlpha()
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
 		Model tempModel = tempList[i].GetModel();
-		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture());
+		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), tempModel.GetNormalMap());
 	}
 }
 
