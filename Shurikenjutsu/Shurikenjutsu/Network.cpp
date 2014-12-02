@@ -202,6 +202,9 @@ void Network::SendPlayerPos(float p_x, float p_y, float p_z, float p_dirX, float
 	bitStream.Write(p_x);
 	bitStream.Write(p_y);
 	bitStream.Write(p_z);
+	bitStream.Write(p_dirX);
+	bitStream.Write(p_dirY);
+	bitStream.Write(p_dirZ);
 
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }

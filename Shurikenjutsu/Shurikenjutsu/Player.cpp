@@ -149,11 +149,26 @@ DirectX::XMFLOAT3 Player::GetAttackDirection()
 {
 	return m_attackDir;
 }
+
+void Player::SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir)
+{
+	m_attackDir = p_attackDir;
+	CalculateFacingAngle();
+
+	if (Network::IsConnected())
+	{
+		DirectX::XMFLOAT3 pos = GetPosition();
+		DirectX::XMFLOAT3 dir = GetAttackDirection();
+		Network::SendPlayerPos(pos.x, pos.y, pos.z, dir.x, dir.y, dir.z);
+	}
+}
+
 void Player::SetAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 {
 	m_attackDir = p_attackDir;
 	CalculateFacingAngle();
 }
+
 RakNet::RakNetGUID Player::GetGuID()
 {
 	return m_guid;

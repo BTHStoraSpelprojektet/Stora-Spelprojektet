@@ -29,6 +29,7 @@ public:
 	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);
 	DirectX::XMFLOAT3 GetAttackDirection();
 	void SetAttackDirection(DirectX::XMFLOAT3 p_attackDir);
+	void SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir);
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
 private:

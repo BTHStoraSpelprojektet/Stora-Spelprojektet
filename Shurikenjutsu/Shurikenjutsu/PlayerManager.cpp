@@ -70,7 +70,7 @@ void PlayerManager::Update(double p_deltaTime)
 			m_enemyList[i].Update(p_deltaTime);
 		}
 	}
-		}
+}
 
 void PlayerManager::Render(SHADERTYPE p_shader)
 {
@@ -129,7 +129,7 @@ DirectX::XMFLOAT3 PlayerManager::GetAttackDirection()
 }
 void PlayerManager::SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection)
 {
-	m_player.SetAttackDirection(p_attackDirection);
+	m_player.SetMyAttackDirection(p_attackDirection);
 }
 
 bool PlayerManager::IsGuidInEnemyList(RakNet::RakNetGUID p_guid)
