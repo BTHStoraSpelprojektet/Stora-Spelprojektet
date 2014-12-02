@@ -39,6 +39,7 @@ private:
 	RakNet::Packet *m_packet;
 
 	int m_nrOfConnections;
+	float m_shurikenSetTimeLeft;
 	std::vector<PlayerNet> m_players;
 	std::vector<ShurikenNet> m_shurikens;
 };
