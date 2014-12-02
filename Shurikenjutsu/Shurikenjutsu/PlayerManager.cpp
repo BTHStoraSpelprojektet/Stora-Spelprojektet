@@ -78,12 +78,17 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 
 	if (p_shader == SHADERTYPE_SCENE)
 	{
-		Lines::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetAttackDirection().x * 100.0f, 3.0f, m_player.GetAttackDirection().z * 100.0f));
+		Lines::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x + m_player.GetAttackDirection().x  * 100.0f, 3.0f, m_player.GetPosition().z + m_player.GetAttackDirection().z * 100.0f));
 	}
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
 		m_enemyList[i].Render(p_shader);
+
+		if (p_shader == SHADERTYPE_SCENE)
+		{
+			Lines::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x, 3.0f, m_enemyList[i].GetPosition().z), DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x + m_enemyList[i].GetAttackDirection().x  * 100.0f, 3.0f, m_enemyList[i].GetPosition().z + m_enemyList[i].GetAttackDirection().z * 100.0f));
+		}
 	}
 }
 

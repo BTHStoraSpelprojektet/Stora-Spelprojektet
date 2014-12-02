@@ -45,8 +45,6 @@ void PlayingStateTest::Update(double p_deltaTime)
 
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
-		BasicPicking();
-		//CalculateFacingAngle();
 		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
 	}
 
