@@ -20,7 +20,6 @@ bool Server::Initialize()
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
 	m_nrOfConnections = 0;
-	m_shurikenId = 0;
 	m_players = std::vector<PlayerNet>();
 	m_shurikens = std::vector<ShurikenNet>();
 
@@ -249,11 +248,10 @@ void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, 
 	shuriken.dirX = p_dirX;
 	shuriken.dirY = p_dirY;
 	shuriken.dirZ = p_dirZ;
-	shuriken.shurikenId = m_shurikenId++;
+	shuriken.shurikenId = GetShurikenUniqueId();
 	shuriken.guid = p_guid;
 	shuriken.lifeTime = 2.0f;
 	shuriken.speed = 10.0f;
-
 	m_shurikens.push_back(shuriken);
 
 	RakNet::BitStream wBitStream;
@@ -290,4 +288,28 @@ void Server::UpdateShurikens(double p_deltaTime)
 			i--;
 		}
 	}
+}
+
+unsigned int Server::GetShurikenUniqueId()
+{
+	unsigned int ID = 0;
+	bool found = true;
+
+	do
+	{
+		ID = (unsigned int)(rand() % 10000);
+		found = false;
+
+		for (unsigned int i = 0; i < m_shurikens.size(); i++)
+		{
+			if (m_shurikens[i].shurikenId == ID)
+			{
+				found = true;
+				break;
+			}
+		}
+
+	} while (found);
+	
+	return ID;
 }

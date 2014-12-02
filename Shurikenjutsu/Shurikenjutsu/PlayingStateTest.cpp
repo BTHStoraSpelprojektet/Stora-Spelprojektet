@@ -48,13 +48,6 @@ void PlayingStateTest::Update(double p_deltaTime)
 		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
 	}
 
-	//m_networkShurikens = Network::GetShurikens();
-
-	/*for (int i = 0; i < m_networkShurikens.size(); i++)
-	{
-
-	}*/
-
 	m_objectManager.Update(p_deltaTime);
 	m_playerManager.Update(p_deltaTime);
 
