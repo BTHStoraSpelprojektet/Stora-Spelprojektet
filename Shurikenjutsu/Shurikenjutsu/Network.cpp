@@ -8,6 +8,7 @@ bool Network::m_connected;
 bool Network::m_prevConnected;
 bool Network::m_newOrRemovedPlayers;
 bool Network::m_shurikenListUpdated;
+bool Network::m_respawned;
 int Network::m_connectionCount;
 PlayerNet Network::m_myPlayer;
 std::vector<PlayerNet> Network::m_enemyPlayers;
@@ -20,6 +21,7 @@ bool Network::Initialize()
 	m_prevConnected = false;
 	m_newOrRemovedPlayers = false;
 	m_shurikenListUpdated = false;
+	m_respawned = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -64,12 +66,21 @@ void Network::ReceviePacket()
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
 			break;
 		}
-
 		case ID_CONNECTION_ATTEMPT_FAILED:
 		{
-				ConsolePrintError("Connection to server failed, trying to reconnect");
+			ConsolePrintError("Connection to server failed, trying to reconnect");
 
 			m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
+			break;
+		}
+		case ID_DISCONNECTION_NOTIFICATION:
+		{
+			ConsolePrintError("Server has shutdowned");
+			break;
+		}
+		case ID_CONNECTION_LOST:
+		{
+			ConsolePrintError("Lost connection to server");
 			break;
 		}
 		case ID_NR_CONNECTIONS:
@@ -173,6 +184,20 @@ void Network::ReceviePacket()
 			bitStream.Read(shurikenId);
 
 			RemoveShuriken(shurikenId);
+
+			break;
+		}
+		case ID_RESPAWN_PLAYER:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			float x, y, z;
+			bitStream.Read(messageID);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+
+			RespawnPlayer(x, y, z);
 
 			break;
 		}
@@ -379,4 +404,22 @@ bool Network::IsShurikenListUpdated()
 void Network::SetHaveUpdateShurikenList()
 {
 	m_shurikenListUpdated = false;
+}
+
+bool Network::HasRespawned()
+{
+	return m_respawned;
+}
+
+void Network::SetHaveRespawned()
+{
+	m_respawned = false;
+}
+
+void Network::RespawnPlayer(float p_x, float p_y, float p_z)
+{
+	m_myPlayer.x = p_x;
+	m_myPlayer.y = p_y;
+	m_myPlayer.z = p_z;
+	m_respawned = true;
 }
