@@ -28,7 +28,8 @@ public:
 	void Update(double p_deltaTime);
 	void ReceviePacket();
 private:
-	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
+	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z);
+	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();

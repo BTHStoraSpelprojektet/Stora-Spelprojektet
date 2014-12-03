@@ -104,17 +104,13 @@ void Server::ReceviePacket()
 
 			rBitStream.Read(messageID);
 			float x, y, z;
-			float dirX, dirY, dirZ;
 
 			rBitStream.Read(x);
 			rBitStream.Read(y);
 			rBitStream.Read(z);
-			rBitStream.Read(dirX);
-			rBitStream.Read(dirY);
-			rBitStream.Read(dirZ);
 
 			// Can player move?
-			MovePlayer(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+			MovePlayer(m_packet->guid, x, y, z);
 
 			// Get player pos
 			PlayerNet player = GetPlayer(m_packet->guid);
@@ -125,12 +121,34 @@ void Server::ReceviePacket()
 			wBitStream.Write(player.x);
 			wBitStream.Write(player.y);
 			wBitStream.Write(player.z);
+
+			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+			break;
+		}
+		case ID_PLAYER_ROTATED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			float dirX, dirY, dirZ;
+
+			bitStream.Read(messageID);
+			bitStream.Read(dirX);
+			bitStream.Read(dirY);
+			bitStream.Read(dirZ);
+
+			RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
+
+			PlayerNet player = GetPlayer(m_packet->guid);
+
+			RakNet::BitStream wBitStream;
+			wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
+			wBitStream.Write(player.guid);
 			wBitStream.Write(player.dirX);
 			wBitStream.Write(player.dirY);
 			wBitStream.Write(player.dirZ);
 
-			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
-
+			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			break;
 		}
 		case ID_SHURIKEN_THROWN:
@@ -167,12 +185,9 @@ void Server::ReceviePacket()
 	}
 }
 
-void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ)
+void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z)
 {
-
-
 	bool found = false;
-
 
 	// See if player can move to target position and then update position
 	for (unsigned int i = 0; i < m_players.size(); i++)
@@ -182,9 +197,6 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 			m_players[i].x = p_x;
 			m_players[i].y = p_y;
 			m_players[i].z = p_z;
-			m_players[i].dirX = p_dirX;
-			m_players[i].dirY = p_dirY;
-			m_players[i].dirZ = p_dirZ;
 
 			found = true;
 			break;
@@ -200,15 +212,29 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 		player.x = p_x;
 		player.y = p_y;
 		player.z = p_z;
-		player.dirX = p_dirX;
-		player.dirY = p_dirY;
-		player.dirZ = p_dirZ;
+		player.dirX = 1.0f;
+		player.dirY = 0.0f;
+		player.dirZ = 0.0f;
 		m_players.push_back(player);
 
 		std::cout << "Player added" << std::endl;
 
 		// Broadcast new player
 		BroadcastPlayers();
+	}
+}
+
+void Server::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			m_players[i].dirX = p_dirX;
+			m_players[i].dirY = p_dirY;
+			m_players[i].dirZ = p_dirZ;
+			break;
+		}
 	}
 }
 

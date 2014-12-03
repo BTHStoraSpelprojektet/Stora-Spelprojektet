@@ -23,7 +23,7 @@ public:
 	void SetAgility(float p_agility);
 	float GetAgility() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
-	void SetMyPosition(DirectX::XMFLOAT3 p_pos);
+	void SendPosition(DirectX::XMFLOAT3 p_pos);
 
 	DirectX::XMFLOAT3 GetFacingDirection();
 	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);

@@ -38,7 +38,6 @@ void PlayingStateTest::Update(double p_deltaTime)
 	
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		//MeleeAttack();
 		Network::DoMeleeAttack();
 	}
 	
@@ -47,10 +46,7 @@ void PlayingStateTest::Update(double p_deltaTime)
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
-		//const char* shurikenFile = "../Shurikenjutsu/Models/shurikenShape.SSP";
 		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
-		//m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x - box.m_extents.x, box.m_center.y - box.m_extents.y, box.m_center.z + box.m_extents.z), 
-			//shurikenDir, 0.0f, 0, 0);
 
 	}
 

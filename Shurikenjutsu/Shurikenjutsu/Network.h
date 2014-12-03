@@ -41,7 +41,8 @@ public:
 	static bool ConnectedNow();
 	static bool IsConnected();
 
-	static void SendPlayerPos(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
+	static void SendPlayerPos(float p_x, float p_y, float p_z);
+	static void SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ);
 	static std::vector<PlayerNet> GetOtherPlayers();
 	static PlayerNet GetMyPlayer();
 	static void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
@@ -62,7 +63,8 @@ public:
 private:
 	Network() {};
 	static void ReceviePacket();
-	static void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
+	static void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
+	static void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	static void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	static bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	static void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed);

@@ -116,7 +116,8 @@ void Network::ReceviePacket()
 				bitStream.Read(dirZ);
 
 				// (Add and) update players position
-				UpdatePlayerPos(guid, x, y, z, dirX, dirY, dirZ);
+				UpdatePlayerPos(guid, x, y, z);
+				UpdatePlayerDir(guid, dirX, dirY, dirZ);
 
 				playerGuids.push_back(guid);				
 			}
@@ -137,18 +138,30 @@ void Network::ReceviePacket()
 
 			RakNet::RakNetGUID guid;
 			float x, y, z;
-			float dirX, dirY, dirZ;
 
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			bitStream.Read(x);
 			bitStream.Read(y);
 			bitStream.Read(z);
+
+			UpdatePlayerPos(guid, x, y, z);
+			break;
+		}
+		case ID_PLAYER_ROTATED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float dirX, dirY, dirZ;
+
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
 			bitStream.Read(dirX);
 			bitStream.Read(dirY);
 			bitStream.Read(dirZ);
 
-			UpdatePlayerPos(guid, x, y, z, dirX, dirY, dirZ);
+			UpdatePlayerDir(guid, dirX, dirY, dirZ);
 			break;
 		}
 		case ID_SHURIKEN_THROWN:
@@ -219,7 +232,7 @@ bool Network::ConnectedNow()
 	return (!m_prevConnected && m_connected);
 }
 
-void Network::SendPlayerPos(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ)
+void Network::SendPlayerPos(float p_x, float p_y, float p_z)
 {
 	RakNet::BitStream bitStream;
 
@@ -227,6 +240,15 @@ void Network::SendPlayerPos(float p_x, float p_y, float p_z, float p_dirX, float
 	bitStream.Write(p_x);
 	bitStream.Write(p_y);
 	bitStream.Write(p_z);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+}
+
+void Network::SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
 	bitStream.Write(p_dirX);
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
@@ -234,7 +256,7 @@ void Network::SendPlayerPos(float p_x, float p_y, float p_z, float p_dirX, float
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }
 
-void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ)
+void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z)
 {
 	if (p_owner == m_clientPeer->GetMyGUID())
 	{
@@ -242,9 +264,6 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 		m_myPlayer.x = p_x;
 		m_myPlayer.y = p_y;
 		m_myPlayer.z = p_z;
-		m_myPlayer.dirX = p_dirX;
-		m_myPlayer.dirY = p_dirY;
-		m_myPlayer.dirZ = p_dirZ;
 	}
 	else
 	{
@@ -256,9 +275,6 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 				m_enemyPlayers[i].x = p_x;
 				m_enemyPlayers[i].y = p_y;
 				m_enemyPlayers[i].z = p_z;
-				m_enemyPlayers[i].dirX = p_dirX;
-				m_enemyPlayers[i].dirY = p_dirY;
-				m_enemyPlayers[i].dirZ = p_dirZ;
 
 				found = true;
 				break;
@@ -272,14 +288,37 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 			player.x = p_x;
 			player.y = p_y;
 			player.z = p_z;
-			player.dirX = p_dirX;
-			player.dirY = p_dirY;
-			player.dirZ = p_dirZ;
+			player.dirX = 1.0f;
+			player.dirY = 0.0f;
+			player.dirZ = 0.0f;
 
 			m_enemyPlayers.push_back(player);
 		}
 	}
 	
+}
+
+void Network::UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ)
+{
+	if (p_owner == m_clientPeer->GetMyGUID())
+	{
+		m_myPlayer.dirX = p_dirX;
+		m_myPlayer.dirY = p_dirY;
+		m_myPlayer.dirZ = p_dirZ;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].dirX = p_dirX;
+				m_enemyPlayers[i].dirY = p_dirY;
+				m_enemyPlayers[i].dirZ = p_dirZ;
+				break;
+			}
+		}
+	}
 }
 
 std::vector<PlayerNet> Network::GetOtherPlayers()

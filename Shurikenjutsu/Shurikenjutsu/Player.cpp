@@ -73,7 +73,7 @@ void Player::UpdateMe(double p_deltaTime)
 	SetDirection(tempFloat);
 	if (moved || Network::ConnectedNow())
 	{
-		SetMyPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
+		SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
 	}
 	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
 }
@@ -120,15 +120,14 @@ float Player::GetAgility() const
 	return m_agility;
 }
 
-void Player::SetMyPosition(DirectX::XMFLOAT3 p_pos)
+void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
 	MovingObject::SetPosition(p_pos);
 
 	if (Network::IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
-		DirectX::XMFLOAT3 dir = GetAttackDirection();
-		Network::SendPlayerPos(pos.x, pos.y, pos.z, dir.x, dir.y, dir.z);
+		Network::SendPlayerPos(p_pos.x, p_pos.y, p_pos.z);
 	}
 }
 
@@ -157,9 +156,8 @@ void Player::SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 
 	if (Network::IsConnected())
 	{
-		DirectX::XMFLOAT3 pos = GetPosition();
 		DirectX::XMFLOAT3 dir = GetAttackDirection();
-		Network::SendPlayerPos(pos.x, pos.y, pos.z, dir.x, dir.y, dir.z);
+		Network::SendPlayerDir(dir.x, dir.y, dir.z);
 	}
 }
 
