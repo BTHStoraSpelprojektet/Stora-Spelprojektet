@@ -13,6 +13,8 @@
 #include "DebugRectangle.h"
 #include "DebugShape2D.h"
 #include "DebugShape3D.h"
+#include "DebugCircle.h"
+#include "DebugDot.h"
 
 class DebugDraw
 {

@@ -16,8 +16,12 @@ bool PlayerManager::Initialize()
 	m_enemyList = std::vector<Player>();
 	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.1f, 100, 5, 100, 20);
 
+	// ========== DEBUG TEMP LINES ==========
 	m_debugLines.Initialize(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	m_debugLines.AddLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z + 100.0f));
+	m_debugLines.AddLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 0.1f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x, 0.1f, m_player.GetPosition().z + 100.0f));
+
+	m_debugDot.Initialize(DirectX::XMFLOAT3(m_player.GetPosition().x, 0.1f, m_player.GetPosition().z), 1000, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+	// ========== DEBUG TEMP LINES ==========
 
 	return true;
 }
@@ -90,6 +94,7 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 {
 	m_player.Render(p_shader);
 
+	// ========== DEBUG TEMP LINES ==========
 	if (p_shader == SHADERTYPE_SCENE)
 	{
 		DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
@@ -106,7 +111,15 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 
 		m_debugLines.UpdateWorldMatrix(world);
 		m_debugLines.Render();
+
+		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_player.GetPosition().x + m_player.GetAttackDirection().x * 5.0f, 0.0f, m_player.GetPosition().z + m_player.GetAttackDirection().z * 5.0f);
+		matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+		DirectX::XMStoreFloat4x4(&world, matrix);
+
+		m_debugDot.UpdateWorldMatrix(world);
+		m_debugDot.Render();
 	}
+	// ========== DEBUG TEMP LINES ==========
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{

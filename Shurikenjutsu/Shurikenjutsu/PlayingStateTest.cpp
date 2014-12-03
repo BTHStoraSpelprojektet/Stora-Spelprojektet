@@ -8,6 +8,7 @@ PlayingStateTest::PlayingStateTest()
 
 PlayingStateTest::~PlayingStateTest()
 {
+
 }
 
 bool PlayingStateTest::Initialize()
@@ -23,6 +24,12 @@ bool PlayingStateTest::Initialize()
 	//Load level
 	Level level(&m_objectManager, "../Shurikenjutsu/Levels/testBana.SSPL");
 	GLOBAL::GetInstance().shurikenThrownID = 0;
+
+	// ========== DEBUG TEMP LINES ==========
+	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.1f, m_playerManager.GetPlayerPosition().z), 5.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.1f, m_playerManager.GetPlayerPosition().z), 5.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	// ========== DEBUG TEMP LINES ==========
+
 	return true;
 }
 
@@ -75,6 +82,22 @@ void PlayingStateTest::Render()
 	// Draw to the scene.
 	m_playerManager.Render(SHADERTYPE_SCENE);
 	m_objectManager.Render(SHADERTYPE_SCENE);
+
+	// ========== DEBUG TEMP LINES ==========
+	DirectX::XMFLOAT4X4 circleWorld;
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition()));
+	DirectX::XMStoreFloat4x4(&circleWorld, matrix);
+
+	m_circle1.UpdateWorldMatrix(circleWorld);
+	m_circle1.Render();
+
+	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
+	matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+	DirectX::XMStoreFloat4x4(&circleWorld, matrix);
+
+	m_circle2.UpdateWorldMatrix(circleWorld);
+	m_circle2.Render();
+	// ========== DEBUG TEMP LINES ==========
 
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
