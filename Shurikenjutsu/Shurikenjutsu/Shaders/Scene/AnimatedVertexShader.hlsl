@@ -94,7 +94,7 @@ Output main(Input p_input)
 
 	// Normalmap TBN matrix.
 	float3 N = output.m_normal;
-	float3 T = normalize(output.m_tangent - dot(output.m_tangent, N)*N);
+	float3 T = -normalize(output.m_tangent - dot(output.m_tangent, N)*N);
 	float3 B = cross(N, T);
 
 	output.m_tBN = float3x3(T, B, N);
