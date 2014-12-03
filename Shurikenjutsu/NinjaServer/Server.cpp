@@ -354,9 +354,8 @@ void Server::CheckCollisions()
 			{
 				continue;
 			}
-			if ((m_players[j].x < newPosX + radius && m_players[j].x > newPosX - radius) && (m_players[j].z < newPosZ + radius && m_players[j].z > newPosZ - radius))
+			if (IntersectionTests::Intersections::SphereSphereCollision(DirectX::XMFLOAT3(m_players[j].x, m_players[j].y, m_players[j].z), 1.0f, DirectX::XMFLOAT3(newPosX, newPosY, newPosZ), 0.5f))
 			{
-				//std::cout << "Shuriken hit a player\n";
 				BroadcastDestoyedShuriken(m_shurikens[i].shurikenId);
 
 				m_shurikens.erase(m_shurikens.begin() + i);

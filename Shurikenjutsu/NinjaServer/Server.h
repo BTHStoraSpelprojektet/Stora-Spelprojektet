@@ -15,6 +15,9 @@
 #include "..\CommonLibs\ServerMessages.h"
 #include <vector>
 
+#pragma comment(lib, "PhysicsDll.lib")
+#include "PhysicsDll.h"
+
 class Server
 {
 public:
