@@ -34,6 +34,7 @@ private:
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
+	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 
 	void AddShuriken(RakNet::RakNetGUID, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdateShurikens(double p_deltaTime);

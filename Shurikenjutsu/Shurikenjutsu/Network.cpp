@@ -9,6 +9,7 @@ bool Network::m_prevConnected;
 bool Network::m_newOrRemovedPlayers;
 bool Network::m_shurikenListUpdated;
 bool Network::m_respawned;
+bool Network::m_invalidMove;
 int Network::m_connectionCount;
 PlayerNet Network::m_myPlayer;
 std::vector<PlayerNet> Network::m_enemyPlayers;
@@ -22,6 +23,7 @@ bool Network::Initialize()
 	m_newOrRemovedPlayers = false;
 	m_shurikenListUpdated = false;
 	m_respawned = false;
+	m_invalidMove = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -214,6 +216,11 @@ void Network::ReceviePacket()
 
 			break;
 		}
+		case ID_PLAYER_INVALID_MOVE:
+		{
+			m_invalidMove = true;
+			break;
+		}
 		default:
 		{
 			break;
@@ -342,8 +349,6 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	bitStream.Write(p_dirX);
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
-	//bitStream.Write(p_shurikenID);
-	//bitStream.Write(owner);
 	
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }
@@ -470,4 +475,14 @@ void Network::DoMeleeAttack()
 	bitStream.Write((RakNet::MessageID)ID_MELEE_ATTACK);
 	
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+}
+
+bool Network::MadeInvalidMove()
+{
+	return m_invalidMove;
+}
+
+void Network::UpdatedMoveFromInvalidMove()
+{
+	m_invalidMove = false;
 }

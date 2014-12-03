@@ -46,7 +46,9 @@ public:
 	static std::vector<PlayerNet> GetOtherPlayers();
 	static PlayerNet GetMyPlayer();
 	static void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
-	static std::vector <ShurikenNet> GetShurikens();	
+	static std::vector <ShurikenNet> GetShurikens();
+	static bool MadeInvalidMove();
+	static void UpdatedMoveFromInvalidMove();
 
 	static RakNet::RakNetGUID GetMyGUID();
 	static bool IsPlayerListUpdated();
@@ -81,6 +83,7 @@ private:
 	static bool m_newOrRemovedPlayers;
 	static bool m_shurikenListUpdated;
 	static bool m_respawned;
+	static bool m_invalidMove;
 	static PlayerNet m_myPlayer;
 	static std::vector<PlayerNet> m_enemyPlayers;
 	static std::vector<ShurikenNet> m_shurikensList;

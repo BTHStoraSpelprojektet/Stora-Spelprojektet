@@ -194,9 +194,17 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			m_players[i].x = p_x;
-			m_players[i].y = p_y;
-			m_players[i].z = p_z;
+			if (abs(p_x - m_players[i].x) > 1.0f || abs(p_y - m_players[i].y) > 1.0f || abs(p_z - m_players[i].z) > 1.0f)
+			{
+				// Moved too far
+				SendInvalidMessage(p_guid);
+			}
+			else
+			{
+				m_players[i].x = p_x;
+				m_players[i].y = p_y;
+				m_players[i].z = p_z;
+			}			
 
 			found = true;
 			break;
@@ -209,9 +217,10 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 	{
 		PlayerNet player;
 		player.guid = p_guid;
-		player.x = p_x;
-		player.y = p_y;
-		player.z = p_z;
+		int spawnIndex = 0;
+		player.x = m_spawnPoints[spawnIndex].x;
+		player.y = m_spawnPoints[spawnIndex].y;
+		player.z = m_spawnPoints[spawnIndex].z;
 		player.dirX = 1.0f;
 		player.dirY = 0.0f;
 		player.dirZ = 0.0f;
@@ -464,4 +473,13 @@ void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
 			break;
 		}
 	}
+}
+
+void Server::SendInvalidMessage(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_INVALID_MOVE);
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }
