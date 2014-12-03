@@ -423,3 +423,12 @@ void Network::RespawnPlayer(float p_x, float p_y, float p_z)
 	m_myPlayer.z = p_z;
 	m_respawned = true;
 }
+
+void Network::DoMeleeAttack()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_MELEE_ATTACK);
+	
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+}

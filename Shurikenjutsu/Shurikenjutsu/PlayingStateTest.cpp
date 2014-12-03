@@ -35,14 +35,16 @@ void PlayingStateTest::Shutdown()
 
 void PlayingStateTest::Update(double p_deltaTime)
 {
-	// Temporary "Shuriken" spawn
+	
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		MeleeAttack();
+		//MeleeAttack();
+		Network::DoMeleeAttack();
 	}
 	
 	BasicPicking();
 
+	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		//const char* shurikenFile = "../Shurikenjutsu/Models/shurikenShape.SSP";

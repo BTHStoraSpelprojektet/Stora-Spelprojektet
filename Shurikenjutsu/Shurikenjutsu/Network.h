@@ -45,8 +45,7 @@ public:
 	static std::vector<PlayerNet> GetOtherPlayers();
 	static PlayerNet GetMyPlayer();
 	static void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
-	static std::vector <ShurikenNet> GetShurikens();
-	static std::vector<ShurikenNet> m_shurikensList;
+	static std::vector <ShurikenNet> GetShurikens();	
 
 	static RakNet::RakNetGUID GetMyGUID();
 	static bool IsPlayerListUpdated();
@@ -57,6 +56,8 @@ public:
 
 	static bool HasRespawned();
 	static void SetHaveRespawned();
+
+	static void DoMeleeAttack();
 
 private:
 	Network() {};
@@ -80,6 +81,7 @@ private:
 	static bool m_respawned;
 	static PlayerNet m_myPlayer;
 	static std::vector<PlayerNet> m_enemyPlayers;
+	static std::vector<ShurikenNet> m_shurikensList;
 	
 	
 };
