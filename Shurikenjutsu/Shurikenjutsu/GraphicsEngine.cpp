@@ -125,9 +125,9 @@ void GraphicsEngine::RenderUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderRes
 	m_GUIShader.Render(m_directX.GetContext(), p_worldMatrix, p_texture);
 }
 
-void GraphicsEngine::RenderLine(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color)
+void GraphicsEngine::RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix)
 {
-	m_sceneShader.RenderLine(m_directX.GetContext(), p_mesh, p_number, p_color);
+	m_sceneShader.RenderLines(m_directX.GetContext(), p_mesh, p_number, p_color, p_worldMatrix);
 }
 
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)

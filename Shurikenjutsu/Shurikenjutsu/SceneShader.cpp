@@ -470,16 +470,13 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void SceneShader::RenderLine(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT3 p_color)
+void SceneShader::RenderLines(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(DirectX::XMFLOAT3);
 	const unsigned int offset = 0;
 
-	DirectX::XMFLOAT4X4 worldMatrix;
-	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixIdentity());
-
-	UpdateWorldMatrix(p_context, worldMatrix);
+	UpdateWorldMatrix(p_context, p_worldMatrix);
 	UpdateColorBuffer(p_context, p_color.x, p_color.y, p_color.z);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);

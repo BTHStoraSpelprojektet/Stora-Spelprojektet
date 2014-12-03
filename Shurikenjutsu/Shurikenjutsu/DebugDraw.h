@@ -8,21 +8,19 @@
 #include "Buffer.h"
 #include "GraphicsEngine.h"
 
+#include "DebugBox.h"
+#include "DebugLineList.h"
+#include "DebugRectangle.h"
+#include "DebugShape2D.h"
+#include "DebugShape3D.h"
+
 class DebugDraw
 {
 public:
 	static DebugDraw& GetInstance();
 
 	// Basic.
-	void RenderLine(DirectX::XMFLOAT3 p_startPoint, DirectX::XMFLOAT3 p_endPoint, DirectX::XMFLOAT3 p_color);
-
-	// 2D.
-	void RenderRectangle(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, DirectX::XMFLOAT3 p_color);
-	void Render2DShape(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::XMFLOAT3 p_color);
-
-	// 3D.
-	void RenderBox(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, float p_height, DirectX::XMFLOAT3 p_color);
-	void Render3DShape(std::vector<DirectX::XMFLOAT3> p_shape, float p_height, DirectX::XMFLOAT3 p_color);
+	void RenderSingleLine(DirectX::XMFLOAT3 p_startPoint, DirectX::XMFLOAT3 p_endPoint, DirectX::XMFLOAT3 p_color);
 
 private:
 	DebugDraw() {};

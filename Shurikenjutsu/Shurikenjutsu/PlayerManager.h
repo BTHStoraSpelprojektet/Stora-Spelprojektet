@@ -35,7 +35,7 @@ private:
 
 	Player m_player;
 	std::vector<Player> m_enemyList;
-	
+	DebugLineList m_debugLines;
 };
 
 #endif PLAYERMANAGER

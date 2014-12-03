@@ -3,23 +3,28 @@
 
 PlayerManager::PlayerManager()
 {
-}
 
+}
 
 PlayerManager::~PlayerManager()
 {
+
 }
 
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
 	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.1f, 100, 5, 100, 20);
+
+	m_debugLines.Initialize(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	m_debugLines.AddLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z + 100.0f));
+
 	return true;
 }
 
 void PlayerManager::Shutdown()
 {
-
+	m_debugLines.Shutdown();
 }
 
 void PlayerManager::Update(double p_deltaTime)
@@ -44,6 +49,8 @@ void PlayerManager::Update(double p_deltaTime)
 				{
 					// Remove player
 					m_enemyList.erase(m_enemyList.begin() + i);
+					m_debugLines.RemoveLine(i * 2);
+
 					i--;
 					ConsolePrintText("Removed enemy player in playermanager");
 				}
@@ -56,6 +63,8 @@ void PlayerManager::Update(double p_deltaTime)
 				{
 					// Add player
 					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, 100, 20);
+					m_debugLines.AddLine(DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x, 3.0f, m_enemyList[i].GetPosition().z), DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x + m_enemyList[i].GetAttackDirection().x  * 100.0f, 3.0f, m_enemyList[i].GetPosition().z + m_enemyList[i].GetAttackDirection().z * 100.0f));
+					
 					ConsolePrintText("Added enemy player in playermanager");
 				}
 			}
@@ -78,17 +87,13 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 
 	if (p_shader == SHADERTYPE_SCENE)
 	{
-		DebugDraw::GetInstance().RenderLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x + m_player.GetAttackDirection().x  * 100.0f, 3.0f, m_player.GetPosition().z + m_player.GetAttackDirection().z * 100.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		//DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x + m_player.GetAttackDirection().x  * 100.0f, 3.0f, m_player.GetPosition().z + m_player.GetAttackDirection().z * 100.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		m_debugLines.Render();
 	}
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
 		m_enemyList[i].Render(p_shader);
-
-		if (p_shader == SHADERTYPE_SCENE)
-		{
-			DebugDraw::GetInstance().RenderLine(DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x, 3.0f, m_enemyList[i].GetPosition().z), DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x + m_enemyList[i].GetAttackDirection().x  * 100.0f, 3.0f, m_enemyList[i].GetPosition().z + m_enemyList[i].GetAttackDirection().z * 100.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-		}
 	}
 }
 
