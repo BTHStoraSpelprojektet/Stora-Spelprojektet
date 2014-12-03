@@ -8,20 +8,12 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize()
 {
-	/*m_plane.LoadModel("../Shurikenjutsu/Models/FloorShape.SSP");
-	GraphicsEngine::AddInstanceBuffer(1);
-
-	m_object.LoadModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	GraphicsEngine::AddInstanceBuffer(3);*/
-
 	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
 
 	m_animatedCharacter.LoadModel("../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
-	translation = DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f);
+	translation = DirectX::XMFLOAT3(-20.0f, 0.0f, 10.0f);
 	m_animatedCharacter.Translate(translation);
-
-
 
 	return true;
 }

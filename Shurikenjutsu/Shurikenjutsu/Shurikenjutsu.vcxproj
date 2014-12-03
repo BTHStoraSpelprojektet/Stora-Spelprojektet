@@ -89,6 +89,12 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DebugBox.cpp" />
+    <ClCompile Include="DebugDot.cpp" />
+    <ClCompile Include="DebugLineList.cpp" />
+    <ClCompile Include="DebugRectangle.cpp" />
+    <ClCompile Include="DebugShape2D.cpp" />
+    <ClCompile Include="DebugShape3D.cpp" />
     <ClCompile Include="DepthShader.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -115,6 +121,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Shuriken.cpp" />
+    <ClCompile Include="DebugCircle.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -126,6 +133,12 @@
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="ConsoleFunctions.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DebugBox.h" />
+    <ClInclude Include="DebugCircle.h" />
+    <ClInclude Include="DebugDot.h" />
+    <ClInclude Include="DebugLineList.h" />
+    <ClInclude Include="DebugShape2D.h" />
+    <ClInclude Include="DebugShape3D.h" />
     <ClInclude Include="DepthShader.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Enumerations.h" />
@@ -147,6 +160,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayingStateTest.h" />
+    <ClInclude Include="DebugRectangle.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />

@@ -8,6 +8,7 @@ PlayingStateTest::PlayingStateTest()
 
 PlayingStateTest::~PlayingStateTest()
 {
+
 }
 
 bool PlayingStateTest::Initialize()
@@ -23,6 +24,12 @@ bool PlayingStateTest::Initialize()
 	//Load level
 	Level level(&m_objectManager, "../Shurikenjutsu/Levels/testBana.SSPL");
 	GLOBAL::GetInstance().shurikenThrownID = 0;
+
+	// ========== DEBUG TEMP LINES ==========
+	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.1f, m_playerManager.GetPlayerPosition().z), 5.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.1f, m_playerManager.GetPlayerPosition().z), 5.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	// ========== DEBUG TEMP LINES ==========
+
 	return true;
 }
 
@@ -47,7 +54,6 @@ void PlayingStateTest::Update(double p_deltaTime)
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
-
 	}
 
 	m_objectManager.Update(p_deltaTime);
@@ -78,6 +84,22 @@ void PlayingStateTest::Render()
 	m_playerManager.Render(SHADERTYPE_SCENE);
 	m_objectManager.Render(SHADERTYPE_SCENE);
 
+	// ========== DEBUG TEMP LINES ==========
+	DirectX::XMFLOAT4X4 circleWorld;
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition()));
+	DirectX::XMStoreFloat4x4(&circleWorld, matrix);
+
+	m_circle1.UpdateWorldMatrix(circleWorld);
+	m_circle1.Render();
+
+	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
+	matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+	DirectX::XMStoreFloat4x4(&circleWorld, matrix);
+
+	m_circle2.UpdateWorldMatrix(circleWorld);
+	m_circle2.Render();
+	// ========== DEBUG TEMP LINES ==========
+
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
 
@@ -103,7 +125,7 @@ void PlayingStateTest::RenderAlpha()
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
 		Model tempModel = tempList[i].GetModel();
-		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture());
+		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), tempModel.GetNormalMap());
 	}
 }
 
@@ -114,30 +136,15 @@ void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 void PlayingStateTest::MeleeAttack()
 {
 	std::vector<Model> modelList = m_objectManager.GetListOfStaticModels();
-	for (int i = 0; i < modelList.size(); i++)
+	for (unsigned int i = 0; i < modelList.size(); i++)
 	{
 		std::vector<Box> boxList = modelList[i].GetBoundingBoxes();
 		if (boxList.size() != 0)
 		{
-			for (int j = 0; j < boxList.size(); j++)
+			for (unsigned int j = 0; j < boxList.size(); j++)
 			{
 				Box box = boxList[j];
-				/*DirectX::XMFLOAT3 shurikenDir = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
-				const char* shurikenFile = "../Shurikenjutsu/Models/shurikenShape.SSP";
 			
-				//The box
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x, box.m_center.y, box.m_center.z), DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f), 0.0f, 0, 0);
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x + box.m_extents.x, box.m_center.y + box.m_extents.y, box.m_center.z + box.m_extents.z), shurikenDir, 0.0f, 0, 0);
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x - box.m_extents.x, box.m_center.y - box.m_extents.y, box.m_center.z - box.m_extents.z), shurikenDir, 0.0f, 0, 0);
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x + box.m_extents.x, box.m_center.y - box.m_extents.y, box.m_center.z + box.m_extents.z), shurikenDir, 0.0f, 0, 0);
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x - box.m_extents.x, box.m_center.y + box.m_extents.y, box.m_center.z - box.m_extents.z), shurikenDir, 0.0f, 0, 0);
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x - box.m_extents.x, box.m_center.y + box.m_extents.y, box.m_center.z + box.m_extents.z), shurikenDir, 0.0f, 0, 0);
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x + box.m_extents.x, box.m_center.y - box.m_extents.y, box.m_center.z - box.m_extents.z), shurikenDir, 0.0f, 0, 0);
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x - box.m_extents.x, box.m_center.y - box.m_extents.y, box.m_center.z + box.m_extents.z), shurikenDir, 0.0f, 0, 0);
-				m_objectManager.AddShuriken(shurikenFile, DirectX::XMFLOAT3(box.m_center.x + box.m_extents.x, box.m_center.y + box.m_extents.y, box.m_center.z - box.m_extents.z), shurikenDir, 0.0f, 0, 0);
-				//m_objectManager.AddShuriken(shurikenFile,
-				//	DirectX::XMFLOAT3(playerPos.x + attackDirection.x*sphere.m_radius, playerPos.y + attackDirection.y*sphere.m_radius, playerPos.z + attackDirection.z*sphere.m_radius), shurikenDir, 0.0f, 0);
-				*/
 				DirectX::XMFLOAT3 playerPos = m_playerManager.GetPlayerPosition();
 				Sphere sphere = Sphere(playerPos, 5.0f);
 				DirectX::XMFLOAT3 attackDirection = m_playerManager.GetAttackDirection();

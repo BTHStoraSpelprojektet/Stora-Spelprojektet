@@ -22,7 +22,7 @@ struct Input
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
 
-	//float3x3 m_tBN : TBN;
+	float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
 	float4 m_cameraPosition : CAMERA;
@@ -61,21 +61,21 @@ float4 main(Input p_input) : SV_Target
 		float lightDepth = p_input.m_lightPositionHomogenous.z;
 
 		// Subtract the bias from the depth value of the light.
-		lightDepth = lightDepth - 0.001f;
+		lightDepth = lightDepth - 0.00001f;
 
 		// Compare the depth of the shadow map and the depth of the light to determine whether to shadow or to light this pixel.
 		if (lightDepth < depth)
 		{
 			// Sample NormalMap
-			/*float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
+			float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
 			// Uncompress NormalMap - to get it into the right range
 			float3 normalT = 2.0f * normalMapSample - 1.0f;
 			// Transforms from tangetspace to world space
-			float3 bumpedNormalW = mul(normalT, p_input.m_tBN);*/
+			float3 bumpedNormalW = mul(normalT, p_input.m_tBN);
 			//end of normalmap stuff
 
 			// Normalize normals.
-			float3 normal = normalize(p_input.m_normal);
+			float3 normal = normalize(bumpedNormalW);
 
 			// Calculate the vector to the camera.
 			float3 toCamera = normalize(p_input.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
@@ -89,15 +89,15 @@ float4 main(Input p_input) : SV_Target
 	else
 	{
 		// Sample NormalMap
-		/*float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
+		float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
 		// Uncompress NormalMap - to get it into the right range
 		float3 normalT = 2.0f * normalMapSample - 1.0f;
 		// Transforms from tangetspace to world space
-		float3 bumpedNormalW = mul(normalT, p_input.m_tBN);*/
+		float3 bumpedNormalW = mul(normalT, p_input.m_tBN);
 		//end of normalmap stuff
 
 		// Normalize normals.
-		float3 normal = normalize(p_input.m_normal);
+		float3 normal = normalize(bumpedNormalW);
 
 		// Calculate the vector to the camera.
 		float3 toCamera = normalize(p_input.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
