@@ -156,6 +156,11 @@ void Server::ReceviePacket()
 			BroadcastPlayers();
 			break;
 		}
+		case ID_MELEE_ATTACK:
+		{
+			MeleeAttack(m_packet->guid);
+			break;
+		}
 		default:
 			break;
 		}
@@ -426,7 +431,7 @@ void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(m_players[i].x, m_players[i].y, m_players[i].z);
 		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		// Make collision test
-		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 5.0f, boxPosition, boxExtent, attackDirection))
+		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 1.0f, boxPosition, boxExtent, attackDirection))
 		{
 			// Respawn player
 			RespawnPlayer(m_players[i].guid);
