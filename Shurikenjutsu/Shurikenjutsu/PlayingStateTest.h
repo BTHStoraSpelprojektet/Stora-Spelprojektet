@@ -11,6 +11,7 @@
 #include "Level.h"
 #include "Collisions.h"
 #include <d3d9.h>
+#include "DebugDraw.h"
 
 class PlayingStateTest :
 	public GameState
@@ -35,6 +36,11 @@ private:
 	Camera m_camera;
 
 	float twoPi;
+
+	// ========== DEBUG TEMP LINES ==========
+	DebugCircle m_circle1;
+	DebugCircle m_circle2;
+	// ========== DEBUG TEMP LINES ==========
 };
 
 #endif PLAYINGSTATE
