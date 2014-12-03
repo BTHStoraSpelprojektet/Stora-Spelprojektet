@@ -116,12 +116,12 @@ void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 void PlayingStateTest::MeleeAttack()
 {
 	std::vector<Model> modelList = m_objectManager.GetListOfStaticModels();
-	for (int i = 0; i < modelList.size(); i++)
+	for (unsigned int i = 0; i < modelList.size(); i++)
 	{
 		std::vector<Box> boxList = modelList[i].GetBoundingBoxes();
 		if (boxList.size() != 0)
 		{
-			for (int j = 0; j < boxList.size(); j++)
+			for (unsigned int j = 0; j < boxList.size(); j++)
 			{
 				Box box = boxList[j];
 				/*DirectX::XMFLOAT3 shurikenDir = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);

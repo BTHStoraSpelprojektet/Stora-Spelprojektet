@@ -109,6 +109,12 @@
     <Filter Include="Shaders\Line">
       <UniqueIdentifier>{e854a981-efee-478c-894d-ae58c1e87c5d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utility\DebugDraw">
+      <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility\DebugDraw">
+      <UniqueIdentifier>{6ca99271-27a1-4224-a30f-02cd00536f35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -211,7 +217,22 @@
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="DebugDraw.cpp">
-      <Filter>Source Files\Utility</Filter>
+      <Filter>Source Files\Utility\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRectangle.cpp">
+      <Filter>Source Files\Utility\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLineList.cpp">
+      <Filter>Source Files\Utility\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugShape2D.cpp">
+      <Filter>Source Files\Utility\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugShape3D.cpp">
+      <Filter>Source Files\Utility\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugBox.cpp">
+      <Filter>Source Files\Utility\DebugDraw</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -327,7 +348,22 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="DebugDraw.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRectangle.h">
+      <Filter>Header Files\Utility\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugLineList.h">
+      <Filter>Header Files\Utility\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugShape2D.h">
+      <Filter>Header Files\Utility\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugShape3D.h">
+      <Filter>Header Files\Utility\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugBox.h">
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

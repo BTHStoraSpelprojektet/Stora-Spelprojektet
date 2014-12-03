@@ -13,7 +13,7 @@ public:
 	void Shutdown();
 
 	void UpdateViewMatrix();
-	void UpdateProjectionMatrix();
+	void UpdateProjectionMatrix(bool p_orthographic);
 	void UpdateMovedCamera();
 
 	void UpdatePosition(DirectX::XMFLOAT3 p_position);
