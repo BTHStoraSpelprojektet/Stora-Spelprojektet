@@ -354,10 +354,13 @@ void Server::CheckCollisions()
 
 		for (unsigned int j = 0; j < m_players.size(); j++)
 		{
+			// This is so you dont collide with your own shurikens
 			if (m_players[j].guid == m_shurikens[i].guid)
 			{
 				continue;
 			}
+
+			// Make collision test
 			if (IntersectionTests::Intersections::SphereSphereCollision(DirectX::XMFLOAT3(m_players[j].x, m_players[j].y, m_players[j].z), 1.0f, DirectX::XMFLOAT3(newPosX, newPosY, newPosZ), 0.5f))
 			{
 				// Remove shuriken

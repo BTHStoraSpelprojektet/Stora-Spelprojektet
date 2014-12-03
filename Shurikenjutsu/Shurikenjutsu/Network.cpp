@@ -66,12 +66,21 @@ void Network::ReceviePacket()
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
 			break;
 		}
-
 		case ID_CONNECTION_ATTEMPT_FAILED:
 		{
-				ConsolePrintError("Connection to server failed, trying to reconnect");
+			ConsolePrintError("Connection to server failed, trying to reconnect");
 
 			m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
+			break;
+		}
+		case ID_DISCONNECTION_NOTIFICATION:
+		{
+			ConsolePrintError("Server has shutdowned");
+			break;
+		}
+		case ID_CONNECTION_LOST:
+		{
+			ConsolePrintError("Lost connection to server");
 			break;
 		}
 		case ID_NR_CONNECTIONS:
