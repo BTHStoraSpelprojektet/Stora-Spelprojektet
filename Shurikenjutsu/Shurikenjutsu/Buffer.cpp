@@ -34,7 +34,7 @@ ID3D11Buffer* Buffer::CreateBuffer(BUFFERTYPE P_type, ID3D11Device* p_device, st
 			// Setup vertex buffer description.
 			D3D11_BUFFER_DESC vertexBuffer;
 			vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
-			vertexBuffer.ByteWidth = sizeof(VertexAnimated)* p_meshAnimated.size();
+			vertexBuffer.ByteWidth = sizeof(VertexAnimated) * p_meshAnimated.size();
 			vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 			vertexBuffer.CPUAccessFlags = 0;
 			vertexBuffer.MiscFlags = 0;
@@ -51,7 +51,7 @@ ID3D11Buffer* Buffer::CreateBuffer(BUFFERTYPE P_type, ID3D11Device* p_device, st
 
 			break;
 		}
-		
+
 		default:
 		{
 			ConsolePrintErrorAndQuit("Invalid buffer type passed to CreateBuffer().");
@@ -64,6 +64,31 @@ ID3D11Buffer* Buffer::CreateBuffer(BUFFERTYPE P_type, ID3D11Device* p_device, st
 		ConsolePrintErrorAndQuit("Failed to create buffer.");
 		return NULL;
 	}
+
+	return buffer;
+}
+
+ID3D11Buffer* Buffer::CreateLineBuffer(ID3D11Device* p_device, std::vector<DirectX::XMFLOAT3> p_mesh)
+{
+	ID3D11Buffer* buffer = NULL;
+
+	// Setup vertex buffer description.
+	D3D11_BUFFER_DESC vertexBuffer;
+	vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
+	vertexBuffer.ByteWidth = sizeof(DirectX::XMFLOAT3) * p_mesh.size();
+	vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBuffer.CPUAccessFlags = 0;
+	vertexBuffer.MiscFlags = 0;
+	vertexBuffer.StructureByteStride = 0;
+
+	// Setup vertex buffer data.
+	D3D11_SUBRESOURCE_DATA vertexData;
+	vertexData.pSysMem = p_mesh.data();
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Create the vertex buffer.
+	p_device->CreateBuffer(&vertexBuffer, &vertexData, &buffer);
 
 	return buffer;
 }

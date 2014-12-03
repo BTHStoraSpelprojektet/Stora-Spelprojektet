@@ -313,6 +313,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 {
 	// Lock Camera on player
 	DirectX::XMFLOAT3 playerPosition = p_playerPos;
+
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 40.0f, playerPosition.z - 20.0f);
 	DirectX::XMFLOAT3 target = playerPosition;
 
@@ -355,18 +356,18 @@ void Camera::ResetCameraToLight()
 {
 	// Reset camera.
 	DirectX::XMFLOAT3 target = DirectX::XMFLOAT3(0, 0, 0);
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(10.0f, 20.0f, 10.0f);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(-60.0f, 100.0f, 20.0f);
 
 	UpdatePosition(position);
 	UpdateTarget(target);
 
-	m_upVector = DirectX::XMFLOAT3(-10.0f, 20.0f, -10.0f);
+	m_upVector = DirectX::XMFLOAT3(60.0f, 100.0f, -20.0f);
 	DirectX::XMStoreFloat3(&m_upVector, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_upVector)));
 
-	m_look = DirectX::XMFLOAT3(-10.0f, -20.0f, -10.0f);
+	m_look = DirectX::XMFLOAT3(60.0f, -100.0f, -20.0f);
 	DirectX::XMStoreFloat3(&m_look, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_look)));
 
-	m_right = DirectX::XMFLOAT3(10.0f, 0.0f, -10.0f);
+	m_right = DirectX::XMFLOAT3(-60.0f, 0.0f, -20.0f);
 	DirectX::XMStoreFloat3(&m_right, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_right)));
 
 	// Projection data.
