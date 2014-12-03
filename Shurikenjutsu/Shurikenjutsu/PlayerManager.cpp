@@ -49,8 +49,6 @@ void PlayerManager::Update(double p_deltaTime)
 				{
 					// Remove player
 					m_enemyList.erase(m_enemyList.begin() + i);
-					m_debugLines.RemoveLine(i * 2);
-
 					i--;
 					ConsolePrintText("Removed enemy player in playermanager");
 				}
@@ -63,8 +61,6 @@ void PlayerManager::Update(double p_deltaTime)
 				{
 					// Add player
 					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, 100, 20);
-					m_debugLines.AddLine(DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x, 3.0f, m_enemyList[i].GetPosition().z), DirectX::XMFLOAT3(m_enemyList[i].GetPosition().x + m_enemyList[i].GetAttackDirection().x  * 100.0f, 3.0f, m_enemyList[i].GetPosition().z + m_enemyList[i].GetAttackDirection().z * 100.0f));
-					
 					ConsolePrintText("Added enemy player in playermanager");
 				}
 			}
@@ -87,7 +83,19 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 
 	if (p_shader == SHADERTYPE_SCENE)
 	{
-		//DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x + m_player.GetAttackDirection().x  * 100.0f, 3.0f, m_player.GetPosition().z + m_player.GetAttackDirection().z * 100.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		DirectX::XMFLOAT3 v2 = m_player.GetAttackDirection();
+
+		float x = (v1.x * v2.z) - (v2.x * v1.z);
+		float y = (v1.x * v2.x) - (v1.z * v2.z);
+
+		float faceAngle = atan2(y, x);
+
+		DirectX::XMFLOAT4X4 world;
+		DirectX::XMMATRIX matrix = DirectX::XMMatrixRotationY(faceAngle) * DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_player.GetPosition()));
+		DirectX::XMStoreFloat4x4(&world, matrix);
+
+		m_debugLines.UpdateWorldMatrix(world);
 		m_debugLines.Render();
 	}
 

@@ -61,7 +61,7 @@ float4 main(Input p_input) : SV_Target
 		float lightDepth = p_input.m_lightPositionHomogenous.z;
 
 		// Subtract the bias from the depth value of the light.
-		lightDepth = lightDepth - 0.001f;
+		lightDepth = lightDepth - 0.00001f;
 
 		// Compare the depth of the shadow map and the depth of the light to determine whether to shadow or to light this pixel.
 		if (lightDepth < depth)
