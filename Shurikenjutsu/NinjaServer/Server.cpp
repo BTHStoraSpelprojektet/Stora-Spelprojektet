@@ -230,6 +230,12 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 
 		// Broadcast new player
 		BroadcastPlayers();
+
+		if (abs(p_x - player.x) > 1.0f || abs(p_y - player.y) > 1.0f || abs(p_z - player.z) > 1.0f)
+		{
+			// Moved too far
+			SendInvalidMessage(p_guid);
+		}
 	}
 }
 
