@@ -32,6 +32,7 @@ private:
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
+	void RespawnPlayer(RakNet::RakNetGUID p_guid);
 
 	void AddShuriken(RakNet::RakNetGUID, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdateShurikens(double p_deltaTime);
@@ -48,6 +49,7 @@ private:
 	float m_shurikenSetTimeLeft;
 	std::vector<PlayerNet> m_players;
 	std::vector<ShurikenNet> m_shurikens;
+	std::vector<SpawnPoint> m_spawnPoints;
 };
 
 #endif SERVER
