@@ -102,6 +102,9 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	// Initialize network
 	Network::Initialize();
 
+	// Initialize model library
+	ModelLibrary::GetInstance()->Initialize();
+
 	return result;
 }
 
@@ -118,6 +121,9 @@ void System::Shutdown()
 
 	// Shutdown network
 	Network::Shutdown();
+
+	// Shutdown model library
+	ModelLibrary::GetInstance()->Shutdown();
 }
 
 void System::Run()

@@ -23,16 +23,8 @@ public:
 	ID3D11Buffer* GetMesh();
 	ID3D11ShaderResourceView* GetTexture();
 	ID3D11ShaderResourceView* GetNormalMap();
-	DirectX::XMFLOAT4X4 GetWorldMatrix();
 	int GetVertexCount();
 	std::vector<DirectX::XMMATRIX> GetAnimation();
-
-	void Rotate(DirectX::XMFLOAT3 p_rotation);
-	void Translate(DirectX::XMFLOAT3 p_translation);
-	void Scale(DirectX::XMFLOAT3 p_scale);
-
-	void SetPosition(DirectX::XMFLOAT3 p_position);
-	void UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation); 
 
 	void ResetModel();
 
@@ -45,7 +37,7 @@ protected:
 	std::vector<DirectX::XMMATRIX> boneTransforms;
 
 	int m_vertexCount;
-	DirectX::XMFLOAT4X4 m_worldMatrix;
+	
 	std::vector<Box> m_boundingBoxes;
 };
 #endif;

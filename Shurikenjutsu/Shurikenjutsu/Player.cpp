@@ -75,12 +75,12 @@ void Player::UpdateMe(double p_deltaTime)
 	{
 		SetMyPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
 	}
-	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
+
 }
 
 void Player::Update(double p_deltaTime)
 {
-	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
+
 }
 
 void Player::SetDamage(float p_damage)

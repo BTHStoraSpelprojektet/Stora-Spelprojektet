@@ -1,5 +1,5 @@
 #include "PlayingStateTest.h"
-
+#include "ModelLibrary.h"
 
 PlayingStateTest::PlayingStateTest()
 {
@@ -97,12 +97,7 @@ void PlayingStateTest::Render()
 void PlayingStateTest::RenderAlpha()
 {
 	// Draw Shurikens
-	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
-	for (unsigned int i = 0; i < tempList.size(); i++)
-	{
-		Model tempModel = tempList[i].GetModel();
-		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture());
-	}
+	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)

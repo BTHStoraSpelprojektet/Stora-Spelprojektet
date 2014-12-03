@@ -55,7 +55,8 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 	float x, y, z, rotateX, rotateY, rotateZ, rotateW;
 	for (unsigned int currentLineTemp = 0; currentLineTemp < levelData.size(); currentLineTemp++)
 	{
-		Model model;
+		Object object;
+		std::string filePathToModel = "";
 		std::vector<std::string> temp = levelData.at(currentLineTemp);
 		bool isSpawnPoint = false;
 		int currentTeam;
@@ -68,14 +69,17 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 					std::string objectName = "";
 					int pos = tmpStr.find('_');
 
-					if (pos == -1){
+					if (pos == -1)
+					{
 						objectName = tmpStr.substr(0, tmpStr.size() - 1);
 					}
-					else{
+					else
+					{
 						objectName = tmpStr.substr(0, pos);
 					}
 
-					if (strcmp(objectName.c_str(), "spawnPoint") == 0){
+					if (strcmp(objectName.c_str(), "spawnPoint") == 0)
+					{
 						isSpawnPoint = true;
 						if (m_print)
 						{
@@ -83,12 +87,15 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 						}
 						std::string cTeam = tmpStr.substr(tmpStr.size()-2, 1);
 						currentTeam = atoi(cTeam.c_str());
-						if (m_print){
+						if (m_print)
+						{
 							std::cout << "Team: " << cTeam << " | ";
 						}
 					}
-					else{
-						std::string filePathToModel = "";
+
+					else
+					{
+						filePathToModel = "";
 						filePathToModel.append("../Shurikenjutsu/Models/");
 						filePathToModel.append(objectName);
 						filePathToModel.append("Shape.SSP");
@@ -97,10 +104,7 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 						{
 							std::cout << filePathToModel << "\n";
 						}
-
-						model.LoadModel(filePathToModel.c_str());
 					}
-
 				}
 
 				else if (currentWordTemp == 1){
@@ -144,12 +148,12 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 					}
 					else{
 						DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
-						model.Rotate(rotation);
-
 						DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
-						model.Translate(translation);
 
-						p_objectManager->AddStaticModel(model);
+						object.Initialize(filePathToModel.c_str(), translation);
+						object.SetRotation(rotation);
+
+						p_objectManager->AddStaticObject(object);
 					}
 				}
 
