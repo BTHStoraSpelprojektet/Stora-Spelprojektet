@@ -67,27 +67,26 @@ Output main(Input p_input)
 	// Pass along the texture coordinates.
 	output.m_textureCoordinate = p_input.m_textureCoordinate;
 
-	// Transform  the normals.
-	output.m_normal = p_input.m_normal;
-	output.m_normal = mul(output.m_normal, (float3x3)m_worldMatrix);
-
 	// Calculate the camera position.
 	float4 cameraPosition;
 	cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
 	output.m_cameraPosition = cameraPosition;
 
-	// Pass on tangent.
-	output.m_tangent = p_input.m_tangent;
-
 	// Calculate the position of the vertice as viewed by the light source.
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
+	// Pass on tangent.
+	output.m_tangent = p_input.m_tangent;
+
+	// Transform  the normals.
+	output.m_normal = mul(float4(p_input.m_normal, 0.0f), m_worldMatrix).xyz;
+
 	// Normalmap TBN matrix.
 	float3 N = output.m_normal;
-	float3 T = normalize(output.m_tangent - dot(output.m_tangent, N)*N);
+	float3 T = -normalize(output.m_tangent - dot(output.m_tangent, N)*N);
 	float3 B = cross(N, T);
 
 	output.m_tBN = float3x3(T, B, N);

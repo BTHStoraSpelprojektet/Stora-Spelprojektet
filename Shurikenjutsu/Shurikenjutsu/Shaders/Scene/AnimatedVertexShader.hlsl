@@ -89,7 +89,7 @@ Output main(Input p_input)
 	output.m_textureCoordinate = p_input.m_textureCoordinate;
 
 	// Transform  the normals.
-	output.m_normal = mul(normalAnimated, (float3x3)m_worldMatrix);
+	output.m_normal = mul(float4(normalAnimated, 0.0f), m_worldMatrix);
 	output.m_tangent = p_input.m_tangent;
 
 	// Normalmap TBN matrix.
