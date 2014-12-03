@@ -21,13 +21,26 @@ struct ShurikenNet
 	float speed;
 };
 
+struct SpawnPoint
+{
+	float x, y, z;
+
+	SpawnPoint(float p_x, float p_y, float p_z)
+	{
+		x = p_x;
+		y = p_y;
+		z = p_z;
+	}
+};
+
 enum Messages
 {
 	ID_NR_CONNECTIONS = ID_USER_PACKET_ENUM + 1,
 	ID_DOWNLOAD_PLAYERS,
 	ID_PLAYER_MOVED,
 	ID_SHURIKEN_THROWN,
-	ID_SHURIKEN_REMOVE
+	ID_SHURIKEN_REMOVE,
+	ID_RESPAWN_PLAYER
 };
 
 #endif

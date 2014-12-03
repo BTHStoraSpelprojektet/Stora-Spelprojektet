@@ -23,6 +23,10 @@ bool Server::Initialize()
 	m_shurikenSetTimeLeft = 2.0f;
 	m_players = std::vector<PlayerNet>();
 	m_shurikens = std::vector<ShurikenNet>();
+	m_spawnPoints = std::vector<SpawnPoint>();
+
+	// Temp spawn point
+	m_spawnPoints.push_back(SpawnPoint(0, 0, 0));
 
 	return true;
 }
@@ -38,6 +42,8 @@ void Server::Update(double p_deltaTime)
 	ReceviePacket();
 
 	UpdateShurikens(p_deltaTime);
+
+	CheckCollisions();
 }
 
 void Server::ReceviePacket()
@@ -268,7 +274,7 @@ void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, 
 	shuriken.shurikenId = GetShurikenUniqueId();
 	shuriken.guid = p_guid;
 	shuriken.lifeTime = m_shurikenSetTimeLeft;
-	shuriken.speed = 10.0f;
+	shuriken.speed = 20.0f;
 	m_shurikens.push_back(shuriken);
 
 	RakNet::BitStream wBitStream;
@@ -303,11 +309,7 @@ void Server::UpdateShurikens(double p_deltaTime)
 		if (m_shurikens[i].lifeTime <= 0)
 		{
 			// Send removal of shuriken to clients
-			RakNet::BitStream bitStream;
-			bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
-			bitStream.Write(m_shurikens[i].shurikenId);
-
-			m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			BroadcastDestoyedShuriken(m_shurikens[i].shurikenId);
 
 			m_shurikens.erase(m_shurikens.begin() + i);
 			i--;
@@ -337,4 +339,71 @@ unsigned int Server::GetShurikenUniqueId()
 	} while (found);
 	
 	return ID;
+}
+
+void Server::CheckCollisions()
+{
+	float radius = 1.0f;
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		// Calculate the shurikens position
+		float lifeTime = m_shurikenSetTimeLeft - m_shurikens[i].lifeTime;
+		float newPosX = m_shurikens[i].x + m_shurikens[i].dirX * m_shurikens[i].speed * lifeTime;
+		float newPosY = m_shurikens[i].y + m_shurikens[i].dirY * m_shurikens[i].speed * lifeTime;
+		float newPosZ = m_shurikens[i].z + m_shurikens[i].dirZ * m_shurikens[i].speed * lifeTime;
+
+		for (unsigned int j = 0; j < m_players.size(); j++)
+		{
+			if (m_players[j].guid == m_shurikens[i].guid)
+			{
+				continue;
+			}
+			if (IntersectionTests::Intersections::SphereSphereCollision(DirectX::XMFLOAT3(m_players[j].x, m_players[j].y, m_players[j].z), 1.0f, DirectX::XMFLOAT3(newPosX, newPosY, newPosZ), 0.5f))
+			{
+				// Remove shuriken
+				BroadcastDestoyedShuriken(m_shurikens[i].shurikenId);
+
+				m_shurikens.erase(m_shurikens.begin() + i);
+				i--;
+
+				// Respawn player
+				RespawnPlayer(m_players[j].guid);
+				break;
+			}
+		}
+	}
+}
+
+void Server::BroadcastDestoyedShuriken(unsigned int p_id)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
+	bitStream.Write(p_id);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void Server::RespawnPlayer(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			int spawnIndex = 0;
+			m_players[i].x = m_spawnPoints[spawnIndex].x;
+			m_players[i].y = m_spawnPoints[spawnIndex].y;
+			m_players[i].z = m_spawnPoints[spawnIndex].z;
+
+			RakNet::BitStream bitStream;
+
+			bitStream.Write((RakNet::MessageID)ID_RESPAWN_PLAYER);
+			bitStream.Write(m_players[i].x);
+			bitStream.Write(m_players[i].y);
+			bitStream.Write(m_players[i].z);
+
+			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+			break;
+		}
+	}
 }
