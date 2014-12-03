@@ -44,7 +44,7 @@ struct Output
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
 
-	//float3x3 m_tBN : TBN;
+	float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
 	float4 m_cameraPosition : CAMERA;
@@ -89,14 +89,15 @@ Output main(Input p_input)
 	output.m_textureCoordinate = p_input.m_textureCoordinate;
 
 	// Transform  the normals.
-	output.m_normal = mul(normalAnimated, (float3x3)m_worldMatrix);
+	output.m_normal = mul(float4(normalAnimated, 0.0f), m_worldMatrix);
+	output.m_tangent = p_input.m_tangent;
 
 	// Normalmap TBN matrix.
-	/*float3 N = output.m_normal;
-	float3 T = normalize(output.m_tangent - dot(output.m_tangent, N)*N);
+	float3 N = output.m_normal;
+	float3 T = -normalize(output.m_tangent - dot(output.m_tangent, N)*N);
 	float3 B = cross(N, T);
 
-	output.m_tBN = float3x3(T, B, N);*/
+	output.m_tBN = float3x3(T, B, N);
 
 	float4 cameraPosition;
 
@@ -104,8 +105,6 @@ Output main(Input p_input)
 	cameraPosition = mul(float4(positionAnimated, 1.0f), m_worldMatrix);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
 	output.m_cameraPosition = cameraPosition;
-
-	output.m_tangent = output.m_normal;
 
 	// Calculate the position of the vertice as viewed by the light source.
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);

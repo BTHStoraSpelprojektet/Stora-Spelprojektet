@@ -31,7 +31,7 @@ void Object::Shutdown()
 
 void Object::Render(SHADERTYPE p_shader)
 {
-	GraphicsEngine::Render(p_shader, m_model.GetMesh(), m_model.GetVertexCount(), m_model.GetWorldMatrix(), m_model.GetTexture());
+	GraphicsEngine::Render(p_shader, m_model.GetMesh(), m_model.GetVertexCount(), m_model.GetWorldMatrix(), m_model.GetTexture(), m_model.GetNormalMap());
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
