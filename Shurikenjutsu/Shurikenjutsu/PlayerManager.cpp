@@ -33,6 +33,15 @@ void PlayerManager::Update(double p_deltaTime)
 
 	if (Network::IsConnected())
 	{
+		// Check if I need to respawn
+		if (Network::HasRespawned())
+		{
+			PlayerNet me = Network::GetMyPlayer();
+			m_player.SetMyPosition(DirectX::XMFLOAT3(me.x, me.y, me.z));
+			Network::SetHaveRespawned();
+		}
+
+
 		std::vector<PlayerNet> enemyPlayers = Network::GetOtherPlayers();
 
 		// The player list have added or removed an object

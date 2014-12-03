@@ -180,7 +180,7 @@ void System::Update()
 	}
 
 	m_gameState->Update(deltaTime);
-
+	
 	// Update network
 	Network::Update();
 
