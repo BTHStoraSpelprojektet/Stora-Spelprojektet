@@ -6,7 +6,7 @@
 #include "InstancedShader.h"
 #include "GUIShader.h"
 #include "DepthShader.h"
-#include "ShadowMap.h"
+#include "RenderTarget.h"
 
 #include "Enumerations.h"
 #include "Globals.h"
@@ -26,8 +26,9 @@ public:
 	static D3D_FEATURE_LEVEL GetVersion();
 
 	static void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_numberOfInstances, std::vector<DirectX::XMMATRIX> p_boneTransforms);
-	static void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	static void Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
 	static void RenderUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	static void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 
 	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
@@ -49,6 +50,7 @@ public:
 	static void ResetRenderTarget();
 
 	static ID3D11ShaderResourceView* GetShadowMap();
+	static ID3D11ShaderResourceView* GetSceneShaderShadowMap();
 
 private:
 	GraphicsEngine(){};
@@ -64,6 +66,6 @@ private:
 
 	static HWND* m_windowHandle;
 
-	static ShadowMap m_shadowMap;
+	static RenderTarget m_shadowMap;
 };
 #endif;

@@ -1,8 +1,10 @@
 #ifndef OBJECT
 #define OBJECT
 
+#define WIN32_LEAN_AND_MEAN
 #include "Model.h"
 #include <DirectXMath.h>
+#include "Network.h"
 
 class Object
 {
@@ -11,7 +13,7 @@ public:
 	~Object();
 	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos);
 	virtual void Shutdown();
-	virtual void Render();
+	virtual void Render(SHADERTYPE p_shader);
 	DirectX::XMFLOAT3 GetPosition() const;
 	virtual void SetPosition(DirectX::XMFLOAT3 p_pos);
 

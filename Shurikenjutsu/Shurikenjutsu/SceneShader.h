@@ -15,8 +15,9 @@ class SceneShader
 public:
 	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
 
-	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMMATRIX> p_boneTransforms);
+	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
+	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMMATRIX> p_boneTransforms);
+	void RenderLine(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 
 	void UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	void UpdateLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
@@ -28,16 +29,23 @@ public:
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight);
 	void UpdateShadowMap(ID3D11ShaderResourceView* p_shadowMap);
 
+	ID3D11ShaderResourceView* GetShadowMap();
+
 private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix);
 	void UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMMATRIX> p_boneTransforms);
+	void UpdateColorBuffer(ID3D11DeviceContext* p_context, float R, float G, float B);
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11VertexShader* m_animatedVertexShader;
 	ID3D11PixelShader* m_pixelShader;
 
+	ID3D11VertexShader* m_lineVertexShader;
+	ID3D11PixelShader* m_linePixelShader;
+
 	ID3D11InputLayout* m_layout;
 	ID3D11InputLayout* m_animatedLayout;
+	ID3D11InputLayout* m_lineLayout;
 
 	ID3D11SamplerState* m_samplerState;
 	ID3D11SamplerState* m_samplerShadowMapState;
@@ -86,6 +94,12 @@ private:
 	struct FrameBuffer
 	{
 		DirectionalLight m_directionalLight;
+	};
+
+	ID3D11Buffer* m_colorBuffer;
+	struct ColorBuffer
+	{
+		DirectX::XMFLOAT4 m_color;
 	};
 };
 #endif

@@ -3,23 +3,28 @@
 
 PlayerManager::PlayerManager()
 {
-}
 
+}
 
 PlayerManager::~PlayerManager()
 {
+
 }
 
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0,0,-2.0f), DirectX::XMFLOAT3(0,0,0), 0.1f, 100, 5, 100, 20);
+	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.1f, 100, 5, 100, 20);
+
+	m_debugLines.Initialize(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	m_debugLines.AddLine(DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z), DirectX::XMFLOAT3(m_player.GetPosition().x, 3.0f, m_player.GetPosition().z + 100.0f));
+
 	return true;
 }
 
 void PlayerManager::Shutdown()
 {
-
+	m_debugLines.Shutdown();
 }
 
 void PlayerManager::Update(double p_deltaTime)
@@ -28,6 +33,15 @@ void PlayerManager::Update(double p_deltaTime)
 
 	if (Network::IsConnected())
 	{
+		// Check if I need to respawn
+		if (Network::HasRespawned())
+		{
+			PlayerNet me = Network::GetMyPlayer();
+			m_player.SetMyPosition(DirectX::XMFLOAT3(me.x, me.y, me.z));
+			Network::SetHaveRespawned();
+		}
+
+
 		std::vector<PlayerNet> enemyPlayers = Network::GetOtherPlayers();
 
 		// The player list have added or removed an object
@@ -55,7 +69,7 @@ void PlayerManager::Update(double p_deltaTime)
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(0, 0, 0), 0.1f, 100, 5, 100, 20);
+					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, 100, 20);
 					ConsolePrintText("Added enemy player in playermanager");
 				}
 			}
@@ -66,18 +80,37 @@ void PlayerManager::Update(double p_deltaTime)
 		for (unsigned int i = 0; i < m_enemyList.size(); i++)
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
+			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].Update(p_deltaTime);
 		}
 	}
-		}
+}
 
-void PlayerManager::Render()
+void PlayerManager::Render(SHADERTYPE p_shader)
 {
-	m_player.Render();
-	
+	m_player.Render(p_shader);
+
+	if (p_shader == SHADERTYPE_SCENE)
+	{
+		DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		DirectX::XMFLOAT3 v2 = m_player.GetAttackDirection();
+
+		float x = (v1.x * v2.z) - (v2.x * v1.z);
+		float y = (v1.x * v2.x) - (v1.z * v2.z);
+
+		float faceAngle = atan2(y, x);
+
+		DirectX::XMFLOAT4X4 world;
+		DirectX::XMMATRIX matrix = DirectX::XMMatrixRotationY(faceAngle) * DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_player.GetPosition()));
+		DirectX::XMStoreFloat4x4(&world, matrix);
+
+		m_debugLines.UpdateWorldMatrix(world);
+		m_debugLines.Render();
+	}
+
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
-		m_enemyList[i].Render();
+		m_enemyList[i].Render(p_shader);
 	}
 }
 
@@ -101,6 +134,34 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, 
 DirectX::XMFLOAT3 PlayerManager::GetPlayerPosition()
 {
 	return m_player.GetPosition();
+}
+DirectX::XMFLOAT3 PlayerManager::GetPlayerDirection()
+{
+	return m_player.GetDirection();
+}
+void PlayerManager::SetPlayerDirection(DirectX::XMFLOAT3 p_direction)
+{
+	DirectX::XMVECTOR tempVector = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+	tempVector = DirectX::XMVector3Normalize(tempVector);
+	DirectX::XMFLOAT3 tempFloat;
+	DirectX::XMStoreFloat3(&tempFloat, tempVector);
+	m_player.SetDirection(tempFloat);
+}
+DirectX::XMFLOAT3 PlayerManager::GetFacingDirection()
+{
+	return m_player.GetFacingDirection();
+}
+void PlayerManager::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
+{
+	m_player.SetFacingDirection(p_facingDirection);
+}
+DirectX::XMFLOAT3 PlayerManager::GetAttackDirection()
+{
+	return m_player.GetAttackDirection();
+}
+void PlayerManager::SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection)
+{
+	m_player.SetMyAttackDirection(p_attackDirection);
 }
 
 bool PlayerManager::IsGuidInEnemyList(RakNet::RakNetGUID p_guid)

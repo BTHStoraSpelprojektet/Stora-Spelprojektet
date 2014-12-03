@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>C:\Users\Pappskiva\Desktop\Stora-Spelprojektet\Shurikenjutsu\Shurikenjutsu\GTest\libs\Release\gtest-md;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\Shurikenjutsu\GTest\libs\Debug;$(LibraryPath)</LibraryPath>
     <IncludePath>..\Shurikenjutsu\GTest\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -52,6 +52,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -69,6 +70,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -87,6 +89,11 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Debug.cpp" />
+    <ClCompile Include="DebugBox.cpp" />
+    <ClCompile Include="DebugLineList.cpp" />
+    <ClCompile Include="DebugRectangle.cpp" />
+    <ClCompile Include="DebugShape2D.cpp" />
+    <ClCompile Include="DebugShape3D.cpp" />
     <ClCompile Include="DepthShader.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -97,6 +104,7 @@
     <ClCompile Include="KButtonEvent.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelImporter.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
@@ -110,7 +118,7 @@
     <ClCompile Include="PlayingStateTest.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -123,6 +131,10 @@
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="ConsoleFunctions.h" />
     <ClInclude Include="Debug.h" />
+    <ClInclude Include="DebugBox.h" />
+    <ClInclude Include="DebugLineList.h" />
+    <ClInclude Include="DebugShape2D.h" />
+    <ClInclude Include="DebugShape3D.h" />
     <ClInclude Include="DepthShader.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Enumerations.h" />
@@ -134,6 +146,7 @@
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelImporter.h" />
+    <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelImporter.h" />
     <ClInclude Include="MovingObject.h" />
@@ -143,11 +156,12 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayingStateTest.h" />
+    <ClInclude Include="DebugRectangle.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />
     <ClInclude Include="KButtonEvent.h" />
-    <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Shuriken.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="System.h" />
@@ -185,6 +199,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Shaders\Line\LinePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\Line\LineVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Shaders\Scene\AnimatedVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
@@ -206,6 +232,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Scene\LightCalculation.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Physics\Physics.vcxproj">
+      <Project>{097e6f6b-bac8-441e-858c-ca9fab82c07a}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,3 +1,6 @@
+#ifndef LEVEL_H_
+#define LEVEL_H_
+
 #include <string>
 #include "ObjectManager.h"
 #include "LevelImporter.h"
@@ -15,3 +18,5 @@ protected:
 	int m_mapsizeY;
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
 };
+
+#endif LEVEL_H_

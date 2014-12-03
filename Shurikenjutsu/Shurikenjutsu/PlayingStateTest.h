@@ -1,8 +1,8 @@
 #ifndef PLAYINGSTATE
 #define PLAYINGSTATE
 
-#define WIN32_LEAN_AND_MEAN
 
+#define WIN32_LEAN_AND_MEAN
 #include "GameState.h"
 #include "PlayerManager.h"
 #include "ObjectManager.h"
@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include "Level.h"
 #include "Collisions.h"
+#include <d3d9.h>
 
 class PlayingStateTest :
 	public GameState
@@ -26,10 +27,14 @@ public:
 
 private:
 	void MeleeAttack();
+	void BasicPicking();
+	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
 	PlayerManager m_playerManager;
 	ObjectManager m_objectManager;
 	Camera m_camera;
+
+	float twoPi;
 };
 
 #endif PLAYINGSTATE

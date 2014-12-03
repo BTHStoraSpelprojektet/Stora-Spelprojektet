@@ -57,7 +57,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	// Initialize the graphics engine.
 	GraphicsEngine::Initialize(m_window.GetHandle());
 	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
-	GraphicsEngine::SetSceneFog(0.0f, 100.0f, 0.01f);
+	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::TurnOffAlphaBlending();
 	GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 
@@ -93,7 +93,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.25f, 0.25f, 0.25f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
-	m_directionalLight.m_direction = DirectX::XMVectorSet(-1.0f, -2.0f, -1.0f, 0.0f);
+	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -2.0f, 1.0f, 0.0f);
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	m_lightCamera.Initialize();
@@ -180,7 +180,7 @@ void System::Update()
 	}
 
 	m_gameState->Update(deltaTime);
-
+	
 	// Update network
 	Network::Update();
 
@@ -196,7 +196,7 @@ void System::Render()
 {
 	// Clear the scene to begin rendering.
 	GraphicsEngine::Clear();
-	
+
 	// Render Current GameState
 	m_gameState->Render();
 

@@ -1,3 +1,7 @@
+#ifndef LEVELIMPORTER_H_
+#define LEVELIMPORTER_H_
+
+#define WIN32_LEAN_AND_MEAN
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -34,3 +38,5 @@ protected:
 
 	bool m_print = false;
 };
+
+#endif LEVELIMPORTER_H_

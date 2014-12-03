@@ -1,5 +1,5 @@
 // Matrix buffer.
-cbuffer MatrixBuffer
+cbuffer MatrixBuffer : register(b0)
 {
 	matrix m_worldMatrix;
 	matrix m_viewMatrix;
@@ -10,7 +10,7 @@ cbuffer MatrixBuffer
 };
 
 // Fog calculation buffer.
-cbuffer FogBuffer
+cbuffer FogBuffer : register(b1)
 {
 	float m_fogStart;
 	float m_fogEnd;
@@ -36,7 +36,7 @@ struct Output
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
 
-	//float3x3 m_tBN : TBN;
+	float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
 	float4 m_cameraPosition : CAMERA;
@@ -67,36 +67,35 @@ Output main(Input p_input)
 	// Pass along the texture coordinates.
 	output.m_textureCoordinate = p_input.m_textureCoordinate;
 
-	// Transform  the normals.
-	output.m_normal = p_input.m_normal;
-	output.m_normal = mul(output.m_normal, (float3x3)m_worldMatrix);
-
 	// Calculate the camera position.
 	float4 cameraPosition;
 	cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
 	output.m_cameraPosition = cameraPosition;
 
-	// Pass on tangent.
-	output.m_tangent = p_input.m_tangent;
-
 	// Calculate the position of the vertice as viewed by the light source.
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
-	// Normalmap TBN matrix
-	/*float3 N = output.m_normal;
-	float3 T = normalize(output.m_tangent - dot(output.m_tangent, N)*N);
+	// Pass on tangent.
+	output.m_tangent = p_input.m_tangent;
+
+	// Transform  the normals.
+	output.m_normal = mul(float4(p_input.m_normal, 0.0f), m_worldMatrix).xyz;
+
+	// Normalmap TBN matrix.
+	float3 N = output.m_normal;
+	float3 T = -normalize(output.m_tangent - dot(output.m_tangent, N)*N);
 	float3 B = cross(N, T);
 
-	output.m_tBN = float3x3(T, B, N);*/
+	output.m_tBN = float3x3(T, B, N);
 
 	// No fog.
-	output.m_fogFactor = 1.0f;
+	//output.m_fogFactor = 1.0f;
 
 	// Calculate linear fog.    
-	//output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
+	output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
 
 	// Calculate exponential fog.    
 	//output.m_fogFactor = saturate(1.0 / pow(2.71828, (cameraPosition.z * m_fogDensity)));

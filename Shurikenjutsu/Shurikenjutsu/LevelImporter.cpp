@@ -104,25 +104,25 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 				}
 
 				else if (currentWordTemp == 1){
-					x = atof(tmpStr.c_str());
+					x = (float)atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 2){
-					y = atof(tmpStr.c_str());
+					y = (float)atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 3){
-					z = atof(tmpStr.c_str());
+					z = (float)atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 4){
-					rotateX = atof(tmpStr.c_str());
+					rotateX = (float)atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 5){
-					rotateY = atof(tmpStr.c_str());
+					rotateY = (float)atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 6){
-					rotateZ = atof(tmpStr.c_str());
+					rotateZ = (float)atof(tmpStr.c_str());
 				}
 				else if (currentWordTemp == 7){
-					rotateW = atof(tmpStr.c_str());
+					rotateW = (float)atof(tmpStr.c_str());
 
 					//TODO: Read rotation from file
 					//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);

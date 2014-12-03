@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef GLOBALS
 #define GLOBALS
 
@@ -21,7 +19,7 @@ public:
 
 	bool isNotSwitchingFullscreen;
 	bool flyingCamera;
-
+	unsigned int shurikenThrownID;
 private:
 	GLOBAL() {};
 	GLOBAL(GLOBAL const&);              

@@ -11,7 +11,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile GUI vertex shader from file. @GUIShader");
+			ConsolePrintErrorAndQuit("Failed to compile GUI vertex shader from file. @GUIShader");
 			return false;
 		}
 
@@ -29,7 +29,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	// Create the vertex shader.
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
-		ConsolePrintError("Failed to create scene vertex shader. @GUIShader");
+		ConsolePrintErrorAndQuit("Failed to create scene vertex shader. @GUIShader");
 		return false;
 	}
 
@@ -59,7 +59,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	// Create the vertex input layout.
 	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
 	{
-		ConsolePrintError("Failed to create GUI vertex input layout. @GUIShader");
+		ConsolePrintErrorAndQuit("Failed to create GUI vertex input layout. @GUIShader");
 		return false;
 	}
 
@@ -79,7 +79,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIPixelShader.hlsl", NULL, NULL, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
-			ConsolePrintError("Failed to compile GUI pixel shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile GUI pixel shader from file.");
 			return false;
 		}
 
@@ -97,7 +97,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	// Create the pixel shader.
 	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
 	{
-		ConsolePrintError("Failed to create scene pixel shader @GUIShader");
+		ConsolePrintErrorAndQuit("Failed to create scene pixel shader @GUIShader");
 		return false;
 	}
 
@@ -165,7 +165,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	// Create the matrix buffer.
 	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
 	{
-		ConsolePrintError("Failed to create scene matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to create scene matrix buffer.");
 		return false;
 	}
 
@@ -188,7 +188,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	// Create the texture sampler state.
 	if (FAILED(p_device->CreateSamplerState(&sampler, &m_samplerState)))
 	{
-		ConsolePrintError("Failed to create scene sampler state.");
+		ConsolePrintErrorAndQuit("Failed to create scene sampler state.");
 		return false;
 	}
 
@@ -208,7 +208,7 @@ void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_wor
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintError("Failed to map GUI matrix buffer.");
+		ConsolePrintErrorAndQuit("Failed to map GUI matrix buffer.");
 	}
 
 	// Get a pointer to the data in the constant buffer.
