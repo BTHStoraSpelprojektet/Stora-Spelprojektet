@@ -40,6 +40,7 @@ private:
 	unsigned int GetShurikenUniqueId();
 
 	void CheckCollisions();
+	void MeleeAttack(RakNet::RakNetGUID p_guid);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;

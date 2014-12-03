@@ -410,3 +410,27 @@ void Server::RespawnPlayer(RakNet::RakNetGUID p_guid)
 		}
 	}
 }
+
+void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
+{
+	PlayerNet attackingPlayer = GetPlayer(p_guid);
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		// So you don't collide with yourself.
+		if (m_players[i].guid == attackingPlayer.guid)
+		{
+			continue;
+		}
+		DirectX::XMFLOAT3 spherePos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
+		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(m_players[i].x, m_players[i].y, m_players[i].z);
+		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		// Make collision test
+		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 5.0f, boxPosition, boxExtent, attackDirection))
+		{
+			// Respawn player
+			RespawnPlayer(m_players[i].guid);
+			break;
+		}
+	}
+}
