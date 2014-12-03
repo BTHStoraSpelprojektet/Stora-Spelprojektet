@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 45
+Number of objects: 46
 Floor -0.276767 0 -0.282327 0 0 0 0
 DecoratedObject_1 0 0 10.4601 0 1.5708 0 0
 DecoratedObject_5 0 0 -12.1954 0 1.5708 0 0
@@ -11,7 +11,7 @@ spawnPoint_1_team_1 -26.1405 0 25.2037 0 0 0 0
 DecoratedObject_3 0 0 0 0 1.5708 0 0
 pillar_1 -9.29897 0 -10.5102 0 0 0 0
 sakuraTree_alpha_2 -5.56352 0 20.9807 0 0 0 0
-pillar_2 21.9232 0 20.9072 0 0 0 0
+pillar_2 11.8521 0 7.29437 0 0 0 0
 wallBlock_1 -29.8512 0 -31.2213 0 0 0 0
 wall_1 -30.1848 0 0 0 0 0 0
 wall_29 -30.1848 0 -8.74165 0 0 0 0
@@ -45,3 +45,4 @@ wall_53 -6.06961 0 -31.2887 0 1.5708 0 0
 wall_54 -14.8602 0 -31.2887 0 1.5708 0 0
 wall_55 -23.6356 0 -31.2887 0 1.5708 0 0
 spawnPoint_1_team_2 28.8162 0 -24.5365 0 0 0 0
+DecorativeHouse 17.4557 0 16.049 0 0 0 0
