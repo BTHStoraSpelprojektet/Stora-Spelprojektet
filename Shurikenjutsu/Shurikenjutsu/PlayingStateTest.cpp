@@ -43,18 +43,11 @@ void PlayingStateTest::Shutdown()
 void PlayingStateTest::Update(double p_deltaTime)
 {
 	
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
-	{
-		Network::DoMeleeAttack();
-	}
+	
 	
 	BasicPicking();
 
-	// Temporary "Shuriken" spawn
-	if (InputManager::GetInstance()->IsRightMouseClicked())
-	{
-		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, 1.0f, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
-	}
+	
 
 	m_objectManager.Update(p_deltaTime);
 	m_playerManager.Update(p_deltaTime);

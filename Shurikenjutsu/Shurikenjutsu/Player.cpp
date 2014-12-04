@@ -35,6 +35,7 @@ void Player::Shutdown()
 
 void Player::UpdateMe(double p_deltaTime)
 {
+	// Move
 	bool moved = false;
 	float x, y, z;
 	x = 0;
@@ -76,11 +77,21 @@ void Player::UpdateMe(double p_deltaTime)
 		SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
 	}
 
+	// Melee attack
+	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	{
+		Network::DoMeleeAttack();
+	}
+
+	// Cast shuriken
+	if (InputManager::GetInstance()->IsRightMouseClicked())
+	{
+		Network::AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
+	}
 }
 
 void Player::Update(double p_deltaTime)
 {
-
 }
 
 void Player::SetDamage(float p_damage)
