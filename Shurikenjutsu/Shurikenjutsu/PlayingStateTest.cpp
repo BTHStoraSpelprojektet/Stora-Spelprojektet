@@ -53,12 +53,7 @@ void PlayingStateTest::Shutdown()
 
 void PlayingStateTest::Update(double p_deltaTime)
 {
-	
-	
-	
 	BasicPicking();
-
-	
 
 	m_objectManager.Update(p_deltaTime);
 	m_playerManager.Update(p_deltaTime);
@@ -116,14 +111,6 @@ void PlayingStateTest::Render()
 
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	// ========== DEBUG TEMP LINES ==========
-
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixTranspose(DirectX::XMMatrixScaling(100.0f, 100.0f, 1.0f) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f) * DirectX::XMMatrixTranslation(-500.0f, -370.0f, 0.0f)));
-	GraphicsEngine::RenderUI(world, GraphicsEngine::GetShadowMap());
-
-	DirectX::XMFLOAT4X4 world2;
-	DirectX::XMStoreFloat4x4(&world2, DirectX::XMMatrixTranspose(DirectX::XMMatrixScaling(100.0f, 100.0f, 1.0f) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f) * DirectX::XMMatrixTranslation(-280.0f, -370.0f, 0.0f)));
-	GraphicsEngine::RenderUI(world2, GraphicsEngine::GetSceneShaderShadowMap());
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
