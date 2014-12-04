@@ -208,14 +208,6 @@ void System::Render()
 	// Render Current GameState
 	m_gameState->Render();
 
-	// Start rendering alpha blended.
-	GraphicsEngine::TurnOnAlphaBlending();
-
-	m_gameState->RenderAlpha();
-
-	// Stop rendering alpha blended.
-	GraphicsEngine::TurnOffAlphaBlending();
-
 	// Present the result.
 	GraphicsEngine::Present();
 }
