@@ -54,7 +54,7 @@ void Player::UpdateMe(double p_deltaTime)
 		SetSpeed(5.0f);
 		z += 1;
 		moved = true;
-	}
+		}
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
@@ -64,7 +64,7 @@ void Player::UpdateMe(double p_deltaTime)
 		SetSpeed(5.0f);
 		x += -1;
 		moved = true;
-	}
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
@@ -73,7 +73,7 @@ void Player::UpdateMe(double p_deltaTime)
 		SetSpeed(5.0f);
 		z += -1;
 		moved = true;
-	}
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
@@ -82,7 +82,7 @@ void Player::UpdateMe(double p_deltaTime)
 		SetSpeed(5.0f);
 		x += 1;
 		moved = true;
-	}
+		}
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -99,7 +99,7 @@ void Player::UpdateMe(double p_deltaTime)
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		Network::DoMeleeAttack();
-}
+	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMouseClicked())
