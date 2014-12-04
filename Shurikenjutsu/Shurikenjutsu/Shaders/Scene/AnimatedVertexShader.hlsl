@@ -64,10 +64,12 @@ Output main(Input p_input)
 
 	float3 positionAnimated = float3(0.0f, 0.0f, 0.0f);
 	float3 normalAnimated = float3(0.0f, 0.0f, 0.0f);
+	float3 tangentAnimated = float3(0.0f, 0.0f, 0.0f);
 	for (int i = 0; i < 3; i++)
 	{
 		positionAnimated += weights[i] * mul(float4(p_input.m_positionWorld.xyz, 1.0f), m_boneTransforms[p_input.m_boneIndex[i]]).xyz;
 		normalAnimated += weights[i] * mul(float4(p_input.m_normal, 0.0f), m_boneTransforms[p_input.m_boneIndex[i]]).xyz;
+		tangentAnimated += weights[i] * mul(float4(p_input.m_tangent, 0.0f), m_boneTransforms[p_input.m_boneIndex[i]]).xyz;
 	}
 
 	// Store vertex position in world space.
@@ -90,7 +92,7 @@ Output main(Input p_input)
 
 	// Transform  the normals.
 	output.m_normal = mul(float4(normalAnimated, 0.0f), m_worldMatrix).xyz;
-	output.m_tangent = p_input.m_tangent;
+	output.m_tangent = mul(float4(tangentAnimated, 0.0f), m_worldMatrix).xyz;
 
 	// Normalmap TBN matrix.
 	float3 N = output.m_normal;

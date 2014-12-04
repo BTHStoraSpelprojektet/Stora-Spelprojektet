@@ -79,7 +79,7 @@ Output main(Input p_input)
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
 	// Pass on tangent.
-	output.m_tangent = p_input.m_tangent;
+	output.m_tangent = mul(float4(p_input.m_tangent, 0.0f), m_worldMatrix).xyz;
 
 	// Transform  the normals.
 	output.m_normal = mul(float4(p_input.m_normal, 0.0f), m_worldMatrix).xyz;
