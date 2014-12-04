@@ -57,8 +57,9 @@ void Server::ReceviePacket()
 		{
 		case ID_NEW_INCOMING_CONNECTION:
 		{
-			std::cout << "A new connection is incoming" << std::endl;
 			m_nrOfConnections++;
+			std::cout << "A new connection is incoming (" << m_nrOfConnections << ")" << std::endl;
+			
 
 			RakNet::BitStream bitStream;
 
@@ -78,9 +79,10 @@ void Server::ReceviePacket()
 		}
 		case ID_DISCONNECTION_NOTIFICATION:
 		{
-			std::cout << "A client has disconnected" << std::endl;
-			RemovePlayer(m_packet->guid);
 			m_nrOfConnections--;
+			std::cout << "A client has disconnected (" << m_nrOfConnections << ")" <<std::endl;
+			RemovePlayer(m_packet->guid);
+			
 
 			RakNet::BitStream bitStream;
 
