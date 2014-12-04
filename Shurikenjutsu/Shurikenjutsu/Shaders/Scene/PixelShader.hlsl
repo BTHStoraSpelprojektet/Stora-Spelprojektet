@@ -61,7 +61,7 @@ float4 main(Input p_input) : SV_Target
 		float lightDepth = p_input.m_lightPositionHomogenous.z;
 
 		// Subtract the bias from the depth value of the light.
-		lightDepth = lightDepth - 0.00001f;
+		lightDepth = lightDepth - 0.0001f;
 
 		// Compare the depth of the shadow map and the depth of the light to determine whether to shadow or to light this pixel.
 		if (lightDepth < depth)
@@ -78,7 +78,7 @@ float4 main(Input p_input) : SV_Target
 			float3 normal = normalize(bumpedNormalW);
 
 			// Calculate the vector to the camera.
-			float3 toCamera = normalize(p_input.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
+			float3 toCamera = normalize(-p_input.m_cameraPosition.xyz);
 
 			// Compute directional light
 			ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
