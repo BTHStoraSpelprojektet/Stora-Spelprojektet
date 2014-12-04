@@ -28,11 +28,13 @@ public:
 	void Update(double p_deltaTime);
 	void ReceviePacket();
 private:
-	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
+	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z);
+	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
+	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 
 	void AddShuriken(RakNet::RakNetGUID, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdateShurikens(double p_deltaTime);
@@ -40,6 +42,7 @@ private:
 	unsigned int GetShurikenUniqueId();
 
 	void CheckCollisions();
+	void MeleeAttack(RakNet::RakNetGUID p_guid);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;

@@ -104,17 +104,13 @@ void Server::ReceviePacket()
 
 			rBitStream.Read(messageID);
 			float x, y, z;
-			float dirX, dirY, dirZ;
 
 			rBitStream.Read(x);
 			rBitStream.Read(y);
 			rBitStream.Read(z);
-			rBitStream.Read(dirX);
-			rBitStream.Read(dirY);
-			rBitStream.Read(dirZ);
 
 			// Can player move?
-			MovePlayer(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+			MovePlayer(m_packet->guid, x, y, z);
 
 			// Get player pos
 			PlayerNet player = GetPlayer(m_packet->guid);
@@ -125,12 +121,34 @@ void Server::ReceviePacket()
 			wBitStream.Write(player.x);
 			wBitStream.Write(player.y);
 			wBitStream.Write(player.z);
+
+			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+			break;
+		}
+		case ID_PLAYER_ROTATED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			float dirX, dirY, dirZ;
+
+			bitStream.Read(messageID);
+			bitStream.Read(dirX);
+			bitStream.Read(dirY);
+			bitStream.Read(dirZ);
+
+			RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
+
+			PlayerNet player = GetPlayer(m_packet->guid);
+
+			RakNet::BitStream wBitStream;
+			wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
+			wBitStream.Write(player.guid);
 			wBitStream.Write(player.dirX);
 			wBitStream.Write(player.dirY);
 			wBitStream.Write(player.dirZ);
 
-			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
-
+			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			break;
 		}
 		case ID_SHURIKEN_THROWN:
@@ -156,30 +174,37 @@ void Server::ReceviePacket()
 			BroadcastPlayers();
 			break;
 		}
+		case ID_MELEE_ATTACK:
+		{
+			MeleeAttack(m_packet->guid);
+			break;
+		}
 		default:
 			break;
 		}
 	}
 }
 
-void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ)
+void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z)
 {
-
-
 	bool found = false;
-
 
 	// See if player can move to target position and then update position
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			m_players[i].x = p_x;
-			m_players[i].y = p_y;
-			m_players[i].z = p_z;
-			m_players[i].dirX = p_dirX;
-			m_players[i].dirY = p_dirY;
-			m_players[i].dirZ = p_dirZ;
+			if (abs(p_x - m_players[i].x) > 1.0f || abs(p_y - m_players[i].y) > 1.0f || abs(p_z - m_players[i].z) > 1.0f)
+			{
+				// Moved too far
+				SendInvalidMessage(p_guid);
+			}
+			else
+			{
+				m_players[i].x = p_x;
+				m_players[i].y = p_y;
+				m_players[i].z = p_z;
+			}			
 
 			found = true;
 			break;
@@ -192,18 +217,39 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 	{
 		PlayerNet player;
 		player.guid = p_guid;
-		player.x = p_x;
-		player.y = p_y;
-		player.z = p_z;
-		player.dirX = p_dirX;
-		player.dirY = p_dirY;
-		player.dirZ = p_dirZ;
+		int spawnIndex = 0;
+		player.x = m_spawnPoints[spawnIndex].x;
+		player.y = m_spawnPoints[spawnIndex].y;
+		player.z = m_spawnPoints[spawnIndex].z;
+		player.dirX = 1.0f;
+		player.dirY = 0.0f;
+		player.dirZ = 0.0f;
 		m_players.push_back(player);
 
 		std::cout << "Player added" << std::endl;
 
 		// Broadcast new player
 		BroadcastPlayers();
+
+		if (abs(p_x - player.x) > 1.0f || abs(p_y - player.y) > 1.0f || abs(p_z - player.z) > 1.0f)
+		{
+			// Moved too far
+			SendInvalidMessage(p_guid);
+		}
+	}
+}
+
+void Server::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			m_players[i].dirX = p_dirX;
+			m_players[i].dirY = p_dirY;
+			m_players[i].dirZ = p_dirZ;
+			break;
+		}
 	}
 }
 
@@ -409,4 +455,37 @@ void Server::RespawnPlayer(RakNet::RakNetGUID p_guid)
 			break;
 		}
 	}
+}
+
+void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
+{
+	PlayerNet attackingPlayer = GetPlayer(p_guid);
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		// So you don't collide with yourself.
+		if (m_players[i].guid == attackingPlayer.guid)
+		{
+			continue;
+		}
+		DirectX::XMFLOAT3 spherePos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
+		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(m_players[i].x, m_players[i].y, m_players[i].z);
+		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		// Make collision test
+		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 1.0f, boxPosition, boxExtent, attackDirection))
+		{
+			// Respawn player
+			RespawnPlayer(m_players[i].guid);
+			break;
+		}
+	}
+}
+
+void Server::SendInvalidMessage(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_INVALID_MOVE);
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }

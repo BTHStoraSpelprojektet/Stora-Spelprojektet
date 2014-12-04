@@ -42,14 +42,15 @@ void PlayingStateTest::Shutdown()
 
 void PlayingStateTest::Update(double p_deltaTime)
 {
-	// Temporary "Shuriken" spawn
+	
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		MeleeAttack();
+		Network::DoMeleeAttack();
 	}
-
+	
 	BasicPicking();
 
+	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
@@ -119,7 +120,7 @@ void PlayingStateTest::RenderAlpha()
 {
 	// Draw Shurikens
 	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
-}
+	}
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 {

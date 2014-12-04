@@ -37,14 +37,23 @@ void PlayerManager::Update(double p_deltaTime)
 
 	if (Network::IsConnected())
 	{
+		PlayerNet myPlayer = Network::GetMyPlayer();
+		// Set players position to the servers position
+		//m_player.SetPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
+
 		// Check if I need to respawn
 		if (Network::HasRespawned())
 		{
-			PlayerNet me = Network::GetMyPlayer();
-			m_player.SetMyPosition(DirectX::XMFLOAT3(me.x, me.y, me.z));
+			m_player.SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 			Network::SetHaveRespawned();
 		}
 
+		// Check if i have made an invalid move
+		if (Network::MadeInvalidMove())
+		{
+			m_player.SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
+			Network::UpdatedMoveFromInvalidMove();
+		}
 
 		std::vector<PlayerNet> enemyPlayers = Network::GetOtherPlayers();
 
