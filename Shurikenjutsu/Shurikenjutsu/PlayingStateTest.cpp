@@ -164,8 +164,17 @@ void PlayingStateTest::MeleeAttack()
 
 void PlayingStateTest::BasicPicking()
 {
-	int mousePosX = InputManager::GetInstance()->GetMousePositionX();
-	int mousePosY = InputManager::GetInstance()->GetMousePositionY();
+	int mouseOffsetX = 0;
+	int mouseOffsetY = 0;
+
+	if (!GLOBAL::GetInstance().FULLSCREEN)
+	{
+		mouseOffsetX = 6;
+		mouseOffsetY = 20;
+	}
+
+	int mousePosX = InputManager::GetInstance()->GetMousePositionX() + mouseOffsetX;
+	int mousePosY = InputManager::GetInstance()->GetMousePositionY() + mouseOffsetY;
 
 	DirectX::XMFLOAT3 rayDir;
 	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
