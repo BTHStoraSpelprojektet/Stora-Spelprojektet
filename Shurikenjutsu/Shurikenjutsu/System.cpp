@@ -54,6 +54,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_title = "Shurikenjutsu";
 	m_window.SetTitle(m_title);
 
+	
+
 	// Initialize the graphics engine.
 	GraphicsEngine::Initialize(m_window.GetHandle());
 	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
@@ -67,6 +69,9 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_timer.StartTimer();
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
+
+	// Initialize model library
+	ModelLibrary::GetInstance()->Initialize();
 
 	// Initialize current GameState
 	m_gameState->Initialize();
@@ -93,7 +98,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.25f, 0.25f, 0.25f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
-	m_directionalLight.m_direction = DirectX::XMVectorSet(-1.0f, -2.0f, -1.0f, 0.0f);
+	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -2.0f, 1.0f, 0.0f);
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	m_lightCamera.Initialize();
@@ -101,9 +106,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize network
 	Network::Initialize();
-
-	// Initialize model library
-	ModelLibrary::GetInstance()->Initialize();
 
 	return result;
 }
@@ -186,7 +188,7 @@ void System::Update()
 	}
 
 	m_gameState->Update(deltaTime);
-
+	
 	// Update network
 	Network::Update();
 

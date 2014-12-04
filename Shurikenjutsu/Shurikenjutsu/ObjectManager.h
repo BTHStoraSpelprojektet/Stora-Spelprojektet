@@ -22,6 +22,8 @@ public:
 	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);
 
 	void AddStaticObject(Object p_object);
+	std::vector<Object> GetStaticObjectList()const;
+
 private:
 	std::vector<Shuriken> m_shurikens;
 	std::vector<Object> m_staticObjects;

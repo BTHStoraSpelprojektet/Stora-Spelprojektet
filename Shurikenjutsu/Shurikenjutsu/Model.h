@@ -28,6 +28,8 @@ public:
 
 	void ResetModel();
 
+	std::vector<Box> GetBoundingBoxes();
+
 protected:
 	ID3D11Buffer* m_mesh;
 	ID3D11ShaderResourceView* m_texture;

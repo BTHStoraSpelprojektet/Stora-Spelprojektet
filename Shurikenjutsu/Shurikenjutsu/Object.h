@@ -25,7 +25,7 @@ public:
 	DirectX::XMFLOAT3 GetRotation() const;
 	void SetRotation(DirectX::XMFLOAT3 p_rotation);
 
-	Model GetModel();
+	Model* GetModel();
 
 	// Calculates and then rotates the world matrix
 	DirectX::XMFLOAT4X4 GetWorldMatrix();

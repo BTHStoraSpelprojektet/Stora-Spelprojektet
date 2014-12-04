@@ -8,20 +8,12 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize()
 {
-	/*m_plane.LoadModel("../Shurikenjutsu/Models/FloorShape.SSP");
-	GraphicsEngine::AddInstanceBuffer(1);
-
-	m_object.LoadModel("../Shurikenjutsu/Models/DecoratedObjectShape.SSP");
-	GraphicsEngine::AddInstanceBuffer(3);*/
-
 	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
 
 	//m_animatedCharacter.LoadModel("../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
 	translation = DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f);
 	//m_animatedCharacter.Translate(translation);
-
-
 
 	return true;
 }
@@ -65,7 +57,7 @@ void ObjectManager::Update(double p_deltaTime)
 				// Remove shuriken
 				m_shurikens.erase(m_shurikens.begin() + i);
 			i--;
-			}
+		}
 		}
 		Network::SetHaveUpdateShurikenList();
 	}
@@ -75,7 +67,7 @@ void ObjectManager::Render(SHADERTYPE p_shader)
 {
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		m_staticObjects[i].Render(SHADERTYPE_SCENE);
+		m_staticObjects[i].Render(p_shader);
 	}
 
 	// TODO, move this.
@@ -88,7 +80,7 @@ void ObjectManager::Render(SHADERTYPE p_shader)
 void ObjectManager::RenderShurikens(SHADERTYPE p_shader)
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
-	{
+{
 		m_shurikens[i].Render(p_shader);
 	}
 }
@@ -131,4 +123,9 @@ bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 	}
 
 	return false;
+}
+
+std::vector<Object> ObjectManager::GetStaticObjectList()const
+{
+	return m_staticObjects;
 }

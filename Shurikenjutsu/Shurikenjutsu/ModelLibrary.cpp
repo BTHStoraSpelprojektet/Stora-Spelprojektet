@@ -12,12 +12,14 @@ void ModelLibrary::Initialize()
 	AddModel(directoryPath + "cubemanWnP.SSP");
 	AddModel(directoryPath + "DecoratedObjectShape.SSP");
 	AddModel(directoryPath + "Decorative_House_0Shape1.SSP");
+	AddModel(directoryPath + "DecorativeHouseShape.SSP");
 	AddModel(directoryPath + "FloorShape.SSP");
 	AddModel(directoryPath + "pillarShape.SSP");
-	AddModel(directoryPath + "pPipeShape1.SSP");
 	AddModel(directoryPath + "sakuraTreeShape.SSP");
 	AddModel(directoryPath + "shurikenShape.SSP");
 	AddModel(directoryPath + "StickManAnimatedShape.SSP");
+	AddModel(directoryPath + "wallBlockShape.SSP");
+	AddModel(directoryPath + "wallShape.SSP");
 }
 
 void ModelLibrary::Shutdown()

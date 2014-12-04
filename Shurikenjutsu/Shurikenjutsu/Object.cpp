@@ -17,7 +17,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	SetRotation(DirectX::XMFLOAT3(0.0f,0.0f, 0.0f));
 
 	m_model = ModelLibrary::GetInstance()->GetModel(p_filepath);
-	
+
 	return true;
 }
 
@@ -28,7 +28,7 @@ void Object::Shutdown()
 
 void Object::Render(SHADERTYPE p_shader)
 {
-	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
+	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
@@ -68,4 +68,9 @@ DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 										DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) *
 										DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
 	return matrix;
+}
+
+Model* Object::GetModel()
+{
+	return m_model;
 }
