@@ -12,6 +12,7 @@
 #include "Model.h"
 #include "InputManager.h"
 #include "ObjectManager.h"
+#include "ModelLibrary.h"
 
 #include "ConsoleFunctions.h"
 #include "Flags.h"

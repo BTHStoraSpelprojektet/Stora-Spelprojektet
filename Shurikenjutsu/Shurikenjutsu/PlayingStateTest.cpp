@@ -1,5 +1,5 @@
 #include "PlayingStateTest.h"
-
+#include "ModelLibrary.h"
 
 PlayingStateTest::PlayingStateTest()
 {
@@ -86,15 +86,13 @@ void PlayingStateTest::Render()
 
 	// ========== DEBUG TEMP LINES ==========
 	DirectX::XMFLOAT4X4 circleWorld;
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition()));
-	DirectX::XMStoreFloat4x4(&circleWorld, matrix);
+	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition())));
 
 	m_circle1.UpdateWorldMatrix(circleWorld);
 	m_circle1.Render();
 
 	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
-	matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
-	DirectX::XMStoreFloat4x4(&circleWorld, matrix);
+	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate)));
 
 	m_circle2.UpdateWorldMatrix(circleWorld);
 	m_circle2.Render();
@@ -121,13 +119,8 @@ void PlayingStateTest::Render()
 void PlayingStateTest::RenderAlpha()
 {
 	// Draw Shurikens
-	std::vector<Shuriken> tempList = m_objectManager.GetListOfShurikens();
-	for (unsigned int i = 0; i < tempList.size(); i++)
-	{
-		Model tempModel = tempList[i].GetModel();
-		GraphicsEngine::Render(SHADERTYPE_SCENE, tempModel.GetMesh(), tempModel.GetVertexCount(), tempModel.GetWorldMatrix(), tempModel.GetTexture(), tempModel.GetNormalMap());
+	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
 	}
-}
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 {
@@ -135,30 +128,30 @@ void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 }
 void PlayingStateTest::MeleeAttack()
 {
-	std::vector<Model> modelList = m_objectManager.GetListOfStaticModels();
-	for (unsigned int i = 0; i < modelList.size(); i++)
-	{
-		std::vector<Box> boxList = modelList[i].GetBoundingBoxes();
-		if (boxList.size() != 0)
-		{
-			for (unsigned int j = 0; j < boxList.size(); j++)
-			{
-				Box box = boxList[j];
-			
-				DirectX::XMFLOAT3 playerPos = m_playerManager.GetPlayerPosition();
-				Sphere sphere = Sphere(playerPos, 5.0f);
-				DirectX::XMFLOAT3 attackDirection = m_playerManager.GetAttackDirection();
-				if (Collisions::MeleeAttackCollision(sphere, box, attackDirection))
-				{
-					std::cout << "HIT" << std::endl;
-				}
-				else
-				{
-					std::cout << "MISS" << std::endl;
-				}
-			}
-		}
-	}
+	//std::vector<Object> modelList = m_objectManager.GetStaticObjectList();
+	//for (unsigned int i = 0; i < modelList.size(); i++)
+	//{
+	//	std::vector<Box> boxList = modelList[i].GetModel()->GetBoundingBoxes();
+	//	if (boxList.size() != 0)
+	//	{
+	//		for (unsigned int j = 0; j < boxList.size(); j++)
+	//		{
+	//			Box box = boxList[j];
+
+	//			DirectX::XMFLOAT3 playerPos = m_playerManager.GetPlayerPosition();
+	//			Sphere sphere = Sphere(playerPos, 5.0f);
+	//			DirectX::XMFLOAT3 attackDirection = m_playerManager.GetAttackDirection();
+	//			if (Collisions::MeleeAttackCollision(sphere, box, attackDirection))
+	//			{
+	//				std::cout << "HIT" << std::endl;
+	//			}
+	//			else
+	//			{
+	//				std::cout << "MISS" << std::endl;
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void PlayingStateTest::BasicPicking()

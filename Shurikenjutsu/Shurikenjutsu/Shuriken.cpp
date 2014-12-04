@@ -57,7 +57,6 @@ void Shuriken::Update(double p_deltaTime)
 	SetLifetime((float)(GetLifetime() - p_deltaTime));
 
 	// Update World Matrix
-	m_model.UpdateWorldMatrix(m_position, m_scale, m_rotation);
 }
 
 void Shuriken::SetPosition(DirectX::XMFLOAT3 p_pos)

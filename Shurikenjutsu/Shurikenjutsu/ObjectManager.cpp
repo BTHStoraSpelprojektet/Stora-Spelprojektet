@@ -11,9 +11,9 @@ bool ObjectManager::Initialize()
 	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
 
-	m_animatedCharacter.LoadModel("../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
-	translation = DirectX::XMFLOAT3(-20.0f, 0.0f, 10.0f);
-	m_animatedCharacter.Translate(translation);
+	//m_animatedCharacter.LoadModel("../Shurikenjutsu/Models/StickManAnimatedShape.SSP");
+	translation = DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f);
+	//m_animatedCharacter.Translate(translation);
 
 	return true;
 }
@@ -25,7 +25,7 @@ void ObjectManager::Shutdown()
 
 void ObjectManager::Update(double p_deltaTime)
 {
-	m_animatedCharacter.Update(p_deltaTime);
+	//m_animatedCharacter.Update(p_deltaTime);
 
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -65,21 +65,24 @@ void ObjectManager::Update(double p_deltaTime)
 
 void ObjectManager::Render(SHADERTYPE p_shader)
 {
-	for (unsigned int i = 0; i < m_staticmodels.size(); i++)
+	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		GraphicsEngine::Render(p_shader, m_staticmodels[i].GetMesh(), m_staticmodels[i].GetVertexCount(), m_staticmodels[i].GetWorldMatrix(), m_staticmodels[i].GetTexture(), m_staticmodels[i].GetNormalMap(), 0, m_staticmodels[i].GetAnimation());
+		m_staticObjects[i].Render(p_shader);
 	}
 
 	// TODO, move this.
 	if (p_shader != SHADERTYPE_DEPTH)
 	{
-		GraphicsEngine::Render(SHADERTYPE_ANIMATED, m_animatedCharacter.GetMesh(), m_animatedCharacter.GetVertexCount(), m_animatedCharacter.GetWorldMatrix(), m_animatedCharacter.GetTexture(), m_animatedCharacter.GetNormalMap(), 0, m_animatedCharacter.GetAnimation());
+		//m_animatedCharacter.Render(SHADERTYPE_ANIMATED);
 	}
 }
 
-std::vector<Shuriken> ObjectManager::GetListOfShurikens() const
+void ObjectManager::RenderShurikens(SHADERTYPE p_shader)
 {
-	return m_shurikens;
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+{
+		m_shurikens[i].Render(p_shader);
+	}
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
@@ -89,14 +92,9 @@ void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	m_shurikens.push_back(tempShuriken);
 }
 
-std::vector<Model> ObjectManager::GetListOfStaticModels() const
+void ObjectManager::AddStaticObject(Object p_object)
 {
-	return m_staticmodels;
-}
-
-void ObjectManager::AddStaticModel(Model model)
-{
-	m_staticmodels.push_back(model);
+	m_staticObjects.push_back(p_object);
 }
 
 bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
@@ -125,4 +123,9 @@ bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 	}
 
 	return false;
+}
+
+std::vector<Object> ObjectManager::GetStaticObjectList()const
+{
+	return m_staticObjects;
 }

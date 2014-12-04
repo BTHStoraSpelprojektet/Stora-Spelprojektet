@@ -2,9 +2,6 @@
 
 bool Model::LoadModel(const char* p_filepath)
 {
-	// Initialize world matrix.
-	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
-
 	// Load Mesh.
 	ModelImporter importer;
 	importer.ImportModel(p_filepath);
@@ -119,11 +116,6 @@ ID3D11ShaderResourceView* Model::GetNormalMap()
 	return m_normalMap;
 }
 
-DirectX::XMFLOAT4X4 Model::GetWorldMatrix()
-{
-	return m_worldMatrix;
-}
-
 int Model::GetVertexCount()
 {
 	return m_vertexCount;
@@ -132,51 +124,4 @@ int Model::GetVertexCount()
 std::vector<DirectX::XMMATRIX> Model::GetAnimation()
 {
 	return boneTransforms;
-}
-
-void Model::Rotate(DirectX::XMFLOAT3 p_rotation)
-{
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation));
-
-	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
-}
-
-void Model::Translate(DirectX::XMFLOAT3 p_translation)
-{
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_translation));
-
-	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
-}
-
-void Model::Scale(DirectX::XMFLOAT3 p_scale)
-{
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_scale));
-
-	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
-}
-
-void Model::ResetModel()
-{
-	DirectX::XMStoreFloat4x4(&m_worldMatrix,DirectX::XMMatrixIdentity());
-}
-
-void Model::SetPosition(DirectX::XMFLOAT3 p_position)
-{
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position));
-
-	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMLoadFloat4x4(&m_worldMatrix) * matrix);
-}
-
-void Model::UpdateWorldMatrix(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_scale, DirectX::XMFLOAT3 p_rotation)
-{
-	DirectX::XMMATRIX matrix =	DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&p_scale)) *
-								DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation)) *
-								DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position));
-								
-	DirectX::XMStoreFloat4x4(&m_worldMatrix, matrix);
-}
-
-std::vector<Box> Model::GetBoundingBoxes()
-{
-	return m_boundingBoxes;
 }

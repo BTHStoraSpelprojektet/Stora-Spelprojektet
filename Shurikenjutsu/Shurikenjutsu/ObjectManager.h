@@ -18,16 +18,17 @@ public:
 	void Update(double p_deltaTime);
 	void Render(SHADERTYPE p_shader);
 
-	std::vector<Shuriken> GetListOfShurikens() const;
-	std::vector<Model> GetListOfStaticModels() const;
+	void RenderShurikens(SHADERTYPE p_shader);
 	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);
 
-	void AddStaticModel(Model model);
+	void AddStaticObject(Object p_object);
+	std::vector<Object> GetStaticObjectList()const;
+
 private:
 	std::vector<Shuriken> m_shurikens;
-	std::vector<Model> m_staticmodels;
+	std::vector<Object> m_staticObjects;
 
-	Model m_animatedCharacter;
+	//Object m_animatedCharacter;
 
 	// unique ID for the network
 	RakNet::NetworkIDManager m_networkIDManger;

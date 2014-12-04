@@ -6,10 +6,6 @@
 #include "Windowsx.h"
 #include "ConsoleFunctions.h"
 #include "KButtonEvent.h"
-enum MouseButtonState
-{
-
-};
 
 class InputManager
 {
