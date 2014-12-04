@@ -99,7 +99,7 @@ void Player::UpdateMe(double p_deltaTime)
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		Network::DoMeleeAttack();
-}
+	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMouseClicked())

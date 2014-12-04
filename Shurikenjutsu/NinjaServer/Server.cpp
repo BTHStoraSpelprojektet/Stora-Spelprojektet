@@ -311,35 +311,45 @@ void Server::BroadcastPlayers()
 void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)
 {
 	// Check if you can add shuriken
-	// Add code
+	int count = 0;
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		if (m_shurikens[i].guid == p_guid)
+		{
+			count++;
+		}
+	}
 
 	// If true then add shuriken
-	ShurikenNet shuriken;
-	shuriken.x = p_posX;
-	shuriken.y = p_posY;
-	shuriken.z = p_posZ;
-	shuriken.dirX = p_dirX;
-	shuriken.dirY = p_dirY;
-	shuriken.dirZ = p_dirZ;
-	shuriken.shurikenId = GetShurikenUniqueId();
-	shuriken.guid = p_guid;
-	shuriken.lifeTime = m_shurikenSetTimeLeft;
-	shuriken.speed = 20.0f;
-	m_shurikens.push_back(shuriken);
+	if (count < 5)
+	{		
+		ShurikenNet shuriken;
+		shuriken.x = p_posX;
+		shuriken.y = p_posY;
+		shuriken.z = p_posZ;
+		shuriken.dirX = p_dirX;
+		shuriken.dirY = p_dirY;
+		shuriken.dirZ = p_dirZ;
+		shuriken.shurikenId = GetShurikenUniqueId();
+		shuriken.guid = p_guid;
+		shuriken.lifeTime = m_shurikenSetTimeLeft;
+		shuriken.speed = 20.0f;
+		m_shurikens.push_back(shuriken);
 
-	RakNet::BitStream wBitStream;
-	wBitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
-	wBitStream.Write(shuriken.x);
-	wBitStream.Write(shuriken.y);
-	wBitStream.Write(shuriken.z);
-	wBitStream.Write(shuriken.dirX);
-	wBitStream.Write(shuriken.dirY);
-	wBitStream.Write(shuriken.dirZ);
-	wBitStream.Write(shuriken.shurikenId);
-	wBitStream.Write(shuriken.guid);
-	wBitStream.Write(shuriken.speed);
+		RakNet::BitStream wBitStream;
+		wBitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
+		wBitStream.Write(shuriken.x);
+		wBitStream.Write(shuriken.y);
+		wBitStream.Write(shuriken.z);
+		wBitStream.Write(shuriken.dirX);
+		wBitStream.Write(shuriken.dirY);
+		wBitStream.Write(shuriken.dirZ);
+		wBitStream.Write(shuriken.shurikenId);
+		wBitStream.Write(shuriken.guid);
+		wBitStream.Write(shuriken.speed);
 
-	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+		m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	}
 }
 
 void Server::UpdateShurikens(double p_deltaTime)
