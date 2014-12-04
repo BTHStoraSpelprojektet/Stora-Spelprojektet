@@ -496,7 +496,7 @@ void Server::SendInvalidMessage(RakNet::RakNetGUID p_guid)
 
 void Server::RandomizeNewSpawnPoint()
 {
-	m_spawnPoints[0].x = rand() % 60 - 30;
+	m_spawnPoints[0].x = rand() % 68 - 38;
 	m_spawnPoints[0].y = 0;
-	m_spawnPoints[0].z = rand() % 60 - 30;
+	m_spawnPoints[0].z = rand() % 68 - 38;
 }
