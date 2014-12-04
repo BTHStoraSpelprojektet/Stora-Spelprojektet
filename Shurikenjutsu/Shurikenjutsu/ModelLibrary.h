@@ -2,6 +2,7 @@
 #define MODELLIBRARY_H_
 
 #include "Model.h"
+#include <windows.h>
 #include <unordered_map>
 #include <string>
 
@@ -21,6 +22,7 @@ public:
 
 private:
 	void AddModel(std::string p_path);
+	void LoadModelDirectory();
 
 	static ModelLibrary* m_instance;
 
