@@ -51,38 +51,34 @@ void Player::UpdateMe(double p_deltaTime)
 	{
 		if (!up)
 		{ 
-		SetSpeed(5.0f);
-		z += 1;
-		moved = true;
-	}
+			z += 1;
+			moved = true;
+		}
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		if (!left)
 		{
-		SetSpeed(5.0f);
-		x += -1;
-		moved = true;
-	}
+			x += -1;
+			moved = true;
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		if (!down)
 		{
-		SetSpeed(5.0f);
-		z += -1;
-		moved = true;
-	}
+			z += -1;
+			moved = true;
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		if (!right)
 		{
-		SetSpeed(5.0f);
-		x += 1;
-		moved = true;
-	}
+			x += 1;
+			moved = true;
+		}
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
