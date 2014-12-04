@@ -23,7 +23,6 @@ public:
 	void Shutdown();
 	virtual void Update(double p_deltaTime);
 	virtual void Render();
-	void RenderAlpha();
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:
@@ -38,8 +37,12 @@ private:
 	float twoPi;
 
 	// ========== DEBUG TEMP LINES ==========
+	float m_mouseX;
+	float m_mouseY;
+
 	DebugCircle m_circle1;
 	DebugCircle m_circle2;
+	DebugDot m_debugDot;
 	// ========== DEBUG TEMP LINES ==========
 };
 
