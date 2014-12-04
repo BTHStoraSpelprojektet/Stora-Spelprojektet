@@ -35,11 +35,7 @@ private:
 
 	Player m_player;
 
-	// ========== DEBUG TEMP LINES ==========
 	std::vector<Player> m_enemyList;
-	DebugLineList m_debugLines;
-	DebugDot m_debugDot;
-	// ========== DEBUG TEMP LINES ==========
 };
 
 #endif PLAYERMANAGER

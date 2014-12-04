@@ -44,7 +44,7 @@ public:
 
 	static void AddInstanceBuffer(int p_numberOfInstances);
 
-	static HWND* GetWindowHandle();
+	static HWND GetWindowHandle();
 
 	static void BeginRenderToShadowMap();
 	static void ResetRenderTarget();
@@ -64,7 +64,7 @@ private:
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 
-	static HWND* m_windowHandle;
+	static HWND m_windowHandle;
 
 	static RenderTarget m_shadowMap;
 };

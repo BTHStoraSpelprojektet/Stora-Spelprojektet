@@ -20,4 +20,7 @@ void DebugDraw::RenderSingleLine(DirectX::XMFLOAT3 p_startPoint, DirectX::XMFLOA
 	DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixIdentity());
 
 	GraphicsEngine::RenderLines(mesh, line.size(), p_color, world);
+
+	mesh->Release();
+	mesh = 0;
 }

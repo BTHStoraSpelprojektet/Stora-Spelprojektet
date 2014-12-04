@@ -26,8 +26,13 @@ bool PlayingStateTest::Initialize()
 	GLOBAL::GetInstance().shurikenThrownID = 0;
 
 	// ========== DEBUG TEMP LINES ==========
-	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.1f, m_playerManager.GetPlayerPosition().z), 5.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-	m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.1f, m_playerManager.GetPlayerPosition().z), 5.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+
+	m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1000, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+
+	m_mouseX = 0;
+	m_mouseY = 0;
 	// ========== DEBUG TEMP LINES ==========
 
 	return true;
@@ -38,23 +43,22 @@ void PlayingStateTest::Shutdown()
 	m_camera.Shutdown();
 	m_playerManager.Shutdown();
 	m_objectManager.Shutdown();
+
+	// ========== DEBUG TEMP LINES ==========
+	m_circle1.Shutdown();
+	m_circle2.Shutdown();
+	m_debugDot.Shutdown();
+	// ========== DEBUG TEMP LINES ==========
 }
 
 void PlayingStateTest::Update(double p_deltaTime)
 {
 	
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
-	{
-		Network::DoMeleeAttack();
-	}
+	
 	
 	BasicPicking();
 
-	// Temporary "Shuriken" spawn
-	if (InputManager::GetInstance()->IsRightMouseClicked())
-	{
-		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, 1.0f, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
-	}
+	
 
 	m_objectManager.Update(p_deltaTime);
 	m_playerManager.Update(p_deltaTime);
@@ -92,6 +96,7 @@ void PlayingStateTest::Render()
 	// Draw to the scene.
 	m_playerManager.Render(SHADERTYPE_SCENE);
 	m_objectManager.Render(SHADERTYPE_SCENE);
+	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
 	m_objectManager.Render(SHADERTYPE_ANIMATED);
 
 	// ========== DEBUG TEMP LINES ==========
@@ -106,6 +111,10 @@ void PlayingStateTest::Render()
 
 	m_circle2.UpdateWorldMatrix(circleWorld);
 	m_circle2.Render();
+
+	m_debugDot.Render();
+
+	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	// ========== DEBUG TEMP LINES ==========
 
 	DirectX::XMFLOAT4X4 world;
@@ -116,12 +125,6 @@ void PlayingStateTest::Render()
 	DirectX::XMStoreFloat4x4(&world2, DirectX::XMMatrixTranspose(DirectX::XMMatrixScaling(100.0f, 100.0f, 1.0f) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f) * DirectX::XMMatrixTranslation(-280.0f, -370.0f, 0.0f)));
 	GraphicsEngine::RenderUI(world2, GraphicsEngine::GetSceneShaderShadowMap());
 }
-
-void PlayingStateTest::RenderAlpha()
-{
-	// Draw Shurikens
-	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
-	}
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 {
@@ -187,6 +190,18 @@ void PlayingStateTest::BasicPicking()
 	DirectX::XMFLOAT3 shurDir = DirectX::XMFLOAT3(-(m_playerManager.GetPlayerPosition().x - shurPos.x), -(m_playerManager.GetPlayerPosition().y - shurPos.y), -(m_playerManager.GetPlayerPosition().z - shurPos.z));
 	
 	m_playerManager.SetAttackDirection(NormalizeFloat3(NormalizeFloat3(shurDir)));
+
+	// ========== DEBUG TEMP LINES ==========
+	DirectX::XMFLOAT4X4 world;
+	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+	DirectX::XMStoreFloat4x4(&world, matrix);
+
+	m_debugDot.UpdateWorldMatrix(world);
+
+	m_mouseX = shurPos.x;
+	m_mouseY = shurPos.z;
+	// ========== DEBUG TEMP LINES ==========
 }
 
 DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)

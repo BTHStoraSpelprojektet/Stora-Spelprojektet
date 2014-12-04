@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "MovingObject.h"
 #include "InputManager.h"
+#include "Collisions.h"
 
 class Player :
 	public MovingObject
@@ -14,8 +15,8 @@ public:
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
 	void Shutdown();
-	void Update(double p_deltaTime);
 	void UpdateMe(double p_deltaTime);
+	void Update(double p_deltaTime);
 	void SetDamage(float p_damage);
 	float GetDamage() const;	
 	void SetHealth(unsigned int p_health);
