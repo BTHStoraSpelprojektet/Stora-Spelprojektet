@@ -114,6 +114,11 @@ int Model::GetVertexCount()
 	return m_vertexCount;
 }
 
+std::vector<Box> Model::GetBoundingBoxes()
+{
+	return m_boundingBoxes;
+}
+
 std::vector<AnimationStack> Model::GetAnimationStacks()
 {
 	return m_animationStacks;
