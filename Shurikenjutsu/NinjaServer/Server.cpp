@@ -44,6 +44,8 @@ void Server::Update(double p_deltaTime)
 	UpdateShurikens(p_deltaTime);
 
 	CheckCollisions();
+
+	RandomizeNewSpawnPoint();
 }
 
 void Server::ReceviePacket()
@@ -488,4 +490,11 @@ void Server::SendInvalidMessage(RakNet::RakNetGUID p_guid)
 	bitStream.Write((RakNet::MessageID)ID_PLAYER_INVALID_MOVE);
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+}
+
+void Server::RandomizeNewSpawnPoint()
+{
+	m_spawnPoints[0].x = rand() % 100 - 50;
+	m_spawnPoints[0].y = 0;
+	m_spawnPoints[0].z = rand() % 100 - 50;
 }

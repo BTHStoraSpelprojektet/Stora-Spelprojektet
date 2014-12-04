@@ -44,6 +44,8 @@ private:
 	void CheckCollisions();
 	void MeleeAttack(RakNet::RakNetGUID p_guid);
 
+	void RandomizeNewSpawnPoint();
+
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
