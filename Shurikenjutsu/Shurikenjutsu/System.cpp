@@ -54,6 +54,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_title = "Shurikenjutsu";
 	m_window.SetTitle(m_title);
 
+	
+
 	// Initialize the graphics engine.
 	GraphicsEngine::Initialize(m_window.GetHandle());
 	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
@@ -67,6 +69,9 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_timer.StartTimer();
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
+
+	// Initialize model library
+	ModelLibrary::GetInstance()->Initialize();
 
 	// Initialize current GameState
 	m_gameState->Initialize();
@@ -118,6 +123,9 @@ void System::Shutdown()
 
 	// Shutdown network
 	Network::Shutdown();
+
+	// Shutdown model library
+	ModelLibrary::GetInstance()->Shutdown();
 }
 
 void System::Run()

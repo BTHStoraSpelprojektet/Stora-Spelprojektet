@@ -16,29 +16,24 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	SetRotation(DirectX::XMFLOAT3(0.0f,0.0f, 0.0f));
 
-	if (!m_model.LoadModel(p_filepath))
-	{
-		return false;
-	}
-	
+	m_model = ModelLibrary::GetInstance()->GetModel(p_filepath);
+
 	return true;
 }
 
 void Object::Shutdown()
 {
-	m_model.Shutdown();
+
 }
 
 void Object::Render(SHADERTYPE p_shader)
 {
-	GraphicsEngine::Render(p_shader, m_model.GetMesh(), m_model.GetVertexCount(), m_model.GetWorldMatrix(), m_model.GetTexture(), m_model.GetNormalMap());
+	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	m_position = p_pos;
-
-	m_model.Translate(p_pos);
 }
 
 DirectX::XMFLOAT3 Object::GetPosition() const
@@ -66,7 +61,16 @@ void Object::SetRotation(DirectX::XMFLOAT3 p_rotation)
 	m_rotation = p_rotation;
 }
 
-Model Object::GetModel()
+DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
+{
+	DirectX::XMFLOAT4X4 matrix;
+	DirectX::XMStoreFloat4x4(&matrix,	DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) *
+										DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) *
+										DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+	return matrix;
+}
+
+Model* Object::GetModel()
 {
 	return m_model;
 }
