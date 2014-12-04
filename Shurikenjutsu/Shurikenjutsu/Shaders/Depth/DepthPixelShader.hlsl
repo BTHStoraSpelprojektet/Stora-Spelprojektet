@@ -1,22 +1,21 @@
+Texture2D m_texture : register(t0);
+
+SamplerState m_sampler : register(s0);
+
 struct Input
 {
 	float4 m_position : SV_POSITION;
-	float4 m_depthPosition : TEXCOORD0;
+	float2 m_textureCoordinates : TEXCOORD0;
+	float4 m_depthPosition : TEXCOORD1;
 };
 
 // Pixel depth shader function.
-float4 main(Input p_input) : SV_TARGET
+float main(Input p_input) : SV_TARGET
 {
-	// Initialize outputs values.
-	float depth;
-	float4 color;
+	float4 color = m_texture.Sample(m_sampler, p_input.m_textureCoordinates);
 
-	// The depth value of the pixel is obtained by dividing the pixel depth by the homogeneous W coordinate.
-	depth = p_input.m_depthPosition.z;
-
-	// Save the depth value to the color, making the texture range from black to white.
-	color = float4(depth, depth, depth, 1.0f);
+	clip(color.a - 0.15f);
 
 	// Return depth value.
-	return color;
+	return p_input.m_depthPosition.z;
 }

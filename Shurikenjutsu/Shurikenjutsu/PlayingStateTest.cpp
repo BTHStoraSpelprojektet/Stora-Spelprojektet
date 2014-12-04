@@ -53,7 +53,7 @@ void PlayingStateTest::Update(double p_deltaTime)
 	// Temporary "Shuriken" spawn
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
-		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
+		Network::AddShurikens(m_playerManager.GetPlayerPosition().x, 1.0f, m_playerManager.GetPlayerPosition().z, m_playerManager.GetAttackDirection().x, m_playerManager.GetAttackDirection().y, m_playerManager.GetAttackDirection().z);
 	}
 
 	m_objectManager.Update(p_deltaTime);

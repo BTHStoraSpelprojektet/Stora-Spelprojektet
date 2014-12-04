@@ -34,7 +34,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Configure vertex layout.
-	D3D11_INPUT_ELEMENT_DESC layout[1];
+	D3D11_INPUT_ELEMENT_DESC layout[2];
 	unsigned int size;
 
 	layout[0].SemanticName = "POSITION";
@@ -44,6 +44,14 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	layout[0].AlignedByteOffset = 0;
 	layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	layout[0].InstanceDataStepRate = 0;
+
+	layout[1].SemanticName = "TEXCOORD";
+	layout[1].SemanticIndex = 0;
+	layout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	layout[1].InputSlot = 0;
+	layout[1].AlignedByteOffset = D3D10_APPEND_ALIGNED_ELEMENT;
+	layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layout[1].InstanceDataStepRate = 0;
 
 	// Compute size of layout.
 	size = sizeof(layout) / sizeof(layout[0]);
@@ -134,16 +142,42 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	// Create the sampler state description.
+	D3D11_SAMPLER_DESC sampler;
+	sampler.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampler.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampler.MipLODBias = 0.0f;
+	sampler.MaxAnisotropy = 1;
+	sampler.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
+	sampler.BorderColor[0] = 0;
+	sampler.BorderColor[1] = 0;
+	sampler.BorderColor[2] = 0;
+	sampler.BorderColor[3] = 0;
+	sampler.MinLOD = 0;
+	sampler.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the texture sampler state.
+	if (FAILED(p_device->CreateSamplerState(&sampler, &m_samplerState)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create depth sampler state.");
+		return false;
+	}
+
 	return true;
 }
 
-void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix)
+void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(Vertex);
 	const unsigned int offset = 0;
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
+
+	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

@@ -8,12 +8,14 @@ cbuffer MatrixBuffer
 struct Input
 {
 	float4 m_position : POSITION;
+	float2 m_textureCoordinates : TEXCOORD0;
 };
 
 struct Output
 {
 	float4 m_position : SV_POSITION;
-	float4 m_depthPosition : TEXCOORD0;
+	float2 m_textureCoordinates : TEXCOORD0;
+	float4 m_depthPosition : TEXCOORD1;
 };
 
 // Vertex depth shader function.
@@ -31,6 +33,8 @@ Output main(Input p_input)
 	output.m_position = mul(output.m_position, m_projectionMatrix);
 
 	output.m_depthPosition = output.m_position;
+
+	output.m_textureCoordinates = p_input.m_textureCoordinates;
 
 	// Return output.
 	return output;
