@@ -28,7 +28,7 @@ private:
 	std::vector<Shuriken> m_shurikens;
 	std::vector<Object> m_staticObjects;
 
-	//Object m_animatedCharacter;
+	Object m_animatedCharacter;
 
 	// unique ID for the network
 	RakNet::NetworkIDManager m_networkIDManger;

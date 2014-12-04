@@ -20,6 +20,9 @@ public:
 	bool isNotSwitchingFullscreen;
 	bool flyingCamera;
 	unsigned int shurikenThrownID;
+
+	double DELTATIME;
+
 private:
 	GLOBAL() {};
 	GLOBAL(GLOBAL const&);              

@@ -83,6 +83,7 @@ void PlayingStateTest::Render()
 	// Draw to the scene.
 	m_playerManager.Render(SHADERTYPE_SCENE);
 	m_objectManager.Render(SHADERTYPE_SCENE);
+	m_objectManager.Render(SHADERTYPE_ANIMATED);
 
 	// ========== DEBUG TEMP LINES ==========
 	DirectX::XMFLOAT4X4 circleWorld;

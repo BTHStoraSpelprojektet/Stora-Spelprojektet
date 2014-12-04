@@ -17,6 +17,9 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	SetRotation(DirectX::XMFLOAT3(0.0f,0.0f, 0.0f));
 
 	m_model = ModelLibrary::GetInstance()->GetModel(p_filepath);
+	
+	for (unsigned i = 0; i < m_model->GetAnimationStacks().size(); i++)
+		m_animationController.CreateNewStack(m_model->GetAnimationStacks()[i]);
 
 	return true;
 }
@@ -29,6 +32,11 @@ void Object::Shutdown()
 void Object::Render(SHADERTYPE p_shader)
 {
 	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+}
+
+void Object::RenderAnimated(SHADERTYPE p_shader)
+{
+	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), 0, m_animationController.UpdateAnimation(GLOBAL::GetInstance().DELTATIME));
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)

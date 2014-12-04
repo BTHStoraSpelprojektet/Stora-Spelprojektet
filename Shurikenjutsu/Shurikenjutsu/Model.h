@@ -24,19 +24,18 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 	ID3D11ShaderResourceView* GetNormalMap();
 	int GetVertexCount();
-	std::vector<DirectX::XMMATRIX> GetAnimation();
 
 	void ResetModel();
 
 	std::vector<Box> GetBoundingBoxes();
+	std::vector<AnimationStack> GetAnimationStacks();
 
 protected:
 	ID3D11Buffer* m_mesh;
 	ID3D11ShaderResourceView* m_texture;
 	ID3D11ShaderResourceView* m_normalMap;
 
-	AnimationControl m_animationController;
-	std::vector<DirectX::XMMATRIX> boneTransforms;
+	std::vector<AnimationStack> m_animationStacks;
 
 	int m_vertexCount;
 	

@@ -27,10 +27,7 @@ bool Model::LoadModel(const char* p_filepath)
 	m_normalMap = LoadTexture(mData.m_normalMapSize[0], mData.m_normalMapSize[1], mData.m_normalMapSize[2], mData.m_normalMap);
 
 	// Store animation stacks
-	for (unsigned int i = 0; i < mData.m_stacks.size(); i++)
-	{
-		m_animationController.CreateNewStack(mData.m_stacks[i]);
-	}
+	m_animationStacks = mData.m_stacks;
 
 	// Store bounding box
 	m_boundingBoxes = mData.m_boundingBoxes;
@@ -94,11 +91,7 @@ void Model::Shutdown()
 
 void Model::Update(double p_dt)
 {
-	if (m_animationController.IsAnimated())
-	{
-		boneTransforms = m_animationController.UpdateAnimation(p_dt);
-	
-}
+
 }
 
 ID3D11Buffer* Model::GetMesh()
@@ -121,7 +114,7 @@ int Model::GetVertexCount()
 	return m_vertexCount;
 }
 
-std::vector<DirectX::XMMATRIX> Model::GetAnimation()
+std::vector<AnimationStack> Model::GetAnimationStacks()
 {
-	return boneTransforms;
+	return m_animationStacks;
 }

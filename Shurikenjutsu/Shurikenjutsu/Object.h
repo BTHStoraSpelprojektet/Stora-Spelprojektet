@@ -6,6 +6,7 @@
 #include <DirectXMath.h>
 #include "Network.h"
 #include "ModelLibrary.h"
+#include "AnimationControl.h"
 
 class Object
 {
@@ -15,6 +16,7 @@ public:
 	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos);
 	virtual void Shutdown();
 	virtual void Render(SHADERTYPE p_shader);
+	virtual void RenderAnimated(SHADERTYPE p_shader);
 
 	virtual DirectX::XMFLOAT3 GetPosition() const;
 	virtual void SetPosition(DirectX::XMFLOAT3 p_pos);
@@ -36,6 +38,8 @@ protected:
 	DirectX::XMFLOAT3 m_scale;
 	DirectX::XMFLOAT3 m_rotation;
 	Model* m_model;
+
+	AnimationControl m_animationController;
 };
 
 #endif OBJECT
