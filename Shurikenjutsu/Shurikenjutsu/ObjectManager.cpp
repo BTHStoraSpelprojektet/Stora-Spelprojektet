@@ -37,7 +37,7 @@ void ObjectManager::Update(double p_deltaTime)
 	}
 
 	if (Network::IsShurikenListUpdated())
-		{
+	{
 		std::vector<ShurikenNet> tempNetShurikens = Network::GetShurikens();
 		for (unsigned int i = 0; i < tempNetShurikens.size(); i++)
 		{
@@ -54,8 +54,8 @@ void ObjectManager::Update(double p_deltaTime)
 			{
 				// Remove shuriken
 				m_shurikens.erase(m_shurikens.begin() + i);
-			i--;
-		}
+				i--;
+			}
 		}
 		Network::SetHaveUpdateShurikenList();
 	}

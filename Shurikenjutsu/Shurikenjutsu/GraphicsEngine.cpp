@@ -283,6 +283,9 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 
 void GraphicsEngine::BeginRenderToShadowMap()
 {
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_directX.GetContext()->PSSetShaderResources(0, 1, &nullPointer);
+
 	m_shadowMap.SetAsRenderTarget(m_directX.GetContext());
 	m_shadowMap.Clear(m_directX.GetContext());
 }

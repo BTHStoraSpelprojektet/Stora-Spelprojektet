@@ -80,6 +80,15 @@ void PlayingStateTest::Update(double p_deltaTime)
 
 void PlayingStateTest::Render()
 {
+	// Draw to the shadowmap.
+	GraphicsEngine::BeginRenderToShadowMap();
+
+	m_playerManager.Render(SHADERTYPE_DEPTH);
+	m_objectManager.Render(SHADERTYPE_DEPTH);
+
+	GraphicsEngine::SetShadowMap();
+	GraphicsEngine::ResetRenderTarget();
+
 	// Draw to the scene.
 	m_playerManager.Render(SHADERTYPE_SCENE);
 	m_objectManager.Render(SHADERTYPE_SCENE);
@@ -98,15 +107,6 @@ void PlayingStateTest::Render()
 	m_circle2.UpdateWorldMatrix(circleWorld);
 	m_circle2.Render();
 	// ========== DEBUG TEMP LINES ==========
-
-	// Draw to the shadowmap.
-	GraphicsEngine::BeginRenderToShadowMap();
-
-	m_playerManager.Render(SHADERTYPE_DEPTH);
-	m_objectManager.Render(SHADERTYPE_DEPTH);
-
-	GraphicsEngine::SetShadowMap();
-	GraphicsEngine::ResetRenderTarget();
 
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixTranspose(DirectX::XMMatrixScaling(100.0f, 100.0f, 1.0f) * DirectX::XMMatrixRotationRollPitchYaw(0.0f, 0.0f, 0.0f) * DirectX::XMMatrixTranslation(-500.0f, -370.0f, 0.0f)));

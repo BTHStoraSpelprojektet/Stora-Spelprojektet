@@ -18,6 +18,7 @@ void ModelLibrary::Initialize()
 	AddModel(directoryPath + "sakuraTreeShape.SSP");
 	AddModel(directoryPath + "shurikenShape.SSP");
 	AddModel(directoryPath + "StickManAnimatedShape.SSP");
+	AddModel(directoryPath + "wallBlockMiniShape.SSP");
 	AddModel(directoryPath + "wallBlockShape.SSP");
 	AddModel(directoryPath + "wallShape.SSP");
 }
