@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "MovingObject.h"
 #include "InputManager.h"
+#include "Collisions.h"
 
 class Player :
 	public MovingObject

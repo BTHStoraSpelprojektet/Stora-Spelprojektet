@@ -38,33 +38,51 @@ void Player::UpdateMe(double p_deltaTime)
 	// Move
 	bool moved = false;
 	float x, y, z;
+
 	x = 0;
 	y = 0;
 	z = 0;
+	Box charBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	bool up =		Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, 31.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
+	bool down =		Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, -39.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
+	bool left =		Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(-31.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
+	bool right =	Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(39.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
+		if (!up)
+		{ 
 		SetSpeed(5.0f);
 		z += 1;
 		moved = true;
 	}
+	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
+		if (!left)
+		{
 		SetSpeed(5.0f);
 		x += -1;
 		moved = true;
 	}
+	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
+		if (!down)
+		{
 		SetSpeed(5.0f);
 		z += -1;
 		moved = true;
 	}
+	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
+		if (!right)
+		{
 		SetSpeed(5.0f);
 		x += 1;
 		moved = true;
+	}
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -81,7 +99,7 @@ void Player::UpdateMe(double p_deltaTime)
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		Network::DoMeleeAttack();
-	}
+}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMouseClicked())
