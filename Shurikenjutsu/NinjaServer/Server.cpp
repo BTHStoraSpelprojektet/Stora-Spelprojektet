@@ -96,7 +96,8 @@ void Server::ReceviePacket()
 		}
 		case ID_CONNECTION_LOST:
 		{
-			std::cout << "A client lost the connection" << std::endl;
+			m_nrOfConnections--;
+			std::cout << "A client lost the connection (" << m_nrOfConnections << ")" << std::endl;
 			RemovePlayer(m_packet->guid);
 			break;
 		}
