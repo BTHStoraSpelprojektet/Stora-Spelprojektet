@@ -50,7 +50,7 @@ void Player::UpdateMe(double p_deltaTime)
 	{
 		if (!up)
 		{ 
-			SetSpeed(20.0f);
+			SetSpeed(5.0f);
 			z += 1;
 			moved = true;
 		}
@@ -60,7 +60,7 @@ void Player::UpdateMe(double p_deltaTime)
 	{
 		if (!left)
 		{
-			SetSpeed(20.0f);
+			SetSpeed(5.0f);
 			x += -1;
 			moved = true;
 		}
@@ -69,7 +69,7 @@ void Player::UpdateMe(double p_deltaTime)
 	{
 		if (!down)
 		{
-			SetSpeed(20.0f);
+			SetSpeed(5.0f);
 			z += -1;
 			moved = true;
 		}
@@ -78,7 +78,7 @@ void Player::UpdateMe(double p_deltaTime)
 	{
 		if (!right)
 		{
-			SetSpeed(20.0f);
+			SetSpeed(5.0f);
 			x += 1;
 			moved = true;
 		}
