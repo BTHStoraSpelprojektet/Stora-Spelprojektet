@@ -43,8 +43,8 @@
     <IncludePath>..\Shurikenjutsu\GTest\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>..\Shurikenjutsu\GTest\libs\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>..\Shurikenjutsu\GTest\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\Shurikenjutsu\GTest\libs\Debug</LibraryPath>
+    <IncludePath>..\Shurikenjutsu\GTest\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
