@@ -37,6 +37,8 @@ float4 main(Input p_input) : SV_Target
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
 	clip(textureColor.a - 0.15f);
 
+	float shadowSum = 0.0f;
+
 	// Set fog color.
 	float4 fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
@@ -58,60 +60,54 @@ float4 main(Input p_input) : SV_Target
 	// Calculate if the coordinates are in the range 0 to 1. If they are then the pixel is lit.
 	if ((saturate(shadowMapCoordinates.x) == shadowMapCoordinates.x) && (saturate(shadowMapCoordinates.y) == shadowMapCoordinates.y))
 	{
-		// Sample the shadow map at the projected shadow map coordinates.
-		float depth = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates).r;
+		// Sample the shadow map using PCF.
+		float depth[9];
+		depth[0] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates).r;
+		depth[1] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(0.0f, 1.0f / 1080.0f)).r;
+		depth[2] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 1920.0f, 1.0f / 1080.0f)).r;
+		depth[3] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 1920.0f, 0.0f)).r;
+		depth[4] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 1920.0f, -1.0f / 1080.0f)).r;
+		depth[5] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(0.0f, -1.0f / 1080.0f)).r;
+		depth[6] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 1920.0f, -1.0f / 1080.0f)).r;
+		depth[7] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 1920.0f, 0.0f)).r;
+		depth[8] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 1920.0f, 1.0f / 1080.0f)).r;
 
 		// Calculate the depth of the light.
-		float lightDepth = p_input.m_lightPositionHomogenous.z;
+		float lightDepth = p_input.m_lightPositionHomogenous.z - 0.0001f;
 
-		// Subtract the bias from the depth value of the light.
-		lightDepth = lightDepth - 0.0001f;
+		// Compare the depth of the shadow map and the depth of the light.
+		shadowSum += lightDepth < depth[0];
+		shadowSum += lightDepth < depth[1];
+		shadowSum += lightDepth < depth[2];
+		shadowSum += lightDepth < depth[3];
+		shadowSum += lightDepth < depth[4];
+		shadowSum += lightDepth < depth[5];
+		shadowSum += lightDepth < depth[6];
+		shadowSum += lightDepth < depth[7];
+		shadowSum += lightDepth < depth[8];
+		shadowSum = shadowSum / 9.0f;
 
-		// Compare the depth of the shadow map and the depth of the light to determine whether to shadow or to light this pixel.
-		if (lightDepth < depth)
-		{
-			// Sample NormalMap
-			float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
-			// Uncompress NormalMap - to get it into the right range
-			float3 normalT = 2.0f * normalMapSample - 1.0f;
-			// Transforms from tangetspace to world space
-			float3 bumpedNormalW = mul(normalT, p_input.m_tBN);
-			//end of normalmap stuff
-
-			// Normalize normals.
-			float3 normal = normalize(bumpedNormalW);
-
-			// Calculate the vector to the camera.
-			float3 toCamera = normalize(-p_input.m_cameraPosition.xyz);
-
-			// Compute directional light
-			ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
-		}
-	}
-
-	// If the point is "behind" the shadow map, light it normally.
-	else
-	{
-		// Sample NormalMap
+		// Sample NormalMap.
 		float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
-		// Uncompress NormalMap - to get it into the right range
+
+		// Uncompress NormalMap - to get it into the right range.
 		float3 normalT = 2.0f * normalMapSample - 1.0f;
-		// Transforms from tangetspace to world space
+
+		// Transforms from tangetspace to world space.
 		float3 bumpedNormalW = mul(normalT, p_input.m_tBN);
-		//end of normalmap stuff
 
 		// Normalize normals.
 		float3 normal = normalize(bumpedNormalW);
 
 		// Calculate the vector to the camera.
-		float3 toCamera = normalize(p_input.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
+		float3 toCamera = normalize(-p_input.m_cameraPosition.xyz);
 
 		// Compute directional light
 		ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
 	}
 
 	// Add light.
-	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz) + S.xyz);
+	textureColor.xyz = textureColor.xyz*(((A.xyz * shadowSum + 0.05f) + D.xyz * shadowSum) + S.xyz * shadowSum);
 	
 	// Add fog.
 	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
