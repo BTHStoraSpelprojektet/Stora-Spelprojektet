@@ -85,8 +85,11 @@ void Model::Shutdown()
 	m_texture->Release();
 	m_texture = 0;
 
-	m_normalMap->Release();
-	m_normalMap = 0;
+	if (m_normalMap != NULL)
+	{
+		m_normalMap->Release();
+		m_normalMap = 0;
+	}	
 }
 
 void Model::Update(double p_dt)
