@@ -5,13 +5,13 @@ SceneShader GraphicsEngine::m_sceneShader;
 InstancedShader GraphicsEngine::m_instanceShader;
 GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
-HWND* GraphicsEngine::m_windowHandle;
+HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
 	bool result = true;
-	m_windowHandle = &p_handle;
+	m_windowHandle = p_handle;
 
 	// Initialize directX.
 	result = m_directX.Initialize(p_handle);
@@ -86,7 +86,7 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 		}
 		case(SHADERTYPE_DEPTH) :
 		{
-			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix);
+			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 
 			break;
 		}
@@ -106,14 +106,16 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 	{
 		case(SHADERTYPE_SCENE) :
 		{
+			GraphicsEngine::TurnOnAlphaBlending();
 			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
+			GraphicsEngine::TurnOffAlphaBlending();
 
 			break;
 		}
 
 		case(SHADERTYPE_DEPTH) :
 		{
-			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix);
+			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 
 			break;
 		}
@@ -238,15 +240,11 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 void GraphicsEngine::TurnOnAlphaBlending()
 {
 	m_directX.TurnOnAlphaBlending();
-	//m_instanceShader.TurnOffBackFaceCulling(m_directX.GetContext());
-	//m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
 }
 
 void GraphicsEngine::TurnOffAlphaBlending()
 {
 	m_directX.TurnOffAlphaBlending();
-	//m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
-	//m_instanceShader.TurnOnBackFaceCulling(m_directX.GetContext());
 }
 
 void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
@@ -295,7 +293,7 @@ void GraphicsEngine::ResetRenderTarget()
 	m_directX.ResetRenderTarget();
 }
 
-HWND* GraphicsEngine::GetWindowHandle()
+HWND GraphicsEngine::GetWindowHandle()
 {
 	return m_windowHandle;
 }

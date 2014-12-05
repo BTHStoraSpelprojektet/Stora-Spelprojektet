@@ -33,6 +33,10 @@ struct Input
 // Pixel shader function.
 float4 main(Input p_input) : SV_Target
 {
+	// Sample texture using texture coordinates.
+	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
+	clip(textureColor.a - 0.15f);
+
 	// Set fog color.
 	float4 fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
@@ -106,9 +110,6 @@ float4 main(Input p_input) : SV_Target
 		ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
 	}
 
-	// Sample texture using texture coordinates.
-	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
-	
 	// Add light.
 	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz) + S.xyz);
 	

@@ -14,7 +14,7 @@ class DepthShader
 public:
 	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
 
-	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix);
+	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 
 	void UpdateViewAndProjection(DirectX::XMFLOAT4X4& p_viewMatrix, DirectX::XMFLOAT4X4& p_projectionMatrix);
 
@@ -27,6 +27,7 @@ private:
 	ID3D11InputLayout* m_layout;
 
 	ID3D11RasterizerState* m_rasterizer;
+	ID3D11SamplerState* m_samplerState;
 
 	std::string m_VSVersion;
 	std::string m_PSVersion;

@@ -8,19 +8,7 @@ ModelLibrary::~ModelLibrary(){}
 void ModelLibrary::Initialize()
 {
 	// Load every model!
-	std::string directoryPath = "../Shurikenjutsu/Models/";
-	AddModel(directoryPath + "cubemanWnP.SSP");
-	AddModel(directoryPath + "DecoratedObjectShape.SSP");
-	AddModel(directoryPath + "Decorative_House_0Shape1.SSP");
-	AddModel(directoryPath + "DecorativeHouseShape.SSP");
-	AddModel(directoryPath + "FloorShape.SSP");
-	AddModel(directoryPath + "pillarShape.SSP");
-	AddModel(directoryPath + "sakuraTreeShape.SSP");
-	AddModel(directoryPath + "shurikenShape.SSP");
-	AddModel(directoryPath + "StickManAnimatedShape.SSP");
-	AddModel(directoryPath + "wallBlockMiniShape.SSP");
-	AddModel(directoryPath + "wallBlockShape.SSP");
-	AddModel(directoryPath + "wallShape.SSP");
+	LoadModelDirectory();
 }
 
 void ModelLibrary::Shutdown()
@@ -57,4 +45,30 @@ void ModelLibrary::AddModel(std::string p_path)
 	model.LoadModel(p_path.c_str());
 
 	m_models[p_path] = model;
+}
+
+void ModelLibrary::LoadModelDirectory()
+{
+
+	WIN32_FIND_DATA ffd;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+	DWORD dwError = 0;
+
+		
+	// Find the first file in the directory.
+	hFind = FindFirstFile("../Shurikenjutsu/Models/*", &ffd);
+
+	// Skip the ".." file
+	FindNextFile(hFind, &ffd);
+
+	// Relevant files
+	while (FindNextFile(hFind, &ffd) != 0)
+	{
+		AddModel("../Shurikenjutsu/Models/" + (std::string)ffd.cFileName);
+		std::cout << "ModelLibrary: " << ffd.cFileName << " loaded"<< std::endl;
+	}
+	
+	std::cout << std::endl;
+
+	FindClose(hFind);
 }
