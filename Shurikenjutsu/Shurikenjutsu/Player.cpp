@@ -43,10 +43,10 @@ void Player::UpdateMe(double p_deltaTime)
 	y = 0;
 	z = 0;
 	Box charBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	bool up =		Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, 31.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
-	bool down =		Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, -39.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
-	bool left =		Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(-31.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
-	bool right =	Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(39.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
+	bool up = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, 36.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
+	bool down = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, -33.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
+	bool left = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(-35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
+	bool right = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
 		if (!up)
