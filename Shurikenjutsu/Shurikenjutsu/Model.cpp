@@ -79,11 +79,17 @@ ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int 
 
 void Model::Shutdown()
 {
-	m_mesh->Release();
-	m_mesh = 0;
+	if (m_mesh != NULL)
+	{
+		m_mesh->Release();
+		m_mesh = 0;
+	}
 
-	m_texture->Release();
-	m_texture = 0;
+	if (m_texture != NULL)
+	{
+		m_texture->Release();
+		m_texture = 0;
+	}
 
 	if (m_normalMap != NULL)
 	{
