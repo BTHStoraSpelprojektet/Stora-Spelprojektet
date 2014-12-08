@@ -365,7 +365,7 @@ void Camera::ResetCamera()
 	float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	UpdateAspectRatio(aspectRatio);
 	UpdateFieldOfView(3.141592f * 0.25f);
-	UpdateClippingPlanes(0.001f, 1000.0f);
+	UpdateClippingPlanes(0.1f, 1000.0f);
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(false);
 
@@ -394,7 +394,7 @@ void Camera::ResetCameraToLight()
 	float aspectRatio = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH / (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	UpdateAspectRatio(aspectRatio);
 	UpdateFieldOfView(3.141592f * 0.25f);
-	UpdateClippingPlanes(0.001f, 1000.0f);
+	UpdateClippingPlanes(0.1f, 1000.0f);
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(true);
 
