@@ -509,7 +509,6 @@ LevelImporter::SpawnPoint Server::GetSpawnPoint(RakNet::RakNetGUID p_guid)
 {
 	//int index = (int)p_guid.ToUint32 % m_spawnPoints.size();
 	int index = rand() % m_spawnPoints.size();
-	std::cout << index << "\n";
 
 	return m_spawnPoints[index];
 }
