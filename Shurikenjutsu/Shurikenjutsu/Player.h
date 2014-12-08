@@ -33,6 +33,8 @@ public:
 	void SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir);
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
+
+	void SetCollidingObjects(std::vector<Object> p_ModelList);
 private:
 	void CalculateFacingAngle();
 
@@ -43,6 +45,11 @@ private:
 	InputManager* m_inputManager;
 	DirectX::XMFLOAT3 m_attackDir;
 	RakNet::RakNetGUID m_guid;
+
+
+	bool CheckCollisionWithObjects();
+	std::vector<Object> m_modelList;
+	DirectX::XMFLOAT3 m_playerPrevPos;
 };
 
 #endif PLAYER

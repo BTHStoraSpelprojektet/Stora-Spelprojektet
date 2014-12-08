@@ -42,6 +42,8 @@ void Player::UpdateMe(double p_deltaTime)
 	x = 0;
 	y = 0;
 	z = 0;
+
+	m_playerPrevPos = m_position;
 	Box charBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	bool up = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, 36.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
 	bool down = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, -33.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
@@ -147,12 +149,19 @@ float Player::GetAgility() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-	MovingObject::SetPosition(p_pos);
+	if (CheckCollisionWithObjects())
+	{
+		MovingObject::SetPosition(m_playerPrevPos);
+	}
+	else
+	{
+		MovingObject::SetPosition(p_pos);
+	}
 
 	if (Network::IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
-		Network::SendPlayerPos(p_pos.x, p_pos.y, p_pos.z);
+		Network::SendPlayerPos(pos.x, pos.y, pos.z);
 	}
 }
 
@@ -212,4 +221,40 @@ void Player::CalculateFacingAngle()
 
 	float faceAngle = atan2(y, x) - 1.57079632679f;
 	SetFacingDirection(DirectX::XMFLOAT3(GetFacingDirection().x, faceAngle, GetFacingDirection().z));
+}
+void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
+{
+	m_modelList = p_ModelList;
+}
+bool Player::CheckCollisionWithObjects()
+{
+	Box playerBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	if (m_modelList.size() > 0)
+	{
+		std::vector<Object> modelList = m_modelList;
+		for (unsigned int i = 0; i < modelList.size(); i++)
+		{
+			std::vector<Box> boxList = modelList[i].GetModel()->GetBoundingBoxes();
+			if (boxList.size() != 0)
+			{
+				for (unsigned int j = 0; j < boxList.size(); j++)
+				{
+					Box box = boxList[j];
+					playerBox.m_center.x = m_position.x + m_direction.x * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
+					playerBox.m_center.y = m_position.y + m_direction.y * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
+					playerBox.m_center.z = m_position.z + m_direction.z * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
+
+					box.m_center.x += modelList[i].GetPosition().x;
+					box.m_center.y += modelList[i].GetPosition().y;
+					box.m_center.z += modelList[i].GetPosition().z;
+
+					if (Collisions::BoxBoxCollision(playerBox, box))
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
 }
