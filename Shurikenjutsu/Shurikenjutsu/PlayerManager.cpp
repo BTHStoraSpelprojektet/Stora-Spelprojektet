@@ -103,10 +103,12 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
+	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility, std::vector<Object> p_ModelList)
 {
 	Player tempPlayer;
 	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_agility);
+
+	tempPlayer.SetCollidingObjects(p_ModelList);
 	m_player = tempPlayer;
 }
 
