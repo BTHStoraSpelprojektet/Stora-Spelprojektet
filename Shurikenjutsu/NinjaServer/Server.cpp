@@ -23,10 +23,11 @@ bool Server::Initialize()
 	m_shurikenSetTimeLeft = 2.0f;
 	m_players = std::vector<PlayerNet>();
 	m_shurikens = std::vector<ShurikenNet>();
-	m_spawnPoints = std::vector<SpawnPoint>();
 
-	// Temp spawn point
-	m_spawnPoints.push_back(SpawnPoint(0, 0, 0));
+	// Load level
+	std::string levelName = "../Shurikenjutsu/Levels/testBana.SSPL";
+	Level level(levelName);
+	m_spawnPoints = level.GetSpawnPoints();
 
 	return true;
 }
@@ -44,8 +45,6 @@ void Server::Update(double p_deltaTime)
 	UpdateShurikens(p_deltaTime);
 
 	CheckCollisions();
-
-	RandomizeNewSpawnPoint();
 }
 
 void Server::ReceviePacket()
@@ -223,9 +222,10 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 		PlayerNet player;
 		player.guid = p_guid;
 		int spawnIndex = 0;
-		player.x = m_spawnPoints[spawnIndex].x;
-		player.y = m_spawnPoints[spawnIndex].y;
-		player.z = m_spawnPoints[spawnIndex].z;
+		LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(p_guid);
+		player.x = spawnPoint.m_translationX;
+		player.y = spawnPoint.m_translationY;
+		player.z = spawnPoint.m_translationZ;
 		player.dirX = 1.0f;
 		player.dirY = 0.0f;
 		player.dirZ = 0.0f;
@@ -454,10 +454,10 @@ void Server::RespawnPlayer(RakNet::RakNetGUID p_guid)
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			int spawnIndex = 0;
-			m_players[i].x = m_spawnPoints[spawnIndex].x;
-			m_players[i].y = m_spawnPoints[spawnIndex].y;
-			m_players[i].z = m_spawnPoints[spawnIndex].z;
+			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(p_guid);
+			m_players[i].x = spawnPoint.m_translationX;
+			m_players[i].y = spawnPoint.m_translationY;
+			m_players[i].z = spawnPoint.m_translationZ;
 
 			RakNet::BitStream bitStream;
 
@@ -505,9 +505,11 @@ void Server::SendInvalidMessage(RakNet::RakNetGUID p_guid)
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }
 
-void Server::RandomizeNewSpawnPoint()
+LevelImporter::SpawnPoint Server::GetSpawnPoint(RakNet::RakNetGUID p_guid)
 {
-	m_spawnPoints[0].x = rand() % 66 - 33.0f;
-	m_spawnPoints[0].y = 0.0f;
-	m_spawnPoints[0].z = rand() % 66 - 33.0f;
+	//int index = (int)p_guid.ToUint32 % m_spawnPoints.size();
+	int index = rand() % m_spawnPoints.size();
+	std::cout << index << "\n";
+
+	return m_spawnPoints[index];
 }

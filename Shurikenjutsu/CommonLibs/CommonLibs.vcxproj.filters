@@ -522,9 +522,6 @@
     <ClInclude Include="LevelImporter.h">
       <Filter>Header Files\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="CommonObjects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RakNet\_FindFirst.cpp">
@@ -880,9 +877,6 @@
     </ClCompile>
     <ClCompile Include="LevelImporter.cpp">
       <Filter>Source Files\Levels</Filter>
-    </ClCompile>
-    <ClCompile Include="CommonObjects.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

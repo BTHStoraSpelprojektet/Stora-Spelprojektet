@@ -13,6 +13,7 @@
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
+#include "..\CommonLibs\Level.h"
 #include <vector>
 
 #pragma comment(lib, "PhysicsDll.lib")
@@ -44,7 +45,7 @@ private:
 	void CheckCollisions();
 	void MeleeAttack(RakNet::RakNetGUID p_guid);
 
-	void RandomizeNewSpawnPoint();
+	LevelImporter::SpawnPoint GetSpawnPoint(RakNet::RakNetGUID p_guid);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
@@ -54,7 +55,7 @@ private:
 	float m_shurikenSetTimeLeft;
 	std::vector<PlayerNet> m_players;
 	std::vector<ShurikenNet> m_shurikens;
-	std::vector<SpawnPoint> m_spawnPoints;
+	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
 };
 
 #endif SERVER
