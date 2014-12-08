@@ -20,9 +20,19 @@ bool PlayingStateTest::Initialize()
 	m_camera.ResetCamera();
 
 	//Load level
-	Level level(&m_objectManager, "../Shurikenjutsu/Levels/testBana.SSPL");
-	GLOBAL::GetInstance().shurikenThrownID = 0;
+	Level level("../Shurikenjutsu/Levels/testBana.SSPL");
 
+	// Load objects on the level
+	std::vector<LevelImporter::CommonObject> levelObjects = level.GetObjects();
+	for (unsigned int i = 0; i < levelObjects.size(); i++)
+	{
+		Object object;
+		object.Initialize(levelObjects[i].m_filePath.c_str(), DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ));
+		object.SetRotation(DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ));
+		m_objectManager.AddStaticObject(object);
+	}
+
+	// Initiate player
 	m_playerManager.Initialize(m_objectManager.GetStaticObjectList());
 
 	// ========== DEBUG TEMP LINES ==========
