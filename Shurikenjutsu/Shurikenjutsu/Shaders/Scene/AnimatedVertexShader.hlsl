@@ -21,7 +21,7 @@ cbuffer FogBuffer : register(b1)
 // Animation matrix buffer.
 cbuffer AnimationMatrixBuffer : register(b2)
 {
-	matrix m_boneTransforms[25];
+	matrix m_boneTransforms[30];
 };
 
 // Vertex input.

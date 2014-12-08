@@ -87,7 +87,7 @@ private:
 	ID3D11Buffer* m_animationMatrixBuffer;
 	struct AnimationMatrixBuffer
 	{
-		DirectX::XMMATRIX m_boneTransforms[25];
+		DirectX::XMMATRIX m_boneTransforms[30];
 	};
 
 	ID3D11Buffer* m_frameBuffer;
