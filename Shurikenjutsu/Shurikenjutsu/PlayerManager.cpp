@@ -11,7 +11,7 @@ PlayerManager::~PlayerManager()
 
 }
 
-bool PlayerManager::Initialize()
+bool PlayerManager::Initialize(std::vector<Object> p_ModelList)
 {
 	m_enemyList = std::vector<Player>();
 	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 20);

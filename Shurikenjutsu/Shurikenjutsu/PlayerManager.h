@@ -12,7 +12,7 @@ class PlayerManager
 public:
 	PlayerManager();
 	~PlayerManager();
-	bool Initialize();
+	bool Initialize(std::vector<Object> p_ModelList);
 	void Shutdown();
 	void Update(double p_deltaTime);
 	void Render(SHADERTYPE p_shader);
