@@ -15,8 +15,6 @@ bool PlayingStateTest::Initialize()
 {
 	m_camera.Initialize();
 
-	m_playerManager.Initialize();
-
 	m_objectManager.Initialize();
 
 	m_camera.ResetCamera();
@@ -24,6 +22,8 @@ bool PlayingStateTest::Initialize()
 	//Load level
 	Level level(&m_objectManager, "../Shurikenjutsu/Levels/testBana.SSPL");
 	GLOBAL::GetInstance().shurikenThrownID = 0;
+
+	m_playerManager.Initialize(m_objectManager.GetStaticObjectList());
 
 	// ========== DEBUG TEMP LINES ==========
 	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
