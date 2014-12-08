@@ -103,8 +103,6 @@
     <ClCompile Include="ButtonEvent.cpp" />
     <ClCompile Include="InstancedShader.cpp" />
     <ClCompile Include="KButtonEvent.cpp" />
-    <ClCompile Include="Level.cpp" />
-    <ClCompile Include="LevelImporter.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
@@ -149,8 +147,6 @@
     <ClInclude Include="GraphicsEngine.h" />
     <ClInclude Include="GUIShader.h" />
     <ClInclude Include="InstancedShader.h" />
-    <ClInclude Include="Level.h" />
-    <ClInclude Include="LevelImporter.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelImporter.h" />

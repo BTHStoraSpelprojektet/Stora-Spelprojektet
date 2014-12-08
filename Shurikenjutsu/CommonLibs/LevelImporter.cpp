@@ -1,7 +1,6 @@
 #include "LevelImporter.h"
 
-LevelImporter::LevelImporter(ObjectManager* p_objectManager, std::string p_level){
-	m_objectManager = p_objectManager;
+LevelImporter::LevelImporter(std::string p_level){
 	m_level = p_level;
 }
 
@@ -48,14 +47,13 @@ void LevelImporter::loadLevelFile(){
 	levelData = stringVector2;
 }
 
-bool LevelImporter::readData(ObjectManager* p_objectManager){
+bool LevelImporter::readData(){
 	if (levelData.size() == 0){
 		return false;
 	}
 	float x, y, z, rotateX, rotateY, rotateZ, rotateW;
 	for (unsigned int currentLineTemp = 0; currentLineTemp < levelData.size(); currentLineTemp++)
 	{
-		Object object;
 		std::string filePathToModel = "";
 		std::vector<std::string> temp = levelData.at(currentLineTemp);
 		bool isSpawnPoint = false;
@@ -147,13 +145,22 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 						}
 					}
 					else{
-						DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
-						DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
+						CommonObject object;
+						object.m_filePath = filePathToModel.c_str();
+						object.m_translationX = x;
+						object.m_translationY = y;
+						object.m_translationZ = -z;
+						object.m_rotationX = rotateX;
+						object.m_rotationY = -rotateY;
+						object.m_rotationZ = rotateZ;
+						m_objects.push_back(object);
+						//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
+						//DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
 
-						object.Initialize(filePathToModel.c_str(), translation);
-						object.SetRotation(rotation);
+						//object.Initialize(filePathToModel.c_str(), translation);
+						//object.SetRotation(rotation);
 
-						p_objectManager->AddStaticObject(object);
+						//p_objectManager->AddStaticObject(object);
 					}
 				}
 
@@ -168,8 +175,13 @@ bool LevelImporter::readData(ObjectManager* p_objectManager){
 	return true;
 }
 
-std::vector<LevelImporter::SpawnPoint> LevelImporter::getSpawnPoints(){
+std::vector<LevelImporter::SpawnPoint> LevelImporter::GetSpawnPoints(){
 	return m_spawnPoints;
+}
+
+std::vector<LevelImporter::CommonObject> LevelImporter::GetObjects()
+{
+	return m_objects;
 }
 
 LevelImporter::~LevelImporter(){

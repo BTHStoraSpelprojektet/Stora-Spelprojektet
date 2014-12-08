@@ -7,13 +7,12 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include "Model.h"
-#include "ObjectManager.h"
 
 class LevelImporter
 {
 public:
-	struct SpawnPoint{
+	struct SpawnPoint
+	{
 		int m_team;
 		float m_translationX;
 		float m_translationY;
@@ -23,18 +22,30 @@ public:
 		float m_rotationZ;
 	};
 
-	LevelImporter::LevelImporter(ObjectManager* p_objectManager, std::string p_level);
+	struct CommonObject
+	{
+		std::string m_filePath;
+		float m_translationX;
+		float m_translationY;
+		float m_translationZ;
+		float m_rotationX;
+		float m_rotationY;
+		float m_rotationZ;
+	};
+
+	LevelImporter::LevelImporter(std::string p_level);
 	~LevelImporter();
 
 	void loadLevelFile();
-	bool readData(ObjectManager* p_objectManager);
-	std::vector<SpawnPoint> getSpawnPoints();
+	bool readData();
+	std::vector<SpawnPoint> GetSpawnPoints();
+	std::vector<CommonObject> GetObjects();
 protected:
-	ObjectManager* m_objectManager;
 	std::string m_level;
 	std::vector<std::vector<std::string>> levelData;
 	
 	std::vector<SpawnPoint> m_spawnPoints;
+	std::vector<CommonObject> m_objects;
 
 	bool m_print = false;
 };

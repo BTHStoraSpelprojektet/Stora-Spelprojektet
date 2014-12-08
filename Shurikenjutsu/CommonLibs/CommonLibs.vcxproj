@@ -71,7 +71,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\RakNet\Source\XBox360Includes.h" />
+    <ClInclude Include="CommonObjects.h" />
     <ClInclude Include="DefaultReplica.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelImporter.h" />
     <ClInclude Include="PlayerReplica.h" />
     <ClInclude Include="RakNet\AutopatcherPatchContext.h" />
     <ClInclude Include="RakNet\AutopatcherRepositoryInterface.h" />
@@ -232,7 +235,10 @@
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CommonObjects.cpp" />
     <ClCompile Include="DefaultReplica.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelImporter.cpp" />
     <ClCompile Include="PlayerReplica.cpp" />
     <ClCompile Include="RakNet\Base64Encoder.cpp" />
     <ClCompile Include="RakNet\BitStream.cpp" />
