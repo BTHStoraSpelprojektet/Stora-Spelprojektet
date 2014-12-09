@@ -30,7 +30,8 @@ bool PlayingStateTest::Initialize()
 		object.Initialize(levelObjects[i].m_filePath.c_str(), DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ), DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ), DirectX::XMFLOAT3(1.0f,1.0f,1.0f));
 		m_objectManager.AddStaticObject(object);
 	}
-
+	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
+	
 	// Initiate player
 	m_playerManager.Initialize(m_objectManager.GetStaticObjectList());
 

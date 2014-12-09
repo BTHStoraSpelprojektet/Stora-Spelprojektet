@@ -43,7 +43,6 @@ void Player::UpdateMe( )
 	x = 0;
 	y = 0;
 	z = 0;
-
 	m_playerPrevPos = m_position;
 	Box charBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	bool up = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, 36.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
@@ -223,8 +222,6 @@ void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
 }
 OBB Player::CheckCollisionWithObjects()
 {
-
-
 	Sphere playerBox = Sphere(m_position, 0.5f);
 	if (m_modelList.size() > 0)
 	{
@@ -262,6 +259,9 @@ void Player::SetCalculatePlayerPosition()
 	OBB collidingBox = CheckCollisionWithObjects();
 	if (collidingBox.m_center.y != -100.0f)
 	{
+		Sphere playerSphere = Sphere(m_position, 0.5f);
+		bool rightSphere = Collisions::SphereSphereCollision(playerSphere, Sphere(DirectX::XMFLOAT3(collidingBox.m_center.x + collidingBox.m_extents.x, collidingBox.m_center.y, collidingBox.m_center.z), collidingBox.m_extents.x));
+		bool leftSphere = Collisions::SphereSphereCollision(playerSphere, Sphere(DirectX::XMFLOAT3(collidingBox.m_center.x - collidingBox.m_extents.x, collidingBox.m_center.y, collidingBox.m_center.z), collidingBox.m_extents.x));
 		float x = m_direction.x;
 		float z = m_direction.z;
 		if (x == 1 || x == -1)
@@ -274,23 +274,55 @@ void Player::SetCalculatePlayerPosition()
 		}
 		else if (x < 0 && z < 0)//down left
 		{
-			x = 0;
-			z = -1;
+			if (rightSphere)
+			{
+				x = 0;
+				z = -1;
+			}
+			else
+			{
+				x = -1;
+				z = 0;
+			}
 		}
 		else if (x > 0 && z < 0)//down right
 		{
-			x = 0;
-			z = -1;
+			if (leftSphere)
+			{
+				x = 0;
+				z = -1;
+			}
+			else
+			{
+				x = 1;
+				z = 0;
+			}
 		}
 		else if (x < 0 && z > 0)//up left
 		{
-			x = 0;
-			z = 1;
+			if (rightSphere)
+			{
+				x = 0;
+				z = 1;
+			}
+			else
+			{
+				x = -1;
+				z = 0;
+			}
 		}
 		else if (x > 0 && z > 0)//up right
 		{
-			x = 0;
-			z = 1;
+			if (leftSphere)
+			{
+				x = 0;
+				z = 1;
+			}
+			else
+			{
+				x = 1;
+				z = 0;
+			}
 		}
 
 
