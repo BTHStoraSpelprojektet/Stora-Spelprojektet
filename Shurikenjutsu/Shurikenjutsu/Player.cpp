@@ -223,7 +223,9 @@ void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
 }
 OBB Player::CheckCollisionWithObjects()
 {
-	OBB playerBox = OBB(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+
+
+	Sphere playerBox = Sphere(m_position, 0.5f);
 	if (m_modelList.size() > 0)
 	{
 		std::vector<Object> modelList = m_modelList;
@@ -236,11 +238,11 @@ OBB Player::CheckCollisionWithObjects()
 				{
 					OBB box = boxList[j];
 
-					playerBox.m_center.x = m_position.x + m_direction.x * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
-					playerBox.m_center.y = m_position.y + m_direction.y * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
-					playerBox.m_center.z = m_position.z + m_direction.z * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+					playerBox.m_position.x = m_position.x + m_direction.x * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+					playerBox.m_position.y = m_position.y + m_direction.y * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+					playerBox.m_position.z = m_position.z + m_direction.z * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 
-					if (Collisions::OBBOBBCollision(playerBox, box))
+					if (Collisions::OBBSphereCollision(box, playerBox))
 					{
 						return box;
 					}
