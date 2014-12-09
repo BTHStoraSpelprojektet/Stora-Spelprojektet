@@ -28,7 +28,9 @@ public:
 
 	void ResetModel();
 
-	std::vector<AnimationStack> GetAnimationStacks();
+	std::vector<Box> GetBoundingBoxes()const;
+	std::vector<DirectX::XMFLOAT3> GetShadowPoints()const;
+	std::vector<AnimationStack> GetAnimationStacks()const;
 
 protected:
 

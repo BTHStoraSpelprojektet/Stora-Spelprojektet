@@ -36,6 +36,7 @@ bool PlayingStateTest::Initialize()
 	// ========== DEBUG TEMP LINES ==========
 	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+	m_circle3.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 0.5f, 50, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 	m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1000, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
@@ -55,6 +56,8 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 	m_circle1.Shutdown();
 	m_circle2.Shutdown();
+	m_circle3.Shutdown();
+
 	m_debugDot.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
 }
@@ -110,6 +113,9 @@ void PlayingStateTest::Render()
 
 	m_circle1.UpdateWorldMatrix(circleWorld);
 	m_circle1.Render();
+
+	m_circle3.UpdateWorldMatrix(circleWorld);
+	m_circle3.Render();
 
 	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
 	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate)));

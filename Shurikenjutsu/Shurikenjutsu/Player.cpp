@@ -1,22 +1,22 @@
 #include "Player.h"
 
-
 Player::Player()
 {
-}
 
+}
 
 Player::~Player()
 {
+
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
 {
 	if (!MovingObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
 	{
 		return false;
 	}
+
 	SetDamage(p_damage);
 	m_spells = p_spells;
 	SetHealth(p_health);
@@ -54,34 +54,36 @@ void Player::UpdateMe( )
 	{
 		if (!up)
 		{ 
-		z += 1;
-		moved = true;
-	}
+			z += 1;
+			moved = true;
+		}
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		if (!left)
 		{
-		x += -1;
-		moved = true;
+			x += -1;
+			moved = true;
+		}
 	}
-	}
+
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		if (!down)
 		{
-		z += -1;
-		moved = true;
+			z += -1;
+			moved = true;
+		}
 	}
-	}
+
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		if (!right)
 		{
-		x += 1;
-		moved = true;
-	}
+			x += 1;
+			moved = true;
+		}
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -98,7 +100,7 @@ void Player::UpdateMe( )
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		Network::DoMeleeAttack();
-}
+	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMouseClicked())
@@ -109,6 +111,7 @@ void Player::UpdateMe( )
 
 void Player::Update()
 {
+
 }
 
 void Player::SetDamage(float p_damage)
@@ -170,10 +173,12 @@ void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	Object::SetPosition(p_pos);
 }
+
 DirectX::XMFLOAT3 Player::GetFacingDirection()
 {
 	return Object::GetRotation();
 }
+
 void Player::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
 {
 	Object::SetRotation(p_facingDirection);
@@ -223,14 +228,14 @@ void Player::CalculateFacingAngle()
 	float faceAngle = atan2(y, x) - 1.57079632679f;
 	SetFacingDirection(DirectX::XMFLOAT3(GetFacingDirection().x, faceAngle, GetFacingDirection().z));
 }
+
 void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
 {
 	m_modelList = p_ModelList;
 }
+
 bool Player::CheckCollisionWithObjects()
 {
-
-
 	Sphere playerBox = Sphere(m_position, 0.5f);
 	if (m_modelList.size() > 0)
 	{
@@ -255,5 +260,6 @@ bool Player::CheckCollisionWithObjects()
 			}
 		}
 	}
+
 	return false;
 }
