@@ -34,16 +34,19 @@ public:
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 
 	std::vector<OBB> GetBoundingBoxes();
+	std::vector<DirectX::XMFLOAT3> GetShadowPoints();
 
 protected:
 	//void SetModel(const char* p_filepath);
 	void TransformBoundingBoxes();
+	void TransformShadowPoints();
 
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT3 m_scale;
 	DirectX::XMFLOAT3 m_rotation;
 	Model* m_model;
 	std::vector<OBB> m_boundingBoxes;
+	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 };
 
 #endif OBJECT
