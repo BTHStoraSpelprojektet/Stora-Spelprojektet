@@ -62,7 +62,7 @@ void ModelLibrary::LoadModelDirectory(BaseModel *p_modelTypes)
 	while (FindNextFile(hFind, &ffd) != 0)
 	{
 		AddModel("../Shurikenjutsu/Models/" + (std::string)ffd.cFileName, p_modelTypes);
-		//ConsolePrintText("Loading model: " + (std::string)ffd.cFileName);
+		std::cout << "Loading model: " + (std::string)ffd.cFileName << std::endl;
 	}
 
 	FindClose(hFind);
