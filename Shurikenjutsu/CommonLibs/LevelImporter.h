@@ -23,9 +23,9 @@ public:
 	};
 
 	struct LevelBoundingBox{
-		float m_width;
-		float m_height;
-		float m_depth;
+		float m_halfWidth;
+		float m_halfHeight;
+		float m_halfDepth;
 		float m_translationX;
 		float m_translationY;
 		float m_translationZ;
@@ -62,7 +62,8 @@ protected:
 	std::vector<CommonObject> m_objects;
 
 	std::string getObjectName(std::string &tmpStr);
-	void readBoundingBox(std::string &tmpStr, int currentWordTemp);
+	void readBoundingBox(std::string &tmpStr, int currentWordTemp, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ, float &boundingBoxWidth, float &boundingBoxHeight, float &boundingBoxDepth);
+	void readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isSpawnPoint, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ);
 
 	bool m_print = true;
 };

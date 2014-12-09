@@ -60,8 +60,7 @@ std::string LevelImporter::getObjectName(std::string &tmpStr){
 	}
 }
 
-void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp){
-	float x = 0, y = 0, z = 0, rotateX = 0, rotateY = 0, rotateZ = 0, rotateW = 0, boundingBoxWidth = 0, boundingBoxHeight = 0, boundingBoxDepth = 0;
+void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ, float &boundingBoxWidth, float &boundingBoxHeight, float &boundingBoxDepth){
 	if (currentWordTemp == 0){
 		std::string objectName = getObjectName(tmpStr);
 	}
@@ -93,9 +92,9 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp){
 		boundingBoxDepth = (float)atof(tmpStr.c_str());
 
 		LevelBoundingBox boundingBox;
-		boundingBox.m_width = boundingBoxWidth;
-		boundingBox.m_height = boundingBoxHeight;
-		boundingBox.m_depth = boundingBoxDepth;
+		boundingBox.m_halfWidth = boundingBoxWidth;
+		boundingBox.m_halfHeight = boundingBoxHeight;
+		boundingBox.m_halfDepth = boundingBoxDepth;
 		boundingBox.m_translationX = x;
 		boundingBox.m_translationY = y;
 		boundingBox.m_translationZ = z;
@@ -112,8 +111,101 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp){
 
 }
 
-void readLevelObject(){
+void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isSpawnPoint, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
+	
 
+	int currentTeam = 0;
+	if (currentWordTemp == 0){
+
+		std::string objectName = getObjectName(tmpStr);
+
+		if (objectName.find("spawnPoint") != std::string::npos)
+		{
+			isSpawnPoint = true;
+			if (m_print)
+			{
+				std::cout << objectName << " ";
+			}
+			std::string cTeam = tmpStr.substr(tmpStr.size() - 2, 1);
+			currentTeam = atoi(cTeam.c_str());
+			if (m_print)
+			{
+				std::cout << "Team: " << cTeam << " | " << "\n";
+			}
+		}
+
+		else
+		{
+			filePathToModel.append("../Shurikenjutsu/Models/");
+			filePathToModel.append(objectName);
+			filePathToModel.append("Shape.SSP");
+
+			if (m_print)
+			{
+				std::cout << filePathToModel << "\n";
+			}
+		}
+	}
+
+	else if (currentWordTemp == 1){
+		x = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 2){
+		y = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 3){
+		z = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 4){
+		rotateX = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 5){
+		rotateY = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 6){
+		rotateZ = (float)atof(tmpStr.c_str());
+
+		//TODO: Read rotation from file
+		//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
+
+		if (isSpawnPoint){
+			SpawnPoint spawnPoint;
+			spawnPoint.m_team = currentTeam;
+			spawnPoint.m_translationX = x;
+			spawnPoint.m_translationY = y;
+			spawnPoint.m_translationZ = z;
+			spawnPoint.m_rotationX = rotateX;
+			spawnPoint.m_rotationY = -rotateY;
+			spawnPoint.m_rotationZ = rotateZ;
+			m_spawnPoints.push_back(spawnPoint);
+			if (m_print)
+			{
+				std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
+			}
+		}
+		else{
+			CommonObject object;
+			object.m_filePath = filePathToModel.c_str();
+			object.m_translationX = x;
+			object.m_translationY = y;
+			object.m_translationZ = -z;
+			object.m_rotationX = rotateX;
+			object.m_rotationY = -rotateY;
+			object.m_rotationZ = rotateZ;
+			m_objects.push_back(object);
+			if (m_print)
+			{
+				std::cout << object.m_filePath << " " << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
+			}
+			//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
+			//DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
+
+			//object.Initialize(filePathToModel.c_str(), translation);
+			//object.SetRotation(rotation);
+
+			//p_objectManager->AddStaticObject(object);
+		}
+	}
 }
 
 bool LevelImporter::readData(){
@@ -123,7 +215,7 @@ bool LevelImporter::readData(){
 	float x, y, z, rotateX, rotateY, rotateZ, rotateW, boundingBoxWidth, boundingBoxHeight, boundingBoxDepth;
 	int numberOfBoundingBoxesToSkip = 0;
 	int numberOfObjects = 0;
-	int headerSize=2;
+	int headerSize = 2;
 	for (unsigned int currentLineTemp = 0; currentLineTemp < levelData.size(); currentLineTemp++)
 	{
 		std::string filePathToModel = "";
@@ -132,7 +224,6 @@ bool LevelImporter::readData(){
 			continue;
 		}
 		bool isSpawnPoint = false;
-		int currentTeam;
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			std::string tmpStr = temp.at(currentWordTemp);
@@ -152,100 +243,10 @@ bool LevelImporter::readData(){
 				}
 			}
 			else if ((currentLineTemp > 2) && (currentLineTemp < (headerSize + 1 + numberOfBoundingBoxesToSkip))){
-				readBoundingBox(tmpStr, currentWordTemp);
+				readBoundingBox(tmpStr, currentWordTemp, x, y, z, rotateX, rotateY, rotateZ, boundingBoxWidth, boundingBoxHeight, boundingBoxDepth);
 			}
 			else if (currentLineTemp > (headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (numberOfObjects + headerSize + numberOfBoundingBoxesToSkip)){
-				if (currentWordTemp == 0){
-
-					std::string objectName = getObjectName(tmpStr);
-
-					if (objectName.find("spawnPoint") != std::string::npos)
-					{
-						isSpawnPoint = true;
-						if (m_print)
-						{
-							std::cout << objectName << " ";
-						}
-						std::string cTeam = tmpStr.substr(tmpStr.size()-2, 1);
-						currentTeam = atoi(cTeam.c_str());
-						if (m_print)
-						{
-							std::cout << "Team: " << cTeam << " | " << "\n";
-						}
-					}
-
-					else
-					{
-						filePathToModel.append("../Shurikenjutsu/Models/");
-						filePathToModel.append(objectName);
-						filePathToModel.append("Shape.SSP");
-
-						if (m_print)
-						{
-							std::cout << filePathToModel << "\n";
-						}
-					}
-				}
-
-				else if (currentWordTemp == 1){
-					x = (float)atof(tmpStr.c_str());
-				}
-				else if (currentWordTemp == 2){
-					y = (float)atof(tmpStr.c_str());
-				}
-				else if (currentWordTemp == 3){
-					z = (float)atof(tmpStr.c_str());
-				}
-				else if (currentWordTemp == 4){
-					rotateX = (float)atof(tmpStr.c_str());
-				}
-				else if (currentWordTemp == 5){
-					rotateY = (float)atof(tmpStr.c_str());
-				}
-				else if (currentWordTemp == 6){
-					rotateZ = (float)atof(tmpStr.c_str());
-
-					//TODO: Read rotation from file
-					//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
-
-					if (isSpawnPoint){
-						SpawnPoint spawnPoint;
-						spawnPoint.m_team = currentTeam;
-						spawnPoint.m_translationX = x;
-						spawnPoint.m_translationY = y;
-						spawnPoint.m_translationZ = z;
-						spawnPoint.m_rotationX = rotateX;
-						spawnPoint.m_rotationY = -rotateY;
-						spawnPoint.m_rotationZ = rotateZ;
-						m_spawnPoints.push_back(spawnPoint);
-						if (m_print)
-						{
-							std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
-						}
-					}
-					else{
-						CommonObject object;
-						object.m_filePath = filePathToModel.c_str();
-						object.m_translationX = x;
-						object.m_translationY = y;
-						object.m_translationZ = -z;
-						object.m_rotationX = rotateX;
-						object.m_rotationY = -rotateY;
-						object.m_rotationZ = rotateZ;
-						m_objects.push_back(object);
-						if (m_print)
-						{
-							std::cout << object.m_filePath << " " << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
-						}
-						//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
-						//DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
-
-						//object.Initialize(filePathToModel.c_str(), translation);
-						//object.SetRotation(rotation);
-
-						//p_objectManager->AddStaticObject(object);
-					}
-				}
+				readLevelObject(tmpStr, currentWordTemp, isSpawnPoint, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 
 			}
 		}
