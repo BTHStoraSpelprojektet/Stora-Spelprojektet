@@ -97,7 +97,7 @@ void Player::UpdateMe(double p_deltaTime)
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		Network::DoMeleeAttack();
-}
+	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMouseClicked())
@@ -149,9 +149,46 @@ float Player::GetAgility() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-	if (CheckCollisionWithObjects())
+	Box noReturnBox = Box(DirectX::XMFLOAT3(-100.0f, -100.0f, -100.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	Box tempBox = CheckCollisionWithObjects();
+	if (tempBox.m_center.x != noReturnBox.m_center.x)
 	{
-		MovingObject::SetPosition(m_playerPrevPos);
+		float x = m_playerPrevPos.x;
+		float z = m_playerPrevPos.z;
+		Box playerBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+		//vector från xPositive till lådans center.
+		float xPosLength = CalculateLengthBetween2Points(DirectX::XMFLOAT3(playerBox.m_center.x + playerBox.m_extents.x, playerBox.m_center.y, playerBox.m_center.z), tempBox.m_center);
+
+		//vector från xNegative till lådans center.
+		float xNegLength = CalculateLengthBetween2Points(DirectX::XMFLOAT3(playerBox.m_center.x - playerBox.m_extents.x, playerBox.m_center.y, playerBox.m_center.z), tempBox.m_center);
+
+		//vector från zPositive till lådans center.
+		float zPosLength = CalculateLengthBetween2Points(DirectX::XMFLOAT3(playerBox.m_center.x, playerBox.m_center.y, playerBox.m_center.z + playerBox.m_extents.z), tempBox.m_center);
+
+		//vector från zNegative till lådans center.
+		float zNegLength = CalculateLengthBetween2Points(DirectX::XMFLOAT3(playerBox.m_center.x, playerBox.m_center.y, playerBox.m_center.z - playerBox.m_extents.z), tempBox.m_center);
+
+		float zTemp = zPosLength - zNegLength;
+		if ((int)zTemp == 0)
+		{
+			z = p_pos.z;
+		}
+		else
+		{
+			int i = 0;
+		}
+
+		float xTemp = xPosLength - xNegLength;				
+		if ((int)xTemp == 0)
+		{
+			x = p_pos.x;
+		}
+		else
+		{
+			int i = 0;
+		}
+		MovingObject::SetPosition(DirectX::XMFLOAT3(x, m_position.y, z));
 	}
 	else
 	{
@@ -226,7 +263,7 @@ void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
 {
 	m_modelList = p_ModelList;
 }
-bool Player::CheckCollisionWithObjects()
+Box Player::CheckCollisionWithObjects()
 {
 	Box playerBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	if (m_modelList.size() > 0)
@@ -247,14 +284,25 @@ bool Player::CheckCollisionWithObjects()
 					box.m_center.x += modelList[i].GetPosition().x;
 					box.m_center.y += modelList[i].GetPosition().y;
 					box.m_center.z += modelList[i].GetPosition().z;
+		/*			DirectX::XMMATRIX wm = DirectX::XMLoadFloat4x4(&Object::GetWorldMatrix());
+					DirectX::XMVECTOR boxVector = DirectX::XMVectorSet(box.m_center.x, box.m_center.y, box.m_center.z, 1.0f);
+					DirectX::XMVector4Transform(boxVector, wm);
 
+					
+					DirectX::XMStoreFloat3(&box.m_center, boxVector);
+*/
 					if (Collisions::BoxBoxCollision(playerBox, box))
 					{
-						return true;
+						return box;
 					}
 				}
 			}
 		}
 	}
-	return false;
+	return Box(DirectX::XMFLOAT3(-100.0f,-100.0f,-100.0f), DirectX::XMFLOAT3(0.0f,0.0f,0.0f));
+}
+
+float Player::CalculateLengthBetween2Points(DirectX::XMFLOAT3 p_1, DirectX::XMFLOAT3 p_2)
+{
+	return std::sqrt((p_2.x - p_1.x)*(p_2.x - p_1.x) + (p_2.z - p_1.z) * (p_2.z - p_1.z));
 }

@@ -46,8 +46,8 @@ private:
 	DirectX::XMFLOAT3 m_attackDir;
 	RakNet::RakNetGUID m_guid;
 
-
-	bool CheckCollisionWithObjects();
+	float CalculateLengthBetween2Points(DirectX::XMFLOAT3 p_1, DirectX::XMFLOAT3 p_2);
+	Box CheckCollisionWithObjects();
 	std::vector<Object> m_modelList;
 	DirectX::XMFLOAT3 m_playerPrevPos;
 };
