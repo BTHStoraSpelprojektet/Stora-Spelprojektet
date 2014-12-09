@@ -31,6 +31,7 @@ bool Model::LoadModel(const char* p_filepath)
 
 	// Store bounding box
 	m_boundingBoxes = mData.m_boundingBoxes;
+	m_shadowPoints = mData.m_shadowPoints;
 
 	free(mData.m_textureMap);
 	free(mData.m_normalMap);
@@ -98,7 +99,7 @@ void Model::Shutdown()
 	}	
 }
 
-void Model::Update(double p_dt)
+void Model::Update()
 {
 
 }

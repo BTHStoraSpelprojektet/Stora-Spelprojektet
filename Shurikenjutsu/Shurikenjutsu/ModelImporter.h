@@ -21,6 +21,7 @@ struct MeshData
 
 	std::vector<AnimationStack> m_stacks;
 	std::vector<Box> m_boundingBoxes;
+	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 };
 
 class ModelImporter

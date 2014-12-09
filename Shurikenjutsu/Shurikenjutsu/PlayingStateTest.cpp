@@ -60,12 +60,13 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 }
 
-void PlayingStateTest::Update(double p_deltaTime)
+void PlayingStateTest::Update()
 {
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	BasicPicking();
 
-	m_objectManager.Update(p_deltaTime);
-	m_playerManager.Update(p_deltaTime);
+	m_objectManager.Update();
+	m_playerManager.Update();
 
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
 	{
@@ -79,8 +80,9 @@ void PlayingStateTest::Update(double p_deltaTime)
 		}
 	}
 
-	m_camera.MoveCamera(p_deltaTime);
-	if (!GLOBAL::GetInstance().flyingCamera)
+	m_camera.MoveCamera();
+
+	if (!GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		m_camera.FollowCharacter(m_playerManager.GetPlayerPosition());
 	}

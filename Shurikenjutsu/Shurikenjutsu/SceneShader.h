@@ -29,6 +29,8 @@ public:
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight);
 	void UpdateShadowMap(ID3D11ShaderResourceView* p_shadowMap);
 
+	void SetShadowMapDimensions(ID3D11Device* p_device, ID3D11DeviceContext* p_context, float p_width, float p_height);
+
 	ID3D11ShaderResourceView* GetShadowMap();
 
 private:
@@ -94,6 +96,14 @@ private:
 	struct FrameBuffer
 	{
 		DirectionalLight m_directionalLight;
+	};
+
+	struct ShadowMapSizeBuffer
+	{
+		float m_shadowMapWidth;
+		float m_shadowMapHeight;
+		float p0;
+		float p1;
 	};
 
 	ID3D11Buffer* m_colorBuffer;
