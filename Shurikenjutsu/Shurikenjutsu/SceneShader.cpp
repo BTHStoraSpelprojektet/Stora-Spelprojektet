@@ -663,3 +663,47 @@ ID3D11ShaderResourceView* SceneShader::GetShadowMap()
 {
 	return m_shadowMap;
 }
+
+void SceneShader::SetShadowMapDimensions(ID3D11Device* p_device, ID3D11DeviceContext* p_context, float p_width, float p_height)
+{
+	ID3D11Buffer* buffer;
+
+	// Create the cbuffer where size data is stored
+	D3D11_BUFFER_DESC bufferDescription;
+	bufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDescription.ByteWidth = sizeof(ShadowMapSizeBuffer);
+	bufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bufferDescription.MiscFlags = 0;
+	bufferDescription.StructureByteStride = 0;
+
+	// Create the frame buffer.
+	if (FAILED(p_device->CreateBuffer(&bufferDescription, NULL, &buffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create scene shadow map dimension buffer.");
+	}
+
+	// Lock the size constant buffer so it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to map scene shadow map dimension buffer.");
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	ShadowMapSizeBuffer* sizeBuffer;
+	sizeBuffer = (ShadowMapSizeBuffer*)mappedBuffer.pData;
+
+	// Copy the fog information into the frame constant buffer.
+	sizeBuffer->m_shadowMapWidth = p_width;
+	sizeBuffer->m_shadowMapHeight = p_height;
+
+	// Unlock the constant buffer.
+	p_context->Unmap(buffer, 0);
+
+	// Set the position of the frame constant buffer in the vertex shader.
+	p_context->PSSetConstantBuffers(1, 1, &buffer);
+
+	buffer->Release();
+	buffer = 0;
+}

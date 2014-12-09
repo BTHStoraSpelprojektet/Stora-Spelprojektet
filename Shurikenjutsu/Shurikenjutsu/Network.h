@@ -5,15 +5,7 @@
 
 #include <iostream>
 
-//#include "..\CommonLibs\RakNet\RakPeerInterface.h"
-//#include "..\CommonLibs\RakNet\NetworkIDManager.h"
-//
-//#include "..\CommonLibs\ServerGlobals.h"
-//#include "..\CommonLibs\ReplicaManager.h"
-//#include "..\CommonLibs\PlayerReplica.h"
-
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
-
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\RakNetTypes.h"
 #include "..\CommonLibs\RakNet\MessageIdentifiers.h"
@@ -79,7 +71,10 @@ private:
 
 	static bool m_connected;
 	static bool m_prevConnected;
+
 	static int m_connectionCount;
+	static int m_previousCount;
+
 	static bool m_newOrRemovedPlayers;
 	static bool m_shurikenListUpdated;
 	static bool m_respawned;
@@ -87,8 +82,6 @@ private:
 	static PlayerNet m_myPlayer;
 	static std::vector<PlayerNet> m_enemyPlayers;
 	static std::vector<ShurikenNet> m_shurikensList;
-	
-	
-};
 
+};
 #endif
