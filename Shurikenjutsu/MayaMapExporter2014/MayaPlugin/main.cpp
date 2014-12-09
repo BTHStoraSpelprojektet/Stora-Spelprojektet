@@ -304,7 +304,12 @@ void MapExporter::GetPositions(){
 						}
 						print("LALALA");
 						char cha[128];
-						sprintf(cha, "%.5f %.5f %.5f", std::abs(points[0].x), std::abs(points[0].y), std::abs(points[0].z));
+
+						//TODO fixa ordningen på width (lengthX), height (lengthY), depth (lengthZ)
+						float lengthX = points[0].x;
+						float lengthY = points[0].y;
+						float lengthZ = points[0].z;
+						sprintf(cha, "%.5f %.5f %.5f", lengthX, lengthY, lengthZ);
 						MGlobal::displayInfo(cha);
 						boundingboxcounter++;
 					}
