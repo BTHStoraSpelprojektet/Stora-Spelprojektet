@@ -114,6 +114,21 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 		}
 	}
 
+	unsigned int shadowVolumeCount = 0;
+	memcpy(&shadowVolumeCount, (char*)data + readPosition, sizeof(unsigned int));
+	readPosition += sizeof(unsigned int);
+
+	if (shadowVolumeCount < 10)
+	{
+		m_importedMesh.m_shadowPoints.resize(shadowVolumeCount);
+
+		for (unsigned int i = 0; i < shadowVolumeCount; i++)
+		{
+			memcpy(&m_importedMesh.m_shadowPoints[i], (char*)data + readPosition, (sizeof(float)* 3));
+			readPosition += (sizeof(float)* 3);
+		}
+	}
+
 	free(data);
 	return true;
 }

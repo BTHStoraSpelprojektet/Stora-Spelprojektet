@@ -40,5 +40,6 @@ protected:
 	int m_vertexCount;
 	
 	std::vector<Box> m_boundingBoxes;
+	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 };
 #endif;
