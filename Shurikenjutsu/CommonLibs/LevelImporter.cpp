@@ -111,10 +111,9 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp, fl
 
 }
 
-void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isSpawnPoint, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
+void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isSpawnPoint, int &currentTeam, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
 	
 
-	int currentTeam = 0;
 	if (currentWordTemp == 0){
 
 		std::string objectName = getObjectName(tmpStr);
@@ -224,6 +223,7 @@ bool LevelImporter::readData(){
 			continue;
 		}
 		bool isSpawnPoint = false;
+		int currentTeam = 0;
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			std::string tmpStr = temp.at(currentWordTemp);
@@ -246,7 +246,7 @@ bool LevelImporter::readData(){
 				readBoundingBox(tmpStr, currentWordTemp, x, y, z, rotateX, rotateY, rotateZ, boundingBoxWidth, boundingBoxHeight, boundingBoxDepth);
 			}
 			else if (currentLineTemp > (headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (numberOfObjects + headerSize + numberOfBoundingBoxesToSkip)){
-				readLevelObject(tmpStr, currentWordTemp, isSpawnPoint, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
+				readLevelObject(tmpStr, currentWordTemp, isSpawnPoint, currentTeam, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 
 			}
 		}
