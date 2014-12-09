@@ -80,11 +80,13 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="ShurikenManager.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="ShurikenManager.h" />
     <ClInclude Include="System.h" />
   </ItemGroup>
   <ItemGroup>

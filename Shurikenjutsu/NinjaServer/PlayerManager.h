@@ -4,14 +4,8 @@
 #include <iostream>
 
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
-#include "..\CommonLibs\RakNet\RakNetTypes.h"
-#include "..\CommonLibs\RakNet\MessageIdentifiers.h"
-#include "..\CommonLibs\RakNet\GetTime.h"
-#include "..\CommonLibs\RakNet\NetworkIDManager.h"
-#include "..\CommonLibs\RakNet\RakPeer.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
 #include "..\CommonLibs\ServerGlobals.h"
-#include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
 #include <vector>
@@ -24,6 +18,7 @@ public:
 
 	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName);
 	void Shutdown();
+	void Update(double p_deltaTime);
 
 	std::vector<PlayerNet> GetPlayers();
 	void AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections);

@@ -13,7 +13,8 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 {
 	m_serverPeer = p_serverPeer;
 
-	std::vector<PlayerNet> m_players = std::vector<PlayerNet>();
+	m_players = std::vector<PlayerNet>();
+	m_spawnPoints = std::vector<LevelImporter::SpawnPoint>();
 
 	// Load spawnpoints
 	Level level(p_levelName);
@@ -23,6 +24,10 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 }
 
 void PlayerManager::Shutdown()
+{
+}
+
+void PlayerManager::Update(double p_deltaTime)
 {
 }
 

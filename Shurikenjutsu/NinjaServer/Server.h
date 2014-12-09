@@ -16,6 +16,7 @@
 #include "..\CommonLibs\Level.h"
 #include <vector>
 #include "PlayerManager.h"
+#include "ShurikenManager.h"
 
 #pragma comment(lib, "PhysicsDll.lib")
 #include "PhysicsDll.h"
@@ -30,11 +31,6 @@ public:
 	void Update(double p_deltaTime);
 	void ReceviePacket();
 private:
-	void AddShuriken(RakNet::RakNetGUID, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
-	void UpdateShurikens(double p_deltaTime);
-	void BroadcastDestoyedShuriken(unsigned int p_id);
-	unsigned int GetShurikenUniqueId();
-
 	void CheckCollisions();
 	void MeleeAttack(RakNet::RakNetGUID p_guid);
 
@@ -43,10 +39,9 @@ private:
 	RakNet::Packet *m_packet;
 
 	int m_nrOfConnections;
-	float m_shurikenSetTimeLeft;
 	std::string m_levelName;
-	std::vector<ShurikenNet> m_shurikens;
 	PlayerManager m_playerManager;
+	ShurikenManager m_shurikenManager;
 };
 
 #endif SERVER
