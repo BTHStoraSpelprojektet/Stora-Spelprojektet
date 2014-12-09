@@ -18,6 +18,8 @@ bool Camera::Initialize()
 	DirectX::XMStoreFloat4x4(&m_viewMatrix,DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixIdentity());
 
+	m_frustum = DirectX::BoundingFrustum(DirectX::XMLoadFloat4x4(&m_projectionMatrix));
+
 	return true;
 }
 
