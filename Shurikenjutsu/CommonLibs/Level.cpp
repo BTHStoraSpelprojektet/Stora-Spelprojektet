@@ -15,6 +15,8 @@ bool Level::loadLevel(std::string p_level){
 
 	m_spawnPoints = levelImporter.GetSpawnPoints();
 
+	m_levelBoundingBoxes = levelImporter.getLevelBoundingBoxes();
+
 	m_objects = levelImporter.GetObjects();
 
 	return loaded;
