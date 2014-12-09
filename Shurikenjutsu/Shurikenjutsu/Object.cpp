@@ -16,7 +16,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	SetRotation(DirectX::XMFLOAT3(0.0f,0.0f, 0.0f));
 
-	m_model = ModelLibrary::GetInstance()->GetModel(p_filepath);
+	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 	
 	TransformBoundingBoxes();
 
@@ -29,7 +29,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetScale(p_scale);
 	SetRotation(p_rotation);
 
-	m_model = ModelLibrary::GetInstance()->GetModel(p_filepath);
+	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 
 	TransformBoundingBoxes();
 	return true;

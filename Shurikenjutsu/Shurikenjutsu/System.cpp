@@ -63,7 +63,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
 	// Initialize model library.
-	ModelLibrary::GetInstance()->Initialize();
+	ModelLibrary::GetInstance()->Initialize(new Model());
 	ConsolePrintSuccess("All models successfully loaded.");
 	ConsoleSkipLines(1);
 

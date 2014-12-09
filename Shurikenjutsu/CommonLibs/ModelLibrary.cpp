@@ -5,10 +5,10 @@ ModelLibrary* ModelLibrary::m_instance;
 ModelLibrary::ModelLibrary(){}
 ModelLibrary::~ModelLibrary(){}
 
-void ModelLibrary::Initialize()
+void ModelLibrary::Initialize(BaseModel *p_modelTypes)
 {
 	// Load every model!
-	LoadModelDirectory();
+	LoadModelDirectory(p_modelTypes);
 }
 
 void ModelLibrary::Shutdown()
@@ -33,21 +33,19 @@ ModelLibrary* ModelLibrary::GetInstance()
 	return m_instance;
 }
 
-Model* ModelLibrary::GetModel(std::string p_path)
+BaseModel* ModelLibrary::GetModel(std::string p_path)
 {
 	return &m_models[p_path];
 }
 
-void ModelLibrary::AddModel(std::string p_path)
+void ModelLibrary::AddModel(std::string p_path, BaseModel *p_modelTypes)
 {
-	Model model;
+	p_modelTypes->LoadModel(p_path.c_str());
 
-	model.LoadModel(p_path.c_str());
-
-	m_models[p_path] = model;
+	m_models[p_path] = *p_modelTypes;
 }
 
-void ModelLibrary::LoadModelDirectory()
+void ModelLibrary::LoadModelDirectory(BaseModel *p_modelTypes)
 {
 
 	WIN32_FIND_DATA ffd;
@@ -63,8 +61,8 @@ void ModelLibrary::LoadModelDirectory()
 	// Relevant files
 	while (FindNextFile(hFind, &ffd) != 0)
 	{
-		AddModel("../Shurikenjutsu/Models/" + (std::string)ffd.cFileName);
-		ConsolePrintText("Loading model: " + (std::string)ffd.cFileName);
+		AddModel("../Shurikenjutsu/Models/" + (std::string)ffd.cFileName, p_modelTypes);
+		//ConsolePrintText("Loading model: " + (std::string)ffd.cFileName);
 	}
 
 	FindClose(hFind);
