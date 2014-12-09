@@ -50,7 +50,6 @@ private:
 	std::string m_title;
 	int m_previousFPS;
 
-	bool m_flyCamera;
 	float m_oldMouseX;
 	float m_oldMouseY;
 

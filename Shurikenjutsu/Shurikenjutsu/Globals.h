@@ -17,8 +17,8 @@ public:
 	int CURRENT_SCREEN_HEIGHT;
 	int CURRENT_SCREEN_WIDTH;
 
-	bool isNotSwitchingFullscreen;
-	bool flyingCamera;
+	bool SWITCHING_SCREEN_MODE;
+	bool CAMERA_FLYING;
 
 	double DELTATIME;
 

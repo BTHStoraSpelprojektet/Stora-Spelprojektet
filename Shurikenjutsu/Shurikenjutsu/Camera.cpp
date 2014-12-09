@@ -195,10 +195,10 @@ DirectX::XMFLOAT4X4 Camera::GetProjectionMatrix()
 
 void Camera::ToggleFullscreen(bool p_fullscreen)
 {
+	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = true;
+
 	if (p_fullscreen)
 	{
-		GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
-
 		// Go to fullscreen
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
@@ -214,14 +214,10 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
 		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0, 670, 1000, true);
-
-		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 	}
 
 	else
 	{
-		GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
-
 		// Go to windowed mode.
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
@@ -237,18 +233,18 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		HWND console = GetConsoleWindow();
 		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0, 670, 1000, true);
 		SetWindowPos(GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
-
-		GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
 	}
+
+	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 }
 
 void Camera::MoveCamera(double p_deltaTime)
 {
 	// Start moving the camera with the C key.
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')) && !GLOBAL::GetInstance().flyingCamera)
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')) && !GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		ShowCursor(false);
-		GLOBAL::GetInstance().flyingCamera = true;
+		GLOBAL::GetInstance().CAMERA_FLYING = true;
 
 		POINT position;
 		GetCursorPos(&position);
@@ -266,7 +262,7 @@ void Camera::MoveCamera(double p_deltaTime)
 		DirectX::XMStoreFloat3(&m_right, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&m_right)));
 	}
 
-	if (GLOBAL::GetInstance().flyingCamera)
+	if (GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		float deltaTime = (float)p_deltaTime;
 
@@ -312,7 +308,7 @@ void Camera::MoveCamera(double p_deltaTime)
 		if (GetAsyncKeyState(VK_BACK))
 		{
 			ShowCursor(true);
-			GLOBAL::GetInstance().flyingCamera = false;
+			GLOBAL::GetInstance().CAMERA_FLYING = false;
 			ResetCamera();
 		}
 	}

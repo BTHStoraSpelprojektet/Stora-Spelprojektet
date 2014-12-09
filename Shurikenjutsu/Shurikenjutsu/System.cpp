@@ -3,13 +3,13 @@ PlayingStateTest System::playingState;
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	bool result = true;
+
+	// Set default game state.
 	playingState = PlayingStateTest();
-	//m_gameState = &m_playingState;
 	m_gameState = &System::playingState;
 
-	GLOBAL::GetInstance().isNotSwitchingFullscreen = false;
-
 	// Set starting window values.
+	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 	GLOBAL::GetInstance().FULLSCREEN = false;
 	GLOBAL::GetInstance().MAX_SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 	GLOBAL::GetInstance().MAX_SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
@@ -54,14 +54,18 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_title = "Shurikenjutsu";
 	m_window.SetTitle(m_title);
 
-	
-
 	// Initialize the graphics engine.
 	GraphicsEngine::Initialize(m_window.GetHandle());
 	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
 	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
+	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
 	GraphicsEngine::TurnOffAlphaBlending();
-	GLOBAL::GetInstance().isNotSwitchingFullscreen = true;
+	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
+
+	// Initialize model library.
+	ModelLibrary::GetInstance()->Initialize();
+	ConsolePrintSuccess("All models successfully loaded.");
+	ConsoleSkipLines(1);
 
 	// Initialize timer.
 	m_previousFPS = 0;
@@ -70,17 +74,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
-	// Initialize model library
-	ModelLibrary::GetInstance()->Initialize();
-
 	// Initialize current GameState
 	m_gameState->Initialize();
-
-	// Initialize the camera.
-	m_flyCamera = false;
-
-	//Run all tests that are in the debug class
-	m_debug.RunTests(p_argc, p_argv);
 
 	// Input: Register keys
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
@@ -93,6 +88,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
+	ConsolePrintSuccess("Input keys registered.");
+	ConsoleSkipLines(1);
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.25f, 0.25f, 0.25f, 1.0f);
@@ -100,12 +97,21 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -2.0f, 1.0f, 0.0f);
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
-
 	m_lightCamera.Initialize();
 	m_lightCamera.ResetCameraToLight();
+	ConsolePrintSuccess("Light source and light camera initialized successfully.");
+	ConsoleSkipLines(1);
+
+	// Run all tests that are in the debug class.
+	if (FLAG_RUN_TESTS == 1)
+	{
+		m_debug.RunTests(p_argc, p_argv);
+	}
 
 	// Initialize network
 	Network::Initialize();
+	ConsolePrintSuccess("Network initialized successfully.");
+	ConsoleSkipLines(1);
 
 	return result;
 }
@@ -149,7 +155,7 @@ void System::Run()
 		else
 		{
 			Update();
-			if (GLOBAL::GetInstance().isNotSwitchingFullscreen)
+			if (!GLOBAL::GetInstance().SWITCHING_SCREEN_MODE)
 			{
 				Render();
 			}

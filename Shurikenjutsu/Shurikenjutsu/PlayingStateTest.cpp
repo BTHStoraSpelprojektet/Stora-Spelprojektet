@@ -81,7 +81,8 @@ void PlayingStateTest::Update(double p_deltaTime)
 	}
 
 	m_camera.MoveCamera(p_deltaTime);
-	if (!GLOBAL::GetInstance().flyingCamera)
+
+	if (!GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		m_camera.FollowCharacter(m_playerManager.GetPlayerPosition());
 	}
