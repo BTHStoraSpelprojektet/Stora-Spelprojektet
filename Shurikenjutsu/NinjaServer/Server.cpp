@@ -25,8 +25,8 @@ bool Server::Initialize()
 	m_shurikens = std::vector<ShurikenNet>();
 
 	// Load level
-	std::string levelName = "../Shurikenjutsu/Levels/testBana.SSPL";
-	Level level(levelName);
+	m_levelName = "../Shurikenjutsu/Levels/testBana.SSPL";
+	Level level(m_levelName);
 	m_spawnPoints = level.GetSpawnPoints();
 
 	return true;
@@ -68,6 +68,8 @@ void Server::ReceviePacket()
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
+			AddPlayer(m_packet->guid);
+
 			break;
 		}
 		case ID_CONNECTION_REQUEST_ACCEPTED:
@@ -102,8 +104,6 @@ void Server::ReceviePacket()
 		}
 		case ID_PLAYER_MOVED:
 		{
-			//std::cout << "A player moved" << std::endl;
-
 			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
 
 			rBitStream.Read(messageID);
@@ -189,6 +189,26 @@ void Server::ReceviePacket()
 	}
 }
 
+void Server::AddPlayer(RakNet::RakNetGUID p_guid)
+{
+	PlayerNet player;
+	player.guid = p_guid;
+	player.team = (m_nrOfConnections % 2) + 1;
+	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
+	player.x = spawnPoint.m_translationX;
+	player.y = spawnPoint.m_translationY;
+	player.z = spawnPoint.m_translationZ;
+	player.dirX = 1.0f;
+	player.dirY = 0.0f;
+	player.dirZ = 0.0f;
+	m_players.push_back(player);
+
+	std::cout << "Player added" << std::endl;
+
+	// Broadcast new player
+	BroadcastPlayers();
+}
+
 void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z)
 {
 	bool found = false;
@@ -215,32 +235,10 @@ void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p
 		}
 	}
 
-	// Temp
 	// Add player if he doesn't exist in the vector
 	if (!found)
 	{
-		PlayerNet player;
-		player.guid = p_guid;
-		int spawnIndex = 0;
-		LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(p_guid);
-		player.x = spawnPoint.m_translationX;
-		player.y = spawnPoint.m_translationY;
-		player.z = spawnPoint.m_translationZ;
-		player.dirX = 1.0f;
-		player.dirY = 0.0f;
-		player.dirZ = 0.0f;
-		m_players.push_back(player);
-
-		std::cout << "Player added" << std::endl;
-
-		// Broadcast new player
-		BroadcastPlayers();
-
-		if (abs(p_x - player.x) > 1.0f || abs(p_y - player.y) > 1.0f || abs(p_z - player.z) > 1.0f)
-		{
-			// Moved too far
-			SendInvalidMessage(p_guid);
-		}
+		AddPlayer(p_guid);
 	}
 }
 
@@ -304,6 +302,7 @@ void Server::BroadcastPlayers()
 		bitStream.Write(m_players[i].dirX);
 		bitStream.Write(m_players[i].dirY);
 		bitStream.Write(m_players[i].dirZ);
+		bitStream.Write(m_players[i].team);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
@@ -454,7 +453,8 @@ void Server::RespawnPlayer(RakNet::RakNetGUID p_guid)
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(p_guid);
+			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(m_players[i].team);
+			std::cout << m_players[i].team << "\n";
 			m_players[i].x = spawnPoint.m_translationX;
 			m_players[i].y = spawnPoint.m_translationY;
 			m_players[i].z = spawnPoint.m_translationZ;
@@ -505,10 +505,17 @@ void Server::SendInvalidMessage(RakNet::RakNetGUID p_guid)
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }
 
-LevelImporter::SpawnPoint Server::GetSpawnPoint(RakNet::RakNetGUID p_guid)
+LevelImporter::SpawnPoint Server::GetSpawnPoint(int p_team)
 {
-	//int index = (int)p_guid.ToUint32 % m_spawnPoints.size();
-	int index = rand() % m_spawnPoints.size();
+	for (unsigned int i = 0; i < m_spawnPoints.size(); i++)
+	{
+		if (m_spawnPoints[i].m_team == p_team)
+		{
+			return m_spawnPoints[i];
+		}
+	}
 
+	// If the player didn't found a spawnpoint for the team he was in then choose a random point
+	int index = rand() % m_spawnPoints.size();
 	return m_spawnPoints[index];
 }

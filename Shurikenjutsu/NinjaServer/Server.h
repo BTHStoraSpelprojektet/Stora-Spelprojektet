@@ -29,6 +29,7 @@ public:
 	void Update(double p_deltaTime);
 	void ReceviePacket();
 private:
+	void AddPlayer(RakNet::RakNetGUID p_guid);
 	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z);
 	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
@@ -45,7 +46,7 @@ private:
 	void CheckCollisions();
 	void MeleeAttack(RakNet::RakNetGUID p_guid);
 
-	LevelImporter::SpawnPoint GetSpawnPoint(RakNet::RakNetGUID p_guid);
+	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
@@ -53,6 +54,7 @@ private:
 
 	int m_nrOfConnections;
 	float m_shurikenSetTimeLeft;
+	std::string m_levelName;
 	std::vector<PlayerNet> m_players;
 	std::vector<ShurikenNet> m_shurikens;
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
