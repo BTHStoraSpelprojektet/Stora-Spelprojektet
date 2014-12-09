@@ -125,6 +125,7 @@ void Network::ReceviePacket()
 			int nrOfPlayers = 0;
 			float x, y, z;
 			float dirX, dirY, dirZ;
+			int team;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
 			bitStream.Read(messageID);
@@ -139,6 +140,7 @@ void Network::ReceviePacket()
 				bitStream.Read(dirX);
 				bitStream.Read(dirY);
 				bitStream.Read(dirZ);
+				bitStream.Read(team);
 
 				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
@@ -344,6 +346,24 @@ void Network::UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_
 				m_enemyPlayers[i].dirY = p_dirY;
 				m_enemyPlayers[i].dirZ = p_dirZ;
 				break;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team)
+{
+	if (p_owner == m_clientPeer->GetMyGUID())
+	{
+		m_myPlayer.team = p_team;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].team = p_team;
 			}
 		}
 	}
