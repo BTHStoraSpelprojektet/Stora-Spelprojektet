@@ -1,9 +1,17 @@
 #include "LightCalculation.hlsli"
 
 // "Every frame" buffer
-cbuffer FrameBuffer
+cbuffer FrameBuffer : register(b0)
 {
 	DirectionalLight m_directionalLight;
+};
+
+cbuffer ShadowMapSize : register(b1)
+{
+	float m_shadowMapWidth;
+	float m_shadowMapHeight;
+	float p0;
+	float p1;
 };
 
 Texture2D m_texture : register(t0);

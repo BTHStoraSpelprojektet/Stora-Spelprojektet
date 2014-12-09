@@ -39,7 +39,7 @@ class AnimationControl
 {
 public:
 	bool CreateNewStack(AnimationStack p_newStack);
-	std::vector<DirectX::XMMATRIX> UpdateAnimation(double p_dT);
+	std::vector<DirectX::XMMATRIX> UpdateAnimation();
 
 	bool IsAnimated();
 

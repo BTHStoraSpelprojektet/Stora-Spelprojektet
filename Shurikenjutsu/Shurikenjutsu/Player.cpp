@@ -33,8 +33,9 @@ void Player::Shutdown()
 	MovingObject::Shutdown();
 }
 
-void Player::UpdateMe(double p_deltaTime)
+void Player::UpdateMe( )
 {
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	// Move
 	bool moved = false;
 	float x, y, z;
@@ -90,7 +91,7 @@ void Player::UpdateMe(double p_deltaTime)
 	SetDirection(tempFloat);
 	if (moved || Network::ConnectedNow())
 	{
-		SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)p_deltaTime, m_position.y + m_direction.y * m_speed * (float)p_deltaTime, m_position.z + m_direction.z * m_speed * (float)p_deltaTime));
+		SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)deltaTime, m_position.y + m_direction.y * m_speed * (float)deltaTime, m_position.z + m_direction.z * m_speed * (float)deltaTime));
 	}
 
 	// Melee attack
@@ -106,7 +107,7 @@ void Player::UpdateMe(double p_deltaTime)
 	}
 }
 
-void Player::Update(double p_deltaTime)
+void Player::Update()
 {
 }
 
@@ -228,6 +229,7 @@ void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
 }
 bool Player::CheckCollisionWithObjects()
 {
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	Box playerBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	if (m_modelList.size() > 0)
 	{
@@ -240,9 +242,9 @@ bool Player::CheckCollisionWithObjects()
 				for (unsigned int j = 0; j < boxList.size(); j++)
 				{
 					Box box = boxList[j];
-					playerBox.m_center.x = m_position.x + m_direction.x * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
-					playerBox.m_center.y = m_position.y + m_direction.y * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
-					playerBox.m_center.z = m_position.z + m_direction.z * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
+					playerBox.m_center.x = m_position.x + m_direction.x * m_speed * (float)deltaTime;
+					playerBox.m_center.y = m_position.y + m_direction.y * m_speed * (float)deltaTime;
+					playerBox.m_center.z = m_position.z + m_direction.z * m_speed * (float)deltaTime;
 
 					box.m_center.x += modelList[i].GetPosition().x;
 					box.m_center.y += modelList[i].GetPosition().y;

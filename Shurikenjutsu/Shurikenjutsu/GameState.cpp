@@ -20,7 +20,7 @@ void GameState::Shutdown()
 
 }
 
-void GameState::Update(double p_deltaTime)
+void GameState::Update()
 {
 
 }

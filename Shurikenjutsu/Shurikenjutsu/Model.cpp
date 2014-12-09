@@ -98,7 +98,7 @@ void Model::Shutdown()
 	}	
 }
 
-void Model::Update(double p_dt)
+void Model::Update()
 {
 
 }

@@ -24,24 +24,23 @@ void PlayerManager::Shutdown()
 
 }
 
-void PlayerManager::Update(double p_deltaTime)
+void PlayerManager::Update()
 {
-	m_player.UpdateMe(p_deltaTime);
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+	m_player.UpdateMe();
 
 	if (Network::IsConnected())
 	{
 		PlayerNet myPlayer = Network::GetMyPlayer();
-		// Set players position to the servers position
-		//m_player.SetPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 
-		// Check if I need to respawn
+		// Check if the player need to respawn
 		if (Network::HasRespawned())
 		{
 			m_player.SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 			Network::SetHaveRespawned();
 		}
 
-		// Check if i have made an invalid move
+		// Check if the player have made an invalid move
 		if (Network::MadeInvalidMove())
 		{
 			m_player.SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
@@ -65,7 +64,6 @@ void PlayerManager::Update(double p_deltaTime)
 					// Remove player
 					m_enemyList.erase(m_enemyList.begin() + i);
 					i--;
-					ConsolePrintText("Removed enemy player in playermanager");
 				}
 			}
 
@@ -76,7 +74,6 @@ void PlayerManager::Update(double p_deltaTime)
 				{
 					// Add player
 					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, 100, 20);
-					ConsolePrintText("Added enemy player in playermanager");
 				}
 			}
 
@@ -87,7 +84,7 @@ void PlayerManager::Update(double p_deltaTime)
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
-			m_enemyList[i].Update(p_deltaTime);
+			m_enemyList[i].Update();
 		}
 	}
 }

@@ -52,6 +52,8 @@ public:
 	static ID3D11ShaderResourceView* GetShadowMap();
 	static ID3D11ShaderResourceView* GetSceneShaderShadowMap();
 
+	static void SetShadowMapDimensions(float p_width, float p_height);
+
 private:
 	GraphicsEngine(){};
 

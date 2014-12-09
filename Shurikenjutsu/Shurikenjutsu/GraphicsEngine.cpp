@@ -38,7 +38,12 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
-	m_GUIShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle);
+	// Initialize 2D GUI shader.
+	if (m_GUIShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
+	{
+		ConsolePrintSuccess("GUI 2D shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
 
 	// Initialize the depth buffer.
 	if (m_depthShader.Initialize(m_directX.GetDevice(), m_directX.GetContext(), p_handle))
@@ -51,6 +56,11 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
 	{
 		ConsolePrintSuccess("Shadow map initialized successfully.");
+
+		std::string size = "Map size: " + std::to_string(GLOBAL::GetInstance().MAX_SCREEN_WIDTH);
+		size.append("x" + std::to_string(GLOBAL::GetInstance().MAX_SCREEN_HEIGHT));
+		ConsolePrintText(size);
+
 		ConsoleSkipLines(1);
 	}
 
@@ -296,4 +306,9 @@ void GraphicsEngine::ResetRenderTarget()
 HWND GraphicsEngine::GetWindowHandle()
 {
 	return m_windowHandle;
+}
+
+void GraphicsEngine::SetShadowMapDimensions(float p_width, float p_height)
+{
+	m_sceneShader.SetShadowMapDimensions(m_directX.GetDevice(), m_directX.GetContext(), p_width, p_height);
 }

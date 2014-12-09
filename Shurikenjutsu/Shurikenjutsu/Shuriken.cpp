@@ -44,17 +44,18 @@ void Shuriken::Shutdown()
 	MovingObject::Shutdown();
 }
 
-void Shuriken::Update(double p_deltaTime)
+void Shuriken::Update()
 {
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	// Update position
-	m_position.x += (float)(m_direction.x*m_speed*p_deltaTime);
-	m_position.y += (float)(m_direction.y*m_speed*p_deltaTime);
-	m_position.z += (float)(m_direction.z*m_speed*p_deltaTime);
+	m_position.x += (float)(m_direction.x*m_speed*deltaTime);
+	m_position.y += (float)(m_direction.y*m_speed*deltaTime);
+	m_position.z += (float)(m_direction.z*m_speed*deltaTime);
 
-	m_rotation.y += (float)(ShurikenSpeed*p_deltaTime);
+	m_rotation.y += (float)(ShurikenSpeed*deltaTime);
 
 	// Update lifetime
-	SetLifetime((float)(GetLifetime() - p_deltaTime));
+	SetLifetime((float)(GetLifetime() - deltaTime));
 
 	// Update World Matrix
 }

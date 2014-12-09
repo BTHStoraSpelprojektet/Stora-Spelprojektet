@@ -11,6 +11,7 @@ bool Network::m_shurikenListUpdated;
 bool Network::m_respawned;
 bool Network::m_invalidMove;
 int Network::m_connectionCount;
+int Network::m_previousCount;
 PlayerNet Network::m_myPlayer;
 std::vector<PlayerNet> Network::m_enemyPlayers;
 std::vector < ShurikenNet > Network::m_shurikensList;
@@ -32,6 +33,9 @@ bool Network::Initialize()
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
+
+	m_connectionCount = 0;
+	m_previousCount = 0;
 
 	return true;
 }
@@ -57,8 +61,9 @@ void Network::ReceviePacket()
 		{
 		case ID_CONNECTION_REQUEST_ACCEPTED:
 		{
-			ConsolePrintSuccess("Connected to the server");
-			
+			ConsolePrintSuccess("Connected to the server.");
+			ConsoleSkipLines(1);
+
 			m_connected = true;
 
 			RakNet::BitStream bitStream;
@@ -66,23 +71,28 @@ void Network::ReceviePacket()
 			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
 
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
+
 			break;
 		}
 		case ID_CONNECTION_ATTEMPT_FAILED:
 		{
-			ConsolePrintError("Connection to server failed, trying to reconnect");
+			ConsolePrintError("Connection to server failed, trying to reconnect.");
 
 			m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 			break;
 		}
 		case ID_DISCONNECTION_NOTIFICATION:
 		{
-			ConsolePrintError("Server has shutdowned");
+			ConsolePrintError("Server shut down.");
+			ConsoleSkipLines(1);
+
 			break;
 		}
 		case ID_CONNECTION_LOST:
 		{
-			ConsolePrintError("Lost connection to server");
+			ConsolePrintError("Lost connection to server.");
+			ConsoleSkipLines(1);
+
 			break;
 		}
 		case ID_NR_CONNECTIONS:
@@ -92,7 +102,20 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(m_connectionCount);
 
-			std::cout << m_connectionCount << " A new client connected or disconnected to the server" << std::endl;
+			if (m_connectionCount < m_previousCount)
+			{
+				ConsolePrintError("Client disconnected.");
+			}
+			else
+			{
+				ConsolePrintSuccess("New client connected.");
+			}
+
+			ConsolePrintText("Players connected: " + std::to_string(m_connectionCount));
+			ConsoleSkipLines(1);
+
+			m_previousCount = m_connectionCount;
+
 			break;
 		}
 		case ID_DOWNLOAD_PLAYERS:
@@ -129,10 +152,8 @@ void Network::ReceviePacket()
 			// Check for removed players
 			CheckForRemovedPlayers(playerGuids);
 
-
 			m_newOrRemovedPlayers = true;
 
-			std::cout << "Downloaded new players" << std::endl;
 			break;
 		}
 

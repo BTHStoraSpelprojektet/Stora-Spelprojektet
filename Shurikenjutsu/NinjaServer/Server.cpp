@@ -88,9 +88,9 @@ void Server::ReceviePacket()
 		{
 			m_nrOfConnections--;
 			std::cout << "A client has disconnected (" << m_nrOfConnections << ")" <<std::endl;
-
-			m_playerManager.RemovePlayer(m_packet->guid);
 			
+			m_playerManager.RemovePlayer(m_packet->guid);
+
 
 			RakNet::BitStream bitStream;
 
@@ -209,17 +209,17 @@ void Server::CheckCollisions()
 		float newPosZ = m_shurikenManager.GetShurikenPosZ(i);
 
 		for (unsigned int j = 0; j < playerList.size(); j++)
-		{
+	{
 			// This is so you don't collide with your own shurikens
 			if (playerList[j].guid == shurikenList[i].guid)
-			{
+	{
 				continue;
-			}
+}
 
 			// Check so you are not on the same team
 			PlayerNet shootingPlayer = m_playerManager.GetPlayer(shurikenList[i].guid);
 			if (playerList[j].team == shootingPlayer.team)
-			{
+{
 				continue;
 			}
 
@@ -261,5 +261,5 @@ void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
 			m_playerManager.RespawnPlayer(playerList[i].guid);
 			break;
 		}
-	}
+}
 }

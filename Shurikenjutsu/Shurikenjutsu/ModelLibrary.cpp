@@ -54,7 +54,6 @@ void ModelLibrary::LoadModelDirectory()
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	DWORD dwError = 0;
 
-		
 	// Find the first file in the directory.
 	hFind = FindFirstFile("../Shurikenjutsu/Models/*", &ffd);
 
@@ -65,10 +64,8 @@ void ModelLibrary::LoadModelDirectory()
 	while (FindNextFile(hFind, &ffd) != 0)
 	{
 		AddModel("../Shurikenjutsu/Models/" + (std::string)ffd.cFileName);
-		std::cout << "ModelLibrary: " << ffd.cFileName << " loaded"<< std::endl;
+		ConsolePrintText("Loading model: " + (std::string)ffd.cFileName);
 	}
-	
-	std::cout << std::endl;
 
 	FindClose(hFind);
 }

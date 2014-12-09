@@ -11,7 +11,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	{
 		if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
-			ConsolePrintErrorAndQuit("Failed to compile GUI vertex shader from file. @GUIShader");
+			ConsolePrintErrorAndQuit("Failed to compile GUI vertex shader from file.");
 			return false;
 		}
 
@@ -29,7 +29,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	// Create the vertex shader.
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
-		ConsolePrintErrorAndQuit("Failed to create scene vertex shader. @GUIShader");
+		ConsolePrintErrorAndQuit("Failed to create GUI vertex shader.");
 		return false;
 	}
 
@@ -65,7 +65,6 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 
 	ConsolePrintSuccess("GUI vertex shader compiled successfully.");
 	ConsolePrintText("GUI version: VS " + m_VSVersion);
-	ConsoleSkipLines(1);
 
 	vertexShader->Release();
 	vertexShader = 0;
@@ -97,13 +96,12 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	// Create the pixel shader.
 	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
 	{
-		ConsolePrintErrorAndQuit("Failed to create scene pixel shader @GUIShader");
+		ConsolePrintErrorAndQuit("Failed to create GUI pixel shader @GUIShader");
 		return false;
 	}
 
 	ConsolePrintSuccess("GUI pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-	ConsoleSkipLines(1);
 
 	pixelShader->Release();
 	pixelShader = 0;

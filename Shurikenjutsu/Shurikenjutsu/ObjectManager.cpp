@@ -21,14 +21,15 @@ void ObjectManager::Shutdown()
 	m_shurikens.clear();
 }
 
-void ObjectManager::Update(double p_deltaTime)
+void ObjectManager::Update()
 {
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	//m_animatedCharacter.Update(p_deltaTime);
 
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		m_shurikens[i].Update(p_deltaTime);
+		m_shurikens[i].Update();
 	}
 
 	if (Network::IsShurikenListUpdated())
