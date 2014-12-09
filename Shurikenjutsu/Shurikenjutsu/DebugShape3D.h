@@ -11,8 +11,8 @@
 class DebugShape3D
 {
 public:
-	DebugShape3D(std::vector<DirectX::XMFLOAT3> p_shape, float p_height, DirectX::XMFLOAT3 p_color);
-	~DebugShape3D();
+	void Initialize(std::vector<DirectX::XMFLOAT3> p_shape, float p_height, DirectX::XMFLOAT3 p_color);
+	void Shutdown();
 
 	void Render();
 
