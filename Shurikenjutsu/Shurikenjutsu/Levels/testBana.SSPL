@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 73
+Number of objects: 72
 Number of bounding boxes: 4
 LevelBoundingBox_1 0 0 -34 0 0 0 35 7.5 0.5
 LevelBoundingBox_3 -34 0 0 0 0 0 35 7.5 0.5
@@ -63,7 +63,7 @@ sakuraTree_4 -25.4347 0 -3.83891 0 0.698132 0
 DecorativeHouse_4 24 0 -25 0 0 0
 DecorativeHouse_6 -26 0 21 0 3.14159 0
 DecoratedObject_11 -12 0 21 0 1.5708 0
-DecoratedObject_12 11 0 21 0 1.5708 0
+DecoratedObject_12 11 0 21 0 0.785398 0
 DecorativeHouse_7 24 0 21 0 3.14159 0
 sakuraTree_5 -1 0 22 0 0.523599 0
 sakuraTree_1 23 0 1 0 3.49066 0
