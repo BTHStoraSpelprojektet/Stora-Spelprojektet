@@ -9,6 +9,7 @@ struct PlayerNet
 	float x, y, z;
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
+	int team;
 };
 
 struct ShurikenNet
@@ -19,18 +20,6 @@ struct ShurikenNet
 	RakNet::RakNetGUID guid;
 	float lifeTime;
 	float speed;
-};
-
-struct SpawnPoint
-{
-	float x, y, z;
-
-	SpawnPoint(float p_x, float p_y, float p_z)
-	{
-		x = p_x;
-		y = p_y;
-		z = p_z;
-	}
 };
 
 enum Messages

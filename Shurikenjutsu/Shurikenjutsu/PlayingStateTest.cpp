@@ -20,9 +20,18 @@ bool PlayingStateTest::Initialize()
 	m_camera.ResetCamera();
 
 	//Load level
-	Level level(&m_objectManager, "../Shurikenjutsu/Levels/testBana.SSPL");
-	GLOBAL::GetInstance().shurikenThrownID = 0;
+	Level level("../Shurikenjutsu/Levels/testBana.SSPL");
 
+	// Load objects on the level
+	std::vector<LevelImporter::CommonObject> levelObjects = level.GetObjects();
+	for (unsigned int i = 0; i < levelObjects.size(); i++)
+	{
+		Object object;
+		object.Initialize(levelObjects[i].m_filePath.c_str(), DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ), DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ), DirectX::XMFLOAT3(1.0f,1.0f,1.0f));
+		m_objectManager.AddStaticObject(object);
+	}
+
+	// Initiate player
 	m_playerManager.Initialize(m_objectManager.GetStaticObjectList());
 
 	// ========== DEBUG TEMP LINES ==========
@@ -51,12 +60,13 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 }
 
-void PlayingStateTest::Update(double p_deltaTime)
+void PlayingStateTest::Update()
 {
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	BasicPicking();
 
-	m_objectManager.Update(p_deltaTime);
-	m_playerManager.Update(p_deltaTime);
+	m_objectManager.Update();
+	m_playerManager.Update();
 
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
 	{
@@ -70,8 +80,9 @@ void PlayingStateTest::Update(double p_deltaTime)
 		}
 	}
 
-	m_camera.MoveCamera(p_deltaTime);
-	if (!GLOBAL::GetInstance().flyingCamera)
+	m_camera.MoveCamera();
+
+	if (!GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		m_camera.FollowCharacter(m_playerManager.GetPlayerPosition());
 	}

@@ -18,7 +18,7 @@ public:
 	ID3D11ShaderResourceView* LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
 	void Shutdown();
 
-	void Update(double p_dt);
+	void Update( );
 
 	ID3D11Buffer* GetMesh();
 	ID3D11ShaderResourceView* GetTexture();
@@ -40,5 +40,6 @@ protected:
 	int m_vertexCount;
 	
 	std::vector<Box> m_boundingBoxes;
+	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 };
 #endif;

@@ -39,7 +39,7 @@ bool Collisions::RayOBBCollision(Ray *p_ray, OBB p_OBB)
 }
 bool Collisions::OBBOBBCollision(OBB p_OBB1, OBB p_OBB2)
 {
-	return IntersectionTests::Intersections::OBBOBBCollision(p_OBB1.m_center, p_OBB1.m_extents, DirectX::XMFLOAT3(p_OBB1.m_direction.x, p_OBB1.m_direction.y, p_OBB1.m_direction.z),p_OBB2.m_center, p_OBB2.m_extents, DirectX::XMFLOAT3(p_OBB2.m_direction.x, p_OBB2.m_direction.y, p_OBB2.m_direction.z));
+	return IntersectionTests::Intersections::OBBOBBCollision(p_OBB1.m_center, p_OBB1.m_extents, p_OBB1.m_direction,p_OBB2.m_center, p_OBB2.m_extents, p_OBB2.m_direction);
 }
 bool Collisions::OBBSphereCollision(OBB p_OBB, Sphere p_sphere)
 {

@@ -66,12 +66,17 @@ namespace IntersectionTests
 		DirectX::BoundingOrientedBox::CreateFromBoundingBox(obb, DirectX::BoundingBox(p_OBBPosition, p_OBBExtents));
 		return obb.Intersects(rayOrigin, rayDirection, temp);
 	}
-	bool Intersections::OBBOBBCollision(DirectX::XMFLOAT3 p_OBB1Position, DirectX::XMFLOAT3 p_OBBE1xtents, DirectX::XMFLOAT3 p_OBB1Direction, DirectX::XMFLOAT3 p_OBB2Position, DirectX::XMFLOAT3 p_OBB2Extents, DirectX::XMFLOAT3 p_OBB2Direction)
-	{//TODO fix this shit
+	bool Intersections::OBBOBBCollision(DirectX::XMFLOAT3 p_OBB1Position, DirectX::XMFLOAT3 p_OBB1Extents, DirectX::XMFLOAT4 p_OBB1Direction, DirectX::XMFLOAT3 p_OBB2Position, DirectX::XMFLOAT3 p_OBB2Extents, DirectX::XMFLOAT4 p_OBB2Direction)
+	{
 		DirectX::BoundingOrientedBox obb1;
-		DirectX::BoundingOrientedBox::CreateFromBoundingBox(obb1, DirectX::BoundingBox(p_OBB1Position, p_OBBE1xtents));
 		DirectX::BoundingOrientedBox obb2;
-		DirectX::BoundingOrientedBox::CreateFromBoundingBox(obb2, DirectX::BoundingBox(p_OBB2Position, p_OBB2Extents));
+		obb1.Center = p_OBB1Position;
+		obb1.Extents = p_OBB1Extents;
+		obb1.Orientation = p_OBB1Direction;
+		obb2.Center = p_OBB2Position;
+		obb2.Extents = p_OBB2Extents;
+		obb2.Orientation = p_OBB2Direction;
+
 		return obb1.Intersects(obb2);
 	}
 

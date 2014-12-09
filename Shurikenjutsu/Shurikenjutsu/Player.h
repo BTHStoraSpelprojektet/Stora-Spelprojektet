@@ -5,6 +5,7 @@
 #include "MovingObject.h"
 #include "InputManager.h"
 #include "Collisions.h"
+#include "Globals.h"
 
 class Player :
 	public MovingObject
@@ -15,8 +16,8 @@ public:
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
 	void Shutdown();
-	void UpdateMe(double p_deltaTime);
-	void Update(double p_deltaTime);
+	void UpdateMe( );
+	void Update( );
 	void SetDamage(float p_damage);
 	float GetDamage() const;	
 	void SetHealth(unsigned int p_health);
@@ -47,7 +48,8 @@ private:
 	RakNet::RakNetGUID m_guid;
 
 	float CalculateLengthBetween2Points(DirectX::XMFLOAT3 p_1, DirectX::XMFLOAT3 p_2);
-	Box CheckCollisionWithObjects();
+	void SetCalculatePlayerPosition();
+	OBB CheckCollisionWithObjects();
 	std::vector<Object> m_modelList;
 	DirectX::XMFLOAT3 m_playerPrevPos;
 };

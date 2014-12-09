@@ -14,7 +14,7 @@ public:
 	~PlayerManager();
 	bool Initialize(std::vector<Object> p_ModelList);
 	void Shutdown();
-	void Update(double p_deltaTime);
+	void Update( );
 	void Render(SHADERTYPE p_shader);
 	DirectX::XMFLOAT3 GetPlayerPosition();
 	DirectX::XMFLOAT3 GetPlayerDirection();

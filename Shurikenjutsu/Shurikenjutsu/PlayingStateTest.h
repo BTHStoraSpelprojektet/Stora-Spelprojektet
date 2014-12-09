@@ -8,7 +8,7 @@
 #include "ObjectManager.h"
 #include "GraphicsEngine.h"
 #include "Camera.h"
-#include "Level.h"
+#include "..\CommonLibs\Level.h"
 #include "Collisions.h"
 #include <d3d9.h>
 #include "DebugDraw.h"
@@ -21,7 +21,7 @@ public:
 	~PlayingStateTest();
 	virtual bool Initialize();
 	void Shutdown();
-	virtual void Update(double p_deltaTime);
+	virtual void Update();
 	virtual void Render();
 	void ToggleFullscreen(bool p_fullscreen);
 

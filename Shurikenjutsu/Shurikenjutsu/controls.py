@@ -19,17 +19,16 @@ class Main():
 		
 	
 	def circle(self, joint):
-		a = 0.5
-		b = 0.6875
+		a = 0.25
+		b = 0.3432
 		
-		
-		p0 = Point(a + 0.1,0 , -a - 0.1)
-		p1 = Point(b + 0.2, 0, 0)
-		p2 = Point(a + 0.1, 0, a + 0.1)
+		p0 = Point(a + 0.005,0 , -a - 0.005)
+		p1 = Point(b + 0.05, 0, 0)
+		p2 = Point(a + 0.005, 0, a + 0.005)
 		p3 = Point(0, 0, b)
-		p4 = Point(-a - 0.1, 0, a + 0.1)
-		p5 = Point(-b - 0.2, 0, 0)
-		p6 = Point(-a - 0.1, 0, -a - 0.1)
+		p4 = Point(-a - 0.005, 0, a + 0.005)
+		p5 = Point(-b - 0.05, 0, 0)
+		p6 = Point(-a - 0.005, 0, -a - 0.005)
 		p7 = Point(0, 0, - b)
 		
 		points = [p0, p1, p2, p3, p4, p5, p6, p7, p0, p1, p2]
@@ -42,24 +41,25 @@ class Main():
 
 		pm.parent("%s" % str(pm.ls(sl = True)[0]), "%s" % str(joint), relative = True)
 		pm.parent("%s" % str(pm.ls(sl = True)[0]), world = True)
+		pm.makeIdentity(r = True)
 		curve = "%s" % str(pm.ls(sl = True)[0])
 		g = 0
 		while g < 8:
-			pm.moveVertexAlongDirection(curve + ".cv[" + str(g) + "]", d = [0,1,0], m = -0.2)
+			pm.moveVertexAlongDirection(curve + ".cv[" + str(g) + "]", d = [0,1,0], m = -0.08)
 			g += 1
 			
 		group = pm.group(curve)
 		
-		parent = pm.listRelatives(joint, p = True)
-		pm.parentConstraint(parent, group, mo = True)
+		#parent = pm.listRelatives(joint, p = True)[0]
+		#pm.parentConstraint(parent, group, mo = True)
 		pm.orientConstraint(curve, joint)
 		handle = joint + "IK"
 		pm.pointConstraint(curve, handle)
 		
 	def triangle(self, joint):
-		p0 = Point(-3, 0, -1.5)
-		p1 = Point(0, 0, 3)
-		p2 = Point(3, 0, -1.5)
+		p0 = Point(-1, 0, -0.5)
+		p1 = Point(0, 0, 1)
+		p2 = Point(1, 0, -0.5)
 		
 		points = [p0, p1, p2, p0]
 		pts = []
@@ -73,10 +73,10 @@ class Main():
 		
 		
 	def square(self, joint, arm, side):
-		p0 = Point(0, 0.2, -0.2)
-		p1 = Point(0, 0.2, 0.2)
-		p2 = Point(0, -0.2, 0.2)
-		p3 = Point(0, -0.2, -0.2)
+		p0 = Point(0, 0.08, -0.08)
+		p1 = Point(0, 0.08, 0.08)
+		p2 = Point(0, -0.08, 0.08)
+		p3 = Point(0, -0.08, -0.08)
 		
 		points = [p0, p1, p2, p3, p0]
 		pts = []
@@ -88,9 +88,9 @@ class Main():
 		pm.parent(curve, "%s" % str(joint), relative = True)
 		pm.parent(curve, world = True)
 		if arm == True:
-			pm.move(-1, moveZ = True)
+			pm.move(-0.5, moveZ = True)
 		if arm == False:
-			pm.move(1, moveZ = True)
+			pm.move(0.5, moveZ = True)
 			pm.makeIdentity(r = True)
 		pm.makeIdentity(a = True)
 		pm.poleVectorConstraint(curve, side + "IK")
