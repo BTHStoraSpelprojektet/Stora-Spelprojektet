@@ -29,11 +29,6 @@ void ObjectManager::Update(double p_deltaTime)
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		m_shurikens[i].Update(p_deltaTime);
-		//if (m_shurikens[i].IsDead())
-		//{
-		//	m_shurikens.erase(m_shurikens.begin()+i);
-		//	i--;
-		//}
 	}
 
 	if (Network::IsShurikenListUpdated())
