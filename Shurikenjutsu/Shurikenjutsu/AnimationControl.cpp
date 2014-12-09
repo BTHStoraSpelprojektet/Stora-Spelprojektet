@@ -1,4 +1,5 @@
 #include "AnimationControl.h"
+#include "Globals.h"
 
 bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 {
@@ -10,9 +11,11 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	return true;
 }
 
-std::vector<DirectX::XMMATRIX> AnimationControl::UpdateAnimation(double p_dT)
+std::vector<DirectX::XMMATRIX> AnimationControl::UpdateAnimation()
 {
-	m_frame += p_dT * 20;
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+
+	m_frame += deltaTime * 20;
 
 	if (m_frame >= (m_animationStacks[1].m_endFrame - 1))
 		m_frame = 0.0f;

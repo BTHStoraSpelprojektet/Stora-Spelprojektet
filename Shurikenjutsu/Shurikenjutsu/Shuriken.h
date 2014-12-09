@@ -17,7 +17,7 @@ public:
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);
 	void Shutdown();
 
-	void Update(double p_deltaTime);
+	void Update( );
 
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
 

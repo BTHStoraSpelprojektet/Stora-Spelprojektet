@@ -6,3 +6,13 @@ GLOBAL& GLOBAL::GetInstance()
 
 	return instance;
 }
+
+void GLOBAL::SetDeltaTime(double p_deltaTime)
+{
+	DELTATIME = p_deltaTime;
+}
+
+double GLOBAL::GetDeltaTime()
+{
+	return DELTATIME;
+}

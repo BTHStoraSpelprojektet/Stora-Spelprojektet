@@ -20,20 +20,25 @@ bool Server::Initialize()
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
 	m_nrOfConnections = 0;
-	m_shurikenSetTimeLeft = 2.0f;
-	m_players = std::vector<PlayerNet>();
-	m_shurikens = std::vector<ShurikenNet>();
 
-	// Load level
-	std::string levelName = "../Shurikenjutsu/Levels/testBana.SSPL";
-	Level level(levelName);
-	m_spawnPoints = level.GetSpawnPoints();
+	// Set level name
+	m_levelName = "../Shurikenjutsu/Levels/testBana.SSPL";
+
+	// Initiate players
+	m_playerManager = PlayerManager();
+	m_playerManager.Initialize(m_serverPeer, m_levelName);
+
+	// Initiate shurikens
+	m_shurikenManager = ShurikenManager();
+	m_shurikenManager.Initialize(m_serverPeer, m_levelName);
 
 	return true;
 }
 
 void Server::Shutdown()
 {
+	m_playerManager.Shutdown();
+
 	m_serverPeer->Shutdown(1000);
 	RakNet::RakPeerInterface::DestroyInstance(m_serverPeer);
 }
@@ -42,7 +47,8 @@ void Server::Update(double p_deltaTime)
 {
 	ReceviePacket();
 
-	UpdateShurikens(p_deltaTime);
+	m_playerManager.Update(p_deltaTime);
+	m_shurikenManager.Update(p_deltaTime);
 
 	CheckCollisions();
 }
@@ -68,6 +74,8 @@ void Server::ReceviePacket()
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
+			m_playerManager.AddPlayer(m_packet->guid, m_nrOfConnections);
+
 			break;
 		}
 		case ID_CONNECTION_REQUEST_ACCEPTED:
@@ -80,8 +88,9 @@ void Server::ReceviePacket()
 		{
 			m_nrOfConnections--;
 			std::cout << "A client has disconnected (" << m_nrOfConnections << ")" <<std::endl;
-			RemovePlayer(m_packet->guid);
 			
+			m_playerManager.RemovePlayer(m_packet->guid);
+
 
 			RakNet::BitStream bitStream;
 
@@ -97,13 +106,11 @@ void Server::ReceviePacket()
 		{
 			m_nrOfConnections--;
 			std::cout << "A client lost the connection (" << m_nrOfConnections << ")" << std::endl;
-			RemovePlayer(m_packet->guid);
+			m_playerManager.RemovePlayer(m_packet->guid);
 			break;
 		}
 		case ID_PLAYER_MOVED:
 		{
-			//std::cout << "A player moved" << std::endl;
-
 			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
 
 			rBitStream.Read(messageID);
@@ -114,10 +121,10 @@ void Server::ReceviePacket()
 			rBitStream.Read(z);
 
 			// Can player move?
-			MovePlayer(m_packet->guid, x, y, z);
+			m_playerManager.MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections);
 
 			// Get player pos
-			PlayerNet player = GetPlayer(m_packet->guid);
+			PlayerNet player = m_playerManager.GetPlayer(m_packet->guid);
 
 			RakNet::BitStream wBitStream;
 			wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
@@ -141,9 +148,9 @@ void Server::ReceviePacket()
 			bitStream.Read(dirY);
 			bitStream.Read(dirZ);
 
-			RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
+			m_playerManager.RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
 
-			PlayerNet player = GetPlayer(m_packet->guid);
+			PlayerNet player = m_playerManager.GetPlayer(m_packet->guid);
 
 			RakNet::BitStream wBitStream;
 			wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
@@ -170,12 +177,12 @@ void Server::ReceviePacket()
 			rBitStream.Read(dirY);
 			rBitStream.Read(dirZ);
 
-			AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+			m_shurikenManager.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
 			break;
 		}
 		case ID_DOWNLOAD_PLAYERS:
 		{
-			BroadcastPlayers();
+			m_playerManager.BroadcastPlayers();
 			break;
 		}
 		case ID_MELEE_ATTACK:
@@ -189,326 +196,70 @@ void Server::ReceviePacket()
 	}
 }
 
-void Server::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z)
-{
-	bool found = false;
-
-	// See if player can move to target position and then update position
-	for (unsigned int i = 0; i < m_players.size(); i++)
-	{
-		if (m_players[i].guid == p_guid)
-		{
-			if (abs(p_x - m_players[i].x) > 1.0f || abs(p_y - m_players[i].y) > 1.0f || abs(p_z - m_players[i].z) > 1.0f)
-			{
-				// Moved too far
-				SendInvalidMessage(p_guid);
-			}
-			else
-			{
-				m_players[i].x = p_x;
-				m_players[i].y = p_y;
-				m_players[i].z = p_z;
-			}			
-
-			found = true;
-			break;
-		}
-	}
-
-	// Temp
-	// Add player if he doesn't exist in the vector
-	if (!found)
-	{
-		PlayerNet player;
-		player.guid = p_guid;
-		int spawnIndex = 0;
-		LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(p_guid);
-		player.x = spawnPoint.m_translationX;
-		player.y = spawnPoint.m_translationY;
-		player.z = spawnPoint.m_translationZ;
-		player.dirX = 1.0f;
-		player.dirY = 0.0f;
-		player.dirZ = 0.0f;
-		m_players.push_back(player);
-
-		std::cout << "Player added" << std::endl;
-
-		// Broadcast new player
-		BroadcastPlayers();
-
-		if (abs(p_x - player.x) > 1.0f || abs(p_y - player.y) > 1.0f || abs(p_z - player.z) > 1.0f)
-		{
-			// Moved too far
-			SendInvalidMessage(p_guid);
-		}
-	}
-}
-
-void Server::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
-{
-	for (unsigned int i = 0; i < m_players.size(); i++)
-	{
-		if (m_players[i].guid == p_guid)
-		{
-			m_players[i].dirX = p_dirX;
-			m_players[i].dirY = p_dirY;
-			m_players[i].dirZ = p_dirZ;
-			break;
-		}
-	}
-}
-
-PlayerNet Server::GetPlayer(RakNet::RakNetGUID p_guid)
-{
-	for (unsigned int i = 0; i < m_players.size(); i++)
-	{
-		if (m_players[i].guid == p_guid)
-		{
-			return m_players[i];
-		}
-	}
-
-	return PlayerNet();
-}
-
-void Server::RemovePlayer(RakNet::RakNetGUID p_guid)
-{
-	for (unsigned int i = 0; i < m_players.size(); i++)
-	{
-		if (m_players[i].guid == p_guid)
-		{
-			m_players.erase(m_players.begin() + i);
-			i--;
-			std::cout << "Player removed" << std::endl;
-			BroadcastPlayers();
-			break;
-		}
-	}
-}
-
-void Server::BroadcastPlayers()
-{
-	int nrOfPlayers = m_players.size();
-
-	RakNet::BitStream bitStream;
-
-	bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
-	bitStream.Write(nrOfPlayers);
-
-	for (int i = 0; i < nrOfPlayers; i++)
-	{
-		bitStream.Write(m_players[i].guid);
-		bitStream.Write(m_players[i].x);
-		bitStream.Write(m_players[i].y);
-		bitStream.Write(m_players[i].z);
-		bitStream.Write(m_players[i].dirX);
-		bitStream.Write(m_players[i].dirY);
-		bitStream.Write(m_players[i].dirZ);
-	}
-
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
-}
-
-void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)
-{
-	// Check if you can add shuriken
-	int count = 0;
-	for (unsigned int i = 0; i < m_shurikens.size(); i++)
-	{
-		if (m_shurikens[i].guid == p_guid)
-		{
-			count++;
-		}
-	}
-
-	// If true then add shuriken
-	if (count < 5)
-	{		
-		ShurikenNet shuriken;
-		shuriken.x = p_posX;
-		shuriken.y = p_posY;
-		shuriken.z = p_posZ;
-		shuriken.dirX = p_dirX;
-		shuriken.dirY = p_dirY;
-		shuriken.dirZ = p_dirZ;
-		shuriken.shurikenId = GetShurikenUniqueId();
-		shuriken.guid = p_guid;
-		shuriken.lifeTime = m_shurikenSetTimeLeft;
-		shuriken.speed = 20.0f;
-		m_shurikens.push_back(shuriken);
-
-		RakNet::BitStream wBitStream;
-		wBitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
-		wBitStream.Write(shuriken.x);
-		wBitStream.Write(shuriken.y);
-		wBitStream.Write(shuriken.z);
-		wBitStream.Write(shuriken.dirX);
-		wBitStream.Write(shuriken.dirY);
-		wBitStream.Write(shuriken.dirZ);
-		wBitStream.Write(shuriken.shurikenId);
-		wBitStream.Write(shuriken.guid);
-		wBitStream.Write(shuriken.speed);
-
-		m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
-	}
-}
-
-void Server::UpdateShurikens(double p_deltaTime)
-{
-	for (unsigned int i = 0; i < m_shurikens.size(); i++)
-	{
-		m_shurikens[i].lifeTime -= (float)p_deltaTime;
-
-		// Calculate the shurikens position
-		float lifeTime = m_shurikenSetTimeLeft - m_shurikens[i].lifeTime;
-		float newPosX = m_shurikens[i].x + m_shurikens[i].dirX * m_shurikens[i].speed * lifeTime;
-		float newPosY = m_shurikens[i].y + m_shurikens[i].dirY * m_shurikens[i].speed * lifeTime;
-		float newPosZ = m_shurikens[i].z + m_shurikens[i].dirZ * m_shurikens[i].speed * lifeTime;
-
-
-		// Check if the time has run out for the shuriken and remove it
-		if (m_shurikens[i].lifeTime <= 0)
-		{
-			// Send removal of shuriken to clients
-			BroadcastDestoyedShuriken(m_shurikens[i].shurikenId);
-
-			m_shurikens.erase(m_shurikens.begin() + i);
-			i--;
-		}
-	}
-}
-
-unsigned int Server::GetShurikenUniqueId()
-{
-	unsigned int ID = 0;
-	bool found = true;
-
-	do
-	{
-		ID = (unsigned int)(rand() % 10000);
-		found = false;
-
-		for (unsigned int i = 0; i < m_shurikens.size(); i++)
-		{
-			if (m_shurikens[i].shurikenId == ID)
-			{
-				found = true;
-				break;
-			}
-		}
-
-	} while (found);
-	
-	return ID;
-}
-
 void Server::CheckCollisions()
 {
 	float radius = 1.0f;
-	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	std::vector<PlayerNet> playerList = m_playerManager.GetPlayers();
+	std::vector<ShurikenNet> shurikenList = m_shurikenManager.GetShurikens();
+	for (unsigned int i = 0; i < shurikenList.size(); i++)
 	{
-		// Calculate the shurikens position
-		float lifeTime = m_shurikenSetTimeLeft - m_shurikens[i].lifeTime;
-		float newPosX = m_shurikens[i].x + m_shurikens[i].dirX * m_shurikens[i].speed * lifeTime;
-		float newPosY = m_shurikens[i].y + m_shurikens[i].dirY * m_shurikens[i].speed * lifeTime;
-		float newPosZ = m_shurikens[i].z + m_shurikens[i].dirZ * m_shurikens[i].speed * lifeTime;
+		// Get the shurikens position
+		float newPosX = m_shurikenManager.GetShurikenPosX(i);
+		float newPosY = m_shurikenManager.GetShurikenPosY(i);
+		float newPosZ = m_shurikenManager.GetShurikenPosZ(i);
 
-		for (unsigned int j = 0; j < m_players.size(); j++)
-		{
-			// This is so you dont collide with your own shurikens
-			if (m_players[j].guid == m_shurikens[i].guid)
-			{
+		for (unsigned int j = 0; j < playerList.size(); j++)
+	{
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == shurikenList[i].guid)
+	{
+				continue;
+}
+
+			// Check so you are not on the same team
+			PlayerNet shootingPlayer = m_playerManager.GetPlayer(shurikenList[i].guid);
+			if (playerList[j].team == shootingPlayer.team)
+{
 				continue;
 			}
 
 			// Make collision test
-			if (IntersectionTests::Intersections::SphereSphereCollision(DirectX::XMFLOAT3(m_players[j].x, m_players[j].y, m_players[j].z), 1.0f, DirectX::XMFLOAT3(newPosX, newPosY, newPosZ), 0.5f))
+			if (IntersectionTests::Intersections::SphereSphereCollision(DirectX::XMFLOAT3(playerList[j].x, playerList[j].y, playerList[j].z), 1.0f, DirectX::XMFLOAT3(newPosX, newPosY, newPosZ), 0.5f))
 			{
 				// Remove shuriken
-				BroadcastDestoyedShuriken(m_shurikens[i].shurikenId);
-
-				m_shurikens.erase(m_shurikens.begin() + i);
+				m_shurikenManager.RemoveShuriken(shurikenList[i].shurikenId);
+				shurikenList.erase(shurikenList.begin() + i);
 				i--;
 
 				// Respawn player
-				RespawnPlayer(m_players[j].guid);
+				m_playerManager.RespawnPlayer(playerList[j].guid);
 				break;
 			}
-		}
-	}
-}
-
-void Server::BroadcastDestoyedShuriken(unsigned int p_id)
-{
-	RakNet::BitStream bitStream;
-
-	bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
-	bitStream.Write(p_id);
-
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
-}
-
-void Server::RespawnPlayer(RakNet::RakNetGUID p_guid)
-{
-	for (unsigned int i = 0; i < m_players.size(); i++)
-	{
-		if (m_players[i].guid == p_guid)
-		{
-			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(p_guid);
-			m_players[i].x = spawnPoint.m_translationX;
-			m_players[i].y = spawnPoint.m_translationY;
-			m_players[i].z = spawnPoint.m_translationZ;
-
-			RakNet::BitStream bitStream;
-
-			bitStream.Write((RakNet::MessageID)ID_RESPAWN_PLAYER);
-			bitStream.Write(m_players[i].x);
-			bitStream.Write(m_players[i].y);
-			bitStream.Write(m_players[i].z);
-
-			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
-			break;
 		}
 	}
 }
 
 void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
 {
-	PlayerNet attackingPlayer = GetPlayer(p_guid);
-	for (unsigned int i = 0; i < m_players.size(); i++)
+	PlayerNet attackingPlayer = m_playerManager.GetPlayer(p_guid);
+	std::vector<PlayerNet> playerList = m_playerManager.GetPlayers();
+	for (unsigned int i = 0; i < playerList.size(); i++)
 	{
 		// So you don't collide with yourself.
-		if (m_players[i].guid == attackingPlayer.guid)
+		if (playerList[i].guid == attackingPlayer.guid)
 		{
 			continue;
 		}
 		DirectX::XMFLOAT3 spherePos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
-		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(m_players[i].x, m_players[i].y, m_players[i].z);
+		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		// Make collision test
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 1.0f, boxPosition, boxExtent, attackDirection))
 		{
 			// Respawn player
-			RespawnPlayer(m_players[i].guid);
+			m_playerManager.RespawnPlayer(playerList[i].guid);
 			break;
 		}
-	}
 }
-
-void Server::SendInvalidMessage(RakNet::RakNetGUID p_guid)
-{
-	RakNet::BitStream bitStream;
-
-	bitStream.Write((RakNet::MessageID)ID_PLAYER_INVALID_MOVE);
-
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
-}
-
-LevelImporter::SpawnPoint Server::GetSpawnPoint(RakNet::RakNetGUID p_guid)
-{
-	//int index = (int)p_guid.ToUint32 % m_spawnPoints.size();
-	int index = rand() % m_spawnPoints.size();
-
-	return m_spawnPoints[index];
 }
