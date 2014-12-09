@@ -21,7 +21,7 @@ public:
 	~PlayingStateTest();
 	virtual bool Initialize();
 	void Shutdown();
-	virtual void Update(double p_deltaTime);
+	virtual void Update();
 	virtual void Render();
 	void ToggleFullscreen(bool p_fullscreen);
 

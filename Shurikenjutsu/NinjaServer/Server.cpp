@@ -353,11 +353,12 @@ void Server::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, 
 	}
 }
 
-void Server::UpdateShurikens(double p_deltaTime)
+void Server::UpdateShurikens(double p_deltaTime )
 {
+	double deltaTime = p_deltaTime; //GLOBAL::GetInstance().GetDeltaTime();
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		m_shurikens[i].lifeTime -= (float)p_deltaTime;
+		m_shurikens[i].lifeTime -= (float)deltaTime;
 
 		// Calculate the shurikens position
 		float lifeTime = m_shurikenSetTimeLeft - m_shurikens[i].lifeTime;
