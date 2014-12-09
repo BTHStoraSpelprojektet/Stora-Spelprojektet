@@ -26,6 +26,9 @@ std::vector<LevelImporter::SpawnPoint> Level::GetSpawnPoints(){
 	return m_spawnPoints;
 }
 
+std::vector<LevelImporter::LevelBoundingBox> Level::getLevelBoundingBoxes(){
+	return m_levelBoundingBoxes;
+}
 
 std::vector<LevelImporter::CommonObject> Level::GetObjects()
 {
