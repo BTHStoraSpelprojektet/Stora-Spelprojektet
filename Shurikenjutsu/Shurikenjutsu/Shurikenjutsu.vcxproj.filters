@@ -231,6 +231,9 @@
     <ClCompile Include="ModelLibrary.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="AnimatedObject.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -364,6 +367,9 @@
     </ClInclude>
     <ClInclude Include="ModelLibrary.h">
       <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedObject.h">
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

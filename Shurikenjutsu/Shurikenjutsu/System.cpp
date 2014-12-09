@@ -80,7 +80,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_flyCamera = false;
 
 	//Run all tests that are in the debug class
-	m_debug.RunTests(p_argc, p_argv);
+	//m_debug.RunTests(p_argc, p_argv);
 
 	// Input: Register keys
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));

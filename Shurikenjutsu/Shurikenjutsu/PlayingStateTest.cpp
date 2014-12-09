@@ -27,8 +27,7 @@ bool PlayingStateTest::Initialize()
 	for (unsigned int i = 0; i < levelObjects.size(); i++)
 	{
 		Object object;
-		object.Initialize(levelObjects[i].m_filePath.c_str(), DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ));
-		object.SetRotation(DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ));
+		object.Initialize(levelObjects[i].m_filePath.c_str(), DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ), DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ), DirectX::XMFLOAT3(1.0f,1.0f,1.0f));
 		m_objectManager.AddStaticObject(object);
 	}
 

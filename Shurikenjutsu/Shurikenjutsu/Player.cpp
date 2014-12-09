@@ -228,27 +228,25 @@ void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
 }
 bool Player::CheckCollisionWithObjects()
 {
-	Box playerBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+
+	OBB playerBox = OBB(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 	if (m_modelList.size() > 0)
 	{
 		std::vector<Object> modelList = m_modelList;
 		for (unsigned int i = 0; i < modelList.size(); i++)
 		{
-			std::vector<Box> boxList = modelList[i].GetModel()->GetBoundingBoxes();
+			std::vector<OBB> boxList = modelList[i].GetBoundingBoxes();
 			if (boxList.size() != 0)
 			{
 				for (unsigned int j = 0; j < boxList.size(); j++)
 				{
-					Box box = boxList[j];
+					OBB box = boxList[j];
 					playerBox.m_center.x = m_position.x + m_direction.x * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
 					playerBox.m_center.y = m_position.y + m_direction.y * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
 					playerBox.m_center.z = m_position.z + m_direction.z * m_speed * (float)GLOBAL::GetInstance().DELTATIME;
 
-					box.m_center.x += modelList[i].GetPosition().x;
-					box.m_center.y += modelList[i].GetPosition().y;
-					box.m_center.z += modelList[i].GetPosition().z;
-
-					if (Collisions::BoxBoxCollision(playerBox, box))
+					if (Collisions::OBBOBBCollision(playerBox, box))
 					{
 						return true;
 					}
