@@ -47,36 +47,119 @@ void LevelImporter::loadLevelFile(){
 	levelData = stringVector2;
 }
 
+std::string LevelImporter::getObjectName(std::string &tmpStr){
+	int pos = tmpStr.find_last_of('_');
+
+	if (pos == -1)
+	{
+		return tmpStr.substr(0, tmpStr.size() - 1);
+	}
+	else
+	{
+		return tmpStr.substr(0, pos);
+	}
+}
+
+void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp){
+	float x = 0, y = 0, z = 0, rotateX = 0, rotateY = 0, rotateZ = 0, rotateW = 0, boundingBoxWidth = 0, boundingBoxHeight = 0, boundingBoxDepth = 0;
+	if (currentWordTemp == 0){
+		std::string objectName = getObjectName(tmpStr);
+	}
+	else if (currentWordTemp == 1){
+		x = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 2){
+		y = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 3){
+		z = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 4){
+		rotateX = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 5){
+		rotateY = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 6){
+		rotateZ = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 7){
+		boundingBoxWidth = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 8){
+		boundingBoxHeight = (float)atof(tmpStr.c_str());
+	}
+	else if (currentWordTemp == 9){
+		boundingBoxDepth = (float)atof(tmpStr.c_str());
+
+		LevelBoundingBox boundingBox;
+		boundingBox.m_width = boundingBoxWidth;
+		boundingBox.m_height = boundingBoxHeight;
+		boundingBox.m_depth = boundingBoxDepth;
+		boundingBox.m_translationX = x;
+		boundingBox.m_translationY = y;
+		boundingBox.m_translationZ = z;
+		boundingBox.m_rotationX = rotateX;
+		boundingBox.m_rotationY = rotateY;
+		boundingBox.m_rotationZ = rotateZ;
+		m_levelBoundingBoxes.push_back(boundingBox);
+		if (m_print)
+		{
+			std::cout << boundingBoxWidth << " " << boundingBoxHeight << " " << boundingBoxDepth << " " << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
+		}
+
+	}
+
+}
+
+void readLevelObject(){
+
+}
+
 bool LevelImporter::readData(){
 	if (levelData.size() == 0){
 		return false;
 	}
-	float x, y, z, rotateX, rotateY, rotateZ, rotateW;
+	float x, y, z, rotateX, rotateY, rotateZ, rotateW, boundingBoxWidth, boundingBoxHeight, boundingBoxDepth;
+	int numberOfBoundingBoxesToSkip = 0;
+	int numberOfObjects = 0;
+	int headerSize=2;
 	for (unsigned int currentLineTemp = 0; currentLineTemp < levelData.size(); currentLineTemp++)
 	{
 		std::string filePathToModel = "";
 		std::vector<std::string> temp = levelData.at(currentLineTemp);
+		if (temp.at(0).empty()){
+			continue;
+		}
 		bool isSpawnPoint = false;
 		int currentTeam;
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
-			if (currentLineTemp > 1){
-				std::string tmpStr = temp.at(currentWordTemp);
+			std::string tmpStr = temp.at(currentWordTemp);
+
+			if (tmpStr.empty()){
+				continue;
+			}
+
+			if (currentLineTemp == 1){
+				if (currentWordTemp == 3){
+					numberOfObjects = atoi(tmpStr.c_str());
+				}
+			}
+			else if (currentLineTemp == 2){
+				if (currentWordTemp == 4){
+					numberOfBoundingBoxesToSkip = atoi(tmpStr.c_str());
+				}
+			}
+			else if ((currentLineTemp > 2) && (currentLineTemp < (headerSize + 1 + numberOfBoundingBoxesToSkip))){
+				readBoundingBox(tmpStr, currentWordTemp);
+			}
+			else if (currentLineTemp > (headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (numberOfObjects + headerSize + numberOfBoundingBoxesToSkip)){
 				if (currentWordTemp == 0){
 
-					std::string objectName = "";
-					int pos = tmpStr.find('_');
+					std::string objectName = getObjectName(tmpStr);
 
-					if (pos == -1)
-					{
-						objectName = tmpStr.substr(0, tmpStr.size() - 1);
-					}
-					else
-					{
-						objectName = tmpStr.substr(0, pos);
-					}
-
-					if (strcmp(objectName.c_str(), "spawnPoint") == 0)
+					if (objectName.find("spawnPoint") != std::string::npos)
 					{
 						isSpawnPoint = true;
 						if (m_print)
@@ -87,13 +170,12 @@ bool LevelImporter::readData(){
 						currentTeam = atoi(cTeam.c_str());
 						if (m_print)
 						{
-							std::cout << "Team: " << cTeam << " | ";
+							std::cout << "Team: " << cTeam << " | " << "\n";
 						}
 					}
 
 					else
 					{
-						filePathToModel = "";
 						filePathToModel.append("../Shurikenjutsu/Models/");
 						filePathToModel.append(objectName);
 						filePathToModel.append("Shape.SSP");
@@ -122,9 +204,6 @@ bool LevelImporter::readData(){
 				}
 				else if (currentWordTemp == 6){
 					rotateZ = (float)atof(tmpStr.c_str());
-				}
-				else if (currentWordTemp == 7){
-					rotateW = (float)atof(tmpStr.c_str());
 
 					//TODO: Read rotation from file
 					//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
@@ -141,7 +220,7 @@ bool LevelImporter::readData(){
 						m_spawnPoints.push_back(spawnPoint);
 						if (m_print)
 						{
-							std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ;
+							std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
 						}
 					}
 					else{
@@ -154,6 +233,10 @@ bool LevelImporter::readData(){
 						object.m_rotationY = -rotateY;
 						object.m_rotationZ = rotateZ;
 						m_objects.push_back(object);
+						if (m_print)
+						{
+							std::cout << object.m_filePath << " " << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
+						}
 						//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
 						//DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
 
@@ -168,7 +251,7 @@ bool LevelImporter::readData(){
 		}
 		if (m_print)
 		{
-			std::cout << "\n";
+			std::cout << "";
 		}
 	}
 	levelData.clear();
@@ -177,6 +260,10 @@ bool LevelImporter::readData(){
 
 std::vector<LevelImporter::SpawnPoint> LevelImporter::GetSpawnPoints(){
 	return m_spawnPoints;
+}
+
+std::vector<LevelImporter::LevelBoundingBox> LevelImporter::getLevelBoundingBoxes(){
+	return m_levelBoundingBoxes;
 }
 
 std::vector<LevelImporter::CommonObject> LevelImporter::GetObjects()

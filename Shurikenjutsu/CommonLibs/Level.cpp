@@ -3,8 +3,8 @@
 Level::Level(std::string p_level){
 	if (!loadLevel(p_level)){
 		std::cout << "Level not loaded\n";
-		}
-		}
+	}
+}
 
 bool Level::loadLevel(std::string p_level){
 	LevelImporter levelImporter(p_level);

@@ -22,6 +22,18 @@ public:
 		float m_rotationZ;
 	};
 
+	struct LevelBoundingBox{
+		float m_width;
+		float m_height;
+		float m_depth;
+		float m_translationX;
+		float m_translationY;
+		float m_translationZ;
+		float m_rotationX;
+		float m_rotationY;
+		float m_rotationZ;
+	};
+
 	struct CommonObject
 	{
 		std::string m_filePath;
@@ -39,15 +51,20 @@ public:
 	void loadLevelFile();
 	bool readData();
 	std::vector<SpawnPoint> GetSpawnPoints();
+	std::vector<LevelBoundingBox> getLevelBoundingBoxes();
 	std::vector<CommonObject> GetObjects();
 protected:
 	std::string m_level;
 	std::vector<std::vector<std::string>> levelData;
 	
 	std::vector<SpawnPoint> m_spawnPoints;
+	std::vector<LevelBoundingBox> m_levelBoundingBoxes;
 	std::vector<CommonObject> m_objects;
 
-	bool m_print = false;
+	std::string getObjectName(std::string &tmpStr);
+	void readBoundingBox(std::string &tmpStr, int currentWordTemp);
+
+	bool m_print = true;
 };
 
 #endif LEVELIMPORTER_H_
