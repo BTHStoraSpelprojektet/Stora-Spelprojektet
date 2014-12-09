@@ -24,9 +24,10 @@ void PlayerManager::Shutdown()
 
 }
 
-void PlayerManager::Update(double p_deltaTime)
+void PlayerManager::Update()
 {
-	m_player.UpdateMe(p_deltaTime);
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+	m_player.UpdateMe();
 
 	if (Network::IsConnected())
 	{
@@ -87,7 +88,7 @@ void PlayerManager::Update(double p_deltaTime)
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
-			m_enemyList[i].Update(p_deltaTime);
+			m_enemyList[i].Update();
 		}
 	}
 }

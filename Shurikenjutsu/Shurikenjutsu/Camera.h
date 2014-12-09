@@ -38,7 +38,7 @@ public:
 	void ResetCamera();
 	void ResetCameraToLight();
 
-	void MoveCamera(double p_deltaTime);
+	void MoveCamera( );
 	void ToggleFullscreen(bool p_fullscreen);
 	void FollowCharacter(DirectX::XMFLOAT3 p_playerPos);
 

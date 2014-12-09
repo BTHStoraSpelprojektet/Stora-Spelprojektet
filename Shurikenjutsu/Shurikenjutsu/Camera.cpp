@@ -242,8 +242,9 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 	}
 }
 
-void Camera::MoveCamera(double p_deltaTime)
+void Camera::MoveCamera( )
 {
+	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	// Start moving the camera with the C key.
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')) && !GLOBAL::GetInstance().flyingCamera)
 	{
@@ -268,8 +269,6 @@ void Camera::MoveCamera(double p_deltaTime)
 
 	if (GLOBAL::GetInstance().flyingCamera)
 	{
-		float deltaTime = (float)p_deltaTime;
-
 		// Rotate and pitch the camera.
 		POINT position;
 		GetCursorPos(&position);
