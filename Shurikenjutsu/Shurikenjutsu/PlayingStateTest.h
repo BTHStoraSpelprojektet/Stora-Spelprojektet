@@ -42,6 +42,8 @@ private:
 
 	DebugCircle m_circle1;
 	DebugCircle m_circle2;
+	DebugCircle m_circle3;
+
 	DebugDot m_debugDot;
 	// ========== DEBUG TEMP LINES ==========
 };

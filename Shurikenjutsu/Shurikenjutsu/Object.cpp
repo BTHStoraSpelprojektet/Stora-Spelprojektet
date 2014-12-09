@@ -92,7 +92,10 @@ Model* Object::GetModel()
 void Object::TransformBoundingBoxes()
 {
 	m_boundingBoxes.clear();
+	m_debugBoxes.clear();
+
 	std::vector<Box> bbList = m_model->GetBoundingBoxes();
+
 	for (unsigned int i = 0; i < bbList.size(); i++)
 	{
 		OBB temp;
@@ -106,6 +109,37 @@ void Object::TransformBoundingBoxes()
 		temp.m_extents = bbList[i].m_extents;
 		temp.m_direction = orientation;
 		m_boundingBoxes.push_back(temp);
+
+		DebugShape3D shape;
+		std::vector<DirectX::XMFLOAT3> list;
+		DirectX::XMFLOAT3 position;
+
+		// Top right.
+		position = DirectX::XMFLOAT3(temp.m_center.x + temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z + temp.m_extents.z);
+		list.push_back(position);
+
+		// Bottom right.
+		position = DirectX::XMFLOAT3(temp.m_center.x + temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z - temp.m_extents.z);
+		list.push_back(position);
+
+		// Bottom left.
+		position = DirectX::XMFLOAT3(temp.m_center.x - temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z - temp.m_extents.z);
+		list.push_back(position);
+
+		// Top left.
+		position = DirectX::XMFLOAT3(temp.m_center.x - temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z + temp.m_extents.z);
+		list.push_back(position);
+
+		shape.Initialize(list, bbList[i].m_extents.y, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		m_debugBoxes.push_back(shape);
+	}
+}
+
+void Object::RenderDebugBoxes()
+{
+	for (unsigned int i = 0; i < m_debugBoxes.size(); i++)
+	{
+		m_debugBoxes[i].Render();
 	}
 }
 

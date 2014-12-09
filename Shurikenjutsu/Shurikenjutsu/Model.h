@@ -8,17 +8,18 @@
 #include "GraphicsEngine.h"
 #include "Buffer.h"
 #include "ConsoleFunctions.h"
-#include "ModelImporter.h"
+#include "..\CommonLibs\ModelImporter.h"
+#include "..\CommonLibs\BoundingBoxModel.h"
 #include "AnimationControl.h"
 
-class Model
+class Model : public BoundingBoxModel
 {
 public:
 	bool LoadModel(const char* p_filepath);
 	ID3D11ShaderResourceView* LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
 	void Shutdown();
 
-	void Update( );
+	void Update();
 
 	ID3D11Buffer* GetMesh();
 	ID3D11ShaderResourceView* GetTexture();
@@ -27,7 +28,6 @@ public:
 
 	void ResetModel();
 
-	std::vector<Box> GetBoundingBoxes();
 	std::vector<AnimationStack> GetAnimationStacks();
 
 protected:
@@ -39,7 +39,6 @@ protected:
 
 	int m_vertexCount;
 	
-	std::vector<Box> m_boundingBoxes;
 	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 };
 #endif;
