@@ -1,6 +1,6 @@
 #include "DebugShape3D.h"
 
-DebugShape3D::DebugShape3D(std::vector<DirectX::XMFLOAT3> p_shape, float p_height, DirectX::XMFLOAT3 p_color)
+void DebugShape3D::Initialize(std::vector<DirectX::XMFLOAT3> p_shape, float p_height, DirectX::XMFLOAT3 p_color)
 {
 	std::vector<DirectX::XMFLOAT3> shapeTop = p_shape;
 	for (unsigned int i = 0; i < shapeTop.size(); i++)
@@ -41,7 +41,7 @@ DebugShape3D::DebugShape3D(std::vector<DirectX::XMFLOAT3> p_shape, float p_heigh
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 }
 
-DebugShape3D::~DebugShape3D()
+void DebugShape3D::Shutdown()
 {
 	m_mesh->Release();
 	m_mesh = 0;

@@ -107,7 +107,6 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
-    <ClCompile Include="ModelImporter.cpp" />
     <ClCompile Include="ModelLibrary.cpp" />
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="Network.cpp" />
@@ -150,7 +149,6 @@
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelImporter.h" />
     <ClInclude Include="ModelLibrary.h" />
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="Network.h" />

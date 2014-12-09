@@ -8,6 +8,7 @@
 #include "ModelLibrary.h"
 #include "AnimationControl.h"
 #include <DirectXCollision.h>
+#include "DebugDraw.h"
 
 class Object
 {
@@ -18,6 +19,7 @@ public:
 	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_rotation, DirectX::XMFLOAT3 p_scale);
 	virtual void Shutdown();
 	virtual void Render(SHADERTYPE p_shader);
+	void RenderDebugBoxes();
 
 	virtual DirectX::XMFLOAT3 GetPosition() const;
 	virtual void SetPosition(DirectX::XMFLOAT3 p_pos);
@@ -45,7 +47,9 @@ protected:
 	DirectX::XMFLOAT3 m_scale;
 	DirectX::XMFLOAT3 m_rotation;
 	Model* m_model;
+
 	std::vector<OBB> m_boundingBoxes;
+	std::vector<DebugShape3D> m_debugBoxes;
 	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 };
 
