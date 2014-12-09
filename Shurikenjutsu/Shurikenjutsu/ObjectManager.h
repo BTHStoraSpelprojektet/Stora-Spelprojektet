@@ -15,7 +15,7 @@ public:
 	bool Initialize();
 	void Shutdown();
 
-	void Update(double p_deltaTime);
+	void Update();
 	void Render(SHADERTYPE p_shader);
 
 	void RenderShurikens(SHADERTYPE p_shader);

@@ -20,11 +20,13 @@ public:
 	bool SWITCHING_SCREEN_MODE;
 	bool CAMERA_FLYING;
 
-	double DELTATIME;
+	void SetDeltaTime(double p_deltaTime);
+	double GetDeltaTime();
 
 private:
 	GLOBAL() {};
 	GLOBAL(GLOBAL const&);              
 	void operator=(GLOBAL const&);
+	double DELTATIME;
 };
 #endif

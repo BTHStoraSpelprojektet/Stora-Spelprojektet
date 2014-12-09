@@ -176,7 +176,7 @@ void System::Update()
 	m_timer.Update();
 
 	// Get the delta time to use for animation etc.
-	GLOBAL::GetInstance().DELTATIME = m_timer.GetDeltaTime();
+	GLOBAL::GetInstance().SetDeltaTime(m_timer.GetDeltaTime());
 
 	if (FLAG_FPS == 1)
 	{
@@ -193,7 +193,7 @@ void System::Update()
 		}
 	}
 
-	m_gameState->Update(GLOBAL::GetInstance().DELTATIME);
+	m_gameState->Update();
 	
 	// Update network
 	Network::Update();
