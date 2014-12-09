@@ -5,8 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include "Structures.h"
-#include "AnimationControl.h"
+#include "CommonStructures.h"
 
 struct MeshData
 {

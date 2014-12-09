@@ -144,9 +144,6 @@
     <ClCompile Include="Buffer.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ModelImporter.cpp">
-      <Filter>Source Files\Models</Filter>
-    </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>Source Files\Debug</Filter>
     </ClCompile>
@@ -182,9 +179,6 @@
     </ClCompile>
     <ClCompile Include="DepthShader.cpp">
       <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="AnimationControl.cpp">
-      <Filter>Source Files\Models</Filter>
     </ClCompile>
     <ClCompile Include="Globals.cpp">
       <Filter>Source Files\Utility</Filter>
@@ -234,6 +228,9 @@
     <ClCompile Include="AnimatedObject.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationControl.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -277,9 +274,6 @@
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelImporter.h">
-      <Filter>Header Files\Models</Filter>
     </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Header Files\Debug</Filter>
@@ -326,9 +320,6 @@
     <ClInclude Include="Network.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationControl.h">
-      <Filter>Header Files\Models</Filter>
-    </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Header Files\GameState</Filter>
     </ClInclude>
@@ -370,6 +361,9 @@
     </ClInclude>
     <ClInclude Include="AnimatedObject.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationControl.h">
+      <Filter>Header Files\Models</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
