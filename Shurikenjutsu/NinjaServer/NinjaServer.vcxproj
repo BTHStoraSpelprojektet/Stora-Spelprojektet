@@ -78,10 +78,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="System.h" />
   </ItemGroup>
