@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <vector>
 #include "Shuriken.h"
+#include "AnimatedObject.h"
 
 class ObjectManager
 {
@@ -28,7 +29,7 @@ private:
 	std::vector<Shuriken> m_shurikens;
 	std::vector<Object> m_staticObjects;
 
-	Object m_animatedCharacter;
+	AnimatedObject m_animatedCharacter;
 
 	// unique ID for the network
 	RakNet::NetworkIDManager m_networkIDManger;
