@@ -62,6 +62,7 @@ void ObjectManager::Render(SHADERTYPE p_shader)
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
 		m_staticObjects[i].Render(p_shader);
+		m_staticObjects[i].RenderDebugBoxes();
 	}
 
 	// TODO, move this.
