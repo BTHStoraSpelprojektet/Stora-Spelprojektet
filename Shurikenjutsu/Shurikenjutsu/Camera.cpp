@@ -279,22 +279,22 @@ void Camera::MoveCamera( )
 		// Move the camera using W, S, A, D keys.
 		if (InputManager::GetInstance()->IsKeyPressed(VK_UP))
 		{
-			Walk(10.0f * deltaTime);
+			Walk(10.0f * (float)deltaTime);
 		}
 
 		if (InputManager::GetInstance()->IsKeyPressed(VK_DOWN))
 		{
-			Walk(-10.0f * deltaTime);
+			Walk(-10.0f * (float)deltaTime);
 		}
 
 		if (InputManager::GetInstance()->IsKeyPressed(VK_LEFT))
 		{
-			Strafe(-10.0f * deltaTime);
+			Strafe(-10.0f * (float)deltaTime);
 		}
 
 		if (InputManager::GetInstance()->IsKeyPressed(VK_RIGHT))
 		{
-			Strafe(10.0f * deltaTime);
+			Strafe(10.0f * (float)deltaTime);
 		}
 
 		// Update the camera.
