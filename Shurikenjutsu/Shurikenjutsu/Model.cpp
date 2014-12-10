@@ -124,7 +124,17 @@ int Model::GetVertexCount()
 	return m_vertexCount;
 }
 
-std::vector<AnimationStack> Model::GetAnimationStacks()
+std::vector<Box> Model::GetBoundingBoxes()const
+{
+	return m_boundingBoxes;
+}
+
+std::vector<AnimationStack> Model::GetAnimationStacks()const
 {
 	return m_animationStacks;
+}
+
+std::vector<DirectX::XMFLOAT3> Model::GetShadowPoints()const
+{
+	return m_shadowPoints;
 }
