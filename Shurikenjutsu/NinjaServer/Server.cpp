@@ -33,7 +33,7 @@ bool Server::Initialize()
 	m_shurikenManager.Initialize(m_serverPeer, m_levelName);
 
 	// Initate models (for boundingboxes)
-	ModelLibrary::GetInstance().Ini
+	ModelLibrary::GetInstance()->Initialize(new BaseModel());
 
 	return true;
 }

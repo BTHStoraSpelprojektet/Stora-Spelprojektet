@@ -34,7 +34,7 @@ private:
 	ObjectManager m_objectManager;
 	Camera m_camera;
 
-	const float twoPi = 6.28318530718f;
+	float twoPi = 6.28318530718f;
 
 	// ========== DEBUG TEMP LINES ==========
 	float m_mouseX;
