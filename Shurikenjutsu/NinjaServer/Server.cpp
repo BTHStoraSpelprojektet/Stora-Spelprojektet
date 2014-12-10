@@ -37,7 +37,9 @@ bool Server::Initialize()
 	m_shurikenManager = ShurikenManager();
 	m_shurikenManager.Initialize(m_serverPeer, m_levelName, m_shurikenModelName);
 
-	
+	// Initiate map
+	m_mapManager = MapManager();
+	m_mapManager.Initialize(m_levelName);
 
 	return true;
 }
@@ -220,6 +222,7 @@ void Server::CheckCollisions()
 		// Get the shuriken bounding boxes
 		std::vector<Box> shurikenBoundingBoxes = m_shurikenManager.GetBoundingBoxes(i);
 
+		// Go through player list
 		for (unsigned int j = 0; j < playerList.size(); j++)
 		{
 			// This is so you don't collide with your own shurikens
@@ -268,6 +271,29 @@ void Server::CheckCollisions()
 				break;
 			}
 		}
+
+		// Go through maps bounding boxes
+		std::vector<Box> mapBoundingBoxes = m_mapManager.GetBoundingBoxes();
+		for (unsigned int j = 0; j < shurikenBoundingBoxes.size(); j++)
+		{
+			for (unsigned int k = 0; k < mapBoundingBoxes.size(); k++)
+			{
+				if (IntersectionTests::Intersections::BoxBoxCollision(mapBoundingBoxes[k].m_center, mapBoundingBoxes[k].m_extents, shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents))
+				{
+					// Remove shuriken
+					m_shurikenManager.RemoveShuriken(shurikenList[i].shurikenId);
+					shurikenList.erase(shurikenList.begin() + i);
+					i--;
+
+					collisionFound = true;
+					break;
+				}
+			}
+			if (collisionFound)
+			{
+				break;
+			}
+		}		
 	}
 }
 
