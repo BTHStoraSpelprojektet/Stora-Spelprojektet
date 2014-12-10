@@ -1,5 +1,4 @@
 #include "PlayingStateTest.h"
-#include "ModelLibrary.h"
 
 PlayingStateTest::PlayingStateTest()
 {

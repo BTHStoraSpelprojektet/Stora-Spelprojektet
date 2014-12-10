@@ -5,7 +5,7 @@
 #include "Model.h"
 #include <DirectXMath.h>
 #include "Network.h"
-#include "ModelLibrary.h"
+#include "..\CommonLibs\ModelLibrary.h"
 #include "AnimationControl.h"
 #include <DirectXCollision.h>
 #include "DebugDraw.h"

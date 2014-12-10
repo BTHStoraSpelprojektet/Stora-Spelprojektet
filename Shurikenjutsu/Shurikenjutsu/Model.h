@@ -9,10 +9,10 @@
 #include "Buffer.h"
 #include "ConsoleFunctions.h"
 #include "..\CommonLibs\ModelImporter.h"
-#include "..\CommonLibs\BoundingBoxModel.h"
+#include "..\CommonLibs\BaseModel.h"
 #include "AnimationControl.h"
 
-class Model : public BoundingBoxModel
+class Model : public BaseModel
 {
 public:
 	bool LoadModel(const char* p_filepath);
@@ -33,14 +33,6 @@ public:
 	std::vector<AnimationStack> GetAnimationStacks()const;
 
 protected:
-	ID3D11Buffer* m_mesh;
-	ID3D11ShaderResourceView* m_texture;
-	ID3D11ShaderResourceView* m_normalMap;
 
-	std::vector<AnimationStack> m_animationStacks;
-
-	int m_vertexCount;
-	
-	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 };
 #endif;
