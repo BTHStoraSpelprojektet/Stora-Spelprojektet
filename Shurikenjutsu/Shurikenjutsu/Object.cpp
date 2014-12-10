@@ -119,19 +119,27 @@ void Object::TransformBoundingBoxes()
 		DirectX::XMFLOAT3 position;
 
 		// Top right.
-		position = DirectX::XMFLOAT3(temp.m_center.x + temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z + temp.m_extents.z);
+		position = DirectX::XMFLOAT3(bbList[i].m_center.x + temp.m_extents.x, bbList[i].m_center.y - temp.m_extents.y, bbList[i].m_center.z + temp.m_extents.z);
+		DirectX::XMFLOAT4 newPos = DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f);
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&newPos), DirectX::XMLoadFloat4x4(&world)));
 		list.push_back(position);
 
 		// Bottom right.
-		position = DirectX::XMFLOAT3(temp.m_center.x + temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z - temp.m_extents.z);
+		position = DirectX::XMFLOAT3(bbList[i].m_center.x + temp.m_extents.x, bbList[i].m_center.y - temp.m_extents.y, bbList[i].m_center.z - temp.m_extents.z);
+		newPos = DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f);
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&newPos), DirectX::XMLoadFloat4x4(&world)));
 		list.push_back(position);
 
 		// Bottom left.
-		position = DirectX::XMFLOAT3(temp.m_center.x - temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z - temp.m_extents.z);
+		position = DirectX::XMFLOAT3(bbList[i].m_center.x - temp.m_extents.x, bbList[i].m_center.y - temp.m_extents.y, bbList[i].m_center.z - temp.m_extents.z);
+		newPos = DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f);
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&newPos), DirectX::XMLoadFloat4x4(&world)));
 		list.push_back(position);
 
 		// Top left.
-		position = DirectX::XMFLOAT3(temp.m_center.x - temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z + temp.m_extents.z);
+		position = DirectX::XMFLOAT3(bbList[i].m_center.x - temp.m_extents.x, bbList[i].m_center.y - temp.m_extents.y, bbList[i].m_center.z + temp.m_extents.z);
+		newPos = DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f);
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&newPos), DirectX::XMLoadFloat4x4(&world)));
 		list.push_back(position);
 
 		shape.Initialize(list, bbList[i].m_extents.y, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
