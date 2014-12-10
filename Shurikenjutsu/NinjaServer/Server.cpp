@@ -32,6 +32,9 @@ bool Server::Initialize()
 	m_shurikenManager = ShurikenManager();
 	m_shurikenManager.Initialize(m_serverPeer, m_levelName);
 
+	// Initate models (for boundingboxes)
+	ModelLibrary::GetInstance().Ini
+
 	return true;
 }
 

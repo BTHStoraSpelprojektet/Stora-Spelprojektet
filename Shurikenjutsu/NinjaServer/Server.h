@@ -17,6 +17,7 @@
 #include <vector>
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
+#include "..\CommonLibs\ModelLibrary.h"
 
 #pragma comment(lib, "PhysicsDll.lib")
 #include "PhysicsDll.h"

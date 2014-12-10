@@ -2,7 +2,7 @@
 
 PlayingStateTest::PlayingStateTest()
 {
-	twoPi = 6.28318530718f;
+
 }
 
 PlayingStateTest::~PlayingStateTest()
