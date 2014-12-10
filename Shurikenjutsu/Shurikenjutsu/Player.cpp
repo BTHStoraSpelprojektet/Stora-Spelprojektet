@@ -310,7 +310,7 @@ void Player::SetCalculatePlayerPosition()
 		{
 			if (leftOfBox == aboveBox)
 			{
-				SetPosition(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+				SetPosition(DirectX::XMFLOAT3(m_position.x , m_position.y, collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z + m_playerSphere.m_radius*1.1f));
 				x = 0;
 				z = -1;
 			}
