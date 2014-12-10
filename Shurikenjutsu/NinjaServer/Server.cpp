@@ -308,6 +308,13 @@ void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
 		{
 			continue;
 		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
 		DirectX::XMFLOAT3 spherePos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
