@@ -3,26 +3,18 @@
 
 //#define WIN32_LEAN_AND_MEAN
 
-#include <vector>
 #include "Network.h"
 #include "Window.h"
 #include "GraphicsEngine.h"
 
 #include "Camera.h"
-#include "Model.h"
 #include "InputManager.h"
 #include "ObjectManager.h"
-#include "ModelLibrary.h"
+#include "..\CommonLibs\ModelLibrary.h"
 
 #include "ConsoleFunctions.h"
-#include "Flags.h"
-#include "Enumerations.h"
 
 #include "Debug.h"
-#include "Globals.h"
-
-#include "Player.h"
-#include "PlayerManager.h"
 
 #include "PlayingStateTest.h"
 #include "Timer.h"

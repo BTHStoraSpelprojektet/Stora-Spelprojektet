@@ -8,17 +8,18 @@
 #include "GraphicsEngine.h"
 #include "Buffer.h"
 #include "ConsoleFunctions.h"
-#include "ModelImporter.h"
+#include "..\CommonLibs\ModelImporter.h"
+#include "..\CommonLibs\BaseModel.h"
 #include "AnimationControl.h"
 
-class Model
+class Model : public BaseModel
 {
 public:
 	bool LoadModel(const char* p_filepath);
 	ID3D11ShaderResourceView* LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
 	void Shutdown();
 
-	void Update( );
+	void Update();
 
 	ID3D11Buffer* GetMesh();
 	ID3D11ShaderResourceView* GetTexture();
@@ -27,19 +28,11 @@ public:
 
 	void ResetModel();
 
-	std::vector<Box> GetBoundingBoxes();
-	std::vector<AnimationStack> GetAnimationStacks();
+	std::vector<Box> GetBoundingBoxes()const;
+	std::vector<DirectX::XMFLOAT3> GetShadowPoints()const;
+	std::vector<AnimationStack> GetAnimationStacks()const;
 
 protected:
-	ID3D11Buffer* m_mesh;
-	ID3D11ShaderResourceView* m_texture;
-	ID3D11ShaderResourceView* m_normalMap;
 
-	std::vector<AnimationStack> m_animationStacks;
-
-	int m_vertexCount;
-	
-	std::vector<Box> m_boundingBoxes;
-	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 };
 #endif;

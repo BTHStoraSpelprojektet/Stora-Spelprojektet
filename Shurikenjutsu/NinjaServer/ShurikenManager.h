@@ -5,6 +5,7 @@
 #include "..\CommonLibs\RakNet\BitStream.h"
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ServerMessages.h"
+#include "..\CommonLibs\ModelLibrary.h"
 #include <vector>
 
 class ShurikenManager
@@ -13,13 +14,14 @@ public:
 	ShurikenManager();
 	~ShurikenManager();
 
-	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName);
+	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName);
 	void Shutdown();
 	void Update(double p_deltaTime);
 
 	void AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
 	void RemoveShuriken(unsigned int p_id);
 	std::vector<ShurikenNet> GetShurikens();
+	std::vector<Box> GetBoundingBoxes(int p_index);
 	float GetShurikenPosX(int p_index);
 	float GetShurikenPosY(int p_index);
 	float GetShurikenPosZ(int p_index);
@@ -32,6 +34,7 @@ private:
 	float m_shurikenSetTimeLeft;
 
 	std::vector<ShurikenNet> m_shurikens;
+	std::vector<Box> m_boundingBoxes;
 };
 
 #endif

@@ -8,6 +8,7 @@
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
+#include "..\CommonLibs\ModelLibrary.h"
 #include <vector>
 
 class PlayerManager
@@ -16,11 +17,12 @@ public:
 	PlayerManager();
 	~PlayerManager();
 
-	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName);
+	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName);
 	void Shutdown();
 	void Update(double p_deltaTime);
 
 	std::vector<PlayerNet> GetPlayers();
+	std::vector<Box> GetBoundingBoxes(int p_index);
 	void AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections);
 	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections);
 	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
@@ -37,6 +39,7 @@ private:
 
 	std::vector<PlayerNet> m_players;
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
+	std::vector<Box> m_boundingBoxes;
 };
 
 #endif

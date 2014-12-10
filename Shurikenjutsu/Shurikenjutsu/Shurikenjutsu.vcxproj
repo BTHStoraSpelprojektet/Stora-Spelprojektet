@@ -108,8 +108,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
-    <ClCompile Include="ModelImporter.cpp" />
-    <ClCompile Include="ModelLibrary.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -118,7 +117,6 @@
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayingStateTest.cpp" />
     <ClCompile Include="SceneShader.cpp" />
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="DebugCircle.cpp" />
@@ -153,8 +151,6 @@
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelImporter.h" />
-    <ClInclude Include="ModelLibrary.h" />
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Object.h" />

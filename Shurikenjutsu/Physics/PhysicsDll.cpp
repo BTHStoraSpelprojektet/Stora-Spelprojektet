@@ -80,11 +80,13 @@ namespace IntersectionTests
 		return obb1.Intersects(obb2);
 	}
 
-	bool Intersections::OBBSphereCollision(DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT3 p_OBBDirection, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius)
+	bool Intersections::OBBSphereCollision(DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT4 p_OBBDirection, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius)
 	{
 		DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_spherePosition, p_sphereRadius);
 		DirectX::BoundingOrientedBox obb;
-		DirectX::BoundingOrientedBox::CreateFromBoundingBox(obb, DirectX::BoundingBox(p_OBBPosition, p_OBBExtents));
+		obb.Center = p_OBBPosition;
+		obb.Extents = p_OBBExtents;
+		obb.Orientation = p_OBBDirection;
 
 		return obb.Intersects(sphere);
 	}

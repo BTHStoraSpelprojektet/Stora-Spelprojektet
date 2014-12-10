@@ -35,7 +35,7 @@ private:
 	ObjectManager m_objectManager;
 	Camera m_camera;
 
-	float twoPi;
+	float twoPi = 6.28318530718f;
 
 	// ========== DEBUG TEMP LINES ==========
 	float m_mouseX;
@@ -43,6 +43,8 @@ private:
 
 	DebugCircle m_circle1;
 	DebugCircle m_circle2;
+	DebugCircle m_circle3;
+
 	DebugDot m_debugDot;
 	// ========== DEBUG TEMP LINES ==========
 
