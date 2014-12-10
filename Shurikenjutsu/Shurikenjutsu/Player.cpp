@@ -22,7 +22,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetHealth(p_health);
 	SetAgility(p_agility);
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
-
+	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
 
 	return true;
@@ -35,31 +35,29 @@ void Player::Shutdown()
 
 void Player::UpdateMe( )
 {
+	m_playerSphere.m_position = m_position;
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	// Move
 	bool moved = false;
 	float x, y, z;
 
 	x = 0;
-	y = 0;
+	y = 0;//Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)))
 	z = 0;
 	m_playerPrevPos = m_position;
-	Box charBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	bool up = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, 36.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
-	bool down = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, -33.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
-	bool left = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(-35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
-	bool right = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
+	bool down = Collisions::SphereBoxCollision(m_playerSphere, Box(m_OuterWalls[0].m_center, m_OuterWalls[0].m_extents.z, m_OuterWalls[0].m_extents.y, m_OuterWalls[0].m_extents.x)); //NOT WORKING
+	//bool down = Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[0]); //NOT WORKING
+	bool left = Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[1]);
+
+	bool up = Collisions::SphereBoxCollision(m_playerSphere, Box(m_OuterWalls[2].m_center, m_OuterWalls[2].m_extents.z, m_OuterWalls[2].m_extents.y, m_OuterWalls[2].m_extents.x));	//NOT WORKING
+	//bool up = Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[2]);	//NOT WORKING
+	bool right = Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[3]);
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
 		if (!up)
 		{ 
-<<<<<<< HEAD
-		z += 1;
-		moved = true;
-=======
 			z += 1;
 			moved = true;
->>>>>>> origin/master
 		}
 	}
 
@@ -67,13 +65,8 @@ void Player::UpdateMe( )
 	{
 		if (!left)
 		{
-<<<<<<< HEAD
-		x += -1;
-		moved = true;
-=======
 			x += -1;
 			moved = true;
->>>>>>> origin/master
 		}
 	}
 
@@ -81,13 +74,8 @@ void Player::UpdateMe( )
 	{
 		if (!down)
 		{
-<<<<<<< HEAD
-		z += -1;
-		moved = true;
-=======
 			z += -1;
 			moved = true;
->>>>>>> origin/master
 		}
 	}
 
@@ -95,13 +83,8 @@ void Player::UpdateMe( )
 	{
 		if (!right)
 		{
-<<<<<<< HEAD
-		x += 1;
-		moved = true;
-=======
 			x += 1;
 			moved = true;
->>>>>>> origin/master
 		}
 	}
 
@@ -246,8 +229,9 @@ void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
 {
 	m_modelList = p_ModelList;
 }
-OBB Player::CheckCollisionWithObjects()
+std::vector<OBB> Player::CheckCollisionWithObjects()
 {
+	std::vector<OBB> CollisionList;
 	Sphere playerBox = Sphere(m_position, 0.5f);
 	if (m_modelList.size() > 0)
 	{
@@ -267,13 +251,13 @@ OBB Player::CheckCollisionWithObjects()
 
 					if (Collisions::OBBSphereCollision(box, playerBox))
 					{
-						return box;
+						CollisionList.push_back(box);
 					}
 				}
 			}
 		}
 	}
-	return OBB(DirectX::XMFLOAT3(0.0f, -100.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f,0.0f));
+	return CollisionList;
 }
 
 float Player::CalculateLengthBetween2Points(DirectX::XMFLOAT3 p_1, DirectX::XMFLOAT3 p_2)
@@ -282,69 +266,75 @@ float Player::CalculateLengthBetween2Points(DirectX::XMFLOAT3 p_1, DirectX::XMFL
 }
 void Player::SetCalculatePlayerPosition()
 {
-	OBB collidingBox = CheckCollisionWithObjects();
-	if (collidingBox.m_center.y != -100.0f)
+	std::vector<OBB> collidingBoxes = CheckCollisionWithObjects();
+	for (int i = 0; i < collidingBoxes.size(); i++)
 	{
-		Sphere playerSphere = Sphere(m_position, 0.5f);
-		bool rightSphere = Collisions::SphereSphereCollision(playerSphere, Sphere(DirectX::XMFLOAT3(collidingBox.m_center.x + collidingBox.m_extents.x, collidingBox.m_center.y, collidingBox.m_center.z), collidingBox.m_extents.x));
-		bool leftSphere = Collisions::SphereSphereCollision(playerSphere, Sphere(DirectX::XMFLOAT3(collidingBox.m_center.x - collidingBox.m_extents.x, collidingBox.m_center.y, collidingBox.m_center.z), collidingBox.m_extents.x));
+		float radius = std::sqrt(collidingBoxes[i].m_extents.x*collidingBoxes[i].m_extents.x + collidingBoxes[i].m_extents.z*collidingBoxes[i].m_extents.z);
+		//bool rightSphere = Collisions::SphereSphereCollision(m_playerSphere, Sphere(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x, collidingBoxes[i].m_center.y, collidingBoxes[i].m_center.z), collidingBoxes[i].m_extents.x));
+		//bool leftSphere = Collisions::SphereSphereCollision(m_playerSphere, Sphere(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x - collidingBoxes[i].m_extents.x, collidingBoxes[i].m_center.y, collidingBoxes[i].m_center.z), collidingBoxes[i].m_extents.x));
+
+		bool rightOfBox = m_position.x >(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x);
+		bool leftOfBox = m_position.x < (collidingBoxes[i].m_center.x - collidingBoxes[i].m_extents.x);
+		bool aboveBox = m_position.z >(collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z);
+		bool belowBox = m_position.z < (collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z);
 		float x = m_direction.x;
 		float z = m_direction.z;
 		if (x == 1 || x == -1)
 		{
 			x = 0;
 		}
-		else if (z == 1 || z == -1)
+		if (z == 1 || z == -1)
 		{
 			z = 0;
 		}
-		else if (x < 0 && z < 0)//down left
+
+		if (x < 0 && z < 0)//down left
 		{
-			if (rightSphere)
+			if (rightOfBox)
 			{
 				x = 0;
 				z = -1;
 			}
-			else
+			if (aboveBox)
 			{
 				x = -1;
 				z = 0;
 			}
 		}
-		else if (x > 0 && z < 0)//down right
+		if (x > 0 && z < 0)//down right
 		{
-			if (leftSphere)
+			if (leftOfBox)
 			{
 				x = 0;
 				z = -1;
 			}
-			else
+			if (aboveBox)
 			{
 				x = 1;
 				z = 0;
 			}
 		}
-		else if (x < 0 && z > 0)//up left
+		if (x < 0 && z > 0)//up left // works goood
 		{
-			if (rightSphere)
+			if (rightOfBox)
 			{
 				x = 0;
 				z = 1;
 			}
-			else
+			if (belowBox)
 			{
 				x = -1;
 				z = 0;
 			}
 		}
-		else if (x > 0 && z > 0)//up right
+		if (x > 0 && z > 0)//up right // works goood
 		{
-			if (leftSphere)
+			if (leftOfBox)
 			{
 				x = 0;
 				z = 1;
 			}
-			else
+			if (belowBox)
 			{
 				x = 1;
 				z = 0;
@@ -352,8 +342,13 @@ void Player::SetCalculatePlayerPosition()
 		}
 
 
-		SetDirection(DirectX::XMFLOAT3(x,0.0f,z));
+		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 	}
 	float speed_X_Delta = GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
+}
+
+void Player::SetOuterWalls(std::vector<Box> p_OuterWalls)
+{
+	m_OuterWalls = p_OuterWalls;
 }

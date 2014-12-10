@@ -36,6 +36,7 @@ public:
 	void SetGuID(RakNet::RakNetGUID p_guid);
 
 	void SetCollidingObjects(std::vector<Object> p_ModelList);
+	void SetOuterWalls(std::vector<Box> p_OuterWalls);
 private:
 	void CalculateFacingAngle();
 
@@ -49,9 +50,12 @@ private:
 
 	float CalculateLengthBetween2Points(DirectX::XMFLOAT3 p_1, DirectX::XMFLOAT3 p_2);
 	void SetCalculatePlayerPosition();
-	OBB CheckCollisionWithObjects();
+	std::vector<OBB>  CheckCollisionWithObjects();
 	std::vector<Object> m_modelList;
 	DirectX::XMFLOAT3 m_playerPrevPos;
+
+	std::vector<Box> m_OuterWalls;
+	Sphere m_playerSphere;
 };
 
 #endif PLAYER
