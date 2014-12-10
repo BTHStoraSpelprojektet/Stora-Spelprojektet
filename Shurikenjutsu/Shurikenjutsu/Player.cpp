@@ -257,3 +257,7 @@ bool Player::CheckCollisionWithObjects()
 	}
 	return false;
 }
+DirectX::BoundingBox Player::GetPlayerBoundingBox()
+{
+	return DirectX::BoundingBox(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+}

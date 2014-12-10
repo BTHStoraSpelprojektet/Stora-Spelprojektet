@@ -12,6 +12,7 @@
 #include "Collisions.h"
 #include <d3d9.h>
 #include "DebugDraw.h"
+#include "Frustum.h"
 
 class PlayingStateTest :
 	public GameState
@@ -44,6 +45,9 @@ private:
 	DebugCircle m_circle2;
 	DebugDot m_debugDot;
 	// ========== DEBUG TEMP LINES ==========
+
+	Frustum m_frustum;
+
 };
 
 #endif PLAYINGSTATE

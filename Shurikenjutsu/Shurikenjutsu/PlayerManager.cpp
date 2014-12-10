@@ -175,3 +175,8 @@ bool PlayerManager::IsGuidInNetworkList(RakNet::RakNetGUID p_guid)
 	}
 	return false;
 }
+
+DirectX::BoundingBox PlayerManager::GetPlayerBoundingBox()
+{
+	return m_player.GetPlayerBoundingBox();
+}

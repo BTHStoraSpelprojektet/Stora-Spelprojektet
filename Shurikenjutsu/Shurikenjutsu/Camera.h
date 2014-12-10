@@ -71,7 +71,5 @@ private:
 	DirectX::XMFLOAT4X4 m_rotationX;
 	DirectX::XMFLOAT4X4 m_rotationY;
 
-	DirectX::BoundingFrustum m_frustum;
-
 };
 #endif;

@@ -44,6 +44,9 @@ bool PlayingStateTest::Initialize()
 	m_mouseY = 0;
 	// ========== DEBUG TEMP LINES ==========
 
+	// Frustum
+	m_frustum = Frustum();
+
 	return true;
 }
 
@@ -90,6 +93,11 @@ void PlayingStateTest::Update()
 
 void PlayingStateTest::Render()
 {
+	m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+
+	bool testBB = false;
+
+
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
 
@@ -117,11 +125,20 @@ void PlayingStateTest::Render()
 
 	m_circle2.UpdateWorldMatrix(circleWorld);
 	m_circle2.Render();
-
-	m_debugDot.Render();
+	if (m_frustum.CheckCube(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f))
+	{
+		testBB = true;
+	}
+	if (testBB)
+		m_debugDot.Render();
 
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	// ========== DEBUG TEMP LINES ==========
+
+
+	
+
+
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)

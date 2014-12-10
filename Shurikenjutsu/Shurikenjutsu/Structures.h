@@ -297,17 +297,4 @@ struct DirectionalLight
 	DirectX::XMVECTOR m_specular;
 	DirectX::XMVECTOR m_direction;
 };
-
-struct FrustumForCulling
-{
-	DirectX::XMFLOAT3 m_origin;
-	DirectX::XMFLOAT4 m_orientation;
-
-	float m_rightSlope;
-	float m_leftSlope;
-	float m_topSlope;
-	float m_bottomSlope;
-	float m_near, m_far; 
-};
-
 #endif

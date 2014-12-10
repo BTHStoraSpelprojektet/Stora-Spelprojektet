@@ -18,8 +18,6 @@ bool Camera::Initialize()
 	DirectX::XMStoreFloat4x4(&m_viewMatrix,DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixIdentity());
 
-	m_frustum = DirectX::BoundingFrustum(DirectX::XMLoadFloat4x4(&m_projectionMatrix));
-
 	return true;
 }
 
@@ -87,6 +85,7 @@ void Camera::UpdateProjectionMatrix(bool p_orthographic)
 	if (!p_orthographic)
 	{
 		DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixPerspectiveFovLH(m_fieldOfView, m_aspectRatio, m_nearPlane, m_farPlane));
+		
 	}
 
 	else
