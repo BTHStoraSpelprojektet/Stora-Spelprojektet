@@ -41,6 +41,8 @@ private:
 
 	int m_nrOfConnections;
 	std::string m_levelName;
+	std::string m_shurikenModelName;
+	std::string m_playerModelName;
 	PlayerManager m_playerManager;
 	ShurikenManager m_shurikenManager;
 };

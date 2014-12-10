@@ -9,7 +9,7 @@ PlayerManager::~PlayerManager()
 {
 }
 
-bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
+bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName)
 {
 	m_serverPeer = p_serverPeer;
 
@@ -19,6 +19,8 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	// Load spawnpoints
 	Level level(p_levelName);
 	m_spawnPoints = level.GetSpawnPoints();
+
+	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(p_modelName)->GetBoundingBoxes();
 
 	return true;
 }
@@ -202,4 +204,34 @@ LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(int p_team)
 	// If the player didn't found a spawnpoint for the team he was in then choose a random point
 	int index = rand() % m_spawnPoints.size();
 	return m_spawnPoints[index];
+}
+
+std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
+{
+	std::vector<Box> boundingBoxes = std::vector<Box>();
+
+	// Check so index is not out of bounds
+	if (p_index < 0 || p_index > m_players.size() - 1)
+	{
+		return boundingBoxes;
+	}
+
+	for (unsigned int i = 0; i < m_boundingBoxes.size(); i++)
+	{
+		Box box = m_boundingBoxes[i];
+		box.m_center.x += m_players[p_index].x;
+		box.m_center.y += m_players[p_index].y;
+		box.m_center.z += m_players[p_index].z;
+
+		boundingBoxes.push_back(box);
+	}
+
+	// Temp code to create a box around the player
+	Box playerBox = Box(0.0f, 2.0f, 0.0f, 1.0f, 2.0f, 1.0f);
+	playerBox.m_center.x += m_players[p_index].x;
+	playerBox.m_center.y += m_players[p_index].y;
+	playerBox.m_center.z += m_players[p_index].z;
+	boundingBoxes.push_back(playerBox);
+
+	return boundingBoxes;
 }
