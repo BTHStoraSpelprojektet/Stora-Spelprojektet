@@ -6,7 +6,8 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_animationStacks.push_back(p_newStack);
 	m_boneTransforms.resize(p_newStack.m_jointCount);
 
-	m_frame = 0;
+	m_frameArms = 0;
+	m_frameLegs = 0;
 
 	return true;
 }
@@ -15,25 +16,31 @@ std::vector<DirectX::XMMATRIX> AnimationControl::UpdateAnimation()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
-	m_frame += deltaTime * 20;
+	m_frameArms += deltaTime * 20;
+	m_frameLegs += deltaTime * 20;
 
-	if (m_frame >= (m_animationStacks[1].m_endFrame - 1))
-		m_frame = 0.0f;
+	if (m_frameArms >= (m_animationStacks[1].m_endFrame - 1))
+		m_frameArms = 0.0f;
+
+	if (m_frameLegs >= (m_animationStacks[0].m_endFrame - 1))
+		m_frameLegs = 0.0f;
 
 	DirectX::XMVECTOR startQuaternion = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	DirectX::XMVECTOR startTranslation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 
 	int* index = new int(0);
-	CombineMatrices(index, m_animationStacks[1].m_root[(int)m_frame], startQuaternion, startTranslation);
+	CombineMatrices(index, m_animationStacks[1].m_root[(int)m_frameArms], m_animationStacks[0].m_root[(int)m_frameLegs], startQuaternion, startTranslation);
 	delete[] index;
 
 	return m_boneTransforms;
 }
 
-void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_joint, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation)
+void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation)
 {
-	DirectX::XMVECTOR quaternion = DirectX::XMVectorSet(p_joint->m_quaternion[0], p_joint->m_quaternion[1], p_joint->m_quaternion[2], p_joint->m_quaternion[3]);
-	DirectX::XMVECTOR orientQuaternion = DirectX::XMVectorSet(p_joint->m_orientQuaternion[0], p_joint->m_orientQuaternion[1], p_joint->m_orientQuaternion[2], p_joint->m_orientQuaternion[3]);
+	DirectX::XMVECTOR quaternionArms = DirectX::XMVectorSet(p_jointArms->m_quaternion[0], p_jointArms->m_quaternion[1], p_jointArms->m_quaternion[2], p_jointArms->m_quaternion[3]);
+	DirectX::XMVECTOR quaternionLegs = DirectX::XMVectorSet(p_jointLegs->m_quaternion[0], p_jointLegs->m_quaternion[1], p_jointLegs->m_quaternion[2], p_jointLegs->m_quaternion[3]);
+	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionArms, quaternionLegs);
+	DirectX::XMVECTOR orientQuaternion = DirectX::XMVectorSet(p_jointArms->m_orientQuaternion[0], p_jointArms->m_orientQuaternion[1], p_jointArms->m_orientQuaternion[2], p_jointArms->m_orientQuaternion[3]);
 
 	quaternion = DirectX::XMQuaternionMultiply(quaternion, orientQuaternion);
 
@@ -42,7 +49,12 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_joint, DirectX
 	parentMatrix.r[3].m128_f32[1] = p_parentTranslation.m128_f32[1];
 	parentMatrix.r[3].m128_f32[2] = p_parentTranslation.m128_f32[2];
 
-	DirectX::XMVECTOR jointTranslation = DirectX::XMVectorSet(p_joint->m_translation[0], p_joint->m_translation[1], p_joint->m_translation[2], 1.0f);
+	float combinedTranslation[4];
+	combinedTranslation[0] = (p_jointArms->m_translation[0] + p_jointLegs->m_translation[0]) / 2;
+	combinedTranslation[1] = (p_jointArms->m_translation[1] + p_jointLegs->m_translation[1]) / 2;
+	combinedTranslation[2] = (p_jointArms->m_translation[2] + p_jointLegs->m_translation[2]) / 2;
+
+	DirectX::XMVECTOR jointTranslation = DirectX::XMVectorSet(combinedTranslation[0], combinedTranslation[1], combinedTranslation[2], 1.0f);
 
 	jointTranslation = DirectX::XMVector4Transform(jointTranslation, parentMatrix);
 
@@ -56,10 +68,10 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_joint, DirectX
 	DirectX::FXMMATRIX bindPose = m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform;
 	m_boneTransforms[*p_index] = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(bindPose, transformMatrix));
 
-	for (unsigned int i = 0; i < p_joint->m_children.size(); i++)
+	for (unsigned int i = 0; i < p_jointArms->m_children.size(); i++)
 	{
 		(*p_index)++;
-		CombineMatrices(p_index, p_joint->m_children[i], quaternion, jointTranslation);
+		CombineMatrices(p_index, p_jointArms->m_children[i], p_jointLegs->m_children[i], quaternion, jointTranslation);
 	}
 }
 

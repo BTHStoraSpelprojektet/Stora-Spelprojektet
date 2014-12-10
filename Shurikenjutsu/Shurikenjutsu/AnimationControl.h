@@ -14,11 +14,12 @@ public:
 	bool IsAnimated();
 
 private:
-	void CombineMatrices(int* p_index, BoneFrame* p_joint, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
+	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
 
 	std::vector<AnimationStack> m_animationStacks;
 
-	double m_frame;
+	double m_frameArms;
+	double m_frameLegs;
 
 	std::vector<DirectX::XMMATRIX> m_boneTransforms;
 };
