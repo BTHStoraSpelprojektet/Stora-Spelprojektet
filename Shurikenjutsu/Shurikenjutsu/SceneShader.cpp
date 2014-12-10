@@ -1,6 +1,6 @@
 #include "SceneShader.h"
 
-bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle)
+bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;

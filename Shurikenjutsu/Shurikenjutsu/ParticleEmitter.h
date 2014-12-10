@@ -7,15 +7,16 @@
 #include "ConsoleFunctions.h"
 #include "Globals.h"
 #include "Enumerations.h"
+#include "GraphicsEngine.h"
 
-class ParticleEmiter
+class ParticleEmitter
 {
 public:
 	bool Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, float p_size, PARTICLE_PATTERN p_pattern);
 	void Shutdown();
 
-	void Update(ID3D11DeviceContext* p_context);
-	void Render(ID3D11DeviceContext* p_context);
+	void Update();
+	void Render();
 
 	void  SetPosition(DirectX::XMFLOAT3 p_position);
 	void  SetDirection(DirectX::XMFLOAT3 p_direction);
@@ -25,13 +26,14 @@ private:
 	void ClearOldParticles();
 	void EmitParticles();
 	void UpdateParticles();
-	void UpdateBuffers(ID3D11DeviceContext* p_deviceContext);
+	void UpdateBuffers();
 
 	PARTICLE_PATTERN m_pattern;
 	DirectX::XMFLOAT3 m_emitterPosition;
 	DirectX::XMFLOAT3 m_emitterDirection;
 	DirectX::XMFLOAT3 m_emitionPositionOffset;
 	DirectX::XMFLOAT4 m_color;
+	DirectX::XMFLOAT4X4 m_worldMatrix;
 
 	ID3D11ShaderResourceView* m_particleTexture;
 	float m_particleSize;

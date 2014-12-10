@@ -1,12 +1,14 @@
-#include "ParticleEmiter.h"
+#include "ParticleEmitter.h"
 
-bool ParticleEmiter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, float p_size, PARTICLE_PATTERN p_pattern)
+bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, float p_size, PARTICLE_PATTERN p_pattern)
 {
 	m_pattern = p_pattern;
 
 	m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_emitterPosition = p_position;
 	m_emitterDirection = p_direction;
+
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 
 	// TODO load modell and texture here lolz
 	m_particleTexture = 0;
@@ -133,7 +135,7 @@ bool ParticleEmiter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_posi
 	return true;
 }
 
-void ParticleEmiter::Shutdown()
+void ParticleEmitter::Shutdown()
 {
 	if (m_particleTexture)
 	{
@@ -160,7 +162,7 @@ void ParticleEmiter::Shutdown()
 	}
 }
 
-void ParticleEmiter::Update(ID3D11DeviceContext* p_context)
+void ParticleEmitter::Update()
 {
 	// Remove the old, inactive, particles.
 	ClearOldParticles();
@@ -172,16 +174,15 @@ void ParticleEmiter::Update(ID3D11DeviceContext* p_context)
 	UpdateParticles();
 
 	// Update the dynamic vertex buffer with the new position of each particle.
-	UpdateBuffers(p_context);
+	UpdateBuffers();
 }
 
-void ParticleEmiter::Render(ID3D11DeviceContext* p_context)
+void ParticleEmitter::Render()
 {
-	
-	// TODO WAT NO RENDER?
+	GraphicsEngine::RenderParticles(m_vertexBuffer, m_indexBuffer, m_indices, m_worldMatrix, m_particleTexture);
 }
 
-void ParticleEmiter::EmitParticles()
+void ParticleEmitter::EmitParticles()
 {
 	// Set emit to false to begin with.
 	bool emit = false;
@@ -282,7 +283,7 @@ void ParticleEmiter::EmitParticles()
 	}
 }
 
-void ParticleEmiter::UpdateParticles()
+void ParticleEmitter::UpdateParticles()
 {
 	// Update the particles to move upwards from their position.
 	switch (m_pattern)
@@ -338,7 +339,7 @@ void ParticleEmiter::UpdateParticles()
 	}
 }
 
-void ParticleEmiter::ClearOldParticles()
+void ParticleEmitter::ClearOldParticles()
 {
 	// Kill all dying particles.
 	for (unsigned int i = 0; i < m_maxParticles; i++)
@@ -362,7 +363,7 @@ void ParticleEmiter::ClearOldParticles()
 	}
 }
 
-void ParticleEmiter::UpdateBuffers(ID3D11DeviceContext* p_context)
+void ParticleEmitter::UpdateBuffers()
 {
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	ParticleVertex* vertex;
@@ -412,7 +413,7 @@ void ParticleEmiter::UpdateBuffers(ID3D11DeviceContext* p_context)
 	}
 
 	// Lock the dynamic vertex buffer.
-	if (FAILED(p_context->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+	if (FAILED(GraphicsEngine::GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map particle buffer.");
 		return;
@@ -425,5 +426,5 @@ void ParticleEmiter::UpdateBuffers(ID3D11DeviceContext* p_context)
 	memcpy(vertex, (void*)m_mesh, (sizeof(ParticleVertex) * m_vertices));
 
 	// Unlock the vertex buffer.
-	p_context->Unmap(m_vertexBuffer, 0);
+	GraphicsEngine::GetContext()->Unmap(m_vertexBuffer, 0);
 }

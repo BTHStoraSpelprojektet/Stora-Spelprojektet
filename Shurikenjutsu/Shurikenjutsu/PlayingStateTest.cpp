@@ -42,6 +42,8 @@ bool PlayingStateTest::Initialize()
 
 	m_mouseX = 0;
 	m_mouseY = 0;
+
+	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.0f, PARTICLE_PATTERN_FIRE);
 	// ========== DEBUG TEMP LINES ==========
 
 	return true;
@@ -59,16 +61,23 @@ void PlayingStateTest::Shutdown()
 	m_circle3.Shutdown();
 
 	m_debugDot.Shutdown();
+
+	m_particles.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
 }
 
 void PlayingStateTest::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+
 	BasicPicking();
 
 	m_objectManager.Update();
 	m_playerManager.Update();
+
+	// ========== DEBUG TEMP LINES ==========
+	m_particles.Update();
+	// ========== DEBUG TEMP LINES ==========
 
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
 	{
@@ -126,6 +135,8 @@ void PlayingStateTest::Render()
 	m_debugDot.Render();
 
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	
+	m_particles.Render();
 	// ========== DEBUG TEMP LINES ==========
 }
 

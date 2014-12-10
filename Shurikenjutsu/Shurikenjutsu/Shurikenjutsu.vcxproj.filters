@@ -243,10 +243,10 @@
     <ClCompile Include="SceneShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleEmiter.cpp">
+    <ClCompile Include="ParticleShader.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleShader.cpp">
+    <ClCompile Include="ParticleEmitter.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
     </ClCompile>
   </ItemGroup>
@@ -380,10 +380,10 @@
     <ClInclude Include="SceneShader.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleEmiter.h">
+    <ClInclude Include="ParticleShader.h">
       <Filter>Header Files\Graphics\Particles</Filter>
     </ClInclude>
-    <ClInclude Include="ParticleShader.h">
+    <ClInclude Include="ParticleEmitter.h">
       <Filter>Header Files\Graphics\Particles</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,6 +12,7 @@
 #include "Collisions.h"
 #include <d3d9.h>
 #include "DebugDraw.h"
+#include "ParticleEmitter.h"
 
 class PlayingStateTest :
 	public GameState
@@ -45,6 +46,8 @@ private:
 	DebugCircle m_circle3;
 
 	DebugDot m_debugDot;
+
+	ParticleEmitter m_particles;
 	// ========== DEBUG TEMP LINES ==========
 };
 
