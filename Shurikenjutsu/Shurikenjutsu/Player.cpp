@@ -269,10 +269,6 @@ void Player::SetCalculatePlayerPosition()
 	std::vector<OBB> collidingBoxes = CheckCollisionWithObjects();
 	for (int i = 0; i < collidingBoxes.size(); i++)
 	{
-		float radius = std::sqrt(collidingBoxes[i].m_extents.x*collidingBoxes[i].m_extents.x + collidingBoxes[i].m_extents.z*collidingBoxes[i].m_extents.z);
-		//bool rightSphere = Collisions::SphereSphereCollision(m_playerSphere, Sphere(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x, collidingBoxes[i].m_center.y, collidingBoxes[i].m_center.z), collidingBoxes[i].m_extents.x));
-		//bool leftSphere = Collisions::SphereSphereCollision(m_playerSphere, Sphere(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x - collidingBoxes[i].m_extents.x, collidingBoxes[i].m_center.y, collidingBoxes[i].m_center.z), collidingBoxes[i].m_extents.x));
-
 		bool rightOfBox = m_position.x >(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x);
 		bool leftOfBox = m_position.x < (collidingBoxes[i].m_center.x - collidingBoxes[i].m_extents.x);
 		bool aboveBox = m_position.z >(collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z);
@@ -283,61 +279,98 @@ void Player::SetCalculatePlayerPosition()
 		{
 			x = 0;
 		}
-		if (z == 1 || z == -1)
+		else if (z == 1 || z == -1)
 		{
 			z = 0;
 		}
+		else if (x < 0 && z < 0)//down left
+		{
+			if (rightOfBox == aboveBox)
+			{
+				SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z + m_playerSphere.m_radius*1.1f));
 
-		if (x < 0 && z < 0)//down left
-		{
-			if (rightOfBox)
-			{
-				x = 0;
-				z = -1;
-			}
-			if (aboveBox)
-			{
 				x = -1;
 				z = 0;
 			}
-		}
-		if (x > 0 && z < 0)//down right
-		{
-			if (leftOfBox)
+			else
 			{
+				if (rightOfBox)
+				{
+					x = 0;
+					z = -1;
+				}
+				if (aboveBox)
+				{
+					x = -1;
+					z = 0;
+				}
+			}
+		}
+		else if (x > 0 && z < 0)//down right
+		{
+			if (leftOfBox == aboveBox)
+			{
+				SetPosition(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 				x = 0;
 				z = -1;
 			}
-			if (aboveBox)
+			else
 			{
-				x = 1;
-				z = 0;
+				if (leftOfBox)
+				{
+					x = 0;
+					z = -1;
+				}
+				if (aboveBox)
+				{
+					x = 1;
+					z = 0;
+				}
 			}
 		}
-		if (x < 0 && z > 0)//up left // works goood
+		else if (x < 0 && z > 0)//up left // works goood
 		{
-			if (rightOfBox)
+			if (rightOfBox == belowBox)
 			{
+				SetPosition(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 				x = 0;
 				z = 1;
 			}
-			if (belowBox)
+			else
 			{
-				x = -1;
-				z = 0;
+				if (rightOfBox)
+				{
+					x = 0;
+					z = 1;
+				}
+				if (belowBox)
+				{
+					x = -1;
+					z = 0;
+				}
 			}
 		}
-		if (x > 0 && z > 0)//up right // works goood
+		else if (x > 0 && z > 0)//up right // works goood
 		{
-			if (leftOfBox)
+			if (leftOfBox == belowBox)
 			{
-				x = 0;
-				z = 1;
-			}
-			if (belowBox)
-			{
+				SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z - m_playerSphere.m_radius*1.1f));
+
 				x = 1;
 				z = 0;
+			}
+			else
+			{
+				if (leftOfBox)
+				{
+					x = 0;
+					z = 1;
+				}
+				if (belowBox)
+				{
+					x = 1;
+					z = 0;
+				}
 			}
 		}
 
