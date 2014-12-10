@@ -269,7 +269,7 @@ void ParticleEmitter::EmitParticles()
 				m_particleList[index].m_color = m_color;
 				m_particleList[index].m_velocity = velocity;
 				m_particleList[index].m_alive = true;
-				m_particleList[index].m_timeToLive = 0.5f;
+				m_particleList[index].m_timeToLive = 5.0f;
 				m_particleList[index].m_timePassed = 0.0f;
 
 				break;
@@ -300,12 +300,6 @@ void ParticleEmitter::UpdateParticles()
 
 				// Add time passed.
 				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
-
-				// Kill old particles.
-				if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive)
-				{
-					m_particleList[i].m_alive = false;
-				}
 			}
 
 			break;
@@ -318,15 +312,10 @@ void ParticleEmitter::UpdateParticles()
 			{
 				// Fly upwards, ignoring xz movement.
 				m_particleList[i].m_position.y = m_particleList[i].m_position.y + (m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime());
+				// TODO kanske ge droppform.
 
 				// Add time passed.
 				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
-
-				// Kill old particles.
-				if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive)
-				{
-					m_particleList[i].m_alive = false;
-				}
 			}
 
 			break;
@@ -344,8 +333,9 @@ void ParticleEmitter::ClearOldParticles()
 	// Kill all dying particles.
 	for (unsigned int i = 0; i < m_maxParticles; i++)
 	{
-		if (m_particleList[i].m_alive == false)
+		if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive)
 		{
+			m_particleList[i].m_alive = false;
 			m_currentParticles--;
 
 			// Now move all the live particles, to keep the array sorted.

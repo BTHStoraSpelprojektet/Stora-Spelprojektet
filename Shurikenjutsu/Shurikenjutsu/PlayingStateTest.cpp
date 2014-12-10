@@ -101,20 +101,20 @@ void PlayingStateTest::Update()
 
 void PlayingStateTest::Render()
 {
-	// Draw to the shadowmap.
-	GraphicsEngine::BeginRenderToShadowMap();
+	//// Draw to the shadowmap.
+	//GraphicsEngine::BeginRenderToShadowMap();
 
-	m_playerManager.Render(SHADERTYPE_DEPTH);
-	m_objectManager.Render(SHADERTYPE_DEPTH);
+	//m_playerManager.Render(SHADERTYPE_DEPTH);
+	//m_objectManager.Render(SHADERTYPE_DEPTH);
 
-	GraphicsEngine::SetShadowMap();
-	GraphicsEngine::ResetRenderTarget();
+	//GraphicsEngine::SetShadowMap();
+	//GraphicsEngine::ResetRenderTarget();
 
-	// Draw to the scene.
-	m_playerManager.Render(SHADERTYPE_SCENE);
-	m_objectManager.Render(SHADERTYPE_SCENE);
-	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
-	m_objectManager.Render(SHADERTYPE_ANIMATED);
+	//// Draw to the scene.
+	//m_playerManager.Render(SHADERTYPE_SCENE);
+	//m_objectManager.Render(SHADERTYPE_SCENE);
+	//m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
+	//m_objectManager.Render(SHADERTYPE_ANIMATED);
 
 	// ========== DEBUG TEMP LINES ==========
 	DirectX::XMFLOAT4X4 circleWorld;
