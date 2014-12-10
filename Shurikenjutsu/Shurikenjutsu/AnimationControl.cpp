@@ -54,9 +54,7 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_joint, DirectX
 	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];
 
 	DirectX::FXMMATRIX bindPose = m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform;
-	DirectX::XMVECTOR determinant = DirectX::XMMatrixDeterminant(bindPose);
-	DirectX::XMMATRIX bindPoseInverse = DirectX::XMMatrixInverse(&determinant, bindPose);
-	m_boneTransforms[*p_index] = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(bindPoseInverse, transformMatrix));
+	m_boneTransforms[*p_index] = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(bindPose, transformMatrix));
 
 	for (unsigned int i = 0; i < p_joint->m_children.size(); i++)
 	{
