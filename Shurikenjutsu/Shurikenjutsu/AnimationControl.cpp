@@ -9,6 +9,8 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_frameArms = 0;
 	m_frameLegs = 0;
 
+	m_ikDirection = DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f);
+
 	return true;
 }
 
@@ -65,6 +67,11 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	transformMatrix.r[3].m128_f32[1] = jointTranslation.m128_f32[1];
 	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];
 
+	/*if (strcmp(p_jointArms->m_name, "SpineIK") == 0)
+	{
+		transformMatrix = ApplyIK(transformMatrix);
+	}*/
+
 	DirectX::FXMMATRIX bindPose = m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform;
 	m_boneTransforms[*p_index] = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(bindPose, transformMatrix));
 
@@ -75,10 +82,38 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	}
 }
 
+DirectX::XMMATRIX AnimationControl::ApplyIK(DirectX::XMMATRIX& p_transformMatrix)
+{
+	DirectX::XMVECTOR determinant = DirectX::XMMatrixDeterminant(p_transformMatrix);
+	DirectX::XMMATRIX transformInverse = DirectX::XMMatrixInverse(&determinant, p_transformMatrix);
+
+	DirectX::XMVECTOR direction = DirectX::XMVectorSet(m_ikDirection.x, m_ikDirection.y, m_ikDirection.z, 1.0f);
+	direction = DirectX::XMVector3Transform(direction, transformInverse);
+
+	direction = DirectX::XMVector3Normalize(direction);
+
+	DirectX::XMVECTOR lookVector = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 1.0f);
+
+	direction = DirectX::XMVector3Dot(direction, lookVector);
+
+	DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationY(direction.m128_f32[0]);
+
+	DirectX::XMMATRIX appliedIkMatrix = p_transformMatrix;
+
+	appliedIkMatrix = DirectX::XMMatrixMultiply(appliedIkMatrix, p_transformMatrix);
+
+	return appliedIkMatrix;
+}
+
 bool AnimationControl::IsAnimated()
 {
 	if (m_animationStacks.size() > 0)
 		return true;
 
 	return false;
+}
+
+void AnimationControl::SetIkDirection(DirectX::XMFLOAT3 p_direction)
+{
+	m_ikDirection = p_direction;
 }
