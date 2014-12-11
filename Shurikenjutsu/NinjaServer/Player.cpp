@@ -20,6 +20,8 @@ bool Player::Initialize(std::string p_modelName, RakNet::RakNetGUID p_guid, int 
 	m_gcd = 0.0f;
 
 	std::cout << "Player added" << std::endl;
+
+	return false; // Todo change all this class
 }
 
 void Player::Shutdown()
@@ -44,4 +46,5 @@ void Player::Respawn(DirectX::XMFLOAT3 p_position)
 
 std::vector<Box> Player::GetBoundingBoxes()
 {
+	return m_boundingBoxes;
 }
