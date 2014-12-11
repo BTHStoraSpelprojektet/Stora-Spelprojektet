@@ -1,20 +1,19 @@
 #include "Network.h"
 
-RakNet::RakPeerInterface* Network::m_clientPeer;
-RakNet::SocketDescriptor Network::m_socketDesc;
-RakNet::Packet* Network::m_packet;
+Network* Network::m_instance;
 
-bool Network::m_connected;
-bool Network::m_prevConnected;
-bool Network::m_newOrRemovedPlayers;
-bool Network::m_shurikenListUpdated;
-bool Network::m_respawned;
-bool Network::m_invalidMove;
-int Network::m_connectionCount;
-int Network::m_previousCount;
-PlayerNet Network::m_myPlayer;
-std::vector<PlayerNet> Network::m_enemyPlayers;
-std::vector < ShurikenNet > Network::m_shurikensList;
+Network::Network(){}
+Network::~Network(){}
+
+Network* Network::GetInstance()
+{
+	if (m_instance == nullptr)
+	{
+		m_instance = new Network();
+	}
+
+	return m_instance;
+}
 
 bool Network::Initialize()
 {
@@ -44,6 +43,8 @@ void Network::Shutdown()
 {
 	m_clientPeer->Shutdown(300);
 	RakNet::RakPeerInterface::DestroyInstance(m_clientPeer);
+
+	delete m_instance;
 }
 
 void Network::Update()

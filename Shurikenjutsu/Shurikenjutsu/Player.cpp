@@ -94,7 +94,7 @@ void Player::UpdateMe( )
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
 
-	if (moved || Network::ConnectedNow())
+	if (moved || Network::GetInstance()->ConnectedNow())
 	{
 		SetCalculatePlayerPosition();
 	}
@@ -102,13 +102,13 @@ void Player::UpdateMe( )
 	// Melee attack
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		Network::DoMeleeAttack();
+		Network::GetInstance()->DoMeleeAttack();
 }
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
-		Network::AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
+		Network::GetInstance()->AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
 	}
 }
 
@@ -158,10 +158,10 @@ void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
 		MovingObject::SetPosition(p_pos);
 
-	if (Network::IsConnected())
+		if (Network::GetInstance()->IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
-		Network::SendPlayerPos(pos.x, pos.y, pos.z);
+		Network::GetInstance()->SendPlayerPos(pos.x, pos.y, pos.z);
 	}
 }
 
@@ -190,10 +190,10 @@ void Player::SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 	m_attackDir = p_attackDir;
 	CalculateFacingAngle();
 
-	if (Network::IsConnected())
+	if (Network::GetInstance()->IsConnected())
 	{
 		DirectX::XMFLOAT3 dir = GetAttackDirection();
-		Network::SendPlayerDir(dir.x, dir.y, dir.z);
+		Network::GetInstance()->SendPlayerDir(dir.x, dir.y, dir.z);
 	}
 }
 
