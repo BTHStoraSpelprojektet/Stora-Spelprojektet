@@ -17,8 +17,8 @@ public:
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
 	void Shutdown();
-	void UpdateMe( );
-	void Update( );
+	void UpdateMe();
+	void Update();
 	void SetDamage(float p_damage);
 	float GetDamage() const;	
 	void SetHealth(unsigned int p_health);

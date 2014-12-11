@@ -49,6 +49,7 @@ void ObjectManager::Update()
 			if (!IsShurikenInNetworkList(m_shurikens[i].GetID()))
 			{
 				// Remove shuriken
+				m_shurikens[i].Shutdown();
 				m_shurikens.erase(m_shurikens.begin() + i);
 				i--;
 			}

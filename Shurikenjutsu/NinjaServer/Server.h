@@ -14,9 +14,11 @@
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
+#include "..\CommonLibs\ModelLibrary.h"
 #include <vector>
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
+#include "MapManager.h"
 
 #pragma comment(lib, "PhysicsDll.lib")
 #include "PhysicsDll.h"
@@ -40,8 +42,11 @@ private:
 
 	int m_nrOfConnections;
 	std::string m_levelName;
+	std::string m_shurikenModelName;
+	std::string m_playerModelName;
 	PlayerManager m_playerManager;
 	ShurikenManager m_shurikenManager;
+	MapManager m_mapManager;
 };
 
 #endif SERVER

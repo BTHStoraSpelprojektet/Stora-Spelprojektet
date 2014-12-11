@@ -12,6 +12,7 @@
 #include "Collisions.h"
 #include <d3d9.h>
 #include "DebugDraw.h"
+#include "Frustum.h"
 
 class PlayingStateTest :
 	public GameState
@@ -34,8 +35,8 @@ private:
 	ObjectManager m_objectManager;
 	Camera m_camera;
 
-	float twoPi;
-	
+	float twoPi = 6.28318530718f;
+
 	// ========== DEBUG TEMP LINES ==========
 	float m_mouseX;
 	float m_mouseY;
@@ -46,6 +47,9 @@ private:
 
 	DebugDot m_debugDot;
 	// ========== DEBUG TEMP LINES ==========
+
+	Frustum m_frustum;
+
 };
 
 #endif PLAYINGSTATE

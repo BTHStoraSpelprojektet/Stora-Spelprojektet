@@ -229,6 +229,11 @@
       <Filter>Source Files\Models</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -363,6 +368,10 @@
       <Filter>Header Files\Models</Filter>
     </ClInclude>
     <ClInclude Include="CollisionManager.h">
+    <ClInclude Include="Frustum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

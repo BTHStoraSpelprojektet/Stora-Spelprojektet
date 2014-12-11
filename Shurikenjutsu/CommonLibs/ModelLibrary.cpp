@@ -9,6 +9,7 @@ void ModelLibrary::Initialize(BaseModel *p_modelTypes)
 {
 	// Load every model!
 	LoadModelDirectory(p_modelTypes);
+	delete p_modelTypes;
 }
 
 void ModelLibrary::Shutdown()

@@ -98,8 +98,8 @@ bool Player::CalculateDirection()
 	{
 		if (!boolList[3])
 		{
-			x += 1;
-			moved = true;
+		x += 1;
+		moved = true;
 		}
 	}
 
@@ -154,8 +154,8 @@ float Player::GetAgility() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-	MovingObject::SetPosition(p_pos);
-	
+		MovingObject::SetPosition(p_pos);
+
 	if (Network::IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
@@ -325,12 +325,12 @@ void Player::SetCalculatePlayerPosition()
 					z = 1;
 				}
 				if (belowBox)
-				{
+					{
 					x = 1;
 					z = 0;
+					}
 				}
 			}
-		}
 
 
 		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
