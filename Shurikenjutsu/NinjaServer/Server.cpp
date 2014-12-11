@@ -273,12 +273,13 @@ void Server::CheckCollisions()
 		}
 
 		// Go through maps bounding boxes
-		std::vector<Box> mapBoundingBoxes = m_mapManager.GetBoundingBoxes();
+		std::vector<OBB> mapBoundingBoxes = m_mapManager.GetBoundingBoxes();
 		for (unsigned int j = 0; j < shurikenBoundingBoxes.size(); j++)
 		{
 			for (unsigned int k = 0; k < mapBoundingBoxes.size(); k++)
 			{
-				if (IntersectionTests::Intersections::BoxBoxCollision(mapBoundingBoxes[k].m_center, mapBoundingBoxes[k].m_extents, shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents))
+				if (IntersectionTests::Intersections::OBBOBBCollision(mapBoundingBoxes[k].m_center, mapBoundingBoxes[k].m_extents, mapBoundingBoxes[k].m_direction,
+					shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)))
 				{
 					// Remove shuriken
 					m_shurikenManager.RemoveShuriken(shurikenList[i].shurikenId);
