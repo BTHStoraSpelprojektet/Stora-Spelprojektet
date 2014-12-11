@@ -273,12 +273,13 @@ void Server::CheckCollisions()
 		}
 
 		// Go through maps bounding boxes
-		std::vector<Box> mapBoundingBoxes = m_mapManager.GetBoundingBoxes();
+		std::vector<OBB> mapBoundingBoxes = m_mapManager.GetBoundingBoxes();
 		for (unsigned int j = 0; j < shurikenBoundingBoxes.size(); j++)
 		{
 			for (unsigned int k = 0; k < mapBoundingBoxes.size(); k++)
 			{
-				if (IntersectionTests::Intersections::BoxBoxCollision(mapBoundingBoxes[k].m_center, mapBoundingBoxes[k].m_extents, shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents))
+				if (IntersectionTests::Intersections::OBBOBBCollision(mapBoundingBoxes[k].m_center, mapBoundingBoxes[k].m_extents, mapBoundingBoxes[k].m_direction,
+					shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)))
 				{
 					// Remove shuriken
 					m_shurikenManager.RemoveShuriken(shurikenList[i].shurikenId);
@@ -308,6 +309,13 @@ void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
 		{
 			continue;
 		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
 		DirectX::XMFLOAT3 spherePos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);

@@ -32,9 +32,9 @@ void ObjectManager::Update()
 		m_shurikens[i].Update();
 	}
 
-	if (Network::IsShurikenListUpdated())
+	if (Network::GetInstance()->IsShurikenListUpdated())
 	{
-		std::vector<ShurikenNet> tempNetShurikens = Network::GetShurikens();
+		std::vector<ShurikenNet> tempNetShurikens = Network::GetInstance()->GetShurikens();
 		for (unsigned int i = 0; i < tempNetShurikens.size(); i++)
 		{
 			if (!IsShurikenInList(tempNetShurikens[i].shurikenId))
@@ -54,7 +54,7 @@ void ObjectManager::Update()
 				i--;
 			}
 		}
-		Network::SetHaveUpdateShurikenList();
+		Network::GetInstance()->SetHaveUpdateShurikenList();
 	}
 }
 
@@ -109,7 +109,7 @@ bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
 
 bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 {
-	std::vector<ShurikenNet> shurikenList = Network::GetShurikens();
+	std::vector<ShurikenNet> shurikenList = Network::GetInstance()->GetShurikens();
 
 	for (unsigned int i = 0; i < shurikenList.size(); i++)
 	{

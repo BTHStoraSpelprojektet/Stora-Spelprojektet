@@ -121,7 +121,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	}
 
 	// Initialize network
-	Network::Initialize();
+	Network::GetInstance()->Initialize();
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
 
@@ -140,7 +140,7 @@ void System::Shutdown()
 	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
 
 	// Shutdown network
-	Network::Shutdown();
+	Network::GetInstance()->Shutdown();
 
 	// Shutdown model library
 	ModelLibrary::GetInstance()->Shutdown();
@@ -212,7 +212,7 @@ void System::Update()
 	m_sound->Update();
 
 	// Update network
-	Network::Update();
+	Network::GetInstance()->Update();
 
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))
