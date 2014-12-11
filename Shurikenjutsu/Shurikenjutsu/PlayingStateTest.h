@@ -35,7 +35,7 @@ private:
 	Camera m_camera;
 
 	float twoPi;
-
+	
 	// ========== DEBUG TEMP LINES ==========
 	float m_mouseX;
 	float m_mouseY;

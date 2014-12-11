@@ -16,6 +16,7 @@ bool PlayingStateTest::Initialize()
 
 	m_objectManager.Initialize();
 
+
 	m_camera.ResetCamera();
 
 	//Load level
@@ -31,13 +32,14 @@ bool PlayingStateTest::Initialize()
 	}
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
 	std::vector<Box> wallList;
-	for (int i = 0; i < temp.size(); i++)
+	for (unsigned int i = 0; i < temp.size(); i++)
 	{
 		LevelImporter::LevelBoundingBox box = temp[i];
 		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
 	}
 	// Initiate player
-	m_playerManager.Initialize(m_objectManager.GetStaticObjectList(), wallList);
+	m_playerManager.Initialize();
+	CollisionManager::GetInstance()->Initialize(m_objectManager.GetStaticObjectList(), wallList);
 
 	// ========== DEBUG TEMP LINES ==========
 	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));

@@ -6,6 +6,7 @@
 #include "InputManager.h"
 #include "Collisions.h"
 #include "Globals.h"
+#include "CollisionManager.h"
 
 class Player :
 	public MovingObject
@@ -35,9 +36,8 @@ public:
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
 
-	void SetCollidingObjects(std::vector<Object> p_ModelList);
-	void SetOuterWalls(std::vector<Box> p_OuterWalls);
 private:
+	bool CalculateDirection();
 	void CalculateFacingAngle();
 
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
@@ -48,13 +48,9 @@ private:
 	DirectX::XMFLOAT3 m_attackDir;
 	RakNet::RakNetGUID m_guid;
 
-	float CalculateLengthBetween2Points(DirectX::XMFLOAT3 p_1, DirectX::XMFLOAT3 p_2);
 	void SetCalculatePlayerPosition();
-	std::vector<OBB>  CheckCollisionWithObjects();
-	std::vector<Object> m_modelList;
 	DirectX::XMFLOAT3 m_playerPrevPos;
 
-	std::vector<Box> m_OuterWalls;
 	Sphere m_playerSphere;
 };
 
