@@ -228,13 +228,14 @@
     <ClCompile Include="AnimationControl.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionManager.cpp">
-    </ClCompile>
     <ClCompile Include="Frustum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sound.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+      <Filter>Source Files\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -367,13 +368,14 @@
     <ClInclude Include="AnimationControl.h">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionManager.h">
-    </ClInclude>
     <ClInclude Include="Frustum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
+      <Filter>Header Files\Physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
