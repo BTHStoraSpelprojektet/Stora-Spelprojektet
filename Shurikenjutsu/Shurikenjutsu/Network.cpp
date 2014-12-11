@@ -127,6 +127,7 @@ void Network::ReceviePacket()
 			float x, y, z;
 			float dirX, dirY, dirZ;
 			int team;
+			int maxHP, currentHP;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
 			bitStream.Read(messageID);
@@ -142,6 +143,8 @@ void Network::ReceviePacket()
 				bitStream.Read(dirY);
 				bitStream.Read(dirZ);
 				bitStream.Read(team);
+				bitStream.Read(maxHP);
+				bitStream.Read(currentHP);
 
 				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
@@ -243,6 +246,21 @@ void Network::ReceviePacket()
 		case ID_PLAYER_INVALID_MOVE:
 		{
 			m_invalidMove = true;
+			break;
+		}
+		case ID_PLAYER_HP_CHANGED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			int currentHP;
+
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			bitStream.Read(currentHP);
+
+			// Change player hp function here
+
 			break;
 		}
 		default:

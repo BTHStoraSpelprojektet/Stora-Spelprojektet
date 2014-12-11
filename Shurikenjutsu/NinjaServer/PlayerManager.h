@@ -46,6 +46,7 @@ private:
 	std::vector<Box> m_boundingBoxes;
 
 	float m_gcd;
+	int m_playerHealth;
 };
 
 #endif

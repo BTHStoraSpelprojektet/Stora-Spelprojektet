@@ -11,6 +11,7 @@ PlayerManager::~PlayerManager()
 
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName)
 {
+	m_playerHealth = 100;
 	m_gcd = 0.5f;
 	m_serverPeer = p_serverPeer;
 
@@ -59,6 +60,8 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
 	player.dirY = 0.0f;
 	player.dirZ = 0.0f;
 	player.gcd = 0.0f;
+	player.maxHP = m_playerHealth;
+	player.currentHP = m_playerHealth;
 	m_players.push_back(player);
 
 	std::cout << "Player added" << std::endl;
@@ -148,6 +151,8 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].dirY);
 		bitStream.Write(m_players[i].dirZ);
 		bitStream.Write(m_players[i].team);
+		bitStream.Write(m_players[i].maxHP);
+		bitStream.Write(m_players[i].currentHP);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
