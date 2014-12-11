@@ -64,7 +64,7 @@ void Shuriken::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	MovingObject::SetPosition(p_pos);
 
-	if (Network::IsConnected())
+	if (Network::GetInstance()->IsConnected())
 	{ 
 		// Replica3Manager code, unused for now.
 		/*DirectX::XMFLOAT3 pos = GetPosition();

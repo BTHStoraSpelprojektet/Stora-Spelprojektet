@@ -18,6 +18,7 @@
 
 #include "PlayingStateTest.h"
 #include "Timer.h"
+#include "Sound.h"
 
 class System
 {
@@ -49,5 +50,7 @@ private:
 	Camera m_lightCamera;
 	
 	GameState* m_gameState;
+
+	Sound* m_sound;
 };
 #endif

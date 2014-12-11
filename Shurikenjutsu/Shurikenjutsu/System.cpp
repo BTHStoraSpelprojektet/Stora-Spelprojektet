@@ -91,6 +91,18 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
+	m_sound = new Sound();
+	if (!m_sound->Initialize())
+	{
+		ConsolePrintError("Sound Initialize failed.");
+		ConsoleSkipLines(1);
+	}
+	else
+	{
+		ConsolePrintSuccess("Sound Initialize succses.");
+		ConsoleSkipLines(1);
+	}
+
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.25f, 0.25f, 0.25f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
@@ -109,7 +121,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	}
 
 	// Initialize network
-	Network::Initialize();
+	Network::GetInstance()->Initialize();
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
 
@@ -128,10 +140,12 @@ void System::Shutdown()
 	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
 
 	// Shutdown network
-	Network::Shutdown();
+	Network::GetInstance()->Shutdown();
 
 	// Shutdown model library
 	ModelLibrary::GetInstance()->Shutdown();
+
+	m_sound->Shutdown();
 }
 
 void System::Run()
@@ -195,8 +209,10 @@ void System::Update()
 
 	m_gameState->Update();
 	
+	m_sound->Update();
+
 	// Update network
-	Network::Update();
+	Network::GetInstance()->Update();
 
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))

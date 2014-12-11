@@ -25,64 +25,73 @@ class Network
 {
 public:
 
-	static bool Initialize();
-	static void Shutdown();
+	Network(const Network&) = delete;
+	Network& operator=(const Network&) = delete;
 
-	static void Update();
+	static Network* GetInstance();
 
-	static bool ConnectedNow();
-	static bool IsConnected();
+	bool Initialize();
+	void Shutdown();
 
-	static void SendPlayerPos(float p_x, float p_y, float p_z);
-	static void SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ);
-	static std::vector<PlayerNet> GetOtherPlayers();
-	static PlayerNet GetMyPlayer();
-	static void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
-	static std::vector <ShurikenNet> GetShurikens();
-	static bool MadeInvalidMove();
-	static void UpdatedMoveFromInvalidMove();
+	void Update();
 
-	static RakNet::RakNetGUID GetMyGUID();
-	static bool IsPlayerListUpdated();
-	static void SetHaveUpdatedPlayerList();
+	bool ConnectedNow();
+	bool IsConnected();
 
-	static bool IsShurikenListUpdated();
-	static void SetHaveUpdateShurikenList();
+	void SendPlayerPos(float p_x, float p_y, float p_z);
+	void SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ);
+	std::vector<PlayerNet> GetOtherPlayers();
+	PlayerNet GetMyPlayer();
+	void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
+	std::vector <ShurikenNet> GetShurikens();
+	bool MadeInvalidMove();
+	void UpdatedMoveFromInvalidMove();
 
-	static bool HasRespawned();
-	static void SetHaveRespawned();
+	RakNet::RakNetGUID GetMyGUID();
+	bool IsPlayerListUpdated();
+	void SetHaveUpdatedPlayerList();
 
-	static void DoMeleeAttack();
+	bool IsShurikenListUpdated();
+	void SetHaveUpdateShurikenList();
+
+	bool HasRespawned();
+	void SetHaveRespawned();
+
+	void DoMeleeAttack();
 
 private:
-	Network() {};
-	static void ReceviePacket();
-	static void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
-	static void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
-	static void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
-	static void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
-	static bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
-	static void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed);
-	static void RespawnPlayer(float p_x, float p_y, float p_z);
-	static void RemoveShuriken(unsigned int p_shurikenID);
+	Network();
+	~Network();
+	
+	static Network* m_instance;
 
-	static RakNet::RakPeerInterface *m_clientPeer;
-	static RakNet::SocketDescriptor m_socketDesc;
-	static RakNet::Packet *m_packet;
+	void ReceviePacket();
+	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
+	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
+	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
+	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
+	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
+	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed);
+	void RespawnPlayer(float p_x, float p_y, float p_z);
+	void RemoveShuriken(unsigned int p_shurikenID);
 
-	static bool m_connected;
-	static bool m_prevConnected;
+	RakNet::RakPeerInterface *m_clientPeer;
+	RakNet::SocketDescriptor m_socketDesc;
+	RakNet::Packet *m_packet;
 
-	static int m_connectionCount;
-	static int m_previousCount;
+	bool m_connected;
+	bool m_prevConnected;
 
-	static bool m_newOrRemovedPlayers;
-	static bool m_shurikenListUpdated;
-	static bool m_respawned;
-	static bool m_invalidMove;
-	static PlayerNet m_myPlayer;
-	static std::vector<PlayerNet> m_enemyPlayers;
-	static std::vector<ShurikenNet> m_shurikensList;
+	int m_connectionCount;
+	int m_previousCount;
+
+	bool m_newOrRemovedPlayers;
+	bool m_shurikenListUpdated;
+	bool m_respawned;
+	bool m_invalidMove;
+	PlayerNet m_myPlayer;
+	std::vector<PlayerNet> m_enemyPlayers;
+	std::vector<ShurikenNet> m_shurikensList;
 
 };
 #endif

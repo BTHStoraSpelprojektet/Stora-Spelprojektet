@@ -6,6 +6,8 @@
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include "InputManager.h"
+#include <DirectXCollision.h>
+
 class Camera
 {
 public:
@@ -68,5 +70,6 @@ private:
 	DirectX::XMFLOAT4X4 m_positionMatrix;
 	DirectX::XMFLOAT4X4 m_rotationX;
 	DirectX::XMFLOAT4X4 m_rotationY;
+
 };
 #endif;

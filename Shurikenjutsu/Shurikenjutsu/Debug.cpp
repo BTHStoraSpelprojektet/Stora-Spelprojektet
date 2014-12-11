@@ -21,7 +21,7 @@ TEST(AlexTest2, box_vs_box_collision)
 	EXPECT_EQ(false, Collisions::BoxBoxCollision(Box(0.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f), Box(11.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)));
 }
 
-TEST(AlexTest3, frustrum_vs_box_collision)
+/*TEST(AlexTest3, frustrum_vs_box_collision)
 {
 	EXPECT_EQ(true, Collisions::FrustrumBoxCollision(Frustum(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f), Box(0.0f, 0.0f, 0.0f, 5.0f, 5.0f, 5.0f)));
 	EXPECT_EQ(false, Collisions::FrustrumBoxCollision(Frustum(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f), Box(0.0f, 0.0f, 12.0f, 5.0f, 5.0f, 5.0f)));
@@ -31,7 +31,7 @@ TEST(AlexTest4, frustrum_vs_sphere_collision)
 {
 	EXPECT_EQ(true, Collisions::FrustrumSphereCollision(Frustum(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f), Sphere(0.0f, 0.0f, 10.0f, 10.0f)));
 	EXPECT_EQ(false, Collisions::FrustrumSphereCollision(Frustum(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 10.0f), Sphere(0.0f, 0.0f, -10.0f, 10.0f)));
-}
+}*/
 
 TEST(AlexTest5, ray_vs_box_collision)
 {

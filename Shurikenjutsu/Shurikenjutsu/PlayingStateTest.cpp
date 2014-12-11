@@ -16,6 +16,7 @@ bool PlayingStateTest::Initialize()
 
 	m_objectManager.Initialize();
 
+
 	m_camera.ResetCamera();
 
 	//Load level
@@ -31,13 +32,14 @@ bool PlayingStateTest::Initialize()
 	}
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
 	std::vector<Box> wallList;
-	for (int i = 0; i < temp.size(); i++)
+	for (unsigned int i = 0; i < temp.size(); i++)
 	{
 		LevelImporter::LevelBoundingBox box = temp[i];
 		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
 	}
 	// Initiate player
-	m_playerManager.Initialize(m_objectManager.GetStaticObjectList(), wallList);
+	m_playerManager.Initialize();
+	CollisionManager::GetInstance()->Initialize(m_objectManager.GetStaticObjectList(), wallList);
 
 	// ========== DEBUG TEMP LINES ==========
 	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
@@ -49,6 +51,9 @@ bool PlayingStateTest::Initialize()
 	m_mouseX = 0;
 	m_mouseY = 0;
 	// ========== DEBUG TEMP LINES ==========
+
+	// Frustum
+	m_frustum = Frustum();
 
 	return true;
 }
@@ -98,6 +103,11 @@ void PlayingStateTest::Update()
 
 void PlayingStateTest::Render()
 {
+	m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+
+	bool testBB = false;
+
+
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
 
@@ -128,11 +138,20 @@ void PlayingStateTest::Render()
 
 	m_circle2.UpdateWorldMatrix(circleWorld);
 	m_circle2.Render();
-
-	m_debugDot.Render();
+	if (m_frustum.CheckCube(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f))
+	{
+		testBB = true;
+	}
+	if (testBB)
+		m_debugDot.Render();
 
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	// ========== DEBUG TEMP LINES ==========
+
+
+	
+
+
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
