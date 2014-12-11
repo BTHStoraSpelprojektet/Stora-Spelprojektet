@@ -89,6 +89,7 @@
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collisions.cpp" />
+    <ClCompile Include="Dash.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DebugBox.cpp" />
     <ClCompile Include="DebugDot.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="ConsoleFunctions.h" />
+    <ClInclude Include="Dash.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DebugBox.h" />
     <ClInclude Include="DebugCircle.h" />

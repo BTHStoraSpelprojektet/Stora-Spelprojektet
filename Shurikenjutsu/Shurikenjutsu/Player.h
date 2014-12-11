@@ -6,6 +6,8 @@
 #include "InputManager.h"
 #include "Collisions.h"
 #include "Globals.h"
+#include "Ability.h"
+#include "Dash.h"
 
 class Player :
 	public MovingObject
@@ -56,6 +58,8 @@ private:
 
 	std::vector<Box> m_OuterWalls;
 	Sphere m_playerSphere;
+
+	Ability* buttonQ;
 };
 
 #endif PLAYER

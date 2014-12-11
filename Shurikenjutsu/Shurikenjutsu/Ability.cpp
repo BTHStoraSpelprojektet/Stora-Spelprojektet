@@ -29,7 +29,7 @@ void Ability::Update()
 
 }
 
-void Ability::Apply()
+void Ability::Execute()
 {
 
 }

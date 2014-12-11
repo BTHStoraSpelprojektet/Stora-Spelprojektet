@@ -9,17 +9,17 @@ public:
 	Ability();
 	~Ability();
 
-	bool Initialize();
-	void Shutdown();
-	void Update();
-	void Apply();
+	virtual bool Initialize();
+	virtual void Shutdown();
+	virtual void Update();
+	virtual void Execute();
 
-	void SetDamage(unsigned int p_damage);
-	unsigned int GetDamage();
-	void SetTime(double p_time);
-	double GetTime();
-	void SetStatusEffect(StatusEffect p_statusEffect);
-	StatusEffect GetStatusEffect();
+	virtual void SetDamage(unsigned int p_damage);
+	virtual unsigned int GetDamage();
+	virtual void SetTime(double p_time);
+	virtual double GetTime();
+	virtual void SetStatusEffect(StatusEffect p_statusEffect);
+	virtual StatusEffect GetStatusEffect();
 
 
 private:
