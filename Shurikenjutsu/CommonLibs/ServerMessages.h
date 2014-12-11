@@ -10,6 +10,7 @@ struct PlayerNet
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
 	int team;
+	float gcd;
 };
 
 struct ShurikenNet

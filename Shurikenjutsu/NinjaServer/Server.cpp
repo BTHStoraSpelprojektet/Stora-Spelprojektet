@@ -186,7 +186,13 @@ void Server::ReceviePacket()
 			rBitStream.Read(dirY);
 			rBitStream.Read(dirZ);
 
-			m_shurikenManager.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+			int index = m_playerManager.GetPlayerIndex(m_packet->guid);
+			if (m_playerManager.CanUseAbility(index))
+			{
+				m_shurikenManager.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+				m_playerManager.UsedAbility(index);
+			}
+			
 			break;
 		}
 		case ID_DOWNLOAD_PLAYERS:

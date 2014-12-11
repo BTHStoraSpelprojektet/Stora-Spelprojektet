@@ -3,7 +3,8 @@
 
 #define MAX_CLIENTS 10
 #define SERVER_PORT 60000
-#define SERVER_ADDRESS "194.47.150.130"
+//#define SERVER_ADDRESS "194.47.150.130"
+#define SERVER_ADDRESS "127.0.0.1"
 
 class ServerGlobals
 {
