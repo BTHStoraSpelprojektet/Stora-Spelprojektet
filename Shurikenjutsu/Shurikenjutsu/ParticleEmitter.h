@@ -8,6 +8,7 @@
 #include "Globals.h"
 #include "Enumerations.h"
 #include "GraphicsEngine.h"
+#include "../CommonLibs/ModelImporter.h"
 
 class ParticleEmitter
 {
@@ -22,11 +23,17 @@ public:
 	void  SetDirection(DirectX::XMFLOAT3 p_direction);
 	void  SetColor(DirectX::XMFLOAT4 p_color);
 
+	void StandUp(bool p_bool);
+	void UpdateMatrix(DirectX::XMFLOAT4X4 p_world);
+	void UpdatePosition(DirectX::XMFLOAT3 p_position);
+	void UpdateDirection(DirectX::XMFLOAT3 p_direction);
+
 private:
 	void ClearOldParticles();
 	void EmitParticles();
 	void UpdateParticles();
 	void UpdateBuffers();
+	ID3D11ShaderResourceView* LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
 
 	PARTICLE_PATTERN m_pattern;
 	DirectX::XMFLOAT3 m_emitterPosition;
@@ -37,12 +44,15 @@ private:
 
 	ID3D11ShaderResourceView* m_particleTexture;
 	float m_particleSize;
+	bool m_standing;
 
 	float m_velocity;
 	float m_velocityVariation;
 
 	float m_particlesPerSecond;
 	float m_time;
+
+	float m_timeToLive;
 
 	unsigned int m_maxParticles;
 	unsigned int m_currentParticles;
@@ -54,6 +64,7 @@ private:
 		DirectX::XMFLOAT4 m_color;
 
 		float m_velocity;
+		float m_rotation;
 
 		bool m_alive;
 

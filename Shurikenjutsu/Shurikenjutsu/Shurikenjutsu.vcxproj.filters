@@ -243,11 +243,11 @@
     <ClCompile Include="SceneShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleShader.cpp">
-      <Filter>Source Files\Graphics\Particles</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleEmitter.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

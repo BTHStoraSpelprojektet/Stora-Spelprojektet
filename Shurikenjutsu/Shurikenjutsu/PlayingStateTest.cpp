@@ -43,7 +43,7 @@ bool PlayingStateTest::Initialize()
 	m_mouseX = 0;
 	m_mouseY = 0;
 
-	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 1.0f, PARTICLE_PATTERN_FIRE);
+	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 5.0f, PARTICLE_PATTERN_SMOKE);
 	// ========== DEBUG TEMP LINES ==========
 
 	return true;
@@ -101,20 +101,20 @@ void PlayingStateTest::Update()
 
 void PlayingStateTest::Render()
 {
-	//// Draw to the shadowmap.
-	//GraphicsEngine::BeginRenderToShadowMap();
+	// Draw to the shadowmap.
+	GraphicsEngine::BeginRenderToShadowMap();
 
-	//m_playerManager.Render(SHADERTYPE_DEPTH);
-	//m_objectManager.Render(SHADERTYPE_DEPTH);
+	m_playerManager.Render(SHADERTYPE_DEPTH);
+	m_objectManager.Render(SHADERTYPE_DEPTH);
 
-	//GraphicsEngine::SetShadowMap();
-	//GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::SetShadowMap();
+	GraphicsEngine::ResetRenderTarget();
 
-	//// Draw to the scene.
-	//m_playerManager.Render(SHADERTYPE_SCENE);
-	//m_objectManager.Render(SHADERTYPE_SCENE);
-	//m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
-	//m_objectManager.Render(SHADERTYPE_ANIMATED);
+	// Draw to the scene.
+	m_playerManager.Render(SHADERTYPE_SCENE);
+	m_objectManager.Render(SHADERTYPE_SCENE);
+	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
+	m_objectManager.Render(SHADERTYPE_ANIMATED);
 
 	// ========== DEBUG TEMP LINES ==========
 	DirectX::XMFLOAT4X4 circleWorld;
@@ -136,7 +136,9 @@ void PlayingStateTest::Render()
 
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	
+	GraphicsEngine::TurnOnAlphaBlending();
 	m_particles.Render();
+	GraphicsEngine::TurnOffAlphaBlending();
 	// ========== DEBUG TEMP LINES ==========
 }
 

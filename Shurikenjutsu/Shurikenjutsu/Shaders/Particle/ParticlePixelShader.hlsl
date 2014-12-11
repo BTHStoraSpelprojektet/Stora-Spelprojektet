@@ -1,5 +1,5 @@
-Texture2D m_texture;
-SamplerState m_sampler;
+Texture2D m_texture : register (t0);
+SamplerState m_sampler: register (s0);
 
 struct PixelInput
 {

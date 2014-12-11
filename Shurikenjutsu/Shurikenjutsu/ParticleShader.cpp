@@ -249,8 +249,8 @@ void ParticleShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::
 
 	// Copy matrices into the buffer.
 	matrixBuffer->m_worldMatrix = p_worldMatrix;
-	matrixBuffer->m_viewMatrix = m_viewMatrix;
-	matrixBuffer->m_projectionMatrix = m_projectionMatrix;
+	matrixBuffer->m_viewMatrix = viewMatrix;
+	matrixBuffer->m_projectionMatrix = projectionMatrix;
 
 	// Unlock the buffer.
 	p_context->Unmap(m_matrixBuffer, 0);
