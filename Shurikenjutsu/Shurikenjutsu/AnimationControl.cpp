@@ -9,7 +9,8 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_frameArms = 0;
 	m_frameLegs = 0;
 
-	m_ikDirection = DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f);
+	m_ikDirection = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	m_rotationAxis = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
 
 	return true;
 }
@@ -44,6 +45,11 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionArms, quaternionLegs);
 	DirectX::XMVECTOR orientQuaternion = DirectX::XMVectorSet(p_jointArms->m_orientQuaternion[0], p_jointArms->m_orientQuaternion[1], p_jointArms->m_orientQuaternion[2], p_jointArms->m_orientQuaternion[3]);
 
+	if (strcmp(p_jointArms->m_name, "SpineIK") == 0)
+	{
+		quaternion = ApplyIK(quaternion);
+	}
+
 	quaternion = DirectX::XMQuaternionMultiply(quaternion, orientQuaternion);
 
 	DirectX::XMMATRIX parentMatrix = DirectX::XMMatrixRotationQuaternion(p_parentQuaternion);
@@ -65,12 +71,7 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixRotationQuaternion(quaternion);
 	transformMatrix.r[3].m128_f32[0] = jointTranslation.m128_f32[0];
 	transformMatrix.r[3].m128_f32[1] = jointTranslation.m128_f32[1];
-	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];
-
-	/*if (strcmp(p_jointArms->m_name, "SpineIK") == 0)
-	{
-		transformMatrix = ApplyIK(transformMatrix);
-	}*/
+	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];	
 
 	DirectX::FXMMATRIX bindPose = m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform;
 	m_boneTransforms[*p_index] = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(bindPose, transformMatrix));
@@ -82,9 +83,9 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	}
 }
 
-DirectX::XMMATRIX AnimationControl::ApplyIK(DirectX::XMMATRIX& p_transformMatrix)
+DirectX::XMVECTOR AnimationControl::ApplyIK(DirectX::XMVECTOR& p_quaternion)
 {
-	DirectX::XMVECTOR determinant = DirectX::XMMatrixDeterminant(p_transformMatrix);
+	/*DirectX::XMVECTOR determinant = DirectX::XMMatrixDeterminant(p_transformMatrix);
 	DirectX::XMMATRIX transformInverse = DirectX::XMMatrixInverse(&determinant, p_transformMatrix);
 
 	DirectX::XMVECTOR direction = DirectX::XMVectorSet(m_ikDirection.x, m_ikDirection.y, m_ikDirection.z, 1.0f);
@@ -100,9 +101,13 @@ DirectX::XMMATRIX AnimationControl::ApplyIK(DirectX::XMMATRIX& p_transformMatrix
 
 	DirectX::XMMATRIX appliedIkMatrix = p_transformMatrix;
 
-	appliedIkMatrix = DirectX::XMMatrixMultiply(appliedIkMatrix, p_transformMatrix);
+	appliedIkMatrix = DirectX::XMMatrixMultiply(appliedIkMatrix, p_transformMatrix);*/
 
-	return appliedIkMatrix;
+	DirectX::XMVECTOR appliedIkQuaternion = DirectX::XMQuaternionRotationAxis(m_rotationAxis, 3.14f); //DirectX::XMQuaternionRotationRollPitchYaw(m_ikDirection.x, m_ikDirection.y, m_ikDirection.z);  //DirectX::XMVectorSet(0.7071067811865475, 0.0f, 0.0f, 0.7071067811865475f);
+	
+	DirectX::XMQuaternionMultiply(appliedIkQuaternion, p_quaternion);
+
+	return appliedIkQuaternion;
 }
 
 bool AnimationControl::IsAnimated()
