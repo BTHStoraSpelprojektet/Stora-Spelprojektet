@@ -125,6 +125,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
 
+	m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
+
 	return result;
 }
 

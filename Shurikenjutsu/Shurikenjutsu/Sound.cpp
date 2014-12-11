@@ -19,15 +19,9 @@ bool Sound::Initialize()
 	m_result = m_system->init(512, FMOD_INIT_NORMAL, 0);
 	FMODErrorCheck(m_result);
 
-
-	FMOD::Sound *audioStream;
-	m_result = m_system->createStream("../Shurikenjutsu/Sound/257375__zagi2__slap-bass-brass-loop.wav", FMOD_DEFAULT, 0, &audioStream);
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/257375__zagi2__slap-bass-brass-loop.wav", FMOD_DEFAULT, 0, &m_backgroundSound);
 	FMODErrorCheck(m_result);
-
-
-	m_system->playSound(audioStream, 0, false, 0);
-
-
+	
 	// EXTRA KOD FÖR EXTRA KOLLAR
 
 	// Check version
@@ -57,12 +51,6 @@ bool Sound::Initialize()
 		m_result = m_system->getDriverInfo(0, m_name, 256, 0, 0, &m_speakerMode, 0);
 	}*/
 
-
-
-
-
-
-
 	return true;
 }
 
@@ -85,3 +73,16 @@ void Sound::FMODErrorCheck(FMOD_RESULT p_result)
 	}
 }
 
+void Sound::PlaySound(PLAYSOUND p_playSound)
+{
+	switch (p_playSound)
+	{
+	case PLAYSOUND_BACKGROUND_SOUND:
+		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
+		m_backgroundSound->setLoopCount(-1);
+		m_system->playSound(m_backgroundSound, 0, false, 0);
+		break;
+	default:
+		break;
+	}
+}
