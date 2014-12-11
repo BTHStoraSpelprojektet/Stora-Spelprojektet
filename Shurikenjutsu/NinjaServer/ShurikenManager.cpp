@@ -148,7 +148,7 @@ std::vector<ShurikenNet> ShurikenManager::GetShurikens()
 float ShurikenManager::GetShurikenPosX(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index > m_shurikens.size() - 1)
+	if (p_index < 0 || p_index > (int)m_shurikens.size() - 1)
 	{
 		return 0;
 	}
@@ -160,7 +160,7 @@ float ShurikenManager::GetShurikenPosX(int p_index)
 float ShurikenManager::GetShurikenPosY(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index > m_shurikens.size() - 1)
+	if (p_index < 0 || p_index >(int)m_shurikens.size() - 1)
 	{
 		return 0;
 	}
@@ -172,7 +172,7 @@ float ShurikenManager::GetShurikenPosY(int p_index)
 float ShurikenManager::GetShurikenPosZ(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index > m_shurikens.size() - 1)
+	if (p_index < 0 || p_index >(int)m_shurikens.size() - 1)
 	{
 		return 0;
 	}
@@ -186,7 +186,7 @@ std::vector<Box> ShurikenManager::GetBoundingBoxes(int p_index)
 	std::vector<Box> boundingBoxes = std::vector<Box>();
 
 	// Check so index is not out of bounds
-	if (p_index < 0 || p_index > m_shurikens.size() - 1)
+	if (p_index < 0 || p_index >(int)m_shurikens.size() - 1)
 	{
 		return boundingBoxes;
 	}

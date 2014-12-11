@@ -220,7 +220,7 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	std::vector<Box> boundingBoxes = std::vector<Box>();
 
 	// Check so index is not out of bounds
-	if (p_index < 0 || p_index > m_players.size() - 1)
+	if (p_index < 0 || p_index >(int)m_players.size() - 1)
 	{
 		return boundingBoxes;
 	}
