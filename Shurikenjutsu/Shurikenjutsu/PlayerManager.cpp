@@ -11,11 +11,10 @@ PlayerManager::~PlayerManager()
 
 }
 
-bool PlayerManager::Initialize(std::vector<Object> p_ModelList, std::vector<Box> p_OuterWalls)
+bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 20, p_ModelList, p_OuterWalls);
+	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 20);
 
 	return true;
 }
@@ -101,13 +100,10 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility, std::vector<Object> p_ModelList, std::vector<Box> p_OuterWalls)
+	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
 {
 	Player tempPlayer;
 	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_agility);
-
-	tempPlayer.SetCollidingObjects(p_ModelList);
-	tempPlayer.SetOuterWalls(p_OuterWalls);
 	m_player = tempPlayer;
 }
 

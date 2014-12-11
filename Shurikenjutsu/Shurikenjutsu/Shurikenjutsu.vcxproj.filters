@@ -228,6 +228,8 @@
     <ClCompile Include="AnimationControl.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionManager.cpp">
+    </ClCompile>
     <ClCompile Include="Frustum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -364,6 +366,8 @@
     </ClInclude>
     <ClInclude Include="AnimationControl.h">
       <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h">
     </ClInclude>
     <ClInclude Include="Frustum.h">
       <Filter>Header Files</Filter>
