@@ -43,7 +43,7 @@ bool PlayingStateTest::Initialize()
 	m_mouseX = 0;
 	m_mouseY = 0;
 
-	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), 5.0f, PARTICLE_PATTERN_SMOKE);
+	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 3.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(3.0f, 3.0f), PARTICLE_PATTERN_SMOKE);
 	// ========== DEBUG TEMP LINES ==========
 
 	return true;
@@ -135,7 +135,7 @@ void PlayingStateTest::Render()
 	m_debugDot.Render();
 
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	
+
 	GraphicsEngine::TurnOnAlphaBlending();
 	m_particles.Render();
 	GraphicsEngine::TurnOffAlphaBlending();

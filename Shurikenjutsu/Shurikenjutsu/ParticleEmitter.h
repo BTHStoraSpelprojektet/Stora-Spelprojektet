@@ -13,17 +13,16 @@
 class ParticleEmitter
 {
 public:
-	bool Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, float p_size, PARTICLE_PATTERN p_pattern);
+	bool Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, DirectX::XMFLOAT2 p_size, PARTICLE_PATTERN p_pattern);
 	void Shutdown();
 
 	void Update();
 	void Render();
 
-	void  SetPosition(DirectX::XMFLOAT3 p_position);
-	void  SetDirection(DirectX::XMFLOAT3 p_direction);
-	void  SetColor(DirectX::XMFLOAT4 p_color);
+	void SetPosition(DirectX::XMFLOAT3 p_position);
+	void SetDirection(DirectX::XMFLOAT3 p_direction);
+	void SetColor(DirectX::XMFLOAT4 p_color);
 
-	void StandUp(bool p_bool);
 	void UpdateMatrix(DirectX::XMFLOAT4X4 p_world);
 	void UpdatePosition(DirectX::XMFLOAT3 p_position);
 	void UpdateDirection(DirectX::XMFLOAT3 p_direction);
@@ -43,8 +42,7 @@ private:
 	DirectX::XMFLOAT4X4 m_worldMatrix;
 
 	ID3D11ShaderResourceView* m_particleTexture;
-	float m_particleSize;
-	bool m_standing;
+	DirectX::XMFLOAT2 m_particleSize;
 
 	float m_velocity;
 	float m_velocityVariation;
@@ -76,15 +74,12 @@ private:
 	struct ParticleVertex
 	{
 		DirectX::XMFLOAT3 m_position;
-		DirectX::XMFLOAT2 m_UVCoordinates;
+		DirectX::XMFLOAT2 m_size;
 		DirectX::XMFLOAT4 m_color;
 	};
 	ParticleVertex* m_mesh;
 
 	ID3D11Buffer* m_vertexBuffer;
-	ID3D11Buffer* m_indexBuffer;
-
 	unsigned int m_vertices;
-	unsigned int m_indices;
 };
 #endif

@@ -424,6 +424,9 @@
     <FxCompile Include="Shaders\Particle\ParticlePixelShader.hlsl">
       <Filter>Shaders\Particle</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\Particle\ParticleGeometryShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
     <FxCompile Include="Shaders\Particle\ParticleVertexShader.hlsl">
       <Filter>Shaders\Particle</Filter>
     </FxCompile>

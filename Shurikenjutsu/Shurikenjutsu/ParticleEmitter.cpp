@@ -1,13 +1,13 @@
 #include "ParticleEmitter.h"
 
-bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, float p_size, PARTICLE_PATTERN p_pattern)
+bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, DirectX::XMFLOAT2 p_size, PARTICLE_PATTERN p_pattern)
 {
 	m_pattern = p_pattern;
 
 	m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_emitterPosition = p_position;
-	DirectX::XMStoreFloat3(&m_emitterDirection, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&p_direction)));
 
+	DirectX::XMStoreFloat3(&m_emitterDirection, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&p_direction)));
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 
 	// Load the texture.
@@ -19,14 +19,14 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	{
 		case(PARTICLE_PATTERN_SMOKE) :
 		{
-			m_particlesPerSecond = 10.0f;
-			m_maxParticles = 30;
+			m_particlesPerSecond = 50.0f;
+			m_maxParticles = 75;
 
 			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(1.0f, 0.1f, 1.0f);
+			m_emitionPositionOffset = DirectX::XMFLOAT3(1.0f, 0.5f, 1.0f);
 
 			// Set velocity and its variation.
-			m_velocity = 2.0f;
+			m_velocity = 2.5f;
 			m_velocityVariation = 0.1f;
 
 			m_timeToLive = 2.0f;
@@ -35,18 +35,16 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			importer.ImportModel("Models/SmokeParticle.SSP");
 			m_particleTexture = LoadTexture(importer.GetMesh().m_textureMapSize[0], importer.GetMesh().m_textureMapSize[1], importer.GetMesh().m_textureMapSize[2], importer.GetMesh().m_textureMap);
 
-			m_standing = false;
-
 			break;
 		}
 
 		case(PARTICLE_PATTERN_FIRE) :
 		{
-			m_particlesPerSecond = 5.0f;
+			m_particlesPerSecond = 10.0f;
 			m_maxParticles = 20;
 
 			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(2.5f, 0.1f, 2.5f);
+			m_emitionPositionOffset = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
 
 			// Set velocity and its variation.
 			m_velocity = 0.5f;
@@ -57,8 +55,6 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			ModelImporter importer;
 			importer.ImportModel("Models/FireParticle.SSP");
 			m_particleTexture = LoadTexture(importer.GetMesh().m_textureMapSize[0], importer.GetMesh().m_textureMapSize[1], importer.GetMesh().m_textureMapSize[2], importer.GetMesh().m_textureMap);
-
-			m_standing = true;
 
 			break;
 		}
@@ -85,18 +81,10 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 	// Calculate the maximum number of vertices.
 	m_vertices = m_maxParticles * 6;
-	m_indices = m_vertices;
 
 	// Create the mesh and initialize every vertex to 0.
 	m_mesh = new ParticleVertex[m_vertices];
 	memset(m_mesh, 0, (sizeof(ParticleVertex) * m_vertices));
-
-	// Create the index array and initilalize it to i.
-	unsigned long* indices = new unsigned long[m_indices];
-	for (unsigned int i = 0; i < m_indices; i++)
-	{
-		indices[i] = i;
-	}
 
 	// Set up description for the dynamic vertex buffer.
 	D3D11_BUFFER_DESC vertexBufferDescription;
@@ -121,33 +109,6 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		return false;
 	}
 
-	// Set up description for the static index buffer.
-	D3D11_BUFFER_DESC indexBufferDescription;
-	indexBufferDescription.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDescription.ByteWidth = sizeof(unsigned long) * m_indices;
-	indexBufferDescription.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDescription.CPUAccessFlags = 0;
-	indexBufferDescription.MiscFlags = 0;
-	indexBufferDescription.StructureByteStride = 0;
-
-	// Get a pointer to the index data.
-	D3D11_SUBRESOURCE_DATA indexBuffer;
-	indexBuffer.pSysMem = indices;
-	indexBuffer.SysMemPitch = 0;
-	indexBuffer.SysMemSlicePitch = 0;
-
-	// Create the index buffer.
-	m_indexBuffer = 0;
-	if (FAILED(p_device->CreateBuffer(&indexBufferDescription, &indexBuffer, &m_indexBuffer)))
-	{
-		ConsolePrintErrorAndQuit("Failed to create particle index buffer.");
-		return false;
-	}
-
-	// Delete the index array, since it is not needed anymore.
-	delete[] indices;
-	indices = 0;
-
 	return true;
 }
 
@@ -170,12 +131,6 @@ void ParticleEmitter::Shutdown()
 		m_vertexBuffer->Release();
 		m_vertexBuffer = 0;
 	}
-
-	if (m_indexBuffer)
-	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
-	}
 }
 
 void ParticleEmitter::Update()
@@ -195,7 +150,7 @@ void ParticleEmitter::Update()
 
 void ParticleEmitter::Render()
 {
-	GraphicsEngine::RenderParticles(m_vertexBuffer, m_indexBuffer, m_indices, m_worldMatrix, m_particleTexture);
+	GraphicsEngine::RenderParticles(m_vertexBuffer, m_vertices, m_worldMatrix, m_particleTexture);
 }
 
 void ParticleEmitter::EmitParticles()
@@ -214,7 +169,7 @@ void ParticleEmitter::EmitParticles()
 	}
 
 	// If there are particles to be emited, emit one per frame.
-	if ((emit == true) && (m_currentParticles < (m_maxParticles)))
+	if ((emit == true) && (m_currentParticles < (m_maxParticles - 1)))
 	{
 		// Increment counter.
 		m_currentParticles++;
@@ -275,9 +230,12 @@ void ParticleEmitter::EmitParticles()
 				// Randomize again to get a rotation.
 				angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
 
+				// Randomize a color.
+				float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.1f;
+
 				m_particleList[index].m_position = position;
 				m_particleList[index].m_direction = direction;
-				m_particleList[index].m_color = m_color;
+				m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x + color, m_color.y + color, m_color.z + color, 1.0f);
 				m_particleList[index].m_velocity = velocity;
 				m_particleList[index].m_alive = true;
 				m_particleList[index].m_timeToLive = m_timeToLive;
@@ -394,92 +352,12 @@ void ParticleEmitter::UpdateBuffers()
 	memset(m_mesh, 0, (sizeof(ParticleVertex) * m_vertices));
 
 	// Build the mesh using the particle list, every particle is made of two triangles.
-	int index = 0;
-
-	if (!m_standing)
+	for (unsigned int i = 0; i < m_currentParticles; i++)
 	{
-		for (unsigned int i = 0; i < m_currentParticles; i++)
-		{
-			// Bottom left.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x - m_particleSize, m_particleList[i].m_position.y, m_particleList[i].m_position.z - m_particleSize);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(0.0f, 1.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Top left.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x - m_particleSize, m_particleList[i].m_position.y, m_particleList[i].m_position.z + m_particleSize);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(0.0f, 0.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Bottom right.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x + m_particleSize, m_particleList[i].m_position.y, m_particleList[i].m_position.z - m_particleSize);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(1.0f, 1.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Bottom right.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x + m_particleSize, m_particleList[i].m_position.y, m_particleList[i].m_position.z - m_particleSize);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(1.0f, 1.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Top left.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x - m_particleSize, m_particleList[i].m_position.y, m_particleList[i].m_position.z + m_particleSize);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(0.0f, 0.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Top right.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x + m_particleSize, m_particleList[i].m_position.y, m_particleList[i].m_position.z + m_particleSize);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(1.0f, 0.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-		}
+		m_mesh[i].m_position = m_particleList[i].m_position;
+		m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
+		m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f - m_particleList[i].m_timePassed / m_particleList[i].m_timeToLive);
 	}
-
-	else
-	{
-		for (unsigned int i = 0; i < m_currentParticles; i++)
-		{
-			// Bottom left.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x - m_particleSize, m_particleList[i].m_position.y - m_particleSize, m_particleList[i].m_position.z);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(0.0f, 1.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Top left.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x - m_particleSize, m_particleList[i].m_position.y + m_particleSize, m_particleList[i].m_position.z);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(0.0f, 0.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Bottom right.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x + m_particleSize, m_particleList[i].m_position.y - m_particleSize, m_particleList[i].m_position.z);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(1.0f, 1.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Bottom right.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x + m_particleSize, m_particleList[i].m_position.y - m_particleSize, m_particleList[i].m_position.z);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(1.0f, 1.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Top left.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x - m_particleSize, m_particleList[i].m_position.y + m_particleSize, m_particleList[i].m_position.z);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(0.0f, 0.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-
-			// Top right.
-			m_mesh[index].m_position = DirectX::XMFLOAT3(m_particleList[i].m_position.x + m_particleSize, m_particleList[i].m_position.y + m_particleSize, m_particleList[i].m_position.z);
-			m_mesh[index].m_UVCoordinates = DirectX::XMFLOAT2(1.0f, 0.0f);
-			m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, 1.0f);
-			index++;
-		}
-	}
-	
 
 	// Lock the dynamic vertex buffer.
 	if (FAILED(GraphicsEngine::GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
@@ -535,11 +413,6 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 	}
 
 	return textureSRV;
-}
-
-void ParticleEmitter::StandUp(bool p_bool)
-{
-	m_standing = p_bool;
 }
 
 void ParticleEmitter::UpdateMatrix(DirectX::XMFLOAT4X4 p_world)

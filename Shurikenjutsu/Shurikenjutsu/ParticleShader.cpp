@@ -3,6 +3,7 @@
 bool ParticleShader::Initialize(ID3D11Device* p_device)
 {
 	m_vertexShader = 0;
+	m_geometryShader = 0;
 	m_pixelShader = 0;
 	m_layout = 0;
 	m_matrixBuffer = 0;
@@ -48,7 +49,7 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	layout[0].InstanceDataStepRate = 0;
 
-	layout[1].SemanticName = "TEXCOORD";
+	layout[1].SemanticName = "SIZE";
 	layout[1].SemanticIndex = 0;
 	layout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	layout[1].InputSlot = 0;
@@ -80,6 +81,41 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	// Release vertex shader since it is no longer required.
 	vertexShader->Release();
 	vertexShader = 0;
+
+	// Compile the geometry shader.
+	ID3D10Blob* geometryShader = 0;
+	if (FAILED(D3DCompileFromFile(L"Shaders/Particle/ParticleGeometryShader.hlsl", NULL, NULL, "main", "gs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geometryShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/Particle/ParticleGeometryShader.hlsl", NULL, NULL, "main", "gs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geometryShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile particle geometry shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_GSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_GSVersion = "5.0";
+	}
+
+	// Create geometry shader from buffer.
+	if (FAILED(p_device->CreateGeometryShader(geometryShader->GetBufferPointer(), geometryShader->GetBufferSize(), NULL, &m_geometryShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create geometry vertex shader.");
+		return false;
+	}
+
+	ConsolePrintSuccess("Particle geometry shader compiled successfully.");
+	ConsolePrintText("Particle version: PS " + m_GSVersion);
+
+	// Release pixel shader since it is no longer required.
+	geometryShader->Release();
+	geometryShader = 0;
 
 	// Compile the pixel shader.
 	ID3D10Blob*	pixelShader = 0;
@@ -160,6 +196,27 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 
 void ParticleShader::Shutdown()
 {
+	// Release the vertex shader.
+	if (m_vertexShader)
+	{
+		m_vertexShader->Release();
+		m_vertexShader = 0;
+	}
+
+	// Release the vertex shader.
+	if (m_geometryShader)
+	{
+		m_geometryShader->Release();
+		m_geometryShader = 0;
+	}
+
+	// Release the pixel shader.
+	if (m_pixelShader)
+	{
+		m_pixelShader->Release();
+		m_pixelShader = 0;
+	}
+
 	// Release the sampler state.
 	if (m_samplerState)
 	{
@@ -180,23 +237,9 @@ void ParticleShader::Shutdown()
 		m_layout->Release();
 		m_layout = 0;
 	}
-
-	// Release the pixel shader.
-	if (m_pixelShader)
-	{
-		m_pixelShader->Release();
-		m_pixelShader = 0;
-	}
-
-	// Release the vertex shader.
-	if (m_vertexShader)
-	{
-		m_vertexShader->Release();
-		m_vertexShader = 0;
-	}
 }
 
-void ParticleShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, ID3D11Buffer* p_indices, int p_indexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void ParticleShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	// Set vertex buffer stride and offset.
 	unsigned int stride = sizeof(ParticleVertex);
@@ -208,16 +251,18 @@ void ParticleShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
-	p_context->IASetIndexBuffer(p_indices, DXGI_FORMAT_R32_UINT, 0);
-	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	p_context->IASetInputLayout(m_layout);
 
 	// Set vertex and pixel shaders.
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
+	p_context->GSSetShader(m_geometryShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
 	// Render the polygon.
-	p_context->DrawIndexed(p_indexCount, 0, 0);
+	p_context->Draw(p_vertexCount, 0);
+
+	p_context->GSSetShader(NULL, NULL, 0);
 }
 
 void ParticleShader::UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
@@ -256,5 +301,5 @@ void ParticleShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::
 	p_context->Unmap(m_matrixBuffer, 0);
 
 	// Now set the constant buffer in the vertex shader with the updated values.
-	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
+	p_context->GSSetConstantBuffers(0, 1, &m_matrixBuffer);
 }
