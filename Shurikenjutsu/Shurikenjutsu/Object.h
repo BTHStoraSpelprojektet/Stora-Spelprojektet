@@ -9,6 +9,7 @@
 #include "AnimationControl.h"
 #include <DirectXCollision.h>
 #include "DebugDraw.h"
+#include "ShadowShapes.h"
 
 class Object
 {
@@ -20,7 +21,6 @@ public:
 	virtual void Shutdown();
 	virtual void Render(SHADERTYPE p_shader);
 	void RenderDebugBoxes();
-	void RenderShadowShapes();
 
 	virtual DirectX::XMFLOAT3 GetPosition() const;
 	virtual void SetPosition(DirectX::XMFLOAT3 p_pos);
@@ -33,14 +33,11 @@ public:
 
 	Model* GetModel();
 
-	// Calculates and then returns the world matrix
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 
 	std::vector<OBB> GetBoundingBoxes();
-	std::vector<DirectX::XMFLOAT3> GetShadowPoints();
 
 protected:
-	//void SetModel(const char* p_filepath);
 	void TransformBoundingBoxes();
 	void TransformShadowPoints();
 
@@ -51,9 +48,5 @@ protected:
 
 	std::vector<OBB> m_boundingBoxes;
 	std::vector<DebugShape3D> m_debugBoxes;
-
-	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
-	DebugShape2D m_debugShadowShapes;
-	std::vector<DebugDot> m_debugDots;
 };
 #endif

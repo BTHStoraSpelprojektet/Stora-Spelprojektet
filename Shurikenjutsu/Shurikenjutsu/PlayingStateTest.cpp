@@ -132,6 +132,11 @@ void PlayingStateTest::Render()
 	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
 	m_objectManager.Render(SHADERTYPE_ANIMATED);
 
+	if (FLAG_DEBUG == 1)
+	{
+		ShadowShapes::GetInstance().DebugRender();
+	}
+
 	// ========== DEBUG TEMP LINES ==========
 	DirectX::XMFLOAT4X4 circleWorld;
 	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition())));

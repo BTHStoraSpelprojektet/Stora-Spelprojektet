@@ -81,9 +81,8 @@ void Object::SetRotation(DirectX::XMFLOAT3 p_rotation)
 DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 {
 	DirectX::XMFLOAT4X4 matrix;
-	DirectX::XMStoreFloat4x4(&matrix,	DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) *
-										DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) *
-										DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) * DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) * DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+	
 	return matrix;
 }
 
@@ -155,19 +154,11 @@ void Object::RenderDebugBoxes()
 	}
 }
 
-void Object::RenderShadowShapes()
-{
-	m_debugShadowShapes.Render();
-
-	for (unsigned int i = 0; i < m_debugDots.size(); i++)
-	{
-		m_debugDots[i].Render();
-	}
-}
-
 void Object::TransformShadowPoints()
 {
-	m_shadowPoints.clear();
+	std::vector<DirectX::XMFLOAT3> shadowPoints;
+	shadowPoints.clear();
+
 	std::vector<DirectX::XMFLOAT3> saList = m_model->GetShadowPoints();
 	DirectX::XMFLOAT4X4 world = GetWorldMatrix();
 
@@ -175,25 +166,33 @@ void Object::TransformShadowPoints()
 	{
 		DirectX::XMFLOAT4 position = DirectX::XMFLOAT4(saList[i].x, saList[i].y, saList[i].z, 1.0f);
 		DirectX::XMVECTOR transCenter = DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&position), DirectX::XMLoadFloat4x4(&world));
-		m_shadowPoints.push_back(DirectX::XMFLOAT3(position.x, position.y, position.z));
-
-		DebugDot dot;
-		dot.Initialize(m_shadowPoints[i], 100, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-		m_debugDots.push_back(dot);
+		shadowPoints.push_back(DirectX::XMFLOAT3(position.x, position.y, position.z));
 	}
 
-	if (saList.size() > 0)
+	if (shadowPoints.size() > 0)
 	{
-		m_debugShadowShapes.Initialize(m_shadowPoints, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		LineSegment line;
+		ShadowShape shape;
+
+		// Create all but the last shapes.
+		for (unsigned int i = 0; i < shadowPoints.size() - 1; i++)
+		{
+			line.m_startPoint = DirectX::XMFLOAT2(shadowPoints[i].x, shadowPoints[i].z);
+			line.m_endPoint = DirectX::XMFLOAT2(shadowPoints[i + 1].x, shadowPoints[i + 1].z);
+			shape.m_lineSegments.push_back(line);
+		}
+
+		// Create the last shapes.
+		line.m_startPoint = DirectX::XMFLOAT2(shadowPoints[shadowPoints.size() - 1].x, shadowPoints[shadowPoints.size() - 1].z);
+		line.m_endPoint = DirectX::XMFLOAT2(shadowPoints[0].x, shadowPoints[0].z);
+		shape.m_lineSegments.push_back(line);
+
+		// Push the shape.
+		ShadowShapes::GetInstance().AddShadowShape(shape);
 	}
 }
 
 std::vector<OBB> Object::GetBoundingBoxes()
 {
 	return m_boundingBoxes;
-}
-
-std::vector<DirectX::XMFLOAT3> Object::GetShadowPoints()
-{
-	return m_shadowPoints;
 }

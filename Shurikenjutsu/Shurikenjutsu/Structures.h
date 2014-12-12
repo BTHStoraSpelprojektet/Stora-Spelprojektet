@@ -37,4 +37,15 @@ struct DirectionalLight
 	DirectX::XMVECTOR m_specular;
 	DirectX::XMVECTOR m_direction;
 };
+
+struct LineSegment
+{
+	DirectX::XMFLOAT2 m_startPoint;
+	DirectX::XMFLOAT2 m_endPoint;
+};
+
+struct ShadowShape
+{
+	std::vector<LineSegment> m_lineSegments;
+};
 #endif
