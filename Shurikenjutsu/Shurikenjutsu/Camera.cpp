@@ -85,6 +85,7 @@ void Camera::UpdateProjectionMatrix(bool p_orthographic)
 	if (!p_orthographic)
 	{
 		DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixPerspectiveFovLH(m_fieldOfView, m_aspectRatio, m_nearPlane, m_farPlane));
+		
 	}
 
 	else

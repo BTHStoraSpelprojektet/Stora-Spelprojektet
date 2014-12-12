@@ -13,6 +13,7 @@
 #include <d3d9.h>
 #include "DebugDraw.h"
 #include "ParticleEmitter.h"
+#include "Frustum.h"
 
 class PlayingStateTest :
 	public GameState
@@ -35,7 +36,7 @@ private:
 	ObjectManager m_objectManager;
 	Camera m_camera;
 
-	float twoPi;
+	float twoPi = 6.28318530718f;
 
 	// ========== DEBUG TEMP LINES ==========
 	float m_mouseX;
@@ -49,6 +50,9 @@ private:
 
 	ParticleEmitter m_particles;
 	// ========== DEBUG TEMP LINES ==========
+
+	Frustum m_frustum;
+
 };
 
 #endif PLAYINGSTATE

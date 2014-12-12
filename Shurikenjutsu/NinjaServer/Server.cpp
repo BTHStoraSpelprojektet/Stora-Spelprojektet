@@ -23,14 +23,23 @@ bool Server::Initialize()
 
 	// Set level name
 	m_levelName = "../Shurikenjutsu/Levels/testBana.SSPL";
+	m_shurikenModelName = "../Shurikenjutsu/Models/shurikenShape.SSP";
+	m_playerModelName = "../Shurikenjutsu/Models/cubemanWnP";
+
+	// Initate models (for boundingboxes)
+	ModelLibrary::GetInstance()->Initialize(new BaseModel());
 
 	// Initiate players
 	m_playerManager = PlayerManager();
-	m_playerManager.Initialize(m_serverPeer, m_levelName);
+	m_playerManager.Initialize(m_serverPeer, m_levelName, m_playerModelName);
 
 	// Initiate shurikens
 	m_shurikenManager = ShurikenManager();
-	m_shurikenManager.Initialize(m_serverPeer, m_levelName);
+	m_shurikenManager.Initialize(m_serverPeer, m_levelName, m_shurikenModelName);
+
+	// Initiate map
+	m_mapManager = MapManager();
+	m_mapManager.Initialize(m_levelName);
 
 	return true;
 }
@@ -177,7 +186,13 @@ void Server::ReceviePacket()
 			rBitStream.Read(dirY);
 			rBitStream.Read(dirZ);
 
-			m_shurikenManager.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+			int index = m_playerManager.GetPlayerIndex(m_packet->guid);
+			if (m_playerManager.CanUseAbility(index))
+			{
+				m_shurikenManager.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+				m_playerManager.UsedAbility(index);
+			}
+			
 			break;
 		}
 		case ID_DOWNLOAD_PLAYERS:
@@ -203,39 +218,89 @@ void Server::CheckCollisions()
 	std::vector<ShurikenNet> shurikenList = m_shurikenManager.GetShurikens();
 	for (unsigned int i = 0; i < shurikenList.size(); i++)
 	{
+		bool collisionFound = false;
+
 		// Get the shurikens position
 		float newPosX = m_shurikenManager.GetShurikenPosX(i);
 		float newPosY = m_shurikenManager.GetShurikenPosY(i);
 		float newPosZ = m_shurikenManager.GetShurikenPosZ(i);
 
+		// Get the shuriken bounding boxes
+		std::vector<Box> shurikenBoundingBoxes = m_shurikenManager.GetBoundingBoxes(i);
+
+		// Go through player list
 		for (unsigned int j = 0; j < playerList.size(); j++)
-	{
+		{
 			// This is so you don't collide with your own shurikens
 			if (playerList[j].guid == shurikenList[i].guid)
-	{
+			{
 				continue;
-}
+			}
 
 			// Check so you are not on the same team
 			PlayerNet shootingPlayer = m_playerManager.GetPlayer(shurikenList[i].guid);
 			if (playerList[j].team == shootingPlayer.team)
-{
+			{
 				continue;
 			}
 
-			// Make collision test
-			if (IntersectionTests::Intersections::SphereSphereCollision(DirectX::XMFLOAT3(playerList[j].x, playerList[j].y, playerList[j].z), 1.0f, DirectX::XMFLOAT3(newPosX, newPosY, newPosZ), 0.5f))
-			{
-				// Remove shuriken
-				m_shurikenManager.RemoveShuriken(shurikenList[i].shurikenId);
-				shurikenList.erase(shurikenList.begin() + i);
-				i--;
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = m_playerManager.GetBoundingBoxes(j);
 
-				// Respawn player
-				m_playerManager.RespawnPlayer(playerList[j].guid);
+			// Make collision test
+			for (unsigned int k = 0; k < shurikenBoundingBoxes.size(); k++)
+			{
+				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+				{
+					if (IntersectionTests::Intersections::BoxBoxCollision(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_extents, shurikenBoundingBoxes[k].m_center, shurikenBoundingBoxes[k].m_extents))
+					{
+						// Remove shuriken
+						m_shurikenManager.RemoveShuriken(shurikenList[i].shurikenId);
+						shurikenList.erase(shurikenList.begin() + i);
+						i--;
+
+						// Respawn player
+						m_playerManager.RespawnPlayer(playerList[j].guid);
+
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
+			}
+
+			if (collisionFound)
+			{
 				break;
 			}
 		}
+
+		// Go through maps bounding boxes
+		std::vector<OBB> mapBoundingBoxes = m_mapManager.GetBoundingBoxes();
+		for (unsigned int j = 0; j < shurikenBoundingBoxes.size(); j++)
+		{
+			for (unsigned int k = 0; k < mapBoundingBoxes.size(); k++)
+			{
+				if (IntersectionTests::Intersections::OBBOBBCollision(mapBoundingBoxes[k].m_center, mapBoundingBoxes[k].m_extents, mapBoundingBoxes[k].m_direction,
+					shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)))
+				{
+					// Remove shuriken
+					m_shurikenManager.RemoveShuriken(shurikenList[i].shurikenId);
+					shurikenList.erase(shurikenList.begin() + i);
+					i--;
+
+					collisionFound = true;
+					break;
+				}
+			}
+			if (collisionFound)
+			{
+				break;
+			}
+		}		
 	}
 }
 
@@ -250,6 +315,13 @@ void Server::MeleeAttack(RakNet::RakNetGUID p_guid)
 		{
 			continue;
 		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
 		DirectX::XMFLOAT3 spherePos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
