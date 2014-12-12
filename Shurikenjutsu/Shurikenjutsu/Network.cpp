@@ -259,7 +259,7 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 			bitStream.Read(currentHP);
 
-			// Change player hp function here
+			UpdatePlayerHP(guid, currentHP);
 
 			break;
 		}
@@ -545,4 +545,22 @@ bool Network::MadeInvalidMove()
 void Network::UpdatedMoveFromInvalidMove()
 {
 	m_invalidMove = false;
+}
+
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.currentHP = p_currentHP;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].currentHP = p_currentHP;
+			}
+		}
+	}
 }
