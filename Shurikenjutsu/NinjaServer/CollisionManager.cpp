@@ -114,13 +114,14 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				{
 					if (IntersectionTests::Intersections::BoxBoxCollision(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_extents, shurikenBoundingBoxes[k].m_center, shurikenBoundingBoxes[k].m_extents))
 					{
+						// temp shuriken dmg
+						int dmg = 25;
+						p_playerManager->DamagePlayer(playerList[j].guid, dmg);
+
 						// Remove shuriken
 						p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
 						shurikenList.erase(shurikenList.begin() + i);
 						i--;
-
-						// Respawn player
-						p_playerManager->RespawnPlayer(playerList[j].guid);
 
 						collisionFound = true;
 						break;
