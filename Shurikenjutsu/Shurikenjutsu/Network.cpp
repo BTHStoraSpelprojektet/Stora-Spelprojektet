@@ -527,3 +527,13 @@ void Network::UpdatedMoveFromInvalidMove()
 {
 	m_invalidMove = false;
 }
+
+void Network::SendAbility(ABILITIES p_ability)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_ABILITY);
+	bitStream.Write(p_ability);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+}

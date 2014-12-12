@@ -16,6 +16,7 @@
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
+#include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 #include <map>
 
@@ -53,6 +54,7 @@ public:
 	static void SetHaveRespawned();
 
 	static void DoMeleeAttack();
+	static void SendAbility(ABILITIES p_ability);
 
 private:
 	Network() {};

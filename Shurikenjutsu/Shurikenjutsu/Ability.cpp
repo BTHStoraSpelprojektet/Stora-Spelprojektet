@@ -31,7 +31,8 @@ void Ability::Update()
 
 void Ability::Execute()
 {
-
+	// SEND ENUMS
+	
 }
 
 void Ability::SetDamage(unsigned int p_damage)

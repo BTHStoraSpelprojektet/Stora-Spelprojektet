@@ -1,0 +1,9 @@
+#ifndef COMMONENUMS_H_
+#define	COMMONENUMS_H_
+
+enum ABILITIES
+{
+	ABILITES_DASH
+};
+
+#endif // !COMMONENUMS_H_
