@@ -9,6 +9,7 @@
 #include "Ability.h"
 #include "Dash.h"
 #include "CollisionManager.h"
+#include "HealthBar.h"
 
 class Player :
 	public MovingObject
@@ -21,6 +22,7 @@ public:
 	void Shutdown();
 	void UpdateMe();
 	void Update();
+	void Render(SHADERTYPE p_shader);
 	void SetDamage(float p_damage);
 	float GetDamage() const;	
 	void SetHealth(int p_health);
@@ -39,6 +41,8 @@ public:
 	void SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir);
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
+
+	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
 private:
 	bool CalculateDirection();
@@ -60,6 +64,8 @@ private:
 	Ability* m_ability;
 	Ability* m_noAbility;
 	Ability* m_buttonQ;
+
+	HealthBar m_healthbar;
 };
 
 #endif PLAYER
