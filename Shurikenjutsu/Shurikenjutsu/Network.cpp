@@ -263,6 +263,20 @@ void Network::ReceviePacket()
 
 			break;
 		}
+		case ID_ABILITY:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			ABILITIES abilityEnum;
+			RakNet::RakString abilityString;
+			bitStream.Read(messageID);
+			bitStream.Read(abilityEnum);
+			bitStream.Read(abilityString);
+
+			std::cout << " " << abilityString << std::endl;
+
+			break;
+		}
 		default:
 		{
 			break;
@@ -563,4 +577,14 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP)
 			}
 		}
 	}
+}
+
+void Network::SendAbility(ABILITIES p_ability)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_ABILITY);
+	bitStream.Write(p_ability);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }

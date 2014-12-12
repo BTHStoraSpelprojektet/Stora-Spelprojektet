@@ -25,6 +25,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
+	m_ability = new Ability();
+	m_noAbility = new Ability();
+	m_buttonQ = new Dash();
 
 	return true;
 }
@@ -39,6 +42,7 @@ void Player::UpdateMe()
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
+	m_ability = m_noAbility;
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
@@ -68,7 +72,10 @@ void Player::UpdateMe()
 	{
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 	}
+
+	m_ability->Execute();
 }
+
 bool Player::CalculateDirection()
 {
 	float x, y, z;
@@ -87,6 +94,7 @@ bool Player::CalculateDirection()
 			z += 1;
 			moved = true;
 		}
+		m_ability = m_buttonQ;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
@@ -124,6 +132,7 @@ bool Player::CalculateDirection()
 
 	return moved;
 }
+
 void Player::Update()
 {
 

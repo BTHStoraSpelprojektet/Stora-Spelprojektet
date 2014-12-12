@@ -6,6 +6,8 @@
 #include "InputManager.h"
 #include "Collisions.h"
 #include "Globals.h"
+#include "Ability.h"
+#include "Dash.h"
 #include "CollisionManager.h"
 
 class Player :
@@ -55,6 +57,9 @@ private:
 	DirectX::XMFLOAT3 m_playerPrevPos;
 
 	Sphere m_playerSphere;
+	Ability* m_ability;
+	Ability* m_noAbility;
+	Ability* m_buttonQ;
 };
 
 #endif PLAYER

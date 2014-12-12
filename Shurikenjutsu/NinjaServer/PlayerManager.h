@@ -9,6 +9,7 @@
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
+#include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 
 class PlayerManager
@@ -33,9 +34,9 @@ public:
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 
-
-	void UsedAbility(int p_index);
-	bool CanUseAbility(int p_index);
+	void UsedAbility(int p_index, ABILITIES p_ability);
+	bool CanUseAbility(int p_index, ABILITIES p_ability);
+	void ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
