@@ -23,7 +23,6 @@ public:
 	void Update(double p_deltaTime);
 	void ReceviePacket();
 private:
-	void CheckCollisions();
 
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;

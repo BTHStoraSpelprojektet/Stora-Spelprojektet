@@ -1,13 +1,8 @@
 #include "Server.h"
 
-Server::Server()
-{
-}
+Server::Server(){}
 
-
-Server::~Server()
-{
-}
+Server::~Server(){}
 
 bool Server::Initialize()
 {
