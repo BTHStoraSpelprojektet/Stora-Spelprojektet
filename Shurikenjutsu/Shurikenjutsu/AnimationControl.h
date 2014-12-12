@@ -16,7 +16,7 @@ public:
 
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
-	DirectX::XMMATRIX ApplyIK(DirectX::XMMATRIX& p_transformMatrix);
+	DirectX::XMVECTOR ApplyIK(DirectX::XMVECTOR& p_quaternion);
 
 	std::vector<AnimationStack> m_animationStacks;
 
@@ -24,6 +24,7 @@ private:
 	double m_frameLegs;
 
 	DirectX::XMFLOAT3 m_ikDirection;
+	DirectX::XMVECTOR m_rotationAxis;
 
 	std::vector<DirectX::XMMATRIX> m_boneTransforms;
 };

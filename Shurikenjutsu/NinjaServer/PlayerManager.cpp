@@ -11,6 +11,7 @@ PlayerManager::~PlayerManager()
 
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName)
 {
+	m_gcd = 0.5f;
 	m_serverPeer = p_serverPeer;
 
 	m_players = std::vector<PlayerNet>();
@@ -31,6 +32,13 @@ void PlayerManager::Shutdown()
 
 void PlayerManager::Update(double p_deltaTime)
 {
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].gcd > 0.0f)
+		{
+			m_players[i].gcd -= (float)p_deltaTime;
+		}
+	}
 }
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
@@ -50,6 +58,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
 	player.dirX = 1.0f;
 	player.dirY = 0.0f;
 	player.dirZ = 0.0f;
+	player.gcd = 0.0f;
 	m_players.push_back(player);
 
 	std::cout << "Player added" << std::endl;
@@ -211,7 +220,7 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	std::vector<Box> boundingBoxes = std::vector<Box>();
 
 	// Check so index is not out of bounds
-	if (p_index < 0 || p_index > m_players.size() - 1)
+	if (p_index < 0 || p_index > (int)m_players.size() - 1)
 	{
 		return boundingBoxes;
 	}
@@ -234,4 +243,35 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	boundingBoxes.push_back(playerBox);
 
 	return boundingBoxes;
+}
+
+void PlayerManager::UsedAbility(int p_index)
+{
+	if (p_index >= 0 && p_index < (int)m_players.size())
+	{
+		m_players[p_index].gcd = m_gcd;
+	}
+}
+
+bool PlayerManager::CanUseAbility(int p_index)
+{
+	if (p_index >= 0 && p_index < (int)m_players.size())
+	{
+		return (m_players[p_index].gcd <= 0.0f);
+	}
+
+	return false;
+}
+
+int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }

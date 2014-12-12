@@ -12,7 +12,7 @@ class PlayerManager
 public:
 	PlayerManager();
 	~PlayerManager();
-	bool Initialize(std::vector<Object> p_ModelList, std::vector<Box> p_OuterWalls);
+	bool Initialize();
 	void Shutdown();
 	void Update( );
 	void Render(SHADERTYPE p_shader);
@@ -29,7 +29,7 @@ public:
 
 private:
 	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility, std::vector<Object> p_ModelList, std::vector<Box> p_OuterWalls);
+		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
 	void AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
 	

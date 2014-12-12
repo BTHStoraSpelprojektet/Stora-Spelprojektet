@@ -30,6 +30,10 @@ public:
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
+	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
+
+	void UsedAbility(int p_index);
+	bool CanUseAbility(int p_index);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
@@ -40,6 +44,8 @@ private:
 	std::vector<PlayerNet> m_players;
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
 	std::vector<Box> m_boundingBoxes;
+
+	float m_gcd;
 };
 
 #endif
