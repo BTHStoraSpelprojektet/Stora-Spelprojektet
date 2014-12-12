@@ -84,36 +84,31 @@ void PlayingStateTest::Shutdown()
 
 void PlayingStateTest::Update()
 {
+	// Update global delta time.
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-
-	BasicPicking();
-
-	m_objectManager.Update();
+	
+	// Update the players.
 	m_playerManager.Update(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
-	// ========== DEBUG TEMP LINES ==========
-	m_particles.Update();
-	// ========== DEBUG TEMP LINES ==========
+	// Handle camera input.
+	m_camera.HandleInput();
 
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
-	{
-		if (GLOBAL::GetInstance().FULLSCREEN)
-		{
-			m_camera.ToggleFullscreen(false);
-		}
-		else
-		{
-			m_camera.ToggleFullscreen(true);
-		}
-	}
-
-	m_camera.MoveCamera();
-
+	// The camera should follow the character if not flying.
 	if (!GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		m_camera.FollowCharacter(m_playerManager.GetPlayerPosition());
 	}
 
+	// Get picking data.
+	BasicPicking();
+
+	// Update every object.
+	m_objectManager.Update();
+
+	// ========== DEBUG TEMP LINES ==========
+	// Update the particles.
+	m_particles.Update();
+	// ========== DEBUG TEMP LINES ==========
 }
 
 void PlayingStateTest::Render()
