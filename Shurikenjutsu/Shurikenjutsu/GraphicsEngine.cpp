@@ -127,16 +127,20 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 	{
 		case(SHADERTYPE_SCENE) :
 		{
-			GraphicsEngine::TurnOnAlphaBlending();
 			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
-			GraphicsEngine::TurnOffAlphaBlending();
 
 			break;
 		}
 
 		case(SHADERTYPE_DEPTH) :
 		{
+			// Turn the alpha blending off.
+			GraphicsEngine::TurnOffAlphaBlending();
+
 			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+
+			// Turn the alpha blending back on.
+			GraphicsEngine::TurnOnAlphaBlending();
 
 			break;
 		}

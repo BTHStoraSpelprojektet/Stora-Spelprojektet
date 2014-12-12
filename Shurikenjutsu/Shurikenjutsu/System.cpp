@@ -59,7 +59,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
 	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
-	GraphicsEngine::TurnOffAlphaBlending();
+	GraphicsEngine::TurnOnAlphaBlending();
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
 	// Initialize model library.

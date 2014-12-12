@@ -16,7 +16,6 @@ bool PlayingStateTest::Initialize()
 
 	m_objectManager.Initialize();
 
-
 	m_camera.ResetCamera();
 
 	//Load level
@@ -116,7 +115,6 @@ void PlayingStateTest::Render()
 
 	bool testBB = false;
 
-
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
 
@@ -157,13 +155,13 @@ void PlayingStateTest::Render()
 		testBB = true;
 	}
 	if (testBB)
+	{
 		m_debugDot.Render();
-
+	}
+		
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-	GraphicsEngine::TurnOnAlphaBlending();
-	//m_particles.Render();
-	GraphicsEngine::TurnOffAlphaBlending();
+	m_particles.Render();
 	// ========== DEBUG TEMP LINES ==========
 }
 
