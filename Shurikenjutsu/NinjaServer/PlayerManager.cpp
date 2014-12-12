@@ -165,7 +165,6 @@ void PlayerManager::RespawnPlayer(RakNet::RakNetGUID p_guid)
 		if (m_players[i].guid == p_guid)
 		{
 			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(m_players[i].team);
-			std::cout << m_players[i].team << "\n";
 			m_players[i].x = spawnPoint.m_translationX;
 			m_players[i].y = spawnPoint.m_translationY;
 			m_players[i].z = spawnPoint.m_translationZ;
