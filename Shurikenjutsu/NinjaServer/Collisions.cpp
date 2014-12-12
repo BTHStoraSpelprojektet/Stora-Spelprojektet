@@ -47,5 +47,5 @@ bool Collisions::OBBSphereCollision(OBB p_OBB, Sphere p_sphere)
 }
 bool Collisions::MeleeAttackCollision(Sphere p_sphere, Box p_box, DirectX::XMFLOAT3 p_attDirection)
 {
-	return IntersectionTests::Intersections::MeleeAttackCollision(p_sphere.m_position, p_sphere.m_radius, p_box.m_center, p_box.m_extents, p_attDirection);
+	return IntersectionTests::Intersections::MeleeAttackCollision(p_sphere.m_position, p_sphere.m_radius, p_attDirection, p_box.m_center, p_box.m_extents, p_box.m_radius);
 }

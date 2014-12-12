@@ -78,25 +78,15 @@ namespace IntersectionTests
 
 		return obb.Intersects(sphere);
 	}
-	bool Intersections::MeleeAttackCollision(DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents, DirectX::XMFLOAT3 p_attDirection)
+	bool Intersections::MeleeAttackCollision(DirectX::XMFLOAT3 p_attackerPosition, float p_attackerRadius, DirectX::XMFLOAT3 p_attackDir, DirectX::XMFLOAT3 p_defenderCenter, DirectX::XMFLOAT3 p_defenderExtents, float p_defenderRadius)
 	{
-		float tempBoxRadius;
-		if (p_boxExtents.x > p_boxExtents.z)
-		{
-			tempBoxRadius = p_boxExtents.x;
-		}
-		else
-		{
-			tempBoxRadius = p_boxExtents.z;
-		}
-
-		if (SphereSphereCollision(p_spherePosition, p_sphereRadius, p_boxCenter, tempBoxRadius))
+		if (SphereSphereCollision(p_attackerPosition, p_attackerRadius, p_defenderCenter, p_defenderRadius))
 		{
 			DirectX::XMFLOAT3 temp;
-			temp.x = p_spherePosition.x + p_attDirection.x * p_sphereRadius;
-			temp.y = p_spherePosition.y + p_attDirection.y * p_sphereRadius;
-			temp.z = p_spherePosition.z + p_attDirection.z * p_sphereRadius;
-			if (SphereBoxCollision(temp, p_sphereRadius, p_boxCenter, p_boxExtents))
+			temp.x = p_attackerPosition.x + p_attackDir.x * p_attackerRadius;
+			temp.y = p_attackerPosition.y + p_attackDir.y * p_attackerRadius;
+			temp.z = p_attackerPosition.z + p_attackDir.z * p_attackerRadius;
+			if (SphereBoxCollision(temp, p_attackerRadius, p_defenderCenter, p_defenderExtents))
 			{
 				return true;
 			}
