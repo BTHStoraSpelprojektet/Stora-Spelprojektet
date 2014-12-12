@@ -14,10 +14,7 @@ namespace IntersectionTests
 		static PHYSICSDLL_API bool SphereSphereCollision(DirectX::XMFLOAT3 p_sphere1Pos, float p_sphere1Rad, DirectX::XMFLOAT3 p_sphere2, float p_sphere2Rad);
 		static PHYSICSDLL_API bool BoxBoxCollision(DirectX::XMFLOAT3 p_box1Center, DirectX::XMFLOAT3 p_box1Extents, DirectX::XMFLOAT3 p_box2Center, DirectX::XMFLOAT3 p_box2Extents);
 		static PHYSICSDLL_API bool SphereBoxCollision(DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents);
-
-		//static PHYSICSDLL_API bool FrustrumSphereCollision(DllFrustum p_frustum, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius);
-		//static PHYSICSDLL_API bool FrustrumBoxCollision(DllFrustum p_frustum, DllBox p_box);
-
+		
 		static PHYSICSDLL_API bool RaySphereCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius);
 		static PHYSICSDLL_API bool RayBoxCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents);
 

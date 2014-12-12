@@ -25,6 +25,11 @@ public:
 	void ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager);
 
 private:
+	bool OBBOBBtest(OBB p_OBB1, OBB p_OBB2);
+	bool BoxBoxtest(Box p_box1, Box p_box2);
+
+
+
 
 	static CollisionManager* m_instance;
 	void SetLists(std::vector<OBB> p_StaticObjectList/*, std::vector<Sphere> p_sphereObjectList*/);

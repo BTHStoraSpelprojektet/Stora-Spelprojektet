@@ -29,18 +29,6 @@ namespace IntersectionTests
 		DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_spherePosition, p_sphereRadius);
 		return box.Intersects(sphere);
 	}
-/*	bool Intersections::FrustrumSphereCollision(DllFrustum p_frustum, DllSphere p_sphere)
-	{
-		DirectX::BoundingFrustum frustum = DirectX::BoundingFrustum(p_frustum.m_position, p_frustum.m_direction, p_frustum.m_rightAngle, p_frustum.m_leftAngle, p_frustum.m_topAngle, p_frustum.m_bottomAngle, p_frustum.m_nearDistance, p_frustum.m_farDistance);
-		DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_sphere.m_position, p_sphere.m_radius);
-		return frustum.Intersects(sphere);
-	}
-	bool Intersections::FrustrumBoxCollision(DllFrustum p_frustum, DllBox p_box)
-	{
-		DirectX::BoundingFrustum frustum = DirectX::BoundingFrustum(p_frustum.m_position, p_frustum.m_direction, p_frustum.m_rightAngle, p_frustum.m_leftAngle, p_frustum.m_topAngle, p_frustum.m_bottomAngle, p_frustum.m_nearDistance, p_frustum.m_farDistance);
-		DirectX::BoundingBox box = DirectX::BoundingBox(p_box.m_center, p_box.m_extents);
-		return frustum.Intersects(box);
-	}*/
 	bool Intersections::RaySphereCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius)
 	{
 		float temp;
