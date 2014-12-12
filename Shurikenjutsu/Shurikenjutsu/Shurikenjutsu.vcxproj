@@ -121,6 +121,7 @@
     <ClCompile Include="PlayingStateTest.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="ShadowShapes.cpp" />
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="DebugCircle.cpp" />
     <ClCompile Include="AnimatedObject.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="ButtonEvent.h" />
     <ClInclude Include="KButtonEvent.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="ShadowShapes.h" />
     <ClInclude Include="Shuriken.h" />
     <ClInclude Include="AnimatedObject.h" />
     <ClInclude Include="Sound.h" />

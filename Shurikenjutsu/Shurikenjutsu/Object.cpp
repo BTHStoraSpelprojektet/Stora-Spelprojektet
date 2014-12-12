@@ -158,6 +158,11 @@ void Object::RenderDebugBoxes()
 void Object::RenderShadowShapes()
 {
 	m_debugShadowShapes.Render();
+
+	for (unsigned int i = 0; i < m_debugDots.size(); i++)
+	{
+		m_debugDots[i].Render();
+	}
 }
 
 void Object::TransformShadowPoints()
@@ -171,6 +176,10 @@ void Object::TransformShadowPoints()
 		DirectX::XMFLOAT4 position = DirectX::XMFLOAT4(saList[i].x, saList[i].y, saList[i].z, 1.0f);
 		DirectX::XMVECTOR transCenter = DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&position), DirectX::XMLoadFloat4x4(&world));
 		m_shadowPoints.push_back(DirectX::XMFLOAT3(position.x, position.y, position.z));
+
+		DebugDot dot;
+		dot.Initialize(m_shadowPoints[i], 100, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+		m_debugDots.push_back(dot);
 	}
 
 	if (saList.size() > 0)

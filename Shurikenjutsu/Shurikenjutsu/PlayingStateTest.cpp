@@ -46,7 +46,7 @@ bool PlayingStateTest::Initialize()
 	m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 	m_circle3.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 0.5f, 50, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-	m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1000, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+	m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 	m_mouseX = 0;
 	m_mouseY = 0;

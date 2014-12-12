@@ -54,5 +54,6 @@ protected:
 
 	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 	DebugShape2D m_debugShadowShapes;
+	std::vector<DebugDot> m_debugDots;
 };
 #endif
