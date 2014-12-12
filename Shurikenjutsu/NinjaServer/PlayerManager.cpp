@@ -297,14 +297,14 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 
 void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility)
 {
-	std::string ability;
+	RakNet::RakString abilityString = "Hej";
 	switch (p_readAbility)
 	{
 	case ABILITIES_SHURIKEN:
-		ability = "HEJSAN EN SHURIKEN ÄR KASTAD! d:";
+		abilityString = "HEJSAN EN SHURIKEN ÄR KASTAD! d:";
 		break;
 	case ABILITIES_DASH:
-		ability = "HEJSAN NU BLEV DET EN DASH! :p";
+		abilityString = "HEJSAN NU BLEV DET EN DASH! :p";
 		break;
 	default:
 		break;
@@ -315,9 +315,9 @@ void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 
 	bitStream.Write((RakNet::MessageID)ID_ABILITY);
 	bitStream.Write(p_readAbility);
-	bitStream.Write(ability);
+	bitStream.Write(abilityString);
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)

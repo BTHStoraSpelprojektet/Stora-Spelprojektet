@@ -268,12 +268,12 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			ABILITIES abilityEnum;
-			std::string abilityString;
+			RakNet::RakString abilityString;
 			bitStream.Read(messageID);
 			bitStream.Read(abilityEnum);
 			bitStream.Read(abilityString);
 
-			std::cout << abilityString << std::endl;
+			std::cout << " " << abilityString << std::endl;
 
 			break;
 		}
