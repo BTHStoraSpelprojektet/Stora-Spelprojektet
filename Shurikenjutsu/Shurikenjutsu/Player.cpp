@@ -25,6 +25,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
 
+	m_healthbar.Initialize(50.0f, 5.0f);
+
 	return true;
 }
 
@@ -384,4 +386,15 @@ void Player::SetCalculatePlayerPosition()
 void Player::SetOuterWalls(std::vector<Box> p_OuterWalls)
 {
 	m_OuterWalls = p_OuterWalls;
+}
+
+void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
+{
+	m_healthbar.Update(m_position, m_health, 100, p_view, p_projection);
+}
+
+void Player::Render(SHADERTYPE p_shader)
+{
+	MovingObject::Render(p_shader);
+	m_healthbar.Render();
 }

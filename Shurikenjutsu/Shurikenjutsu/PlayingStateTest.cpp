@@ -77,7 +77,7 @@ void PlayingStateTest::Update()
 	BasicPicking();
 
 	m_objectManager.Update();
-	m_playerManager.Update();
+	m_playerManager.Update(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
 	{
@@ -97,6 +97,7 @@ void PlayingStateTest::Update()
 	{
 		m_camera.FollowCharacter(m_playerManager.GetPlayerPosition());
 	}
+
 }
 
 void PlayingStateTest::Render()
@@ -147,7 +148,6 @@ void PlayingStateTest::Render()
 	// ========== DEBUG TEMP LINES ==========
 
 
-	
 
 
 }

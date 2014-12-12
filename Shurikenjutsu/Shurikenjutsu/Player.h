@@ -6,6 +6,7 @@
 #include "InputManager.h"
 #include "Collisions.h"
 #include "Globals.h"
+#include "HealthBar.h"
 
 class Player :
 	public MovingObject
@@ -18,6 +19,7 @@ public:
 	void Shutdown();
 	void UpdateMe();
 	void Update();
+	void Render(SHADERTYPE p_shader);
 	void SetDamage(float p_damage);
 	float GetDamage() const;	
 	void SetHealth(unsigned int p_health);
@@ -37,6 +39,9 @@ public:
 
 	void SetCollidingObjects(std::vector<Object> p_ModelList);
 	void SetOuterWalls(std::vector<Box> p_OuterWalls);
+
+	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
+
 private:
 	void CalculateFacingAngle();
 
@@ -56,6 +61,8 @@ private:
 
 	std::vector<Box> m_OuterWalls;
 	Sphere m_playerSphere;
+
+	HealthBar m_healthbar;
 };
 
 #endif PLAYER
