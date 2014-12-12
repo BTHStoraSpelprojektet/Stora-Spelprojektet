@@ -33,12 +33,12 @@ void Player::Shutdown()
 	MovingObject::Shutdown();
 }
 
-void Player::UpdateMe( )
+void Player::UpdateMe()
 {
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	// Move
 
+	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
 		SetCalculatePlayerPosition();
