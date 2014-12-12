@@ -109,6 +109,21 @@
     <Filter Include="Source Files\Utility\DebugDraw">
       <UniqueIdentifier>{6ca99271-27a1-4224-a30f-02cd00536f35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics\Shader Bridges">
+      <UniqueIdentifier>{1e8c5c16-9775-4b31-9ab3-cd6c5d58c7e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Shader Bridges">
+      <UniqueIdentifier>{e86672ab-06e6-4a96-bb09-b0d6d418edff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Particles">
+      <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Particle">
+      <UniqueIdentifier>{f17db6bb-41a5-4400-9258-b0dd33a5820f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics\Particles">
+      <UniqueIdentifier>{e7ff7528-8b45-486b-b4cf-e03973d7aad8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -130,9 +145,6 @@
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsEngine.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneShader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
@@ -159,9 +171,6 @@
     <ClCompile Include="MovingObject.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
-    <ClCompile Include="InstancedShader.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Object.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
@@ -174,9 +183,6 @@
     <ClCompile Include="PlayerManager.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
-    <ClCompile Include="DepthShader.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Globals.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
@@ -185,9 +191,6 @@
     </ClCompile>
     <ClCompile Include="PlayingStateTest.cpp">
       <Filter>Source Files\GameState</Filter>
-    </ClCompile>
-    <ClCompile Include="GUIShader.cpp">
-      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Network.cpp">
       <Filter>Source Files\Network</Filter>
@@ -228,6 +231,24 @@
     <ClCompile Include="AnimationControl.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
+    <ClCompile Include="DepthShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="InstancedShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitter.cpp">
+      <Filter>Source Files\Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
     <ClCompile Include="Frustum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -266,9 +287,6 @@
     <ClInclude Include="GraphicsEngine.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="SceneShader.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Enumerations.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -302,9 +320,6 @@
     <ClInclude Include="Player.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="InstancedShader.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -317,9 +332,6 @@
     <ClInclude Include="PlayerManager.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
-    <ClInclude Include="DepthShader.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Network.h">
       <Filter>Header Files\Network</Filter>
     </ClInclude>
@@ -328,9 +340,6 @@
     </ClInclude>
     <ClInclude Include="PlayingStateTest.h">
       <Filter>Header Files\GameState</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIShader.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>Header Files\Graphics</Filter>
@@ -367,6 +376,24 @@
     </ClInclude>
     <ClInclude Include="AnimationControl.h">
       <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="DepthShader.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIShader.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="InstancedShader.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneShader.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleShader.h">
+      <Filter>Header Files\Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitter.h">
+      <Filter>Header Files\Graphics\Particles</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h">
       <Filter>Header Files</Filter>
@@ -411,6 +438,15 @@
     </FxCompile>
     <FxCompile Include="Shaders\Line\LineVertexShader.hlsl">
       <Filter>Shaders\Line</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle\ParticlePixelShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle\ParticleGeometryShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle\ParticleVertexShader.hlsl">
+      <Filter>Shaders\Particle</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

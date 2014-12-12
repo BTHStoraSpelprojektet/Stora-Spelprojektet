@@ -1,6 +1,6 @@
 #include "SceneShader.h"
 
-bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle)
+bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
@@ -211,6 +211,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("Scene vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
+	// Release useless local shaders.
 	vertexShader->Release();
 	vertexShader = 0;
 	animatedVertexShader->Release();
@@ -517,6 +518,14 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	DirectX::XMFLOAT4X4 lightViewMatrix = m_lightViewMatrix;
 	DirectX::XMFLOAT4X4 lightProjectionMatrix = m_lightProjectionMatrix;
 
+	// Transpose the matrices.
+	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
+	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
+	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
+
+	DirectX::XMStoreFloat4x4(&lightViewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightViewMatrix)));
+	DirectX::XMStoreFloat4x4(&lightProjectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightProjectionMatrix)));
+
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
@@ -525,16 +534,7 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	}
 
 	// Get pointer to the matrix buffer data.
-	MatrixBuffer* matrixBuffer;
-	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
-
-	// Transpose the matrices.
-	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
-	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
-	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
-
-	DirectX::XMStoreFloat4x4(&lightViewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightViewMatrix)));
-	DirectX::XMStoreFloat4x4(&lightProjectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightProjectionMatrix)));
+	MatrixBuffer* matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
 
 	// Set matrices in buffer.
 	matrixBuffer->m_worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix);

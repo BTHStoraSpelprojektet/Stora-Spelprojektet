@@ -137,7 +137,7 @@ void System::Shutdown()
 	m_gameState->Shutdown();
 
 	// Shutdown graphics engine.
-	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
+	GraphicsEngine::Shutdown();
 
 	// Shutdown network
 	Network::GetInstance()->Shutdown();
