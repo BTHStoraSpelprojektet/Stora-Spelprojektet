@@ -32,6 +32,7 @@ bool Model::LoadModel(const char* p_filepath)
 	// Store bounding box
 	m_boundingBoxes = mData.m_boundingBoxes;
 	m_shadowPoints = mData.m_shadowPoints;
+	m_boundingSpheres = mData.m_boundingSpheres;
 
 	free(mData.m_textureMap);
 	free(mData.m_normalMap);
@@ -127,6 +128,11 @@ int Model::GetVertexCount()
 std::vector<Box> Model::GetBoundingBoxes()const
 {
 	return m_boundingBoxes;
+}
+
+std::vector<Sphere> Model::GetBoundingSpheres()const
+{
+	return m_boundingSpheres;
 }
 
 std::vector<AnimationStack> Model::GetAnimationStacks()const

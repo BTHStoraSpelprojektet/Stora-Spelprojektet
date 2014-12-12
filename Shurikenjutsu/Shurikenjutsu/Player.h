@@ -17,14 +17,16 @@ public:
 	Player();
 	~Player();
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
+		float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility);
 	void Shutdown();
 	void UpdateMe();
 	void Update();
 	void SetDamage(float p_damage);
 	float GetDamage() const;	
-	void SetHealth(unsigned int p_health);
-	unsigned int GetHealth() const;
+	void SetHealth(int p_health);
+	int GetHealth() const;
+	void SetMaxHealth(int p_maxHealth);
+	int GetMaxHealth() const;
 	void SetAgility(float p_agility);
 	float GetAgility() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
@@ -44,7 +46,8 @@ private:
 
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	int m_spells; // antalet spells om det behövs - skapa lista
-	unsigned int m_health; // Player health
+	int m_health; // Player health
+	int m_maxHealth; // Max player health
 	float m_agility; // Speed på attacker och rullning m.m
 	InputManager* m_inputManager;
 	DirectX::XMFLOAT3 m_attackDir;

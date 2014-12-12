@@ -14,7 +14,7 @@ PlayerManager::~PlayerManager()
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 20);
+	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 100, 20);
 
 	return true;
 }
@@ -73,7 +73,7 @@ void PlayerManager::Update()
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, 100, 20);
+					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, enemyPlayers[i].currentHP, enemyPlayers[i].maxHP, 20);
 				}
 			}
 
@@ -84,6 +84,7 @@ void PlayerManager::Update()
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
+			m_enemyList[i].SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i].Update();
 		}
 	}
@@ -100,18 +101,18 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
+	float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
 	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_agility);
+	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_maxHealth, p_agility);
 	m_player = tempPlayer;
 }
 
 void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
+	float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
 	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_agility);
+	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_maxHealth, p_agility);
 	tempPlayer.SetGuID(p_guid);
 	m_enemyList.push_back(tempPlayer);
 }
