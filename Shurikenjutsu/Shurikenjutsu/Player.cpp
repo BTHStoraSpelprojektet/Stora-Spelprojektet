@@ -44,6 +44,8 @@ void Player::UpdateMe()
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
+	CheckForSpecialAttack();
+
 	m_ability = m_noAbility;
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
@@ -78,6 +80,20 @@ void Player::UpdateMe()
 	m_ability->Execute();
 }
 
+void Player::CheckForSpecialAttack()
+{
+	if (m_inputManager->IsKeyPressed(VkKeyScan('v')))
+	{
+		float speed_X_Delta_X_DashLength = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed * 10.0f;
+		SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta_X_DashLength,
+			m_position.y + m_direction.y * speed_X_Delta_X_DashLength, m_position.z + m_direction.z * speed_X_Delta_X_DashLength));
+		std::cout << "local dash" << std::endl;
+	}	
+	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
+	//{
+	//	std::cout << "" << std::endl;
+	//}
+}
 bool Player::CalculateDirection()
 {
 	float x, y, z;
@@ -87,43 +103,30 @@ bool Player::CalculateDirection()
 	y = 0;//Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)))
 	z = 0;
 	m_playerPrevPos = m_position;
-	std::vector<bool> boolList = CollisionManager::GetInstance()->OuterWallCollision(m_playerSphere);
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
-		if (!boolList[2])
-		{
-			z += 1;
-			moved = true;
-		}
+		z += 1;
+		moved = true;
 		m_ability = m_buttonQ;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
-		if (!boolList[1])
-		{
-			x += -1;
-			moved = true;
-		}
+		x += -1;
+		moved = true;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
-		if (!boolList[0])
-		{
-			z += -1;
-			moved = true;
-		}
+		z += -1;
+		moved = true;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
-		if (!boolList[3])
-		{
 		x += 1;
 		moved = true;
-		}
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));

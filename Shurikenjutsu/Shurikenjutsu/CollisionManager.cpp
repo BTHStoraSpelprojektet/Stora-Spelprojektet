@@ -20,10 +20,14 @@ void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vec
 			}
 		}
 	}
-	for (unsigned int i = 0; i < p_outerWallList.size(); i++)
-	{
-		m_outerWallList.push_back(p_outerWallList[i]);
-	}
+	m_StaticObjectList.push_back(OBB(p_outerWallList[0].m_center, p_outerWallList[0].m_extents.z, p_outerWallList[0].m_extents.y, p_outerWallList[0].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));
+	//boolList.push_back(Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[0])); //NOT WORKING
+	m_StaticObjectList.push_back(OBB(p_outerWallList[1]));
+
+	m_StaticObjectList.push_back(OBB(p_outerWallList[2].m_center, p_outerWallList[2].m_extents.z, p_outerWallList[2].m_extents.y, p_outerWallList[2].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));	//NOT WORKING
+	//boolList.push_back(Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[2]));	//NOT WORKING
+	m_StaticObjectList.push_back(OBB(p_outerWallList[3]));
+
 	//for (unsigned int i = 0; i < p_sphereObjectList.size(); i++)
 	//{
 	//	m_sphereObjectList.push_back(p_sphereObjectList[i]);
@@ -62,15 +66,7 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObject
 	return CollisionList;
 }
 
-std::vector<bool> CollisionManager::OuterWallCollision(Sphere p_playerSphere)
+bool CollisionManager::CalculateDashLength()
 {
-	std::vector<bool> boolList;
-	boolList.push_back(Collisions::SphereBoxCollision(p_playerSphere, Box(m_outerWallList[0].m_center, m_outerWallList[0].m_extents.z, m_outerWallList[0].m_extents.y, m_outerWallList[0].m_extents.x)));
-	//boolList.push_back(Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[0])); //NOT WORKING
-	boolList.push_back(Collisions::SphereBoxCollision(p_playerSphere, m_outerWallList[1]));
-
-	boolList.push_back(Collisions::SphereBoxCollision(p_playerSphere, Box(m_outerWallList[2].m_center, m_outerWallList[2].m_extents.z, m_outerWallList[2].m_extents.y, m_outerWallList[2].m_extents.x)));	//NOT WORKING
-	//boolList.push_back(Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[2]));	//NOT WORKING
-	boolList.push_back(Collisions::SphereBoxCollision(p_playerSphere, m_outerWallList[3]));
-	return boolList;
+	return true;
 }

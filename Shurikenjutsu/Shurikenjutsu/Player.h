@@ -45,6 +45,7 @@ public:
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
 private:
+	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
 

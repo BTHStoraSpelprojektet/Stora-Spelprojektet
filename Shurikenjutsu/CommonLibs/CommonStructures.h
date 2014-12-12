@@ -156,6 +156,13 @@ struct OBB
 		m_direction = p_direction;
 		CalculateRadius();
 	}
+	OBB(Box p_box)
+	{
+		m_center = p_box.m_center;
+		m_extents = p_box.m_extents;
+		m_direction = DirectX::XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
+		CalculateRadius();
+	}
 	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
 	{
 		m_center = p_center;
