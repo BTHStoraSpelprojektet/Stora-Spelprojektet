@@ -40,7 +40,7 @@ public:
 	void ResetCamera();
 	void ResetCameraToLight();
 
-	void MoveCamera( );
+	void HandleInput();
 	void ToggleFullscreen(bool p_fullscreen);
 	void FollowCharacter(DirectX::XMFLOAT3 p_playerPos);
 
