@@ -30,6 +30,7 @@ public:
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
+	void DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 
@@ -40,6 +41,7 @@ public:
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
+	void UpdateHealth(RakNet::RakNetGUID p_guid, int p_health);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 
@@ -48,6 +50,7 @@ private:
 	std::vector<Box> m_boundingBoxes;
 
 	float m_gcd;
+	int m_playerHealth;
 };
 
 #endif

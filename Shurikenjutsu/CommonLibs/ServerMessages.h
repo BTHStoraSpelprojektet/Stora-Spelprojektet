@@ -10,6 +10,8 @@ struct PlayerNet
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
 	int team;
+	int maxHP;
+	int currentHP;
 	float gcd;
 };
 
@@ -34,6 +36,7 @@ enum Messages
 	ID_RESPAWN_PLAYER,
 	ID_MELEE_ATTACK,
 	ID_PLAYER_INVALID_MOVE,
+	ID_PLAYER_HP_CHANGED,
 	ID_ABILITY
 };
 
