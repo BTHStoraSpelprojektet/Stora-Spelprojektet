@@ -83,7 +83,7 @@ void PlayingStateTest::Update()
 	BasicPicking();
 
 	m_objectManager.Update();
-	m_playerManager.Update();
+	m_playerManager.Update(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
 	// ========== DEBUG TEMP LINES ==========
 	m_particles.Update();
@@ -107,6 +107,7 @@ void PlayingStateTest::Update()
 	{
 		m_camera.FollowCharacter(m_playerManager.GetPlayerPosition());
 	}
+
 }
 
 void PlayingStateTest::Render()
@@ -158,7 +159,7 @@ void PlayingStateTest::Render()
 	{
 		m_debugDot.Render();
 	}
-		
+
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 	m_particles.Render();

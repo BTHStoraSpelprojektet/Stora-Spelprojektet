@@ -52,7 +52,6 @@ private:
 	// ========== DEBUG TEMP LINES ==========
 
 	Frustum m_frustum;
-
 };
 
 #endif PLAYINGSTATE

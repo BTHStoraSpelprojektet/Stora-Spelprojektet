@@ -14,7 +14,7 @@ public:
 	~PlayerManager();
 	bool Initialize();
 	void Shutdown();
-	void Update( );
+	void Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 	void Render(SHADERTYPE p_shader);
 	DirectX::XMFLOAT3 GetPlayerPosition();
 	DirectX::XMFLOAT3 GetPlayerDirection();

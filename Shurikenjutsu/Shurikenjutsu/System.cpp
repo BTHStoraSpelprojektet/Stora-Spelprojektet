@@ -148,6 +148,8 @@ void System::Shutdown()
 	ModelLibrary::GetInstance()->Shutdown();
 
 	m_sound->Shutdown();
+
+	GUIManager::GetInstance()->Shutdown();
 }
 
 void System::Run()
@@ -231,6 +233,9 @@ void System::Render()
 
 	// Render Current GameState
 	m_gameState->Render();
+
+	//Render GUI
+	GUIManager::GetInstance()->Render();
 
 	// Present the result.
 	GraphicsEngine::Present();

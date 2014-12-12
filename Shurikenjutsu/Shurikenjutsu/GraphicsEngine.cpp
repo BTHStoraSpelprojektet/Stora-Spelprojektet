@@ -53,6 +53,12 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
+	if (m_GUIShader.InitializeColorShader(m_directX.GetDevice(), m_directX.GetContext()))
+	{
+		ConsolePrintSuccess("GUI 2D color shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+
 	// Initialize the depth buffer.
 	if (m_depthShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
@@ -147,9 +153,14 @@ void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_num
 	}
 }
 
-void GraphicsEngine::RenderUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void GraphicsEngine::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	m_GUIShader.Render(m_directX.GetContext(), p_worldMatrix, p_texture);
+}
+
+void GraphicsEngine::RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color)
+{
+	m_GUIShader.RenderColor(m_directX.GetContext(), p_worldMatrix, p_color);
 }
 
 void GraphicsEngine::RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix)
@@ -333,3 +344,14 @@ void GraphicsEngine::SetShadowMapDimensions(float p_width, float p_height)
 {
 	m_sceneShader.SetShadowMapDimensions(m_directX.GetDevice(), m_directX.GetContext(), p_width, p_height);
 }
+
+void GraphicsEngine::TurnOnDepthStencil()
+{
+	m_directX.TurnOnDepthStencil();
+}
+
+void GraphicsEngine::TurnOffDepthStencil()
+{
+	m_directX.TurnOffDepthStencil();
+}
+
