@@ -280,3 +280,34 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 
 	return -1;
 }
+
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			m_players[i].currentHP -= p_damage;
+
+			if (m_players[i].currentHP <= 0)
+			{
+				m_players[i].currentHP = m_players[i].maxHP;
+				RespawnPlayer(p_guid);
+			}
+
+			UpdateHealth(p_guid, m_players[i].currentHP);
+		}
+	}
+}
+
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_HP_CHANGED);
+	bitStream.Write(p_guid);
+	bitStream.Write(p_health);
+	
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
