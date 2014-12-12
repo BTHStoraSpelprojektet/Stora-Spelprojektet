@@ -157,14 +157,9 @@ void PlayingStateTest::Render()
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 	GraphicsEngine::TurnOnAlphaBlending();
-	m_particles.Render();
+	//m_particles.Render();
 	GraphicsEngine::TurnOffAlphaBlending();
 	// ========== DEBUG TEMP LINES ==========
-
-
-	
-
-
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)

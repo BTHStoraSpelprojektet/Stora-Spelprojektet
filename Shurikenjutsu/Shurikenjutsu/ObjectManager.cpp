@@ -61,17 +61,23 @@ void ObjectManager::Update()
 void ObjectManager::Render(SHADERTYPE p_shader)
 {
 	if (p_shader == SHADERTYPE_SCENE || p_shader == SHADERTYPE_DEPTH)
+	{
 		for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 		{
-			m_staticObjects[i].Render(p_shader);
+			//m_staticObjects[i].Render(p_shader);
 
 			if (FLAG_DEBUG)
 			{
-				m_staticObjects[i].RenderDebugBoxes();
+				//m_staticObjects[i].RenderDebugBoxes(); 
+				m_staticObjects[i].RenderShadowShapes();
 			}
 		}
+	}
+
 	else if (p_shader == SHADERTYPE_ANIMATED)
+	{
 		m_animatedCharacter.RenderAnimated(p_shader);
+	}
 }
 
 void ObjectManager::RenderShurikens(SHADERTYPE p_shader)

@@ -11,8 +11,8 @@
 class DebugShape2D
 {
 public:
-	DebugShape2D(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::XMFLOAT3 p_color);
-	~DebugShape2D();
+	void Initialize(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::XMFLOAT3 p_color);
+	void Shutdown();
 
 	void Render();
 

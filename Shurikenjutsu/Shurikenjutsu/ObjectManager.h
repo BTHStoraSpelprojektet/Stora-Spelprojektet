@@ -36,6 +36,4 @@ private:
 	bool IsShurikenInList(unsigned int p_shurikenId);
 	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
 };
-
 #endif
-

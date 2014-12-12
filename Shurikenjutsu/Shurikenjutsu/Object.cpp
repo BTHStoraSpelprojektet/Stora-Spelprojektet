@@ -155,6 +155,11 @@ void Object::RenderDebugBoxes()
 	}
 }
 
+void Object::RenderShadowShapes()
+{
+	m_debugShadowShapes.Render();
+}
+
 void Object::TransformShadowPoints()
 {
 	m_shadowPoints.clear();
@@ -165,7 +170,12 @@ void Object::TransformShadowPoints()
 	{
 		DirectX::XMFLOAT4 position = DirectX::XMFLOAT4(saList[i].x, saList[i].y, saList[i].z, 1.0f);
 		DirectX::XMVECTOR transCenter = DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&position), DirectX::XMLoadFloat4x4(&world));
-		m_shadowPoints.push_back(DirectX::XMFLOAT3(position.x, position.y, position.z));	
+		m_shadowPoints.push_back(DirectX::XMFLOAT3(position.x, position.y, position.z));
+	}
+
+	if (saList.size() > 0)
+	{
+		m_debugShadowShapes.Initialize(m_shadowPoints, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	}
 }
 
