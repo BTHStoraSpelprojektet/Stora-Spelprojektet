@@ -54,8 +54,9 @@ private:
 	DirectX::XMFLOAT3 m_playerPrevPos;
 
 	Sphere m_playerSphere;
-	Ability* ability;
-	Ability* buttonQ;
+	Ability* m_ability;
+	Ability* m_noAbility;
+	Ability* m_buttonQ;
 };
 
 #endif PLAYER

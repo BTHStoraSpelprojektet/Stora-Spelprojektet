@@ -245,22 +245,75 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	return boundingBoxes;
 }
 
-void PlayerManager::UsedAbility(int p_index)
+void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 {
 	if (p_index >= 0 && p_index < (int)m_players.size())
 	{
 		m_players[p_index].gcd = m_gcd;
+		switch (p_ability)
+		{
+		case ABILITIES_SHURIKEN:
+			break;
+		case ABILITIES_DASH:
+			break;
+		default:
+			break;
+		}
+
 	}
 }
 
-bool PlayerManager::CanUseAbility(int p_index)
+bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 {
+	bool result = false;
+
 	if (p_index >= 0 && p_index < (int)m_players.size())
 	{
-		return (m_players[p_index].gcd <= 0.0f);
+		if (m_players[p_index].gcd <= 0.0f)
+		{
+			result = true;
+			switch (p_ability)
+			{
+			case ABILITIES_SHURIKEN:
+				if (true)
+				{
+
+				}// IF PLAYER SHURIKEn cd is 0 do ability)
+				break;
+			case ABILITIES_DASH:
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
-	return false;
+	return result;
+}
+
+void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility)
+{
+	std::string ability;
+	switch (p_readAbility)
+	{
+	case ABILITIES_SHURIKEN:
+		ability = "HEJSAN EN SHURIKEN ÄR KASTAD! d:";
+		break;
+	case ABILITIES_DASH:
+		ability = "HEJSAN NU BLEV DET EN DASH! :p";
+		break;
+	default:
+		break;
+	}
+
+
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_ABILITY);
+	bitStream.Write(p_readAbility);
+	bitStream.Write(ability);
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }
 
 int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)

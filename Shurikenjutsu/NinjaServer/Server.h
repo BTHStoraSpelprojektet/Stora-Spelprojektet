@@ -9,6 +9,7 @@
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
+#include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 #include "MapManager.h"
 #include "CollisionManager.h"

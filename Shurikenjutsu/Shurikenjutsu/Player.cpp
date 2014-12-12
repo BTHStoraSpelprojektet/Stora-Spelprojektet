@@ -24,8 +24,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
-	ability = new Ability();
-	buttonQ = new Dash();
+	m_ability = new Ability();
+	m_noAbility = new Ability();
+	m_buttonQ = new Dash();
 
 	return true;
 }
@@ -39,7 +40,8 @@ void Player::UpdateMe()
 {
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-
+	
+	m_ability = m_noAbility;
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
@@ -57,6 +59,8 @@ void Player::UpdateMe()
 	{
 		Network::GetInstance()->AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
 	}
+
+	m_ability->Execute();
 }
 
 bool Player::CalculateDirection()
@@ -77,7 +81,7 @@ bool Player::CalculateDirection()
 		z += 1;
 		moved = true;
 		}
-		ability = buttonQ;
+		m_ability = m_buttonQ;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
