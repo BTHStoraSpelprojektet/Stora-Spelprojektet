@@ -211,7 +211,7 @@ bool LevelImporter::readData(){
 	if (levelData.size() == 0){
 		return false;
 	}
-	float x, y, z, rotateX, rotateY, rotateZ, rotateW, boundingBoxWidth, boundingBoxHeight, boundingBoxDepth;
+	float x, y, z, rotateX, rotateY, rotateZ, /*rotateW,*/ boundingBoxWidth, boundingBoxHeight, boundingBoxDepth;
 	int numberOfBoundingBoxesToSkip = 0;
 	int numberOfObjects = 0;
 	int headerSize = 2;
@@ -242,19 +242,24 @@ bool LevelImporter::readData(){
 					numberOfBoundingBoxesToSkip = atoi(tmpStr.c_str());
 				}
 			}
-			else if ((currentLineTemp > 2) && (currentLineTemp < (headerSize + 1 + numberOfBoundingBoxesToSkip))){
+
+			else if ((currentLineTemp > 2) && (currentLineTemp < (unsigned int)(headerSize + 1 + numberOfBoundingBoxesToSkip)))
+			{
 				readBoundingBox(tmpStr, currentWordTemp, x, y, z, rotateX, rotateY, rotateZ, boundingBoxWidth, boundingBoxHeight, boundingBoxDepth);
 			}
-			else if (currentLineTemp > (headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (numberOfObjects + headerSize + numberOfBoundingBoxesToSkip)){
-				readLevelObject(tmpStr, currentWordTemp, isSpawnPoint, currentTeam, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 
+			else if (currentLineTemp > (unsigned int)(headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (unsigned int)(numberOfObjects + headerSize + numberOfBoundingBoxesToSkip))
+			{
+				readLevelObject(tmpStr, currentWordTemp, isSpawnPoint, currentTeam, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 			}
 		}
+
 		if (m_print)
 		{
 			std::cout << "";
 		}
 	}
+
 	levelData.clear();
 	return true;
 }
