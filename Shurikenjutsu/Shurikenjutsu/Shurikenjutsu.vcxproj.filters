@@ -124,6 +124,18 @@
     <Filter Include="Header Files\Graphics\Particles">
       <UniqueIdentifier>{e7ff7528-8b45-486b-b4cf-e03973d7aad8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GUI">
+      <UniqueIdentifier>{69b2b7a4-55e2-4c79-91ab-bf6e4ba9e713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GUI">
+      <UniqueIdentifier>{b1bdfbf5-1a23-4587-a5f9-52649839e070}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\Internal">
+      <UniqueIdentifier>{1923165b-8a5d-4c22-bcfb-eab47c0d126f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GUI\Internal">
+      <UniqueIdentifier>{fb93a324-473a-4d57-b35a-f79fef42c390}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -266,6 +278,15 @@
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Source Files\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="HealthBar.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIElement.cpp">
+      <Filter>Source Files\GUI\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIManager.cpp">
+      <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -422,6 +443,15 @@
     <ClInclude Include="CollisionManager.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="HealthBar.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIElement.h">
+      <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIManager.h">
+      <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -445,9 +475,6 @@
     <FxCompile Include="Shaders\Scene\AnimatedVertexShader.hlsl">
       <Filter>Shaders\Scene</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\GUI\GUIPixelShader.hlsl">
-      <Filter>Shaders\GUI</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\GUI\GUIVertexShader.hlsl">
       <Filter>Shaders\GUI</Filter>
     </FxCompile>
@@ -465,6 +492,15 @@
     </FxCompile>
     <FxCompile Include="Shaders\Particle\ParticleVertexShader.hlsl">
       <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GUI\GUIPixelShader.hlsl">
+      <Filter>Shaders\GUI</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GUI\GUIColorPixelShader.hlsl">
+      <Filter>Shaders\GUI</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GUI\GUIColorVertexShader.hlsl">
+      <Filter>Shaders\GUI</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

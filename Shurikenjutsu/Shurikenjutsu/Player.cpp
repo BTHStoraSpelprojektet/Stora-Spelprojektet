@@ -29,6 +29,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_noAbility = new Ability();
 	m_buttonQ = new Dash();
 
+	m_healthbar.Initialize(50.0f, 5.0f);
+
 	return true;
 }
 
@@ -370,4 +372,15 @@ void Player::SetCalculatePlayerPosition()
 	}
 	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
+}
+
+void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
+{
+	m_healthbar.Update(m_position, m_health, 100, p_view, p_projection);
+}
+
+void Player::Render(SHADERTYPE p_shader)
+{
+	MovingObject::Render(p_shader);
+	m_healthbar.Render();
 }

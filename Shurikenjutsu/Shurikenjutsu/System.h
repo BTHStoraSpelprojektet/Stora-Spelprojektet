@@ -19,6 +19,7 @@
 #include "PlayingStateTest.h"
 #include "Timer.h"
 #include "Sound.h"
+#include "GUIManager.h"
 
 class System
 {
@@ -52,5 +53,6 @@ private:
 	GameState* m_gameState;
 
 	Sound* m_sound;
+
 };
 #endif

@@ -20,6 +20,9 @@ public:
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
 
+	void TurnOnDepthStencil();
+	void TurnOffDepthStencil();
+
 	void SetClearColor(float R, float G, float B, float p_opacity);
 
 	void ResetRenderTarget();

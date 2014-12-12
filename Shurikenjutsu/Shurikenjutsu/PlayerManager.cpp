@@ -24,10 +24,11 @@ void PlayerManager::Shutdown()
 
 }
 
-void PlayerManager::Update()
+void PlayerManager::Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	m_player.UpdateMe();
+	m_player.UpdateHealthBar(p_view, p_projection);
 
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -86,6 +87,7 @@ void PlayerManager::Update()
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i].Update();
+			m_enemyList[i].UpdateHealthBar(p_view, p_projection);
 		}
 	}
 }
