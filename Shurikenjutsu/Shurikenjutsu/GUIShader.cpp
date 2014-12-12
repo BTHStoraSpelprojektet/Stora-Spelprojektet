@@ -1,6 +1,6 @@
 #include "GUIShader.h"
 
-bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle)
+bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
@@ -233,7 +233,7 @@ void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_wor
 	p_context->Draw(6, 0);
 }
 
-bool GUIShader::InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle)
+bool GUIShader::InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
@@ -385,6 +385,7 @@ bool GUIShader::InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContex
 		ConsolePrintErrorAndQuit("Failed to create GUI color buffer.");
 		return false;
 	}
+	return true;
 }
 
 void GUIShader::RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color)

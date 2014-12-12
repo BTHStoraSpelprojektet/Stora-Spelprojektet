@@ -7,6 +7,7 @@
 #include "GUIShader.h"
 #include "DepthShader.h"
 #include "RenderTarget.h"
+#include "ParticleShader.h"
 
 #include "Enumerations.h"
 #include "Globals.h"
@@ -30,6 +31,7 @@ public:
 	static void RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 	static void RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
 	static void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
+	static void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 
 	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
@@ -69,6 +71,7 @@ private:
 	static InstancedShader m_instanceShader;
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
+	static ParticleShader m_particleShader;
 
 	static HWND m_windowHandle;
 

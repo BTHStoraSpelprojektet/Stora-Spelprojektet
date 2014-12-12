@@ -16,6 +16,7 @@ bool PlayingStateTest::Initialize()
 
 	m_objectManager.Initialize();
 
+
 	m_camera.ResetCamera();
 
 	//Load level
@@ -31,13 +32,14 @@ bool PlayingStateTest::Initialize()
 	}
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
 	std::vector<Box> wallList;
-	for (int i = 0; i < temp.size(); i++)
+	for (unsigned int i = 0; i < temp.size(); i++)
 	{
 		LevelImporter::LevelBoundingBox box = temp[i];
 		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
 	}
 	// Initiate player
-	m_playerManager.Initialize(m_objectManager.GetStaticObjectList(), wallList);
+	m_playerManager.Initialize();
+	CollisionManager::GetInstance()->Initialize(m_objectManager.GetStaticObjectList(), wallList);
 
 	// ========== DEBUG TEMP LINES ==========
 	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
@@ -48,6 +50,8 @@ bool PlayingStateTest::Initialize()
 
 	m_mouseX = 0;
 	m_mouseY = 0;
+
+	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 3.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(3.0f, 3.0f), PARTICLE_PATTERN_SMOKE);
 	// ========== DEBUG TEMP LINES ==========
 
 	// Frustum
@@ -68,16 +72,23 @@ void PlayingStateTest::Shutdown()
 	m_circle3.Shutdown();
 
 	m_debugDot.Shutdown();
+
+	m_particles.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
 }
 
 void PlayingStateTest::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+
 	BasicPicking();
 
 	m_objectManager.Update();
 	m_playerManager.Update(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+
+	// ========== DEBUG TEMP LINES ==========
+	m_particles.Update();
+	// ========== DEBUG TEMP LINES ==========
 
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
 	{
@@ -145,6 +156,10 @@ void PlayingStateTest::Render()
 		m_debugDot.Render();
 
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+	GraphicsEngine::TurnOnAlphaBlending();
+	m_particles.Render();
+	GraphicsEngine::TurnOffAlphaBlending();
 	// ========== DEBUG TEMP LINES ==========
 
 

@@ -14,8 +14,8 @@
 class GUIShader
 {
 public:
-	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
-	bool InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContext* p_context, HWND p_handle);
+	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
+	bool InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
 
 	void Shutdown();
 

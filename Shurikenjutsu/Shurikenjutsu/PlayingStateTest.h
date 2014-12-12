@@ -12,6 +12,7 @@
 #include "Collisions.h"
 #include <d3d9.h>
 #include "DebugDraw.h"
+#include "ParticleEmitter.h"
 #include "Frustum.h"
 
 class PlayingStateTest :
@@ -46,6 +47,8 @@ private:
 	DebugCircle m_circle3;
 
 	DebugDot m_debugDot;
+
+	ParticleEmitter m_particles;
 	// ========== DEBUG TEMP LINES ==========
 
 	Frustum m_frustum;

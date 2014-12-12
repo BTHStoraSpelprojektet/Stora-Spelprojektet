@@ -11,11 +11,10 @@ PlayerManager::~PlayerManager()
 
 }
 
-bool PlayerManager::Initialize(std::vector<Object> p_ModelList, std::vector<Box> p_OuterWalls)
+bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 
-		DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 20, p_ModelList, p_OuterWalls);
+	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 100, 20);
 
 	return true;
 }
@@ -31,28 +30,28 @@ void PlayerManager::Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_pro
 	m_player.UpdateMe();
 	m_player.UpdateHealthBar(p_view, p_projection);
 
-	if (Network::IsConnected())
+	if (Network::GetInstance()->IsConnected())
 	{
-		PlayerNet myPlayer = Network::GetMyPlayer();
+		PlayerNet myPlayer = Network::GetInstance()->GetMyPlayer();
 
 		// Check if the player need to respawn
-		if (Network::HasRespawned())
+		if (Network::GetInstance()->HasRespawned())
 		{
 			m_player.SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
-			Network::SetHaveRespawned();
+			Network::GetInstance()->SetHaveRespawned();
 		}
 
 		// Check if the player have made an invalid move
-		if (Network::MadeInvalidMove())
+		if (Network::GetInstance()->MadeInvalidMove())
 		{
 			m_player.SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
-			Network::UpdatedMoveFromInvalidMove();
+			Network::GetInstance()->UpdatedMoveFromInvalidMove();
 		}
 
-		std::vector<PlayerNet> enemyPlayers = Network::GetOtherPlayers();
+		std::vector<PlayerNet> enemyPlayers = Network::GetInstance()->GetOtherPlayers();
 
 		// The player list have added or removed an object
-		if (Network::IsPlayerListUpdated())
+		if (Network::GetInstance()->IsPlayerListUpdated())
 		{
 			// Add or remove an object
 
@@ -75,17 +74,18 @@ void PlayerManager::Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_pro
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, 100, 20);
+					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, enemyPlayers[i].currentHP, enemyPlayers[i].maxHP, 20);
 				}
 			}
 
-			Network::SetHaveUpdatedPlayerList();
+			Network::GetInstance()->SetHaveUpdatedPlayerList();
 		}
 
 		for (unsigned int i = 0; i < m_enemyList.size(); i++)
 		{
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
+			m_enemyList[i].SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i].Update();
 			m_enemyList[i].UpdateHealthBar(p_view, p_projection);
 		}
@@ -103,21 +103,18 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility, std::vector<Object> p_ModelList, std::vector<Box> p_OuterWalls)
+	float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
 	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_agility);
-
-	tempPlayer.SetCollidingObjects(p_ModelList);
-	tempPlayer.SetOuterWalls(p_OuterWalls);
+	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_maxHealth, p_agility);
 	m_player = tempPlayer;
 }
 
 void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
+	float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
 	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_agility);
+	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_maxHealth, p_agility);
 	tempPlayer.SetGuID(p_guid);
 	m_enemyList.push_back(tempPlayer);
 }
@@ -169,7 +166,7 @@ bool PlayerManager::IsGuidInEnemyList(RakNet::RakNetGUID p_guid)
 
 bool PlayerManager::IsGuidInNetworkList(RakNet::RakNetGUID p_guid)
 {
-	std::vector<PlayerNet> enemyPlayers = Network::GetOtherPlayers();
+	std::vector<PlayerNet> enemyPlayers = Network::GetInstance()->GetOtherPlayers();
 	for (unsigned int i = 0; i < enemyPlayers.size(); i++)
 	{
 		if (enemyPlayers[i].guid == p_guid)
