@@ -164,9 +164,10 @@ void Object::TransformShadowPoints()
 
 	for (unsigned int i = 0; i < saList.size(); i++)
 	{
-		DirectX::XMFLOAT4 position = DirectX::XMFLOAT4(saList[i].x, saList[i].y, saList[i].z, 1.0f);
-		DirectX::XMVECTOR transCenter = DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&position), DirectX::XMLoadFloat4x4(&world));
-		shadowPoints.push_back(DirectX::XMFLOAT3(position.x, position.y, position.z));
+		DirectX::XMFLOAT3 position = saList[i];
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
+
+		shadowPoints.push_back(position);
 	}
 
 	if (shadowPoints.size() > 0)
