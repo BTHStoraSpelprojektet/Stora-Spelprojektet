@@ -84,10 +84,12 @@ void Player::CheckForSpecialAttack()
 {
 	if (m_inputManager->IsKeyPressed(VkKeyScan('v')))
 	{
-		float speed_X_Delta_X_DashLength = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed * 10.0f;
-		SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta_X_DashLength,
-			m_position.y + m_direction.y * speed_X_Delta_X_DashLength, m_position.z + m_direction.z * speed_X_Delta_X_DashLength));
-		std::cout << "local dash" << std::endl;
+		if (CollisionManager::GetInstance()->CalculateDashLength())
+		{
+			float speed_X_Delta_X_DashLength = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed * 3.0f;
+			SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta_X_DashLength, m_position.y + m_direction.y * speed_X_Delta_X_DashLength, m_position.z + m_direction.z * speed_X_Delta_X_DashLength));
+
+		}
 	}	
 	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	//{
