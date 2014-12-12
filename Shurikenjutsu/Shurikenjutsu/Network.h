@@ -16,6 +16,7 @@
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
+#include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 #include <map>
 
@@ -58,6 +59,7 @@ public:
 	void SetHaveRespawned();
 
 	void DoMeleeAttack();
+	void SendAbility(ABILITIES p_ability);
 
 private:
 	Network();
@@ -69,6 +71,7 @@ private:
 	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
+	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP);
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed);

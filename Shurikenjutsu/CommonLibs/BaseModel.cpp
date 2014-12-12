@@ -30,3 +30,8 @@ std::vector<Box> BaseModel::GetBoundingBoxes()
 {
 	return m_boundingBoxes;
 }
+
+std::vector<Sphere> BaseModel::GetBoundingSpheres()
+{
+	return m_boundingSpheres;
+}

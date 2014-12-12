@@ -10,7 +10,7 @@ Player::~Player()
 
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
 	if (!MovingObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
 	{
@@ -20,10 +20,14 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetDamage(p_damage);
 	m_spells = p_spells;
 	SetHealth(p_health);
+	SetMaxHealth(p_maxHealth);
 	SetAgility(p_agility);
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
+	m_ability = new Ability();
+	m_noAbility = new Ability();
+	m_buttonQ = new Dash();
 
 	return true;
 }
@@ -38,6 +42,7 @@ void Player::UpdateMe()
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
+	m_ability = m_noAbility;
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
@@ -55,7 +60,22 @@ void Player::UpdateMe()
 	{
 		Network::GetInstance()->AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
 	}
+
+	// Check health from server
+	if (Network::GetInstance()->IsConnected())
+	{
+		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
+	}
+
+	// Temp to set max health
+	if (Network::GetInstance()->ConnectedNow())
+	{
+		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
+	}
+
+	m_ability->Execute();
 }
+
 bool Player::CalculateDirection()
 {
 	float x, y, z;
@@ -74,6 +94,7 @@ bool Player::CalculateDirection()
 			z += 1;
 			moved = true;
 		}
+		m_ability = m_buttonQ;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
@@ -111,6 +132,7 @@ bool Player::CalculateDirection()
 
 	return moved;
 }
+
 void Player::Update()
 {
 
@@ -126,7 +148,7 @@ float Player::GetDamage() const
 	return m_damage;
 }
 
-void Player::SetHealth(unsigned int p_health)
+void Player::SetHealth(int p_health)
 {
 	if (p_health < 0)
 	{
@@ -138,9 +160,19 @@ void Player::SetHealth(unsigned int p_health)
 	}	
 }
 
-unsigned int Player::GetHealth() const
+int Player::GetHealth() const
 {
 	return m_health;
+}
+
+void Player::SetMaxHealth(int p_maxHealth)
+{
+	m_maxHealth = p_maxHealth;
+}
+
+int Player::GetMaxHealth() const
+{
+	return m_maxHealth;
 }
 
 void Player::SetAgility(float p_agility)

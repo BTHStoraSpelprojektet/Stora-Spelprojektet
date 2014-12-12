@@ -16,6 +16,7 @@ public:
 	virtual void Shutdown();
 
 	std::vector<Box> GetBoundingBoxes();
+	std::vector<Sphere> GetBoundingSpheres();
 protected:
 	ID3D11Buffer* m_mesh;
 	ID3D11ShaderResourceView* m_texture;
@@ -27,6 +28,7 @@ protected:
 
 	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 	std::vector<Box> m_boundingBoxes;
+	std::vector<Sphere> m_boundingSpheres;
 };
 
 #endif

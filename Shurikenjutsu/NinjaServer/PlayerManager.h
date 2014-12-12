@@ -9,6 +9,7 @@
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
+#include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 
 class PlayerManager
@@ -29,15 +30,18 @@ public:
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
+	void DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 
-	void UsedAbility(int p_index);
-	bool CanUseAbility(int p_index);
+	void UsedAbility(int p_index, ABILITIES p_ability);
+	bool CanUseAbility(int p_index, ABILITIES p_ability);
+	void ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
+	void UpdateHealth(RakNet::RakNetGUID p_guid, int p_health);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 
@@ -46,6 +50,7 @@ private:
 	std::vector<Box> m_boundingBoxes;
 
 	float m_gcd;
+	int m_playerHealth;
 };
 
 #endif

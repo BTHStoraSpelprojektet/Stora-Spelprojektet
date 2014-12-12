@@ -185,10 +185,10 @@ void Server::ReceviePacket()
 			rBitStream.Read(dirZ);
 
 			int index = m_playerManager.GetPlayerIndex(m_packet->guid);
-			if (m_playerManager.CanUseAbility(index))
+			if (m_playerManager.CanUseAbility(index, ABILITIES_SHURIKEN))
 			{
 				m_shurikenManager.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
-				m_playerManager.UsedAbility(index);
+				m_playerManager.UsedAbility(index, ABILITIES_SHURIKEN);
 			}
 			
 			break;
@@ -201,6 +201,23 @@ void Server::ReceviePacket()
 		case ID_MELEE_ATTACK:
 		{
 			m_collisionManager->NormalMeleeAttack(m_packet->guid, &m_playerManager);
+			break;
+		}
+		case ID_ABILITY:
+		{
+			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
+
+			rBitStream.Read(messageID);
+			ABILITIES readAbility;
+
+			rBitStream.Read(readAbility);
+			int index = m_playerManager.GetPlayerIndex(m_packet->guid);
+
+			if (m_playerManager.CanUseAbility(index, readAbility))
+			{
+				m_playerManager.ExceuteAbility(m_packet->guid, readAbility);
+				m_playerManager.UsedAbility(index, readAbility);
+			}
 			break;
 		}
 		default:

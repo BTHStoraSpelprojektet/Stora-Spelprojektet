@@ -270,6 +270,15 @@
     <ClCompile Include="Sound.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Ability.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusEffect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Dash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ShadowShapes.cpp">
       <Filter>Source Files\Graphics\ShadowShapes</Filter>
     </ClCompile>
@@ -418,6 +427,15 @@
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Ability.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusEffect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dash.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ShadowShapes.h">
       <Filter>Header Files\Graphics\ShadowShapes</Filter>
