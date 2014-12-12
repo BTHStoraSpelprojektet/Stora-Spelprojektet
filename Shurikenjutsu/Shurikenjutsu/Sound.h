@@ -25,8 +25,4 @@ private:
 	//FMOD_Caps caps;
 	char m_name[256];
 };
-
-
-#endif // !SOUND_H_
-
-
+#endif
