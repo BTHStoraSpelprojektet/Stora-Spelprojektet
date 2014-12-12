@@ -297,7 +297,7 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 
 void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility)
 {
-	std::string abilityString = "Hej";
+	RakNet::RakString abilityString = "Hej";
 	switch (p_readAbility)
 	{
 	case ABILITIES_SHURIKEN:
