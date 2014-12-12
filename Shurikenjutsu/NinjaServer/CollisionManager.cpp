@@ -66,8 +66,11 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		// Make collision test
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 2.5f, boxPosition, boxExtent, attackDirection))
 		{
-			// Respawn player
-			p_playerManager->RespawnPlayer(playerList[i].guid);
+			// todo melee dmg
+			int dmg = 100;
+
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, dmg);
 			break;
 		}
 	}
