@@ -12,6 +12,7 @@
 #include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 #include "GameState.h"
+#include "DebugState.h"
 
 class Server
 {
@@ -29,7 +30,7 @@ private:
 	RakNet::Packet *m_packet;
 
 	int m_nrOfConnections;
-	GameState m_gameState;
+	GameState* m_gameState;
 };
 
 #endif SERVER

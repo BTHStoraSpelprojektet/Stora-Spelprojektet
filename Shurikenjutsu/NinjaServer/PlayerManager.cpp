@@ -340,13 +340,6 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
 		if (m_players[i].guid == p_guid)
 		{
 			m_players[i].currentHP -= p_damage;
-
-			if (m_players[i].currentHP <= 0)
-			{
-				m_players[i].currentHP = m_players[i].maxHP;
-				RespawnPlayer(p_guid);
-			}
-
 			UpdateHealth(p_guid, m_players[i].currentHP);
 		}
 	}
@@ -362,4 +355,21 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health)
 	
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+int PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
+{
+	return GetPlayer(p_guid).currentHP;
+}
+
+void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (p_guid == m_players[i].guid)
+		{
+			m_players[i].currentHP = m_players[i].maxHP;
+			UpdateHealth(p_guid, m_players[i].currentHP);
+		}
+	}
 }

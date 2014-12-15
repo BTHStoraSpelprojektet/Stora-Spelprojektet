@@ -20,15 +20,16 @@ bool Server::Initialize()
 	ModelLibrary::GetInstance()->Initialize(new BaseModel());
 
 	// Initiate game state
-	m_gameState = GameState();
-	m_gameState.Initialize(m_serverPeer);
+	m_gameState = new DebugState();
+	m_gameState->Initialize(m_serverPeer);
 
 	return true;
 }
 
 void Server::Shutdown()
 {
-	m_gameState.Shutdown();
+	m_gameState->Shutdown();
+	delete m_gameState;
 
 	m_serverPeer->Shutdown(1000);
 	RakNet::RakPeerInterface::DestroyInstance(m_serverPeer);
@@ -38,7 +39,7 @@ void Server::Update(double p_deltaTime)
 {
 	ReceviePacket();
 
-	m_gameState.Update(p_deltaTime);
+	m_gameState->Update(p_deltaTime);
 }
 
 void Server::ReceviePacket()
@@ -62,7 +63,7 @@ void Server::ReceviePacket()
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-			m_gameState.AddPlayer(m_packet->guid, m_nrOfConnections);
+			m_gameState->AddPlayer(m_packet->guid, m_nrOfConnections);
 
 			break;
 		}
@@ -77,7 +78,7 @@ void Server::ReceviePacket()
 			m_nrOfConnections--;
 			std::cout << "A client has disconnected (" << m_nrOfConnections << ")" <<std::endl;
 			
-			m_gameState.RemovePlayer(m_packet->guid);
+			m_gameState->RemovePlayer(m_packet->guid);
 
 
 			RakNet::BitStream bitStream;
@@ -94,7 +95,7 @@ void Server::ReceviePacket()
 		{
 			m_nrOfConnections--;
 			std::cout << "A client lost the connection (" << m_nrOfConnections << ")" << std::endl;
-			m_gameState.RemovePlayer(m_packet->guid);
+			m_gameState->RemovePlayer(m_packet->guid);
 			break;
 		}
 		case ID_PLAYER_MOVED:
@@ -109,10 +110,10 @@ void Server::ReceviePacket()
 			rBitStream.Read(z);
 
 			// Can player move?
-			m_gameState.MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections);
+			m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections);
 
 			// Get player pos
-			PlayerNet player = m_gameState.GetPlayer(m_packet->guid);
+			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
 			RakNet::BitStream wBitStream;
 			wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
@@ -136,9 +137,9 @@ void Server::ReceviePacket()
 			bitStream.Read(dirY);
 			bitStream.Read(dirZ);
 
-			m_gameState.RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
+			m_gameState->RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
 
-			PlayerNet player = m_gameState.GetPlayer(m_packet->guid);
+			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
 			RakNet::BitStream wBitStream;
 			wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
@@ -165,23 +166,23 @@ void Server::ReceviePacket()
 			rBitStream.Read(dirY);
 			rBitStream.Read(dirZ);
 
-			int index = m_gameState.GetPlayerIndex(m_packet->guid);
-			if (m_gameState.CanUseAbility(index, ABILITIES_SHURIKEN))
+			int index = m_gameState->GetPlayerIndex(m_packet->guid);
+			if (m_gameState->CanUseAbility(index, ABILITIES_SHURIKEN))
 			{
-				m_gameState.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
-				m_gameState.UsedAbility(index, ABILITIES_SHURIKEN);
+				m_gameState->AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+				m_gameState->UsedAbility(index, ABILITIES_SHURIKEN);
 			}
 			
 			break;
 		}
 		case ID_DOWNLOAD_PLAYERS:
 		{
-			m_gameState.BroadcastPlayers();
+			m_gameState->BroadcastPlayers();
 			break;
 		}
 		case ID_MELEE_ATTACK:
 		{
-			m_gameState.NormalMeleeAttack(m_packet->guid);
+			m_gameState->NormalMeleeAttack(m_packet->guid);
 			break;
 		}
 		case ID_ABILITY:
@@ -192,12 +193,12 @@ void Server::ReceviePacket()
 			ABILITIES readAbility;
 
 			rBitStream.Read(readAbility);
-			int index = m_gameState.GetPlayerIndex(m_packet->guid);
+			int index = m_gameState->GetPlayerIndex(m_packet->guid);
 
-			if (m_gameState.CanUseAbility(index, readAbility))
+			if (m_gameState->CanUseAbility(index, readAbility))
 			{
-				m_gameState.ExecuteAbility(m_packet->guid, readAbility);
-				m_gameState.UsedAbility(index, readAbility);
+				m_gameState->ExecuteAbility(m_packet->guid, readAbility);
+				m_gameState->UsedAbility(index, readAbility);
 			}
 			break;
 		}

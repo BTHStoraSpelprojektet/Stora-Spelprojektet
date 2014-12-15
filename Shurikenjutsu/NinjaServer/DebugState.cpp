@@ -31,4 +31,14 @@ void DebugState::Shutdown()
 void DebugState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
+
+	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
+	for each(PlayerNet player in players)
+	{
+		if (player.currentHP <= 0)
+		{
+			m_playerManager.ResetHealth(player.guid);
+			m_playerManager.RespawnPlayer(player.guid);
+		}
+	}
 }

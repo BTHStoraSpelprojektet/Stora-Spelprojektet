@@ -27,8 +27,8 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	m_mapManager.Initialize(LEVEL_NAME);
 
 	// Initiate collision manager
-	m_collisionManager = CollisionManager();
-	m_collisionManager.Initialize(m_mapManager.GetBoundingBoxes());
+	m_collisionManager = new CollisionManager();
+	m_collisionManager->Initialize(m_mapManager.GetBoundingBoxes());
 
 	return true;
 }
@@ -38,6 +38,7 @@ void GameState::Shutdown()
 	m_playerManager.Shutdown();
 	m_shurikenManager.Shutdown();
 	m_mapManager.Shutdown();
+	delete m_collisionManager;
 }
 
 void GameState::Update(double p_deltaTime)
@@ -45,7 +46,7 @@ void GameState::Update(double p_deltaTime)
 	m_playerManager.Update(p_deltaTime);
 	m_shurikenManager.Update(p_deltaTime);
 
-	m_collisionManager.ShurikenCollisionChecks(&m_shurikenManager, &m_playerManager);
+	m_collisionManager->ShurikenCollisionChecks(&m_shurikenManager, &m_playerManager);
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
@@ -105,5 +106,5 @@ void GameState::AddShuriken(RakNet::RakNetGUID p_guid, float p_x, float p_y, flo
 
 void GameState::NormalMeleeAttack(RakNet::RakNetGUID p_guid)
 {
-	m_collisionManager.NormalMeleeAttack(p_guid, &m_playerManager);
+	m_collisionManager->NormalMeleeAttack(p_guid, &m_playerManager);
 }
