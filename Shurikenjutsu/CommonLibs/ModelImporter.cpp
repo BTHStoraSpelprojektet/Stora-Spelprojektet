@@ -110,6 +110,7 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 		for (unsigned int i = 0; i < boundingBoxCount; i++)
 		{
 			memcpy(&m_importedMesh.m_boundingBoxes[i], (char*)data + readPosition, sizeof(Box));
+			m_importedMesh.m_boundingBoxes[i].CalculateRadius();
 			readPosition += sizeof(Box);
 		}
 	}
