@@ -74,6 +74,7 @@ std::vector<OBB> MapManager::TransformToOBB(std::vector<Box> p_boxList, DirectX:
 		DirectX::XMStoreFloat3(&temp.m_center, transCenter);
 		temp.m_extents = box.m_extents;
 		temp.m_direction = orientation;
+		temp.CalculateRadius();
 
 		obbList.push_back(temp);
 	}
