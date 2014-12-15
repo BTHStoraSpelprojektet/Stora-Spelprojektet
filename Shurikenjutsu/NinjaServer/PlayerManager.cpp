@@ -9,7 +9,7 @@ PlayerManager::~PlayerManager()
 {
 }
 
-bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName)
+bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = 100;
 	m_gcd = 0.5f;
@@ -22,7 +22,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	Level level(p_levelName);
 	m_spawnPoints = level.GetSpawnPoints();
 
-	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(p_modelName)->GetBoundingBoxes();
+	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(PLAYER_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
@@ -295,7 +295,7 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	return result;
 }
 
-void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility)
 {
 	RakNet::RakString abilityString = "Hej";
 	switch (p_readAbility)

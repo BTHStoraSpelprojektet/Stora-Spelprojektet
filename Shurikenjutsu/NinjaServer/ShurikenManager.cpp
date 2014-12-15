@@ -10,14 +10,14 @@ ShurikenManager::~ShurikenManager()
 {
 }
 
-bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName)
+bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	m_serverPeer = p_serverPeer;
 	m_shurikenSetTimeLeft = 2.0f;
 
 	m_shurikens = std::vector<ShurikenNet>();
 
-	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(p_modelName)->GetBoundingBoxes();
+	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(SHURIKEN_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
