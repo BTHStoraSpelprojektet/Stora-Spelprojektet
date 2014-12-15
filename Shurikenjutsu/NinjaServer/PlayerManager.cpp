@@ -79,7 +79,7 @@ void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, 
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			if (abs(p_x - m_players[i].x) > 1.0f || abs(p_y - m_players[i].y) > 1.0f || abs(p_z - m_players[i].z) > 1.0f)
+			if (abs(p_x - m_players[i].x) > 5.0f || abs(p_y - m_players[i].y) > 5.0f || abs(p_z - m_players[i].z) > 5.0f)
 			{
 				// Moved too far
 				SendInvalidMessage(p_guid);

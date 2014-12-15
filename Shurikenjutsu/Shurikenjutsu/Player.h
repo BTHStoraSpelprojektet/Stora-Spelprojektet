@@ -47,6 +47,7 @@ public:
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
 private:
+	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
 
@@ -70,6 +71,9 @@ private:
 	Ability* m_shurikenAbility;
 
 	HealthBar m_healthbar;
+
+
+	float m_dashCd;
 };
 
 #endif PLAYER
