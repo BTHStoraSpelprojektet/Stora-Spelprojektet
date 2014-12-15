@@ -137,7 +137,9 @@ struct Box
 	}
 	void CalculateRadius()
 	{
-		m_radius = std::sqrt(m_extents.x * m_extents.x + m_extents.z * m_extents.z);
+		float max1 = std::fmaxf(m_extents.x, m_extents.y);
+		float max2 = std::fmaxf(max1, m_extents.z);
+		m_radius = std::sqrt(max2 * max2 + max2 * max2);
 	}
 };
 
@@ -212,7 +214,9 @@ struct OBB
 	}
 	void CalculateRadius()
 	{
-		m_radius = std::sqrt(m_extents.x * m_extents.x + m_extents.z * m_extents.z);
+		float max1 = std::fmaxf(m_extents.x, m_extents.y);
+		float max2 = std::fmaxf(max1, m_extents.z);
+		m_radius = std::sqrt(max2 * max2 + max2 * max2);
 	}
 };
 
