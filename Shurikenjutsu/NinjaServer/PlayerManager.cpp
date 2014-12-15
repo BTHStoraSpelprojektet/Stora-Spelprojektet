@@ -9,8 +9,10 @@ PlayerManager::~PlayerManager()
 {
 }
 
-bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
+bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName)
 {
+	m_playerHealth = 100;
+	m_gcd = 0.5f;
 	m_serverPeer = p_serverPeer;
 
 	m_players = std::vector<PlayerNet>();
@@ -19,6 +21,8 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	// Load spawnpoints
 	Level level(p_levelName);
 	m_spawnPoints = level.GetSpawnPoints();
+
+	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(p_modelName)->GetBoundingBoxes();
 
 	return true;
 }
@@ -29,6 +33,13 @@ void PlayerManager::Shutdown()
 
 void PlayerManager::Update(double p_deltaTime)
 {
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].gcd > 0.0f)
+		{
+			m_players[i].gcd -= (float)p_deltaTime;
+		}
+	}
 }
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
@@ -48,6 +59,9 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
 	player.dirX = 1.0f;
 	player.dirY = 0.0f;
 	player.dirZ = 0.0f;
+	player.gcd = 0.0f;
+	player.maxHP = m_playerHealth;
+	player.currentHP = m_playerHealth;
 	m_players.push_back(player);
 
 	std::cout << "Player added" << std::endl;
@@ -137,6 +151,8 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].dirY);
 		bitStream.Write(m_players[i].dirZ);
 		bitStream.Write(m_players[i].team);
+		bitStream.Write(m_players[i].maxHP);
+		bitStream.Write(m_players[i].currentHP);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
@@ -149,7 +165,6 @@ void PlayerManager::RespawnPlayer(RakNet::RakNetGUID p_guid)
 		if (m_players[i].guid == p_guid)
 		{
 			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(m_players[i].team);
-			std::cout << m_players[i].team << "\n";
 			m_players[i].x = spawnPoint.m_translationX;
 			m_players[i].y = spawnPoint.m_translationY;
 			m_players[i].z = spawnPoint.m_translationZ;
@@ -202,4 +217,149 @@ LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(int p_team)
 	// If the player didn't found a spawnpoint for the team he was in then choose a random point
 	int index = rand() % m_spawnPoints.size();
 	return m_spawnPoints[index];
+}
+
+std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
+{
+	std::vector<Box> boundingBoxes = std::vector<Box>();
+
+	// Check so index is not out of bounds
+	if (p_index < 0 || p_index > (int)m_players.size() - 1)
+	{
+		return boundingBoxes;
+	}
+
+	for (unsigned int i = 0; i < m_boundingBoxes.size(); i++)
+	{
+		Box box = m_boundingBoxes[i];
+		box.m_center.x += m_players[p_index].x;
+		box.m_center.y += m_players[p_index].y;
+		box.m_center.z += m_players[p_index].z;
+
+		boundingBoxes.push_back(box);
+	}
+
+	// Temp code to create a box around the player
+	Box playerBox = Box(0.0f, 2.0f, 0.0f, 1.0f, 2.0f, 1.0f);
+	playerBox.m_center.x += m_players[p_index].x;
+	playerBox.m_center.y += m_players[p_index].y;
+	playerBox.m_center.z += m_players[p_index].z;
+	boundingBoxes.push_back(playerBox);
+
+	return boundingBoxes;
+}
+
+void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
+{
+	if (p_index >= 0 && p_index < (int)m_players.size())
+	{
+		m_players[p_index].gcd = m_gcd;
+		switch (p_ability)
+		{
+		case ABILITIES_SHURIKEN:
+			break;
+		case ABILITIES_DASH:
+			break;
+		default:
+			break;
+		}
+
+	}
+}
+
+bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
+{
+	bool result = false;
+
+	if (p_index >= 0 && p_index < (int)m_players.size())
+	{
+		if (m_players[p_index].gcd <= 0.0f)
+		{
+			result = true;
+			switch (p_ability)
+			{
+			case ABILITIES_SHURIKEN:
+				if (true)
+				{
+
+				}// IF PLAYER SHURIKEn cd is 0 do ability)
+				break;
+			case ABILITIES_DASH:
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	return result;
+}
+
+void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility)
+{
+	RakNet::RakString abilityString = "Hej";
+	switch (p_readAbility)
+	{
+	case ABILITIES_SHURIKEN:
+		abilityString = "HEJSAN EN SHURIKEN ÄR KASTAD! d:";
+		break;
+	case ABILITIES_DASH:
+		abilityString = "HEJSAN NU BLEV DET EN DASH! :p";
+		break;
+	default:
+		break;
+	}
+
+
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_ABILITY);
+	bitStream.Write(p_readAbility);
+	bitStream.Write(abilityString);
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			m_players[i].currentHP -= p_damage;
+
+			if (m_players[i].currentHP <= 0)
+			{
+				m_players[i].currentHP = m_players[i].maxHP;
+				RespawnPlayer(p_guid);
+			}
+
+			UpdateHealth(p_guid, m_players[i].currentHP);
+		}
+	}
+}
+
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_HP_CHANGED);
+	bitStream.Write(p_guid);
+	bitStream.Write(p_health);
+	
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

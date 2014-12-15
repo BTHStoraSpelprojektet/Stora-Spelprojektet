@@ -1,20 +1,19 @@
 #include "Network.h"
 
-RakNet::RakPeerInterface* Network::m_clientPeer;
-RakNet::SocketDescriptor Network::m_socketDesc;
-RakNet::Packet* Network::m_packet;
+Network* Network::m_instance;
 
-bool Network::m_connected;
-bool Network::m_prevConnected;
-bool Network::m_newOrRemovedPlayers;
-bool Network::m_shurikenListUpdated;
-bool Network::m_respawned;
-bool Network::m_invalidMove;
-int Network::m_connectionCount;
-int Network::m_previousCount;
-PlayerNet Network::m_myPlayer;
-std::vector<PlayerNet> Network::m_enemyPlayers;
-std::vector < ShurikenNet > Network::m_shurikensList;
+Network::Network(){}
+Network::~Network(){}
+
+Network* Network::GetInstance()
+{
+	if (m_instance == nullptr)
+	{
+		m_instance = new Network();
+	}
+
+	return m_instance;
+}
 
 bool Network::Initialize()
 {
@@ -44,6 +43,8 @@ void Network::Shutdown()
 {
 	m_clientPeer->Shutdown(300);
 	RakNet::RakPeerInterface::DestroyInstance(m_clientPeer);
+
+	delete m_instance;
 }
 
 void Network::Update()
@@ -126,6 +127,7 @@ void Network::ReceviePacket()
 			float x, y, z;
 			float dirX, dirY, dirZ;
 			int team;
+			int maxHP, currentHP;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
 			bitStream.Read(messageID);
@@ -141,10 +143,13 @@ void Network::ReceviePacket()
 				bitStream.Read(dirY);
 				bitStream.Read(dirZ);
 				bitStream.Read(team);
+				bitStream.Read(maxHP);
+				bitStream.Read(currentHP);
 
 				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
+				UpdatePlayerHP(guid, maxHP, currentHP);
 
 				playerGuids.push_back(guid);				
 			}
@@ -242,6 +247,35 @@ void Network::ReceviePacket()
 		case ID_PLAYER_INVALID_MOVE:
 		{
 			m_invalidMove = true;
+			break;
+		}
+		case ID_PLAYER_HP_CHANGED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			int currentHP;
+
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			bitStream.Read(currentHP);
+
+			UpdatePlayerHP(guid, currentHP);
+
+			break;
+		}
+		case ID_ABILITY:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			ABILITIES abilityEnum;
+			RakNet::RakString abilityString;
+			bitStream.Read(messageID);
+			bitStream.Read(abilityEnum);
+			bitStream.Read(abilityString);
+
+			std::cout << " " << abilityString << std::endl;
+
 			break;
 		}
 		default:
@@ -526,4 +560,52 @@ bool Network::MadeInvalidMove()
 void Network::UpdatedMoveFromInvalidMove()
 {
 	m_invalidMove = false;
+}
+
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.currentHP = p_currentHP;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].currentHP = p_currentHP;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_currentHP)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.maxHP = p_maxHP;
+		m_myPlayer.currentHP = p_currentHP;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].maxHP = p_maxHP;
+				m_enemyPlayers[i].currentHP = p_currentHP;
+			}
+		}
+	}
+}
+
+void Network::SendAbility(ABILITIES p_ability)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_ABILITY);
+	bitStream.Write(p_ability);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }

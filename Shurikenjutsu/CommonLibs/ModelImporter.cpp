@@ -118,7 +118,7 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	memcpy(&shadowVolumeCount, (char*)data + readPosition, sizeof(unsigned int));
 	readPosition += sizeof(unsigned int);
 
-	if (shadowVolumeCount < 10)
+	if (shadowVolumeCount < 100)
 	{
 		m_importedMesh.m_shadowPoints.resize(shadowVolumeCount);
 
@@ -126,6 +126,21 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 		{
 			memcpy(&m_importedMesh.m_shadowPoints[i], (char*)data + readPosition, (sizeof(float)* 3));
 			readPosition += (sizeof(float)* 3);
+		}
+	}
+
+	unsigned int boundingSphereCount = 0;
+	memcpy(&boundingSphereCount, (char*)data + readPosition, sizeof(unsigned int));
+	readPosition += sizeof(unsigned int);
+
+	if (boundingSphereCount < 10)
+	{
+		m_importedMesh.m_boundingSpheres.resize(boundingSphereCount);
+
+		for (unsigned int i = 0; i < boundingSphereCount; i++)
+		{
+			memcpy(&m_importedMesh.m_boundingSpheres[i], (char*)data + readPosition, (sizeof(Sphere)));
+			readPosition += sizeof(Sphere);
 		}
 	}
 

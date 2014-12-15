@@ -1,6 +1,6 @@
 #include "DebugShape2D.h"
 
-DebugShape2D::DebugShape2D(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::XMFLOAT3 p_color)
+void DebugShape2D::Initialize(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::XMFLOAT3 p_color)
 {
 	std::vector<DirectX::XMFLOAT3> lines;
 
@@ -19,7 +19,7 @@ DebugShape2D::DebugShape2D(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::XMFL
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 }
 
-DebugShape2D::~DebugShape2D()
+void DebugShape2D::Shutdown()
 {
 	m_mesh->Release();
 	m_mesh = 0;

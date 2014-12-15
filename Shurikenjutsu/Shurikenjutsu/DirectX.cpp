@@ -260,7 +260,6 @@ void DirectXWrapper::TurnOnAlphaBlending()
 	blendFactor[3] = 0.0f;
 
 	m_context->OMSetBlendState(m_alphaEnabled, blendFactor, 0xffffffff);
-	//m_context->OMSetDepthStencilState(m_depthDisabled, 1);
 }
 
 void DirectXWrapper::TurnOffAlphaBlending()
@@ -273,10 +272,19 @@ void DirectXWrapper::TurnOffAlphaBlending()
 	blendFactor[3] = 0.0f;
 
 	m_context->OMSetBlendState(m_alphaDisabled, blendFactor, 0xffffffff);
-	//m_context->OMSetDepthStencilState(m_depthEnabled, 1);
 }
 
 void DirectXWrapper::ResetRenderTarget()
 {
 	m_context->OMSetRenderTargets(1, &m_renderTarget, m_depthStencilView);
+}
+
+void DirectXWrapper::TurnOnDepthStencil()
+{
+	m_context->OMSetDepthStencilState(m_depthEnabled, 1);
+}
+
+void DirectXWrapper::TurnOffDepthStencil()
+{
+	m_context->OMSetDepthStencilState(m_depthDisabled, 1);
 }

@@ -12,9 +12,9 @@ class PlayerManager
 public:
 	PlayerManager();
 	~PlayerManager();
-	bool Initialize(std::vector<Object> p_ModelList);
+	bool Initialize();
 	void Shutdown();
-	void Update( );
+	void Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 	void Render(SHADERTYPE p_shader);
 	DirectX::XMFLOAT3 GetPlayerPosition();
 	DirectX::XMFLOAT3 GetPlayerDirection();
@@ -24,11 +24,14 @@ public:
 	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);
 	DirectX::XMFLOAT3 GetAttackDirection();
 	void SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection);
+
+	DirectX::BoundingBox GetPlayerBoundingBox();
+
 private:
 	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility, std::vector<Object> p_ModelList);
+		float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility);
 	void AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-		float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility);
+		float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility);
 	
 	bool IsGuidInEnemyList(RakNet::RakNetGUID p_guid);
 	bool IsGuidInNetworkList(RakNet::RakNetGUID p_guid);

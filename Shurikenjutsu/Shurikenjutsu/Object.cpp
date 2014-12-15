@@ -16,9 +16,10 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	SetRotation(DirectX::XMFLOAT3(0.0f,0.0f, 0.0f));
 
-	m_model = ModelLibrary::GetInstance()->GetModel(p_filepath);
+	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 	
 	TransformBoundingBoxes();
+	TransformShadowPoints();
 
 	return true;
 }
@@ -29,9 +30,11 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetScale(p_scale);
 	SetRotation(p_rotation);
 
-	m_model = ModelLibrary::GetInstance()->GetModel(p_filepath);
+	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 
 	TransformBoundingBoxes();
+	TransformShadowPoints();
+
 	return true;
 }
 
@@ -78,11 +81,11 @@ void Object::SetRotation(DirectX::XMFLOAT3 p_rotation)
 DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 {
 	DirectX::XMFLOAT4X4 matrix;
-	DirectX::XMStoreFloat4x4(&matrix,	DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) *
-										DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) *
-										DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) * DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) * DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+	
 	return matrix;
 }
+
 
 Model* Object::GetModel()
 {
@@ -95,13 +98,13 @@ void Object::TransformBoundingBoxes()
 	m_debugBoxes.clear();
 
 	std::vector<Box> bbList = m_model->GetBoundingBoxes();
+	DirectX::XMFLOAT4X4 world = GetWorldMatrix();
+	DirectX::XMFLOAT4 orientation;
+	DirectX::XMStoreFloat4(&orientation, DirectX::XMQuaternionRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)));
 
 	for (unsigned int i = 0; i < bbList.size(); i++)
 	{
 		OBB temp;
-		DirectX::XMFLOAT4 orientation;
-		DirectX::XMStoreFloat4(&orientation, DirectX::XMQuaternionRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)));
-		DirectX::XMFLOAT4X4 world = GetWorldMatrix();
 		temp.m_center = bbList[i].m_center;
 		DirectX::XMFLOAT4 center = DirectX::XMFLOAT4(temp.m_center.x, temp.m_center.y, temp.m_center.z, 1.0f);
 		DirectX::XMVECTOR transCenter = DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&center), DirectX::XMLoadFloat4x4(&world));
@@ -115,19 +118,27 @@ void Object::TransformBoundingBoxes()
 		DirectX::XMFLOAT3 position;
 
 		// Top right.
-		position = DirectX::XMFLOAT3(temp.m_center.x + temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z + temp.m_extents.z);
+		position = DirectX::XMFLOAT3(bbList[i].m_center.x + temp.m_extents.x, bbList[i].m_center.y - temp.m_extents.y, bbList[i].m_center.z + temp.m_extents.z);
+		DirectX::XMFLOAT4 newPos = DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f);
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&newPos), DirectX::XMLoadFloat4x4(&world)));
 		list.push_back(position);
 
 		// Bottom right.
-		position = DirectX::XMFLOAT3(temp.m_center.x + temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z - temp.m_extents.z);
+		position = DirectX::XMFLOAT3(bbList[i].m_center.x + temp.m_extents.x, bbList[i].m_center.y - temp.m_extents.y, bbList[i].m_center.z - temp.m_extents.z);
+		newPos = DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f);
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&newPos), DirectX::XMLoadFloat4x4(&world)));
 		list.push_back(position);
 
 		// Bottom left.
-		position = DirectX::XMFLOAT3(temp.m_center.x - temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z - temp.m_extents.z);
+		position = DirectX::XMFLOAT3(bbList[i].m_center.x - temp.m_extents.x, bbList[i].m_center.y - temp.m_extents.y, bbList[i].m_center.z - temp.m_extents.z);
+		newPos = DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f);
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&newPos), DirectX::XMLoadFloat4x4(&world)));
 		list.push_back(position);
 
 		// Top left.
-		position = DirectX::XMFLOAT3(temp.m_center.x - temp.m_extents.x, temp.m_center.y - temp.m_extents.y, temp.m_center.z + temp.m_extents.z);
+		position = DirectX::XMFLOAT3(bbList[i].m_center.x - temp.m_extents.x, bbList[i].m_center.y - temp.m_extents.y, bbList[i].m_center.z + temp.m_extents.z);
+		newPos = DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f);
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&newPos), DirectX::XMLoadFloat4x4(&world)));
 		list.push_back(position);
 
 		shape.Initialize(list, bbList[i].m_extents.y, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
@@ -140,6 +151,45 @@ void Object::RenderDebugBoxes()
 	for (unsigned int i = 0; i < m_debugBoxes.size(); i++)
 	{
 		m_debugBoxes[i].Render();
+	}
+}
+
+void Object::TransformShadowPoints()
+{
+	std::vector<DirectX::XMFLOAT3> shadowPoints;
+	shadowPoints.clear();
+
+	std::vector<DirectX::XMFLOAT3> saList = m_model->GetShadowPoints();
+	DirectX::XMFLOAT4X4 world = GetWorldMatrix();
+
+	for (unsigned int i = 0; i < saList.size(); i++)
+	{
+		DirectX::XMFLOAT3 position = saList[i];
+		DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
+
+		shadowPoints.push_back(position);
+	}
+
+	if (shadowPoints.size() > 0)
+	{
+		LineSegment line;
+		ShadowShape shape;
+
+		// Create all but the last shapes.
+		for (unsigned int i = 0; i < shadowPoints.size() - 1; i++)
+		{
+			line.m_startPoint = DirectX::XMFLOAT2(shadowPoints[i].x, shadowPoints[i].z);
+			line.m_endPoint = DirectX::XMFLOAT2(shadowPoints[i + 1].x, shadowPoints[i + 1].z);
+			shape.m_lineSegments.push_back(line);
+		}
+
+		// Create the last shapes.
+		line.m_startPoint = DirectX::XMFLOAT2(shadowPoints[shadowPoints.size() - 1].x, shadowPoints[shadowPoints.size() - 1].z);
+		line.m_endPoint = DirectX::XMFLOAT2(shadowPoints[0].x, shadowPoints[0].z);
+		shape.m_lineSegments.push_back(line);
+
+		// Push the shape.
+		ShadowShapes::GetInstance().AddShadowShape(shape);
 	}
 }
 

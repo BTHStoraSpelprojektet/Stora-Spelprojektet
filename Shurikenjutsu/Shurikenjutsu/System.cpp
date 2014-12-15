@@ -59,11 +59,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GraphicsEngine::SetClearColor(0.0f, 0.6f, 0.9f, 1.0f);
 	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
-	GraphicsEngine::TurnOffAlphaBlending();
+	GraphicsEngine::TurnOnAlphaBlending();
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
 	// Initialize model library.
-	ModelLibrary::GetInstance()->Initialize();
+	ModelLibrary::GetInstance()->Initialize(new Model());
 	ConsolePrintSuccess("All models successfully loaded.");
 	ConsoleSkipLines(1);
 
@@ -91,6 +91,18 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
+	m_sound = new Sound();
+	if (!m_sound->Initialize())
+	{
+		ConsolePrintError("Sound Initialize failed.");
+		ConsoleSkipLines(1);
+	}
+	else
+	{
+		ConsolePrintSuccess("Sound Initialize succses.");
+		ConsoleSkipLines(1);
+	}
+
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.25f, 0.25f, 0.25f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
@@ -109,9 +121,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	}
 
 	// Initialize network
-	Network::Initialize();
+	Network::GetInstance()->Initialize();
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
+
+	m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
 	return result;
 }
@@ -125,13 +139,17 @@ void System::Shutdown()
 	m_gameState->Shutdown();
 
 	// Shutdown graphics engine.
-	GraphicsEngine::Shutdown(); // TODO, this does nothing so far.
+	GraphicsEngine::Shutdown();
 
 	// Shutdown network
-	Network::Shutdown();
+	Network::GetInstance()->Shutdown();
 
 	// Shutdown model library
 	ModelLibrary::GetInstance()->Shutdown();
+
+	m_sound->Shutdown();
+
+	GUIManager::GetInstance()->Shutdown();
 }
 
 void System::Run()
@@ -195,8 +213,10 @@ void System::Update()
 
 	m_gameState->Update();
 	
+	m_sound->Update();
+
 	// Update network
-	Network::Update();
+	Network::GetInstance()->Update();
 
 	// Quick escape.
 	if (GetAsyncKeyState(VK_ESCAPE))
@@ -213,6 +233,9 @@ void System::Render()
 
 	// Render Current GameState
 	m_gameState->Render();
+
+	//Render GUI
+	GUIManager::GetInstance()->Render();
 
 	// Present the result.
 	GraphicsEngine::Present();

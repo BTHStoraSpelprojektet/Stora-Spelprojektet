@@ -3,23 +3,16 @@
 
 #include <iostream>
 
-#include "..\CommonLibs\RakNet\RakPeerInterface.h"
-#include "..\CommonLibs\RakNet\RakNetTypes.h"
-#include "..\CommonLibs\RakNet\MessageIdentifiers.h"
-#include "..\CommonLibs\RakNet\GetTime.h"
-#include "..\CommonLibs\RakNet\NetworkIDManager.h"
-#include "..\CommonLibs\RakNet\RakPeer.h"
-#include "..\CommonLibs\RakNet\BitStream.h"
+
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
+#include "..\CommonLibs\ModelLibrary.h"
+#include "..\CommonLibs\CommonEnums.h"
 #include <vector>
-#include "PlayerManager.h"
-#include "ShurikenManager.h"
-
-#pragma comment(lib, "PhysicsDll.lib")
-#include "PhysicsDll.h"
+#include "MapManager.h"
+#include "CollisionManager.h"
 
 class Server
 {
@@ -31,8 +24,6 @@ public:
 	void Update(double p_deltaTime);
 	void ReceviePacket();
 private:
-	void CheckCollisions();
-	void MeleeAttack(RakNet::RakNetGUID p_guid);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 	RakNet::SocketDescriptor m_socketDesc;
@@ -40,8 +31,12 @@ private:
 
 	int m_nrOfConnections;
 	std::string m_levelName;
+	std::string m_shurikenModelName;
+	std::string m_playerModelName;
 	PlayerManager m_playerManager;
 	ShurikenManager m_shurikenManager;
+	MapManager m_mapManager;
+	CollisionManager* m_collisionManager;
 };
 
 #endif SERVER

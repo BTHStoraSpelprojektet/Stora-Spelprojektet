@@ -1,8 +1,7 @@
 #ifndef PLAYINGSTATE
 #define PLAYINGSTATE
-
-
 #define WIN32_LEAN_AND_MEAN
+
 #include "GameState.h"
 #include "PlayerManager.h"
 #include "ObjectManager.h"
@@ -10,11 +9,11 @@
 #include "Camera.h"
 #include "..\CommonLibs\Level.h"
 #include "Collisions.h"
-#include <d3d9.h>
 #include "DebugDraw.h"
+#include "ParticleEmitter.h"
+#include "Frustum.h"
 
-class PlayingStateTest :
-	public GameState
+class PlayingStateTest : public GameState
 {
 public:
 	PlayingStateTest();
@@ -34,7 +33,7 @@ private:
 	ObjectManager m_objectManager;
 	Camera m_camera;
 
-	float twoPi;
+	float twoPi = 6.28318530718f;
 
 	// ========== DEBUG TEMP LINES ==========
 	float m_mouseX;
@@ -45,7 +44,10 @@ private:
 	DebugCircle m_circle3;
 
 	DebugDot m_debugDot;
-	// ========== DEBUG TEMP LINES ==========
-};
 
+	ParticleEmitter m_particles;
+	// ========== DEBUG TEMP LINES ==========
+
+	Frustum m_frustum;
+};
 #endif PLAYINGSTATE

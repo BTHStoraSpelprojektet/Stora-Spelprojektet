@@ -5,10 +5,11 @@
 #include "Model.h"
 #include <DirectXMath.h>
 #include "Network.h"
-#include "ModelLibrary.h"
+#include "..\CommonLibs\ModelLibrary.h"
 #include "AnimationControl.h"
 #include <DirectXCollision.h>
 #include "DebugDraw.h"
+#include "ShadowShapes.h"
 
 class Object
 {
@@ -32,14 +33,13 @@ public:
 
 	Model* GetModel();
 
-	// Calculates and then returns the world matrix
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 
 	std::vector<OBB> GetBoundingBoxes();
 
 protected:
-	//void SetModel(const char* p_filepath);
 	void TransformBoundingBoxes();
+	void TransformShadowPoints();
 
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT3 m_scale;
@@ -49,5 +49,4 @@ protected:
 	std::vector<OBB> m_boundingBoxes;
 	std::vector<DebugShape3D> m_debugBoxes;
 };
-
-#endif OBJECT
+#endif

@@ -14,9 +14,9 @@ void DebugDot::Initialize(DirectX::XMFLOAT3 p_centrum, int p_resolution, DirectX
 
 		lines.push_back(position);
 
-		position.x = p_centrum.x + cos(2 * 3.141592f * i / p_resolution) * 0.2f;
+		position.x = p_centrum.x + cos(2 * 3.141592f * i / p_resolution) * 0.1f;
 		position.y = p_centrum.y;
-		position.z = p_centrum.z + sin(2 * 3.141592f * i / p_resolution) * 0.2f;
+		position.z = p_centrum.z + sin(2 * 3.141592f * i / p_resolution) * 0.1f;
 
 		lines.push_back(position);
 	}

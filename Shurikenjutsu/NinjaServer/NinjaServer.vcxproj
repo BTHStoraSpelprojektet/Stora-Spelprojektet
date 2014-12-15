@@ -77,13 +77,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MapManager.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ShurikenManager.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="Collisions.h" />
+    <ClInclude Include="MapManager.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="ShurikenManager.h" />

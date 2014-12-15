@@ -534,8 +534,14 @@
     <ClInclude Include="ModelImporter.h">
       <Filter>Header Files\Models</Filter>
     </ClInclude>
-    <ClInclude Include="BoundingBoxModel.h">
+    <ClInclude Include="ModelLibrary.h">
       <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseModel.h">
+      <Filter>Header Files\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonEnums.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -896,7 +902,10 @@
     <ClCompile Include="ModelImporter.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingBoxModel.cpp">
+    <ClCompile Include="ModelLibrary.cpp">
+      <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseModel.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
   </ItemGroup>

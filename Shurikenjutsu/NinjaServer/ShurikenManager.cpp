@@ -10,12 +10,14 @@ ShurikenManager::~ShurikenManager()
 {
 }
 
-bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
+bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName)
 {
 	m_serverPeer = p_serverPeer;
 	m_shurikenSetTimeLeft = 2.0f;
 
 	m_shurikens = std::vector<ShurikenNet>();
+
+	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(p_modelName)->GetBoundingBoxes();
 
 	return true;
 }
@@ -146,7 +148,7 @@ std::vector<ShurikenNet> ShurikenManager::GetShurikens()
 float ShurikenManager::GetShurikenPosX(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index > m_shurikens.size() - 1)
+	if (p_index < 0 || p_index > (int)m_shurikens.size() - 1)
 	{
 		return 0;
 	}
@@ -158,7 +160,7 @@ float ShurikenManager::GetShurikenPosX(int p_index)
 float ShurikenManager::GetShurikenPosY(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index > m_shurikens.size() - 1)
+	if (p_index < 0 || p_index >(int)m_shurikens.size() - 1)
 	{
 		return 0;
 	}
@@ -170,11 +172,34 @@ float ShurikenManager::GetShurikenPosY(int p_index)
 float ShurikenManager::GetShurikenPosZ(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index > m_shurikens.size() - 1)
+	if (p_index < 0 || p_index >(int)m_shurikens.size() - 1)
 	{
 		return 0;
 	}
 
 	float lifeTime = m_shurikenSetTimeLeft - m_shurikens[p_index].lifeTime;
 	return m_shurikens[p_index].z + m_shurikens[p_index].dirZ * m_shurikens[p_index].speed * lifeTime;
+}
+
+std::vector<Box> ShurikenManager::GetBoundingBoxes(int p_index)
+{
+	std::vector<Box> boundingBoxes = std::vector<Box>();
+
+	// Check so index is not out of bounds
+	if (p_index < 0 || p_index >(int)m_shurikens.size() - 1)
+	{
+		return boundingBoxes;
+	}
+
+	for (unsigned int i = 0; i < m_boundingBoxes.size(); i++)
+	{
+		Box box = m_boundingBoxes[i];
+		box.m_center.x += GetShurikenPosX(p_index);
+		box.m_center.y += GetShurikenPosY(p_index);
+		box.m_center.z += GetShurikenPosZ(p_index);
+
+		boundingBoxes.push_back(box);
+	}
+
+	return boundingBoxes;
 }

@@ -32,9 +32,9 @@ void ObjectManager::Update()
 		m_shurikens[i].Update();
 	}
 
-	if (Network::IsShurikenListUpdated())
+	if (Network::GetInstance()->IsShurikenListUpdated())
 	{
-		std::vector<ShurikenNet> tempNetShurikens = Network::GetShurikens();
+		std::vector<ShurikenNet> tempNetShurikens = Network::GetInstance()->GetShurikens();
 		for (unsigned int i = 0; i < tempNetShurikens.size(); i++)
 		{
 			if (!IsShurikenInList(tempNetShurikens[i].shurikenId))
@@ -49,24 +49,33 @@ void ObjectManager::Update()
 			if (!IsShurikenInNetworkList(m_shurikens[i].GetID()))
 			{
 				// Remove shuriken
+				m_shurikens[i].Shutdown();
 				m_shurikens.erase(m_shurikens.begin() + i);
 				i--;
 			}
 		}
-		Network::SetHaveUpdateShurikenList();
+		Network::GetInstance()->SetHaveUpdateShurikenList();
 	}
 }
 
 void ObjectManager::Render(SHADERTYPE p_shader)
 {
-	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	if (p_shader == SHADERTYPE_SCENE || p_shader == SHADERTYPE_DEPTH)
 	{
-		m_staticObjects[i].Render(p_shader);
-
-		if (FLAG_DEBUG)
+		for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 		{
-			m_staticObjects[i].RenderDebugBoxes();
+			m_staticObjects[i].Render(p_shader);
+
+			if (FLAG_DEBUG)
+			{
+				m_staticObjects[i].RenderDebugBoxes(); 
+			}
 		}
+	}
+
+	else if (p_shader == SHADERTYPE_ANIMATED)
+	{
+		m_animatedCharacter.RenderAnimated(p_shader);
 	}
 }
 
@@ -105,7 +114,7 @@ bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
 
 bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 {
-	std::vector<ShurikenNet> shurikenList = Network::GetShurikens();
+	std::vector<ShurikenNet> shurikenList = Network::GetInstance()->GetShurikens();
 
 	for (unsigned int i = 0; i < shurikenList.size(); i++)
 	{

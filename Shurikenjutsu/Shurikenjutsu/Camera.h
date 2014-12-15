@@ -6,6 +6,8 @@
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include "InputManager.h"
+#include <DirectXCollision.h>
+
 class Camera
 {
 public:
@@ -38,7 +40,7 @@ public:
 	void ResetCamera();
 	void ResetCameraToLight();
 
-	void MoveCamera( );
+	void HandleInput();
 	void ToggleFullscreen(bool p_fullscreen);
 	void FollowCharacter(DirectX::XMFLOAT3 p_playerPos);
 
@@ -68,5 +70,6 @@ private:
 	DirectX::XMFLOAT4X4 m_positionMatrix;
 	DirectX::XMFLOAT4X4 m_rotationX;
 	DirectX::XMFLOAT4X4 m_rotationY;
+
 };
 #endif;

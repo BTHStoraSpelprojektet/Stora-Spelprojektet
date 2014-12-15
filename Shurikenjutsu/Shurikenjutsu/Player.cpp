@@ -10,7 +10,7 @@ Player::~Player()
 
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, unsigned int p_health, float p_agility)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
 	if (!MovingObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
 	{
@@ -20,10 +20,16 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetDamage(p_damage);
 	m_spells = p_spells;
 	SetHealth(p_health);
+	SetMaxHealth(p_maxHealth);
 	SetAgility(p_agility);
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
-
+	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
+	m_ability = new Ability();
+	m_noAbility = new Ability();
+	m_buttonQ = new Dash();
+
+	m_healthbar.Initialize(50.0f, 5.0f);
 
 	return true;
 }
@@ -33,35 +39,69 @@ void Player::Shutdown()
 	MovingObject::Shutdown();
 }
 
-void Player::UpdateMe( )
+void Player::UpdateMe()
 {
-	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+	m_playerSphere.m_position = m_position;
+	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+
+	m_ability = m_noAbility;
 	// Move
-	bool moved = false;
+	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
+	{
+		SetCalculatePlayerPosition();
+	}
+
+	// Melee attack
+	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	{
+		Network::GetInstance()->DoMeleeAttack();
+	}
+
+	// Cast shuriken
+	if (InputManager::GetInstance()->IsRightMouseClicked())
+	{
+		Network::GetInstance()->AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
+	}
+
+	// Check health from server
+	if (Network::GetInstance()->IsConnected())
+	{
+		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
+	}
+
+	// Temp to set max health
+	if (Network::GetInstance()->ConnectedNow())
+	{
+		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
+	}
+
+	m_ability->Execute();
+}
+
+bool Player::CalculateDirection()
+{
 	float x, y, z;
+	bool moved = false;
 
 	x = 0;
-	y = 0;
+	y = 0;//Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)))
 	z = 0;
-
 	m_playerPrevPos = m_position;
-	Box charBox = Box(m_position, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	bool up = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, 36.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
-	bool down = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(0.0f, 0.0f, -33.0f), DirectX::XMFLOAT3(40.0f, 1.0f, 1.0f)));
-	bool left = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(-35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
-	bool right = Collisions::BoxBoxCollision(charBox, Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)));
+	std::vector<bool> boolList = CollisionManager::GetInstance()->OuterWallCollision(m_playerSphere);
+
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
-		if (!up)
-		{ 
+		if (!boolList[2])
+		{
 			z += 1;
 			moved = true;
 		}
+		m_ability = m_buttonQ;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
-		if (!left)
+		if (!boolList[1])
 		{
 			x += -1;
 			moved = true;
@@ -70,7 +110,7 @@ void Player::UpdateMe( )
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
-		if (!down)
+		if (!boolList[0])
 		{
 			z += -1;
 			moved = true;
@@ -79,10 +119,10 @@ void Player::UpdateMe( )
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
-		if (!right)
+		if (!boolList[3])
 		{
-			x += 1;
-			moved = true;
+		x += 1;
+		moved = true;
 		}
 	}
 
@@ -91,22 +131,8 @@ void Player::UpdateMe( )
 	DirectX::XMFLOAT3 tempFloat;
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
-	if (moved || Network::ConnectedNow())
-	{
-		SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * m_speed * (float)deltaTime, m_position.y + m_direction.y * m_speed * (float)deltaTime, m_position.z + m_direction.z * m_speed * (float)deltaTime));
-	}
 
-	// Melee attack
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
-	{
-		Network::DoMeleeAttack();
-	}
-
-	// Cast shuriken
-	if (InputManager::GetInstance()->IsRightMouseClicked())
-	{
-		Network::AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
-	}
+	return moved;
 }
 
 void Player::Update()
@@ -124,7 +150,7 @@ float Player::GetDamage() const
 	return m_damage;
 }
 
-void Player::SetHealth(unsigned int p_health)
+void Player::SetHealth(int p_health)
 {
 	if (p_health < 0)
 	{
@@ -136,9 +162,19 @@ void Player::SetHealth(unsigned int p_health)
 	}	
 }
 
-unsigned int Player::GetHealth() const
+int Player::GetHealth() const
 {
 	return m_health;
+}
+
+void Player::SetMaxHealth(int p_maxHealth)
+{
+	m_maxHealth = p_maxHealth;
+}
+
+int Player::GetMaxHealth() const
+{
+	return m_maxHealth;
 }
 
 void Player::SetAgility(float p_agility)
@@ -153,19 +189,12 @@ float Player::GetAgility() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-	if (CheckCollisionWithObjects())
-	{
-		MovingObject::SetPosition(m_playerPrevPos);
-	}
-	else
-	{
 		MovingObject::SetPosition(p_pos);
-	}
 
-	if (Network::IsConnected())
+		if (Network::GetInstance()->IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
-		Network::SendPlayerPos(pos.x, pos.y, pos.z);
+		Network::GetInstance()->SendPlayerPos(pos.x, pos.y, pos.z);
 	}
 }
 
@@ -194,10 +223,10 @@ void Player::SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 	m_attackDir = p_attackDir;
 	CalculateFacingAngle();
 
-	if (Network::IsConnected())
+	if (Network::GetInstance()->IsConnected())
 	{
 		DirectX::XMFLOAT3 dir = GetAttackDirection();
-		Network::SendPlayerDir(dir.x, dir.y, dir.z);
+		Network::GetInstance()->SendPlayerDir(dir.x, dir.y, dir.z);
 	}
 }
 
@@ -228,38 +257,130 @@ void Player::CalculateFacingAngle()
 	float faceAngle = atan2(y, x) - 1.57079632679f;
 	SetFacingDirection(DirectX::XMFLOAT3(GetFacingDirection().x, faceAngle, GetFacingDirection().z));
 }
-
-void Player::SetCollidingObjects(std::vector<Object> p_ModelList)
+void Player::SetCalculatePlayerPosition()
 {
-	m_modelList = p_ModelList;
-}
-
-bool Player::CheckCollisionWithObjects()
-{
-	Sphere playerBox = Sphere(m_position, 0.5f);
-	if (m_modelList.size() > 0)
+	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticObjects(m_playerSphere, m_speed, m_direction);
+	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{
-		std::vector<Object> modelList = m_modelList;
-		for (unsigned int i = 0; i < modelList.size(); i++)
+		bool rightOfBox = m_position.x >(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x);
+		bool leftOfBox = m_position.x < (collidingBoxes[i].m_center.x - collidingBoxes[i].m_extents.x);
+		bool aboveBox = m_position.z >(collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z);
+		bool belowBox = m_position.z < (collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z);
+		float x = m_direction.x;
+		float z = m_direction.z;
+		if (x == 1 || x == -1)
 		{
-			std::vector<OBB> boxList = modelList[i].GetBoundingBoxes();
-			if (boxList.size() != 0)
+			x = 0;
+		}
+		else if (z == 1 || z == -1)
+		{
+			z = 0;
+		}
+		else if (x < 0 && z < 0)//down left
+		{
+			if (rightOfBox == aboveBox)
 			{
-				for (unsigned int j = 0; j < boxList.size(); j++)
-				{
-					OBB box = boxList[j];
-					playerBox.m_position.x = m_position.x + m_direction.x * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
-					playerBox.m_position.y = m_position.y + m_direction.y * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
-					playerBox.m_position.z = m_position.z + m_direction.z * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+				SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z + m_playerSphere.m_radius*1.1f));
 
-					if (Collisions::OBBSphereCollision(box, playerBox))
-					{
-						return true;
-					}
+				x = -1;
+				z = 0;
+			}
+			else
+			{
+				if (rightOfBox)
+				{
+					x = 0;
+					z = -1;
+				}
+				if (aboveBox)
+				{
+					x = -1;
+					z = 0;
 				}
 			}
 		}
-	}
+		else if (x > 0 && z < 0)//down right
+		{
+			if (leftOfBox == aboveBox)
+			{
+				SetPosition(DirectX::XMFLOAT3(m_position.x , m_position.y, collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z + m_playerSphere.m_radius*1.1f));
+				x = 0;
+				z = -1;
+			}
+			else
+			{
+				if (leftOfBox)
+				{
+					x = 0;
+					z = -1;
+				}
+				if (aboveBox)
+				{
+					x = 1;
+					z = 0;
+				}
+			}
+		}
+		else if (x < 0 && z > 0)//up left // works goood
+		{
+			if (rightOfBox == belowBox)
+			{
+				SetPosition(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+				x = 0;
+				z = 1;
+			}
+			else
+			{
+				if (rightOfBox)
+				{
+					x = 0;
+					z = 1;
+				}
+				if (belowBox)
+				{
+					x = -1;
+					z = 0;
+				}
+			}
+		}
+		else if (x > 0 && z > 0)//up right // works goood
+		{
+			if (leftOfBox == belowBox)
+			{
+				SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z - m_playerSphere.m_radius*1.1f));
 
-	return false;
+				x = 1;
+				z = 0;
+			}
+			else
+			{
+				if (leftOfBox)
+				{
+					x = 0;
+					z = 1;
+				}
+				if (belowBox)
+					{
+					x = 1;
+					z = 0;
+					}
+				}
+			}
+
+
+		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
+	}
+	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
+	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
+}
+
+void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
+{
+	m_healthbar.Update(m_position, m_health, 100, p_view, p_projection);
+}
+
+void Player::Render(SHADERTYPE p_shader)
+{
+	MovingObject::Render(p_shader);
+	m_healthbar.Render();
 }

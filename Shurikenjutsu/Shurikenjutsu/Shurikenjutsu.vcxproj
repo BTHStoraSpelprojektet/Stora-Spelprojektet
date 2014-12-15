@@ -39,8 +39,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>..\Shurikenjutsu\GTest\libs\Debug;$(LibraryPath)</LibraryPath>
-    <IncludePath>..\Shurikenjutsu\GTest\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\Shurikenjutsu\GTest\libs\Release</LibraryPath>
+    <IncludePath>..\Shurikenjutsu\GTest\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\Shurikenjutsu\GTest\libs\Debug</LibraryPath>
@@ -52,14 +52,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;CommonLibs.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Shurikenjutsu\FMOD\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;gtestd.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -70,7 +70,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -78,16 +78,18 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;CommonLibs.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>
-      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;gtest.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Shurikenjutsu\FMOD\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ability.cpp" />
     <ClCompile Include="AnimationControl.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Collisions.cpp" />
+    <ClCompile Include="Dash.cpp" />
     <ClCompile Include="Debug.cpp" />
     <ClCompile Include="DebugBox.cpp" />
     <ClCompile Include="DebugDot.cpp" />
@@ -96,9 +98,13 @@
     <ClCompile Include="DebugShape2D.cpp" />
     <ClCompile Include="DebugShape3D.cpp" />
     <ClCompile Include="DepthShader.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GUIElement.cpp" />
+    <ClCompile Include="GUIManager.cpp" />
     <ClCompile Include="GUIShader.cpp" />
+    <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ButtonEvent.cpp" />
     <ClCompile Include="InstancedShader.cpp" />
@@ -107,30 +113,37 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
-    <ClCompile Include="ModelLibrary.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
+    <ClCompile Include="ParticleEmitter.cpp" />
+    <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayingStateTest.cpp" />
     <ClCompile Include="SceneShader.cpp" />
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="ShadowShapes.cpp" />
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="DebugCircle.cpp" />
     <ClCompile Include="AnimatedObject.cpp" />
+    <ClCompile Include="Sound.cpp" />
+    <ClCompile Include="StatusEffect.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ability.h" />
     <ClInclude Include="AnimationControl.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="ConsoleFunctions.h" />
+    <ClInclude Include="Dash.h" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="DebugBox.h" />
     <ClInclude Include="DebugCircle.h" />
@@ -142,18 +155,23 @@
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Enumerations.h" />
     <ClInclude Include="Flags.h" />
+    <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GraphicsEngine.h" />
+    <ClInclude Include="GUIElement.h" />
+    <ClInclude Include="GUIManager.h" />
     <ClInclude Include="GUIShader.h" />
+    <ClInclude Include="HealthBar.h" />
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelLibrary.h" />
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />
+    <ClInclude Include="ParticleEmitter.h" />
+    <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayingStateTest.h" />
@@ -163,8 +181,11 @@
     <ClInclude Include="ButtonEvent.h" />
     <ClInclude Include="KButtonEvent.h" />
     <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="ShadowShapes.h" />
     <ClInclude Include="Shuriken.h" />
     <ClInclude Include="AnimatedObject.h" />
+    <ClInclude Include="Sound.h" />
+    <ClInclude Include="StatusEffect.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Timer.h" />
@@ -189,6 +210,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Shaders\GUI\GUIColorPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\GUI\GUIColorVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Shaders\GUI\GUIPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
@@ -208,6 +241,24 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shaders\Line\LineVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle\ParticleGeometryShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle\ParticlePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle\ParticleVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

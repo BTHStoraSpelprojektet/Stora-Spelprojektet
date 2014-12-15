@@ -105,30 +105,39 @@ struct Box
 {
 	DirectX::XMFLOAT3 m_center;
 	DirectX::XMFLOAT3 m_extents;
+	float m_radius;
 
 	Box(){}
 	Box(DirectX::XMFLOAT3 p_center, DirectX::XMFLOAT3 p_extents)
 	{
 		m_center = p_center;
 		m_extents = p_extents;
+		CalculateRadius();
 	}
 	Box(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent)
 	{
 		m_center = p_center;
 
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
+		CalculateRadius();
 	}
 	Box(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents)
 	{
 		m_center = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
 
 		m_extents = p_extents;
+		CalculateRadius();
 	}
 	Box(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent)
 	{
 		m_center = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
 
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
+		CalculateRadius();
+	}
+	void CalculateRadius()
+	{
+		m_radius = std::sqrt(m_extents.x * m_extents.x + m_extents.z * m_extents.z);
 	}
 };
 
@@ -137,6 +146,7 @@ struct OBB
 	DirectX::XMFLOAT3 m_center;
 	DirectX::XMFLOAT3 m_extents;
 	DirectX::XMFLOAT4 m_direction;
+	float m_radius;
 
 	OBB(){}
 	OBB(DirectX::XMFLOAT3 p_center, DirectX::XMFLOAT3 p_extents, DirectX::XMFLOAT4 p_direction)
@@ -144,7 +154,7 @@ struct OBB
 		m_center = p_center;
 		m_extents = p_extents;
 		m_direction = p_direction;
-		//NormalizeDirction();
+		CalculateRadius();
 	}
 	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
 	{
@@ -153,7 +163,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = p_direction;
-		//NormalizeDirction();
+		CalculateRadius();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents, DirectX::XMFLOAT4 p_direction)
 	{
@@ -162,7 +172,7 @@ struct OBB
 		m_extents = p_extents;
 
 		m_direction = p_direction;
-		//NormalizeDirction();
+		CalculateRadius();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)
 	{
@@ -171,7 +181,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = p_direction;
-		//NormalizeDirction();
+		CalculateRadius();
 	}
 	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -180,7 +190,7 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
-		//NormalizeDirction();
+		CalculateRadius();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_extents, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -189,7 +199,7 @@ struct OBB
 		m_extents = p_extents;
 
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
-		//NormalizeDirction();
+		CalculateRadius();
 	}
 	OBB(float p_xPos, float p_yPos, float p_zPos, float p_xExtent, float p_yExtent, float p_zExtent, float p_xDir, float p_yDir, float p_zDir)
 	{
@@ -198,69 +208,11 @@ struct OBB
 		m_extents = DirectX::XMFLOAT3(p_xExtent, p_yExtent, p_zExtent);
 
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
-		//NormalizeDirction();
+		CalculateRadius();
 	}
-	void NormalizeDirction()
+	void CalculateRadius()
 	{
-		float x = m_direction.x;
-		float y = m_direction.y;
-		float z = m_direction.z;
-		float w = m_direction.w;
-		float l = sqrt(x*x + y*y + z*z + w*w);
-		m_direction = DirectX::XMFLOAT4(x / l, y / l, z / l, w / l);
-	}
-};
-
-struct Frustum
-{
-	DirectX::XMFLOAT3 m_position;
-	DirectX::XMFLOAT4 m_direction;
-	float m_leftAngle;
-	float m_rightAngle;
-	float m_topAngle;
-	float m_bottomAngle;
-	float m_nearDistance;
-	float m_farDistance;
-
-	Frustum(){}
-	Frustum(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
-	{
-		m_position = p_position;
-		m_direction = DirectX::XMFLOAT4(p_direction.x, p_direction.y, p_direction.z, 0.0f);
-		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
-	}
-	Frustum(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4 p_direction, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
-	{
-		m_position = p_position;
-		m_direction = p_direction;
-		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
-	}
-	Frustum(float p_xPos, float p_yPos, float p_zPos, DirectX::XMFLOAT3 p_direction, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
-	{
-		m_position = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
-		m_direction = DirectX::XMFLOAT4(p_direction.x, p_direction.y, p_direction.z, 0.0f);
-		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
-	}
-	Frustum(DirectX::XMFLOAT3 p_position, float p_xDir, float p_yDir, float p_zDir, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
-	{
-		m_position = p_position;
-		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
-		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
-	}
-	Frustum(float p_xPos, float p_yPos, float p_zPos, float p_xDir, float p_yDir, float p_zDir, float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
-	{
-		m_position = DirectX::XMFLOAT3(p_xPos, p_yPos, p_zPos);
-		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
-		SetAngles(p_leftAngle, p_rightAngle, p_topAngle, p_bottomAngle, p_nearDist, p_farDist);
-	}
-	void SetAngles(float p_leftAngle, float p_rightAngle, float p_topAngle, float p_bottomAngle, float p_nearDist, float p_farDist)
-	{
-		m_leftAngle = p_leftAngle;
-		m_rightAngle = p_rightAngle;
-		m_topAngle = p_topAngle;
-		m_bottomAngle = p_bottomAngle;
-		m_nearDistance = p_nearDist;
-		m_farDistance = p_farDist;
+		m_radius = std::sqrt(m_extents.x * m_extents.x + m_extents.z * m_extents.z);
 	}
 };
 

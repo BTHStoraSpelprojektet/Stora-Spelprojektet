@@ -1,9 +1,8 @@
 #include "PlayingStateTest.h"
-#include "ModelLibrary.h"
 
 PlayingStateTest::PlayingStateTest()
 {
-	twoPi = 6.28318530718f;
+
 }
 
 PlayingStateTest::~PlayingStateTest()
@@ -30,20 +29,35 @@ bool PlayingStateTest::Initialize()
 		object.Initialize(levelObjects[i].m_filePath.c_str(), DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ), DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ), DirectX::XMFLOAT3(1.0f,1.0f,1.0f));
 		m_objectManager.AddStaticObject(object);
 	}
-
+	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
+	std::vector<Box> wallList;
+	for (unsigned int i = 0; i < temp.size(); i++)
+	{
+		LevelImporter::LevelBoundingBox box = temp[i];
+		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
+	}
 	// Initiate player
-	m_playerManager.Initialize(m_objectManager.GetStaticObjectList());
+	m_playerManager.Initialize();
+	CollisionManager::GetInstance()->Initialize(m_objectManager.GetStaticObjectList(), wallList);
 
 	// ========== DEBUG TEMP LINES ==========
-	m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-	m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-	m_circle3.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 0.5f, 50, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	if (FLAG_DEBUG == 1)
+	{
+		m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+		m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1.0f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+		m_circle3.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 0.5f, 50, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-	m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 1000, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
-	m_mouseX = 0;
-	m_mouseY = 0;
+		m_mouseX = 0;
+		m_mouseY = 0;
+	}
+
+	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 3.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(3.0f, 3.0f), PARTICLE_PATTERN_SMOKE);
 	// ========== DEBUG TEMP LINES ==========
+
+	// Frustum
+	m_frustum = Frustum();
 
 	return true;
 }
@@ -55,44 +69,54 @@ void PlayingStateTest::Shutdown()
 	m_objectManager.Shutdown();
 
 	// ========== DEBUG TEMP LINES ==========
-	m_circle1.Shutdown();
-	m_circle2.Shutdown();
-	m_circle3.Shutdown();
+	if (FLAG_DEBUG == 1)
+	{
+		m_circle1.Shutdown();
+		m_circle2.Shutdown();
+		m_circle3.Shutdown();
 
-	m_debugDot.Shutdown();
+		m_debugDot.Shutdown();
+	}
+
+	m_particles.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
 }
 
 void PlayingStateTest::Update()
 {
+	// Update global delta time.
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	BasicPicking();
+	
+	// Update the players.
+	m_playerManager.Update(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
-	m_objectManager.Update();
-	m_playerManager.Update();
+	// Handle camera input.
+	m_camera.HandleInput();
 
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
-	{
-		if (GLOBAL::GetInstance().FULLSCREEN)
-		{
-			m_camera.ToggleFullscreen(false);
-		}
-		else
-		{
-			m_camera.ToggleFullscreen(true);
-		}
-	}
-
-	m_camera.MoveCamera();
-
+	// The camera should follow the character if not flying.
 	if (!GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		m_camera.FollowCharacter(m_playerManager.GetPlayerPosition());
 	}
+
+	// Get picking data.
+	BasicPicking();
+
+	// Update every object.
+	m_objectManager.Update();
+
+	// ========== DEBUG TEMP LINES ==========
+	// Update the particles.
+	m_particles.Update();
+	// ========== DEBUG TEMP LINES ==========
 }
 
 void PlayingStateTest::Render()
 {
+	m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+
+	bool testBB = false;
+
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
 
@@ -108,25 +132,41 @@ void PlayingStateTest::Render()
 	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
 	m_objectManager.Render(SHADERTYPE_ANIMATED);
 
+	if (FLAG_DEBUG == 1)
+	{
+		ShadowShapes::GetInstance().DebugRender();
+	}
+
 	// ========== DEBUG TEMP LINES ==========
-	DirectX::XMFLOAT4X4 circleWorld;
-	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition())));
+	if (FLAG_DEBUG == 1)
+	{
+		DirectX::XMFLOAT4X4 circleWorld;
+		DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition())));
 
-	m_circle1.UpdateWorldMatrix(circleWorld);
-	m_circle1.Render();
+		m_circle1.UpdateWorldMatrix(circleWorld);
+		m_circle1.Render();
 
-	m_circle3.UpdateWorldMatrix(circleWorld);
-	m_circle3.Render();
+		m_circle3.UpdateWorldMatrix(circleWorld);
+		m_circle3.Render();
 
-	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
-	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate)));
+		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
+		DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate)));
 
-	m_circle2.UpdateWorldMatrix(circleWorld);
-	m_circle2.Render();
+		m_circle2.UpdateWorldMatrix(circleWorld);
+		m_circle2.Render();
+		if (m_frustum.CheckCube(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f))
+		{
+			testBB = true;
+		}
+		if (testBB)
+		{
+			m_debugDot.Render();
+		}
 
-	m_debugDot.Render();
+		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	}
 
-	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	m_particles.Render();
 	// ========== DEBUG TEMP LINES ==========
 }
 
@@ -205,15 +245,18 @@ void PlayingStateTest::BasicPicking()
 	m_playerManager.SetAttackDirection(NormalizeFloat3(NormalizeFloat3(shurDir)));
 
 	// ========== DEBUG TEMP LINES ==========
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
-	DirectX::XMStoreFloat4x4(&world, matrix);
+	if (FLAG_DEBUG == 1)
+	{
+		DirectX::XMFLOAT4X4 world;
+		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
+		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+		DirectX::XMStoreFloat4x4(&world, matrix);
 
-	m_debugDot.UpdateWorldMatrix(world);
+		m_debugDot.UpdateWorldMatrix(world);
 
-	m_mouseX = shurPos.x;
-	m_mouseY = shurPos.z;
+		m_mouseX = shurPos.x;
+		m_mouseY = shurPos.z;
+	}
 	// ========== DEBUG TEMP LINES ==========
 }
 

@@ -85,6 +85,7 @@ void Camera::UpdateProjectionMatrix(bool p_orthographic)
 	if (!p_orthographic)
 	{
 		DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixPerspectiveFovLH(m_fieldOfView, m_aspectRatio, m_nearPlane, m_farPlane));
+		
 	}
 
 	else
@@ -238,9 +239,10 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 }
 
-void Camera::MoveCamera( )
+void Camera::HandleInput()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+
 	// Start moving the camera with the C key.
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')) && !GLOBAL::GetInstance().CAMERA_FLYING)
 	{
@@ -279,22 +281,22 @@ void Camera::MoveCamera( )
 		// Move the camera using W, S, A, D keys.
 		if (InputManager::GetInstance()->IsKeyPressed(VK_UP))
 		{
-			Walk(10.0f * deltaTime);
+			Walk(10.0f * (float)deltaTime);
 		}
 
 		if (InputManager::GetInstance()->IsKeyPressed(VK_DOWN))
 		{
-			Walk(-10.0f * deltaTime);
+			Walk(-10.0f * (float)deltaTime);
 		}
 
 		if (InputManager::GetInstance()->IsKeyPressed(VK_LEFT))
 		{
-			Strafe(-10.0f * deltaTime);
+			Strafe(-10.0f * (float)deltaTime);
 		}
 
 		if (InputManager::GetInstance()->IsKeyPressed(VK_RIGHT))
 		{
-			Strafe(10.0f * deltaTime);
+			Strafe(10.0f * (float)deltaTime);
 		}
 
 		// Update the camera.
@@ -309,6 +311,19 @@ void Camera::MoveCamera( )
 			ShowCursor(true);
 			GLOBAL::GetInstance().CAMERA_FLYING = false;
 			ResetCamera();
+		}
+	}
+
+	// Fullscreen toggle.
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
+	{
+		if (GLOBAL::GetInstance().FULLSCREEN)
+		{
+			ToggleFullscreen(false);
+		}
+		else
+		{
+			ToggleFullscreen(true);
 		}
 	}
 }
