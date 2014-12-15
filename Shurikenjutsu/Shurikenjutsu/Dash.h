@@ -2,6 +2,7 @@
 #define DASH_H_
 
 #include "Ability.h"
+#include "Network.h"
 #include <iostream>
 
 class Dash : public Ability
