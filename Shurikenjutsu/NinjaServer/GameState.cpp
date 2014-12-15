@@ -91,20 +91,10 @@ void GameState::UsedAbility(int p_index, ABILITIES p_ability)
 
 void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability)
 {
-	m_playerManager.ExecuteAbility(p_guid, p_ability);
+	m_playerManager.ExecuteAbility(p_guid, p_ability, *m_collisionManager, m_shurikenManager);
 }
 
 void GameState::BroadcastPlayers()
 {
 	m_playerManager.BroadcastPlayers();
-}
-
-void GameState::AddShuriken(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ)
-{
-	m_shurikenManager.AddShuriken(p_guid, p_x, p_y, p_z, p_dirX, p_dirY, p_dirZ);
-}
-
-void GameState::NormalMeleeAttack(RakNet::RakNetGUID p_guid)
-{
-	m_collisionManager->NormalMeleeAttack(p_guid, &m_playerManager);
 }

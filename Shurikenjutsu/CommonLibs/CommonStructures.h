@@ -98,6 +98,7 @@ struct Ray
 	void SetDirection(float p_xDir, float p_yDir, float p_zDir)
 	{
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		m_distance = 0;
 	}
 };
 
@@ -156,6 +157,13 @@ struct OBB
 		m_center = p_center;
 		m_extents = p_extents;
 		m_direction = p_direction;
+		CalculateRadius();
+	}
+	OBB(Box p_box)
+	{
+		m_center = p_box.m_center;
+		m_extents = p_box.m_extents;
+		m_direction = DirectX::XMFLOAT4(0.0f,0.0f,0.0f,1.0f);
 		CalculateRadius();
 	}
 	OBB(DirectX::XMFLOAT3 p_center, float p_xExtent, float p_yExtent, float p_zExtent, DirectX::XMFLOAT4 p_direction)

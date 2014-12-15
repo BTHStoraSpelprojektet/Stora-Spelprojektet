@@ -153,7 +153,7 @@ void Server::ReceviePacket()
 		}
 		case ID_SHURIKEN_THROWN:
 		{
-			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
+			/*RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
 
 			rBitStream.Read(messageID);
 			float x, y, z;
@@ -173,7 +173,7 @@ void Server::ReceviePacket()
 				m_gameState->UsedAbility(index, ABILITIES_SHURIKEN);
 			}
 			
-			break;
+			break;*/
 		}
 		case ID_DOWNLOAD_PLAYERS:
 		{
@@ -182,7 +182,7 @@ void Server::ReceviePacket()
 		}
 		case ID_MELEE_ATTACK:
 		{
-			m_gameState->NormalMeleeAttack(m_packet->guid);
+			//m_gameState->NormalMeleeAttack(m_packet->guid);
 			break;
 		}
 		case ID_ABILITY:

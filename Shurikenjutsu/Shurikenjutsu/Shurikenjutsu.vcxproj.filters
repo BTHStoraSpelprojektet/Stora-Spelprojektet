@@ -148,6 +148,12 @@
     <Filter Include="Header Files\GUI\Internal">
       <UniqueIdentifier>{fb93a324-473a-4d57-b35a-f79fef42c390}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Abilities">
+      <UniqueIdentifier>{b0c8a535-7d03-4685-94fc-456b01c98d3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Abilities">
+      <UniqueIdentifier>{b0121fa2-8f9d-42a5-8c09-594f399da5c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -282,15 +288,6 @@
     <ClCompile Include="Sound.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Ability.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="StatusEffect.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Dash.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ShadowShapes.cpp">
       <Filter>Source Files\Graphics\ShadowShapes</Filter>
     </ClCompile>
@@ -302,6 +299,21 @@
     </ClCompile>
     <ClCompile Include="GUIManager.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Dash.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Ability.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusEffect.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="MeleeSwing.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ShurikenAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,15 +461,6 @@
     <ClInclude Include="Sound.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Ability.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="StatusEffect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Dash.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ShadowShapes.h">
       <Filter>Header Files\Graphics\ShadowShapes</Filter>
     </ClInclude>
@@ -469,6 +472,21 @@
     </ClInclude>
     <ClInclude Include="GUIManager.h">
       <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Ability.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Dash.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusEffect.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="MeleeSwing.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ShurikenAbility.h">
+      <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

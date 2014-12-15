@@ -28,10 +28,6 @@ public:
 	void UsedAbility(int p_index, ABILITIES p_ability);
 	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability);
 	void BroadcastPlayers();
-
-	void AddShuriken(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
-
-	void NormalMeleeAttack(RakNet::RakNetGUID p_guid);
 protected:
 	RakNet::RakPeerInterface* m_serverPeer;
 	PlayerManager m_playerManager;

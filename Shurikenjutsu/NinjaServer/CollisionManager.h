@@ -12,6 +12,7 @@
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
 
+class PlayerManager;
 class CollisionManager
 {
 public:

@@ -17,7 +17,7 @@ public:
 
 
 	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
-	std::vector<bool> OuterWallCollision(Sphere p_playerSphere);
+	float CalculateDashLength(Ray* p_ray);
 private:
 
 	CollisionManager();
@@ -25,7 +25,6 @@ private:
 	static CollisionManager* m_instance;
 	void SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/);
 	std::vector<OBB> m_StaticObjectList;
-	std::vector<Box> m_outerWallList;
 	//std::vector<Sphere> m_sphereObjectList;
 };
 

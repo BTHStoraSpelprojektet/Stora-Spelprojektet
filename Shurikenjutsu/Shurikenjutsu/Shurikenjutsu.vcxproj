@@ -113,6 +113,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
+    <ClCompile Include="MeleeSwing.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="Network.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="DebugCircle.cpp" />
     <ClCompile Include="AnimatedObject.cpp" />
+    <ClCompile Include="ShurikenAbility.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StatusEffect.cpp" />
     <ClCompile Include="System.cpp" />
@@ -165,6 +167,7 @@
     <ClInclude Include="HealthBar.h" />
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="MeleeSwing.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="Network.h" />
@@ -184,6 +187,7 @@
     <ClInclude Include="ShadowShapes.h" />
     <ClInclude Include="Shuriken.h" />
     <ClInclude Include="AnimatedObject.h" />
+    <ClInclude Include="ShurikenAbility.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="StatusEffect.h" />
     <ClInclude Include="Structures.h" />
