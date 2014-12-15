@@ -37,8 +37,8 @@ bool Server::Initialize()
 	m_mapManager.Initialize(m_levelName);
 
 	//Initialize Collision manager
-	m_collisionManager = new CollisionManager();
-	m_collisionManager->Initialize(m_mapManager.GetBoundingBoxes());
+	m_collisionManager = CollisionManager();
+	m_collisionManager.Initialize(m_mapManager.GetBoundingBoxes());
 	return true;
 }
 
@@ -57,7 +57,7 @@ void Server::Update(double p_deltaTime)
 	m_playerManager.Update(p_deltaTime);
 	m_shurikenManager.Update(p_deltaTime);
 
-	m_collisionManager->ShurikenCollisionChecks(&m_shurikenManager, &m_playerManager);
+	m_collisionManager.ShurikenCollisionChecks(&m_shurikenManager, &m_playerManager);
 }
 
 void Server::ReceviePacket()
@@ -171,7 +171,7 @@ void Server::ReceviePacket()
 		}
 		case ID_SHURIKEN_THROWN:
 		{
-			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
+			/*RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
 
 			rBitStream.Read(messageID);
 			float x, y, z;
@@ -191,7 +191,7 @@ void Server::ReceviePacket()
 				m_playerManager.UsedAbility(index, ABILITIES_SHURIKEN);
 			}
 			
-			break;
+			break;*/
 		}
 		case ID_DOWNLOAD_PLAYERS:
 		{
@@ -200,7 +200,7 @@ void Server::ReceviePacket()
 		}
 		case ID_MELEE_ATTACK:
 		{
-			m_collisionManager->NormalMeleeAttack(m_packet->guid, &m_playerManager);
+			//m_collisionManager->NormalMeleeAttack(m_packet->guid, &m_playerManager);
 			break;
 		}
 		case ID_ABILITY:
@@ -215,7 +215,7 @@ void Server::ReceviePacket()
 
 			if (m_playerManager.CanUseAbility(index, readAbility))
 			{
-				m_playerManager.ExceuteAbility(m_packet->guid, readAbility);
+				m_playerManager.ExceuteAbility(m_packet->guid, readAbility, m_collisionManager, m_shurikenManager);
 				m_playerManager.UsedAbility(index, readAbility);
 			}
 			break;

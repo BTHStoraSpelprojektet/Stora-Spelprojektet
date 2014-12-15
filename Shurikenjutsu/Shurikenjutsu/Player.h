@@ -9,6 +9,7 @@
 #include "Ability.h"
 #include "Dash.h"
 #include "MeleeSwing.h"
+#include "ShurikenAbility.h"
 #include "CollisionManager.h"
 #include "HealthBar.h"
 
@@ -66,6 +67,7 @@ private:
 	Ability* m_noAbility;
 	Ability* m_buttonQ;
 	Ability* m_meleeSwing;
+	Ability* m_shurikenAbility;
 
 	HealthBar m_healthbar;
 };

@@ -260,6 +260,8 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 			break;
 		case ABILITIES_DASH:
 			break;
+		case ABILITIES_MELEESWING:
+			break;
 		default:
 			break;
 		}
@@ -286,6 +288,11 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 				break;
 			case ABILITIES_DASH:
 				break;
+			case ABILITIES_MELEESWING:
+			{
+
+				break;
+			}
 			default:
 				break;
 			}
@@ -295,17 +302,26 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	return result;
 }
 
-void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility)
+void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager)
 {
 	RakNet::RakString abilityString = "Hej";
+	int index = GetPlayerIndex(p_guid);
 	switch (p_readAbility)
 	{
 	case ABILITIES_SHURIKEN:
 		abilityString = "HEJSAN EN SHURIKEN ÄR KASTAD! d:";
+		p_shurikenManager.AddShuriken(p_guid, m_players[index].x, m_players[index].y, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 		break;
 	case ABILITIES_DASH:
 		abilityString = "HEJSAN NU BLEV DET EN DASH! :p";
 		break;
+	case ABILITIES_MELEESWING:
+	{
+		p_collisionManager.NormalMeleeAttack(p_guid, this);
+		abilityString = "MeleeSwinged!";
+		
+		break;
+	}
 	default:
 		break;
 	}

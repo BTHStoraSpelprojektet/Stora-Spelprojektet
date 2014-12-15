@@ -130,6 +130,7 @@
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="DebugCircle.cpp" />
     <ClCompile Include="AnimatedObject.cpp" />
+    <ClCompile Include="ShurikenAbility.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StatusEffect.cpp" />
     <ClCompile Include="System.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="ShadowShapes.h" />
     <ClInclude Include="Shuriken.h" />
     <ClInclude Include="AnimatedObject.h" />
+    <ClInclude Include="ShurikenAbility.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="StatusEffect.h" />
     <ClInclude Include="Structures.h" />

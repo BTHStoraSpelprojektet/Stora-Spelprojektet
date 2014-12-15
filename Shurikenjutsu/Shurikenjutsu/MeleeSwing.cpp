@@ -11,5 +11,5 @@ MeleeSwing::~MeleeSwing()
 
 void MeleeSwing::Execute()
 {
-	Network::GetInstance()->DoMeleeAttack();
+	Network::GetInstance()->SendAbility(ABILITIES_MELEESWING);
 }

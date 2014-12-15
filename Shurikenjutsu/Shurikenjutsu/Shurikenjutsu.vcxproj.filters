@@ -312,6 +312,9 @@
     <ClCompile Include="MeleeSwing.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="ShurikenAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -480,6 +483,9 @@
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="MeleeSwing.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ShurikenAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>
