@@ -67,6 +67,9 @@ private:
 	Ability* m_buttonQ;
 
 	HealthBar m_healthbar;
+
+
+	float m_dashCd;
 };
 
 #endif PLAYER

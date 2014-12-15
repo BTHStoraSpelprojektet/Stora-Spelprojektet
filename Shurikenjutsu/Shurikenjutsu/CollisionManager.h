@@ -17,7 +17,7 @@ public:
 
 
 	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
-	bool CalculateDashLength();
+	float CalculateDashLength(Ray* p_ray);
 private:
 
 	CollisionManager();

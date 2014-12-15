@@ -98,6 +98,7 @@ struct Ray
 	void SetDirection(float p_xDir, float p_yDir, float p_zDir)
 	{
 		m_direction = DirectX::XMFLOAT4(p_xDir, p_yDir, p_zDir, 0.0f);
+		m_distance = 0;
 	}
 };
 
@@ -137,7 +138,12 @@ struct Box
 	}
 	void CalculateRadius()
 	{
-		m_radius = std::sqrt(m_extents.x * m_extents.x + m_extents.z * m_extents.z);
+		float temp = std::sqrt(m_extents.x * m_extents.x + m_extents.z * m_extents.z);
+
+		if (temp < 0)
+			m_radius *= -1;
+		
+		m_radius = temp;
 	}
 };
 

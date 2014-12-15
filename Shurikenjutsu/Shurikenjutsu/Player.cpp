@@ -82,15 +82,28 @@ void Player::UpdateMe()
 
 void Player::CheckForSpecialAttack()
 {
+	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(m_attackDir.x, 0.1f, m_attackDir.z);
+	if (m_dashCd > 0)
+	{
+		m_dashCd -= (float)GLOBAL::GetInstance().GetDeltaTime();
+	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('v')))
 	{
-		if (CollisionManager::GetInstance()->CalculateDashLength())
+		if (m_dashCd <= 0)
 		{
-			float speed_X_Delta_X_DashLength = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed * 3.0f;
-			SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta_X_DashLength, m_position.y + m_direction.y * speed_X_Delta_X_DashLength, m_position.z + m_direction.z * speed_X_Delta_X_DashLength));
+			DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(m_position.x, 0.1f, m_position.z);
+			float dashLength = CollisionManager::GetInstance()->CalculateDashLength(&Ray(rayPos, rayDirection)) - 1.0f;
 
+			std::cout << "X: " << rayDirection.x << std::endl;
+			std::cout << "Z: " << rayDirection.z << std::endl;
+			std::cout << dashLength << std::endl;
+
+			DirectX::XMFLOAT3 dir_And_Dash = DirectX::XMFLOAT3(m_attackDir.x * dashLength, m_attackDir.y, m_attackDir.z * dashLength);
+			float speed_X_Delta = 1.0f;//(float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
+			SendPosition(DirectX::XMFLOAT3(m_position.x + dir_And_Dash.x * speed_X_Delta, 0.0f, m_position.z + dir_And_Dash.z *speed_X_Delta));
+			m_dashCd = 0.5f;
 		}
-	}	
+	}
 	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	//{
 	//	std::cout << "" << std::endl;
