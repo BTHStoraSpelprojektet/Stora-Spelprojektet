@@ -36,7 +36,7 @@ private:
 	PlayerManager m_playerManager;
 	ShurikenManager m_shurikenManager;
 	MapManager m_mapManager;
-	CollisionManager* m_collisionManager;
+	CollisionManager m_collisionManager;
 };
 
 #endif SERVER

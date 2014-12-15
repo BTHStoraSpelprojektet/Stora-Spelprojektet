@@ -10,8 +10,11 @@
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonEnums.h"
+#include "CollisionManager.h"
+#include "ShurikenManager.h"
 #include <vector>
 
+class CollisionManager;
 class PlayerManager
 {
 public:
@@ -36,7 +39,7 @@ public:
 
 	void UsedAbility(int p_index, ABILITIES p_ability);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
-	void ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility);
+	void ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);

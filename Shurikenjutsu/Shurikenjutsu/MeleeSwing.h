@@ -1,5 +1,5 @@
-#ifndef MELEESWING
-#define MELEESWING
+#ifndef MELEESWING_H_
+#define MELEESWING_H_
 
 #include "Ability.h"
 #include "Network.h"
@@ -12,7 +12,7 @@ public:
 
 	void Execute();
 };
-#endif // !MELEESWING
+#endif // !MELEESWING_H_
 
 
 
