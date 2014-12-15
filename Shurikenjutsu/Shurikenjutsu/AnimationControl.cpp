@@ -12,10 +12,13 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_ikDirection = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
 	m_rotationAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
+	m_bindPoses.clear();
+	m_bindPoses = p_newStack.m_bindPoses;
+
 	return true;
 }
 
-std::vector<DirectX::XMMATRIX> AnimationControl::UpdateAnimation()
+std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
@@ -77,8 +80,9 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	transformMatrix.r[3].m128_f32[1] = jointTranslation.m128_f32[1];
 	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];	
 
-	DirectX::FXMMATRIX bindPose = m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform;
-	m_boneTransforms[*p_index] = DirectX::XMMatrixTranspose(DirectX::XMMatrixMultiply(bindPose, transformMatrix));
+	DirectX::XMMATRIX bindPose = DirectX::XMLoadFloat4x4(&m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform);
+	transformMatrix = DirectX::XMMatrixMultiply(bindPose, transformMatrix);
+	DirectX::XMStoreFloat4x4(&m_boneTransforms[*p_index], DirectX::XMMatrixTranspose(transformMatrix));
 
 	for (unsigned int i = 0; i < p_jointArms->m_children.size(); i++)
 	{
