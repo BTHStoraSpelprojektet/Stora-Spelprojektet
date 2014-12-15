@@ -28,6 +28,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_ability = new Ability();
 	m_noAbility = new Ability();
 	m_buttonQ = new Dash();
+	m_meleeSwing = new MeleeSwing();
 
 	m_healthbar.Initialize(50.0f, 5.0f);
 
@@ -54,7 +55,7 @@ void Player::UpdateMe()
 	// Melee attack
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		Network::GetInstance()->DoMeleeAttack();
+		m_ability = m_meleeSwing;
 	}
 
 	// Cast shuriken

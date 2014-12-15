@@ -137,7 +137,9 @@ struct Box
 	}
 	void CalculateRadius()
 	{
-		m_radius = std::sqrt(m_extents.x * m_extents.x + m_extents.z * m_extents.z);
+		float max1 = std::fmaxf(m_extents.x, m_extents.y);
+		float max2 = std::fmaxf(max1, m_extents.z);
+		m_radius = std::sqrt(max2 * max2 + max2 * max2);
 	}
 };
 
@@ -212,7 +214,9 @@ struct OBB
 	}
 	void CalculateRadius()
 	{
-		m_radius = std::sqrt(m_extents.x * m_extents.x + m_extents.z * m_extents.z);
+		float max1 = std::fmaxf(m_extents.x, m_extents.y);
+		float max2 = std::fmaxf(max1, m_extents.z);
+		m_radius = std::sqrt(max2 * max2 + max2 * max2);
 	}
 };
 
@@ -232,8 +236,8 @@ struct BoneFrame
 
 struct BindPose
 {
-	DirectX::XMMATRIX m_bindPoseTransform;
-	DirectX::XMMATRIX m_geometricTransform;
+	DirectX::XMFLOAT4X4 m_bindPoseTransform;
+	DirectX::XMFLOAT4X4 m_geometricTransform;
 };
 
 struct AnimationStack

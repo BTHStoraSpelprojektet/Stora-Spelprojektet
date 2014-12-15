@@ -448,7 +448,7 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMMATRIX> p_boneTransforms)
+void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(VertexAnimated);
@@ -602,7 +602,7 @@ void SceneShader::UpdateColorBuffer(ID3D11DeviceContext* p_context, float R, flo
 	p_context->VSSetConstantBuffers(3, 1, &m_colorBuffer);
 }
 
-void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMMATRIX> p_boneTransforms)
+void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
@@ -617,7 +617,7 @@ void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vect
 
 	// Set matrices in buffer.
 	for (unsigned int i = 0; i < p_boneTransforms.size(); i++)
-		animatedMatrixBuffer->m_boneTransforms[i] = p_boneTransforms[i];
+		animatedMatrixBuffer->m_boneTransforms[i] = DirectX::XMLoadFloat4x4(&p_boneTransforms[i]);
 
 	// Unlock the matrix buffer after it has been written to.
 	p_context->Unmap(m_animationMatrixBuffer, 0);
