@@ -41,6 +41,7 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObject
 	}
 	return CollisionList;
 }
+
 void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
 {
 	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
@@ -67,7 +68,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 2.5f, attackDirection, boxPosition, boxExtent, 1.2f))
 		{
 			// todo melee dmg
-			int dmg = 100;
+			int dmg = 50;
 
 			// Damage the player
 			p_playerManager->DamagePlayer(playerList[i].guid, dmg);
