@@ -1,13 +1,13 @@
-#ifndef DEBUGSTATE_H_
-#define DEBUGSTATE_H_
+#ifndef NORMALSTATE_H_
+#define NORMALSTATE_H_
 
 #include "GameState.h"
 
-class DebugState : public GameState
+class NormalState : public GameState
 {
 public:
-	DebugState();
-	~DebugState();
+	NormalState();
+	~NormalState();
 
 	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
 	void Shutdown();
