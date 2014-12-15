@@ -63,7 +63,6 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		m_ability = m_shurikenAbility;
-		Network::GetInstance()->AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
 	}
 
 	// Check health from server
