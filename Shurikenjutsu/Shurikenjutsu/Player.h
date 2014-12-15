@@ -8,6 +8,7 @@
 #include "Globals.h"
 #include "Ability.h"
 #include "Dash.h"
+#include "MeleeSwing.h"
 #include "CollisionManager.h"
 #include "HealthBar.h"
 
@@ -65,6 +66,7 @@ private:
 	Ability* m_ability;
 	Ability* m_noAbility;
 	Ability* m_buttonQ;
+	Ability* m_meleeSwing;
 
 	HealthBar m_healthbar;
 
