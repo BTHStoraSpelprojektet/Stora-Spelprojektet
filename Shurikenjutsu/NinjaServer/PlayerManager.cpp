@@ -39,6 +39,18 @@ void PlayerManager::Update(double p_deltaTime)
 		{
 			m_players[i].gcd -= (float)p_deltaTime;
 		}
+		if (m_players[i].cooldownAbilites.shurikenCD > 0.0f)
+		{
+			m_players[i].cooldownAbilites.shurikenCD -= (float)p_deltaTime;
+		}
+		if (m_players[i].cooldownAbilites.dashCD > 0.0f)
+		{
+			m_players[i].cooldownAbilites.dashCD -= (float)p_deltaTime;
+		}
+		if (m_players[i].cooldownAbilites.meleeSwingCD > 0.0f)
+		{
+			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
+		}
 	}
 }
 
@@ -257,10 +269,13 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 		switch (p_ability)
 		{
 		case ABILITIES_SHURIKEN:
+			m_players[p_index].cooldownAbilites.shurikenCD = 3;
 			break;
 		case ABILITIES_DASH:
+			m_players[p_index].cooldownAbilites.dashCD = 12;
 			break;
 		case ABILITIES_MELEESWING:
+			m_players[p_index].cooldownAbilites.meleeSwingCD = 0.6;
 			break;
 		default:
 			break;
@@ -277,16 +292,41 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	{
 		if (m_players[p_index].gcd <= 0.0f)
 		{
-			result = true;
 			switch (p_ability)
 			{
 			case ABILITIES_SHURIKEN:
+				if (m_players[p_index].cooldownAbilites.shurikenCD <= 0.0f)
+				{
+					result = true;
+				}
+				else
+				{
+					result = false;
+				}
+
 				break;
 			case ABILITIES_DASH:
+				if (m_players[p_index].cooldownAbilites.dashCD <= 0.0f)
+				{			
+					result = true;
+				}
+				else
+				{
+					result = false;
+				}
 				break;
 			case ABILITIES_MELEESWING:
+				if (m_players[p_index].cooldownAbilites.meleeSwingCD <= 0.0f)
+				{
+					result = true;
+				}
+				else
+				{
+					result = false;
+				}
 				break;
 			default:
+				result = false;
 				break;
 			}
 		}

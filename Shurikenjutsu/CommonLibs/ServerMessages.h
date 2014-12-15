@@ -4,6 +4,13 @@
 #include "..\CommonLibs\RakNet\MessageIdentifiers.h"
 #include "..\CommonLibs\RakNet\RakNetTypes.h"
 
+struct Cooldowns
+{
+	float shurikenCD;
+	float meleeSwingCD;
+	float dashCD;
+};
+
 struct PlayerNet
 {
 	float x, y, z;
@@ -13,6 +20,7 @@ struct PlayerNet
 	int maxHP;
 	int currentHP;
 	float gcd;
+	Cooldowns cooldownAbilites;
 };
 
 struct ShurikenNet
