@@ -9,7 +9,7 @@ class AnimationControl
 {
 public:
 	bool CreateNewStack(AnimationStack p_newStack);
-	std::vector<DirectX::XMMATRIX> UpdateAnimation();
+	std::vector<DirectX::XMFLOAT4X4> UpdateAnimation();
 
 	bool IsAnimated();
 	void SetIkDirection(DirectX::XMFLOAT3 p_direction);
@@ -26,7 +26,8 @@ private:
 	DirectX::XMFLOAT3 m_ikDirection;
 	DirectX::XMVECTOR m_rotationAxis;
 
-	std::vector<DirectX::XMMATRIX> m_boneTransforms;
+	std::vector<DirectX::XMFLOAT4X4> m_boneTransforms;
+	std::vector<BindPose> m_bindPoses;
 };
 
 #endif;

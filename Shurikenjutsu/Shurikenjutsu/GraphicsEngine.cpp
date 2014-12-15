@@ -89,7 +89,7 @@ void GraphicsEngine::Shutdown()
 	// TODO shutdowns for everyone!
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex, std::vector<DirectX::XMMATRIX> p_boneTransforms)
+void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	switch (p_shader)
 	{

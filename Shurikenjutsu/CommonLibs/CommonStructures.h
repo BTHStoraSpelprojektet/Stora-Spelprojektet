@@ -232,8 +232,8 @@ struct BoneFrame
 
 struct BindPose
 {
-	DirectX::XMMATRIX m_bindPoseTransform;
-	DirectX::XMMATRIX m_geometricTransform;
+	DirectX::XMFLOAT4X4 m_bindPoseTransform;
+	DirectX::XMFLOAT4X4 m_geometricTransform;
 };
 
 struct AnimationStack
