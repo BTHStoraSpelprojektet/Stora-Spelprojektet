@@ -72,7 +72,7 @@ float CollisionManager::CalculateDashLength(Ray* p_ray)
 	float dashLength = 10.0f;
 	std::vector<float> rayLengths;
 
-	for (int i = 0; i < m_StaticObjectList.size(); i++)
+	for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
 	{
 		if (Collisions::RayOBBCollision(ray, m_StaticObjectList[i]));
 		{
@@ -82,7 +82,7 @@ float CollisionManager::CalculateDashLength(Ray* p_ray)
 			}
 		}
 	}
-	for (int i = 0; i < rayLengths.size(); i++)
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
 	{
 		if (rayLengths[i] < dashLength)
 		{

@@ -24,6 +24,7 @@ public:
 
 	void NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager);
+	void CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 
 private:
 	bool OBBOBBtest(OBB p_OBB1, OBB p_OBB2);

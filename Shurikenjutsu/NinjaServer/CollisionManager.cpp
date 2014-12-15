@@ -169,7 +169,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 
 void CollisionManager::CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
 {
-	Ray* ray;
+	Ray* ray = new Ray;
 	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
 	std::vector<PlayerNet> targetsIntersectingWithRay;
