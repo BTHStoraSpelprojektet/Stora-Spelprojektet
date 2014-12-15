@@ -167,6 +167,29 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 	}
 }
 
+void CollisionManager::CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+{
+	Ray* ray;
+	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<PlayerNet> targetsIntersectingWithRay;
+	// Go through player list
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		// Get the players bounding boxes
+		std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
+		for (unsigned int j = 0; j < playerBoundingBoxes.size(); j++)
+		{
+			Box box = playerBoundingBoxes[j];
+			if (Collisions::RayBoxCollision(ray,  box))
+			{
+				targetsIntersectingWithRay.push_back(playerList[i]);
+			}
+		}
+	}
+}
+
+//Private
 bool CollisionManager::OBBOBBtest(OBB p_OBB1, OBB p_OBB2)
 {
 	if (IntersectionTests::Intersections::SphereSphereCollision(p_OBB1.m_center, p_OBB1.m_radius, p_OBB2.m_center, p_OBB2.m_radius))
