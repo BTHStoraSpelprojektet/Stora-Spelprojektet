@@ -32,6 +32,7 @@ void DebugState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
 
+	// Instant respawn of players
 	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
 	for each(PlayerNet player in players)
 	{
