@@ -29,8 +29,6 @@ private:
 	std::vector<Shuriken> m_shurikens;
 	std::vector<Object> m_staticObjects;
 
-	AnimatedObject m_animatedCharacter;
-
 	// unique ID for the network
 	RakNet::NetworkIDManager m_networkIDManger;
 	bool IsShurikenInList(unsigned int p_shurikenId);
