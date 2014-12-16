@@ -44,8 +44,8 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation)
 {
 	DirectX::XMVECTOR quaternionArms = DirectX::XMVectorSet(p_jointArms->m_quaternion[0], p_jointArms->m_quaternion[1], p_jointArms->m_quaternion[2], p_jointArms->m_quaternion[3]);
-	DirectX::XMVECTOR quaternionLegs = DirectX::XMVectorSet(p_jointLegs->m_quaternion[0], p_jointLegs->m_quaternion[1], p_jointLegs->m_quaternion[2], p_jointLegs->m_quaternion[3]);
-	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionArms, quaternionLegs);
+	DirectX::XMVECTOR quaternion = DirectX::XMVectorSet(p_jointLegs->m_quaternion[0], p_jointLegs->m_quaternion[1], p_jointLegs->m_quaternion[2], p_jointLegs->m_quaternion[3]);
+	//DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionArms, quaternionLegs);
 	DirectX::XMVECTOR orientQuaternion = DirectX::XMVectorSet(p_jointArms->m_orientQuaternion[0], p_jointArms->m_orientQuaternion[1], p_jointArms->m_orientQuaternion[2], p_jointArms->m_orientQuaternion[3]);
 
 	quaternion = DirectX::XMQuaternionMultiply(quaternion, orientQuaternion);
@@ -65,9 +65,9 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	parentMatrix.r[3].m128_f32[2] = p_parentTranslation.m128_f32[2];
 
 	float combinedTranslation[3];
-	combinedTranslation[0] = (p_jointArms->m_translation[0] + p_jointLegs->m_translation[0]) / 2;
-	combinedTranslation[1] = (p_jointArms->m_translation[1] + p_jointLegs->m_translation[1]) / 2;
-	combinedTranslation[2] = (p_jointArms->m_translation[2] + p_jointLegs->m_translation[2]) / 2;
+	combinedTranslation[0] = (p_jointArms->m_translation[0]);// + p_jointLegs->m_translation[0]) / 2;
+	combinedTranslation[1] = (p_jointArms->m_translation[1]);// + p_jointLegs->m_translation[1]) / 2;
+	combinedTranslation[2] = (p_jointArms->m_translation[2]);// + p_jointLegs->m_translation[2]) / 2;
 
 	DirectX::XMVECTOR jointTranslation = DirectX::XMVectorSet(combinedTranslation[0], combinedTranslation[1], combinedTranslation[2], 1.0f);
 
