@@ -16,35 +16,20 @@ bool Server::Initialize()
 
 	m_nrOfConnections = 0;
 
-	// Set level name
-	m_levelName = "../Shurikenjutsu/Levels/testBana.SSPL";
-	m_shurikenModelName = "../Shurikenjutsu/Models/shurikenShape.SSP";
-	m_playerModelName = "../Shurikenjutsu/Models/cubemanWnP";
-
 	// Initate models (for boundingboxes)
 	ModelLibrary::GetInstance()->Initialize(new BaseModel());
 
-	// Initiate players
-	m_playerManager = PlayerManager();
-	m_playerManager.Initialize(m_serverPeer, m_levelName, m_playerModelName);
+	// Initiate game state
+	m_gameState = new DebugState();
+	m_gameState->Initialize(m_serverPeer);
 
-	// Initiate shurikens
-	m_shurikenManager = ShurikenManager();
-	m_shurikenManager.Initialize(m_serverPeer, m_levelName, m_shurikenModelName);
-
-	// Initiate map
-	m_mapManager = MapManager();
-	m_mapManager.Initialize(m_levelName);
-
-	//Initialize Collision manager
-	m_collisionManager = CollisionManager();
-	m_collisionManager.Initialize(m_mapManager.GetBoundingBoxes());
 	return true;
 }
 
 void Server::Shutdown()
 {
-	m_playerManager.Shutdown();
+	m_gameState->Shutdown();
+	delete m_gameState;
 
 	m_serverPeer->Shutdown(1000);
 	RakNet::RakPeerInterface::DestroyInstance(m_serverPeer);
@@ -54,10 +39,7 @@ void Server::Update(double p_deltaTime)
 {
 	ReceviePacket();
 
-	m_playerManager.Update(p_deltaTime);
-	m_shurikenManager.Update(p_deltaTime);
-
-	m_collisionManager.ShurikenCollisionChecks(&m_shurikenManager, &m_playerManager);
+	m_gameState->Update(p_deltaTime);
 }
 
 void Server::ReceviePacket()
@@ -81,7 +63,7 @@ void Server::ReceviePacket()
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-			m_playerManager.AddPlayer(m_packet->guid, m_nrOfConnections);
+			m_gameState->AddPlayer(m_packet->guid, m_nrOfConnections);
 
 			break;
 		}
@@ -96,7 +78,7 @@ void Server::ReceviePacket()
 			m_nrOfConnections--;
 			std::cout << "A client has disconnected (" << m_nrOfConnections << ")" <<std::endl;
 			
-			m_playerManager.RemovePlayer(m_packet->guid);
+			m_gameState->RemovePlayer(m_packet->guid);
 
 
 			RakNet::BitStream bitStream;
@@ -113,7 +95,7 @@ void Server::ReceviePacket()
 		{
 			m_nrOfConnections--;
 			std::cout << "A client lost the connection (" << m_nrOfConnections << ")" << std::endl;
-			m_playerManager.RemovePlayer(m_packet->guid);
+			m_gameState->RemovePlayer(m_packet->guid);
 			break;
 		}
 		case ID_PLAYER_MOVED:
@@ -128,10 +110,10 @@ void Server::ReceviePacket()
 			rBitStream.Read(z);
 
 			// Can player move?
-			m_playerManager.MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
+			m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
 
 			// Get player pos
-			PlayerNet player = m_playerManager.GetPlayer(m_packet->guid);
+			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
 			RakNet::BitStream wBitStream;
 			wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
@@ -155,9 +137,9 @@ void Server::ReceviePacket()
 			bitStream.Read(dirY);
 			bitStream.Read(dirZ);
 
-			m_playerManager.RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
+			m_gameState->RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
 
-			PlayerNet player = m_playerManager.GetPlayer(m_packet->guid);
+			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
 			RakNet::BitStream wBitStream;
 			wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
@@ -184,23 +166,23 @@ void Server::ReceviePacket()
 			rBitStream.Read(dirY);
 			rBitStream.Read(dirZ);
 
-			int index = m_playerManager.GetPlayerIndex(m_packet->guid);
-			if (m_playerManager.CanUseAbility(index, ABILITIES_SHURIKEN))
+			int index = m_gameState->GetPlayerIndex(m_packet->guid);
+			if (m_gameState->CanUseAbility(index, ABILITIES_SHURIKEN))
 			{
-				m_shurikenManager.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
-				m_playerManager.UsedAbility(index, ABILITIES_SHURIKEN);
+				m_gameState->AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
+				m_gameState->UsedAbility(index, ABILITIES_SHURIKEN);
 			}
 			
 			break;*/
 		}
 		case ID_DOWNLOAD_PLAYERS:
 		{
-			m_playerManager.BroadcastPlayers();
+			m_gameState->BroadcastPlayers();
 			break;
 		}
 		case ID_MELEE_ATTACK:
 		{
-			//m_collisionManager->NormalMeleeAttack(m_packet->guid, &m_playerManager);
+			//m_gameState->NormalMeleeAttack(m_packet->guid);
 			break;
 		}
 		case ID_ABILITY:
@@ -211,12 +193,20 @@ void Server::ReceviePacket()
 			ABILITIES readAbility;
 
 			rBitStream.Read(readAbility);
-			int index = m_playerManager.GetPlayerIndex(m_packet->guid);
+			int index = m_gameState->GetPlayerIndex(m_packet->guid);
 
-			if (m_playerManager.CanUseAbility(index, readAbility))
+			if (m_gameState->CanUseAbility(index, readAbility))
 			{
-				m_playerManager.ExceuteAbility(m_packet->guid, readAbility, m_collisionManager, m_shurikenManager, m_nrOfConnections);
-				m_playerManager.UsedAbility(index, readAbility);
+				if (readAbility == ABILITIES_DASH)
+				{
+					m_gameState->ExecuteAbility(m_packet->guid, readAbility, true);
+					m_gameState->UsedAbility(index, readAbility);
+				}
+				else
+				{
+					m_gameState->ExecuteAbility(m_packet->guid, readAbility, false);
+					m_gameState->UsedAbility(index, readAbility);
+				}
 			}
 			break;
 		}

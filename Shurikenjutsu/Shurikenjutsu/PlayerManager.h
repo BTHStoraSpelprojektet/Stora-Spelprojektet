@@ -4,7 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "Player.h"
 #include "DebugDraw.h"
-
+#include "AbilityBar.h"
 #include <vector>
 
 class PlayerManager
@@ -14,7 +14,7 @@ public:
 	~PlayerManager();
 	bool Initialize();
 	void Shutdown();
-	void Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
+	void Update();
 	void Render(SHADERTYPE p_shader);
 	DirectX::XMFLOAT3 GetPlayerPosition();
 	DirectX::XMFLOAT3 GetPlayerDirection();
@@ -27,6 +27,8 @@ public:
 
 	DirectX::BoundingBox GetPlayerBoundingBox();
 
+	void UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
+
 private:
 	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 		float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility);
@@ -38,7 +40,11 @@ private:
 
 	Player m_player;
 
+	AbilityBar m_playerAbilityBar;
+
 	std::vector<Player> m_enemyList;
+
+
 };
 
 #endif PLAYERMANAGER

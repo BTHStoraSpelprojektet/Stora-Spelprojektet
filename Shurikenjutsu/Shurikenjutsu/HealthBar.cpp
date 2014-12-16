@@ -21,7 +21,7 @@ void HealthBar::Update(DirectX::XMFLOAT3 p_position, int p_health, int p_maxHeal
 
 	float newLength = m_background.GetSize().x * (1.0f - percent);
 
-	DirectX::XMFLOAT3 newPos = m_foreground.GetPosition();
+	DirectX::XMFLOAT3 newPos = m_background.GetPosition();
 	newPos.x -= newLength;
 	m_foreground.SetPosition(newPos);
 

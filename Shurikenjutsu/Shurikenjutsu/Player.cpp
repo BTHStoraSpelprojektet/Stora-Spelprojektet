@@ -48,7 +48,6 @@ void Player::UpdateMe()
 	m_ability = m_noAbility;
 
 	CheckForSpecialAttack();
-
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
@@ -93,23 +92,10 @@ void Player::CheckForSpecialAttack()
 	{
 		if (m_dashCd <= 0)
 		{
-			m_ability = m_dash;
 			m_dashCd = 0.5f;
+			m_ability = m_dash;
 		}
 	}
-	//if (m_inputManager->IsKeyPressed(VkKeyScan('v')))
-	//{
-	//	if (m_dashCd <= 0)
-	//	{
-	//		
-	//		DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(m_position.x, 0.1f, m_position.z);
-	//		float dashLength = CollisionManager::GetInstance()->CalculateDashLength(&Ray(rayPos, rayDirection)) - 1.0f;
-
-	//		DirectX::XMFLOAT3 dir_And_Dash = DirectX::XMFLOAT3(m_attackDir.x * dashLength, m_attackDir.y, m_attackDir.z * dashLength);
-	//		SendPosition(DirectX::XMFLOAT3(m_position.x + dir_And_Dash.x, 0.0f, m_position.z + dir_And_Dash.z));
-	//		m_dashCd = 0.5f;
-	//	}
-	//}
 	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	//{
 	//	std::cout << "" << std::endl;
@@ -399,7 +385,7 @@ void Player::SetCalculatePlayerPosition()
 
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	m_healthbar.Update(m_position, m_health, 100, p_view, p_projection);
+	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
 }
 
 void Player::Render(SHADERTYPE p_shader)
