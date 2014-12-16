@@ -151,7 +151,7 @@ void Network::ReceviePacket()
 				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
-				UpdatePlayerHP(guid, maxHP, currentHP);
+				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
 
 				playerGuids.push_back(guid);				
 			}

@@ -2,6 +2,7 @@
 #define NORMALSTATE_H_
 
 #include "GameState.h"
+#include <map>
 
 class NormalState : public GameState
 {

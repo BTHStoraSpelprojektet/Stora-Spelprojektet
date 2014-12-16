@@ -36,28 +36,57 @@ void NormalState::Update(double p_deltaTime)
 	// Död = sluta rendera?
 	// Vänta tills alla på ett lag är döda
 	// Sedan respawna ALLA
+
+
+	if (OneTeamLeft())
+	{
+		std::vector<PlayerNet> players = m_playerManager.GetPlayers();
+		for each (PlayerNet player in players)
+		{
+			m_playerManager.ResetHealth(player.guid);
+			m_playerManager.RespawnPlayer(player.guid);
+		}
+	}
 }
 
 bool NormalState::OneTeamLeft()
 {
 	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
-	std::vector<int> teamsFound = std::vector<int>();
-	bool found;
+	std::map<int, bool> teamsFound = std::map<int, bool>();
+	
+
 	for each (PlayerNet player in players)
 	{
-		found = false;
-		for (unsigned int i = 0; i < teamsFound.size(); i++)
+		if (teamsFound.find(player.team) != teamsFound.end())
 		{
-			if (teamsFound[i] == player.team)
+			// found
+			if (teamsFound[player.team] == true)
 			{
-				found = true;
+				teamsFound[player.team] = player.isAlive;
 			}
 		}
-		if (!found)
+		else
 		{
-			teamsFound.push_back(player.team);
+			// not found
+			teamsFound[player.team] = player.isAlive;
 		}
 	}
 
-	return (teamsFound.size() <= 1);
+	if (teamsFound.size() <= 1)
+	{
+		return false;
+	}
+	else
+	{
+		int teamsAlive = 0;
+		for (std::map<int, bool>::iterator it = teamsFound.begin(); it != teamsFound.end(); it++)
+		{
+			if (it->second)
+			{
+				teamsAlive++;
+			}
+		}
+
+		return teamsAlive <= 1;
+	}
 }
