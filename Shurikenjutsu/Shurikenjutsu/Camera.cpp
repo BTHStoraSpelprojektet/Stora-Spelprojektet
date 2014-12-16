@@ -239,9 +239,10 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 }
 
-void Camera::MoveCamera( )
+void Camera::HandleInput()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+
 	// Start moving the camera with the C key.
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')) && !GLOBAL::GetInstance().CAMERA_FLYING)
 	{
@@ -310,6 +311,19 @@ void Camera::MoveCamera( )
 			ShowCursor(true);
 			GLOBAL::GetInstance().CAMERA_FLYING = false;
 			ResetCamera();
+		}
+	}
+
+	// Fullscreen toggle.
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
+	{
+		if (GLOBAL::GetInstance().FULLSCREEN)
+		{
+			ToggleFullscreen(false);
+		}
+		else
+		{
+			ToggleFullscreen(true);
 		}
 	}
 }

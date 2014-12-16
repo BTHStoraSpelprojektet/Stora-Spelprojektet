@@ -41,6 +41,7 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObject
 	}
 	return CollisionList;
 }
+
 void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
 {
 	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
@@ -64,10 +65,13 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		// Make collision test
-		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 2.5f, boxPosition, boxExtent, attackDirection))
+		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 2.5f, attackDirection, boxPosition, boxExtent, 2.5f))
 		{
-			// Respawn player
-			p_playerManager->RespawnPlayer(playerList[i].guid);
+			// todo melee dmg
+			int dmg = 50;
+
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, dmg);
 			break;
 		}
 	}
@@ -112,7 +116,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			{
 				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 				{
-					if (IntersectionTests::Intersections::BoxBoxCollision(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_extents, shurikenBoundingBoxes[k].m_center, shurikenBoundingBoxes[k].m_extents))
+					if (BoxBoxtest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
 						// temp shuriken dmg
 						int dmg = 25;
@@ -144,8 +148,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 		{
 			for (unsigned int k = 0; k < m_StaticObjectList.size(); k++)
 			{
-				if (IntersectionTests::Intersections::OBBOBBCollision(m_StaticObjectList[k].m_center, m_StaticObjectList[k].m_extents, m_StaticObjectList[k].m_direction,
-					shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)))
+				if (OBBOBBtest(m_StaticObjectList[k], OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
 				{
 					// Remove shuriken
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
@@ -162,4 +165,21 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			}
 		}
 	}
+}
+
+bool CollisionManager::OBBOBBtest(OBB p_OBB1, OBB p_OBB2)
+{
+	if (IntersectionTests::Intersections::SphereSphereCollision(p_OBB1.m_center, p_OBB1.m_radius, p_OBB2.m_center, p_OBB2.m_radius))
+	{
+		return IntersectionTests::Intersections::OBBOBBCollision(p_OBB1.m_center, p_OBB1.m_extents, p_OBB1.m_direction, p_OBB2.m_center, p_OBB2.m_extents, p_OBB2.m_direction);
+	}
+	return false;
+}
+bool CollisionManager::BoxBoxtest(Box p_box1, Box p_box2)
+{
+	if (IntersectionTests::Intersections::SphereSphereCollision(p_box1.m_center, p_box1.m_radius, p_box2.m_center, p_box2.m_radius))
+	{
+		return IntersectionTests::Intersections::BoxBoxCollision(p_box1.m_center, p_box1.m_extents, p_box2.m_center, p_box2.m_extents);
+	}
+	return false;
 }

@@ -50,8 +50,6 @@ class Main():
 			
 		group = pm.group(curve)
 		
-		#parent = pm.listRelatives(joint, p = True)[0]
-		#pm.parentConstraint(parent, group, mo = True)
 		pm.orientConstraint(curve, joint)
 		handle = joint + "IK"
 		pm.pointConstraint(curve, handle)
@@ -70,6 +68,7 @@ class Main():
 		pos = pm.PyNode("%s" % joint).getTranslation()
 		pm.move(pos)
 		pm.pointConstraint(pm.ls(sl = True)[0], joint)
+		pm.orientConstraint("%s" % str(pm.ls(sl = True)[0]), joint)
 		
 		
 	def square(self, joint, arm, side):

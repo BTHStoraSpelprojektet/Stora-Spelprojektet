@@ -29,18 +29,6 @@ namespace IntersectionTests
 		DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_spherePosition, p_sphereRadius);
 		return box.Intersects(sphere);
 	}
-/*	bool Intersections::FrustrumSphereCollision(DllFrustum p_frustum, DllSphere p_sphere)
-	{
-		DirectX::BoundingFrustum frustum = DirectX::BoundingFrustum(p_frustum.m_position, p_frustum.m_direction, p_frustum.m_rightAngle, p_frustum.m_leftAngle, p_frustum.m_topAngle, p_frustum.m_bottomAngle, p_frustum.m_nearDistance, p_frustum.m_farDistance);
-		DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_sphere.m_position, p_sphere.m_radius);
-		return frustum.Intersects(sphere);
-	}
-	bool Intersections::FrustrumBoxCollision(DllFrustum p_frustum, DllBox p_box)
-	{
-		DirectX::BoundingFrustum frustum = DirectX::BoundingFrustum(p_frustum.m_position, p_frustum.m_direction, p_frustum.m_rightAngle, p_frustum.m_leftAngle, p_frustum.m_topAngle, p_frustum.m_bottomAngle, p_frustum.m_nearDistance, p_frustum.m_farDistance);
-		DirectX::BoundingBox box = DirectX::BoundingBox(p_box.m_center, p_box.m_extents);
-		return frustum.Intersects(box);
-	}*/
 	bool Intersections::RaySphereCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius)
 	{
 		float temp;
@@ -49,22 +37,29 @@ namespace IntersectionTests
 		DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_rayDirection.x, p_rayDirection.y, p_rayDirection.z, 0.0f));
 		return sphere.Intersects(rayOrigin, rayDirection, temp);
 	}
-	bool Intersections::RayBoxCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents)
+	float Intersections::RayBoxCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents)
 	{
-		float temp;
+		float temp = 0;
 		DirectX::BoundingBox box = DirectX::BoundingBox(p_boxCenter, p_boxExtents);
 		DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_rayOrigin.x, p_rayOrigin.y, p_rayOrigin.z, 0.0f);
 		DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_rayDirection.x, p_rayDirection.y, p_rayDirection.z, 0.0f));
-		return box.Intersects(rayOrigin, rayDirection, temp);
+		bool temp2 = box.Intersects(rayOrigin, rayDirection, temp);
+		return temp;
 	}
-	bool Intersections::RayOBBCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT3 p_OBBDirection)
+	bool Intersections::RayOBBCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT4 p_OBBDirection, float* p_returnValue)
 	{
-		float temp;
+		float temp2 = 0;
 		DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_rayOrigin.x, p_rayOrigin.y, p_rayOrigin.z, 0.0f);
 		DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_rayDirection.x, p_rayDirection.y, p_rayDirection.z, 0.0f));
 		DirectX::BoundingOrientedBox obb;
-		DirectX::BoundingOrientedBox::CreateFromBoundingBox(obb, DirectX::BoundingBox(p_OBBPosition, p_OBBExtents));
-		return obb.Intersects(rayOrigin, rayDirection, temp);
+		obb.Center = p_OBBPosition;
+		obb.Extents = p_OBBExtents;
+		obb.Orientation = p_OBBDirection; 
+		float asdf;
+		bool temp = obb.Intersects(rayOrigin,rayDirection, asdf);
+		*p_returnValue = asdf;
+		//bool temp = obb.Intersects(rayOrigin, rayDirection, p_returnValue);
+		return temp;
 	}
 	bool Intersections::OBBOBBCollision(DirectX::XMFLOAT3 p_OBB1Position, DirectX::XMFLOAT3 p_OBB1Extents, DirectX::XMFLOAT4 p_OBB1Direction, DirectX::XMFLOAT3 p_OBB2Position, DirectX::XMFLOAT3 p_OBB2Extents, DirectX::XMFLOAT4 p_OBB2Direction)
 	{
@@ -76,7 +71,6 @@ namespace IntersectionTests
 		obb2.Center = p_OBB2Position;
 		obb2.Extents = p_OBB2Extents;
 		obb2.Orientation = p_OBB2Direction;
-
 		return obb1.Intersects(obb2);
 	}
 
@@ -90,25 +84,15 @@ namespace IntersectionTests
 
 		return obb.Intersects(sphere);
 	}
-	bool Intersections::MeleeAttackCollision(DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents, DirectX::XMFLOAT3 p_attDirection)
+	bool Intersections::MeleeAttackCollision(DirectX::XMFLOAT3 p_attackerPosition, float p_attackerRadius, DirectX::XMFLOAT3 p_attackDir, DirectX::XMFLOAT3 p_defenderCenter, DirectX::XMFLOAT3 p_defenderExtents, float p_defenderRadius)
 	{
-		float tempBoxRadius;
-		if (p_boxExtents.x > p_boxExtents.z)
-		{
-			tempBoxRadius = p_boxExtents.x;
-		}
-		else
-		{
-			tempBoxRadius = p_boxExtents.z;
-		}
-
-		if (SphereSphereCollision(p_spherePosition, p_sphereRadius, p_boxCenter, tempBoxRadius))
+		if (SphereSphereCollision(p_attackerPosition, p_attackerRadius, p_defenderCenter, p_defenderRadius))
 		{
 			DirectX::XMFLOAT3 temp;
-			temp.x = p_spherePosition.x + p_attDirection.x * p_sphereRadius;
-			temp.y = p_spherePosition.y + p_attDirection.y * p_sphereRadius;
-			temp.z = p_spherePosition.z + p_attDirection.z * p_sphereRadius;
-			if (SphereBoxCollision(temp, p_sphereRadius, p_boxCenter, p_boxExtents))
+			temp.x = p_attackerPosition.x + p_attackDir.x * p_attackerRadius;
+			temp.y = p_attackerPosition.y + p_attackDir.y * p_attackerRadius;
+			temp.z = p_attackerPosition.z + p_attackDir.z * p_attackerRadius;
+			if (SphereBoxCollision(temp, p_attackerRadius, p_defenderCenter, p_defenderExtents))
 			{
 				return true;
 			}

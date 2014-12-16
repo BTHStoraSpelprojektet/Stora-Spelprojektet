@@ -10,15 +10,18 @@
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonEnums.h"
+#include "CollisionManager.h"
+#include "ShurikenManager.h"
 #include <vector>
 
+class CollisionManager;
 class PlayerManager
 {
 public:
 	PlayerManager();
 	~PlayerManager();
 
-	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName);
+	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName);
 	void Shutdown();
 	void Update(double p_deltaTime);
 
@@ -34,9 +37,12 @@ public:
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 
+	int GetPlayerHealth(RakNet::RakNetGUID p_guid);
+	void ResetHealth(RakNet::RakNetGUID p_guid);
+
 	void UsedAbility(int p_index, ABILITIES p_ability);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
-	void ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility);
+	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
