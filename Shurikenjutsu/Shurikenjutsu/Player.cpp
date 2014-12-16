@@ -27,7 +27,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_inputManager = InputManager::GetInstance();
 	m_ability = new Ability();
 	m_noAbility = new Ability();
-	m_buttonQ = new Dash();
+	m_dash = new Dash();
 	m_meleeSwing = new MeleeSwing();
 	m_shurikenAbility = new ShurikenAbility();
 
@@ -45,10 +45,10 @@ void Player::UpdateMe()
 {
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+	m_ability = m_noAbility;
 
 	CheckForSpecialAttack();
 
-	m_ability = m_noAbility;
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
@@ -93,14 +93,23 @@ void Player::CheckForSpecialAttack()
 	{
 		if (m_dashCd <= 0)
 		{
-			DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(m_position.x, 0.1f, m_position.z);
-			float dashLength = CollisionManager::GetInstance()->CalculateDashLength(&Ray(rayPos, rayDirection)) - 1.0f;
-
-			DirectX::XMFLOAT3 dir_And_Dash = DirectX::XMFLOAT3(m_attackDir.x * dashLength, m_attackDir.y, m_attackDir.z * dashLength);
-			SendPosition(DirectX::XMFLOAT3(m_position.x + dir_And_Dash.x, 0.0f, m_position.z + dir_And_Dash.z));
+			m_ability = m_dash;
 			m_dashCd = 0.5f;
 		}
 	}
+	//if (m_inputManager->IsKeyPressed(VkKeyScan('v')))
+	//{
+	//	if (m_dashCd <= 0)
+	//	{
+	//		
+	//		DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(m_position.x, 0.1f, m_position.z);
+	//		float dashLength = CollisionManager::GetInstance()->CalculateDashLength(&Ray(rayPos, rayDirection)) - 1.0f;
+
+	//		DirectX::XMFLOAT3 dir_And_Dash = DirectX::XMFLOAT3(m_attackDir.x * dashLength, m_attackDir.y, m_attackDir.z * dashLength);
+	//		SendPosition(DirectX::XMFLOAT3(m_position.x + dir_And_Dash.x, 0.0f, m_position.z + dir_And_Dash.z));
+	//		m_dashCd = 0.5f;
+	//	}
+	//}
 	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	//{
 	//	std::cout << "" << std::endl;
@@ -120,7 +129,6 @@ bool Player::CalculateDirection()
 	{
 		z += 1;
 		moved = true;
-		m_ability = m_buttonQ;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))

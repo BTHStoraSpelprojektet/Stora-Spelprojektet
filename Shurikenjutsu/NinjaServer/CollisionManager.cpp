@@ -167,13 +167,36 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 	}
 }
 
-float CollisionManager::CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
 {
-	Ray* ray = new Ray;
-	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
-	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
-	std::vector<PlayerNet> targetsIntersectingWithRay;
+	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_attackingPlayer.dirX, 0.1f, p_attackingPlayer.dirZ);
+	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(p_attackingPlayer.x, 0.1f, p_attackingPlayer.z);
+	Ray* ray = new Ray(rayPos, rayDirection);
+	float dashLength = 10.0f;
 	std::vector<float> distancesToTarget;
+	std::vector<float> rayLengths;
+
+	// Go through static objects
+	for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
+	{
+		if (Collisions::RayOBBCollision(ray, m_StaticObjectList[i]));
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+	//Go through the shortest intersecting object
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
+	{
+		if (rayLengths[i] < dashLength)
+		{
+			dashLength = rayLengths[i];
+		}
+	}
+
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
 	// Go through player list
 	for (unsigned int i = 0; i < playerList.size(); i++)
 	{
@@ -184,20 +207,19 @@ float CollisionManager::CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerMana
 			Box box = playerBoundingBoxes[j];
 			if (Collisions::RayBoxCollision(ray,  box))
 			{
-				targetsIntersectingWithRay.push_back(playerList[i]);
 				distancesToTarget.push_back(ray->m_distance);
 			}
 		}
 	}
-	float distance = 10.0f;
+	//Get the shortest intersecting distance
 	for (unsigned int i = 0; i < distancesToTarget.size(); i++)
 	{
-		if (distance < distancesToTarget[i])
+		if ((distancesToTarget[i] < dashLength) && (distancesToTarget[i] > 0))
 		{
-			distance = distancesToTarget[i];
+			dashLength = distancesToTarget[i];
 		}
 	}
-	return distance;
+	return dashLength;
 }
 
 //Private

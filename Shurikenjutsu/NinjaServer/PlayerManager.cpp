@@ -310,9 +310,8 @@ void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	case ABILITIES_DASH:
 		abilityString = "Dash";
 		//Calculate new location for the dashing player and inflict damage on enemies
-		distance = p_collisionManager.CalculateDashRange(p_guid, this);
-
 		player = GetPlayer(p_guid);
+		distance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
 		MovePlayer(p_guid, player.x + distance*player.dirX, player.y, player.z + distance*player.dirZ, p_nrOfConnections, true);
 		
 		break;
@@ -324,6 +323,15 @@ void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		break;
 	}
 
+	player = GetPlayer(p_guid);
+	RakNet::BitStream l_bitStream;
+	l_bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
+	l_bitStream.Write(player.guid);
+	l_bitStream.Write(player.x);
+	l_bitStream.Write(player.y);
+	l_bitStream.Write(player.z);
+
+	m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 	RakNet::BitStream bitStream;
 
