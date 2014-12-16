@@ -5,6 +5,7 @@ LevelBoundingBox_1 0 0 -34 0 0 0 0.5 7.5 35
 LevelBoundingBox_2 -34 0 0 0 0 0 35 7.5 0.5
 LevelBoundingBox_3 0 0 34 0 0 0 0.5 7.5 35
 LevelBoundingBox_4 34 0 0 0 0 0 35 7.5 0.5
+Floor 0 0 0 0 0 0
 pillar_1 -6.98362 0 -6.54079 0 0 0
 pillar_2 6.33441 0 6.65807 0 0 0
 pillar_3 6.33441 0 -6.09524 0 0 0
@@ -72,4 +73,3 @@ DecoratedObject_10 -12 0 -25 0 -1.5708 0
 DecorativeHouse_5 -26 0 -25 0 0 0
 spawnPoint_1_team_1 -19 0 6 0 0 0
 boxpile_01__1 0 0 -14.7134 0 0 0
-Floor 0 0 0 0 0 0
