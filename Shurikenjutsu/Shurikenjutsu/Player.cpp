@@ -25,11 +25,18 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
+	
 	m_ability = new Ability();
 	m_noAbility = new Ability();
+
 	m_buttonQ = new Dash();
+	m_buttonQ->Initialize();
+
 	m_meleeSwing = new MeleeSwing();
+	m_meleeSwing->Initialize();
+
 	m_shurikenAbility = new ShurikenAbility();
+	m_shurikenAbility->Initialize();
 
 	m_healthbar.Initialize(50.0f, 5.0f);
 
@@ -78,6 +85,11 @@ void Player::UpdateMe()
 	{
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 	}
+
+	m_buttonQ->Update();
+	m_meleeSwing->Update();
+	m_shurikenAbility->Update();
+
 
 	m_ability->Execute();
 }
