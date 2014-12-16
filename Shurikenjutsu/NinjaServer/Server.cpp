@@ -16,7 +16,7 @@ bool Server::Initialize()
 
 	m_nrOfConnections = 0;
 
-	// Initate models (for boundingboxes)
+	// Initiate models (for boundingboxes)
 	ModelLibrary::GetInstance()->Initialize(new BaseModel());
 
 	// Initiate game state

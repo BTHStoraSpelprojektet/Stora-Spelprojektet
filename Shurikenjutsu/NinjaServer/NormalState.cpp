@@ -32,12 +32,6 @@ void NormalState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
 
-	// Spelare ska inte respawna förräns ett lag har vunnit
-	// Död = sluta rendera?
-	// Vänta tills alla på ett lag är döda
-	// Sedan respawna ALLA
-
-
 	if (OneTeamLeft())
 	{
 		std::vector<PlayerNet> players = m_playerManager.GetPlayers();
