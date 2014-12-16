@@ -128,7 +128,7 @@ void Server::ReceviePacket()
 			rBitStream.Read(z);
 
 			// Can player move?
-			m_playerManager.MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections);
+			m_playerManager.MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
 
 			// Get player pos
 			PlayerNet player = m_playerManager.GetPlayer(m_packet->guid);
@@ -215,7 +215,7 @@ void Server::ReceviePacket()
 
 			if (m_playerManager.CanUseAbility(index, readAbility))
 			{
-				m_playerManager.ExceuteAbility(m_packet->guid, readAbility, m_collisionManager, m_shurikenManager);
+				m_playerManager.ExceuteAbility(m_packet->guid, readAbility, m_collisionManager, m_shurikenManager, m_nrOfConnections);
 				m_playerManager.UsedAbility(index, readAbility);
 			}
 			break;
