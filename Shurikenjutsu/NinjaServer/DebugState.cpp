@@ -36,7 +36,7 @@ void DebugState::Update(double p_deltaTime)
 	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
 	for each(PlayerNet player in players)
 	{
-		if (player.currentHP <= 0)
+		if (!player.isAlive)
 		{
 			m_playerManager.ResetHealth(player.guid);
 			m_playerManager.RespawnPlayer(player.guid);

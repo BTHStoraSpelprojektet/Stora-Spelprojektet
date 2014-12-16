@@ -12,6 +12,9 @@ public:
 	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
 	void Shutdown();
 	void Update(double p_deltaTime);
+
+private:
+	bool OneTeamLeft();
 };
 
 #endif
