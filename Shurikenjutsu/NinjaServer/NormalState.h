@@ -18,6 +18,7 @@ private:
 	bool OneTeamRemaining();
 	int GetWinningTeam();
 	void RespawnAllPlayers();
+	void SendWinningTeam(int p_winningTeam);
 };
 
 #endif

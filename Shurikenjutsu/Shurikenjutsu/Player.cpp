@@ -48,7 +48,15 @@ void Player::UpdateMe()
 	if (Network::GetInstance()->IsConnected())
 	{
 		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
+		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
+	}
+
+	m_playerSphere.m_position = m_position;
+	// Move
+	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
+	{
+		SetCalculatePlayerPosition();
 	}
 
 	// Don't update player if he is dead
@@ -57,16 +65,10 @@ void Player::UpdateMe()
 		return;
 	}
 
-	m_playerSphere.m_position = m_position;
-	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+	
 	m_ability = m_noAbility;
-
 	CheckForSpecialAttack();
-	// Move
-	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
-	{
-		SetCalculatePlayerPosition();
-	}
+
 
 	// Melee attack
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
@@ -79,15 +81,7 @@ void Player::UpdateMe()
 	{
 		m_ability = m_shurikenAbility;
 	}
-
-
-
-	// Temp to set max health
-	if (Network::GetInstance()->ConnectedNow())
-	{
-		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
-	}
-
+	
 	m_ability->Execute();
 }
 

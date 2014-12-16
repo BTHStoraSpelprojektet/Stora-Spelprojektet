@@ -286,6 +286,17 @@ void Network::ReceviePacket()
 
 			break;
 		}
+		case ID_ROUND_OVER:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int winningTeam;
+
+			bitStream.Read(messageID);
+			bitStream.Read(winningTeam);
+
+			std::cout << "Team " << winningTeam << " won this round\n";
+		}
 		default:
 		{
 			break;

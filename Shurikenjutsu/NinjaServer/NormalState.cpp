@@ -35,7 +35,7 @@ void NormalState::Update(double p_deltaTime)
 	if (OneTeamRemaining())
 	{
 		int winningTeam = GetWinningTeam();
-		std::cout << "Team " << winningTeam << " won this round" << std::endl;
+		SendWinningTeam(winningTeam);
 		RespawnAllPlayers();
 	}
 }
@@ -51,7 +51,7 @@ bool NormalState::OneTeamRemaining()
 		if (teamsFound.find(player.team) != teamsFound.end())
 		{
 			// found
-			if (teamsFound[player.team] == true)
+			if (teamsFound[player.team] == false)
 			{
 				teamsFound[player.team] = player.isAlive;
 			}
@@ -106,4 +106,14 @@ void NormalState::RespawnAllPlayers()
 		m_playerManager.ResetHealth(player.guid);
 		m_playerManager.RespawnPlayer(player.guid);
 	}
+}
+
+void NormalState::SendWinningTeam(int p_winningTeam)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_ROUND_OVER);
+	bitStream.Write(p_winningTeam);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
