@@ -33,7 +33,7 @@ bool MapManager::Initialize(std::string p_levelName)
 
 	for each(LevelImporter::LevelBoundingBox levelBoundingBox in m_levelBoundingBoxes)
 	{
-		OBB boundingBox = OBB(levelBoundingBox.m_translationX, levelBoundingBox.m_translationY, levelBoundingBox.m_translationZ, 2 * levelBoundingBox.m_halfWidth, 2 * levelBoundingBox.m_halfHeight, 2 * levelBoundingBox.m_halfDepth, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
+		OBB boundingBox = OBB(levelBoundingBox.m_translationX, levelBoundingBox.m_translationY, levelBoundingBox.m_translationZ, 2 * levelBoundingBox.m_halfDepth, 2 * levelBoundingBox.m_halfHeight, 2 * levelBoundingBox.m_halfWidth, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f));
 		
 
 		m_boundingBoxes.push_back(boundingBox);
