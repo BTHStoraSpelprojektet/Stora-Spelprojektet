@@ -148,6 +148,9 @@
     <Filter Include="Header Files\GUI\Internal">
       <UniqueIdentifier>{fb93a324-473a-4d57-b35a-f79fef42c390}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Menu">
+      <UniqueIdentifier>{aafd8341-9dfd-4d25-8c5d-4df8e2ce7064}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -302,6 +305,9 @@
     </ClCompile>
     <ClCompile Include="GUIManager.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -469,6 +475,9 @@
     </ClInclude>
     <ClInclude Include="GUIManager.h">
       <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
