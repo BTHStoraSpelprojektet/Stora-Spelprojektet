@@ -8,6 +8,8 @@
 #include "Globals.h"
 #include "Ability.h"
 #include "Dash.h"
+#include "MeleeSwing.h"
+#include "ShurikenAbility.h"
 #include "CollisionManager.h"
 #include "HealthBar.h"
 
@@ -45,6 +47,7 @@ public:
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
 private:
+	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
 
@@ -63,9 +66,14 @@ private:
 	Sphere m_playerSphere;
 	Ability* m_ability;
 	Ability* m_noAbility;
-	Ability* m_buttonQ;
+	Ability* m_dash;
+	Ability* m_meleeSwing;
+	Ability* m_shurikenAbility;
 
 	HealthBar m_healthbar;
+
+
+	float m_dashCd;
 };
 
 #endif PLAYER

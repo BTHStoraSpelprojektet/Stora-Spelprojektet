@@ -18,10 +18,12 @@ GUIManager* GUIManager::GetInstance()
 void GUIManager::Render()
 {
 	GraphicsEngine::TurnOffDepthStencil();
+	GraphicsEngine::TurnOnAlphaBlending();
 	for (unsigned int i = 0; i < m_elements.size(); i++)
 	{
 		GraphicsEngine::RenderGUIColor(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetColor());
 	}
+	GraphicsEngine::TurnOffAlphaBlending();
 	GraphicsEngine::TurnOnDepthStencil();
 	m_elements.clear();
 }

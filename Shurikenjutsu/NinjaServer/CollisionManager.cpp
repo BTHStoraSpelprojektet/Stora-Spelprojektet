@@ -65,7 +65,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		// Make collision test
-		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 2.5f, attackDirection, boxPosition, boxExtent, 1.2f))
+		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 2.5f, attackDirection, boxPosition, boxExtent, 2.5f))
 		{
 			// todo melee dmg
 			int dmg = 50;
