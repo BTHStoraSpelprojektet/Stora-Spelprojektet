@@ -34,7 +34,9 @@ void NormalState::Update(double p_deltaTime)
 
 	if (OneTeamRemaining())
 	{
-
+		int winningTeam = GetWinningTeam();
+		std::cout << "Team " << winningTeam << " won this round" << std::endl;
+		RespawnAllPlayers();
 	}
 }
 
