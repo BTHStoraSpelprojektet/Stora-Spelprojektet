@@ -45,9 +45,8 @@ void Player::UpdateMe()
 {
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-
-
 	m_ability = m_noAbility;
+
 	CheckForSpecialAttack();
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
@@ -93,16 +92,6 @@ void Player::CheckForSpecialAttack()
 	{
 		if (m_dashCd <= 0)
 		{
-			DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(m_position.x, 0.1f, m_position.z);
-			float dashLength = CollisionManager::GetInstance()->CalculateDashLength(&Ray(rayPos, rayDirection)) - 1.0f;
-
-			//std::cout << "X: " << rayDirection.x << std::endl;
-			//std::cout << "Z: " << rayDirection.z << std::endl;
-			//std::cout << dashLength << std::endl;
-
-			DirectX::XMFLOAT3 dir_And_Dash = DirectX::XMFLOAT3(m_attackDir.x * dashLength, m_attackDir.y, m_attackDir.z * dashLength);
-			float speed_X_Delta = 1.0f;//(float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
-			SendPosition(DirectX::XMFLOAT3(m_position.x + dir_And_Dash.x * speed_X_Delta, 0.0f, m_position.z + dir_And_Dash.z *speed_X_Delta));
 			m_dashCd = 0.5f;
 			m_ability = m_dash;
 		}
