@@ -80,16 +80,20 @@ void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, 
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			if ((abs(p_x - m_players[i].x) > 5.0f || abs(p_y - m_players[i].y) > 5.0f || abs(p_z - m_players[i].z) > 5.0f) && p_dashed == false)
+			// Check so the player is not dead
+			if (m_players[i].isAlive)
 			{
-				// Moved too far
-				SendInvalidMessage(p_guid);
-			}
-			else
-			{
-				m_players[i].x = p_x;
-				m_players[i].y = p_y;
-				m_players[i].z = p_z;
+				if ((abs(p_x - m_players[i].x) > 5.0f || abs(p_y - m_players[i].y) > 5.0f || abs(p_z - m_players[i].z) > 5.0f) && p_dashed == false)
+				{
+					// Moved too far
+					SendInvalidMessage(p_guid);
+				}
+				else
+				{
+					m_players[i].x = p_x;
+					m_players[i].y = p_y;
+					m_players[i].z = p_z;
+				}
 			}
 
 			found = true;
@@ -110,9 +114,12 @@ void PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float 
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			m_players[i].dirX = p_dirX;
-			m_players[i].dirY = p_dirY;
-			m_players[i].dirZ = p_dirZ;
+			if (m_players[i].isAlive)
+			{
+				m_players[i].dirX = p_dirX;
+				m_players[i].dirY = p_dirY;
+				m_players[i].dirZ = p_dirZ;
+			}
 			break;
 		}
 	}

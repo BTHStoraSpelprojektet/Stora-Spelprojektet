@@ -15,7 +15,9 @@ public:
 	void Update(double p_deltaTime);
 
 private:
-	bool OneTeamLeft();
+	bool OneTeamRemaining();
+	int GetWinningTeam();
+	void RespawnAllPlayers();
 };
 
 #endif

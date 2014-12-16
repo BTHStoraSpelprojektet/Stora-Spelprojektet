@@ -32,18 +32,13 @@ void NormalState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
 
-	if (OneTeamLeft())
+	if (OneTeamRemaining())
 	{
-		std::vector<PlayerNet> players = m_playerManager.GetPlayers();
-		for each (PlayerNet player in players)
-		{
-			m_playerManager.ResetHealth(player.guid);
-			m_playerManager.RespawnPlayer(player.guid);
-		}
+
 	}
 }
 
-bool NormalState::OneTeamLeft()
+bool NormalState::OneTeamRemaining()
 {
 	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
 	std::map<int, bool> teamsFound = std::map<int, bool>();
@@ -82,5 +77,31 @@ bool NormalState::OneTeamLeft()
 		}
 
 		return teamsAlive <= 1;
+	}
+}
+
+// Make sure OneTeamRemaining is true before calling this
+int NormalState::GetWinningTeam()
+{
+	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
+
+	for each(PlayerNet player in players)
+	{
+		if (player.isAlive)
+		{
+			return player.team;
+		}
+	}
+
+	return -1;
+}
+
+void NormalState::RespawnAllPlayers()
+{
+	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
+	for each (PlayerNet player in players)
+	{
+		m_playerManager.ResetHealth(player.guid);
+		m_playerManager.RespawnPlayer(player.guid);
 	}
 }

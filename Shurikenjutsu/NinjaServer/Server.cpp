@@ -20,7 +20,7 @@ bool Server::Initialize()
 	ModelLibrary::GetInstance()->Initialize(new BaseModel());
 
 	// Initiate game state
-	m_gameState = new DebugState();
+	m_gameState = new NormalState();
 	m_gameState->Initialize(m_serverPeer);
 
 	return true;
@@ -194,8 +194,9 @@ void Server::ReceviePacket()
 
 			rBitStream.Read(readAbility);
 			int index = m_gameState->GetPlayerIndex(m_packet->guid);
+			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
-			if (m_gameState->CanUseAbility(index, readAbility))
+			if (m_gameState->CanUseAbility(index, readAbility) && player.isAlive)
 			{
 				if (readAbility == ABILITIES_DASH)
 				{

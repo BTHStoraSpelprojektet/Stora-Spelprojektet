@@ -30,6 +30,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dash = new Dash();
 	m_meleeSwing = new MeleeSwing();
 	m_shurikenAbility = new ShurikenAbility();
+	m_isAlive = true;
 
 	m_healthbar.Initialize(50.0f, 5.0f);
 
@@ -43,6 +44,19 @@ void Player::Shutdown()
 
 void Player::UpdateMe()
 {
+	// Check health and isAlive from server
+	if (Network::GetInstance()->IsConnected())
+	{
+		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
+		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
+	}
+
+	// Don't update player if he is dead
+	if (!m_isAlive)
+	{
+		return;
+	}
+
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	m_ability = m_noAbility;
@@ -66,11 +80,7 @@ void Player::UpdateMe()
 		m_ability = m_shurikenAbility;
 	}
 
-	// Check health from server
-	if (Network::GetInstance()->IsConnected())
-	{
-		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
-	}
+
 
 	// Temp to set max health
 	if (Network::GetInstance()->ConnectedNow())
@@ -390,6 +400,14 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::Render(SHADERTYPE p_shader)
 {
-	MovingObject::Render(p_shader);
-	m_healthbar.Render();
+	if (m_isAlive)
+	{
+		MovingObject::Render(p_shader);
+		m_healthbar.Render();
+	}
+}
+
+void Player::SetIsAlive(bool p_isAlive)
+{
+	m_isAlive = p_isAlive;
 }
