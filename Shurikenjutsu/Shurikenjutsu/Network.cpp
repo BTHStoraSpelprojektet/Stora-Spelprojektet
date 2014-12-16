@@ -239,7 +239,7 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 			bitStream.Read(speed);
 
-			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed);
+			UpdateMegaShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed);
 			break;
 		}
 		case ID_SHURIKEN_REMOVE:

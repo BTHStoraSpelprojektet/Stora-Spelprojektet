@@ -298,15 +298,7 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 			switch (p_ability)
 			{
 			case ABILITIES_SHURIKEN:
-				if (m_players[p_index].cooldownAbilites.shurikenCD <= 0.0f)
-				{
-					result = true;
-				}
-				else
-				{
-					result = false;
-				}
-
+				result = true; // controlled locally atm
 				break;
 			case ABILITIES_DASH:
 				if (m_players[p_index].cooldownAbilites.dashCD <= 0.0f)
