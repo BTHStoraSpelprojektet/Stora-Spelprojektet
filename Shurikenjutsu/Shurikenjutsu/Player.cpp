@@ -12,7 +12,7 @@ Player::~Player()
 
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
-	if (!MovingObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
+	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
 	{
 		return false;
 	}
@@ -39,7 +39,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 void Player::Shutdown()
 {
-	MovingObject::Shutdown();
+	AnimatedObject::Shutdown();
 }
 
 void Player::UpdateMe()
@@ -81,7 +81,7 @@ void Player::UpdateMe()
 	{
 		m_ability = m_shurikenAbility;
 	}
-	
+
 	m_ability->Execute();
 }
 
@@ -202,7 +202,7 @@ float Player::GetAgility() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-		MovingObject::SetPosition(p_pos);
+		AnimatedObject::SetPosition(p_pos);
 
 		if (Network::GetInstance()->IsConnected())
 	{
@@ -396,7 +396,7 @@ void Player::Render(SHADERTYPE p_shader)
 {
 	if (m_isAlive)
 	{
-		MovingObject::Render(p_shader);
+		AnimatedObject::RenderAnimated(p_shader);
 		m_healthbar.Render();
 	}
 }
