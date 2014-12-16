@@ -25,17 +25,17 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 	m_frameArms += deltaTime * 20;
 	m_frameLegs += deltaTime * 20;
 
-	if (m_frameArms >= (m_animationStacks[9].m_endFrame - 1))
+	if (m_frameArms >= (m_animationStacks[4].m_endFrame - 1))
 		m_frameArms = 0.0f;
 
-	if (m_frameLegs >= (m_animationStacks[10].m_endFrame - 1))
+	if (m_frameLegs >= (m_animationStacks[2].m_endFrame - 1))
 		m_frameLegs = 0.0f;
 
 	DirectX::XMVECTOR startQuaternion = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	DirectX::XMVECTOR startTranslation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 
 	int* index = new int(0);
-	CombineMatrices(index, m_animationStacks[9].m_root[(int)m_frameArms], m_animationStacks[10].m_root[(int)m_frameLegs], startQuaternion, startTranslation);
+	CombineMatrices(index, m_animationStacks[4].m_root[(int)m_frameArms], m_animationStacks[1].m_root[(int)m_frameLegs], startQuaternion, startTranslation);
 	delete[] index;
 
 	return m_boneTransforms;
