@@ -12,6 +12,7 @@ struct PlayerNet
 	int team;
 	int maxHP;
 	int currentHP;
+	bool isAlive;
 	float gcd;
 };
 

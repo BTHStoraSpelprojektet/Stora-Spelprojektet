@@ -62,6 +62,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
 	player.gcd = 0.0f;
 	player.maxHP = m_playerHealth;
 	player.currentHP = m_playerHealth;
+	player.isAlive = true;
 	m_players.push_back(player);
 
 	std::cout << "Player added" << std::endl;
@@ -153,6 +154,7 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].team);
 		bitStream.Write(m_players[i].maxHP);
 		bitStream.Write(m_players[i].currentHP);
+		bitStream.Write(m_players[i].isAlive);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
@@ -346,18 +348,23 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
 		if (m_players[i].guid == p_guid)
 		{
 			m_players[i].currentHP -= p_damage;
-			UpdateHealth(p_guid, m_players[i].currentHP);
+			if (m_players[i].currentHP <= 0)
+			{
+				m_players[i].isAlive = false;
+			}
+			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
 		}
 	}
 }
 
-void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health)
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p_isAlive)
 {
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_PLAYER_HP_CHANGED);
 	bitStream.Write(p_guid);
 	bitStream.Write(p_health);
+	bitStream.Write(p_isAlive);
 	
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
@@ -375,7 +382,8 @@ void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
 		if (p_guid == m_players[i].guid)
 		{
 			m_players[i].currentHP = m_players[i].maxHP;
-			UpdateHealth(p_guid, m_players[i].currentHP);
+			m_players[i].isAlive = true;
+			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
 		}
 	}
 }

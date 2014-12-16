@@ -31,4 +31,7 @@ void NormalState::Shutdown()
 void NormalState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
+
+	// Spelare ska inte respawna förräns ett lag har vunnit
+	// Död = sluta rendera?
 }
