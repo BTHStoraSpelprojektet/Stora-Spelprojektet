@@ -20,13 +20,13 @@ public:
 public:
 	void AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections);
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
-	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections);
+	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
 	void UsedAbility(int p_index, ABILITIES p_ability);
-	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability);
+	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash);
 	void BroadcastPlayers();
 protected:
 	RakNet::RakPeerInterface* m_serverPeer;

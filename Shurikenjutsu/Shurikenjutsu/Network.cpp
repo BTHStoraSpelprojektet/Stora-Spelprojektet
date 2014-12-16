@@ -277,6 +277,10 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(abilityEnum);
 			bitStream.Read(abilityString);
+			if (abilityEnum == ABILITIES_DASH)
+			{
+				m_invalidMove = true;
+			}
 
 			std::cout << " " << abilityString << std::endl;
 
