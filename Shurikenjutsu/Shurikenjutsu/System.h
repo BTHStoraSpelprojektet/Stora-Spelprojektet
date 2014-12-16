@@ -53,6 +53,5 @@ private:
 	GameState* m_gameState;
 
 	Sound* m_sound;
-
 };
 #endif

@@ -396,7 +396,7 @@ void Player::SetCalculatePlayerPosition()
 
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	m_healthbar.Update(m_position, m_health, 100, p_view, p_projection);
+	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
 }
 
 void Player::Render(SHADERTYPE p_shader)
