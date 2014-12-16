@@ -38,6 +38,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_shurikenAbility = new ShurikenAbility();
 	m_shurikenAbility->Initialize();
 
+	m_megaShuriken = new MegaShuriken();
+	m_megaShuriken->Initialize();
+
 	m_healthbar.Initialize(50.0f, 5.0f);
 
 	return true;
@@ -52,10 +55,12 @@ void Player::UpdateMe()
 {
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-
+	
+	m_ability = m_noAbility;
+	
 	CheckForSpecialAttack();
 
-	m_ability = m_noAbility;
+
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
@@ -86,10 +91,8 @@ void Player::UpdateMe()
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 	}
 
-	m_buttonQ->Update();
-	m_meleeSwing->Update();
-	m_shurikenAbility->Update();
-
+	// For counting down cooldowns
+	UpdateAbilities();
 
 	m_ability->Execute();
 }
@@ -118,10 +121,13 @@ void Player::CheckForSpecialAttack()
 			m_dashCd = 0.5f;
 		}
 	}
-	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
-	//{
-	//	std::cout << "" << std::endl;
-	//}
+
+
+	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
+	{
+		std::cout << "NEGASHURIKEN" << std::endl;
+		m_ability = m_megaShuriken;
+	}
 }
 bool Player::CalculateDirection()
 {
@@ -170,6 +176,14 @@ bool Player::CalculateDirection()
 void Player::Update()
 {
 
+}
+
+void Player::UpdateAbilities()
+{
+	m_buttonQ->Update();
+	m_meleeSwing->Update();
+	m_shurikenAbility->Update();
+	m_megaShuriken->Update();
 }
 
 void Player::SetDamage(float p_damage)

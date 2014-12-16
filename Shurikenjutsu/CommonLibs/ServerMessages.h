@@ -9,6 +9,7 @@ struct Cooldowns
 	float shurikenCD;
 	float meleeSwingCD;
 	float dashCD;
+	float megaShurikenCD;
 };
 
 struct PlayerNet
@@ -31,6 +32,7 @@ struct ShurikenNet
 	RakNet::RakNetGUID guid;
 	float lifeTime;
 	float speed;
+	bool megaShuriken;
 };
 
 enum Messages
@@ -40,6 +42,7 @@ enum Messages
 	ID_PLAYER_MOVED,
 	ID_PLAYER_ROTATED,
 	ID_SHURIKEN_THROWN,
+	ID_MEGASHURIKEN_THROWN,
 	ID_SHURIKEN_REMOVE,
 	ID_RESPAWN_PLAYER,
 	ID_MELEE_ATTACK,

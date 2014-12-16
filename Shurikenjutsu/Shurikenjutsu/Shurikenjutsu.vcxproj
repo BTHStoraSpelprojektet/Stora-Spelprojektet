@@ -113,6 +113,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
+    <ClCompile Include="MegaShuriken.cpp" />
     <ClCompile Include="MeleeSwing.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingObject.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="HealthBar.h" />
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="MegaShuriken.h" />
     <ClInclude Include="MeleeSwing.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MovingObject.h" />

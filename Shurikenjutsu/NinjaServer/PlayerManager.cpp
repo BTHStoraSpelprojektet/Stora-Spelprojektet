@@ -275,7 +275,10 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 			m_players[p_index].cooldownAbilites.dashCD = 12;
 			break;
 		case ABILITIES_MELEESWING:
-			m_players[p_index].cooldownAbilites.meleeSwingCD = 0.6;
+			m_players[p_index].cooldownAbilites.meleeSwingCD = 0.5;
+			break;
+		case ABILITIES_MEGASHURIKEN:
+			m_players[p_index].cooldownAbilites.megaShurikenCD = 10;
 			break;
 		default:
 			break;
@@ -324,6 +327,15 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 				{
 					result = false;
 				}
+			case ABILITIES_MEGASHURIKEN:
+				if (m_players[p_index].cooldownAbilites.megaShurikenCD <= 0.0f)
+				{
+					result = true;
+				}
+				else
+				{
+					result = false;
+				}
 				break;
 			default:
 				result = false;
@@ -351,6 +363,10 @@ void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
 		p_collisionManager.NormalMeleeAttack(p_guid, this);		
+		break;
+	case ABILITIES_MEGASHURIKEN:
+		abilityString = "MegaShuriken";
+		p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 		break;
 	default:
 		break;

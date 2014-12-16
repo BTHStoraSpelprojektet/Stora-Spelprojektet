@@ -169,38 +169,9 @@ void Server::ReceviePacket()
 			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			break;
 		}
-		case ID_SHURIKEN_THROWN:
-		{
-			/*RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
-
-			rBitStream.Read(messageID);
-			float x, y, z;
-			float dirX, dirY, dirZ;
-
-			rBitStream.Read(x);
-			rBitStream.Read(y);
-			rBitStream.Read(z);
-			rBitStream.Read(dirX);
-			rBitStream.Read(dirY);
-			rBitStream.Read(dirZ);
-
-			int index = m_playerManager.GetPlayerIndex(m_packet->guid);
-			if (m_playerManager.CanUseAbility(index, ABILITIES_SHURIKEN))
-			{
-				m_shurikenManager.AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
-				m_playerManager.UsedAbility(index, ABILITIES_SHURIKEN);
-			}
-			
-			break;*/
-		}
 		case ID_DOWNLOAD_PLAYERS:
 		{
 			m_playerManager.BroadcastPlayers();
-			break;
-		}
-		case ID_MELEE_ATTACK:
-		{
-			//m_collisionManager->NormalMeleeAttack(m_packet->guid, &m_playerManager);
 			break;
 		}
 		case ID_ABILITY:
