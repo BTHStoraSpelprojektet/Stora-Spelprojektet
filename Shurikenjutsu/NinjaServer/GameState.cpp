@@ -59,9 +59,9 @@ void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)
 	m_playerManager.RemovePlayer(p_guid);
 }
 
-void GameState::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections)
+void GameState::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash)
 {
-	m_playerManager.MovePlayer(p_guid, p_x, p_y, p_z, p_nrOfConnections);
+	m_playerManager.MovePlayer(p_guid, p_x, p_y, p_z, p_nrOfConnections, p_dash);
 }
 
 PlayerNet GameState::GetPlayer(RakNet::RakNetGUID p_guid)
@@ -89,9 +89,9 @@ void GameState::UsedAbility(int p_index, ABILITIES p_ability)
 	m_playerManager.UsedAbility(p_index, p_ability);
 }
 
-void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability)
+void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash)
 {
-	m_playerManager.ExecuteAbility(p_guid, p_ability, *m_collisionManager, m_shurikenManager);
+	m_playerManager.ExecuteAbility(p_guid, p_ability, *m_collisionManager, m_shurikenManager, p_dash);
 }
 
 void GameState::BroadcastPlayers()

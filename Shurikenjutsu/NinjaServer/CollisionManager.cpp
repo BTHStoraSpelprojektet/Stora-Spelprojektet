@@ -17,30 +17,30 @@ void CollisionManager::SetLists(std::vector<OBB> p_StaticObjectList/*, std::vect
 	//	m_sphereObjectList.push_back(p_sphereObjectList[i]);
 	//}
 }
-
-std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction, float p_deltaTime)
-{
-	std::vector<OBB> CollisionList;
-	Sphere playerBox = p_playerSphere;
-	float speedXDeltaTime = p_speed * p_deltaTime;
-	if (m_StaticObjectList.size() > 0)
-	{
-		for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
-		{
-			OBB box = m_StaticObjectList[i];
-
-			playerBox.m_position.x = p_playerSphere.m_position.x + p_direction.x * speedXDeltaTime;
-			playerBox.m_position.y = p_playerSphere.m_position.y + p_direction.y * speedXDeltaTime;
-			playerBox.m_position.z = p_playerSphere.m_position.z + p_direction.z * speedXDeltaTime;
-
-			if (Collisions::OBBSphereCollision(box, playerBox))
-			{
-				CollisionList.push_back(box);
-			}
-		}
-	}
-	return CollisionList;
-}
+//
+//std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction, float p_deltaTime)
+//{
+//	std::vector<OBB> CollisionList;
+//	Sphere playerBox = p_playerSphere;
+//	float speedXDeltaTime = p_speed * p_deltaTime;
+//	if (m_StaticObjectList.size() > 0)
+//	{
+//		for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
+//		{
+//			OBB box = m_StaticObjectList[i];
+//
+//			playerBox.m_position.x = p_playerSphere.m_position.x + p_direction.x * speedXDeltaTime;
+//			playerBox.m_position.y = p_playerSphere.m_position.y + p_direction.y * speedXDeltaTime;
+//			playerBox.m_position.z = p_playerSphere.m_position.z + p_direction.z * speedXDeltaTime;
+//
+//			if (Collisions::OBBSphereCollision(box, playerBox))
+//			{
+//				CollisionList.push_back(box);
+//			}
+//		}
+//	}
+//	return CollisionList;
+//}
 
 void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
 {
@@ -167,6 +167,62 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 	}
 }
 
+float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
+{
+	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_attackingPlayer.dirX, 0.1f, p_attackingPlayer.dirZ);
+	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(p_attackingPlayer.x, 0.1f, p_attackingPlayer.z);
+	Ray* ray = new Ray(rayPos, rayDirection);
+	float dashLength = 10.0f;
+	std::vector<float> distancesToTarget;
+	std::vector<float> rayLengths;
+
+	// Go through static objects
+	for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
+	{
+		if (Collisions::RayOBBCollision(ray, m_StaticObjectList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+	//Go through the shortest intersecting object
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
+	{
+		if (rayLengths[i] < dashLength)
+		{
+			dashLength = rayLengths[i];
+		}
+	}
+
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	// Go through player list
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		// Get the players bounding boxes
+		std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
+		for (unsigned int j = 0; j < playerBoundingBoxes.size(); j++)
+		{
+			Box box = playerBoundingBoxes[j];
+			if (Collisions::RayBoxCollision(ray,  box))
+			{
+				distancesToTarget.push_back(ray->m_distance);
+			}
+		}
+	}
+	//Get the shortest intersecting distance
+	for (unsigned int i = 0; i < distancesToTarget.size(); i++)
+	{
+		if ((distancesToTarget[i] < dashLength) && (distancesToTarget[i] > 0))
+		{
+			dashLength = distancesToTarget[i];
+		}
+	}
+	return dashLength;
+}
+
+//Private
 bool CollisionManager::OBBOBBtest(OBB p_OBB1, OBB p_OBB2)
 {
 	if (IntersectionTests::Intersections::SphereSphereCollision(p_OBB1.m_center, p_OBB1.m_radius, p_OBB2.m_center, p_OBB2.m_radius))

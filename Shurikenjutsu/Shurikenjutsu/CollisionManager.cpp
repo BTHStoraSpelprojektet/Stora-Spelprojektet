@@ -9,12 +9,12 @@ void CollisionManager::Initialize(std::vector<Object> p_StaticObjectList, std::v
 }
 void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/)
 {
-	m_StaticObjectList.push_back(OBB(p_outerWallList[0].m_center, p_outerWallList[0].m_extents.z, p_outerWallList[0].m_extents.y, p_outerWallList[0].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));
-	//boolList.push_back(Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[0])); //NOT WORKING
+	//m_StaticObjectList.push_back(OBB(p_outerWallList[0].m_center, p_outerWallList[0].m_extents.z, p_outerWallList[0].m_extents.y, p_outerWallList[0].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));
+	m_StaticObjectList.push_back(OBB(p_outerWallList[0])); 
 	m_StaticObjectList.push_back(OBB(p_outerWallList[1]));
 
-	m_StaticObjectList.push_back(OBB(p_outerWallList[2].m_center, p_outerWallList[2].m_extents.z, p_outerWallList[2].m_extents.y, p_outerWallList[2].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));	//NOT WORKING
-	//boolList.push_back(Collisions::SphereBoxCollision(m_playerSphere, m_OuterWalls[2]));	//NOT WORKING
+	//m_StaticObjectList.push_back(OBB(p_outerWallList[2].m_center, p_outerWallList[2].m_extents.z, p_outerWallList[2].m_extents.y, p_outerWallList[2].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));	//NOT WORKING
+	m_StaticObjectList.push_back(OBB(p_outerWallList[2]));	
 	m_StaticObjectList.push_back(OBB(p_outerWallList[3]));
 	for (unsigned int i = 0; i < p_StaticObjectList.size(); i++)
 	{
@@ -72,9 +72,9 @@ float CollisionManager::CalculateDashLength(Ray* p_ray)
 	float dashLength = 10.0f;
 	std::vector<float> rayLengths;
 
-	for (int i = 0; i < m_StaticObjectList.size(); i++)
+	for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
 	{
-		if (Collisions::RayOBBCollision(ray, m_StaticObjectList[i]));
+		if (Collisions::RayOBBCollision(ray, m_StaticObjectList[i]))
 		{
 			if (ray->m_distance != 0)
 			{
@@ -82,7 +82,7 @@ float CollisionManager::CalculateDashLength(Ray* p_ray)
 			}
 		}
 	}
-	for (int i = 0; i < rayLengths.size(); i++)
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
 	{
 		if (rayLengths[i] < dashLength)
 		{

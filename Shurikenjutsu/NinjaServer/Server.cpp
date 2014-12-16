@@ -110,7 +110,7 @@ void Server::ReceviePacket()
 			rBitStream.Read(z);
 
 			// Can player move?
-			m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections);
+			m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
 
 			// Get player pos
 			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
@@ -197,8 +197,16 @@ void Server::ReceviePacket()
 
 			if (m_gameState->CanUseAbility(index, readAbility))
 			{
-				m_gameState->ExecuteAbility(m_packet->guid, readAbility);
-				m_gameState->UsedAbility(index, readAbility);
+				if (readAbility == ABILITIES_DASH)
+				{
+					m_gameState->ExecuteAbility(m_packet->guid, readAbility, true);
+					m_gameState->UsedAbility(index, readAbility);
+				}
+				else
+				{
+					m_gameState->ExecuteAbility(m_packet->guid, readAbility, false);
+					m_gameState->UsedAbility(index, readAbility);
+				}
 			}
 			break;
 		}
