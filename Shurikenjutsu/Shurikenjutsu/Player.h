@@ -2,7 +2,7 @@
 #define PLAYER
 
 #define WIN32_LEAN_AND_MEAN
-#include "MovingObject.h"
+#include "AnimatedObject.h"
 #include "InputManager.h"
 #include "Collisions.h"
 #include "Globals.h"
@@ -14,7 +14,7 @@
 #include "HealthBar.h"
 
 class Player :
-	public MovingObject
+	public AnimatedObject
 {
 public:
 	Player();

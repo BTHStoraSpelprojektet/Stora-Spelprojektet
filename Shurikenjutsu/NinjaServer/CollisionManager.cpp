@@ -179,7 +179,7 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	// Go through static objects
 	for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
 	{
-		if (Collisions::RayOBBCollision(ray, m_StaticObjectList[i]));
+		if (Collisions::RayOBBCollision(ray, m_StaticObjectList[i]))
 		{
 			if (ray->m_distance != 0)
 			{
