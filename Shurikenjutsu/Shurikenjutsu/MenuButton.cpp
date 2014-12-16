@@ -17,6 +17,7 @@ bool MenuButton::Initialize(float p_x, float p_y, float p_width, float p_height)
 	position = DirectX::XMFLOAT3(p_x - 2.0f, p_y - 2.0f, 1.0f);
 	color = DirectX::XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	m_background.Initialize(position, p_width - 1.0f, p_height - 1.0f, color);
+	return true;
 	
 }
 
