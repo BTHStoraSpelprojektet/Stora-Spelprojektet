@@ -36,7 +36,6 @@ bool Ability::Execute()
 {
 	if (m_cooldown <= 0.0)
 	{
-
 		return true;
 	}
 

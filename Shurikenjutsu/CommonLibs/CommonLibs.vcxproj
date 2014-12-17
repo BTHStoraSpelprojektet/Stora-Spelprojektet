@@ -75,6 +75,7 @@
     <ClInclude Include="CommonEnums.h" />
     <ClInclude Include="CommonStructures.h" />
     <ClInclude Include="DefaultReplica.h" />
+    <ClInclude Include="GameplayGlobalVariables.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelImporter.h" />
     <ClInclude Include="ModelImporter.h" />

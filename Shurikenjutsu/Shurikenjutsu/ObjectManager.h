@@ -20,7 +20,7 @@ public:
 	void Render(SHADERTYPE p_shader);
 
 	void RenderShurikens(SHADERTYPE p_shader);
-	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);
+	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID);
 
 	void AddStaticObject(Object p_object);
 	std::vector<Object> GetStaticObjectList()const;
