@@ -76,9 +76,6 @@ private:
 	Ability* m_megaShuriken;
 
 	HealthBar m_healthbar;
-
-
-	float m_dashCd;
 };
 
 #endif PLAYER
