@@ -10,7 +10,7 @@ GameState::~GameState()
 {
 }
 
-bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
+bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_serverPeer = p_serverPeer;
 
@@ -31,6 +31,21 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	m_collisionManager->Initialize(m_mapManager.GetBoundingBoxes());
 
 	return true;
+}
+
+bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
+{
+	return Initialize(p_serverPeer, LEVEL_NAME);	
+}
+
+bool GameState::Initialize(std::string p_levelName)
+{
+	if (m_serverPeer == NULL)
+	{
+		return false;
+	}
+
+	return Initialize(m_serverPeer, p_levelName);
 }
 
 void GameState::Shutdown()

@@ -63,7 +63,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
 {
 	PlayerNet player;
 	player.guid = p_guid;
-	player.team = (p_nrOfConnections % 2) + 1;
+	player.team = (m_players.size() % 2) + 1;
 	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
 	player.x = spawnPoint.m_translationX;
 	player.y = spawnPoint.m_translationY;

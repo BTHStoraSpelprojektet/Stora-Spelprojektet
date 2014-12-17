@@ -19,6 +19,7 @@ public:
 	PlayingStateTest();
 	~PlayingStateTest();
 	virtual bool Initialize();
+	virtual bool Initialize(std::string p_levelName);
 	void Shutdown();
 	virtual void Update();
 	virtual void Render();

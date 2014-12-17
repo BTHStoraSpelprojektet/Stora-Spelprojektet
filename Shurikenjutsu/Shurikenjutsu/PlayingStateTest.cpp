@@ -12,6 +12,11 @@ PlayingStateTest::~PlayingStateTest()
 
 bool PlayingStateTest::Initialize()
 {
+	return Initialize("../Shurikenjutsu/Levels/testBana.SSPL");
+}
+
+bool PlayingStateTest::Initialize(std::string p_levelName)
+{
 	m_camera.Initialize();
 
 	m_objectManager.Initialize();
@@ -19,7 +24,7 @@ bool PlayingStateTest::Initialize()
 	m_camera.ResetCamera();
 
 	//Load level
-	Level level("../Shurikenjutsu/Levels/testBana.SSPL");
+	Level level(p_levelName);
 
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = level.GetObjects();
@@ -112,6 +117,15 @@ void PlayingStateTest::Update()
 	// ========== DEBUG TEMP LINES ==========
 	m_playerManager.UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
+
+	// Check if new level have started
+	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
+	{
+		std::string levelName = Network::GetInstance()->LevelName();
+		Network::GetInstance()->SetHaveUpdateNewLevel();
+		Shutdown();
+		Initialize(levelName);
+	}
 }
 
 void PlayingStateTest::Render()

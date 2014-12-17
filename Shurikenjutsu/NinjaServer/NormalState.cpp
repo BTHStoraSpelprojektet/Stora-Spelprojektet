@@ -13,16 +13,43 @@ NormalState::~NormalState()
 bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	bool result;
-	m_roundTimer = 5.0f;
-	m_currentTimer = m_roundTimer;
-	m_sendTime = (int)m_roundTimer;
-	m_roundRestarting = false;
+	result = Initialize();
+	if (!result)
+	{
+		return false;
+	}
 
 	result = GameState::Initialize(p_serverPeer);
 	if (!result)
 	{
 		return false;
 	}
+
+	return true;
+}
+
+bool NormalState::Initialize(std::string p_levelName)
+{
+	bool result;
+	Initialize();
+
+	result = GameState::Initialize(p_levelName);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool NormalState::Initialize()
+{
+	m_roundLimit = 5;
+	m_roundTimer = 5.0f;
+	m_currentTimer = m_roundTimer;
+	m_sendTime = (int)m_roundTimer;
+	m_roundRestarting = false;
+	m_winningTeams = std::vector<int>();
 
 	return true;
 }
@@ -36,6 +63,7 @@ void NormalState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
 
+	// Is the round restarting
 	if (m_roundRestarting)
 	{
 		m_currentTimer -= (float)p_deltaTime;
@@ -52,14 +80,27 @@ void NormalState::Update(double p_deltaTime)
 			RespawnAllPlayers();
 		}
 	}
+	// Check if there is only one team remaining
 	else if (OneTeamRemaining(m_playerManager.GetPlayers()))
 	{
+		// Check which team won
 		int winningTeam = GetWinningTeam();
 		SendWinningTeam(winningTeam);
-		m_currentTimer = m_roundTimer;
-		m_sendTime = (int)m_roundTimer;
-		m_roundRestarting = true;
-		SendRestartingRound();
+		m_winningTeams.push_back(winningTeam);
+
+		// See if the round limit has been reached else restart a new round
+		if (m_winningTeams.size() >= (unsigned int)m_roundLimit)
+		{
+			StartNewLevel();
+		}
+		else
+		{
+			m_currentTimer = m_roundTimer;
+			m_sendTime = (int)m_roundTimer;
+			m_roundRestarting = true;
+			SendRestartingRound();
+		}
+
 	}
 }
 
@@ -172,4 +213,17 @@ void NormalState::SendRestartingRoundTime(int p_time)
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 	std::cout << p_time << "\n";
+}
+
+void NormalState::StartNewLevel()
+{
+	Shutdown();
+	Initialize(LEVEL_NAME);
+
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_NEW_LEVEL);
+	bitStream.Write(LEVEL_NAME);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

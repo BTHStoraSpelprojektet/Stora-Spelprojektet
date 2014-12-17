@@ -25,6 +25,8 @@ bool Network::Initialize()
 	m_respawned = false;
 	m_invalidMove = false;
 	m_roundRestarted = false;
+	m_newLevel = false;
+	m_levelName = "";
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -352,6 +354,21 @@ void Network::ReceviePacket()
 			bitStream.Read(time);
 
 			std::cout << time << std::endl;
+			break;
+		}
+		case ID_NEW_LEVEL:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakString levelName;
+
+			bitStream.Read(messageID);
+			bitStream.Read(levelName);
+
+			m_newLevel = true;
+			m_levelName = levelName;
+			m_invalidMove = true;
+
 			break;
 		}
 		default:
@@ -730,4 +747,19 @@ bool Network::RoundRestarted()
 void Network::SetHaveUpdatedAfterRestartedRound()
 {
 	m_roundRestarted = false;
+}
+
+bool Network::NewLevel()
+{
+	return m_newLevel;
+}
+
+void Network::SetHaveUpdateNewLevel()
+{
+	m_newLevel = false;
+}
+
+std::string Network::LevelName()
+{
+	return m_levelName;
 }
