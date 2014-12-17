@@ -14,6 +14,7 @@ public:
 	bool Initialize();
 	void Update();
 	bool Execute();
+	void ResetCooldown();
 private:
 	int m_stacks;
 	double m_gcd;

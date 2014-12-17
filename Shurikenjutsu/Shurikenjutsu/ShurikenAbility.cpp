@@ -45,3 +45,9 @@ bool ShurikenAbility::Execute()
 	
 	return true;
 }
+
+void ShurikenAbility::ResetCooldown()
+{
+	Ability::ResetCooldown();
+	m_stacks = 3;
+}

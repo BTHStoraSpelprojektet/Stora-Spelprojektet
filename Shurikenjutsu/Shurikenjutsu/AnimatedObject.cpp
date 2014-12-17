@@ -52,3 +52,18 @@ void AnimatedObject::RenderAnimated(SHADERTYPE p_shader)
 {
 	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), 0, m_animationController.UpdateAnimation());
 }
+
+void AnimatedObject::RangeAttackAnimation()
+{
+	m_animationController.RangeAttack();
+}
+
+void AnimatedObject::MeleeAttackAnimation()
+{
+	m_animationController.MeleeAttack();
+}
+
+void AnimatedObject::HandleInput()
+{
+	m_animationController.HandleInput();
+}

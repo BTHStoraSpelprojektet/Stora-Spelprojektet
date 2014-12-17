@@ -10,7 +10,7 @@
 // Model names
 #define LEVEL_NAME "../Shurikenjutsu/Levels/testBana.SSPL"
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
-#define PLAYER_MODEL_NAME "../Shurikenjutsu/Models/cubemanWnP.SSP"
+#define PLAYER_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 
 class ServerGlobals
 {

@@ -78,12 +78,14 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		m_ability = m_meleeSwing;
+		AnimatedObject::MeleeAttackAnimation();
 	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		m_ability = m_shurikenAbility;
+		AnimatedObject::RangeAttackAnimation();
 	}
 
 	// Check health from server
@@ -129,24 +131,28 @@ bool Player::CalculateDirection()
 	{
 		z += 1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		x += -1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		z += -1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		x += 1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -171,6 +177,15 @@ void Player::UpdateAbilities()
 	m_megaShuriken->Update();
 }
 
+void Player::ResetCooldowns()
+{
+	m_dash->ResetCooldown();
+	m_meleeSwing->ResetCooldown();
+	m_shurikenAbility->ResetCooldown();
+	m_megaShuriken->ResetCooldown();
+
+	UpdateAbilities();
+}
 void Player::SetHealth(int p_health)
 {
 	if (p_health < 0)

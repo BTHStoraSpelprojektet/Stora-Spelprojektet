@@ -82,3 +82,8 @@ StatusEffect Ability::GetStatusEffect()
 {
 	return m_statusEffect;
 }
+
+void Ability::ResetCooldown()
+{
+	SetCooldown(0.0);
+}
