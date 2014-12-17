@@ -74,12 +74,14 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		m_ability = m_meleeSwing;
+		AnimatedObject::MeleeAttackAnimation();
 	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		m_ability = m_shurikenAbility;
+		AnimatedObject::RangeAttackAnimation();
 	}
 
 	m_ability->Execute();
@@ -119,24 +121,28 @@ bool Player::CalculateDirection()
 	{
 		z += 1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		x += -1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		z += -1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		x += 1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
