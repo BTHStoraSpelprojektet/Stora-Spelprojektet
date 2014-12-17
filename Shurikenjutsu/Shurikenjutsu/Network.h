@@ -61,6 +61,9 @@ public:
 	void DoMeleeAttack();
 	void SendAbility(ABILITIES p_ability);
 
+	bool RoundRestarted();
+	void SetHaveUpdatedAfterRestartedRound();
+
 private:
 	Network();
 	~Network();
@@ -94,6 +97,7 @@ private:
 	bool m_shurikenListUpdated;
 	bool m_respawned;
 	bool m_invalidMove;
+	bool m_roundRestarted;
 	PlayerNet m_myPlayer;
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;

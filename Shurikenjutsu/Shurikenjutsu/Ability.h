@@ -23,7 +23,7 @@ public:
 	virtual double GetCooldown();
 	virtual void SetStatusEffect(StatusEffect p_statusEffect);
 	virtual StatusEffect GetStatusEffect();
-
+	virtual void ResetCooldown();
 
 protected:
 	unsigned int m_damage;

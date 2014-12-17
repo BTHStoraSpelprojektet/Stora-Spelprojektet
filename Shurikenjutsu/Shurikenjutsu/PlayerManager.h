@@ -29,6 +29,8 @@ public:
 
 	void UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
+	void ResetCooldowns();
+
 private:
 	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
 		float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility);

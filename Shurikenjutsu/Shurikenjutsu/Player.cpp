@@ -177,6 +177,16 @@ void Player::UpdateAbilities()
 	m_megaShuriken->Update();
 }
 
+void Player::ResetCooldowns()
+{
+	m_dash->ResetCooldown();
+	m_meleeSwing->ResetCooldown();
+	m_shurikenAbility->ResetCooldown();
+	m_megaShuriken->ResetCooldown();
+
+	UpdateAbilities();
+}
+
 void Player::SetDamage(float p_damage)
 {
 	m_damage = p_damage;
