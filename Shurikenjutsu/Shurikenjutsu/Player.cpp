@@ -25,11 +25,22 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
+	
 	m_ability = new Ability();
 	m_noAbility = new Ability();
+
 	m_dash = new Dash();
+	m_dash->Initialize();
+
 	m_meleeSwing = new MeleeSwing();
+	m_meleeSwing->Initialize();
+
 	m_shurikenAbility = new ShurikenAbility();
+	m_shurikenAbility->Initialize();
+	m_isAlive = true;
+
+	m_megaShuriken = new MegaShuriken();
+	m_megaShuriken->Initialize();
 
 	m_healthbar.Initialize(50.0f, 5.0f);
 
@@ -43,25 +54,40 @@ void Player::Shutdown()
 
 void Player::UpdateMe()
 {
-	m_playerSphere.m_position = m_position;
-	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	m_ability = m_noAbility;
+	// Check health and isAlive from server
+	if (Network::GetInstance()->IsConnected())
+	{
+		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
+		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
+		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
+	}
 
-	CheckForSpecialAttack();
+	m_playerSphere.m_position = m_position;
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
 		SetCalculatePlayerPosition();
 	}
 
+	// Don't update player if he is dead
+	if (!m_isAlive)
+	{
+		return;
+	}
+
+	
+	m_ability = m_noAbility;
+	CheckForSpecialAttack();
+
+
 	// Melee attack
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		m_ability = m_meleeSwing;
 	}
 
 	// Cast shuriken
-	if (InputManager::GetInstance()->IsRightMouseClicked())
+	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		m_ability = m_shurikenAbility;
 	}
@@ -78,28 +104,22 @@ void Player::UpdateMe()
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 	}
 
+	// Count down cooldowns
+	UpdateAbilities();
+
 	m_ability->Execute();
 }
 
 void Player::CheckForSpecialAttack()
 {
-	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(m_attackDir.x, 0.1f, m_attackDir.z);
-	if (m_dashCd > 0)
+	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	{
-		m_dashCd -= (float)GLOBAL::GetInstance().GetDeltaTime();
+		m_ability = m_megaShuriken;
 	}
-	if (m_inputManager->IsKeyPressed(VkKeyScan('v')))
+	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
-		if (m_dashCd <= 0)
-		{
-			m_dashCd = 0.5f;
-			m_ability = m_dash;
-		}
+		m_ability = m_dash;
 	}
-	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
-	//{
-	//	std::cout << "" << std::endl;
-	//}
 }
 bool Player::CalculateDirection()
 {
@@ -147,6 +167,14 @@ bool Player::CalculateDirection()
 void Player::Update()
 {
 
+}
+
+void Player::UpdateAbilities()
+{
+	m_dash->Update();
+	m_meleeSwing->Update();
+	m_shurikenAbility->Update();
+	m_megaShuriken->Update();
 }
 
 void Player::SetDamage(float p_damage)
@@ -390,6 +418,14 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::Render(SHADERTYPE p_shader)
 {
-	AnimatedObject::RenderAnimated(p_shader);
+	if (m_isAlive)
+	{
+		AnimatedObject::RenderAnimated(p_shader);
 	m_healthbar.Render();
+}
+}
+
+void Player::SetIsAlive(bool p_isAlive)
+{
+	m_isAlive = p_isAlive;
 }

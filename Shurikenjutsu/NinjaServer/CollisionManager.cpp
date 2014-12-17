@@ -60,6 +60,12 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 			continue;
 		}
 
+		// Check so the player aren't already dead
+		if (!playerList[i].isAlive)
+		{
+			continue;
+		}
+
 		DirectX::XMFLOAT3 spherePos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
@@ -107,6 +113,13 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			{
 				continue;
 			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+
 
 			// Get the players bounding boxes
 			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);

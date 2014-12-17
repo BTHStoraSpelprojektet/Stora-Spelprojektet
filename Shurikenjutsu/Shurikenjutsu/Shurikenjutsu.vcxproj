@@ -59,7 +59,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;CommonLibs.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Shurikenjutsu\FMOD\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;gtestd.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,6 +115,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
+    <ClCompile Include="MegaShuriken.cpp" />
     <ClCompile Include="MeleeSwing.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingObject.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="HealthBar.h" />
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="MegaShuriken.h" />
     <ClInclude Include="MeleeSwing.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MovingObject.h" />

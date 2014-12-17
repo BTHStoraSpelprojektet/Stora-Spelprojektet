@@ -16,11 +16,11 @@ bool Server::Initialize()
 
 	m_nrOfConnections = 0;
 
-	// Initate models (for boundingboxes)
+	// Initiate models (for boundingboxes)
 	ModelLibrary::GetInstance()->Initialize(new BaseModel());
 
 	// Initiate game state
-	m_gameState = new DebugState();
+	m_gameState = new NormalState();
 	m_gameState->Initialize(m_serverPeer);
 
 	return true;
@@ -151,38 +151,9 @@ void Server::ReceviePacket()
 			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			break;
 		}
-		case ID_SHURIKEN_THROWN:
-		{
-			/*RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);
-
-			rBitStream.Read(messageID);
-			float x, y, z;
-			float dirX, dirY, dirZ;
-
-			rBitStream.Read(x);
-			rBitStream.Read(y);
-			rBitStream.Read(z);
-			rBitStream.Read(dirX);
-			rBitStream.Read(dirY);
-			rBitStream.Read(dirZ);
-
-			int index = m_gameState->GetPlayerIndex(m_packet->guid);
-			if (m_gameState->CanUseAbility(index, ABILITIES_SHURIKEN))
-			{
-				m_gameState->AddShuriken(m_packet->guid, x, y, z, dirX, dirY, dirZ);
-				m_gameState->UsedAbility(index, ABILITIES_SHURIKEN);
-			}
-			
-			break;*/
-		}
 		case ID_DOWNLOAD_PLAYERS:
 		{
 			m_gameState->BroadcastPlayers();
-			break;
-		}
-		case ID_MELEE_ATTACK:
-		{
-			//m_gameState->NormalMeleeAttack(m_packet->guid);
 			break;
 		}
 		case ID_ABILITY:
@@ -194,8 +165,9 @@ void Server::ReceviePacket()
 
 			rBitStream.Read(readAbility);
 			int index = m_gameState->GetPlayerIndex(m_packet->guid);
+			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
-			if (m_gameState->CanUseAbility(index, readAbility))
+			if (m_gameState->CanUseAbility(index, readAbility) && player.isAlive)
 			{
 				if (readAbility == ABILITIES_DASH)
 				{
@@ -203,7 +175,7 @@ void Server::ReceviePacket()
 					m_gameState->UsedAbility(index, readAbility);
 				}
 				else
-				{
+			{
 					m_gameState->ExecuteAbility(m_packet->guid, readAbility, false);
 					m_gameState->UsedAbility(index, readAbility);
 				}

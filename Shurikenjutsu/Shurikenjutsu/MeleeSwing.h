@@ -10,7 +10,8 @@ public:
 	MeleeSwing();
 	~MeleeSwing();
 
-	void Execute();
+	bool Initialize();
+	bool Execute();
 };
 #endif // !MELEESWING_H_
 

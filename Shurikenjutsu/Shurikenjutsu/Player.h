@@ -10,6 +10,7 @@
 #include "Dash.h"
 #include "MeleeSwing.h"
 #include "ShurikenAbility.h"
+#include "MegaShuriken.h"
 #include "CollisionManager.h"
 #include "HealthBar.h"
 
@@ -24,6 +25,7 @@ public:
 	void Shutdown();
 	void UpdateMe();
 	void Update();
+	void UpdateAbilities();
 	void Render(SHADERTYPE p_shader);
 	void SetDamage(float p_damage);
 	float GetDamage() const;	
@@ -43,6 +45,7 @@ public:
 	void SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir);
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
+	void SetIsAlive(bool p_isAlive);
 
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
@@ -56,6 +59,7 @@ private:
 	int m_health; // Player health
 	int m_maxHealth; // Max player health
 	float m_agility; // Speed på attacker och rullning m.m
+	bool m_isAlive; // bool to check if the player should render and update itself
 	InputManager* m_inputManager;
 	DirectX::XMFLOAT3 m_attackDir;
 	RakNet::RakNetGUID m_guid;
@@ -69,11 +73,9 @@ private:
 	Ability* m_dash;
 	Ability* m_meleeSwing;
 	Ability* m_shurikenAbility;
+	Ability* m_megaShuriken;
 
 	HealthBar m_healthbar;
-
-
-	float m_dashCd;
 };
 
 #endif PLAYER

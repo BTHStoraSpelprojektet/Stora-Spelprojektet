@@ -3,7 +3,6 @@
 
 #include "GameState.h"
 
-
 class DebugState : public GameState
 {
 public:
@@ -13,8 +12,6 @@ public:
 	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
 	void Shutdown();
 	void Update(double p_deltaTime);
-
-private:
 };
 
 #endif

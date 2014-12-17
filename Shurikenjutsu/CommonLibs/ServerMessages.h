@@ -4,6 +4,14 @@
 #include "..\CommonLibs\RakNet\MessageIdentifiers.h"
 #include "..\CommonLibs\RakNet\RakNetTypes.h"
 
+struct Cooldowns
+{
+	float shurikenCD;
+	float meleeSwingCD;
+	float dashCD;
+	float megaShurikenCD;
+};
+
 struct PlayerNet
 {
 	float x, y, z;
@@ -12,7 +20,9 @@ struct PlayerNet
 	int team;
 	int maxHP;
 	int currentHP;
+	bool isAlive;
 	float gcd;
+	Cooldowns cooldownAbilites;
 };
 
 struct ShurikenNet
@@ -23,6 +33,7 @@ struct ShurikenNet
 	RakNet::RakNetGUID guid;
 	float lifeTime;
 	float speed;
+	bool megaShuriken;
 };
 
 enum Messages
@@ -32,12 +43,14 @@ enum Messages
 	ID_PLAYER_MOVED,
 	ID_PLAYER_ROTATED,
 	ID_SHURIKEN_THROWN,
+	ID_MEGASHURIKEN_THROWN,
 	ID_SHURIKEN_REMOVE,
 	ID_RESPAWN_PLAYER,
 	ID_MELEE_ATTACK,
 	ID_PLAYER_INVALID_MOVE,
 	ID_PLAYER_HP_CHANGED,
-	ID_ABILITY
+	ID_ABILITY,
+	ID_ROUND_OVER
 };
 
 #endif
