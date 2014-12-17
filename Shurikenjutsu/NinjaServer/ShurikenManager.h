@@ -14,7 +14,7 @@ public:
 	ShurikenManager();
 	~ShurikenManager();
 
-	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName);
+	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
 	void Shutdown();
 	void Update(double p_deltaTime);
 

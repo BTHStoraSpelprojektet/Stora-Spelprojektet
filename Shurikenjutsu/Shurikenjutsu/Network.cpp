@@ -128,6 +128,7 @@ void Network::ReceviePacket()
 			float dirX, dirY, dirZ;
 			int team;
 			int maxHP, currentHP;
+			bool isAlive;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
 			bitStream.Read(messageID);
@@ -145,11 +146,12 @@ void Network::ReceviePacket()
 				bitStream.Read(team);
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
+				bitStream.Read(isAlive);
 
 				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
-				UpdatePlayerHP(guid, maxHP, currentHP);
+				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
 
 				playerGuids.push_back(guid);				
 			}
@@ -279,12 +281,14 @@ void Network::ReceviePacket()
 
 			RakNet::RakNetGUID guid;
 			int currentHP;
+			bool isAlive;
 
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			bitStream.Read(currentHP);
+			bitStream.Read(isAlive);
 
-			UpdatePlayerHP(guid, currentHP);
+			UpdatePlayerHP(guid, currentHP, isAlive);
 
 			break;
 		}
@@ -297,10 +301,25 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(abilityEnum);
 			bitStream.Read(abilityString);
+			if (abilityEnum == ABILITIES_DASH)
+			{
+				m_invalidMove = true;
+			}
 
 			std::cout << " " << abilityString << std::endl;
 
 			break;
+		}
+		case ID_ROUND_OVER:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int winningTeam;
+
+			bitStream.Read(messageID);
+			bitStream.Read(winningTeam);
+
+			std::cout << "Team " << winningTeam << " won this round\n";
 		}
 		default:
 		{
@@ -618,11 +637,12 @@ void Network::UpdatedMoveFromInvalidMove()
 	m_invalidMove = false;
 }
 
-void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP)
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP, bool p_isAlive)
 {
 	if (p_guid == m_myPlayer.guid)
 	{
 		m_myPlayer.currentHP = p_currentHP;
+		m_myPlayer.isAlive = p_isAlive;
 	}
 	else
 	{
@@ -631,17 +651,19 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP)
 			if (p_guid == m_enemyPlayers[i].guid)
 			{
 				m_enemyPlayers[i].currentHP = p_currentHP;
+				m_enemyPlayers[i].isAlive = p_isAlive;
 			}
 		}
 	}
 }
 
-void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_currentHP)
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_currentHP, bool p_isAlive)
 {
 	if (p_guid == m_myPlayer.guid)
 	{
 		m_myPlayer.maxHP = p_maxHP;
 		m_myPlayer.currentHP = p_currentHP;
+		m_myPlayer.isAlive = p_isAlive;
 	}
 	else
 	{
@@ -651,6 +673,7 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_curre
 			{
 				m_enemyPlayers[i].maxHP = p_maxHP;
 				m_enemyPlayers[i].currentHP = p_currentHP;
+				m_enemyPlayers[i].isAlive = p_isAlive;
 			}
 		}
 	}

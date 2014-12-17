@@ -1,10 +1,10 @@
 Map size: 100 100
 Number of objects: 72
 Number of bounding boxes: 4
-LevelBoundingBox_1 0 0 -34 0 0 0 35 7.5 0.5
-LevelBoundingBox_3 -34 0 0 0 0 0 35 7.5 0.5
-LevelBoundingBox_4 0 0 34 0 0 0 35 7.5 0.5
-LevelBoundingBox_5 34 0 0 0 0 0 35 7.5 0.5
+LevelBoundingBox_1 0 0 -34 0 0 0 0.5 7.5 35
+LevelBoundingBox_2 -34 0 0 0 0 0 35 7.5 0.5
+LevelBoundingBox_3 0 0 34 0 0 0 0.5 7.5 35
+LevelBoundingBox_4 34 0 0 0 0 0 35 7.5 0.5
 Floor 0 0 0 0 0 0
 pillar_1 -6.98362 0 -6.54079 0 0 0
 pillar_2 6.33441 0 6.65807 0 0 0

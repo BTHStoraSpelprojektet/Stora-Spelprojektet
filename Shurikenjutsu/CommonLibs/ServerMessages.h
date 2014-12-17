@@ -20,6 +20,7 @@ struct PlayerNet
 	int team;
 	int maxHP;
 	int currentHP;
+	bool isAlive;
 	float gcd;
 	Cooldowns cooldownAbilites;
 };
@@ -48,7 +49,8 @@ enum Messages
 	ID_MELEE_ATTACK,
 	ID_PLAYER_INVALID_MOVE,
 	ID_PLAYER_HP_CHANGED,
-	ID_ABILITY
+	ID_ABILITY,
+	ID_ROUND_OVER
 };
 
 #endif

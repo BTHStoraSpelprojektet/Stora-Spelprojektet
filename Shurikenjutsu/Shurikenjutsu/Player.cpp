@@ -12,7 +12,7 @@ Player::~Player()
 
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
-	if (!MovingObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
+	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
 	{
 		return false;
 	}
@@ -37,6 +37,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_shurikenAbility = new ShurikenAbility();
 	m_shurikenAbility->Initialize();
+	m_isAlive = true;
 
 	m_megaShuriken = new MegaShuriken();
 	m_megaShuriken->Initialize();
@@ -48,24 +49,36 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 void Player::Shutdown()
 {
-	MovingObject::Shutdown();
+	AnimatedObject::Shutdown();
 }
 
 void Player::UpdateMe()
 {
+	// Check health and isAlive from server
+	if (Network::GetInstance()->IsConnected())
+	{
+		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
+		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
+		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
+	}
+
 	m_playerSphere.m_position = m_position;
-	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	
-	m_ability = m_noAbility;
-	
-	CheckForSpecialAttack();
-
-
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
 		SetCalculatePlayerPosition();
 	}
+
+	// Don't update player if he is dead
+	if (!m_isAlive)
+	{
+		return;
+	}
+
+	
+	m_ability = m_noAbility;
+	CheckForSpecialAttack();
+
 
 	// Melee attack
 	if (InputManager::GetInstance()->IsLeftMousePressed())
@@ -126,7 +139,7 @@ void Player::CheckForSpecialAttack()
 	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	{
 		m_ability = m_megaShuriken;
-	}
+		}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
 		m_ability = m_dash;
@@ -237,7 +250,7 @@ float Player::GetAgility() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-		MovingObject::SetPosition(p_pos);
+		AnimatedObject::SetPosition(p_pos);
 
 		if (Network::GetInstance()->IsConnected())
 	{
@@ -424,11 +437,19 @@ void Player::SetCalculatePlayerPosition()
 
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	m_healthbar.Update(m_position, m_health, 100, p_view, p_projection);
+	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
 }
 
 void Player::Render(SHADERTYPE p_shader)
 {
-	MovingObject::Render(p_shader);
+	if (m_isAlive)
+	{
+		AnimatedObject::RenderAnimated(p_shader);
 	m_healthbar.Render();
+}
+}
+
+void Player::SetIsAlive(bool p_isAlive)
+{
+	m_isAlive = p_isAlive;
 }

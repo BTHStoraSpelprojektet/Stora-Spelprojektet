@@ -19,6 +19,12 @@
     <Filter Include="Header Files\Objects">
       <UniqueIdentifier>{ce5dd287-b13f-435a-b45b-651e93322619}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\GameStates">
+      <UniqueIdentifier>{2ded1272-78d8-4a0e-9d3a-9aa379d7d5cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameStates">
+      <UniqueIdentifier>{575ba3bc-13b8-42fa-af99-58c0df87fe44}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -48,6 +54,15 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalState.cpp">
+      <Filter>Source Files\GameStates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -73,6 +88,15 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Header Files\Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugState.h">
+      <Filter>Header Files\GameStates</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalState.h">
+      <Filter>Header Files\GameStates</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

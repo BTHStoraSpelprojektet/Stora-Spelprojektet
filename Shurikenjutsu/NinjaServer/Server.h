@@ -11,8 +11,9 @@
 #include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonEnums.h"
 #include <vector>
-#include "MapManager.h"
-#include "CollisionManager.h"
+#include "GameState.h"
+#include "DebugState.h"
+#include "NormalState.h"
 
 class Server
 {
@@ -30,13 +31,7 @@ private:
 	RakNet::Packet *m_packet;
 
 	int m_nrOfConnections;
-	std::string m_levelName;
-	std::string m_shurikenModelName;
-	std::string m_playerModelName;
-	PlayerManager m_playerManager;
-	ShurikenManager m_shurikenManager;
-	MapManager m_mapManager;
-	CollisionManager m_collisionManager;
+	GameState* m_gameState;
 };
 
 #endif SERVER

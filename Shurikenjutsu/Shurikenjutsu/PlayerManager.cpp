@@ -14,8 +14,8 @@ PlayerManager::~PlayerManager()
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 100, 20);
-
+	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 100, 20);
+	m_playerAbilityBar.Initialize(0.0f, -(float)(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.50 + 50.0f), 6);
 	return true;
 }
 
@@ -24,11 +24,10 @@ void PlayerManager::Shutdown()
 
 }
 
-void PlayerManager::Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
+void PlayerManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	m_player.UpdateMe();
-	m_player.UpdateHealthBar(p_view, p_projection);
 
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -74,7 +73,7 @@ void PlayerManager::Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_pro
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/cubemanWnP.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, enemyPlayers[i].currentHP, enemyPlayers[i].maxHP, 20);
+					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, enemyPlayers[i].currentHP, enemyPlayers[i].maxHP, 20);
 				}
 			}
 
@@ -86,8 +85,8 @@ void PlayerManager::Update(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_pro
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].SetHealth(enemyPlayers[i].currentHP);
+			m_enemyList[i].SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i].Update();
-			m_enemyList[i].UpdateHealthBar(p_view, p_projection);
 		}
 	}
 }
@@ -100,6 +99,7 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 	{
 		m_enemyList[i].Render(p_shader);
 	}
+	m_playerAbilityBar.Render();
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
@@ -175,4 +175,14 @@ bool PlayerManager::IsGuidInNetworkList(RakNet::RakNetGUID p_guid)
 		}
 	}
 	return false;
+}
+
+void PlayerManager::UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
+{
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		m_enemyList[i].UpdateHealthBar(p_view, p_projection);
+	}
+
+	m_player.UpdateHealthBar(p_view, p_projection);
 }
