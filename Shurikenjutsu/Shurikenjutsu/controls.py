@@ -50,9 +50,9 @@ class Main():
 			
 		group = pm.group(curve)
 		
-		pm.orientConstraint(curve, joint)
+		pm.orientConstraint(curve, joint, mo = True)
 		handle = joint + "IK"
-		pm.pointConstraint(curve, handle)
+		pm.pointConstraint(curve, handle, mo = True)
 		
 	def triangle(self, joint):
 		p0 = Point(-1, 0, -0.5)
