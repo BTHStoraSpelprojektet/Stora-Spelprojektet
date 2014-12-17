@@ -32,7 +32,7 @@ void NormalState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
 
-	if (OneTeamRemaining())
+	if (OneTeamRemaining(m_playerManager.GetPlayers()))
 	{
 		int winningTeam = GetWinningTeam();
 		SendWinningTeam(winningTeam);
@@ -40,18 +40,17 @@ void NormalState::Update(double p_deltaTime)
 	}
 }
 
-bool NormalState::OneTeamRemaining()
+bool NormalState::OneTeamRemaining(std::vector<PlayerNet> p_players)
 {
-	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
 	std::map<int, bool> teamsFound = std::map<int, bool>();
 	
 
-	for each (PlayerNet player in players)
+	for each (PlayerNet player in p_players)
 	{
 		if (teamsFound.find(player.team) != teamsFound.end())
 		{
 			// found
-			if (teamsFound[player.team] == false)
+			if (!teamsFound[player.team])
 			{
 				teamsFound[player.team] = player.isAlive;
 			}

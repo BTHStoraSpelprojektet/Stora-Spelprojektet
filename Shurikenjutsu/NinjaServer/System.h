@@ -4,14 +4,13 @@
 #include "Server.h"
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "..\CommonLibs\Timer.h"
-//#include <iostream>
 
 class System
 {
 public:
 	System();
 	~System();
-	bool Initialize();
+	bool Initialize(int p_argc, _TCHAR* p_argv[]);
 	void Run();
 private:
 	void Update();

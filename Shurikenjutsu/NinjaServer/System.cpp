@@ -10,7 +10,7 @@ System::~System()
 {
 }
 
-bool System::Initialize()
+bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	m_server.Initialize();
 

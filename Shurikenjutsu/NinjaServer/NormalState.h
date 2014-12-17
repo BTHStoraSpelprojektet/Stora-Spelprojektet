@@ -15,7 +15,7 @@ public:
 	void Update(double p_deltaTime);
 
 private:
-	bool OneTeamRemaining();
+	bool OneTeamRemaining(std::vector<PlayerNet> p_players);
 	int GetWinningTeam();
 	void RespawnAllPlayers();
 	void SendWinningTeam(int p_winningTeam);
