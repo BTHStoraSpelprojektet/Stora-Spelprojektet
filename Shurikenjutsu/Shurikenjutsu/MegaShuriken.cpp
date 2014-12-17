@@ -24,6 +24,8 @@ bool MegaShuriken::Execute()
 	if (Ability::Execute())
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_MEGASHURIKEN);
+		SetCooldown(10.0);
+		std::cout << "MEGASHURIKEN" << std::endl;
 	}	
 	return true;
 }

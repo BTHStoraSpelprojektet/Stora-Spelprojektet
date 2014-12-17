@@ -24,6 +24,7 @@ bool MeleeSwing::Execute()
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_MELEESWING);
 		SetCooldown(0.5);
+		std::cout << "MELEE" << std::endl;
 	}
 	return true;
 }

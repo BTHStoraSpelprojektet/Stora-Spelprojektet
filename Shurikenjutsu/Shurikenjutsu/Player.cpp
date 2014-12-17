@@ -29,8 +29,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_ability = new Ability();
 	m_noAbility = new Ability();
 
-	m_buttonQ = new Dash();
-	m_buttonQ->Initialize();
+	m_dash = new Dash();
+	m_dash->Initialize();
 
 	m_meleeSwing = new MeleeSwing();
 	m_meleeSwing->Initialize();
@@ -68,13 +68,13 @@ void Player::UpdateMe()
 	}
 
 	// Melee attack
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		m_ability = m_meleeSwing;
 	}
 
 	// Cast shuriken
-	if (InputManager::GetInstance()->IsRightMouseClicked())
+	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		m_ability = m_shurikenAbility;
 	}
@@ -91,7 +91,7 @@ void Player::UpdateMe()
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 	}
 
-	// For counting down cooldowns
+	// Count down cooldowns
 	UpdateAbilities();
 
 	m_ability->Execute();
@@ -118,15 +118,18 @@ void Player::CheckForSpecialAttack()
 			DirectX::XMFLOAT3 dir_And_Dash = DirectX::XMFLOAT3(m_attackDir.x * dashLength, m_attackDir.y, m_attackDir.z * dashLength);
 			float speed_X_Delta = 1.0f;//(float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 			SendPosition(DirectX::XMFLOAT3(m_position.x + dir_And_Dash.x * speed_X_Delta, 0.0f, m_position.z + dir_And_Dash.z *speed_X_Delta));
-			m_dashCd = 0.5f;
+			m_dashCd = 5.0f;
 		}
 	}
 
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	{
-		std::cout << "NEGASHURIKEN" << std::endl;
 		m_ability = m_megaShuriken;
+	}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
+	{
+		m_ability = m_dash;
 	}
 }
 bool Player::CalculateDirection()
@@ -143,7 +146,6 @@ bool Player::CalculateDirection()
 	{
 		z += 1;
 		moved = true;
-		m_ability = m_buttonQ;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
@@ -180,7 +182,7 @@ void Player::Update()
 
 void Player::UpdateAbilities()
 {
-	m_buttonQ->Update();
+	m_dash->Update();
 	m_meleeSwing->Update();
 	m_shurikenAbility->Update();
 	m_megaShuriken->Update();

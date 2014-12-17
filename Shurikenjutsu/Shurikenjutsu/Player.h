@@ -68,7 +68,7 @@ private:
 	Sphere m_playerSphere;
 	Ability* m_ability;
 	Ability* m_noAbility;
-	Ability* m_buttonQ;
+	Ability* m_dash;
 	Ability* m_meleeSwing;
 	Ability* m_shurikenAbility;
 	Ability* m_megaShuriken;

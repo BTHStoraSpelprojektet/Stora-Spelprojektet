@@ -272,7 +272,7 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 			m_players[p_index].cooldownAbilites.shurikenCD = 3;
 			break;
 		case ABILITIES_DASH:
-			m_players[p_index].cooldownAbilites.dashCD = 12;
+			m_players[p_index].cooldownAbilites.dashCD = 8;
 			break;
 		case ABILITIES_MELEESWING:
 			m_players[p_index].cooldownAbilites.meleeSwingCD = 0.5;
@@ -301,33 +301,13 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 				result = true; // controlled locally atm
 				break;
 			case ABILITIES_DASH:
-				if (m_players[p_index].cooldownAbilites.dashCD <= 0.0f)
-				{			
-					result = true;
-				}
-				else
-				{
-					result = false;
-				}
+				result = true; // controlled locally atm
 				break;
 			case ABILITIES_MELEESWING:
-				if (m_players[p_index].cooldownAbilites.meleeSwingCD <= 0.0f)
-				{
-					result = true;
-				}
-				else
-				{
-					result = false;
-				}
+				result = true; // controlled locally atm
+				break;
 			case ABILITIES_MEGASHURIKEN:
-				if (m_players[p_index].cooldownAbilites.megaShurikenCD <= 0.0f)
-				{
-					result = true;
-				}
-				else
-				{
-					result = false;
-				}
+				result = true; // controlled locally atmresult = false;
 				break;
 			default:
 				result = false;

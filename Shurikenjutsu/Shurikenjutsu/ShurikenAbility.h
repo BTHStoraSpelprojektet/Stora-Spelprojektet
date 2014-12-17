@@ -16,5 +16,6 @@ public:
 private:
 	int m_stacks;
 	double m_stackCD;
+	double m_gcd;
 };
 #endif SHURIKENABILITY_H_
