@@ -33,6 +33,13 @@ void PlayerManager::Update()
 	{
 		PlayerNet myPlayer = Network::GetInstance()->GetMyPlayer();
 
+		// Check if the round have restarted
+		if (Network::GetInstance()->RoundRestarted())
+		{
+			ResetCooldowns();
+			Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
+		}
+
 		// Check if the player need to respawn
 		if (Network::GetInstance()->HasRespawned())
 		{
@@ -185,4 +192,14 @@ void PlayerManager::UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOA
 	}
 
 	m_player.UpdateHealthBar(p_view, p_projection);
+}
+
+void PlayerManager::ResetCooldowns()
+{
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		m_enemyList[i].ResetCooldowns();
+	}
+
+	m_player.ResetCooldowns();
 }

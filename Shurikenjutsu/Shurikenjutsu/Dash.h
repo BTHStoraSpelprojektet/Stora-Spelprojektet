@@ -11,6 +11,7 @@ public:
 	Dash();
 	~Dash();
 
-	void Execute();
+	bool Initialize();
+	bool Execute();
 };
 #endif // !DASH_H_

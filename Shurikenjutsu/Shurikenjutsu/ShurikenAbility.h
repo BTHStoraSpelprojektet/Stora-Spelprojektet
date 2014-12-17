@@ -10,6 +10,13 @@ public:
 	ShurikenAbility();
 	~ShurikenAbility();
 
-	void Execute();
+	bool Initialize();
+	void Update();
+	bool Execute();
+	void ResetCooldown();
+private:
+	int m_stacks;
+	double m_stackCD;
+	double m_gcd;
 };
 #endif SHURIKENABILITY_H_

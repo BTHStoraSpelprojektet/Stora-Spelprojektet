@@ -15,7 +15,7 @@ bool Ability::Initialize()
 	SetDamage(0);
 	SetTime(0.0);
 	SetStatusEffect(StatusEffect());
-
+	SetCooldown(0.0);
 	return true;
 }
 
@@ -26,13 +26,21 @@ void Ability::Shutdown()
 
 void Ability::Update()
 {
-
+	if (m_cooldown > 0.00)
+	{
+		m_cooldown = m_cooldown - GLOBAL::GetInstance().GetDeltaTime();
+	}
 }
 
-void Ability::Execute()
+bool Ability::Execute()
 {
-	// SEND ENUMS
-	
+	if (m_cooldown <= 0.0)
+	{
+
+		return true;
+	}
+
+	return false;
 }
 
 void Ability::SetDamage(unsigned int p_damage)
@@ -55,6 +63,17 @@ double Ability::GetTime()
 	return m_time;
 }
 
+void Ability::SetCooldown(double p_cooldown)
+{
+	m_cooldown = p_cooldown;
+}
+
+double Ability::GetCooldown()
+{
+	return m_cooldown;
+}
+
+
 void Ability::SetStatusEffect(StatusEffect p_statusEffect)
 {
 	m_statusEffect = p_statusEffect;
@@ -63,4 +82,9 @@ void Ability::SetStatusEffect(StatusEffect p_statusEffect)
 StatusEffect Ability::GetStatusEffect()
 {
 	return m_statusEffect;
+}
+
+void Ability::ResetCooldown()
+{
+	SetCooldown(0.0);
 }

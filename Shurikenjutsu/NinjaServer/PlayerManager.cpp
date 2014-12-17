@@ -39,6 +39,18 @@ void PlayerManager::Update(double p_deltaTime)
 		{
 			m_players[i].gcd -= (float)p_deltaTime;
 		}
+		if (m_players[i].cooldownAbilites.shurikenCD > 0.0f)
+		{
+			m_players[i].cooldownAbilites.shurikenCD -= (float)p_deltaTime;
+		}
+		if (m_players[i].cooldownAbilites.dashCD > 0.0f)
+		{
+			m_players[i].cooldownAbilites.dashCD -= (float)p_deltaTime;
+		}
+		if (m_players[i].cooldownAbilites.meleeSwingCD > 0.0f)
+		{
+			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
+		}
 	}
 }
 
@@ -266,10 +278,16 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 		switch (p_ability)
 		{
 		case ABILITIES_SHURIKEN:
+			m_players[p_index].cooldownAbilites.shurikenCD = 3;
 			break;
 		case ABILITIES_DASH:
+			m_players[p_index].cooldownAbilites.dashCD = 8;
 			break;
 		case ABILITIES_MELEESWING:
+			m_players[p_index].cooldownAbilites.meleeSwingCD = 0.5;
+			break;
+		case ABILITIES_MEGASHURIKEN:
+			m_players[p_index].cooldownAbilites.megaShurikenCD = 10;
 			break;
 		default:
 			break;
@@ -286,16 +304,22 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	{
 		if (m_players[p_index].gcd <= 0.0f)
 		{
-			result = true;
 			switch (p_ability)
 			{
 			case ABILITIES_SHURIKEN:
+				result = true; // controlled locally atm
 				break;
 			case ABILITIES_DASH:
+				result = true; // controlled locally atm
 				break;
 			case ABILITIES_MELEESWING:
+				result = true; // controlled locally atm
+				break;
+			case ABILITIES_MEGASHURIKEN:
+				result = true; // controlled locally atmresult = false;
 				break;
 			default:
+				result = false;
 				break;
 			}
 		}
@@ -327,6 +351,10 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
 		p_collisionManager.NormalMeleeAttack(p_guid, this);		
+		break;
+	case ABILITIES_MEGASHURIKEN:
+		abilityString = "MegaShuriken";
+		p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 		break;
 	default:
 		break;
