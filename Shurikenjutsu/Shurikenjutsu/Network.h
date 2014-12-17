@@ -76,6 +76,7 @@ private:
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed);
+	void UpdateMegaShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed);
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
 

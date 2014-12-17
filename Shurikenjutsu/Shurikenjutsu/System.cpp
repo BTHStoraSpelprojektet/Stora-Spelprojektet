@@ -82,7 +82,9 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('s'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('d'));
-	InputManager::GetInstance()->RegisterKey(VkKeyScan('c'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('q'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('e'));
+	//InputManager::GetInstance()->RegisterKey(VkKeyScan('c'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('f'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('v'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);

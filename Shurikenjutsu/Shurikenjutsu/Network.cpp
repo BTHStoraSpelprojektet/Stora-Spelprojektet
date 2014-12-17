@@ -220,6 +220,30 @@ void Network::ReceviePacket()
 			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed);
 			break;
 		}
+		case ID_MEGASHURIKEN_THROWN:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float x, y, z;
+			float dirX, dirY, dirZ;
+			unsigned int shurikenID;
+			float speed;
+
+			bitStream.Read(messageID);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+			bitStream.Read(dirX);
+			bitStream.Read(dirY);
+			bitStream.Read(dirZ);
+			bitStream.Read(shurikenID);
+			bitStream.Read(guid);
+			bitStream.Read(speed);
+
+			UpdateMegaShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed);
+			break;
+		}
 		case ID_SHURIKEN_REMOVE:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -461,6 +485,38 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 	tempShuriken.shurikenId = p_shurikenID;
 	tempShuriken.guid = p_guid;
 	tempShuriken.speed = p_speed;
+	tempShuriken.megaShuriken = false;
+
+	for (unsigned int i = 0; i < m_shurikensList.size(); i++)
+	{
+		if (m_shurikensList[i].guid == tempShuriken.guid && m_shurikensList[i].shurikenId == tempShuriken.shurikenId)
+		{
+			addShuriken = false;
+			break;
+		}
+	}
+	if (addShuriken)
+	{
+		m_shurikensList.push_back(tempShuriken);
+		m_shurikenListUpdated = true;
+	}
+}
+
+void Network::UpdateMegaShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed)
+{
+	bool addShuriken = true;
+	ShurikenNet tempShuriken;
+	tempShuriken = ShurikenNet();
+	tempShuriken.x = p_x;
+	tempShuriken.y = p_y;
+	tempShuriken.z = p_z;
+	tempShuriken.dirX = p_dirX;
+	tempShuriken.dirY = p_dirY;
+	tempShuriken.dirZ = p_dirZ;
+	tempShuriken.shurikenId = p_shurikenID;
+	tempShuriken.guid = p_guid;
+	tempShuriken.speed = p_speed;
+	tempShuriken.megaShuriken = true;
 
 	for (unsigned int i = 0; i < m_shurikensList.size(); i++)
 	{

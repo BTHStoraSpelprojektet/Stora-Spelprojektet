@@ -10,6 +10,7 @@
 #include "Dash.h"
 #include "MeleeSwing.h"
 #include "ShurikenAbility.h"
+#include "MegaShuriken.h"
 #include "CollisionManager.h"
 #include "HealthBar.h"
 
@@ -24,6 +25,7 @@ public:
 	void Shutdown();
 	void UpdateMe();
 	void Update();
+	void UpdateAbilities();
 	void Render(SHADERTYPE p_shader);
 	void SetDamage(float p_damage);
 	float GetDamage() const;	
@@ -71,11 +73,9 @@ private:
 	Ability* m_dash;
 	Ability* m_meleeSwing;
 	Ability* m_shurikenAbility;
+	Ability* m_megaShuriken;
 
 	HealthBar m_healthbar;
-
-
-	float m_dashCd;
 };
 
 #endif PLAYER
