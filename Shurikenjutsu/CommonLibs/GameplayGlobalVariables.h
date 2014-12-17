@@ -11,7 +11,7 @@ const float SHURIKEN_COOLDOWN = 2.0f;
 const float SHURIKEN_DURATION = 3.0f;
 const int SHURIKEN_MAX_STACK = 3;
 const float SHURIKEN_ROTATION_SPEED = 15.70f;
-const float SHURIKEN_SPEED = 15.70f;
+const float SHURIKEN_SPEED = 20.0f;
 
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
@@ -54,6 +54,8 @@ const float SMOKEBOMB_COOLDOWN = 0.0f;
 
 ////////////////////////////////////////////////////////////////Character Variables
 const float CHARACTAR_KATANA_SHURIKEN_HEALTH = 100.0f;
+
+const float CHARACTAR_KATANA_SHURIKEN_SPEED = 10.0f;
 
 ////////////////////////////////////////////////////////////////Character Variables
 

@@ -1,15 +1,8 @@
 #include "Object.h"
 
 
-Object::Object()
-{
-}
-
-
-Object::~Object()
-{
-}
-
+Object::Object(){}
+Object::~Object(){}
 bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 {
 	SetPosition(p_pos);
@@ -38,10 +31,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	return true;
 }
 
-void Object::Shutdown()
-{
-
-}
+void Object::Shutdown(){}
 
 void Object::Render(SHADERTYPE p_shader)
 {

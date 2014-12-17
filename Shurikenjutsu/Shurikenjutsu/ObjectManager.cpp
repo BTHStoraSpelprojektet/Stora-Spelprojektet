@@ -2,8 +2,6 @@
 
 
 ObjectManager::ObjectManager(){}
-
-
 ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize()
