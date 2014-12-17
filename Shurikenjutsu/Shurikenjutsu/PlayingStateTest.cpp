@@ -19,7 +19,7 @@ bool PlayingStateTest::Initialize()
 	m_camera.ResetCamera();
 
 	//Load level
-	Level level("../Shurikenjutsu/Levels/testBana.SSPL");
+	Level level("../Shurikenjutsu/Levels/firstLevel.SSPL");
 
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = level.GetObjects();
