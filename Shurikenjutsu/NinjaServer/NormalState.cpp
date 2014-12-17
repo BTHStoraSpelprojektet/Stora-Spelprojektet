@@ -13,6 +13,10 @@ NormalState::~NormalState()
 bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	bool result;
+	m_roundTimer = 5.0f;
+	m_currentTimer = m_roundTimer;
+	m_sendTime = (int)m_roundTimer;
+	m_roundRestarting = false;
 
 	result = GameState::Initialize(p_serverPeer);
 	if (!result)
@@ -32,11 +36,30 @@ void NormalState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
 
-	if (OneTeamRemaining(m_playerManager.GetPlayers()))
+	if (m_roundRestarting)
+	{
+		m_currentTimer -= (float)p_deltaTime;
+		if ((int)m_currentTimer < m_sendTime)
+		{
+			m_sendTime = (int)m_currentTimer;
+			SendRestartingRoundTime(m_sendTime + 1);
+		}
+
+		if (m_currentTimer <= 0.0f)
+		{
+			m_roundRestarting = false;
+			SendRestartedRound();
+			RespawnAllPlayers();
+		}
+	}
+	else if (OneTeamRemaining(m_playerManager.GetPlayers()))
 	{
 		int winningTeam = GetWinningTeam();
 		SendWinningTeam(winningTeam);
-		RespawnAllPlayers();
+		m_currentTimer = m_roundTimer;
+		m_sendTime = (int)m_roundTimer;
+		m_roundRestarting = true;
+		SendRestartingRound();
 	}
 }
 
@@ -115,4 +138,38 @@ void NormalState::SendWinningTeam(int p_winningTeam)
 	bitStream.Write(p_winningTeam);
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+	std::cout << "Team " << p_winningTeam << " won this round\n";
+}
+
+void NormalState::SendRestartedRound()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_RESTARTED_ROUND);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void NormalState::SendRestartingRound()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+	std::cout << "Restarting round in: \n";
+}
+
+void NormalState::SendRestartingRoundTime(int p_time)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND_TIMER);
+	bitStream.Write(p_time);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+	std::cout << p_time << "\n";
 }
