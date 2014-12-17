@@ -4,6 +4,7 @@
 #include "Server.h"
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "..\CommonLibs\Timer.h"
+#include "Debug.h"
 
 class System
 {
@@ -17,6 +18,7 @@ private:
 
 	Server m_server;
 	Timer m_timer;
+	Debug m_debug;
 };
 
 #endif SYSTEM

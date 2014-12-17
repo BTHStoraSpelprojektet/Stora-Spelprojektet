@@ -14,8 +14,10 @@ public:
 	void Shutdown();
 	void Update(double p_deltaTime);
 
-private:
+// public for testing with Google test
+public:
 	bool OneTeamRemaining(std::vector<PlayerNet> p_players);
+private:	
 	int GetWinningTeam();
 	void RespawnAllPlayers();
 	void SendWinningTeam(int p_winningTeam);

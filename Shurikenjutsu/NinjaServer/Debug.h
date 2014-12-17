@@ -4,6 +4,7 @@
 #include <iostream>
 #include <tchar.h>
 #include "..\Shurikenjutsu\GTest\include\gtest\gtest.h"
+#include "NormalState.h"
 
 class Debug
 {
