@@ -10,7 +10,7 @@
 #include "..\CommonLibs\Level.h"
 #include "Collisions.h"
 #include "DebugDraw.h"
-#include "ParticleEmitter.h"
+//#include "ParticleEmitter.h"
 #include "Frustum.h"
 #include "GameState.h"
 
@@ -26,7 +26,6 @@ public:
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:
-	void MeleeAttack();
 	void BasicPicking();
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
@@ -46,7 +45,7 @@ private:
 
 	DebugDot m_debugDot;
 
-	ParticleEmitter m_particles;
+	//ParticleEmitter m_particles;
 	// ========== DEBUG TEMP LINES ==========
 
 	Frustum m_frustum;

@@ -543,6 +543,9 @@
     <ClInclude Include="CommonEnums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameplayGlobalVariables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RakNet\_FindFirst.cpp">

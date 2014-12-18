@@ -13,6 +13,7 @@
 #include <vector>
 #include "GameState.h"
 #include "DebugState.h"
+#include "NormalState.h"
 
 class Server
 {

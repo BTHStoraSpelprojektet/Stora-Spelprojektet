@@ -3,6 +3,7 @@
 
 #include "Ability.h"
 #include "Network.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 class MeleeSwing : public Ability
 {
@@ -10,7 +11,8 @@ public:
 	MeleeSwing();
 	~MeleeSwing();
 
-	void Execute();
+	bool Initialize();
+	bool Execute();
 };
 #endif // !MELEESWING_H_
 

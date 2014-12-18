@@ -1,16 +1,24 @@
 #include "Dash.h"
 
 
-Dash::Dash()
+Dash::Dash(){}
+Dash::~Dash(){}
+
+bool Dash::Initialize()
 {
+	SetDamage(DASH_DAMAGE);
+	SetTime(0.0);
+	SetStatusEffect(StatusEffect());
+	SetCooldown(DASH_COOLDOWN);
+	return true;
 }
 
-
-Dash::~Dash()
+bool Dash::Execute()
 {
-}
-
-void Dash::Execute()
-{
-	Network::GetInstance()->SendAbility(ABILITIES_DASH);
+	if (Ability::Execute())
+	{
+		Network::GetInstance()->SendAbility(ABILITIES_DASH);
+		SetCooldown(DASH_COOLDOWN);
+	}
+	return true;
 }

@@ -10,6 +10,7 @@
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "CollisionManager.h"
 #include "ShurikenManager.h"
 #include <vector>
@@ -48,7 +49,7 @@ public:
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
-	void UpdateHealth(RakNet::RakNetGUID p_guid, int p_health);
+	void UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p_isAlive);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 

@@ -10,13 +10,16 @@ System::~System()
 {
 }
 
-bool System::Initialize()
+bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	m_server.Initialize();
 
 	// Initialize timer.
 	m_timer.Initialize();
 	m_timer.StartTimer();
+
+	// Run tests
+	m_debug.RunTests(p_argc, p_argv);
 
 	return true;
 }

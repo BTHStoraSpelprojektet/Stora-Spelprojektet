@@ -2,8 +2,6 @@
 
 
 ObjectManager::ObjectManager(){}
-
-
 ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize()
@@ -37,8 +35,17 @@ void ObjectManager::Update()
 		{
 			if (!IsShurikenInList(tempNetShurikens[i].shurikenId))
 			{
-				// Add shuriken
-				AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].speed, tempNetShurikens[i].shurikenId);
+				if (tempNetShurikens[i].megaShuriken)
+				{
+					// Add Mega shuriken
+					AddShuriken("../Shurikenjutsu/Models/MegaShurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].shurikenId);
+				}
+				else
+				{
+					// Add shuriken
+					AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].shurikenId);
+				}
+				
 			}
 		}
 
@@ -80,10 +87,10 @@ void ObjectManager::RenderShurikens(SHADERTYPE p_shader)
 	}
 }
 
-void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
+void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID)
 {
 	Shuriken tempShuriken;
-	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_speed, p_shurikenID);
+	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_shurikenID);
 	m_shurikens.push_back(tempShuriken);
 }
 

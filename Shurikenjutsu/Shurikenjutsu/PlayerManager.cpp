@@ -1,28 +1,17 @@
 #include "PlayerManager.h"
 
 
-PlayerManager::PlayerManager()
-{
-
-}
-
-PlayerManager::~PlayerManager()
-{
-
-}
-
+PlayerManager::PlayerManager(){}
+PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 100, 20);
+	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	m_playerAbilityBar.Initialize(0.0f, -420.0f, 6);
 	return true;
 }
 
-void PlayerManager::Shutdown()
-{
-
-}
+void PlayerManager::Shutdown(){}
 
 void PlayerManager::Update()
 {
@@ -32,6 +21,13 @@ void PlayerManager::Update()
 	if (Network::GetInstance()->IsConnected())
 	{
 		PlayerNet myPlayer = Network::GetInstance()->GetMyPlayer();
+
+		// Check if the round have restarted
+		if (Network::GetInstance()->RoundRestarted())
+		{
+			ResetCooldowns();
+			Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
+		}
 
 		// Check if the player need to respawn
 		if (Network::GetInstance()->HasRespawned())
@@ -73,7 +69,8 @@ void PlayerManager::Update()
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, enemyPlayers[i].currentHP, enemyPlayers[i].maxHP, 20);
+					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), 
+						DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX));
 				}
 			}
 
@@ -85,6 +82,7 @@ void PlayerManager::Update()
 			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].SetHealth(enemyPlayers[i].currentHP);
+			m_enemyList[i].SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i].Update();
 		}
 	}
@@ -101,20 +99,19 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 	m_playerAbilityBar.Render();
 }
 
-void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
+void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
 	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_maxHealth, p_agility);
+	tempPlayer.Initialize(p_filepath, p_pos, p_direction);
 	m_player = tempPlayer;
 }
 
-void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
+void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
 	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_maxHealth, p_agility);
+	tempPlayer.Initialize(p_filepath, p_pos, p_direction);
 	tempPlayer.SetGuID(p_guid);
+	tempPlayer.SetMaxHealth(CHARACTAR_KATANA_SHURIKEN_HEALTH);
 	m_enemyList.push_back(tempPlayer);
 }
 
@@ -184,4 +181,14 @@ void PlayerManager::UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOA
 	}
 
 	m_player.UpdateHealthBar(p_view, p_projection);
+}
+
+void PlayerManager::ResetCooldowns()
+{
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		m_enemyList[i].ResetCooldowns();
+	}
+
+	m_player.ResetCooldowns();
 }

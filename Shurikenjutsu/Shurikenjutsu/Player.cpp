@@ -10,27 +10,36 @@ Player::~Player()
 
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
+	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, CHARACTAR_KATANA_SHURIKEN_SPEED))
 	{
 		return false;
 	}
-
-	SetDamage(p_damage);
-	m_spells = p_spells;
-	SetHealth(p_health);
-	SetMaxHealth(p_maxHealth);
-	SetAgility(p_agility);
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
+	
 	m_ability = new Ability();
 	m_noAbility = new Ability();
-	m_dash = new Dash();
-	m_meleeSwing = new MeleeSwing();
-	m_shurikenAbility = new ShurikenAbility();
 
+	m_dash = new Dash();
+	m_dash->Initialize();
+
+	m_meleeSwing = new MeleeSwing();
+	m_meleeSwing->Initialize();
+
+	m_shurikenAbility = new ShurikenAbility();
+	m_shurikenAbility->Initialize();
+	m_isAlive = true;
+
+	m_megaShuriken = new MegaShuriken();
+	m_megaShuriken->Initialize();
+
+	m_smokeBombAbility = new SmokeBombAbility();
+	m_smokeBombAbility->Initialize();
+	m_smokeBomb = new SmokeBomb();
+	m_smokeBomb->Initialize(DirectX::XMFLOAT3(0, 3.0f, 0));
 	m_healthbar.Initialize(100.0f, 15.0f);
 
 	return true;
@@ -39,31 +48,57 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 void Player::Shutdown()
 {
 	AnimatedObject::Shutdown();
+	delete m_ability;
+	delete m_noAbility;
+	delete m_dash;
+
+	delete m_meleeSwing;
+	delete m_shurikenAbility;
+	delete m_megaShuriken;
+	delete m_smokeBombAbility;
+	delete m_smokeBomb;
 }
 
 void Player::UpdateMe()
 {
-	m_playerSphere.m_position = m_position;
-	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	m_ability = m_noAbility;
+	// Check health and isAlive from server
+	if (Network::GetInstance()->IsConnected())
+	{
+		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
+		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
+		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
+	}
 
-	CheckForSpecialAttack();
+	m_playerSphere.m_position = m_position;
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
 		SetCalculatePlayerPosition();
 	}
 
+	// Don't update player if he is dead
+	if (!m_isAlive)
+	{
+		return;
+	}
+
+	
+	m_ability = m_noAbility;
+	CheckForSpecialAttack();
+
+
 	// Melee attack
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		m_ability = m_meleeSwing;
+		AnimatedObject::MeleeAttackAnimation();
 	}
 
 	// Cast shuriken
-	if (InputManager::GetInstance()->IsRightMouseClicked())
+	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		m_ability = m_shurikenAbility;
+		AnimatedObject::RangeAttackAnimation();
 	}
 
 	// Check health from server
@@ -78,28 +113,29 @@ void Player::UpdateMe()
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 	}
 
+	// Count down cooldowns
+	UpdateAbilities();
+
 	m_ability->Execute();
 }
 
 void Player::CheckForSpecialAttack()
 {
-	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(m_attackDir.x, 0.1f, m_attackDir.z);
-	if (m_dashCd > 0)
+	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	{
-		m_dashCd -= (float)GLOBAL::GetInstance().GetDeltaTime();
+		m_ability = m_megaShuriken;
 	}
-	if (m_inputManager->IsKeyPressed(VkKeyScan('v')))
-	{
-		if (m_dashCd <= 0)
+	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 		{
-			m_dashCd = 0.5f;
 			m_ability = m_dash;
 		}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
+	{
+		std::cout << "SMOOOOOOOOOOOOOOOOOOOOOOOOKING!!!!" << std::endl;
+		m_smokeBomb->SetPosition(CollisionManager::GetInstance()->CalculateSmokeBombLocation(m_playerSphere, m_attackDir));
+		m_smokeBomb->ResetTimer();
+		m_ability = m_smokeBombAbility;
 	}
-	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
-	//{
-	//	std::cout << "" << std::endl;
-	//}
 }
 bool Player::CalculateDirection()
 {
@@ -115,24 +151,28 @@ bool Player::CalculateDirection()
 	{
 		z += 1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		x += -1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		z += -1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		x += 1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -149,16 +189,26 @@ void Player::Update()
 
 }
 
-void Player::SetDamage(float p_damage)
+void Player::UpdateAbilities()
 {
-	m_damage = p_damage;
+	m_dash->Update();
+	m_meleeSwing->Update();
+	m_shurikenAbility->Update();
+	m_megaShuriken->Update();
+	m_smokeBombAbility->Update();
+	m_smokeBomb->Update();
 }
 
-float Player::GetDamage() const
+void Player::ResetCooldowns()
 {
-	return m_damage;
-}
+	m_dash->ResetCooldown();
+	m_meleeSwing->ResetCooldown();
+	m_shurikenAbility->ResetCooldown();
+	m_megaShuriken->ResetCooldown();
+	m_smokeBombAbility->ResetCooldown();
 
+	UpdateAbilities();
+}
 void Player::SetHealth(int p_health)
 {
 	if (p_health < 0)
@@ -184,16 +234,6 @@ void Player::SetMaxHealth(int p_maxHealth)
 int Player::GetMaxHealth() const
 {
 	return m_maxHealth;
-}
-
-void Player::SetAgility(float p_agility)
-{
-	m_agility = p_agility;
-}
-
-float Player::GetAgility() const
-{
-	return m_agility;
 }
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
@@ -376,7 +416,6 @@ void Player::SetCalculatePlayerPosition()
 				}
 			}
 
-
 		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 	}
 	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
@@ -390,6 +429,22 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::Render(SHADERTYPE p_shader)
 {
+	if (m_isAlive)
+	{
 	AnimatedObject::RenderAnimated(p_shader);
+		if (m_smokeBomb->GetIfActive() && Collisions::SphereSphereCollision(m_smokeBomb->GetSmokeSphere(), m_playerSphere))
+		{
+		}
+		else
+		{
 	m_healthbar.Render();
+
+		}
+	}
+	m_smokeBomb->Render();
+}
+
+void Player::SetIsAlive(bool p_isAlive)
+{
+	m_isAlive = p_isAlive;
 }

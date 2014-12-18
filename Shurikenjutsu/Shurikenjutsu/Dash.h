@@ -4,6 +4,7 @@
 #include "Ability.h"
 #include "Network.h"
 #include <iostream>
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 class Dash : public Ability
 {
@@ -11,6 +12,7 @@ public:
 	Dash();
 	~Dash();
 
-	void Execute();
+	bool Initialize();
+	bool Execute();
 };
 #endif // !DASH_H_

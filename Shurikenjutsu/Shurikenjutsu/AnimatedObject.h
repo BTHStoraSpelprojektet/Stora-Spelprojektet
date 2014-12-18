@@ -16,6 +16,9 @@ public:
 	virtual float GetSpeed() const;
 
 	void RenderAnimated(SHADERTYPE p_shader);
+	void RangeAttackAnimation();
+	void MeleeAttackAnimation();
+	void HandleInput();
 
 protected:
 	DirectX::XMFLOAT3 m_direction;
