@@ -18,9 +18,9 @@ public:
 	virtual bool Initialize(std::string p_levelName);
 	virtual void Shutdown();
 	virtual void Update(double p_deltaTime);
-
+	
 public:
-	void AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections);
+	void AddPlayer(RakNet::RakNetGUID p_guid);
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);

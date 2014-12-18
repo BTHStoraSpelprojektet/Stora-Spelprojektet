@@ -50,6 +50,36 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 void Player::Shutdown()
 {
 	AnimatedObject::Shutdown();
+
+	if (m_noAbility != nullptr)
+	{
+		m_noAbility->Shutdown();
+		delete m_noAbility;
+	}
+
+	if (m_dash != nullptr)
+	{
+		m_dash->Shutdown();
+		delete m_dash;
+	}
+
+	if (m_meleeSwing != nullptr)
+	{
+		m_meleeSwing->Shutdown();
+		delete m_meleeSwing;
+	}
+
+	if (m_shurikenAbility != nullptr)
+	{
+		m_shurikenAbility->Shutdown();
+		delete m_shurikenAbility;
+	}
+
+	if (m_megaShuriken != nullptr)
+	{
+		m_megaShuriken->Shutdown();
+		delete m_megaShuriken;
+	}
 }
 
 void Player::UpdateMe()

@@ -89,6 +89,16 @@ void PlayingStateTest::Shutdown()
 
 void PlayingStateTest::Update()
 {
+	// Check if new level have started
+	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
+	{
+		std::string levelName = Network::GetInstance()->LevelName();
+		Network::GetInstance()->SetHaveUpdateNewLevel();
+		Shutdown();
+		Initialize(levelName);
+		return;
+	}
+
 	// Update global delta time.
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
@@ -116,16 +126,6 @@ void PlayingStateTest::Update()
 	m_particles.Update();
 	// ========== DEBUG TEMP LINES ==========
 	m_playerManager.UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
-
-
-	// Check if new level have started
-	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
-	{
-		std::string levelName = Network::GetInstance()->LevelName();
-		Network::GetInstance()->SetHaveUpdateNewLevel();
-		Shutdown();
-		Initialize(levelName);
-	}
 }
 
 void PlayingStateTest::Render()

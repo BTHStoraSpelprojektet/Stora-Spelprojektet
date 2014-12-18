@@ -356,6 +356,18 @@ void Network::ReceviePacket()
 			std::cout << time << std::endl;
 			break;
 		}
+		case ID_MATCH_OVER:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int winningTeam;
+
+			bitStream.Read(messageID);
+			bitStream.Read(winningTeam);
+
+			std::cout << "Team " << winningTeam << " won this match\n";
+			break;
+		}
 		case ID_NEW_LEVEL:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -367,8 +379,12 @@ void Network::ReceviePacket()
 
 			m_newLevel = true;
 			m_levelName = levelName;
-			m_invalidMove = true;
 
+			// Send invalid positions to get an invalid move from server and therefore update correct position according to server
+			SendPlayerPos(100.0f, -100.0f, 100.0f);
+			SendPlayerPos(-100.0f, 100.0f, -100.0f);
+
+			std::cout << "Starting new level\n";
 			break;
 		}
 		default:
