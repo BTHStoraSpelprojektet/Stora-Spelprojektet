@@ -23,6 +23,7 @@ public:
 	void RemoveShuriken(unsigned int p_id);
 	std::vector<ShurikenNet> GetShurikens();
 	std::vector<Box> GetBoundingBoxes(int p_index);
+	std::vector<Box> GetMegaBoundingBoxes(int p_index);
 	float GetShurikenPosX(int p_index);
 	float GetShurikenPosY(int p_index);
 	float GetShurikenPosZ(int p_index);
@@ -36,6 +37,7 @@ private:
 
 	std::vector<ShurikenNet> m_shurikens;
 	std::vector<Box> m_boundingBoxes;
+	std::vector<Box> m_megaBoundingBoxes;
 };
 
 #endif

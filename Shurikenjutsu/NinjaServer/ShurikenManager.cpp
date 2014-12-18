@@ -18,6 +18,7 @@ bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	m_shurikens = std::vector<ShurikenNet>();
 
 	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(SHURIKEN_MODEL_NAME)->GetBoundingBoxes();
+	m_megaBoundingBoxes = ModelLibrary::GetInstance()->GetModel(MEGA_SHURIKEN_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
@@ -44,6 +45,7 @@ void ShurikenManager::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float
 	shuriken.guid = p_guid;
 	shuriken.lifeTime = m_shurikenSetTimeLeft;
 	shuriken.speed = 20.0f;
+	shuriken.megaShuriken = false;
 	m_shurikens.push_back(shuriken);
 
 	RakNet::BitStream wBitStream;
@@ -57,6 +59,7 @@ void ShurikenManager::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float
 	wBitStream.Write(shuriken.shurikenId);
 	wBitStream.Write(shuriken.guid);
 	wBitStream.Write(shuriken.speed);
+	wBitStream.Write(shuriken.megaShuriken);
 
 	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
@@ -74,10 +77,11 @@ void ShurikenManager::AddMegaShuriken(RakNet::RakNetGUID p_guid, float p_posX, f
 	shuriken.guid = p_guid;
 	shuriken.lifeTime = 4.0f;
 	shuriken.speed = 10.0f;
+	shuriken.megaShuriken = true;
 	m_shurikens.push_back(shuriken);
 
 	RakNet::BitStream wBitStream;
-	wBitStream.Write((RakNet::MessageID)ID_MEGASHURIKEN_THROWN);
+	wBitStream.Write((RakNet::MessageID)ID_SHURIKEN_THROWN);
 	wBitStream.Write(shuriken.x);
 	wBitStream.Write(shuriken.y);
 	wBitStream.Write(shuriken.z);
@@ -87,6 +91,7 @@ void ShurikenManager::AddMegaShuriken(RakNet::RakNetGUID p_guid, float p_posX, f
 	wBitStream.Write(shuriken.shurikenId);
 	wBitStream.Write(shuriken.guid);
 	wBitStream.Write(shuriken.speed);
+	wBitStream.Write(shuriken.megaShuriken);
 
 	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
@@ -210,6 +215,29 @@ std::vector<Box> ShurikenManager::GetBoundingBoxes(int p_index)
 	for (unsigned int i = 0; i < m_boundingBoxes.size(); i++)
 	{
 		Box box = m_boundingBoxes[i];
+		box.m_center.x += GetShurikenPosX(p_index);
+		box.m_center.y += GetShurikenPosY(p_index);
+		box.m_center.z += GetShurikenPosZ(p_index);
+
+		boundingBoxes.push_back(box);
+	}
+
+	return boundingBoxes;
+}
+
+std::vector<Box> ShurikenManager::GetMegaBoundingBoxes(int p_index)
+{
+	std::vector<Box> boundingBoxes = std::vector<Box>();
+
+	// Check so index is not out of bounds
+	if (p_index < 0 || p_index >(int)m_shurikens.size() - 1)
+	{
+		return boundingBoxes;
+	}
+
+	for (unsigned int i = 0; i < m_megaBoundingBoxes.size(); i++)
+	{
+		Box box = m_megaBoundingBoxes[i];
 		box.m_center.x += GetShurikenPosX(p_index);
 		box.m_center.y += GetShurikenPosY(p_index);
 		box.m_center.z += GetShurikenPosZ(p_index);
