@@ -19,6 +19,7 @@ public:
 	void RangeAttackAnimation();
 	void MeleeAttackAnimation();
 	void HandleInput();
+	void SetIkDirection(DirectX::XMFLOAT3 p_ikDirection);
 
 protected:
 	DirectX::XMFLOAT3 m_direction;

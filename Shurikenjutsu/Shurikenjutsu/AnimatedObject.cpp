@@ -30,7 +30,6 @@ void AnimatedObject::Shutdown()
 void AnimatedObject::SetDirection(DirectX::XMFLOAT3 p_direction)
 {
 	m_direction = p_direction;
-
 }
 
 DirectX::XMFLOAT3 AnimatedObject::GetDirection()
@@ -66,4 +65,9 @@ void AnimatedObject::MeleeAttackAnimation()
 void AnimatedObject::HandleInput()
 {
 	m_animationController.HandleInput();
+}
+
+void AnimatedObject::SetIkDirection(DirectX::XMFLOAT3 p_ikDirection)
+{
+	m_animationController.SetIkDirection(p_ikDirection);
 }

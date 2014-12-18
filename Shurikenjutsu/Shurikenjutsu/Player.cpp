@@ -236,7 +236,7 @@ DirectX::XMFLOAT3 Player::GetFacingDirection()
 
 void Player::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
 {
-	Object::SetRotation(p_facingDirection);
+	//Object::SetRotation(p_facingDirection);
 }
 
 DirectX::XMFLOAT3 Player::GetAttackDirection()
@@ -248,6 +248,8 @@ void Player::SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 {
 	m_attackDir = p_attackDir;
 	CalculateFacingAngle();
+
+	AnimatedObject::SetIkDirection(p_attackDir);
 
 	if (Network::GetInstance()->IsConnected())
 	{
