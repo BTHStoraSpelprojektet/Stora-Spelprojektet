@@ -1,15 +1,7 @@
 #include "PlayingStateTest.h"
 
-PlayingStateTest::PlayingStateTest()
-{
-
-}
-
-PlayingStateTest::~PlayingStateTest()
-{
-
-}
-
+PlayingStateTest::PlayingStateTest(){}
+PlayingStateTest::~PlayingStateTest(){}
 bool PlayingStateTest::Initialize()
 {
 	m_camera.Initialize();
@@ -52,8 +44,9 @@ bool PlayingStateTest::Initialize()
 	m_mouseX = 0;
 	m_mouseY = 0;
 	}
-
-	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 3.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(3.0f, 3.0f), PARTICLE_PATTERN_SMOKE);
+	//m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, SMOKEBOMB_POSITION_Y, 1.0f),
+	//	DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
+	//	DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 	// ========== DEBUG TEMP LINES ==========
 
 	// Frustum
@@ -78,7 +71,7 @@ void PlayingStateTest::Shutdown()
 	m_debugDot.Shutdown();
 	}
 
-	m_particles.Shutdown();
+	//m_particles.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
 }
 
@@ -108,7 +101,7 @@ void PlayingStateTest::Update()
 
 	// ========== DEBUG TEMP LINES ==========
 	// Update the particles.
-	m_particles.Update();
+	//m_particles.Update();
 	// ========== DEBUG TEMP LINES ==========
 	m_playerManager.UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 
@@ -142,33 +135,33 @@ void PlayingStateTest::Render()
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-	DirectX::XMFLOAT4X4 circleWorld;
-	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition())));
+		DirectX::XMFLOAT4X4 circleWorld;
+		DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition())));
 
-	m_circle1.UpdateWorldMatrix(circleWorld);
-	m_circle1.Render();
+		m_circle1.UpdateWorldMatrix(circleWorld);
+		m_circle1.Render();
 
-	m_circle3.UpdateWorldMatrix(circleWorld);
-	m_circle3.Render();
+		m_circle3.UpdateWorldMatrix(circleWorld);
+		m_circle3.Render();
 
-	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
-	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate)));
+		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
+		DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate)));
 
-	m_circle2.UpdateWorldMatrix(circleWorld);
-	m_circle2.Render();
-	if (m_frustum.CheckCube(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f))
-	{
-		testBB = true;
+		m_circle2.UpdateWorldMatrix(circleWorld);
+		m_circle2.Render();
+		if (m_frustum.CheckCube(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f))
+		{
+			testBB = true;
+		}
+		if (testBB)
+		{
+			m_debugDot.Render();
+		}
+
+		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	}
-	if (testBB)
-	{
-		m_debugDot.Render();
-	}
 
-	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	}
-
-	m_particles.Render();
+	//m_particles.Render();
 	// ========== DEBUG TEMP LINES ==========
 }
 

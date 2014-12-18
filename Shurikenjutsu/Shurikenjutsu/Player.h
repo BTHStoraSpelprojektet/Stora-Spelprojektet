@@ -13,6 +13,8 @@
 #include "MegaShuriken.h"
 #include "CollisionManager.h"
 #include "HealthBar.h"
+#include "SmokeBombAbility.h"
+#include "SmokeBomb.h"
 
 class Player :
 	public AnimatedObject
@@ -26,8 +28,8 @@ public:
 	void Update();
 	void UpdateAbilities();
 	void Render(SHADERTYPE p_shader);
-	void SetDamage(float p_damage);
-	float GetDamage() const;	
+	//void SetDamage(float p_damage);
+	//float GetDamage() const;	
 	void SetHealth(int p_health);
 	int GetHealth() const;
 	void SetMaxHealth(int p_maxHealth);
@@ -75,8 +77,10 @@ private:
 	Ability* m_meleeSwing;
 	Ability* m_shurikenAbility;
 	Ability* m_megaShuriken;
+	Ability* m_smokeBombAbility;
 
 	HealthBar m_healthbar;
+	SmokeBomb* m_smokeBomb;
 };
 
 #endif PLAYER

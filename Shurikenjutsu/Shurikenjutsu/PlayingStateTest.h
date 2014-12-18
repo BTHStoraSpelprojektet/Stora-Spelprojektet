@@ -10,7 +10,7 @@
 #include "..\CommonLibs\Level.h"
 #include "Collisions.h"
 #include "DebugDraw.h"
-#include "ParticleEmitter.h"
+//#include "ParticleEmitter.h"
 #include "Frustum.h"
 
 class PlayingStateTest : public GameState
@@ -44,7 +44,7 @@ private:
 
 	DebugDot m_debugDot;
 
-	ParticleEmitter m_particles;
+	//ParticleEmitter m_particles;
 	// ========== DEBUG TEMP LINES ==========
 
 	Frustum m_frustum;

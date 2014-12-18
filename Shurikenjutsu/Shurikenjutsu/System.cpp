@@ -87,6 +87,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	//InputManager::GetInstance()->RegisterKey(VkKeyScan('c'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('f'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('v'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('r'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);

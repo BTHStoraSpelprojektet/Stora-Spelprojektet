@@ -36,6 +36,10 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_megaShuriken = new MegaShuriken();
 	m_megaShuriken->Initialize();
 
+	m_smokeBombAbility = new SmokeBombAbility();
+	m_smokeBombAbility->Initialize();
+	m_smokeBomb = new SmokeBomb();
+	m_smokeBomb->Initialize(DirectX::XMFLOAT3(0, 3.0f, 0));
 	m_healthbar.Initialize(50.0f, 5.0f);
 
 	return true;
@@ -44,6 +48,15 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 void Player::Shutdown()
 {
 	AnimatedObject::Shutdown();
+	delete m_ability;
+	delete m_noAbility;
+	delete m_dash;
+
+	delete m_meleeSwing;
+	delete m_shurikenAbility;
+	delete m_megaShuriken;
+	delete m_smokeBombAbility;
+	delete m_smokeBomb;
 }
 
 void Player::UpdateMe()
@@ -116,6 +129,13 @@ void Player::CheckForSpecialAttack()
 	{
 		m_ability = m_dash;
 	}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
+	{
+		std::cout << "SMOOOOOOOOOOOOOOOOOOOOOOOOKING!!!!" << std::endl;
+		m_smokeBomb->SetPosition(CollisionManager::GetInstance()->CalculateSmokeBombLocation(m_playerSphere, m_attackDir));
+		m_smokeBomb->ResetTimer();
+		m_ability = m_smokeBombAbility;
+	}
 }
 bool Player::CalculateDirection()
 {
@@ -175,6 +195,8 @@ void Player::UpdateAbilities()
 	m_meleeSwing->Update();
 	m_shurikenAbility->Update();
 	m_megaShuriken->Update();
+	m_smokeBombAbility->Update();
+	m_smokeBomb->Update();
 }
 
 void Player::ResetCooldowns()
@@ -183,6 +205,7 @@ void Player::ResetCooldowns()
 	m_meleeSwing->ResetCooldown();
 	m_shurikenAbility->ResetCooldown();
 	m_megaShuriken->ResetCooldown();
+	m_smokeBombAbility->ResetCooldown();
 
 	UpdateAbilities();
 }
@@ -410,8 +433,16 @@ void Player::Render(SHADERTYPE p_shader)
 	if (m_isAlive)
 	{
 		AnimatedObject::RenderAnimated(p_shader);
-	m_healthbar.Render();
-}
+		if (m_smokeBomb->GetIfActive() && Collisions::SphereSphereCollision(m_smokeBomb->GetSmokeSphere(), m_playerSphere))
+		{
+		}
+		else
+		{
+			m_healthbar.Render();
+
+		}
+	}
+	m_smokeBomb->Render();
 }
 
 void Player::SetIsAlive(bool p_isAlive)

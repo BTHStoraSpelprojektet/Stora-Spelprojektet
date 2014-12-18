@@ -1,14 +1,8 @@
 #include "Dash.h"
 
 
-Dash::Dash()
-{
-}
-
-
-Dash::~Dash()
-{
-}
+Dash::Dash(){}
+Dash::~Dash(){}
 
 bool Dash::Initialize()
 {
