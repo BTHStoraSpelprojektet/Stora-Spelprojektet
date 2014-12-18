@@ -37,22 +37,29 @@ namespace IntersectionTests
 		DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_rayDirection.x, p_rayDirection.y, p_rayDirection.z, 0.0f));
 		return sphere.Intersects(rayOrigin, rayDirection, temp);
 	}
-	bool Intersections::RayBoxCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents)
+	float Intersections::RayBoxCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents)
 	{
-		float temp;
+		float temp = 0;
 		DirectX::BoundingBox box = DirectX::BoundingBox(p_boxCenter, p_boxExtents);
 		DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_rayOrigin.x, p_rayOrigin.y, p_rayOrigin.z, 0.0f);
 		DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_rayDirection.x, p_rayDirection.y, p_rayDirection.z, 0.0f));
-		return box.Intersects(rayOrigin, rayDirection, temp);
+		bool temp2 = box.Intersects(rayOrigin, rayDirection, temp);
+		return temp;
 	}
-	bool Intersections::RayOBBCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT3 p_OBBDirection)
+	bool Intersections::RayOBBCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT4 p_OBBDirection, float* p_returnValue)
 	{
-		float temp;
+		float temp2 = 0;
 		DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_rayOrigin.x, p_rayOrigin.y, p_rayOrigin.z, 0.0f);
 		DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_rayDirection.x, p_rayDirection.y, p_rayDirection.z, 0.0f));
 		DirectX::BoundingOrientedBox obb;
-		DirectX::BoundingOrientedBox::CreateFromBoundingBox(obb, DirectX::BoundingBox(p_OBBPosition, p_OBBExtents));
-		return obb.Intersects(rayOrigin, rayDirection, temp);
+		obb.Center = p_OBBPosition;
+		obb.Extents = p_OBBExtents;
+		obb.Orientation = p_OBBDirection; 
+		float asdf;
+		bool temp = obb.Intersects(rayOrigin,rayDirection, asdf);
+		*p_returnValue = asdf;
+		//bool temp = obb.Intersects(rayOrigin, rayDirection, p_returnValue);
+		return temp;
 	}
 	bool Intersections::OBBOBBCollision(DirectX::XMFLOAT3 p_OBB1Position, DirectX::XMFLOAT3 p_OBB1Extents, DirectX::XMFLOAT4 p_OBB1Direction, DirectX::XMFLOAT3 p_OBB2Position, DirectX::XMFLOAT3 p_OBB2Extents, DirectX::XMFLOAT4 p_OBB2Direction)
 	{
@@ -64,7 +71,6 @@ namespace IntersectionTests
 		obb2.Center = p_OBB2Position;
 		obb2.Extents = p_OBB2Extents;
 		obb2.Orientation = p_OBB2Direction;
-
 		return obb1.Intersects(obb2);
 	}
 

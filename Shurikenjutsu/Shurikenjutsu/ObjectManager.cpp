@@ -11,8 +11,6 @@ bool ObjectManager::Initialize()
 	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
 	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
 
-	m_animatedCharacter.Initialize("../Shurikenjutsu/Models/StickManAnimatedShape.SSP", DirectX::XMFLOAT3(5.0f, 0.0f, 0.0f));
-
 	return true;
 }
 
@@ -72,17 +70,12 @@ void ObjectManager::Render(SHADERTYPE p_shader)
 			}
 		}
 	}
-
-	else if (p_shader == SHADERTYPE_ANIMATED)
-	{
-		m_animatedCharacter.RenderAnimated(p_shader);
-	}
 }
 
 void ObjectManager::RenderShurikens(SHADERTYPE p_shader)
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
-{
+	{
 		m_shurikens[i].Render(p_shader);
 	}
 }

@@ -12,16 +12,17 @@
 #include "DebugDraw.h"
 #include "ParticleEmitter.h"
 #include "Frustum.h"
+#include "GameState.h"
 
 class PlayingStateTest : public GameState
 {
 public:
 	PlayingStateTest();
 	~PlayingStateTest();
-	virtual bool Initialize();
+	bool Initialize();
 	void Shutdown();
-	virtual void Update();
-	virtual void Render();
+	GAMESTATESWITCH Update();
+	void Render();
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:

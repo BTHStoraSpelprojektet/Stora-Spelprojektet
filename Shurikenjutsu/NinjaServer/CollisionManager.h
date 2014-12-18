@@ -12,17 +12,19 @@
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
 
+class PlayerManager;
 class CollisionManager
 {
 public:
 	void Initialize(std::vector<OBB> p_StaticObjectList/*, std::vector<Sphere> p_sphereObjectList*/);
 
-	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction, float p_deltaTime);
+	//std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction, float p_deltaTime);
 	std::vector<bool> OuterWallCollision(Sphere p_playerSphere);
 
 
 	void NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager);
+	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 
 private:
 	bool OBBOBBtest(OBB p_OBB1, OBB p_OBB2);

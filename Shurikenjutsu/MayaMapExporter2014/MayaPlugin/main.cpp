@@ -246,7 +246,7 @@ void MapExporter::GetPositions(){
 						mPointArray.get(dest);*/
 
 						MFloatPointArray tempPoints;
-						mesh.getPoints(tempPoints, MSpace::kObject);
+						mesh.getPoints(tempPoints, MSpace::kPostTransform);
 
 						/*for (int j = 0; j < tempPoints.length(); j++)
 						{
@@ -286,7 +286,7 @@ void MapExporter::GetPositions(){
 									vtxIndex = polyIter.vertexIndex(vtx);
 									MVector tempVec(tempPoints[vtxIndex].x, tempPoints[vtxIndex].y, tempPoints[vtxIndex].z);
 									points.push_back(tempVec);
-
+									break;
 									/*char ch[128];
 									sprintf(ch, "%.5f %.5f %.5f", tempVec.x, tempVec.y, tempVec.z);
 									MGlobal::displayInfo(ch);*/
@@ -304,7 +304,20 @@ void MapExporter::GetPositions(){
 						}
 						print("LALALA");
 						char cha[128];
-						sprintf(cha, "%.5f %.5f %.5f", std::abs(points[0].x), std::abs(points[0].y), std::abs(points[0].z));
+
+						//TODO fixa ordningen på width (lengthX), height (lengthY), depth (lengthZ)
+						float lengthX = points[boundingboxcounter].x;
+						float lengthY = points[boundingboxcounter].y;
+						float lengthZ = points[boundingboxcounter].z;
+
+						if (world.wBoundingBox[boundingboxcounter].z > 0 || world.wBoundingBox[boundingboxcounter].z < 0){
+							sprintf(cha, "%.5f %.5f %.5f", lengthZ, lengthY, lengthX);
+							points[boundingboxcounter].x = lengthZ;
+							points[boundingboxcounter].z = lengthX;
+						}
+						else{
+							sprintf(cha, "%.5f %.5f %.5f", lengthX, lengthY, lengthZ);
+						}
 						MGlobal::displayInfo(cha);
 						boundingboxcounter++;
 					}

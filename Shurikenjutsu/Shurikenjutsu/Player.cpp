@@ -12,7 +12,7 @@ Player::~Player()
 
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
 {
-	if (!MovingObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
+	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
 	{
 		return false;
 	}
@@ -27,24 +27,27 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_inputManager = InputManager::GetInstance();
 	m_ability = new Ability();
 	m_noAbility = new Ability();
-	m_buttonQ = new Dash();
+	m_dash = new Dash();
+	m_meleeSwing = new MeleeSwing();
+	m_shurikenAbility = new ShurikenAbility();
 
-	m_healthbar.Initialize(50.0f, 5.0f);
+	m_healthbar.Initialize(100.0f, 15.0f);
 
 	return true;
 }
 
 void Player::Shutdown()
 {
-	MovingObject::Shutdown();
+	AnimatedObject::Shutdown();
 }
 
 void Player::UpdateMe()
 {
 	m_playerSphere.m_position = m_position;
 	//double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-
 	m_ability = m_noAbility;
+
+	CheckForSpecialAttack();
 	// Move
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
@@ -54,13 +57,13 @@ void Player::UpdateMe()
 	// Melee attack
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
-		Network::GetInstance()->DoMeleeAttack();
+		m_ability = m_meleeSwing;
 	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
-		Network::GetInstance()->AddShurikens(GetPosition().x, 1.0f, GetPosition().z, GetAttackDirection().x, GetAttackDirection().y, GetAttackDirection().z);
+		m_ability = m_shurikenAbility;
 	}
 
 	// Check health from server
@@ -78,6 +81,26 @@ void Player::UpdateMe()
 	m_ability->Execute();
 }
 
+void Player::CheckForSpecialAttack()
+{
+	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(m_attackDir.x, 0.1f, m_attackDir.z);
+	if (m_dashCd > 0)
+	{
+		m_dashCd -= (float)GLOBAL::GetInstance().GetDeltaTime();
+	}
+	if (m_inputManager->IsKeyPressed(VkKeyScan('v')))
+	{
+		if (m_dashCd <= 0)
+		{
+			m_dashCd = 0.5f;
+			m_ability = m_dash;
+		}
+	}
+	//if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
+	//{
+	//	std::cout << "" << std::endl;
+	//}
+}
 bool Player::CalculateDirection()
 {
 	float x, y, z;
@@ -87,43 +110,29 @@ bool Player::CalculateDirection()
 	y = 0;//Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)))
 	z = 0;
 	m_playerPrevPos = m_position;
-	std::vector<bool> boolList = CollisionManager::GetInstance()->OuterWallCollision(m_playerSphere);
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
-		if (!boolList[2])
-		{
-			z += 1;
-			moved = true;
-		}
-		m_ability = m_buttonQ;
+		z += 1;
+		moved = true;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
-		if (!boolList[1])
-		{
-			x += -1;
-			moved = true;
-		}
+		x += -1;
+		moved = true;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
-		if (!boolList[0])
-		{
-			z += -1;
-			moved = true;
-		}
+		z += -1;
+		moved = true;
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
-		if (!boolList[3])
-		{
 		x += 1;
 		moved = true;
-		}
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -189,7 +198,7 @@ float Player::GetAgility() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-		MovingObject::SetPosition(p_pos);
+		AnimatedObject::SetPosition(p_pos);
 
 		if (Network::GetInstance()->IsConnected())
 	{
@@ -376,11 +385,11 @@ void Player::SetCalculatePlayerPosition()
 
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	m_healthbar.Update(m_position, m_health, 100, p_view, p_projection);
+	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
 }
 
 void Player::Render(SHADERTYPE p_shader)
 {
-	MovingObject::Render(p_shader);
+	AnimatedObject::RenderAnimated(p_shader);
 	m_healthbar.Render();
 }

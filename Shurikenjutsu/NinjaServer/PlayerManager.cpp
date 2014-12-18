@@ -9,7 +9,7 @@ PlayerManager::~PlayerManager()
 {
 }
 
-bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName, std::string p_modelName)
+bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = 100;
 	m_gcd = 0.5f;
@@ -22,7 +22,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	Level level(p_levelName);
 	m_spawnPoints = level.GetSpawnPoints();
 
-	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(p_modelName)->GetBoundingBoxes();
+	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(PLAYER_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
@@ -70,7 +70,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
 	BroadcastPlayers();
 }
 
-void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections)
+void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
 {
 	bool found = false;
 
@@ -79,7 +79,7 @@ void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, 
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			if (abs(p_x - m_players[i].x) > 1.0f || abs(p_y - m_players[i].y) > 1.0f || abs(p_z - m_players[i].z) > 1.0f)
+			if ((abs(p_x - m_players[i].x) > 5.0f || abs(p_y - m_players[i].y) > 5.0f || abs(p_z - m_players[i].z) > 5.0f) && p_dashed == false)
 			{
 				// Moved too far
 				SendInvalidMessage(p_guid);
@@ -260,6 +260,8 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 			break;
 		case ABILITIES_DASH:
 			break;
+		case ABILITIES_MELEESWING:
+			break;
 		default:
 			break;
 		}
@@ -279,12 +281,10 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 			switch (p_ability)
 			{
 			case ABILITIES_SHURIKEN:
-				if (true)
-				{
-
-				}// IF PLAYER SHURIKEn cd is 0 do ability)
 				break;
 			case ABILITIES_DASH:
+				break;
+			case ABILITIES_MELEESWING:
 				break;
 			default:
 				break;
@@ -295,21 +295,43 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	return result;
 }
 
-void PlayerManager::ExceuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections)
 {
+	float distance = 10.0f;
+	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
+	int index = GetPlayerIndex(p_guid);
 	switch (p_readAbility)
 	{
 	case ABILITIES_SHURIKEN:
-		abilityString = "HEJSAN EN SHURIKEN ÄR KASTAD! d:";
+		abilityString = "Shuriken";
+		p_shurikenManager.AddShuriken(p_guid, m_players[index].x, m_players[index].y, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 		break;
 	case ABILITIES_DASH:
-		abilityString = "HEJSAN NU BLEV DET EN DASH! :p";
+		abilityString = "Dash";
+		//Calculate new location for the dashing player and inflict damage on enemies
+		player = GetPlayer(p_guid);
+		distance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
+		MovePlayer(p_guid, player.x + distance*player.dirX, player.y, player.z + distance*player.dirZ, p_nrOfConnections, true);
+		
+		break;
+	case ABILITIES_MELEESWING:
+		abilityString = "MeleeSwinged";
+		p_collisionManager.NormalMeleeAttack(p_guid, this);		
 		break;
 	default:
 		break;
 	}
 
+	player = GetPlayer(p_guid);
+	RakNet::BitStream l_bitStream;
+	l_bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
+	l_bitStream.Write(player.guid);
+	l_bitStream.Write(player.x);
+	l_bitStream.Write(player.y);
+	l_bitStream.Write(player.z);
+
+	m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 	RakNet::BitStream bitStream;
 
@@ -340,13 +362,6 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
 		if (m_players[i].guid == p_guid)
 		{
 			m_players[i].currentHP -= p_damage;
-
-			if (m_players[i].currentHP <= 0)
-			{
-				m_players[i].currentHP = m_players[i].maxHP;
-				RespawnPlayer(p_guid);
-			}
-
 			UpdateHealth(p_guid, m_players[i].currentHP);
 		}
 	}
@@ -362,4 +377,21 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health)
 	
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+int PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
+{
+	return GetPlayer(p_guid).currentHP;
+}
+
+void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (p_guid == m_players[i].guid)
+		{
+			m_players[i].currentHP = m_players[i].maxHP;
+			UpdateHealth(p_guid, m_players[i].currentHP);
+		}
+	}
 }
