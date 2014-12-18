@@ -88,6 +88,7 @@
     <ClCompile Include="AnimationControl.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="MenuCheckbox.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Dash.cpp" />
@@ -116,7 +117,11 @@
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="MegaShuriken.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MeleeSwing.cpp" />
+    <ClCompile Include="MenuItem.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="Network.cpp" />
@@ -134,6 +139,8 @@
     <ClCompile Include="DebugCircle.cpp" />
     <ClCompile Include="AnimatedObject.cpp" />
     <ClCompile Include="ShurikenAbility.cpp" />
+    <ClCompile Include="SmokeBomb.cpp" />
+    <ClCompile Include="SmokeBombAbility.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="StatusEffect.cpp" />
     <ClCompile Include="System.cpp" />
@@ -146,6 +153,7 @@
     <ClInclude Include="AnimationControl.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="MenuCheckbox.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="ConsoleFunctions.h" />
@@ -173,7 +181,11 @@
     <ClInclude Include="InstancedShader.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="MegaShuriken.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MeleeSwing.h" />
+    <ClInclude Include="MenuItem.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="Network.h" />
@@ -194,6 +206,8 @@
     <ClInclude Include="Shuriken.h" />
     <ClInclude Include="AnimatedObject.h" />
     <ClInclude Include="ShurikenAbility.h" />
+    <ClInclude Include="SmokeBomb.h" />
+    <ClInclude Include="SmokeBombAbility.h" />
     <ClInclude Include="Sound.h" />
     <ClInclude Include="StatusEffect.h" />
     <ClInclude Include="Structures.h" />

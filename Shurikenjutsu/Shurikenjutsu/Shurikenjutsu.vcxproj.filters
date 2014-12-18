@@ -154,6 +154,18 @@
     <Filter Include="Header Files\Abilities">
       <UniqueIdentifier>{b0121fa2-8f9d-42a5-8c09-594f399da5c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GUI\Menu">
+      <UniqueIdentifier>{aafd8341-9dfd-4d25-8c5d-4df8e2ce7064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GUI\Menu">
+      <UniqueIdentifier>{ad7b4020-33dd-46b3-ad66-de8214a58dc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GUI\Menu\Menu Items">
+      <UniqueIdentifier>{e1e63284-17b8-4d34-8372-8b8283fbca97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GUI\Menu\Menu Items">
+      <UniqueIdentifier>{4cd81acc-f6cd-467c-80cb-edf01ec328bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -323,6 +335,27 @@
     </ClCompile>
     <ClCompile Include="MegaShuriken.cpp">
       <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeBombAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeBomb.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuCheckbox.cpp">
+      <Filter>Source Files\GUI\Menu\Menu Items</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuButton.cpp">
+      <Filter>Source Files\GUI\Menu\Menu Items</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files\GUI\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuItem.cpp">
+      <Filter>Source Files\GUI\Menu\Menu Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -505,6 +538,27 @@
     </ClInclude>
     <ClInclude Include="MegaShuriken.h">
       <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeBombAbility.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeBomb.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuCheckbox.h">
+      <Filter>Header Files\GUI\Menu\Menu Items</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuButton.h">
+      <Filter>Header Files\GUI\Menu\Menu Items</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>Header Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files\GUI\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h">
+      <Filter>Header Files\GUI\Menu\Menu Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

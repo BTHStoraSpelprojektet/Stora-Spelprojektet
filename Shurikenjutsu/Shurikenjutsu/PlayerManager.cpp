@@ -1,21 +1,13 @@
 #include "PlayerManager.h"
 
 
-PlayerManager::PlayerManager()
-{
-
-}
-
-PlayerManager::~PlayerManager()
-{
-
-}
-
+PlayerManager::PlayerManager(){}
+PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 10.0f, 100, 5, 100, 100, 20);
-	m_playerAbilityBar.Initialize(0.0f, -(float)(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.50 + 50.0f), 6);
+	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	m_playerAbilityBar.Initialize(0.0f, -420.0f, 6);
 	return true;
 }
 
@@ -85,7 +77,8 @@ void PlayerManager::Update()
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), 0.1f, 100, 5, enemyPlayers[i].currentHP, enemyPlayers[i].maxHP, 20);
+					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), 
+						DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX));
 				}
 			}
 
@@ -114,20 +107,19 @@ void PlayerManager::Render(SHADERTYPE p_shader)
 	m_playerAbilityBar.Render();
 }
 
-void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
+void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
 	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_maxHealth, p_agility);
+	tempPlayer.Initialize(p_filepath, p_pos, p_direction);
 	m_player = tempPlayer;
 }
 
-void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-	float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
+void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
 	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction, p_speed, p_damage, p_spells, p_health, p_maxHealth, p_agility);
+	tempPlayer.Initialize(p_filepath, p_pos, p_direction);
 	tempPlayer.SetGuID(p_guid);
+	tempPlayer.SetMaxHealth(CHARACTAR_KATANA_SHURIKEN_HEALTH);
 	m_enemyList.push_back(tempPlayer);
 }
 

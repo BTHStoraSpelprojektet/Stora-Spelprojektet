@@ -13,11 +13,11 @@ bool AbilityBar::Initialize(float p_positionX, float p_positionY, int p_numberOf
 	{
 		position = DirectX::XMFLOAT3(p_positionX-halfLength + 52.0f * float(i), p_positionY, 0.0f);
 		GUIAbility temp;
-		temp.Initialize(position, 25.0f, 25.0f);
+		temp.Initialize(position, 50.0f, 50.0f);
 		m_abilities.push_back(temp);
 	}
 	position = DirectX::XMFLOAT3(p_positionX, p_positionY, 0.0f);
-	m_background.Initialize(position, 26.0f*p_numberOfAbilities + 1.0f, 27.0f, DirectX::XMFLOAT4(0.0f,0.0f,0.0f,1.0f));
+	m_background.Initialize(position, 52.0f*p_numberOfAbilities + 4.0f, 56.0f, DirectX::XMFLOAT4(0.0f,0.0f,0.0f,1.0f));
 
 	return true;
 }

@@ -7,6 +7,7 @@
 #include "..\CommonLibs\RakNet\NetworkIDManager.h"
 #include "..\CommonLibs\RakNet\RakPeer.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 #include <vector>
 #include "Collisions.h"
 #include "PlayerManager.h"
@@ -25,6 +26,7 @@ public:
 	void NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager);
 	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
+	void CalculateSmokeBombLocation();
 
 private:
 	bool OBBOBBtest(OBB p_OBB1, OBB p_OBB2);

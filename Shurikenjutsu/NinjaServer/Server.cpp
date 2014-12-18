@@ -175,7 +175,7 @@ void Server::ReceviePacket()
 					m_gameState->UsedAbility(index, readAbility);
 				}
 				else
-			{
+				{
 					m_gameState->ExecuteAbility(m_packet->guid, readAbility, false);
 					m_gameState->UsedAbility(index, readAbility);
 				}

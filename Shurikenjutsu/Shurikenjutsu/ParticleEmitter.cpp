@@ -109,6 +109,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		return false;
 	}
 
+	m_emit = false;
 	return true;
 }
 
@@ -156,7 +157,7 @@ void ParticleEmitter::Render()
 void ParticleEmitter::EmitParticles()
 {
 	// Set emit to false to begin with.
-	bool emit = false;
+	bool emit = m_emit;
 
 	// Add the delta time.
 	m_time += (float)GLOBAL::GetInstance().GetDeltaTime();
@@ -165,7 +166,6 @@ void ParticleEmitter::EmitParticles()
 	if (m_time > (1.0f / m_particlesPerSecond))
 	{
 		m_time = 0.0f;
-		emit = true;
 	}
 
 	// If there are particles to be emited, emit one per frame.
@@ -428,4 +428,15 @@ void ParticleEmitter::UpdatePosition(DirectX::XMFLOAT3 p_position)
 void ParticleEmitter::UpdateDirection(DirectX::XMFLOAT3 p_direction)
 {
 	m_emitterDirection = p_direction;
+}
+
+
+void ParticleEmitter::SetPosition(DirectX::XMFLOAT3 p_position)
+{
+	m_emitterPosition = p_position;
+}
+
+void ParticleEmitter::SetEmitParticleState(bool p_emit)
+{
+	m_emit = p_emit;
 }

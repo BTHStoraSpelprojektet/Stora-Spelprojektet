@@ -1,12 +1,14 @@
 #include "System.h"
+
 PlayingStateTest System::playingState;
+
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	bool result = true;
 
 	// Set default game state.
-	playingState = PlayingStateTest();
-	m_gameState = &System::playingState;
+	//playingState = PlayingStateTest();
+	m_gameState = &playingState;
 
 	// Set starting window values.
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
@@ -87,6 +89,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	//InputManager::GetInstance()->RegisterKey(VkKeyScan('c'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('f'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('v'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('r'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
@@ -117,16 +120,16 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Light source and light camera initialized successfully.");
 	ConsoleSkipLines(1);
 
+	// Initialize network
+	Network::GetInstance()->Initialize();
+	ConsolePrintSuccess("Network initialized successfully.");
+	ConsoleSkipLines(1);
+
 	// Run all tests that are in the debug class.
 	if (FLAG_RUN_TESTS == 1)
 	{
 		m_debug.RunTests(p_argc, p_argv);
 	}
-
-	// Initialize network
-	Network::GetInstance()->Initialize();
-	ConsolePrintSuccess("Network initialized successfully.");
-	ConsoleSkipLines(1);
 
 	m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
@@ -214,7 +217,13 @@ void System::Update()
 		}
 	}
 
-	m_gameState->Update();
+	switch (m_gameState->Update())
+	{
+	case GAMESTATESWITCH_PLAY:
+		m_gameState = &playingState;
+		m_gameState->Initialize();
+		break;
+	}
 	
 	m_sound->Update();
 
@@ -226,6 +235,7 @@ void System::Update()
 	{
 		PostQuitMessage(0);
 	}
+
 }
 
 // Render game scene here.

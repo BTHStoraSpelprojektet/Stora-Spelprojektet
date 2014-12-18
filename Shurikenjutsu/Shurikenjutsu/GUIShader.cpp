@@ -334,22 +334,22 @@ bool GUIShader::InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContex
 	std::vector<GUIVertexColor> quad;
 
 	GUIVertexColor vertex;
-	vertex.m_position = DirectX::XMFLOAT3(1.0f, -1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(0.5f, -0.5f, 0);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(-1.0f, -1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(-0.5f, -0.5f, 0);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(-1.0f, 1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(-0.5f, 0.5f, 0);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(-1.0f, 1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(-0.5f, 0.5f, 0);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(1.0f, 1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(0.5f, 0.5f, 0);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(1.0f, -1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(0.5f, -0.5f, 0);
 	quad.push_back(vertex);
 
 	// Setup vertex buffer description.

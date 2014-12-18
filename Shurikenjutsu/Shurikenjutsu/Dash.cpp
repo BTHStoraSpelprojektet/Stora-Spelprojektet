@@ -1,21 +1,15 @@
 #include "Dash.h"
 
 
-Dash::Dash()
-{
-}
-
-
-Dash::~Dash()
-{
-}
+Dash::Dash(){}
+Dash::~Dash(){}
 
 bool Dash::Initialize()
 {
-	SetDamage(30);
+	SetDamage(DASH_DAMAGE);
 	SetTime(0.0);
 	SetStatusEffect(StatusEffect());
-	SetCooldown(8.0);
+	SetCooldown(DASH_COOLDOWN);
 	return true;
 }
 
@@ -24,7 +18,7 @@ bool Dash::Execute()
 	if (Ability::Execute())
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_DASH);
-		SetCooldown(8.0);
+		SetCooldown(DASH_COOLDOWN);
 	}
 	return true;
 }

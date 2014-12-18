@@ -32,10 +32,8 @@ public:
 	void ResetCooldowns();
 
 private:
-	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-		float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility);
-	void AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-		float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility);
+	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
+	void AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
 	
 	bool IsGuidInEnemyList(RakNet::RakNetGUID p_guid);
 	bool IsGuidInNetworkList(RakNet::RakNetGUID p_guid);

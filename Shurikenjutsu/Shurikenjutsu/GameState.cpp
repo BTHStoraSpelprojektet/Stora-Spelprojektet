@@ -1,6 +1,5 @@
 #include "GameState.h"
 
-
 GameState::GameState()
 {
 }
@@ -20,9 +19,9 @@ void GameState::Shutdown()
 
 }
 
-void GameState::Update()
+GAMESTATESWITCH GameState::Update()
 {
-
+	return GAMESTATESWITCH_NONE;
 }
 
 void GameState::Render()

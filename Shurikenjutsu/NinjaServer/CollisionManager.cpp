@@ -71,13 +71,10 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		// Make collision test
-		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, 2.5f, attackDirection, boxPosition, boxExtent, 2.5f))
+		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, KATANA_RANGE, attackDirection, boxPosition, boxExtent, 2.5f))
 		{
-			// todo melee dmg
-			int dmg = 50;
-
 			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, dmg);
+			p_playerManager->DamagePlayer(playerList[i].guid, KATANA_DAMAGE);
 			break;
 		}
 	}
@@ -132,8 +129,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 					if (BoxBoxtest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
 						// temp shuriken dmg
-						int dmg = 25;
-						p_playerManager->DamagePlayer(playerList[j].guid, dmg);
+						p_playerManager->DamagePlayer(playerList[j].guid, SHURIKEN_DAMAGE);
 
 						// Remove shuriken
 						p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
@@ -185,7 +181,7 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_attackingPlayer.dirX, 0.1f, p_attackingPlayer.dirZ);
 	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(p_attackingPlayer.x, 0.1f, p_attackingPlayer.z);
 	Ray* ray = new Ray(rayPos, rayDirection);
-	float dashLength = 10.0f;
+	float dashLength = DASH_MAX_RANGE;
 	std::vector<float> distancesToTarget;
 	std::vector<float> rayLengths;
 
@@ -235,6 +231,10 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	return dashLength;
 }
 
+void CollisionManager::CalculateSmokeBombLocation()
+{
+
+}
 //Private
 bool CollisionManager::OBBOBBtest(OBB p_OBB1, OBB p_OBB2)
 {

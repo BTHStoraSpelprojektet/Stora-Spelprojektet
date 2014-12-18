@@ -1,18 +1,10 @@
 #include "PlayingStateTest.h"
 
-PlayingStateTest::PlayingStateTest()
-{
-
-}
-
-PlayingStateTest::~PlayingStateTest()
-{
-
-}
-
+PlayingStateTest::PlayingStateTest(){}
+PlayingStateTest::~PlayingStateTest(){}
 bool PlayingStateTest::Initialize()
 {
-	return Initialize("../Shurikenjutsu/Levels/testBana.SSPL");
+	return Initialize("../Shurikenjutsu/Levels/firstLevel.SSPL");
 }
 
 bool PlayingStateTest::Initialize(std::string p_levelName)
@@ -57,8 +49,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_mouseX = 0;
 	m_mouseY = 0;
 	}
-
-	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 3.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(3.0f, 3.0f), PARTICLE_PATTERN_SMOKE);
+	//m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, SMOKEBOMB_POSITION_Y, 1.0f),
+	//	DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
+	//	DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 	// ========== DEBUG TEMP LINES ==========
 
 	// Frustum
@@ -83,11 +76,11 @@ void PlayingStateTest::Shutdown()
 	m_debugDot.Shutdown();
 	}
 
-	m_particles.Shutdown();
+	//m_particles.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
 }
 
-void PlayingStateTest::Update()
+GAMESTATESWITCH PlayingStateTest::Update()
 {
 	// Check if new level have started
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
@@ -96,7 +89,7 @@ void PlayingStateTest::Update()
 		Network::GetInstance()->SetHaveUpdateNewLevel();
 		Shutdown();
 		Initialize(levelName);
-		return;
+		return GAMESTATESWITCH_NONE;
 	}
 
 	// Update global delta time.
@@ -123,9 +116,11 @@ void PlayingStateTest::Update()
 
 	// ========== DEBUG TEMP LINES ==========
 	// Update the particles.
-	m_particles.Update();
+	//m_particles.Update();
 	// ========== DEBUG TEMP LINES ==========
 	m_playerManager.UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+
+	return GAMESTATESWITCH_NONE;
 }
 
 void PlayingStateTest::Render()
@@ -182,44 +177,13 @@ void PlayingStateTest::Render()
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	}
 
-	m_particles.Render();
+	//m_particles.Render();
 	// ========== DEBUG TEMP LINES ==========
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 {
 	m_camera.ToggleFullscreen(p_fullscreen);
-}
-void PlayingStateTest::MeleeAttack()
-{
-	/*std::vector<Object> modelList = m_objectManager.GetStaticObjectList();
-	for (unsigned int i = 0; i < modelList.size(); i++)
-	{
-		std::vector<Box> boxList = modelList[i].GetModel()->GetBoundingBoxes();
-		if (boxList.size() != 0)
-		{
-			for (unsigned int j = 0; j < boxList.size(); j++)
-			{
-				Box box = boxList[j];
-
-				box.m_center.x += modelList[i].GetPosition().x;
-				box.m_center.y += modelList[i].GetPosition().y;
-				box.m_center.z += modelList[i].GetPosition().z;
-
-				DirectX::XMFLOAT3 playerPos = m_playerManager.GetPlayerPosition();
-				Sphere sphere = Sphere(playerPos, 5.0f);
-				DirectX::XMFLOAT3 attackDirection = m_playerManager.GetAttackDirection();
-				if (Collisions::MeleeAttackCollision(sphere, box, attackDirection))
-				{
-					std::cout << "HIT" << std::endl;
-				}
-				else
-				{
-					std::cout << "MISS" << std::endl;
-				}
-			}
-		}
-	}*/
 }
 
 void PlayingStateTest::BasicPicking()

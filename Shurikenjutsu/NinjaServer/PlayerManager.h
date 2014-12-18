@@ -10,6 +10,7 @@
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "CollisionManager.h"
 #include "ShurikenManager.h"
 #include <vector>
