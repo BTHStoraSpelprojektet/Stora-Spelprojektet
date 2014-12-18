@@ -7,6 +7,7 @@
 #include "..\CommonLibs\RakNet\NetworkIDManager.h"
 #include "..\CommonLibs\RakNet\RakPeer.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 #include <vector>
 #include "Collisions.h"
 #include "PlayerManager.h"

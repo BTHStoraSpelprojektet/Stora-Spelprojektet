@@ -11,10 +11,10 @@ MeleeSwing::~MeleeSwing()
 
 bool MeleeSwing::Initialize()
 {
-	SetDamage(50);
+	SetDamage(KATANA_DAMAGE);
 	SetTime(0.0);
 	SetStatusEffect(StatusEffect());
-	SetCooldown(0.5);
+	SetCooldown(0.0f);
 	return true;
 }
 
@@ -23,7 +23,7 @@ bool MeleeSwing::Execute()
 	if (Ability::Execute())
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_MELEESWING);
-		SetCooldown(0.5);
+		SetCooldown(ALL_AROUND_GOLOBAL_COOLDOWN);
 		std::cout << "MELEE" << std::endl;
 	}
 	return true;

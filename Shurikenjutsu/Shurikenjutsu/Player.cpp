@@ -10,18 +10,12 @@ Player::~Player()
 
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, p_speed))
+	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, CHARACTAR_KATANA_SHURIKEN_SPEED))
 	{
 		return false;
 	}
-
-	SetDamage(p_damage);
-	m_spells = p_spells;
-	SetHealth(p_health);
-	SetMaxHealth(p_maxHealth);
-	SetAgility(p_agility);
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
@@ -84,12 +78,14 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		m_ability = m_meleeSwing;
+		AnimatedObject::MeleeAttackAnimation();
 	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		m_ability = m_shurikenAbility;
+		AnimatedObject::RangeAttackAnimation();
 	}
 
 	// Check health from server
@@ -135,24 +131,28 @@ bool Player::CalculateDirection()
 	{
 		z += 1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		x += -1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		z += -1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		x += 1;
 		moved = true;
+		AnimatedObject::HandleInput();
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -177,16 +177,15 @@ void Player::UpdateAbilities()
 	m_megaShuriken->Update();
 }
 
-void Player::SetDamage(float p_damage)
+void Player::ResetCooldowns()
 {
-	m_damage = p_damage;
-}
+	m_dash->ResetCooldown();
+	m_meleeSwing->ResetCooldown();
+	m_shurikenAbility->ResetCooldown();
+	m_megaShuriken->ResetCooldown();
 
-float Player::GetDamage() const
-{
-	return m_damage;
+	UpdateAbilities();
 }
-
 void Player::SetHealth(int p_health)
 {
 	if (p_health < 0)
@@ -212,16 +211,6 @@ void Player::SetMaxHealth(int p_maxHealth)
 int Player::GetMaxHealth() const
 {
 	return m_maxHealth;
-}
-
-void Player::SetAgility(float p_agility)
-{
-	m_agility = p_agility;
-}
-
-float Player::GetAgility() const
-{
-	return m_agility;
 }
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)

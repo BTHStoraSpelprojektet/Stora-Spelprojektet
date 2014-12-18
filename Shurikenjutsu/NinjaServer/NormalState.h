@@ -21,6 +21,15 @@ private:
 	int GetWinningTeam();
 	void RespawnAllPlayers();
 	void SendWinningTeam(int p_winningTeam);
+	
+	void SendRestartedRound();
+	void SendRestartingRound();
+	void SendRestartingRoundTime(int p_time);
+
+	float m_roundTimer;
+	float m_currentTimer;
+	int m_sendTime;
+	bool m_roundRestarting;
 };
 
 #endif

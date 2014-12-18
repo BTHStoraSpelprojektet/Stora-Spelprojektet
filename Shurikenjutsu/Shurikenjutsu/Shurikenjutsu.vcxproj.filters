@@ -324,6 +324,12 @@
     <ClCompile Include="MegaShuriken.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="SmokeBombAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeBomb.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -505,6 +511,12 @@
     </ClInclude>
     <ClInclude Include="MegaShuriken.h">
       <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeBombAbility.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeBomb.h">
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

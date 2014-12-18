@@ -25,7 +25,6 @@ public:
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:
-	void MeleeAttack();
 	void BasicPicking();
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 

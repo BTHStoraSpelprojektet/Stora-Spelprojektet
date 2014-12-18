@@ -5,12 +5,11 @@ Shuriken::Shuriken(){}
 
 Shuriken::~Shuriken(){}
 
-bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
+bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID)
 {
-	if (MovingObject::Initialize(p_filepath, p_pos, p_dir, p_speed))
+	if (MovingObject::Initialize(p_filepath, p_pos, p_dir, SHURIKEN_SPEED))
 	{
-		SetLifetime(2.0f);
-		SetDamage(10);
+		SetLifetime(SHURIKEN_DURATION);
 	}
 	else
 	{
@@ -19,28 +18,11 @@ bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Direc
 
 	m_shurikenID = p_shurikenID;
 
-	// Replica3Manager code, unused for now.
-	/*m_shurikenReplica = new ShurikenReplica();
-	m_shurikenReplica->SetPosition(GetPosition().x, GetPosition().y, GetPosition().z);
-	*/
-
-	// Replica3Manager code, unused for now.
-	/*if (Network::ConnectedNow())
-	{
-		Network::AddReference(m_shurikenReplica);
-	}*/
-
-	// Create ID for the network on the object
-
 	return true;
 }
 
 void Shuriken::Shutdown()
 {
-	/*Network::RemoveReference(m_shurikenReplica);
-	delete m_shurikenReplica;
-	*/
-
 	MovingObject::Shutdown();
 }
 
@@ -52,25 +34,16 @@ void Shuriken::Update()
 	m_position.y += (float)(m_direction.y*m_speed*deltaTime);
 	m_position.z += (float)(m_direction.z*m_speed*deltaTime);
 
-	m_rotation.y += (float)(ShurikenSpeed*deltaTime);
+	m_rotation.y += (float)(SHURIKEN_ROTATION_SPEED*deltaTime);
 
 	// Update lifetime
 	SetLifetime((float)(GetLifetime() - deltaTime));
 
-	// Update World Matrix
 }
 
 void Shuriken::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	MovingObject::SetPosition(p_pos);
-
-	if (Network::GetInstance()->IsConnected())
-	{ 
-		// Replica3Manager code, unused for now.
-		/*DirectX::XMFLOAT3 pos = GetPosition();
-		m_shurikenReplica->SetPosition(pos.x, pos.y, pos.z);
-		*/
-	}
 }
 
 void Shuriken::SetLifetime(float p_lifetime)

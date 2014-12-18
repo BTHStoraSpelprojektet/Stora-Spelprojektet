@@ -176,37 +176,6 @@ void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 {
 	m_camera.ToggleFullscreen(p_fullscreen);
 }
-void PlayingStateTest::MeleeAttack()
-{
-	/*std::vector<Object> modelList = m_objectManager.GetStaticObjectList();
-	for (unsigned int i = 0; i < modelList.size(); i++)
-	{
-		std::vector<Box> boxList = modelList[i].GetModel()->GetBoundingBoxes();
-		if (boxList.size() != 0)
-		{
-			for (unsigned int j = 0; j < boxList.size(); j++)
-			{
-				Box box = boxList[j];
-
-				box.m_center.x += modelList[i].GetPosition().x;
-				box.m_center.y += modelList[i].GetPosition().y;
-				box.m_center.z += modelList[i].GetPosition().z;
-
-				DirectX::XMFLOAT3 playerPos = m_playerManager.GetPlayerPosition();
-				Sphere sphere = Sphere(playerPos, 5.0f);
-				DirectX::XMFLOAT3 attackDirection = m_playerManager.GetAttackDirection();
-				if (Collisions::MeleeAttackCollision(sphere, box, attackDirection))
-				{
-					std::cout << "HIT" << std::endl;
-				}
-				else
-				{
-					std::cout << "MISS" << std::endl;
-				}
-			}
-		}
-	}*/
-}
 
 void PlayingStateTest::BasicPicking()
 {

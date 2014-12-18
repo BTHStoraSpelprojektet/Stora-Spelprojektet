@@ -24,6 +24,7 @@ bool Network::Initialize()
 	m_shurikenListUpdated = false;
 	m_respawned = false;
 	m_invalidMove = false;
+	m_roundRestarted = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -320,6 +321,38 @@ void Network::ReceviePacket()
 			bitStream.Read(winningTeam);
 
 			std::cout << "Team " << winningTeam << " won this round\n";
+			break;
+		}
+		case ID_RESTARTED_ROUND:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			bitStream.Read(messageID);
+
+			m_roundRestarted = true;
+			std::cout << "New round has started\n";
+			break;
+		}
+		case ID_RESTARTING_ROUND:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			bitStream.Read(messageID);
+
+			std::cout << "Restarting round in:\n";
+			break;
+		}
+		case ID_RESTARTING_ROUND_TIMER:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int time;
+
+			bitStream.Read(messageID);
+			bitStream.Read(time);
+
+			std::cout << time << std::endl;
+			break;
 		}
 		default:
 		{
@@ -687,4 +720,14 @@ void Network::SendAbility(ABILITIES p_ability)
 	bitStream.Write(p_ability);
 
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+}
+
+bool Network::RoundRestarted()
+{
+	return m_roundRestarted;
+}
+
+void Network::SetHaveUpdatedAfterRestartedRound()
+{
+	m_roundRestarted = false;
 }

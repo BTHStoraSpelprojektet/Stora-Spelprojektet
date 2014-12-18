@@ -3,6 +3,7 @@
 
 #include "Ability.h"
 #include "Network.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 class MeleeSwing : public Ability
 {

@@ -36,7 +36,6 @@ bool Ability::Execute()
 {
 	if (m_cooldown <= 0.0)
 	{
-
 		return true;
 	}
 
@@ -82,4 +81,9 @@ void Ability::SetStatusEffect(StatusEffect p_statusEffect)
 StatusEffect Ability::GetStatusEffect()
 {
 	return m_statusEffect;
+}
+
+void Ability::ResetCooldown()
+{
+	SetCooldown(0.0);
 }

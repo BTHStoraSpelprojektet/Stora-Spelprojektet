@@ -3,10 +3,11 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include "MovingObject.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 
 
-const float ShurikenSpeed = 15.70f;
+
 
 class Shuriken : public MovingObject
 {
@@ -14,7 +15,7 @@ public:
 	Shuriken();
 	~Shuriken();
 
-	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);
+	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID);
 	void Shutdown();
 
 	void Update( );

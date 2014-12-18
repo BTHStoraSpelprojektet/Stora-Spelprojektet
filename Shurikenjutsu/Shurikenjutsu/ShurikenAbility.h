@@ -3,6 +3,7 @@
 
 #include "Ability.h"
 #include "Network.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 class ShurikenAbility :
 	public Ability
 {
@@ -13,9 +14,9 @@ public:
 	bool Initialize();
 	void Update();
 	bool Execute();
+	void ResetCooldown();
 private:
 	int m_stacks;
-	double m_stackCD;
 	double m_gcd;
 };
 #endif SHURIKENABILITY_H_

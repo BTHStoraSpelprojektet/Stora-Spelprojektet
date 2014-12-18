@@ -12,10 +12,10 @@ MegaShuriken::~MegaShuriken()
 
 bool MegaShuriken::Initialize()
 {
-	SetDamage(40);
+	SetDamage(MEGASHURIKEN_DAMAGE);
 	SetTime(0.0);
 	SetStatusEffect(StatusEffect());
-	SetCooldown(10.0);
+	SetCooldown(MEGASHURIKEN_COOLDOWN);
 	return true;
 }
 
@@ -24,7 +24,7 @@ bool MegaShuriken::Execute()
 	if (Ability::Execute())
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_MEGASHURIKEN);
-		SetCooldown(10.0);
+		SetCooldown(MEGASHURIKEN_COOLDOWN);
 		std::cout << "MEGASHURIKEN" << std::endl;
 	}	
 	return true;

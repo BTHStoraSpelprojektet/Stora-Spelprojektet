@@ -20,8 +20,7 @@ class Player :
 public:
 	Player();
 	~Player();
-	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction,
-		float p_speed, float p_damage, int p_spells, int p_health, int p_maxHealth, float p_agility);
+	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
 	void Shutdown();
 	void UpdateMe();
 	void Update();
@@ -33,8 +32,8 @@ public:
 	int GetHealth() const;
 	void SetMaxHealth(int p_maxHealth);
 	int GetMaxHealth() const;
-	void SetAgility(float p_agility);
-	float GetAgility() const;
+	//void SetAgility(float p_agility);
+	//float GetAgility() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
 	void SendPosition(DirectX::XMFLOAT3 p_pos);
 
@@ -49,16 +48,18 @@ public:
 
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
+	void ResetCooldowns();
+
 private:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
 
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
-	int m_spells; // antalet spells om det behövs - skapa lista
+	//int m_spells; // antalet spells om det behövs - skapa lista
 	int m_health; // Player health
 	int m_maxHealth; // Max player health
-	float m_agility; // Speed på attacker och rullning m.m
+	//float m_agility; // Speed på attacker och rullning m.m
 	bool m_isAlive; // bool to check if the player should render and update itself
 	InputManager* m_inputManager;
 	DirectX::XMFLOAT3 m_attackDir;
