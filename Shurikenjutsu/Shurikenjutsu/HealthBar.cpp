@@ -6,9 +6,10 @@ HealthBar::~HealthBar(){}
 bool HealthBar::Initialize(float p_width, float p_height)
 {
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_border.Initialize(position, p_width+2.0f, p_height+2.0f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-	m_background.Initialize(position, p_width, p_height, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-	m_foreground.Initialize(position, p_width, p_height, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+	m_border.Initialize(position, p_width, p_height, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	m_background.Initialize(position, p_width - 4.0f, p_height - 3.0f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	m_foreground.Initialize(position, p_width - 4.0f, p_height - 3.0f, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -22,14 +23,13 @@ void HealthBar::Update(DirectX::XMFLOAT3 p_position, int p_health, int p_maxHeal
 	float newLength = m_background.GetSize().x * (1.0f - percent);
 
 	DirectX::XMFLOAT3 newPos = m_background.GetPosition();
-	newPos.x -= newLength;
+	newPos.x -= newLength * 0.5f;
 	m_foreground.SetPosition(newPos);
 
 	DirectX::XMFLOAT2 newSize = m_background.GetSize();
 	newSize.x -= newLength;
 	m_foreground.SetSize(newSize);
 
-	
 }
 
 void HealthBar::Render()

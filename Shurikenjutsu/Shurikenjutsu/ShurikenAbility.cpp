@@ -49,5 +49,5 @@ bool ShurikenAbility::Execute()
 void ShurikenAbility::ResetCooldown()
 {
 	Ability::ResetCooldown();
-	m_stacks = 3;
+	m_stacks = SHURIKEN_MAX_STACK;
 }

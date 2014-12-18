@@ -231,6 +231,10 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	return dashLength;
 }
 
+void CollisionManager::CalculateSmokeBombLocation()
+{
+
+}
 //Private
 bool CollisionManager::OBBOBBtest(OBB p_OBB1, OBB p_OBB2)
 {
