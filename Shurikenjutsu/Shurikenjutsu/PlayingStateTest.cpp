@@ -26,6 +26,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		object.Initialize(levelObjects[i].m_filePath.c_str(), DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ), DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ), DirectX::XMFLOAT3(1.0f,1.0f,1.0f));
 		m_objectManager.AddStaticObject(object);
 	}
+
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
 	std::vector<Box> wallList;
 	for (unsigned int i = 0; i < temp.size(); i++)
@@ -33,6 +34,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		LevelImporter::LevelBoundingBox box = temp[i];
 		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
 	}
+
 	// Initiate player
 	m_playerManager.Initialize();
 	CollisionManager::GetInstance()->Initialize(m_objectManager.GetStaticObjectList(), wallList);
@@ -42,12 +44,12 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	{
 		m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 2.5f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 		m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 2.5f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-	m_circle3.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 0.5f, 50, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		m_circle3.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 0.5f, 50, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-	m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
-	m_mouseX = 0;
-	m_mouseY = 0;
+		m_mouseX = 0;
+		m_mouseY = 0;
 	}
 	//m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, SMOKEBOMB_POSITION_Y, 1.0f),
 	//	DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
