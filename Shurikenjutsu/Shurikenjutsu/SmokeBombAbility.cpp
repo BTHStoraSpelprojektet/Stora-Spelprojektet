@@ -15,7 +15,7 @@ bool SmokeBombAbility::Execute()
 {
 	if (Ability::Execute())
 	{
-		Network::GetInstance()->SendAbility(ABILITIES_DASH);
+		Network::GetInstance()->SendAbility(ABILITIES_SMOKEBOMB);
 		SetCooldown(SMOKEBOMB_COOLDOWN);
 	}
 

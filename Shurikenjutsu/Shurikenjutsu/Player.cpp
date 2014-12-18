@@ -416,7 +416,6 @@ void Player::SetCalculatePlayerPosition()
 				}
 			}
 
-
 		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 	}
 	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;

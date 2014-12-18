@@ -356,6 +356,10 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		abilityString = "MegaShuriken";
 		p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 		break;
+	case ABILITIES_SMOKEBOMB:
+		abilityString = "SmokeBooooooooobm";
+
+		break;
 	default:
 		break;
 	}
