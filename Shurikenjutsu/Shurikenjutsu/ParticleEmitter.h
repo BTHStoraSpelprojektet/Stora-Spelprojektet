@@ -27,7 +27,11 @@ public:
 	void UpdatePosition(DirectX::XMFLOAT3 p_position);
 	void UpdateDirection(DirectX::XMFLOAT3 p_direction);
 
+	void SetEmitParticleState(bool p_emit);
+
 private:
+
+	bool m_emit;
 	void ClearOldParticles();
 	void EmitParticles();
 	void UpdateParticles();

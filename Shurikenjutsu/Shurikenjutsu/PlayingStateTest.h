@@ -10,18 +10,19 @@
 #include "..\CommonLibs\Level.h"
 #include "Collisions.h"
 #include "DebugDraw.h"
-#include "ParticleEmitter.h"
+//#include "ParticleEmitter.h"
 #include "Frustum.h"
+#include "GameState.h"
 
 class PlayingStateTest : public GameState
 {
 public:
 	PlayingStateTest();
 	~PlayingStateTest();
-	virtual bool Initialize();
+	bool Initialize();
 	void Shutdown();
-	virtual void Update();
-	virtual void Render();
+	GAMESTATESWITCH Update();
+	void Render();
 	void ToggleFullscreen(bool p_fullscreen);
 
 private:
@@ -44,7 +45,7 @@ private:
 
 	DebugDot m_debugDot;
 
-	ParticleEmitter m_particles;
+	//ParticleEmitter m_particles;
 	// ========== DEBUG TEMP LINES ==========
 
 	Frustum m_frustum;

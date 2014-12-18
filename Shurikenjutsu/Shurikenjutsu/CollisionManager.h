@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "Object.h"
 
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 class CollisionManager
 {
@@ -18,6 +19,7 @@ public:
 
 	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
 	float CalculateDashLength(Ray* p_ray);
+	DirectX::XMFLOAT3 CalculateSmokeBombLocation(Sphere p_playerSphere, DirectX::XMFLOAT3 p_direction);
 private:
 
 	CollisionManager();
