@@ -92,9 +92,16 @@ float CollisionManager::CalculateDashLength(Ray* p_ray)
 
 	return dashLength;
 }
-DirectX::XMFLOAT3 CollisionManager::CalculateSmokeBombLocation(Sphere p_playerSphere, DirectX::XMFLOAT3 p_attackingDirection)
+float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos)
 {
-	float range = SMOKEBOMB_RANGE;
-	DirectX::XMFLOAT3 plPos = p_playerSphere.m_position;
-	return DirectX::XMFLOAT3(plPos.x + range *p_attackingDirection.x, 0.0f, plPos.z + range *p_attackingDirection.z);
+	float x = m_pickedLocation.x - p_playerPos.x;
+	float y = m_pickedLocation.y - p_playerPos.z;
+	float temp = sqrt((x*x) + (y*y));
+ 	return temp;
+}
+
+void CollisionManager::Update(float p_pickedx, float p_pickedZ)
+{
+	m_pickedLocation.x = p_pickedx;
+	m_pickedLocation.y = p_pickedZ;
 }

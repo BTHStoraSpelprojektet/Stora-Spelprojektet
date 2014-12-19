@@ -28,12 +28,13 @@ public:
 	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
 	void UsedAbility(int p_index, ABILITIES p_ability);
-	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash);
+	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash, float p_distanceFromPlayer);
 	void BroadcastPlayers();
 protected:
 	RakNet::RakPeerInterface* m_serverPeer;
 	PlayerManager m_playerManager;
 	ShurikenManager m_shurikenManager;
+	SmokeBombManager m_smokeBombManager;
 	MapManager m_mapManager;
 	CollisionManager* m_collisionManager;
 };
