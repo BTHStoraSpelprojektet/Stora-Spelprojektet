@@ -68,6 +68,7 @@ void ObjectManager::Update()
 	if (Network::GetInstance()->IsSmokeBombListUpdated())
 	{
 		std::vector<SmokeBombNet> tempSmokeBomb = Network::GetInstance()->GetSmokeBombs();
+		std::vector<SmokeBomb> smokeBombList;
 		for (unsigned int i = 0; i < tempSmokeBomb.size(); i++)
 		{
 			if (!IsSmokeBombInList(tempSmokeBomb[i].smokeBombId))

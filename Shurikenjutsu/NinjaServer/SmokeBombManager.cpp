@@ -40,6 +40,8 @@ void SmokeBombManager::AddSmokeBomb(float p_posX, float p_posZ)
 	wBitStream.Write(temp.smokeBombId);
 	wBitStream.Write(p_posX);
 	wBitStream.Write(p_posZ);
+	wBitStream.Write(temp.lifeTime);
+
 
 	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
@@ -70,7 +72,7 @@ void SmokeBombManager::BroadcastEmptySmokeBombs(unsigned int p_id)
 {
 	RakNet::BitStream bitStream;
 
-	bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
+	bitStream.Write((RakNet::MessageID)ID_SMOKEBOMB_REMOVE);
 	bitStream.Write(p_id);
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);

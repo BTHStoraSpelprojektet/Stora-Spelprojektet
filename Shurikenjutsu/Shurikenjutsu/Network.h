@@ -75,7 +75,7 @@ private:
 	static Network* m_instance;
 
 	void ReceviePacket();
-	void UpdateSmokeBomb(unsigned int p_smokebombId, float p_posX, float p_posZ);
+	void UpdateSmokeBomb(unsigned int p_smokebombId, float p_posX, float p_posZ, float p_lifetime);
 	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);

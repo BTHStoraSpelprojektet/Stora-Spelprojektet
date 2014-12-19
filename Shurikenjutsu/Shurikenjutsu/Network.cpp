@@ -360,13 +360,14 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			unsigned int smokebombId;
-			float posX, posZ;
+			float posX, posZ, lifetime;
 			bitStream.Read(messageID);
 			bitStream.Read(smokebombId);
 			bitStream.Read(posX);
 			bitStream.Read(posZ);
+			bitStream.Read(lifetime);
 
-			UpdateSmokeBomb(smokebombId, posX, posZ);
+			UpdateSmokeBomb(smokebombId, posX, posZ, lifetime);
 			break;
 		}
 		case ID_SMOKEBOMB_REMOVE:
@@ -531,7 +532,7 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }
 
-void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_posX, float p_posZ)
+void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_posX, float p_posZ, float p_lifetime)
 {
 
 	bool addSmokeBomb = true;
@@ -539,8 +540,7 @@ void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_posX, float p_
 	temp.smokeBombId = p_smokebombId;
 	temp.x = p_posX;
 	temp.z = p_posZ;
-	m_smokeBombList.push_back(temp);
-	m_smokebombListUpdated = true;
+	temp.lifeTime = p_lifetime;
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
