@@ -14,7 +14,17 @@ bool ObjectManager::Initialize()
 
 void ObjectManager::Shutdown()
 {
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		m_shurikens[i].Shutdown();
+	}
 	m_shurikens.clear();
+
+	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	{
+		m_staticObjects[i].Shutdown();
+	}
+	m_staticObjects.clear();
 }
 
 void ObjectManager::Update()

@@ -63,7 +63,7 @@ void Server::ReceviePacket()
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-			m_gameState->AddPlayer(m_packet->guid, m_nrOfConnections);
+			m_gameState->AddPlayer(m_packet->guid);
 
 			break;
 		}

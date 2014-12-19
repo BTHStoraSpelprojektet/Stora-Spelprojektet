@@ -7,11 +7,19 @@ bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
 	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	m_playerAbilityBar.Initialize(0.0f, -(float)(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.50 + 50.0f), 6);
+	m_playerAbilityBar.Initialize(0.0f, -420.0f, 6);
 	return true;
 }
 
-void PlayerManager::Shutdown(){}
+void PlayerManager::Shutdown()
+{
+	m_player.Shutdown();
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		m_enemyList[i].Shutdown();
+	}
+	m_enemyList.clear();
+}
 
 void PlayerManager::Update()
 {

@@ -29,7 +29,7 @@ public:
 
 	std::vector<PlayerNet> GetPlayers();
 	std::vector<Box> GetBoundingBoxes(int p_index);
-	void AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections);
+	void AddPlayer(RakNet::RakNetGUID p_guid);
 	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed);
 	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
 	void RemovePlayer(RakNet::RakNetGUID p_guid);

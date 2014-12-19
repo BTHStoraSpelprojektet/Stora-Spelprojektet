@@ -3,6 +3,13 @@
 
 #include "GraphicsEngine.h"
 
+enum GAMESTATESWITCH
+{
+	GAMESTATESWITCH_MENU,
+	GAMESTATESWITCH_PLAY,
+	GAMESTATESWITCH_NONE,
+};
+
 class GameState
 {
 public:
@@ -10,7 +17,7 @@ public:
 	~GameState();
 	virtual bool Initialize();
 	virtual void Shutdown();	
-	virtual void Update( );
+	virtual GAMESTATESWITCH Update();
 	virtual void Render();
 	virtual void RenderAlpha();
 	virtual void ToggleFullscreen(bool p_fullscreen);

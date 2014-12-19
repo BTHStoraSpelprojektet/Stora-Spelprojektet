@@ -17,6 +17,7 @@
 #include "Debug.h"
 
 #include "PlayingStateTest.h"
+#include "MenuState.h"
 #include "Timer.h"
 #include "Sound.h"
 #include "GUIManager.h"
@@ -49,7 +50,7 @@ private:
 
 	DirectionalLight m_directionalLight;
 	Camera m_lightCamera;
-	
+	MenuState m_menuState;
 	GameState* m_gameState;
 
 	Sound* m_sound;

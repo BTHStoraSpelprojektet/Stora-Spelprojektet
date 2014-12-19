@@ -26,6 +26,8 @@ bool Network::Initialize()
 	m_respawned = false;
 	m_invalidMove = false;
 	m_roundRestarted = false;
+	m_newLevel = false;
+	m_levelName = "";
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -379,7 +381,36 @@ void Network::ReceviePacket()
 			bitStream.Read(smokeBombID);
 
 			RemoveSmokeBomb(smokeBombID);
+		}
+		case ID_MATCH_OVER:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+			int winningTeam;
+
+			bitStream.Read(messageID);
+			bitStream.Read(winningTeam);
+
+			std::cout << "Team " << winningTeam << " won this match\n";
+			break;
+		}
+		case ID_NEW_LEVEL:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakString levelName;
+
+			bitStream.Read(messageID);
+			bitStream.Read(levelName);
+
+			m_newLevel = true;
+			m_levelName = levelName;
+
+			// Send invalid positions to get an invalid move from server and therefore update correct position according to server
+			SendPlayerPos(100.0f, -100.0f, 100.0f);
+			SendPlayerPos(-100.0f, 100.0f, -100.0f);
+
+			std::cout << "Starting new level\n";
 			break;
 		}
 		default:
@@ -807,4 +838,19 @@ bool Network::RoundRestarted()
 void Network::SetHaveUpdatedAfterRestartedRound()
 {
 	m_roundRestarted = false;
+}
+
+bool Network::NewLevel()
+{
+	return m_newLevel;
+}
+
+void Network::SetHaveUpdateNewLevel()
+{
+	m_newLevel = false;
+}
+
+std::string Network::LevelName()
+{
+	return m_levelName;
 }

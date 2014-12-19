@@ -68,6 +68,10 @@ public:
 	bool RoundRestarted();
 	void SetHaveUpdatedAfterRestartedRound();
 
+	bool NewLevel();
+	void SetHaveUpdateNewLevel();
+	std::string LevelName();
+
 private:
 	Network();
 	~Network();
@@ -106,6 +110,8 @@ private:
 	bool m_respawned;
 	bool m_invalidMove;
 	bool m_roundRestarted;
+	bool m_newLevel;
+	std::string m_levelName;
 	PlayerNet m_myPlayer;
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;

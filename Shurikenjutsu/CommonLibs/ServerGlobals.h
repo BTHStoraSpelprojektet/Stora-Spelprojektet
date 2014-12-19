@@ -8,7 +8,7 @@
 //#define SERVER_ADDRESS "127.0.0.1"
 
 // Model names
-#define LEVEL_NAME "../Shurikenjutsu/Levels/testBana.SSPL"
+#define LEVEL_NAME "../Shurikenjutsu/Levels/firstLevel.SSPL"
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
 #define PLAYER_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 

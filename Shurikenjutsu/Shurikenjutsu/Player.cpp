@@ -33,6 +33,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_smokeBombAbility->Initialize();
 
 	m_healthbar.Initialize(50.0f, 5.0f);
+	m_healthbar.Initialize(100.0f, 15.0f);
 
 	return true;
 }
@@ -40,14 +41,41 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 void Player::Shutdown()
 {
 	AnimatedObject::Shutdown();
-	delete m_ability;
-	delete m_noAbility;
-	delete m_dash;
+	if (m_noAbility != nullptr)
+	{
+		m_noAbility->Shutdown();
+		delete m_noAbility;
+	}
 
-	delete m_meleeSwing;
-	delete m_shurikenAbility;
-	delete m_megaShuriken;
-	delete m_smokeBombAbility;
+	if (m_dash != nullptr)
+	{
+		m_dash->Shutdown();
+		delete m_dash;
+	}
+
+	if (m_meleeSwing != nullptr)
+	{
+		m_meleeSwing->Shutdown();
+		delete m_meleeSwing;
+	}
+
+	if (m_shurikenAbility != nullptr)
+	{
+		m_shurikenAbility->Shutdown();
+		delete m_shurikenAbility;
+	}
+
+	if (m_megaShuriken != nullptr)
+	{
+		m_megaShuriken->Shutdown();
+		delete m_megaShuriken;
+	}
+
+	if (m_smokeBombAbility != nullptr)
+	{
+		m_smokeBombAbility->Shutdown();
+		delete m_smokeBombAbility;
+	}
 }
 
 void Player::UpdateMe()
@@ -122,8 +150,7 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-		m_ability = m_smokeBombAbility;
-		
+		m_ability = m_smokeBombAbility;		
 	}
 }
 bool Player::CalculateDirection()
@@ -244,7 +271,7 @@ DirectX::XMFLOAT3 Player::GetFacingDirection()
 
 void Player::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
 {
-	Object::SetRotation(p_facingDirection);
+	//Object::SetRotation(p_facingDirection);
 }
 
 DirectX::XMFLOAT3 Player::GetAttackDirection()
@@ -256,6 +283,8 @@ void Player::SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 {
 	m_attackDir = p_attackDir;
 	CalculateFacingAngle();
+
+	AnimatedObject::SetIkDirection(p_attackDir);
 
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -420,7 +449,6 @@ void Player::Render(SHADERTYPE p_shader)
 		m_healthbar.Render();
 	}
 }
-
 void Player::SetIsAlive(bool p_isAlive)
 {
 	m_isAlive = p_isAlive;

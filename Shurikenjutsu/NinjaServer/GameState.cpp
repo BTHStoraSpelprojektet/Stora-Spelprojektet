@@ -10,7 +10,7 @@ GameState::~GameState()
 {
 }
 
-bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
+bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_serverPeer = p_serverPeer;
 
@@ -36,6 +36,21 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	return true;
 }
 
+bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
+{
+	return Initialize(p_serverPeer, LEVEL_NAME);	
+}
+
+bool GameState::Initialize(std::string p_levelName)
+{
+	if (m_serverPeer == NULL)
+	{
+		return false;
+	}
+
+	return Initialize(m_serverPeer, p_levelName);
+}
+
 void GameState::Shutdown()
 {
 	m_playerManager.Shutdown();
@@ -54,9 +69,9 @@ void GameState::Update(double p_deltaTime)
 	m_collisionManager->ShurikenCollisionChecks(&m_shurikenManager, &m_playerManager);
 }
 
-void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
+void GameState::AddPlayer(RakNet::RakNetGUID p_guid)
 {
-	m_playerManager.AddPlayer(p_guid, p_nrOfConnections);
+	m_playerManager.AddPlayer(p_guid);
 }
 
 void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)

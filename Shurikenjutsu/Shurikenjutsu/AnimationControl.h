@@ -29,8 +29,10 @@ private:
 
 	bool m_attackAnimation;
 
-	DirectX::XMFLOAT3 m_ikDirection;
+	DirectX::XMVECTOR m_ikDirection;
+	DirectX::XMVECTOR m_forwardDirection;
 	DirectX::XMVECTOR m_rotationAxis;
+	float m_hipRotation;
 
 	AnimationStack* m_currentArms;
 	AnimationStack* m_currentLegs;

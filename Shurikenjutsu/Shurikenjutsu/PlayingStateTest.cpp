@@ -4,6 +4,11 @@ PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 bool PlayingStateTest::Initialize()
 {
+	return Initialize("../Shurikenjutsu/Levels/firstLevel.SSPL");
+}
+
+bool PlayingStateTest::Initialize(std::string p_levelName)
+{
 	m_camera.Initialize();
 
 	m_objectManager.Initialize();
@@ -11,7 +16,7 @@ bool PlayingStateTest::Initialize()
 	m_camera.ResetCamera();
 
 	//Load level
-	Level level("../Shurikenjutsu/Levels/testBana.SSPL");
+	Level level(p_levelName);
 
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = level.GetObjects();
@@ -21,6 +26,7 @@ bool PlayingStateTest::Initialize()
 		object.Initialize(levelObjects[i].m_filePath.c_str(), DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ), DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ), DirectX::XMFLOAT3(1.0f,1.0f,1.0f));
 		m_objectManager.AddStaticObject(object);
 	}
+
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
 	std::vector<Box> wallList;
 	for (unsigned int i = 0; i < temp.size(); i++)
@@ -28,6 +34,7 @@ bool PlayingStateTest::Initialize()
 		LevelImporter::LevelBoundingBox box = temp[i];
 		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
 	}
+
 	// Initiate player
 	m_playerManager.Initialize();
 	CollisionManager::GetInstance()->Initialize(m_objectManager.GetStaticObjectList(), wallList);
@@ -37,12 +44,12 @@ bool PlayingStateTest::Initialize()
 	{
 		m_circle1.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 2.5f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 		m_circle2.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 2.5f, 50, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-	m_circle3.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 0.5f, 50, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		m_circle3.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 0.5f, 50, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-	m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
-	m_mouseX = 0;
-	m_mouseY = 0;
+		m_mouseX = 0;
+		m_mouseY = 0;
 	}
 	//m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, SMOKEBOMB_POSITION_Y, 1.0f),
 	//	DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
@@ -75,8 +82,18 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 }
 
-void PlayingStateTest::Update()
+GAMESTATESWITCH PlayingStateTest::Update()
 {
+	// Check if new level have started
+	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
+	{
+		std::string levelName = Network::GetInstance()->LevelName();
+		Network::GetInstance()->SetHaveUpdateNewLevel();
+		Shutdown();
+		Initialize(levelName);
+		return GAMESTATESWITCH_NONE;
+	}
+
 	// Update global delta time.
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
@@ -105,6 +122,8 @@ void PlayingStateTest::Update()
 	// ========== DEBUG TEMP LINES ==========
 	m_playerManager.UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
+
+	return GAMESTATESWITCH_NONE;
 }
 
 void PlayingStateTest::Render()
@@ -135,30 +154,30 @@ void PlayingStateTest::Render()
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-		DirectX::XMFLOAT4X4 circleWorld;
-		DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition())));
+	DirectX::XMFLOAT4X4 circleWorld;
+	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_playerManager.GetPlayerPosition())));
 
-		m_circle1.UpdateWorldMatrix(circleWorld);
-		m_circle1.Render();
+	m_circle1.UpdateWorldMatrix(circleWorld);
+	m_circle1.Render();
 
-		m_circle3.UpdateWorldMatrix(circleWorld);
-		m_circle3.Render();
+	m_circle3.UpdateWorldMatrix(circleWorld);
+	m_circle3.Render();
 
-		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
-		DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate)));
+	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x + m_playerManager.GetAttackDirection().x * m_circle2.GetRadius(), 0.0f, m_playerManager.GetPlayerPosition().z + m_playerManager.GetAttackDirection().z * m_circle2.GetRadius());
+	DirectX::XMStoreFloat4x4(&circleWorld, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate)));
 
-		m_circle2.UpdateWorldMatrix(circleWorld);
-		m_circle2.Render();
-		if (m_frustum.CheckCube(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f))
-		{
-			testBB = true;
-		}
-		if (testBB)
-		{
-			m_debugDot.Render();
-		}
+	m_circle2.UpdateWorldMatrix(circleWorld);
+	m_circle2.Render();
+	if (m_frustum.CheckCube(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f))
+	{
+		testBB = true;
+	}
+	if (testBB)
+	{
+		m_debugDot.Render();
+	}
 
-		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	}
 
 	//m_particles.Render();
