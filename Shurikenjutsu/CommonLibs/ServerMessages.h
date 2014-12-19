@@ -35,7 +35,12 @@ struct ShurikenNet
 	float speed;
 	bool megaShuriken;
 };
-
+struct SmokeBombNet
+{
+	unsigned int smokeBombId;
+	float x, z;
+	float lifeTime;
+};
 enum Messages
 {
 	ID_NR_CONNECTIONS = ID_USER_PACKET_ENUM + 1,
@@ -53,7 +58,9 @@ enum Messages
 	ID_ROUND_OVER,
 	ID_RESTARTED_ROUND,
 	ID_RESTARTING_ROUND,
-	ID_RESTARTING_ROUND_TIMER
+	ID_RESTARTING_ROUND_TIMER,
+	ID_SMOKEBOMB_THROW,
+	ID_SMOKEBOMB_REMOVE
 };
 
 #endif

@@ -55,6 +55,10 @@ public:
 	bool IsShurikenListUpdated();
 	void SetHaveUpdateShurikenList();
 
+	bool IsSmokeBombListUpdated();
+	void SetHaveUpdateSmokeBombList();
+	std::vector<SmokeBombNet> GetSmokeBombs();
+
 	bool HasRespawned();
 	void SetHaveRespawned();
 
@@ -71,6 +75,7 @@ private:
 	static Network* m_instance;
 
 	void ReceviePacket();
+	void UpdateSmokeBomb(unsigned int p_smokebombId, float p_posX, float p_posZ);
 	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
@@ -83,24 +88,28 @@ private:
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
 
+	void RemoveSmokeBomb(unsigned int p_smokeBombID);
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
 
 	bool m_connected;
 	bool m_prevConnected;
+	
 
 	int m_connectionCount;
 	int m_previousCount;
 
 	bool m_newOrRemovedPlayers;
 	bool m_shurikenListUpdated;
+	bool m_smokebombListUpdated;
 	bool m_respawned;
 	bool m_invalidMove;
 	bool m_roundRestarted;
 	PlayerNet m_myPlayer;
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;
+	std::vector<SmokeBombNet> m_smokeBombList;
 
 };
 #endif

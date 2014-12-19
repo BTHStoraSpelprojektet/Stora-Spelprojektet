@@ -38,7 +38,7 @@ const float DASH_DAMAGE = 5.0f;
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 ////////////////////////////////////////////////////////////////Tools
 //Smoke bomb
-const float SMOKEBOMB_DURATION = 5.0f;
+const float SMOKEBOMB_DURATION = 3.0f;
 const float SMOKEBOMB_DAMAGE = 0.0f;
 const float SMOKEBOMB_COOLDOWN = 1.0f;
 

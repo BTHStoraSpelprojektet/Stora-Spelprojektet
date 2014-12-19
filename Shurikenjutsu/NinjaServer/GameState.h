@@ -32,6 +32,7 @@ protected:
 	RakNet::RakPeerInterface* m_serverPeer;
 	PlayerManager m_playerManager;
 	ShurikenManager m_shurikenManager;
+	SmokeBombManager m_smokeBombManager;
 	MapManager m_mapManager;
 	CollisionManager* m_collisionManager;
 };

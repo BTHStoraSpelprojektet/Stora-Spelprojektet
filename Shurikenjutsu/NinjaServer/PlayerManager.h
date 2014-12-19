@@ -13,6 +13,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "CollisionManager.h"
 #include "ShurikenManager.h"
+#include "SmokeBombManager.h"
 #include <vector>
 
 class CollisionManager;
@@ -43,7 +44,7 @@ public:
 
 	void UsedAbility(int p_index, ABILITIES p_ability);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
-	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections);
+	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb);
 
 
 private:	
