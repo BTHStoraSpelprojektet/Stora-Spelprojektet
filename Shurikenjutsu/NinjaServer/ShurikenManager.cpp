@@ -1,20 +1,13 @@
 #include "ShurikenManager.h"
 
 
-ShurikenManager::ShurikenManager()
-{
-}
-
-
-ShurikenManager::~ShurikenManager()
-{
-}
-
+ShurikenManager::ShurikenManager(){}
+ShurikenManager::~ShurikenManager(){}
 bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	m_serverPeer = p_serverPeer;
-	m_shurikenSetTimeLeft = 2.0f;
-	m_megaShurikenSetTimeLeft = 4.0f;
+	m_shurikenSetTimeLeft = SHURIKEN_COOLDOWN;
+	m_megaShurikenSetTimeLeft = MEGASHURIKEN_COOLDOWN;
 
 	m_shurikens = std::vector<ShurikenNet>();
 
@@ -24,9 +17,7 @@ bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	return true;
 }
 
-void ShurikenManager::Shutdown()
-{
-}
+void ShurikenManager::Shutdown(){}
 
 void ShurikenManager::Update(double p_deltaTime)
 {

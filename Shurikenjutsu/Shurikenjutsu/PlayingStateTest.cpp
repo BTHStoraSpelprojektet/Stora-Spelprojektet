@@ -121,6 +121,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	//m_particles.Update();
 	// ========== DEBUG TEMP LINES ==========
 	m_playerManager.UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	return GAMESTATESWITCH_NONE;
 }

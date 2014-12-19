@@ -6,6 +6,7 @@
 #include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\ModelLibrary.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 #include <vector>
 
 class ShurikenManager

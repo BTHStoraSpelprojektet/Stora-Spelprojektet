@@ -30,6 +30,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_collisionManager = new CollisionManager();
 	m_collisionManager->Initialize(m_mapManager.GetBoundingBoxes());
 
+	m_smokeBombManager = SmokeBombManager();
+	m_smokeBombManager.Initialize(m_serverPeer);
+
 	return true;
 }
 
@@ -52,6 +55,7 @@ void GameState::Shutdown()
 {
 	m_playerManager.Shutdown();
 	m_shurikenManager.Shutdown();
+	m_smokeBombManager.Shutdown();
 	m_mapManager.Shutdown();
 	delete m_collisionManager;
 }
@@ -60,6 +64,7 @@ void GameState::Update(double p_deltaTime)
 {
 	m_playerManager.Update(p_deltaTime);
 	m_shurikenManager.Update(p_deltaTime);
+	m_smokeBombManager.Update(p_deltaTime);
 
 	m_collisionManager->ShurikenCollisionChecks(&m_shurikenManager, &m_playerManager);
 }
@@ -104,9 +109,10 @@ void GameState::UsedAbility(int p_index, ABILITIES p_ability)
 	m_playerManager.UsedAbility(p_index, p_ability);
 }
 
-void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash)
+void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash, float p_distanceFromPlayer)
 {
-	m_playerManager.ExecuteAbility(p_guid, p_ability, *m_collisionManager, m_shurikenManager, p_dash);
+	m_smokeBombManager.SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
+	m_playerManager.ExecuteAbility(p_guid, p_ability, *m_collisionManager, m_shurikenManager, p_dash, m_smokeBombManager);
 }
 
 void GameState::BroadcastPlayers()

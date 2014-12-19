@@ -12,7 +12,7 @@ public:
 	~MeleeSwing();
 
 	bool Initialize();
-	bool Execute();
+	bool Execute(float p_distance);
 };
 #endif // !MELEESWING_H_
 

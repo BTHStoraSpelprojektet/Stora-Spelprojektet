@@ -18,11 +18,11 @@ bool MeleeSwing::Initialize()
 	return true;
 }
 
-bool MeleeSwing::Execute()
+bool MeleeSwing::Execute(float p_distance)
 {
-	if (Ability::Execute())
+	if (Ability::Execute(p_distance))
 	{
-		Network::GetInstance()->SendAbility(ABILITIES_MELEESWING);
+		Network::GetInstance()->SendAbility(ABILITIES_MELEESWING,0);
 		SetCooldown(ALL_AROUND_GOLOBAL_COOLDOWN);
 		std::cout << "MELEE" << std::endl;
 	}

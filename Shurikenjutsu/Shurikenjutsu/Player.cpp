@@ -1,14 +1,7 @@
 #include "Player.h"
 
-Player::Player()
-{
-
-}
-
-Player::~Player()
-{
-
-}
+Player::Player(){}
+Player::~Player(){}
 
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
@@ -38,8 +31,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
-	m_smokeBomb = new SmokeBomb();
-	m_smokeBomb->Initialize(DirectX::XMFLOAT3(0, 3.0f, 0));
+
+	m_healthbar.Initialize(50.0f, 5.0f);
 	m_healthbar.Initialize(100.0f, 15.0f);
 
 	return true;
@@ -48,7 +41,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 void Player::Shutdown()
 {
 	AnimatedObject::Shutdown();
-
 	if (m_noAbility != nullptr)
 	{
 		m_noAbility->Shutdown();
@@ -83,12 +75,6 @@ void Player::Shutdown()
 	{
 		m_smokeBombAbility->Shutdown();
 		delete m_smokeBombAbility;
-	}
-
-	if (m_smokeBomb != nullptr)
-	{
-		m_smokeBomb->Shutdown();
-		delete m_smokeBomb;
 	}
 }
 
@@ -148,8 +134,8 @@ void Player::UpdateMe()
 
 	// Count down cooldowns
 	UpdateAbilities();
-
-	m_ability->Execute();
+	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
+	m_ability->Execute(temp);
 }
 
 void Player::CheckForSpecialAttack()
@@ -164,11 +150,8 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-		std::cout << "SMOOOOOOOOOOOOOOOOOOOOOOOOKING!!!!" << std::endl;
-		m_smokeBomb->SetPosition(CollisionManager::GetInstance()->CalculateSmokeBombLocation(m_playerSphere, m_attackDir));
-		m_smokeBomb->ResetTimer();
-		m_ability = m_smokeBombAbility;
-}
+		m_ability = m_smokeBombAbility;		
+	}
 }
 bool Player::CalculateDirection()
 {
@@ -217,10 +200,7 @@ bool Player::CalculateDirection()
 	return moved;
 }
 
-void Player::Update()
-{
-
-}
+void Player::Update(){}
 
 void Player::UpdateAbilities()
 {
@@ -229,7 +209,6 @@ void Player::UpdateAbilities()
 	m_shurikenAbility->Update();
 	m_megaShuriken->Update();
 	m_smokeBombAbility->Update();
-	m_smokeBomb->Update();
 }
 
 void Player::ResetCooldowns()
@@ -467,18 +446,9 @@ void Player::Render(SHADERTYPE p_shader)
 	if (m_isAlive)
 	{
 		AnimatedObject::RenderAnimated(p_shader);
-		if (m_smokeBomb->GetIfActive() && Collisions::SphereSphereCollision(m_smokeBomb->GetSmokeSphere(), m_playerSphere))
-		{
-		}
-		else
-		{
-	m_healthbar.Render();
-
-		}
+		m_healthbar.Render();
+	}
 }
-	m_smokeBomb->Render();
-}
-
 void Player::SetIsAlive(bool p_isAlive)
 {
 	m_isAlive = p_isAlive;
