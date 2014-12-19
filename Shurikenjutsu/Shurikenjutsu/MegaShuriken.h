@@ -13,7 +13,7 @@ public:
 	~MegaShuriken();
 
 	bool Initialize();
-	bool Execute();
+	bool Execute(float p_distance);
 };
 
 #endif //!MEGASHURIKEN_H_

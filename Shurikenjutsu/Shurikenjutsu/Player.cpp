@@ -1,14 +1,7 @@
 #include "Player.h"
 
-Player::Player()
-{
-
-}
-
-Player::~Player()
-{
-
-}
+Player::Player(){}
+Player::~Player(){}
 
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
@@ -38,8 +31,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
-	m_smokeBomb = new SmokeBomb();
-	m_smokeBomb->Initialize(DirectX::XMFLOAT3(0, 3.0f, 0));
+
+	m_healthbar.Initialize(50.0f, 5.0f);
 	m_healthbar.Initialize(100.0f, 15.0f);
 
 	return true;
@@ -48,15 +41,41 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 void Player::Shutdown()
 {
 	AnimatedObject::Shutdown();
-	delete m_ability;
-	delete m_noAbility;
-	delete m_dash;
+	if (m_noAbility != nullptr)
+	{
+		m_noAbility->Shutdown();
+		delete m_noAbility;
+	}
 
-	delete m_meleeSwing;
-	delete m_shurikenAbility;
-	delete m_megaShuriken;
-	delete m_smokeBombAbility;
-	delete m_smokeBomb;
+	if (m_dash != nullptr)
+	{
+		m_dash->Shutdown();
+		delete m_dash;
+	}
+
+	if (m_meleeSwing != nullptr)
+	{
+		m_meleeSwing->Shutdown();
+		delete m_meleeSwing;
+	}
+
+	if (m_shurikenAbility != nullptr)
+	{
+		m_shurikenAbility->Shutdown();
+		delete m_shurikenAbility;
+	}
+
+	if (m_megaShuriken != nullptr)
+	{
+		m_megaShuriken->Shutdown();
+		delete m_megaShuriken;
+	}
+
+	if (m_smokeBombAbility != nullptr)
+	{
+		m_smokeBombAbility->Shutdown();
+		delete m_smokeBombAbility;
+	}
 }
 
 void Player::UpdateMe()
@@ -115,8 +134,8 @@ void Player::UpdateMe()
 
 	// Count down cooldowns
 	UpdateAbilities();
-
-	m_ability->Execute();
+	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
+	m_ability->Execute(temp);
 }
 
 void Player::CheckForSpecialAttack()
@@ -126,15 +145,12 @@ void Player::CheckForSpecialAttack()
 		m_ability = m_megaShuriken;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
-		{
-			m_ability = m_dash;
-		}
+	{
+		m_ability = m_dash;
+	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-		std::cout << "SMOOOOOOOOOOOOOOOOOOOOOOOOKING!!!!" << std::endl;
-		m_smokeBomb->SetPosition(CollisionManager::GetInstance()->CalculateSmokeBombLocation(m_playerSphere, m_attackDir));
-		m_smokeBomb->ResetTimer();
-		m_ability = m_smokeBombAbility;
+		m_ability = m_smokeBombAbility;		
 	}
 }
 bool Player::CalculateDirection()
@@ -151,28 +167,24 @@ bool Player::CalculateDirection()
 	{
 		z += 1;
 		moved = true;
-		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		x += -1;
 		moved = true;
-		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		z += -1;
 		moved = true;
-		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		x += 1;
 		moved = true;
-		AnimatedObject::HandleInput();
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -180,14 +192,12 @@ bool Player::CalculateDirection()
 	DirectX::XMFLOAT3 tempFloat;
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
+	AnimatedObject::HandleInput(tempFloat);
 
 	return moved;
 }
 
-void Player::Update()
-{
-
-}
+void Player::Update(){}
 
 void Player::UpdateAbilities()
 {
@@ -196,7 +206,6 @@ void Player::UpdateAbilities()
 	m_shurikenAbility->Update();
 	m_megaShuriken->Update();
 	m_smokeBombAbility->Update();
-	m_smokeBomb->Update();
 }
 
 void Player::ResetCooldowns()
@@ -249,7 +258,14 @@ void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 
 void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
+	DirectX::XMFLOAT3 oldPos = Object::GetPosition();
 	Object::SetPosition(p_pos);
+
+	DirectX::XMFLOAT3 dir;
+	dir.x = p_pos.x - oldPos.x;
+	dir.y = p_pos.y - oldPos.y;
+	dir.z = p_pos.z - oldPos.z;
+	AnimatedObject::NetworkInput(dir);
 }
 
 DirectX::XMFLOAT3 Player::GetFacingDirection()
@@ -259,7 +275,7 @@ DirectX::XMFLOAT3 Player::GetFacingDirection()
 
 void Player::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
 {
-	Object::SetRotation(p_facingDirection);
+	//Object::SetRotation(p_facingDirection);
 }
 
 DirectX::XMFLOAT3 Player::GetAttackDirection()
@@ -272,6 +288,8 @@ void Player::SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 	m_attackDir = p_attackDir;
 	CalculateFacingAngle();
 
+	AnimatedObject::SetIkDirection(p_attackDir);
+
 	if (Network::GetInstance()->IsConnected())
 	{
 		DirectX::XMFLOAT3 dir = GetAttackDirection();
@@ -283,6 +301,7 @@ void Player::SetAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 {
 	m_attackDir = p_attackDir;
 	CalculateFacingAngle();
+	AnimatedObject::SetIkDirection(p_attackDir);
 }
 
 RakNet::RakNetGUID Player::GetGuID()
@@ -431,19 +450,10 @@ void Player::Render(SHADERTYPE p_shader)
 {
 	if (m_isAlive)
 	{
-	AnimatedObject::RenderAnimated(p_shader);
-		if (m_smokeBomb->GetIfActive() && Collisions::SphereSphereCollision(m_smokeBomb->GetSmokeSphere(), m_playerSphere))
-		{
-		}
-		else
-		{
-	m_healthbar.Render();
-
-		}
+		AnimatedObject::RenderAnimated(p_shader);
+		m_healthbar.Render();
 	}
-	m_smokeBomb->Render();
 }
-
 void Player::SetIsAlive(bool p_isAlive)
 {
 	m_isAlive = p_isAlive;

@@ -11,7 +11,7 @@ PlayerManager::~PlayerManager()
 
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
-	m_playerHealth = CHARACTAR_KATANA_SHURIKEN_HEALTH;
+	m_playerHealth = (int)CHARACTAR_KATANA_SHURIKEN_HEALTH;
 	m_gcd = ALL_AROUND_GOLOBAL_COOLDOWN;
 	m_serverPeer = p_serverPeer;
 
@@ -59,11 +59,11 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 	return m_players;
 }
 
-void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_nrOfConnections)
+void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid)
 {
 	PlayerNet player;
 	player.guid = p_guid;
-	player.team = (p_nrOfConnections % 2) + 1;
+	player.team = (m_players.size() % 2) + 1;
 	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
 	player.x = spawnPoint.m_translationX;
 	player.y = spawnPoint.m_translationY;
@@ -116,7 +116,7 @@ void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, 
 	// Add player if he doesn't exist in the vector
 	if (!found)
 	{
-		AddPlayer(p_guid, p_nrOfConnections);
+		AddPlayer(p_guid);
 	}
 }
 
@@ -278,16 +278,16 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 		switch (p_ability)
 		{
 		case ABILITIES_SHURIKEN:
-			m_players[p_index].cooldownAbilites.shurikenCD = 3;
+			m_players[p_index].cooldownAbilites.shurikenCD = ALL_AROUND_GOLOBAL_COOLDOWN;
 			break;
 		case ABILITIES_DASH:
-			m_players[p_index].cooldownAbilites.dashCD = 8;
+			m_players[p_index].cooldownAbilites.dashCD = DASH_COOLDOWN;
 			break;
 		case ABILITIES_MELEESWING:
-			m_players[p_index].cooldownAbilites.meleeSwingCD = 0.5;
+			m_players[p_index].cooldownAbilites.meleeSwingCD = ALL_AROUND_GOLOBAL_COOLDOWN;
 			break;
 		case ABILITIES_MEGASHURIKEN:
-			m_players[p_index].cooldownAbilites.megaShurikenCD = 10;
+			m_players[p_index].cooldownAbilites.megaShurikenCD = MEGASHURIKEN_COOLDOWN;
 			break;
 		default:
 			break;
@@ -318,6 +318,9 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 			case ABILITIES_MEGASHURIKEN:
 				result = true; // controlled locally atmresult = false;
 				break;
+			case ABILITIES_SMOKEBOMB:
+				result = true; 
+				break;
 			default:
 				result = false;
 				break;
@@ -328,9 +331,10 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	return result;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb)
 {
-	float distance = 10.0f;
+	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
+	float dashDistance = 10.0f;
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
 	int index = GetPlayerIndex(p_guid);
@@ -344,13 +348,12 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		abilityString = "Dash";
 		//Calculate new location for the dashing player and inflict damage on enemies
 		player = GetPlayer(p_guid);
-		distance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
-		MovePlayer(p_guid, player.x + distance*player.dirX, player.y, player.z + distance*player.dirZ, p_nrOfConnections, true);
-		
+		dashDistance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
+		MovePlayer(p_guid, player.x + dashDistance*player.dirX, player.y, player.z + dashDistance*player.dirZ, p_nrOfConnections, true);
 		break;
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
-		p_collisionManager.NormalMeleeAttack(p_guid, this);		
+		p_collisionManager.NormalMeleeAttack(p_guid, this);
 		break;
 	case ABILITIES_MEGASHURIKEN:
 		abilityString = "MegaShuriken";
@@ -358,7 +361,11 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		break;
 	case ABILITIES_SMOKEBOMB:
 		abilityString = "SmokeBooooooooobm";
-
+		if (smokeBombDistance > SMOKEBOMB_RANGE)
+		{
+			smokeBombDistance = SMOKEBOMB_RANGE;
+		}
+		p_smokebomb.AddSmokeBomb(m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
 		break;
 	default:
 		break;

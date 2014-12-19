@@ -14,18 +14,31 @@ bool ObjectManager::Initialize()
 
 void ObjectManager::Shutdown()
 {
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		m_shurikens[i].Shutdown();
+	}
 	m_shurikens.clear();
+
+	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	{
+		m_staticObjects[i].Shutdown();
+	}
+	m_staticObjects.clear();
 }
 
 void ObjectManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	//m_animatedCharacter.Update(p_deltaTime);
-
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		m_shurikens[i].Update();
+	}	
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		m_smokeBombList[i].Update();
 	}
 
 	if (Network::GetInstance()->IsShurikenListUpdated())
@@ -61,6 +74,29 @@ void ObjectManager::Update()
 		}
 		Network::GetInstance()->SetHaveUpdateShurikenList();
 	}
+	if (Network::GetInstance()->IsSmokeBombListUpdated())
+	{
+		std::vector<SmokeBombNet> tempSmokeBomb = Network::GetInstance()->GetSmokeBombs();
+		std::vector<SmokeBomb> smokeBombList;
+		for (unsigned int i = 0; i < tempSmokeBomb.size(); i++)
+		{
+			if (!IsSmokeBombInList(tempSmokeBomb[i].smokeBombId))
+			{
+				AddSmokeBomb(tempSmokeBomb[i].x, tempSmokeBomb[i].z, tempSmokeBomb[i].smokeBombId);
+			}
+		}
+		for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+		{
+			if (!m_smokeBombList[i].GetIfActive())
+			{
+				// Remove Smoke bomb
+				m_smokeBombList[i].Shutdown();
+				m_smokeBombList.erase(m_smokeBombList.begin() + i);
+				i--;
+			}
+		}
+		Network::GetInstance()->SetHaveUpdateSmokeBombList();
+	}
 }
 
 void ObjectManager::Render(SHADERTYPE p_shader)
@@ -85,6 +121,10 @@ void ObjectManager::RenderShurikens(SHADERTYPE p_shader)
 	{
 		m_shurikens[i].Render(p_shader);
 	}
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		m_smokeBombList[i].Render();
+	}
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID)
@@ -94,6 +134,13 @@ void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	m_shurikens.push_back(tempShuriken);
 }
 
+void ObjectManager::AddSmokeBomb(float p_xPos, float p_zPos, unsigned int p_smokeBombID)
+{
+	SmokeBomb tempSmokeBomb;
+	tempSmokeBomb.Initialize(DirectX::XMFLOAT3(p_xPos, 0.0f, p_zPos), p_smokeBombID);
+	tempSmokeBomb.ResetTimer();
+	m_smokeBombList.push_back(tempSmokeBomb);
+}
 void ObjectManager::AddStaticObject(Object p_object)
 {
 	m_staticObjects.push_back(p_object);
@@ -111,7 +158,18 @@ bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
 
 	return false;
 }
+bool ObjectManager::IsSmokeBombInList(unsigned int p_smokeBombId)
+{
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		if (p_smokeBombId == m_smokeBombList[i].GetID())
+		{
+			return true;
+		}
+	}
 
+	return false;
+}
 bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 {
 	std::vector<ShurikenNet> shurikenList = Network::GetInstance()->GetShurikens();

@@ -19,6 +19,8 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	{
 		m_animationController.CreateNewStack(m_model->GetAnimationStacks()[i]);
 	}
+	m_animationController.HandleInput(p_dir);
+
 	return true;
 }
 
@@ -30,7 +32,6 @@ void AnimatedObject::Shutdown()
 void AnimatedObject::SetDirection(DirectX::XMFLOAT3 p_direction)
 {
 	m_direction = p_direction;
-
 }
 
 DirectX::XMFLOAT3 AnimatedObject::GetDirection()
@@ -63,7 +64,17 @@ void AnimatedObject::MeleeAttackAnimation()
 	m_animationController.MeleeAttack();
 }
 
-void AnimatedObject::HandleInput()
+void AnimatedObject::HandleInput(DirectX::XMFLOAT3 p_dir)
 {
-	m_animationController.HandleInput();
+	m_animationController.HandleInput(p_dir);
+}
+
+void AnimatedObject::NetworkInput(DirectX::XMFLOAT3 p_dir)
+{
+	m_animationController.NetworkInput(p_dir);
+}
+
+void AnimatedObject::SetIkDirection(DirectX::XMFLOAT3 p_ikDirection)
+{
+	m_animationController.SetIkDirection(p_ikDirection);
 }

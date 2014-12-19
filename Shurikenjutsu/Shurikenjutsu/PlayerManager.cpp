@@ -11,7 +11,15 @@ bool PlayerManager::Initialize()
 	return true;
 }
 
-void PlayerManager::Shutdown(){}
+void PlayerManager::Shutdown()
+{
+	m_player.Shutdown();
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		m_enemyList[i].Shutdown();
+	}
+	m_enemyList.clear();
+}
 
 void PlayerManager::Update()
 {

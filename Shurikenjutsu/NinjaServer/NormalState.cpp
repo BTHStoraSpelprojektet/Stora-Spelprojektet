@@ -13,16 +13,44 @@ NormalState::~NormalState()
 bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	bool result;
-	m_roundTimer = 5.0f;
-	m_currentTimer = m_roundTimer;
-	m_sendTime = (int)m_roundTimer;
-	m_roundRestarting = false;
+	result = Initialize();
+	if (!result)
+	{
+		return false;
+	}
 
 	result = GameState::Initialize(p_serverPeer);
 	if (!result)
 	{
 		return false;
 	}
+
+	return true;
+}
+
+bool NormalState::Initialize(std::string p_levelName)
+{
+	bool result;
+	Initialize();
+
+	result = GameState::Initialize(p_levelName);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool NormalState::Initialize()
+{
+	m_roundLimit = 5;
+	m_currentRound = 1;
+	m_roundTimer = 5.0f;
+	m_currentTimer = m_roundTimer;
+	m_sendTime = (int)m_roundTimer;
+	m_roundRestarting = false;
+	m_winningTeams = std::map<int, int>();
 
 	return true;
 }
@@ -36,6 +64,7 @@ void NormalState::Update(double p_deltaTime)
 {
 	GameState::Update(p_deltaTime);
 
+	// Is the round restarting
 	if (m_roundRestarting)
 	{
 		m_currentTimer -= (float)p_deltaTime;
@@ -52,14 +81,28 @@ void NormalState::Update(double p_deltaTime)
 			RespawnAllPlayers();
 		}
 	}
+	// Check if there is only one team remaining
 	else if (OneTeamRemaining(m_playerManager.GetPlayers()))
 	{
-		int winningTeam = GetWinningTeam();
+		// Check which team won this round
+		int winningTeam = GetRoundWinningTeam();
+		SetTeamWon(winningTeam);
 		SendWinningTeam(winningTeam);
-		m_currentTimer = m_roundTimer;
-		m_sendTime = (int)m_roundTimer;
-		m_roundRestarting = true;
-		SendRestartingRound();
+		m_currentRound++;
+
+		// See if the round limit has been reached else restart a new round
+		if (m_currentRound > m_roundLimit)
+		{
+			SendMatchOver(GetTotalWinningTeam());
+			StartNewLevel();
+		}
+		else
+		{
+			m_currentTimer = m_roundTimer;
+			m_sendTime = (int)m_roundTimer;
+			m_roundRestarting = true;
+			SendRestartingRound();
+		}
 	}
 }
 
@@ -105,7 +148,7 @@ bool NormalState::OneTeamRemaining(std::vector<PlayerNet> p_players)
 }
 
 // Make sure OneTeamRemaining is true before calling this
-int NormalState::GetWinningTeam()
+int NormalState::GetRoundWinningTeam()
 {
 	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
 
@@ -118,6 +161,37 @@ int NormalState::GetWinningTeam()
 	}
 
 	return -1;
+}
+
+int NormalState::GetTotalWinningTeam()
+{
+	int team = -1;
+	int score = 0;
+
+	for (std::map<int, int>::iterator it = m_winningTeams.begin(); it != m_winningTeams.end(); it++)
+	{
+		if (it->second > score || team == -1)
+		{
+			team = it->first;
+			score = it->second;
+		}
+	}
+	return team;
+}
+
+void NormalState::SetTeamWon(int p_winningTeam)
+{
+	if (m_winningTeams.find(p_winningTeam) != m_winningTeams.end())
+	{
+		// found
+		m_winningTeams[p_winningTeam]++;
+	}
+	else
+	{
+		// not found
+		m_winningTeams[p_winningTeam] = 1;
+	}
+
 }
 
 void NormalState::RespawnAllPlayers()
@@ -172,4 +246,27 @@ void NormalState::SendRestartingRoundTime(int p_time)
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 	std::cout << p_time << "\n";
+}
+
+void NormalState::StartNewLevel()
+{
+	Shutdown();
+	Initialize(LEVEL_NAME);
+
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_NEW_LEVEL);
+	bitStream.Write(LEVEL_NAME);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void NormalState::SendMatchOver(int p_winningTeam)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_MATCH_OVER);
+	bitStream.Write(p_winningTeam);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

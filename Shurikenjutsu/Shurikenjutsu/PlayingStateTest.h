@@ -19,7 +19,8 @@ class PlayingStateTest : public GameState
 public:
 	PlayingStateTest();
 	~PlayingStateTest();
-	bool Initialize();
+	virtual bool Initialize();
+	virtual bool Initialize(std::string p_levelName);
 	void Shutdown();
 	GAMESTATESWITCH Update();
 	void Render();

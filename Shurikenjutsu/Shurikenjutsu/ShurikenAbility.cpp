@@ -27,13 +27,13 @@ void ShurikenAbility::Update()
 	}
 	m_gcd += GLOBAL::GetInstance().GetDeltaTime();
 }
-bool ShurikenAbility::Execute()
+bool ShurikenAbility::Execute(float p_distance)
 {
 	if (m_gcd > ALL_AROUND_GOLOBAL_COOLDOWN)
 	{
 		if (m_stacks > 0)
 		{
-			Network::GetInstance()->SendAbility(ABILITIES_SHURIKEN);
+			Network::GetInstance()->SendAbility(ABILITIES_SHURIKEN, 0);
 			if (m_stacks == SHURIKEN_MAX_STACK)
 			{
 				SetCooldown(SHURIKEN_COOLDOWN);

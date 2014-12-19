@@ -15,11 +15,11 @@ public:
 
 	void Initialize(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/);
 	static CollisionManager* GetInstance();
-
-
+	
+	void Update(float p_pickedx, float p_pickedZ);
 	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
 	float CalculateDashLength(Ray* p_ray);
-	DirectX::XMFLOAT3 CalculateSmokeBombLocation(Sphere p_playerSphere, DirectX::XMFLOAT3 p_direction);
+	float CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos);
 private:
 
 	CollisionManager();
@@ -27,6 +27,7 @@ private:
 	static CollisionManager* m_instance;
 	void SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/);
 	std::vector<OBB> m_StaticObjectList;
+	DirectX::XMFLOAT2 m_pickedLocation;
 	//std::vector<Sphere> m_sphereObjectList;
 };
 

@@ -8,7 +8,7 @@
 class SmokeBomb
 {
 public:
-	bool Initialize(DirectX::XMFLOAT3 p_position);
+	bool Initialize(DirectX::XMFLOAT3 p_position, unsigned int p_smokeBombID);
 	void Update();
 	void Shutdown();
 	void Render();
@@ -17,11 +17,14 @@ public:
 	void ResetTimer();
 	bool GetIfActive();
 	Sphere GetSmokeSphere();
+	unsigned int GetID();
+
 
 private:
 	Sphere m_SmokeSphere;
 	ParticleEmitter m_particles;
 	float m_timer;
+	unsigned int m_smokeBombId;
 };
 
 #endif

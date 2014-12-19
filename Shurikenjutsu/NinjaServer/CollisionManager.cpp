@@ -74,7 +74,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, KATANA_RANGE, attackDirection, boxPosition, boxExtent, 2.5f))
 		{
 			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, KATANA_DAMAGE);
+			p_playerManager->DamagePlayer(playerList[i].guid, (int)KATANA_DAMAGE);
 			break;
 		}
 	}
@@ -93,7 +93,16 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 		float newPosZ = p_shurikenManager->GetShurikenPosZ(i);
 
 		// Get the shuriken bounding boxes
-		std::vector<Box> shurikenBoundingBoxes = p_shurikenManager->GetBoundingBoxes(i);
+		std::vector<Box> shurikenBoundingBoxes; 
+		if (shurikenList[i].megaShuriken)
+		{
+			shurikenBoundingBoxes = p_shurikenManager->GetMegaBoundingBoxes(i);
+		}
+		else
+		{
+			shurikenBoundingBoxes = p_shurikenManager->GetBoundingBoxes(i);
+		}
+		
 
 		// Go through player list
 		for (unsigned int j = 0; j < playerList.size(); j++)
@@ -129,7 +138,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 					if (BoxBoxtest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
 						// temp shuriken dmg
-						p_playerManager->DamagePlayer(playerList[j].guid, SHURIKEN_DAMAGE);
+						p_playerManager->DamagePlayer(playerList[j].guid, (int)SHURIKEN_DAMAGE);
 
 						// Remove shuriken
 						p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);

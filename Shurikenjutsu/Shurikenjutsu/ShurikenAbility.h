@@ -13,7 +13,7 @@ public:
 
 	bool Initialize();
 	void Update();
-	bool Execute();
+	bool Execute(float p_distance);
 	void ResetCooldown();
 private:
 	int m_stacks;

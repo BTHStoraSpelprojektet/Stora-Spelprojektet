@@ -1,7 +1,7 @@
 #include "SmokeBomb.h"
 
 
-bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_position)
+bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_position, unsigned int p_smokeBombID)
 {
 	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(p_position.x, SMOKEBOMB_POSITION_Y, p_position.z),
 		DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
@@ -9,7 +9,7 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_position)
 
 
 	m_SmokeSphere = Sphere(p_position, SMOKEBOMB_SIZE_X);
-
+	m_smokeBombId = p_smokeBombID;
 	m_timer = 10;
 	return true;
 }
@@ -58,4 +58,9 @@ bool SmokeBomb::GetIfActive()
 Sphere SmokeBomb::GetSmokeSphere()
 {
 	return m_SmokeSphere;
+}
+
+unsigned int SmokeBomb::GetID()
+{
+	return m_smokeBombId;
 }

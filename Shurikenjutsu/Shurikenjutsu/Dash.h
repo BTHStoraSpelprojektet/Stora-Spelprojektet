@@ -13,6 +13,6 @@ public:
 	~Dash();
 
 	bool Initialize();
-	bool Execute();
+	bool Execute(float p_distance);
 };
 #endif // !DASH_H_

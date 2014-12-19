@@ -16,7 +16,8 @@ public:
 	void SetIkDirection(DirectX::XMFLOAT3 p_direction);
 	void MeleeAttack();
 	void RangeAttack();
-	void HandleInput();
+	void HandleInput(DirectX::XMFLOAT3 p_dir);
+	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
@@ -29,19 +30,18 @@ private:
 
 	bool m_attackAnimation;
 
-	DirectX::XMFLOAT3 m_ikDirection;
+	DirectX::XMVECTOR m_ikDirection;
+	DirectX::XMVECTOR m_forwardDirection;
 	DirectX::XMVECTOR m_rotationAxis;
+	float m_hipRotation;
 
-	AnimationStack* m_currentArms;
-	AnimationStack* m_currentLegs;
+	AnimationStack m_currentArms;
+	AnimationStack m_currentLegs;
 
 	std::vector<DirectX::XMFLOAT4X4> m_boneTransforms;
 	std::vector<BindPose> m_bindPoses;
 
 	InputManager* m_inputManager;
-
-	AnimationStack* m_runF;
-	AnimationStack* m_runA;
 };
 
 #endif;
