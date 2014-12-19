@@ -18,20 +18,7 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 
 	m_inputManager = InputManager::GetInstance();
 
-	m_hipRotation = 0.0f;// -3.14f / 2.0f;
-
-	/*for (unsigned int i = 0; i < m_animationStacks.size(); i++)
-	{
-		if (strcmp(m_animationStacks[i].m_name, "RunF") == 0)
-		{
-			m_runF = &m_animationStacks[i];
-		}
-
-		if (strcmp(m_animationStacks[i].m_name, "RunA") == 0)
-		{
-			m_runA = &m_animationStacks[i];
-		}
-	}*/
+	m_hipRotation = 0.0f;
 
 	return true;
 }
@@ -40,19 +27,16 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
-	HandleInput();
-
 	m_frameArms += deltaTime * 20;
 	m_frameLegs += deltaTime * 20;
 
-	if (m_frameArms >= (m_currentArms->m_endFrame - 1))
+	if (m_frameArms >= (m_currentArms.m_endFrame - 1))
 	{
 		m_frameArms = 0.0f;
 		m_attackAnimation = false;
-	}
-		
+	}		
 
-	if (m_frameLegs >= (m_currentLegs->m_endFrame - 1))
+	if (m_frameLegs >= (m_currentLegs.m_endFrame - 1))
 	{
 		m_frameLegs = 0.0f;
 	}		
@@ -61,7 +45,7 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 	DirectX::XMVECTOR startTranslation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 
 	int* index = new int(0);
-	CombineMatrices(index, m_currentArms->m_root[(int)m_frameArms], m_currentLegs->m_root[(int)m_frameLegs], startQuaternion, startTranslation);
+	CombineMatrices(index, m_currentArms.m_root[(int)m_frameArms], m_currentLegs.m_root[(int)m_frameLegs], startQuaternion, startTranslation);
 	delete[] index;
 
 	return m_boneTransforms;
@@ -146,20 +130,18 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 DirectX::XMVECTOR AnimationControl::ApplyIK(DirectX::XMVECTOR& p_quaternion)
 {
-	float angleFix = 1.0f;
-	if (m_ikDirection.m128_f32[0] > 0)
-	{
-		angleFix = -1.0f;
-	}
-
 	DirectX::XMMATRIX forwardRotation = DirectX::XMMatrixRotationY(-m_hipRotation);
 	m_ikDirection = DirectX::XMVector3TransformNormal(m_ikDirection, forwardRotation);
 
-	m_ikDirection = DirectX::XMVector3AngleBetweenVectors(m_ikDirection, m_forwardDirection);
+	float cross = DirectX::XMVector3Cross(m_ikDirection, m_forwardDirection).m128_f32[1];
+	float angle = acosf(DirectX::XMVector3Dot(m_ikDirection, m_forwardDirection).m128_f32[0]);
 
-	m_ikDirection.m128_f32[0] *= angleFix;
+	if (cross > 0)
+	{
+		angle *= -1.0f;
+	}
 
-	DirectX::XMVECTOR appliedIkQuaternion = DirectX::XMQuaternionRotationAxis(m_rotationAxis, m_ikDirection.m128_f32[0]);  
+	DirectX::XMVECTOR appliedIkQuaternion = DirectX::XMQuaternionRotationAxis(m_rotationAxis, angle);
 	appliedIkQuaternion = DirectX::XMQuaternionMultiply(appliedIkQuaternion, p_quaternion);
 
 	return appliedIkQuaternion;
@@ -178,65 +160,94 @@ void AnimationControl::SetIkDirection(DirectX::XMFLOAT3 p_direction)
 	m_ikDirection = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
 }
 
-void AnimationControl::HandleInput()
+void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 {
-	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
-	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = &m_animationStacks[4];
-		}
-		
-		m_currentLegs = &m_animationStacks[1];
-	}
-	else if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
-	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = &m_animationStacks[11];
-		}
-		
-		m_currentLegs = &m_animationStacks[8];
-	}
-	else if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
-	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = &m_animationStacks[11];
-		}
-		
-		m_currentLegs = &m_animationStacks[2];
-	}
-	else if(m_inputManager->IsKeyPressed(VkKeyScan('d')))
-	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = &m_animationStacks[11];
-		}
-		
-		m_currentLegs = &m_animationStacks[5];
-	}
-	else
-	{
-		if (m_attackAnimation != true)
-		{ 
-			m_currentArms = &m_animationStacks[0]; 
-		}		
+	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
 
-		m_currentLegs = &m_animationStacks[3];
+	if (m_animationStacks.size() > 0)
+	{
+		if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
+		{
+			if (m_attackAnimation != true)
+			{
+				m_currentArms = m_animationStacks[4];
+			}
+
+			m_currentLegs = m_animationStacks[1];
+			m_hipRotation = 3.14f;
+		}
+		else if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
+		{
+			if (m_attackAnimation != true)
+			{
+				m_currentArms = m_animationStacks[11];
+			}
+
+			m_currentLegs = m_animationStacks[8];
+			m_hipRotation = 3.14f / 2.0f;
+		}
+		else if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
+		{
+			if (m_attackAnimation != true)
+			{
+				m_currentArms = m_animationStacks[11];
+			}
+
+			m_currentLegs = m_animationStacks[2];
+			m_hipRotation = 0.0f;
+		}
+		else if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
+		{
+			if (m_attackAnimation != true)
+			{
+				m_currentArms = m_animationStacks[11];
+			}
+
+			m_currentLegs = m_animationStacks[5];
+			m_hipRotation = -3.14f / 2.0f;
+		}
+		else
+		{
+			if (m_attackAnimation != true)
+			{
+				m_currentArms = m_animationStacks[0];
+			}
+
+			m_currentLegs = m_animationStacks[3];
+		}
+	}
+}
+
+void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
+{
+	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
+
+	if (m_animationStacks.size() > 0)
+	{
+		if (DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)
+		{
+			m_currentArms = m_animationStacks[0];
+			m_currentLegs = m_animationStacks[3];
+		}
 	}
 }
 
 void AnimationControl::RangeAttack()
 {
-	m_currentArms = &m_animationStacks[7];
-	m_frameArms = 0.0f;
-	m_attackAnimation = true;
+	if (!m_attackAnimation)
+	{
+		m_currentArms = m_animationStacks[7];
+		m_frameArms = 0.0f;
+		m_attackAnimation = true;
+	}	
 }
 
 void AnimationControl::MeleeAttack()
 {
-	m_currentArms = &m_animationStacks[6];
-	m_frameArms = 0.0f;
-	m_attackAnimation = true;
+	if (!m_attackAnimation)
+	{
+		m_currentArms = m_animationStacks[6];
+		m_frameArms = 0.0f;
+		m_attackAnimation = true;
+	}
 }

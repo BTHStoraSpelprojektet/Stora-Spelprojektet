@@ -184,28 +184,24 @@ bool Player::CalculateDirection()
 	{
 		z += 1;
 		moved = true;
-		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
 	{
 		x += -1;
 		moved = true;
-		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
 	{
 		z += -1;
 		moved = true;
-		AnimatedObject::HandleInput();
 	}
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
 	{
 		x += 1;
 		moved = true;
-		AnimatedObject::HandleInput();
 	}
 
 	DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(x, y, z));
@@ -213,6 +209,7 @@ bool Player::CalculateDirection()
 	DirectX::XMFLOAT3 tempFloat;
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	SetDirection(tempFloat);
+	AnimatedObject::HandleInput(tempFloat);
 
 	return moved;
 }
@@ -282,7 +279,14 @@ void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 
 void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
+	DirectX::XMFLOAT3 oldPos = Object::GetPosition();
 	Object::SetPosition(p_pos);
+
+	DirectX::XMFLOAT3 dir;
+	dir.x = p_pos.x - oldPos.x;
+	dir.y = p_pos.y - oldPos.y;
+	dir.z = p_pos.z - oldPos.z;
+	AnimatedObject::NetworkInput(dir);
 }
 
 DirectX::XMFLOAT3 Player::GetFacingDirection()
@@ -318,6 +322,7 @@ void Player::SetAttackDirection(DirectX::XMFLOAT3 p_attackDir)
 {
 	m_attackDir = p_attackDir;
 	CalculateFacingAngle();
+	AnimatedObject::SetIkDirection(p_attackDir);
 }
 
 RakNet::RakNetGUID Player::GetGuID()

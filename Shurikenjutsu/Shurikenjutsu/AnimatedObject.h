@@ -18,7 +18,8 @@ public:
 	void RenderAnimated(SHADERTYPE p_shader);
 	void RangeAttackAnimation();
 	void MeleeAttackAnimation();
-	void HandleInput();
+	void HandleInput(DirectX::XMFLOAT3 p_dir);
+	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 	void SetIkDirection(DirectX::XMFLOAT3 p_ikDirection);
 
 protected:
