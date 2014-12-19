@@ -14,6 +14,7 @@ bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	m_serverPeer = p_serverPeer;
 	m_shurikenSetTimeLeft = 2.0f;
+	m_megaShurikenSetTimeLeft = 4.0f;
 
 	m_shurikens = std::vector<ShurikenNet>();
 
@@ -75,7 +76,7 @@ void ShurikenManager::AddMegaShuriken(RakNet::RakNetGUID p_guid, float p_posX, f
 	shuriken.dirZ = p_dirZ;
 	shuriken.shurikenId = GetShurikenUniqueId();
 	shuriken.guid = p_guid;
-	shuriken.lifeTime = 4.0f;
+	shuriken.lifeTime = m_megaShurikenSetTimeLeft;
 	shuriken.speed = 10.0f;
 	shuriken.megaShuriken = true;
 	m_shurikens.push_back(shuriken);
@@ -174,7 +175,8 @@ float ShurikenManager::GetShurikenPosX(int p_index)
 		return 0;
 	}
 
-	float lifeTime = m_shurikenSetTimeLeft - m_shurikens[p_index].lifeTime;
+	float setTimeLeft = m_shurikens[p_index].megaShuriken ? m_megaShurikenSetTimeLeft : m_shurikenSetTimeLeft;
+	float lifeTime = setTimeLeft - m_shurikens[p_index].lifeTime;
 	return m_shurikens[p_index].x + m_shurikens[p_index].dirX * m_shurikens[p_index].speed * lifeTime;
 }
 
@@ -186,7 +188,8 @@ float ShurikenManager::GetShurikenPosY(int p_index)
 		return 0;
 	}
 
-	float lifeTime = m_shurikenSetTimeLeft - m_shurikens[p_index].lifeTime;
+	float setTimeLeft = m_shurikens[p_index].megaShuriken ? m_megaShurikenSetTimeLeft : m_shurikenSetTimeLeft;	
+	float lifeTime = setTimeLeft - m_shurikens[p_index].lifeTime;
 	return m_shurikens[p_index].y + m_shurikens[p_index].dirY * m_shurikens[p_index].speed * lifeTime;
 }
 
@@ -198,7 +201,8 @@ float ShurikenManager::GetShurikenPosZ(int p_index)
 		return 0;
 	}
 
-	float lifeTime = m_shurikenSetTimeLeft - m_shurikens[p_index].lifeTime;
+	float setTimeLeft = m_shurikens[p_index].megaShuriken ? m_megaShurikenSetTimeLeft : m_shurikenSetTimeLeft;
+	float lifeTime = setTimeLeft - m_shurikens[p_index].lifeTime;
 	return m_shurikens[p_index].z + m_shurikens[p_index].dirZ * m_shurikens[p_index].speed * lifeTime;
 }
 

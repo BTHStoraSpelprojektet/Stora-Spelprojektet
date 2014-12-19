@@ -34,6 +34,7 @@ private:
 
 	RakNet::RakPeerInterface *m_serverPeer;
 	float m_shurikenSetTimeLeft;
+	float m_megaShurikenSetTimeLeft;
 
 	std::vector<ShurikenNet> m_shurikens;
 	std::vector<Box> m_boundingBoxes;
