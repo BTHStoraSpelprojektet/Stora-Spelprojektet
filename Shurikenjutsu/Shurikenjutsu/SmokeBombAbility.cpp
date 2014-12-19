@@ -11,11 +11,11 @@ bool SmokeBombAbility::Initialize()
 	SetCooldown(0.0f);
 	return true;
 }
-bool SmokeBombAbility::Execute()
+bool SmokeBombAbility::Execute(float p_distance)
 {
-	if (Ability::Execute())
+	if (Ability::Execute(p_distance))
 	{
-		Network::GetInstance()->SendAbility(ABILITIES_SMOKEBOMB);
+		Network::GetInstance()->SendAbility(ABILITIES_SMOKEBOMB, p_distance);
 		SetCooldown(SMOKEBOMB_COOLDOWN);
 	}
 

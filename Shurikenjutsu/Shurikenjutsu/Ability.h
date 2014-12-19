@@ -13,7 +13,7 @@ public:
 	virtual bool Initialize();
 	virtual void Shutdown();
 	virtual void Update();
-	virtual bool Execute();
+	virtual bool Execute(float p_distance);
 
 	virtual void SetDamage(unsigned int p_damage);
 	virtual unsigned int GetDamage();

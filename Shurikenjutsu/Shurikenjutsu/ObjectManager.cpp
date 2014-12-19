@@ -21,7 +21,6 @@ void ObjectManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	//m_animatedCharacter.Update(p_deltaTime);
-	std::cout << m_smokeBombList.size() << std::endl;
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{

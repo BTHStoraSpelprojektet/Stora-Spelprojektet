@@ -63,7 +63,7 @@ public:
 	void SetHaveRespawned();
 
 	void DoMeleeAttack();
-	void SendAbility(ABILITIES p_ability);
+	void SendAbility(ABILITIES p_ability, float p_distanceFromPlayer);
 
 	bool RoundRestarted();
 	void SetHaveUpdatedAfterRestartedRound();

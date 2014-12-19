@@ -8,10 +8,7 @@ bool SmokeBombManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 
 	return true;
 }
-void SmokeBombManager::Shutdown()
-{
-
-}
+void SmokeBombManager::Shutdown(){}
 void SmokeBombManager::Update(double p_deltaTime)
 {
 	for (unsigned int i = 0; i < m_smokeBombs.size(); i++)
@@ -80,4 +77,13 @@ void SmokeBombManager::BroadcastEmptySmokeBombs(unsigned int p_id)
 std::vector<SmokeBombNet> SmokeBombManager::GetSmokeBombs()
 {
 	return m_smokeBombs;
+}
+
+float SmokeBombManager::GetCurrentDistanceFromPlayer()
+{
+	return m_currentDistanceFromPlayer;
+}
+void SmokeBombManager::SetCurrentDistanceFromPlayer(float p_distance)
+{
+	m_currentDistanceFromPlayer = p_distance;
 }

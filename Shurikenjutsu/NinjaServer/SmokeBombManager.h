@@ -19,11 +19,14 @@ public:
 	unsigned int GetSmokeBombUniqueId();
 
 	void BroadcastEmptySmokeBombs(unsigned int p_id);
+	float GetCurrentDistanceFromPlayer();
+	void SetCurrentDistanceFromPlayer(float p_distance);
+
 
 private:
-	RakNet::RakPeerInterface *m_serverPeer;
-	
+	RakNet::RakPeerInterface *m_serverPeer;	
 	std::vector<SmokeBombNet> m_smokeBombs;
+	float m_currentDistanceFromPlayer;
 };
 
 

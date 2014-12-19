@@ -333,7 +333,8 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 
 void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb)
 {
-	float distance = 10.0f;
+	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
+	float dashDistance = 10.0f;
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
 	int index = GetPlayerIndex(p_guid);
@@ -347,9 +348,8 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		abilityString = "Dash";
 		//Calculate new location for the dashing player and inflict damage on enemies
 		player = GetPlayer(p_guid);
-		distance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
-		MovePlayer(p_guid, player.x + distance*player.dirX, player.y, player.z + distance*player.dirZ, p_nrOfConnections, true);
-
+		dashDistance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
+		MovePlayer(p_guid, player.x + dashDistance*player.dirX, player.y, player.z + dashDistance*player.dirZ, p_nrOfConnections, true);
 		break;
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
@@ -361,7 +361,11 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		break;
 	case ABILITIES_SMOKEBOMB:
 		abilityString = "SmokeBooooooooobm";
-		p_smokebomb.AddSmokeBomb(m_players[index].x, m_players[index].z);
+		if (smokeBombDistance > SMOKEBOMB_RANGE)
+		{
+			smokeBombDistance = SMOKEBOMB_RANGE;
+		}
+		p_smokebomb.AddSmokeBomb(m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
 		break;
 	default:
 		break;

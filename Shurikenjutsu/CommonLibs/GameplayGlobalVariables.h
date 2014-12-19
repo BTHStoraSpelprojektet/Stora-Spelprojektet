@@ -42,7 +42,7 @@ const float SMOKEBOMB_DURATION = 3.0f;
 const float SMOKEBOMB_DAMAGE = 0.0f;
 const float SMOKEBOMB_COOLDOWN = 1.0f;
 
-const float SMOKEBOMB_RANGE = 15.0f;
+const float SMOKEBOMB_RANGE = 30.0f;
 const float SMOKEBOMB_POSITION_Y = 4.0f;
 const float SMOKEBOMB_DIRECTION_X = 0.0f;
 const float SMOKEBOMB_DIRECTION_Y = 1.0f;

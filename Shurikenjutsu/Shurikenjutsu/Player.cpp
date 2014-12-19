@@ -1,10 +1,7 @@
 #include "Player.h"
 
 Player::Player(){}
-Player::~Player()
-{
-
-}
+Player::~Player(){}
 
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
@@ -109,8 +106,8 @@ void Player::UpdateMe()
 
 	// Count down cooldowns
 	UpdateAbilities();
-
-	m_ability->Execute();
+	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
+	m_ability->Execute(temp);
 }
 
 void Player::CheckForSpecialAttack()
@@ -126,6 +123,7 @@ void Player::CheckForSpecialAttack()
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
 		m_ability = m_smokeBombAbility;
+		
 	}
 }
 bool Player::CalculateDirection()
@@ -175,10 +173,7 @@ bool Player::CalculateDirection()
 	return moved;
 }
 
-void Player::Update()
-{
-
-}
+void Player::Update(){}
 
 void Player::UpdateAbilities()
 {

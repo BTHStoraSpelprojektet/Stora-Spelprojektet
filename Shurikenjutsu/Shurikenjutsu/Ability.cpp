@@ -32,7 +32,7 @@ void Ability::Update()
 	}
 }
 
-bool Ability::Execute()
+bool Ability::Execute(float p_distance)
 {
 	if (m_cooldown <= 0.0)
 	{

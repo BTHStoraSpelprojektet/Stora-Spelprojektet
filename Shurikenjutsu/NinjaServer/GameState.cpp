@@ -94,8 +94,9 @@ void GameState::UsedAbility(int p_index, ABILITIES p_ability)
 	m_playerManager.UsedAbility(p_index, p_ability);
 }
 
-void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash)
+void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash, float p_distanceFromPlayer)
 {
+	m_smokeBombManager.SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_playerManager.ExecuteAbility(p_guid, p_ability, *m_collisionManager, m_shurikenManager, p_dash, m_smokeBombManager);
 }
 

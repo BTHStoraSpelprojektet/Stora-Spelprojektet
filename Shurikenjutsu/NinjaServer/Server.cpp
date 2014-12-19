@@ -162,8 +162,10 @@ void Server::ReceviePacket()
 
 			rBitStream.Read(messageID);
 			ABILITIES readAbility;
-
+			float distanceFromPlayer;
 			rBitStream.Read(readAbility);
+			rBitStream.Read(distanceFromPlayer);
+
 			int index = m_gameState->GetPlayerIndex(m_packet->guid);
 			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
@@ -171,13 +173,13 @@ void Server::ReceviePacket()
 			{
 				if (readAbility == ABILITIES_DASH)
 				{
-					m_gameState->ExecuteAbility(m_packet->guid, readAbility, true);
+					m_gameState->ExecuteAbility(m_packet->guid, readAbility, true, distanceFromPlayer);
 					m_gameState->UsedAbility(index, readAbility);
 				}
 				else
 				{
 
-					m_gameState->ExecuteAbility(m_packet->guid, readAbility, false);
+					m_gameState->ExecuteAbility(m_packet->guid, readAbility, false, distanceFromPlayer);
 					m_gameState->UsedAbility(index, readAbility);
 				}
 			}

@@ -787,12 +787,14 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_curre
 	}
 }
 
-void Network::SendAbility(ABILITIES p_ability)
+void Network::SendAbility(ABILITIES p_ability, float p_distanceFromPlayer)
 {
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_ABILITY);
 	bitStream.Write(p_ability);
+	bitStream.Write(p_distanceFromPlayer);
+
 
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }
