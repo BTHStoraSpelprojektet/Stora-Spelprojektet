@@ -33,7 +33,7 @@ bool ShurikenAbility::Execute()
 	{
 		if (m_stacks > 0)
 		{
-			Network::GetInstance()->SendAbility(ABILITIES_SHURIKEN);
+			Network::GetInstance()->SendAbility(ABILITIES_SHURIKEN, 0);
 			if (m_stacks == SHURIKEN_MAX_STACK)
 			{
 				SetCooldown(SHURIKEN_COOLDOWN);

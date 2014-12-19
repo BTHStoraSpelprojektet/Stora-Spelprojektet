@@ -22,6 +22,7 @@ bool Network::Initialize()
 	m_prevConnected = false;
 	m_newOrRemovedPlayers = false;
 	m_shurikenListUpdated = false;
+	m_smokebombListUpdated = false;
 	m_respawned = false;
 	m_invalidMove = false;
 	m_roundRestarted = false;
@@ -208,6 +209,7 @@ void Network::ReceviePacket()
 			float dirX, dirY, dirZ;
 			unsigned int shurikenID;
 			float speed;
+			bool megaShuriken;
 
 			bitStream.Read(messageID);
 			bitStream.Read(x);
@@ -219,32 +221,9 @@ void Network::ReceviePacket()
 			bitStream.Read(shurikenID);
 			bitStream.Read(guid);
 			bitStream.Read(speed);
+			bitStream.Read(megaShuriken);
 
-			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed);
-			break;
-		}
-		case ID_MEGASHURIKEN_THROWN:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float x, y, z;
-			float dirX, dirY, dirZ;
-			unsigned int shurikenID;
-			float speed;
-
-			bitStream.Read(messageID);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-			bitStream.Read(dirX);
-			bitStream.Read(dirY);
-			bitStream.Read(dirZ);
-			bitStream.Read(shurikenID);
-			bitStream.Read(guid);
-			bitStream.Read(speed);
-
-			UpdateMegaShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed);
+			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed, megaShuriken);
 			break;
 		}
 		case ID_SHURIKEN_REMOVE:
@@ -355,6 +334,31 @@ void Network::ReceviePacket()
 
 			std::cout << time << std::endl;
 			break;
+		}
+		case ID_SMOKEBOMB_THROW:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int smokebombId;
+			float posX, posZ, lifetime;
+			bitStream.Read(messageID);
+			bitStream.Read(smokebombId);
+			bitStream.Read(posX);
+			bitStream.Read(posZ);
+			bitStream.Read(lifetime);
+
+			UpdateSmokeBomb(smokebombId, posX, posZ, lifetime);
+			break;
+		}
+		case ID_SMOKEBOMB_REMOVE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int smokeBombID;
+			bitStream.Read(messageID);
+			bitStream.Read(smokeBombID);
+
+			RemoveSmokeBomb(smokeBombID);
 		}
 		case ID_MATCH_OVER:
 		{
@@ -537,38 +541,31 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }
 
-void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed)
+void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_posX, float p_posZ, float p_lifetime)
 {
-	bool addShuriken = true;
-	ShurikenNet tempShuriken;
-	tempShuriken = ShurikenNet();
-	tempShuriken.x = p_x;
-	tempShuriken.y = p_y;
-	tempShuriken.z = p_z;
-	tempShuriken.dirX = p_dirX;
-	tempShuriken.dirY = p_dirY;
-	tempShuriken.dirZ = p_dirZ;
-	tempShuriken.shurikenId = p_shurikenID;
-	tempShuriken.guid = p_guid;
-	tempShuriken.speed = p_speed;
-	tempShuriken.megaShuriken = false;
 
-	for (unsigned int i = 0; i < m_shurikensList.size(); i++)
+	bool addSmokeBomb = true;
+	SmokeBombNet temp;
+	temp.smokeBombId = p_smokebombId;
+	temp.x = p_posX;
+	temp.z = p_posZ;
+	temp.lifeTime = p_lifetime;
+
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
-		if (m_shurikensList[i].guid == tempShuriken.guid && m_shurikensList[i].shurikenId == tempShuriken.shurikenId)
+		if (m_smokeBombList[i].smokeBombId == temp.smokeBombId)
 		{
-			addShuriken = false;
+			addSmokeBomb = false;
 			break;
 		}
 	}
-	if (addShuriken)
+	if (addSmokeBomb)
 	{
-		m_shurikensList.push_back(tempShuriken);
-		m_shurikenListUpdated = true;
+		m_smokeBombList.push_back(temp);
+		m_smokebombListUpdated = true;
 	}
 }
-
-void Network::UpdateMegaShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed)
+void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken)
 {
 	bool addShuriken = true;
 	ShurikenNet tempShuriken;
@@ -582,7 +579,7 @@ void Network::UpdateMegaShurikens(float p_x, float p_y, float p_z, float p_dirX,
 	tempShuriken.shurikenId = p_shurikenID;
 	tempShuriken.guid = p_guid;
 	tempShuriken.speed = p_speed;
-	tempShuriken.megaShuriken = true;
+	tempShuriken.megaShuriken = p_megaShuriken;
 
 	for (unsigned int i = 0; i < m_shurikensList.size(); i++)
 	{
@@ -602,6 +599,9 @@ void Network::UpdateMegaShurikens(float p_x, float p_y, float p_z, float p_dirX,
 std::vector<ShurikenNet> Network::GetShurikens()
 {
 	return m_shurikensList;
+}std::vector<SmokeBombNet> Network::GetSmokeBombs()
+{
+	return m_smokeBombList;
 }
 
 RakNet::RakNetGUID Network::GetMyGUID()
@@ -655,12 +655,32 @@ void Network::RemoveShuriken(unsigned int p_shurikenID)
 		}
 	}
 }
+void Network::RemoveSmokeBomb(unsigned int p_smokeBombID)
+{
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		if (m_smokeBombList[i].smokeBombId == p_smokeBombID)
+		{
+			m_smokeBombList.erase(m_smokeBombList.begin() + i);
+			m_smokebombListUpdated = true;
+			break;
+		}
+	}
+}
+bool Network::IsSmokeBombListUpdated()
+{
+	return m_smokebombListUpdated;
+	}
+
+void Network::SetHaveUpdateSmokeBombList()
+{
+	m_smokebombListUpdated = false;
+}
 
 bool Network::IsShurikenListUpdated()
 {
 	return m_shurikenListUpdated;
 }
-
 void Network::SetHaveUpdateShurikenList()
 {
 	m_shurikenListUpdated = false;
@@ -745,12 +765,14 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_curre
 	}
 }
 
-void Network::SendAbility(ABILITIES p_ability)
+void Network::SendAbility(ABILITIES p_ability, float p_distanceFromPlayer)
 {
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_ABILITY);
 	bitStream.Write(p_ability);
+	bitStream.Write(p_distanceFromPlayer);
+
 
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
 }

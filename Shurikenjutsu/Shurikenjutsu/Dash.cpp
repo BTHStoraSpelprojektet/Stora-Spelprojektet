@@ -13,11 +13,11 @@ bool Dash::Initialize()
 	return true;
 }
 
-bool Dash::Execute()
+bool Dash::Execute(float p_distance)
 {
-	if (Ability::Execute())
+	if (Ability::Execute(p_distance))
 	{
-		Network::GetInstance()->SendAbility(ABILITIES_DASH);
+		Network::GetInstance()->SendAbility(ABILITIES_DASH,0);
 		SetCooldown(DASH_COOLDOWN);
 	}
 	return true;

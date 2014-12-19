@@ -11,7 +11,7 @@ public:
 	SmokeBombAbility();
 	~SmokeBombAbility();
 	bool Initialize();
-	bool Execute();
+	bool Execute(float p_distance);
 };
 
 

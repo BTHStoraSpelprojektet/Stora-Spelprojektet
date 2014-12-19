@@ -14,7 +14,6 @@
 #include "CollisionManager.h"
 #include "HealthBar.h"
 #include "SmokeBombAbility.h"
-#include "SmokeBomb.h"
 
 class Player :
 	public AnimatedObject
@@ -80,7 +79,6 @@ private:
 	Ability* m_smokeBombAbility;
 
 	HealthBar m_healthbar;
-	SmokeBomb* m_smokeBomb;
 };
 
 #endif PLAYER
