@@ -27,7 +27,7 @@ void ShurikenAbility::Update()
 	}
 	m_gcd += GLOBAL::GetInstance().GetDeltaTime();
 }
-bool ShurikenAbility::Execute()
+bool ShurikenAbility::Execute(float p_distance)
 {
 	if (m_gcd > ALL_AROUND_GOLOBAL_COOLDOWN)
 	{
