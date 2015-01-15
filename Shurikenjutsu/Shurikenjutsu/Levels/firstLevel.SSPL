@@ -1,8 +1,8 @@
 Map size: 100 100
 Number of objects: 288
 Number of bounding boxes: 4
-LevelBoundingBox_3 0 0 64.5867 0 0 0 3.41333 7.5 52.3631
-LevelBoundingBox_6 0 0 -72.6917 0 0 0 3.41333 7.5 52.3631
+LevelBoundingBox_3 0 0 71.442 0 -0 0 3.41333 7.5 52.3631
+LevelBoundingBox_6 0 0 -76.5791 0 0 0 3.41333 7.5 52.3631
 LevelBoundingBox_7 -57 0 0 0 1.5708 0 52.3631 7.5 0.5
 LevelBoundingBox_9 55 0 0 0 1.5708 0 52.3631 7.5 0.5
 DecoratedObject_2 0 0 -24.6333 0 1.5708 0
