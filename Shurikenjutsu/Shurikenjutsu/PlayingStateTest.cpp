@@ -123,12 +123,14 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager.UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
+	m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+
 	return GAMESTATESWITCH_NONE;
 }
 
 void PlayingStateTest::Render()
 {
-	m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+	
 
 	bool testBB = false;
 

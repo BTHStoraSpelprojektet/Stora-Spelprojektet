@@ -2,6 +2,7 @@
 
 
 Dash::Dash(){}
+Dash::Dash(const Dash& other){}
 Dash::~Dash(){}
 
 bool Dash::Initialize()

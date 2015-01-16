@@ -97,7 +97,7 @@ float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_pla
 	float x = m_pickedLocation.x - p_playerPos.x;
 	float y = m_pickedLocation.y - p_playerPos.z;
 	float temp = sqrt((x*x) + (y*y));
- 	return temp;
+	return temp;
 }
 
 void CollisionManager::Update(float p_pickedx, float p_pickedZ)
