@@ -58,6 +58,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	// Frustum
 	m_frustum = Frustum();
+	m_updateFrustum = true;
 
 	return true;
 }
@@ -124,8 +125,19 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	// Update frustum
-	m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
-	m_objectManager.UpdateFrustum(&m_frustum);
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')))
+	{
+		m_updateFrustum = false;
+	}
+	if (GetAsyncKeyState(VK_BACK))
+	{
+		m_updateFrustum = true;
+	}
+	if (m_updateFrustum)
+	{
+		m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+		m_objectManager.UpdateFrustum(&m_frustum);
+	}
 
 	return GAMESTATESWITCH_NONE;
 }

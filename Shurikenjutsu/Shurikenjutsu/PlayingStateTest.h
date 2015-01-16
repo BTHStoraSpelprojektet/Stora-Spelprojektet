@@ -36,6 +36,8 @@ private:
 
 	float twoPi = 6.28318530718f;
 
+	bool m_updateFrustum;
+
 	// ========== DEBUG TEMP LINES ==========
 	float m_mouseX;
 	float m_mouseY;
