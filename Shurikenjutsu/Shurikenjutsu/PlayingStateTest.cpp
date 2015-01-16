@@ -135,16 +135,14 @@ void PlayingStateTest::Render()
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
 
-	//m_playerManager.Render(SHADERTYPE_DEPTH);
-	m_objectManager.Render(SHADERTYPE_DEPTH);
+	m_objectManager.RenderDepth();
 
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
 
 	// Draw to the scene.
-	m_playerManager.Render(SHADERTYPE_ANIMATED);
-	m_objectManager.Render(SHADERTYPE_SCENE);
-	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
+	m_playerManager.Render();
+	m_objectManager.Render();
 
 	if (FLAG_DEBUG == 1)
 	{
