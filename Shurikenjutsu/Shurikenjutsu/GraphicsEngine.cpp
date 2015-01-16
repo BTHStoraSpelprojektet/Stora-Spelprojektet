@@ -86,71 +86,32 @@ void GraphicsEngine::Shutdown()
 	m_particleShader.Shutdown();
 	m_shadowMap.Shutdown();
 
+	m_sceneShader.Shutdown();
+	m_instanceShader.Shutdown();
+	m_GUIShader.Shutdown();
+	m_depthShader.Shutdown();
+
 	// TODO shutdowns for everyone!
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
 {
-	switch (p_shader)
-	{
-		case(SHADERTYPE_SCENE) :
-		{
-			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
-
-			break;
-		}
-		case(SHADERTYPE_INSTANCED) :
-		{
-			m_instanceShader.Render( m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex);
-
-			break;
-		}
-		case(SHADERTYPE_ANIMATED) :
-		{
-			m_sceneShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
-
-			break;
-		}
-		case(SHADERTYPE_DEPTH) :
-		{
-			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
-
-			break;
-		}
-
-		default:
-		{
-			ConsolePrintErrorAndQuit("Invalid shader type passed to Render().");
-
-			break;
-		}
-	}
+	m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
 }
 
-void GraphicsEngine::Render(SHADERTYPE p_shader, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
+void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
-	switch (p_shader)
-	{
-		case(SHADERTYPE_SCENE) :
-		{
-			m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
+	m_instanceShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex);
+}
 
-			break;
-		}
+void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+{
+	m_sceneShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
+}
 
-		case(SHADERTYPE_DEPTH) :
-		{
-			// Turn the alpha blending off.
-			GraphicsEngine::TurnOffAlphaBlending();
-
-			m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
-
-			// Turn the alpha blending back on.
-			GraphicsEngine::TurnOnAlphaBlending();
-
-			break;
-		}
-	}
+void GraphicsEngine::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+{
+	m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 }
 
 void GraphicsEngine::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)

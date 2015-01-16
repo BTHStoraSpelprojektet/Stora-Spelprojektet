@@ -15,7 +15,7 @@ public:
 	bool Initialize();
 	void Shutdown();
 	void Update();
-	void Render(SHADERTYPE p_shader);
+	void Render();
 	DirectX::XMFLOAT3 GetPlayerPosition();
 	DirectX::XMFLOAT3 GetPlayerDirection();
 	void SetPlayerDirection(DirectX::XMFLOAT3 p_direction); 
