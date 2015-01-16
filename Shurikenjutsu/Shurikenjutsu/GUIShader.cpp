@@ -193,6 +193,27 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	return true;
 }
 
+void GUIShader::Shutdown()
+{
+	m_vertexShader->Release();
+	m_pixelShader->Release();
+
+	m_layout->Release();
+	m_samplerState->Release();
+
+	m_matrixBuffer->Release();
+
+	m_quadBuffer->Release();
+
+	m_colorVertexShader->Release();
+	m_colorPixelShader->Release();
+	m_colorLayout->Release();
+
+	m_colorQuadBuffer->Release();
+
+	m_colorBuffer->Release();
+}
+
 void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	// Set parameters and then render.
@@ -439,9 +460,4 @@ void GUIShader::RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 
 	p_context->PSSetShader(m_colorPixelShader, NULL, 0);
 
 	p_context->Draw(6, 0);
-}
-
-void GUIShader::Shutdown()
-{
-
 }

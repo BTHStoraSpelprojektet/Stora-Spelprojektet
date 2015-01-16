@@ -33,9 +33,14 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 void Object::Shutdown(){}
 
-void Object::Render(SHADERTYPE p_shader)
+void Object::Render()
 {
-	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+	GraphicsEngine::RenderScene(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+}
+
+void Object::RenderDepth()
+{
+	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)

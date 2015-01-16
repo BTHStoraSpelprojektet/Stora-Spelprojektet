@@ -446,11 +446,11 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
 }
 
-void Player::Render(SHADERTYPE p_shader)
+void Player::Render()
 {
 	if (m_isAlive)
 	{
-		AnimatedObject::RenderAnimated(p_shader);
+		AnimatedObject::Render();
 		m_healthbar.Render();
 	}
 }

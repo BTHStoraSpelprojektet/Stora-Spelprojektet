@@ -15,7 +15,7 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_position, unsigned int p_smokeBom
 }
 void SmokeBomb::Update()
 {
-	m_timer += GLOBAL::GetInstance().GetDeltaTime();
+	m_timer += (float)GLOBAL::GetInstance().GetDeltaTime();
 	m_particles.Update();
 	if (m_timer < SMOKEBOMB_DURATION)
 	{

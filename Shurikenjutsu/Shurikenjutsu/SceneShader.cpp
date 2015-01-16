@@ -424,6 +424,28 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	return true;
 }
 
+void SceneShader::Shutdown()
+{
+	m_vertexShader->Release();
+	m_animatedVertexShader->Release();
+	m_pixelShader->Release();
+	m_lineVertexShader->Release();
+	m_linePixelShader->Release();
+	m_layout->Release();
+	m_animatedLayout->Release();
+	m_lineLayout->Release();
+	m_samplerState->Release();
+	m_samplerShadowMapState->Release();
+	m_rasterizerStateBackCulled->Release();
+	m_rasterizerStateNoneCulled->Release();
+	m_shadowMap->Release();
+	m_matrixBuffer->Release();
+	m_fogBuffer->Release();
+	m_animationMatrixBuffer->Release();
+	m_frameBuffer->Release();
+	m_colorBuffer->Release();
+}
+
 void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
 {
 	// Set parameters and then render.
