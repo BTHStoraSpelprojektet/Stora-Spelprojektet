@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "DebugDraw.h"
 #include "AbilityBar.h"
+#include "Frustum.h"
 #include <vector>
 
 class PlayerManager
@@ -31,6 +32,8 @@ public:
 
 	void ResetCooldowns();
 
+	void UpdateFrustum(Frustum* p_frustum);
+
 private:
 	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
 	void AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
@@ -44,6 +47,7 @@ private:
 
 	std::vector<Player> m_enemyList;
 
+	Frustum m_frustum;
 
 };
 

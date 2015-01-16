@@ -102,7 +102,10 @@ void PlayerManager::Render()
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
-		m_enemyList[i].Render();
+		if (m_frustum.CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
+		{
+			m_enemyList[i].Render();
+		}
 	}
 	m_playerAbilityBar.Render();
 }
@@ -199,4 +202,9 @@ void PlayerManager::ResetCooldowns()
 	}
 
 	m_player.ResetCooldowns();
+}
+
+void PlayerManager::UpdateFrustum(Frustum*  p_frustum)
+{
+	m_frustum = *p_frustum;
 }

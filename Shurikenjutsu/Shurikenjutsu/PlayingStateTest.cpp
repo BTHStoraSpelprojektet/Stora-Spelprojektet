@@ -137,6 +137,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
 		m_objectManager.UpdateFrustum(&m_frustum);
+		m_playerManager.UpdateFrustum(&m_frustum);
 	}
 
 	return GAMESTATESWITCH_NONE;
