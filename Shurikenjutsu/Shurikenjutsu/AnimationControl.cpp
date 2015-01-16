@@ -237,9 +237,9 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float dir
 
 	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikDirection).m128_f32[0];
 
-	float low = 3.14f * 0.125;
+	float low = 3.14f * 0.125f;
 	float lowMid = 3.14f * 0.375f;
-	float highMid = 3.14f * 0.625;
+	float highMid = 3.14f * 0.625f;
 	float high = 3.14f * 0.875f;
 
 	if (crossD > 0)

@@ -27,12 +27,17 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	memcpy(&vertexVectorSize, (char*)data + readPosition, sizeof(unsigned int));
 	readPosition += sizeof(unsigned int);
 	
+	m_importedMesh.m_frustumSphere.m_radius = 0.0f;
+	m_averageVertexPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	if (!m_importedMesh.m_animated)
 		for (int i = 0; i < vertexVectorSize; i++)
 		{
 			Vertex temp(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			memcpy(&temp, (char*)data + readPosition, sizeof(Vertex));
 			readPosition += sizeof(Vertex);
+
+			CheckVertices(temp.m_position.x, temp.m_position.y, temp.m_position.z);
+
 			m_importedMesh.m_vertices.push_back(temp);
 		}
 	else
@@ -41,8 +46,17 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 			VertexAnimated temp(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0, 0 ,0);
 			memcpy(&temp, (char*)data + readPosition, sizeof(VertexAnimated));
 			readPosition += sizeof(VertexAnimated);
+
+			CheckVertices(temp.m_position.x, temp.m_position.y, temp.m_position.z);
+
 			m_importedMesh.m_verticesAnimated.push_back(temp);
 		}
+
+	m_averageVertexPosition.x /= vertexVectorSize;
+	m_averageVertexPosition.y /= vertexVectorSize;
+	m_averageVertexPosition.z /= vertexVectorSize;
+
+	m_importedMesh.m_frustumSphere.m_position = m_averageVertexPosition;
 
 	memcpy(&m_importedMesh.m_textureMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
 	readPosition += (sizeof(unsigned int)* 3);
@@ -176,6 +190,32 @@ int ModelImporter::ReadHierarchy(BoneFrame* bone, void* data, int readPosition)
 
 	return readPosition;
 }
+
+void ModelImporter::CheckVertices(float x, float y, float z)
+{
+	m_averageVertexPosition.x += x;
+	m_averageVertexPosition.y += y;
+	m_averageVertexPosition.z += z;
+
+	if (x < 0)
+	{
+		x *= -1;
+	}
+	if (z < 0)
+	{
+		z *= -1;
+	}
+
+	if (m_importedMesh.m_frustumSphere.m_radius < x)
+	{
+		m_importedMesh.m_frustumSphere.m_radius = x;
+	}
+	if (m_importedMesh.m_frustumSphere.m_radius < z)
+	{
+		m_importedMesh.m_frustumSphere.m_radius = z;
+	}	
+}
+
 MeshData ModelImporter::GetMesh()
 {
 	return m_importedMesh;

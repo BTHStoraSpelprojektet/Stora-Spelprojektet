@@ -29,6 +29,7 @@ protected:
 	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
 	std::vector<Box> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
+	Sphere m_frustumSphere;
 };
 
 #endif
