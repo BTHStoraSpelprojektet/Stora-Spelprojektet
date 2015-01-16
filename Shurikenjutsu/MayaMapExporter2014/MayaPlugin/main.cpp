@@ -311,12 +311,12 @@ void MapExporter::GetPositions(){
 						float lengthZ = points[boundingboxcounter].z;
 
 						if (world.wBoundingBox[boundingboxcounter].z > 0 || world.wBoundingBox[boundingboxcounter].z < 0){
-							sprintf(cha, "%.5f %.5f %.5f", lengthZ, lengthY, lengthX);
+							sprintf(cha, ">>>> REVERSE %.5f %.5f %.5f", lengthZ, lengthY, lengthX);
 							points[boundingboxcounter].x = lengthZ;
 							points[boundingboxcounter].z = lengthX;
 						}
 						else{
-							sprintf(cha, "%.5f %.5f %.5f", lengthX, lengthY, lengthZ);
+							sprintf(cha, ">>>> NORMAL %.5f %.5f %.5f", lengthX, lengthY, lengthZ);
 						}
 						MGlobal::displayInfo(cha);
 						boundingboxcounter++;
