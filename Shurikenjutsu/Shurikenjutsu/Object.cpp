@@ -192,3 +192,14 @@ std::vector<OBB> Object::GetBoundingBoxes()
 {
 	return m_boundingBoxes;
 }
+
+Sphere Object::GetFrustumSphere()
+{
+	Sphere tempSphere = m_model->GetFrustumSphere();
+
+	tempSphere.m_position.x += m_position.x;
+	tempSphere.m_position.y += m_position.y;
+	tempSphere.m_position.z += m_position.z;
+
+	return tempSphere;
+}

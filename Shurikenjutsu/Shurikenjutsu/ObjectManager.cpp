@@ -26,7 +26,7 @@ void ObjectManager::Shutdown()
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		m_smokeBombList[i].Shutdown();
-	}
+}
 
 }
 
@@ -104,16 +104,16 @@ void ObjectManager::Update()
 }
 
 void ObjectManager::Render()
-{
-	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
+		for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+		{
 		m_staticObjects[i].Render();
 
-		if (FLAG_DEBUG)
-		{
-			m_staticObjects[i].RenderDebugBoxes();
+			if (FLAG_DEBUG)
+			{
+				m_staticObjects[i].RenderDebugBoxes(); 
+			}
 		}
-	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{

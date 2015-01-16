@@ -37,6 +37,7 @@ public:
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 
 	std::vector<OBB> GetBoundingBoxes();
+	Sphere GetFrustumSphere();
 
 protected:
 	void TransformBoundingBoxes();
