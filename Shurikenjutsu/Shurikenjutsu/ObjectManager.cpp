@@ -189,3 +189,8 @@ std::vector<Object> ObjectManager::GetStaticObjectList()const
 {
 	return m_staticObjects;
 }
+
+void ObjectManager::UpdateFrustum(Frustum* p_frustum)
+{
+	m_frustum = *p_frustum;
+}
