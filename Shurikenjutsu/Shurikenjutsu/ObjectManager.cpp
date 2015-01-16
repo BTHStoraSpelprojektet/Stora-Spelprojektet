@@ -104,25 +104,34 @@ void ObjectManager::Update()
 }
 
 void ObjectManager::Render()
+{
+	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
 		{
-		m_staticObjects[i].Render();
+			m_staticObjects[i].Render();
 
 			if (FLAG_DEBUG)
 			{
-				m_staticObjects[i].RenderDebugBoxes(); 
+				m_staticObjects[i].RenderDebugBoxes();
 			}
 		}
+	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		m_shurikens[i].Render();
+		if (m_frustum.CheckSphere(m_shurikens[i].GetFrustumSphere(), 1.0f))
+		{
+			m_shurikens[i].Render();
+		}
 	}
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
-		m_smokeBombList[i].Render();
+		if (m_frustum.CheckSphere(m_smokeBombList[i].GetSmokeSphere(), 2.0f))
+		{
+			m_smokeBombList[i].Render();
+		}
 	}
 }
 
@@ -130,7 +139,13 @@ void ObjectManager::RenderDepth()
 {
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		m_staticObjects[i].RenderDepth();
+		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
+		sphere.m_position.x += 2.0f;
+		sphere.m_position.z += 2.0f;
+		if (m_frustum.CheckSphere(sphere, 7.5f))
+		{
+			m_staticObjects[i].RenderDepth();
+		}
 	}
 }
 
@@ -195,4 +210,9 @@ bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 std::vector<Object> ObjectManager::GetStaticObjectList()const
 {
 	return m_staticObjects;
+}
+
+void ObjectManager::UpdateFrustum(Frustum* p_frustum)
+{
+	m_frustum = *p_frustum;
 }

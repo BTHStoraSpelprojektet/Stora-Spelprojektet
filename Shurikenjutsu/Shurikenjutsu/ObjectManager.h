@@ -7,6 +7,7 @@
 #include "Shuriken.h"
 #include "AnimatedObject.h"
 #include "SmokeBomb.h"
+#include "Frustum.h"
 
 class ObjectManager
 {
@@ -27,10 +28,13 @@ public:
 	void AddStaticObject(Object p_object);
 	std::vector<Object> GetStaticObjectList()const;
 
+	void UpdateFrustum(Frustum* p_frustum);
 private:
 	std::vector<SmokeBomb> m_smokeBombList;
 	std::vector<Shuriken> m_shurikens;
 	std::vector<Object> m_staticObjects;
+
+	Frustum m_frustum;
 
 	bool IsShurikenInList(unsigned int p_shurikenId);
 	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
