@@ -177,7 +177,7 @@ void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 
 		m_currentLegs = m_animationStacks[3];
 	}
-	else if (directionAngle < (3.14f * 0.25f))			  // Forward
+	else if (directionAngle < (3.14f * 0.375f))			  // Forward
 	{
 		if (m_attackAnimation != true)
 		{
@@ -186,7 +186,7 @@ void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 
 		m_currentLegs = m_animationStacks[1];
 	}
-	else if (directionAngle > (3.14f * 0.75f))			  // Back
+	else if (directionAngle >(3.14f * 0.625f))			  // Back
 	{
 		if (m_attackAnimation != true)
 		{
@@ -214,37 +214,7 @@ void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 		m_currentLegs = m_animationStacks[8];
 	}
 
-	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikDirection).m128_f32[0];
-
-	if (cross > 0)
-	{
-		m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
-	}
-	else
-	{
-		m_hipRotation = CalculateLegDirection(forwardAngle);
-	}	
-}
-
-float AnimationControl::CalculateLegDirection(float forwardAngle)
-{
-	float piDivFour = 0.785000026f;
-	int a = (int)forwardAngle / piDivFour;
-	float b = forwardAngle / piDivFour;
-
-	for (unsigned int i = 0; i < 8; i++)
-	{
-		if (a == i)
-		{
-			if (b > 0.5f)
-			{
-				a++;
-			}
-			break;
-		}
-	}
-
-	return piDivFour * a;
+	ApplyLegDirection(direction, directionAngle, cross);
 }
 
 void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
@@ -259,6 +229,94 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 			m_currentLegs = m_animationStacks[3];
 		}
 	}
+}
+
+void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float directionAngle, float cross)
+{
+	float crossD = DirectX::XMVector3Cross(m_ikDirection, direction).m128_f32[1];
+
+	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikDirection).m128_f32[0];
+
+	float low = 3.14f * 0.125f;
+	float lowMid = 3.14f * 0.375f;
+	float highMid = 3.14f * 0.625f;
+	float high = 3.14f * 0.875f;
+
+	if (crossD > 0)
+	{
+		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		{
+			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle);
+		}
+		else if (directionAngle < lowMid && directionAngle > low && cross > 0)
+		{
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - directionAngle);
+		}
+		else if (directionAngle < high && directionAngle > highMid && cross <= 0)
+		{
+			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
+		}
+		else if (directionAngle < high && directionAngle > highMid && cross > 0)
+		{
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
+		}
+		else if (cross > 0)
+		{
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
+		}
+		else
+		{
+			m_hipRotation = CalculateLegDirection(forwardAngle);
+		}
+	}
+	else
+	{
+		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		{
+			m_hipRotation = CalculateLegDirection(forwardAngle - directionAngle);
+		}
+		else if (directionAngle < lowMid && directionAngle > low && cross > 0)
+		{
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle);
+		}
+		else if (directionAngle < high && directionAngle > highMid && cross <= 0)
+		{
+			m_hipRotation = CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
+		}
+		else if (directionAngle < high && directionAngle > highMid && cross > 0)
+		{
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
+		}
+		else if (cross > 0)
+		{
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
+		}
+		else
+		{
+			m_hipRotation = CalculateLegDirection(forwardAngle);
+		}
+	}
+}
+
+float AnimationControl::CalculateLegDirection(float forwardAngle)
+{
+	float piDivFour = 0.785000026f;
+	int a = (int)(forwardAngle / piDivFour);
+	float b = forwardAngle / piDivFour;
+
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		if (a == i)
+		{
+			if (b >(0.5f + i))
+			{
+				a++;
+			}
+			break;
+		}
+	}
+
+	return piDivFour * a;
 }
 
 void AnimationControl::RangeAttack()

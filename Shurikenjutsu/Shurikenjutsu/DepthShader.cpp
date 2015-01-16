@@ -168,6 +168,15 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	return true;
 }
 
+void DepthShader::Shutdown()
+{
+	m_vertexShader->Release();
+	m_pixelShader->Release();
+	m_layout->Release();
+	m_rasterizer->Release();
+	m_samplerState->Release();
+}
+
 void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	// Set parameters and then render.

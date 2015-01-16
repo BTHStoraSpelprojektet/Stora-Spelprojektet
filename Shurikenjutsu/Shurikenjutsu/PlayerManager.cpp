@@ -96,13 +96,13 @@ void PlayerManager::Update()
 	}
 }
 
-void PlayerManager::Render(SHADERTYPE p_shader)
+void PlayerManager::Render()
 {
-	m_player.Render(p_shader);
+	m_player.Render();
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
-		m_enemyList[i].Render(p_shader);
+		m_enemyList[i].Render();
 	}
 	m_playerAbilityBar.Render();
 }

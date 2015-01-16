@@ -22,6 +22,7 @@ struct MeshData
 	std::vector<Box> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
 	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
+	Sphere m_frustumSphere;
 };
 
 class ModelImporter
@@ -33,6 +34,9 @@ public:
 	MeshData GetMesh();
 
 private:
+	void CheckVertices(float x, float y, float z);
+
+	DirectX::XMFLOAT3 m_averageVertexPosition;
 	MeshData m_importedMesh;
 };
 

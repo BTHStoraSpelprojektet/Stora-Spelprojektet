@@ -26,7 +26,7 @@ public:
 	void UpdateMe();
 	void Update();
 	void UpdateAbilities();
-	void Render(SHADERTYPE p_shader);
+	void Render();
 	//void SetDamage(float p_damage);
 	//float GetDamage() const;	
 	void SetHealth(int p_health);
