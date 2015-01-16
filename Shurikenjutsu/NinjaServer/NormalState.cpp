@@ -31,7 +31,12 @@ bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 bool NormalState::Initialize(std::string p_levelName)
 {
 	bool result;
-	Initialize();
+
+	result = Initialize();
+	if (!result)
+	{
+		return false;
+	}
 
 	result = GameState::Initialize(p_levelName);
 	if (!result)

@@ -359,6 +359,7 @@ void Network::ReceviePacket()
 			bitStream.Read(smokeBombID);
 
 			RemoveSmokeBomb(smokeBombID);
+			break;
 		}
 		case ID_MATCH_OVER:
 		{
