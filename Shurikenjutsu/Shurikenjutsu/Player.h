@@ -6,7 +6,6 @@
 #include "InputManager.h"
 #include "Collisions.h"
 #include "Globals.h"
-#include "Ability.h"
 #include "Dash.h"
 #include "MeleeSwing.h"
 #include "ShurikenAbility.h"
@@ -14,6 +13,7 @@
 #include "CollisionManager.h"
 #include "HealthBar.h"
 #include "SmokeBombAbility.h"
+
 
 class Player :
 	public AnimatedObject
@@ -80,5 +80,4 @@ private:
 
 	HealthBar m_healthbar;
 };
-
 #endif PLAYER

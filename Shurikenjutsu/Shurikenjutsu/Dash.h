@@ -10,6 +10,7 @@ class Dash : public Ability
 {
 public:
 	Dash();
+	Dash(const Dash&);
 	~Dash();
 
 	bool Initialize();

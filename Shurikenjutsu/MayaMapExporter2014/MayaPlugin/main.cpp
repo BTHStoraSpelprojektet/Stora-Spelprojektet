@@ -46,6 +46,7 @@
 #include <maya/MFloatPointArray.h>
 
 static const int NUMOFWORLDOBJECTS = 4096;
+bool enable_workaround_for_boundingbox_positions = true;
 
 struct worldObject{
 	std::string name;
@@ -226,6 +227,10 @@ void MapExporter::GetPositions(){
 						world.wBoundingBox[boundingboxcounter].y = dest2[1];
 						world.wBoundingBox[boundingboxcounter].z = dest2[2];
 
+						char ch[128];
+						sprintf(ch, ">>>> %.5f %.5f %.5f", world.wBoundingBox[boundingboxcounter].x, world.wBoundingBox[boundingboxcounter].y, world.wBoundingBox[boundingboxcounter].z);
+						MGlobal::displayInfo(ch);
+
 						world.wBoundingBox[boundingboxcounter].rotatex = rotatex;
 						world.wBoundingBox[boundingboxcounter].rotatey = rotatey;
 						world.wBoundingBox[boundingboxcounter].rotatez = rotatez;
@@ -306,17 +311,40 @@ void MapExporter::GetPositions(){
 						char cha[128];
 
 						//TODO fixa ordningen på width (lengthX), height (lengthY), depth (lengthZ)
-						float lengthX = points[boundingboxcounter].x;
-						float lengthY = points[boundingboxcounter].y;
-						float lengthZ = points[boundingboxcounter].z;
+						double lengthX = points[boundingboxcounter].x;
+						double lengthY = points[boundingboxcounter].y;
+						double lengthZ = points[boundingboxcounter].z;
 
 						if (world.wBoundingBox[boundingboxcounter].z > 0 || world.wBoundingBox[boundingboxcounter].z < 0){
-							sprintf(cha, "%.5f %.5f %.5f", lengthZ, lengthY, lengthX);
+							sprintf(cha, ">>>> REVERSE %.5f %.5f %.5f", lengthZ, lengthY, lengthX);
 							points[boundingboxcounter].x = lengthZ;
 							points[boundingboxcounter].z = lengthX;
+
+							//world.wBoundingBox[boundingboxcounter].x = dest2[0];
+							//world.wBoundingBox[boundingboxcounter].y = dest2[1];
+
+							if (enable_workaround_for_boundingbox_positions){
+								world.wBoundingBox[boundingboxcounter].z += lengthZ;
+
+								if (world.wBoundingBox[boundingboxcounter].z < 0){
+									world.wBoundingBox[boundingboxcounter].z += (lengthZ / 2);
+								}
+								else{
+									world.wBoundingBox[boundingboxcounter].z -= (lengthZ / 2);
+								}
+							}
 						}
 						else{
-							sprintf(cha, "%.5f %.5f %.5f", lengthX, lengthY, lengthZ);
+							sprintf(cha, ">>>> NORMAL %.5f %.5f %.5f", lengthX, lengthY, lengthZ);
+							MGlobal::displayInfo(cha);
+
+							print(world.wBoundingBox[boundingboxcounter].x);
+							print(lengthX);
+							
+							if (enable_workaround_for_boundingbox_positions){
+								world.wBoundingBox[boundingboxcounter].x += lengthZ;
+							}
+
 						}
 						MGlobal::displayInfo(cha);
 						boundingboxcounter++;
