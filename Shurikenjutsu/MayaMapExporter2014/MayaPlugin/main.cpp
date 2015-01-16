@@ -46,6 +46,7 @@
 #include <maya/MFloatPointArray.h>
 
 static const int NUMOFWORLDOBJECTS = 4096;
+bool enable_workaround_for_boundingbox_positions = true;
 
 struct worldObject{
 	std::string name;
@@ -321,10 +322,17 @@ void MapExporter::GetPositions(){
 
 							//world.wBoundingBox[boundingboxcounter].x = dest2[0];
 							//world.wBoundingBox[boundingboxcounter].y = dest2[1];
-							world.wBoundingBox[boundingboxcounter].z += lengthZ;
 
-							MGlobal::displayInfo(cha);
-							sprintf(cha, ">>>> %.5f %.5f %.5f", world.wBoundingBox[boundingboxcounter].x, world.wBoundingBox[boundingboxcounter].y, world.wBoundingBox[boundingboxcounter].z);
+							if (enable_workaround_for_boundingbox_positions){
+								world.wBoundingBox[boundingboxcounter].z += lengthZ;
+
+								if (world.wBoundingBox[boundingboxcounter].z < 0){
+									world.wBoundingBox[boundingboxcounter].z += (lengthZ / 2);
+								}
+								else{
+									world.wBoundingBox[boundingboxcounter].z -= (lengthZ / 2);
+								}
+							}
 						}
 						else{
 							sprintf(cha, ">>>> NORMAL %.5f %.5f %.5f", lengthX, lengthY, lengthZ);
@@ -332,10 +340,11 @@ void MapExporter::GetPositions(){
 
 							print(world.wBoundingBox[boundingboxcounter].x);
 							print(lengthX);
-							MGlobal::displayInfo(cha);
-							world.wBoundingBox[boundingboxcounter].x += lengthZ;
+							
+							if (enable_workaround_for_boundingbox_positions){
+								world.wBoundingBox[boundingboxcounter].x += lengthZ;
+							}
 
-							sprintf(cha, ">>>> %.5f %.5f %.5f", world.wBoundingBox[boundingboxcounter].x, world.wBoundingBox[boundingboxcounter].y, world.wBoundingBox[boundingboxcounter].z);
 						}
 						MGlobal::displayInfo(cha);
 						boundingboxcounter++;
