@@ -12,5 +12,8 @@ QuadTree::~QuadTree(){}
 
 bool QuadTree::Initialize()
 {
+	int vertexCount;
+	float centerX, centerZ, width;
 
+	return true;
 }
