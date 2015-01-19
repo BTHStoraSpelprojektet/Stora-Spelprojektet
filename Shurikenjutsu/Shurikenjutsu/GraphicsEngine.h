@@ -51,7 +51,7 @@ public:
 
 	static bool ToggleFullscreen(bool p_fullscreen);
 
-	static void AddInstanceBuffer(int p_numberOfInstances);
+	static void AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position);
 
 	static HWND GetWindowHandle();
 

@@ -8,6 +8,7 @@
 #include "AnimatedObject.h"
 #include "SmokeBomb.h"
 #include "Frustum.h"
+#include "..\CommonLibs\Level.h"
 
 class ObjectManager
 {
@@ -15,7 +16,7 @@ public:
 	ObjectManager();
 	~ObjectManager();
 
-	bool Initialize();
+	bool Initialize(Level* p_level);
 	void Shutdown();
 
 	void Update();

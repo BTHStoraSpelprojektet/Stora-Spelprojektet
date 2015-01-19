@@ -209,3 +209,16 @@ Sphere Object::GetFrustumSphere()
 
 	return tempSphere;
 }
+
+void Object::CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_positions)
+{
+	GraphicsEngine::AddInstanceBuffer(p_numberOfInstances, p_positions);
+}
+int Object::GetInstanceIndex() const
+{
+	return m_InstanceIndex;
+}
+void Object::SetInstanceIndex(int p_instanceIndex)
+{
+	m_InstanceIndex = p_instanceIndex;
+}

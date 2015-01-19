@@ -249,10 +249,9 @@ void GraphicsEngine::TurnOffAlphaBlending()
 	m_directX.TurnOffAlphaBlending();
 }
 
-void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
-{
-	std::vector<DirectX::XMFLOAT3> m_position;
-	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, m_position);
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
+{	
+	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_position);
 }
 
 bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)

@@ -307,8 +307,11 @@ void InstancedShader::TurnOffBackFaceCulling(ID3D11DeviceContext* p_context)
 
 void InstancedShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
 {
-	m_numberOfInstanceList.push_back(p_numberOfInstances);
-	m_instanceBufferList.push_back(InitializeInstanceBuffer(p_device, p_numberOfInstances, p_position));
+	if (p_numberOfInstances > 0)
+	{
+		m_numberOfInstanceList.push_back(p_numberOfInstances);
+		m_instanceBufferList.push_back(InitializeInstanceBuffer(p_device, p_numberOfInstances, p_position));
+	}
 }
 ID3D11Buffer* InstancedShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
 {

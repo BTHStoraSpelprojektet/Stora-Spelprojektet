@@ -4,8 +4,37 @@
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
 
-bool ObjectManager::Initialize()
+bool ObjectManager::Initialize(Level* p_level)
 {
+	// Load objects on the level
+	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
+	for (unsigned int i = 0; i < levelObjects.size(); i++)
+	{
+		Object object;
+		object.Initialize(levelObjects[i].m_filePath.c_str(),
+			DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ),
+			DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ),
+			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+		AddStaticObject(object);
+	}
+
+	Model *tempModel = m_staticObjects[0].GetModel();
+	std::vector<DirectX::XMFLOAT3> modelPositions;
+	int startValues;
+	for (unsigned int i = 1; i < m_staticObjects.size(); i++)
+	{
+		modelPositions.clear();
+		startValues = i;
+		while (tempModel == m_staticObjects[i].GetModel())
+		{
+			modelPositions.push_back(m_staticObjects[i].GetPosition());
+			tempModel = m_staticObjects[i].GetModel();
+			i++;
+		}
+		int endValue = i - startValues;
+		m_staticObjects[i].CreateInstanceBuffer(endValue, modelPositions);
+	}
+
 	return true;
 }
 
@@ -26,8 +55,7 @@ void ObjectManager::Shutdown()
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		m_smokeBombList[i].Shutdown();
-}
-
+	}
 }
 
 void ObjectManager::Update()
@@ -105,6 +133,7 @@ void ObjectManager::Update()
 
 void ObjectManager::Render()
 {
+	m_objectsToRender.clear();
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
 		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
@@ -118,6 +147,17 @@ void ObjectManager::Render()
 	}
 	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
 	{
+		//if (i < m_objectsToRender.size() - 1)
+		//{
+		//	if (m_objectsToRender[i].GetModel() == m_objectsToRender[i + 1].GetModel())
+		//	{
+		//		int abs = 1;
+		//	}
+		//	else
+		//	{
+
+		//	}
+		//}
 		m_objectsToRender[i].Render();
 	}
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
