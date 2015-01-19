@@ -132,6 +132,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayingStateTest.cpp" />
+    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ShadowShapes.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayingStateTest.h" />
     <ClInclude Include="DebugRectangle.h" />
+    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />

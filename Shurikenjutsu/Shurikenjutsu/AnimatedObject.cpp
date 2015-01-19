@@ -49,9 +49,9 @@ float AnimatedObject::GetSpeed() const
 	return m_speed;
 }
 
-void AnimatedObject::RenderAnimated(SHADERTYPE p_shader)
+void AnimatedObject::Render()
 {
-	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), 0, m_animationController.UpdateAnimation());
+	GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.UpdateAnimation());
 }
 
 void AnimatedObject::RangeAttackAnimation()

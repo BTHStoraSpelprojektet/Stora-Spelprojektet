@@ -6,6 +6,8 @@ Level::Level(std::string p_level){
 	}
 }
 
+Level::~Level(){}
+
 bool Level::loadLevel(std::string p_level){
 	LevelImporter levelImporter(p_level);
 
@@ -35,6 +37,3 @@ std::vector<LevelImporter::CommonObject> Level::GetObjects()
 	return m_objects;
 }
 
-Level::~Level(){
-
-}

@@ -15,7 +15,7 @@ public:
 	virtual void SetSpeed(float p_speed);
 	virtual float GetSpeed() const;
 
-	void RenderAnimated(SHADERTYPE p_shader);
+	void Render();
 	void RangeAttackAnimation();
 	void MeleeAttackAnimation();
 	void HandleInput(DirectX::XMFLOAT3 p_dir);

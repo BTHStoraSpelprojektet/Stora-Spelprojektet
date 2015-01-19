@@ -22,6 +22,7 @@ public:
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
 	DirectX::XMVECTOR ApplyIK(DirectX::XMVECTOR& p_quaternion);	
+	void ApplyLegDirection(DirectX::XMVECTOR& direction, float directionAngle, float cross);
 	float CalculateLegDirection(float forwardAngle);
 
 	std::vector<AnimationStack> m_animationStacks;

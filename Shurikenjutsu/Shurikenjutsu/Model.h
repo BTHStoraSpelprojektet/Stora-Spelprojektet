@@ -32,6 +32,7 @@ public:
 	std::vector<Sphere> GetBoundingSpheres()const;
 	std::vector<DirectX::XMFLOAT3> GetShadowPoints()const;
 	std::vector<AnimationStack> GetAnimationStacks()const;
+	Sphere GetFrustumSphere()const;
 
 protected:
 

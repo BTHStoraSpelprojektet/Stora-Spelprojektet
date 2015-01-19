@@ -53,6 +53,6 @@ private:
 	MenuState m_menuState;
 	GameState* m_gameState;
 
-	//Sound* m_sound;
+	Sound* m_sound;
 };
 #endif

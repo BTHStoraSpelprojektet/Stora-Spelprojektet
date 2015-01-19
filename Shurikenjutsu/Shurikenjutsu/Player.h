@@ -26,7 +26,7 @@ public:
 	void UpdateMe();
 	void Update();
 	void UpdateAbilities();
-	void Render(SHADERTYPE p_shader);
+	void Render();
 	//void SetDamage(float p_damage);
 	//float GetDamage() const;	
 	void SetHealth(int p_health);
@@ -50,6 +50,8 @@ public:
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
 	void ResetCooldowns();
+
+	void DoAnimation();
 
 private:
 	void CheckForSpecialAttack();

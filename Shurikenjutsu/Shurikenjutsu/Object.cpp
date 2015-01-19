@@ -33,9 +33,14 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 void Object::Shutdown(){}
 
-void Object::Render(SHADERTYPE p_shader)
+void Object::Render()
 {
-	GraphicsEngine::Render(p_shader, m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+	GraphicsEngine::RenderScene(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+}
+
+void Object::RenderDepth()
+{
+	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
@@ -186,4 +191,15 @@ void Object::TransformShadowPoints()
 std::vector<OBB> Object::GetBoundingBoxes()
 {
 	return m_boundingBoxes;
+}
+
+Sphere Object::GetFrustumSphere()
+{
+	Sphere tempSphere = m_model->GetFrustumSphere();
+
+	tempSphere.m_position.x += m_position.x;
+	tempSphere.m_position.y += m_position.y;
+	tempSphere.m_position.z += m_position.z;
+
+	return tempSphere;
 }

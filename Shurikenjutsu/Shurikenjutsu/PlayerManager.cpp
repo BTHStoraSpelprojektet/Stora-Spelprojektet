@@ -96,13 +96,16 @@ void PlayerManager::Update()
 	}
 }
 
-void PlayerManager::Render(SHADERTYPE p_shader)
+void PlayerManager::Render()
 {
-	m_player.Render(p_shader);
+	m_player.Render();
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
-		m_enemyList[i].Render(p_shader);
+		if (m_frustum.CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
+		{
+			m_enemyList[i].Render();
+		}
 	}
 	m_playerAbilityBar.Render();
 }
@@ -199,4 +202,9 @@ void PlayerManager::ResetCooldowns()
 	}
 
 	m_player.ResetCooldowns();
+}
+
+void PlayerManager::UpdateFrustum(Frustum*  p_frustum)
+{
+	m_frustum = *p_frustum;
 }

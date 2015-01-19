@@ -143,7 +143,7 @@ bool Frustum::CheckSphere(float xCenter, float yCenter, float zCenter, float rad
 	// Check if the radius of the sphere is inside the view frustum
 	for (int i = 0; i < 6; i++)
 	{
-		if (DirectX::XMPlaneDotCoord(DirectX::XMLoadFloat4(&m_planes[i]), DirectX::XMLoadFloat3(&DirectX::XMFLOAT3((xCenter - radius), (yCenter - radius), (zCenter - radius)))).m128_f32[0] < -radius)
+		if (DirectX::XMPlaneDotCoord(DirectX::XMLoadFloat4(&m_planes[i]), DirectX::XMLoadFloat3(&DirectX::XMFLOAT3((xCenter), (yCenter), (zCenter)))).m128_f32[0] < -radius)
 		{
 			return false;
 		}
@@ -151,6 +151,11 @@ bool Frustum::CheckSphere(float xCenter, float yCenter, float zCenter, float rad
 
 	return true;
 }
+bool Frustum::CheckSphere(Sphere p_sphere, float p_offset)
+{
+	return CheckSphere(p_sphere.m_position.x, p_sphere.m_position.y, p_sphere.m_position.z, p_sphere.m_radius + p_offset);
+}
+
 
 bool Frustum::CheckRectangle(float xCenter, float yCenter, float zCenter, float xSize, float ySize, float zSize)
 {

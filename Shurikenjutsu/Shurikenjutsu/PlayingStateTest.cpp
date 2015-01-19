@@ -51,13 +51,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		m_mouseX = 0;
 		m_mouseY = 0;
 	}
-	//m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, SMOKEBOMB_POSITION_Y, 1.0f),
+	//  m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, SMOKEBOMB_POSITION_Y, 1.0f),
 	//	DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
 	//	DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 	// ========== DEBUG TEMP LINES ==========
 
 	// Frustum
 	m_frustum = Frustum();
+	m_updateFrustum = true;
 
 	return true;
 }
@@ -123,7 +124,21 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager.UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
 	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
-	m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+	// Update frustum
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')))
+	{
+		m_updateFrustum = false;
+	}
+	if (GetAsyncKeyState(VK_BACK))
+	{
+		m_updateFrustum = true;
+	}
+	if (m_updateFrustum)
+	{
+		m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+		m_objectManager.UpdateFrustum(&m_frustum);
+		m_playerManager.UpdateFrustum(&m_frustum);
+	}
 
 	return GAMESTATESWITCH_NONE;
 }
@@ -137,16 +152,14 @@ void PlayingStateTest::Render()
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
 
-	//m_playerManager.Render(SHADERTYPE_DEPTH);
-	m_objectManager.Render(SHADERTYPE_DEPTH);
+	m_objectManager.RenderDepth();
 
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
 
 	// Draw to the scene.
-	m_playerManager.Render(SHADERTYPE_ANIMATED);
-	m_objectManager.Render(SHADERTYPE_SCENE);
-	m_objectManager.RenderShurikens(SHADERTYPE_SCENE);
+	m_playerManager.Render();
+	m_objectManager.Render();
 
 	if (FLAG_DEBUG == 1)
 	{

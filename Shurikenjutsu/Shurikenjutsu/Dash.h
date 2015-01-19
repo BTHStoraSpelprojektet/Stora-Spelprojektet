@@ -15,5 +15,6 @@ public:
 
 	bool Initialize();
 	bool Execute(float p_distance);
+
 };
 #endif // !DASH_H_

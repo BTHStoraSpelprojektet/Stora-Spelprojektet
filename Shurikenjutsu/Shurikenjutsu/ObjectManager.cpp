@@ -6,9 +6,6 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize()
 {
-	DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
-	DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(0.0f, 0.0f, -2.0f);
-
 	return true;
 }
 
@@ -25,17 +22,24 @@ void ObjectManager::Shutdown()
 		m_staticObjects[i].Shutdown();
 	}
 	m_staticObjects.clear();
+
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		m_smokeBombList[i].Shutdown();
+}
+
 }
 
 void ObjectManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	//m_animatedCharacter.Update(p_deltaTime);
+
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		m_shurikens[i].Update();
 	}	
+
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		m_smokeBombList[i].Update();
@@ -58,7 +62,6 @@ void ObjectManager::Update()
 					// Add shuriken
 					AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].shurikenId);
 				}
-				
 			}
 		}
 
@@ -74,6 +77,7 @@ void ObjectManager::Update()
 		}
 		Network::GetInstance()->SetHaveUpdateShurikenList();
 	}
+
 	if (Network::GetInstance()->IsSmokeBombListUpdated())
 	{
 		std::vector<SmokeBombNet> tempSmokeBomb = Network::GetInstance()->GetSmokeBombs();
@@ -99,31 +103,49 @@ void ObjectManager::Update()
 	}
 }
 
-void ObjectManager::Render(SHADERTYPE p_shader)
+void ObjectManager::Render()
 {
-	if (p_shader == SHADERTYPE_SCENE || p_shader == SHADERTYPE_DEPTH)
+	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
 		{
-			m_staticObjects[i].Render(p_shader);
+			m_staticObjects[i].Render();
 
 			if (FLAG_DEBUG)
 			{
-				m_staticObjects[i].RenderDebugBoxes(); 
+				m_staticObjects[i].RenderDebugBoxes();
 			}
+		}
+	}
+
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		if (m_frustum.CheckSphere(m_shurikens[i].GetFrustumSphere(), 1.0f))
+		{
+			m_shurikens[i].Render();
+		}
+	}
+
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		if (m_frustum.CheckSphere(m_smokeBombList[i].GetSmokeSphere(), 2.0f))
+		{
+			m_smokeBombList[i].Render();
 		}
 	}
 }
 
-void ObjectManager::RenderShurikens(SHADERTYPE p_shader)
+void ObjectManager::RenderDepth()
 {
-	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		m_shurikens[i].Render(p_shader);
-	}
-	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
-	{
-		m_smokeBombList[i].Render();
+		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
+		sphere.m_position.x += 2.0f;
+		sphere.m_position.z += 2.0f;
+		if (m_frustum.CheckSphere(sphere, 7.5f))
+		{
+			m_staticObjects[i].RenderDepth();
+		}
 	}
 }
 
@@ -188,4 +210,9 @@ bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 std::vector<Object> ObjectManager::GetStaticObjectList()const
 {
 	return m_staticObjects;
+}
+
+void ObjectManager::UpdateFrustum(Frustum* p_frustum)
+{
+	m_frustum = *p_frustum;
 }
