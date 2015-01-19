@@ -384,7 +384,7 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, fl
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
 		}
-		/*else if (cross > 0 && DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)
+		/*else if (cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
