@@ -40,6 +40,7 @@ void ObjectManager::Update()
 		m_shurikens[i].Update();
 	}	
 
+	// Update all the smokebombs
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		m_smokeBombList[i].Update();
@@ -86,6 +87,7 @@ void ObjectManager::Update()
 		{
 			if (!IsSmokeBombInList(tempSmokeBomb[i].smokeBombId))
 			{
+				// Add Smoke bomb
 				AddSmokeBomb(tempSmokeBomb[i].x, tempSmokeBomb[i].z, tempSmokeBomb[i].smokeBombId);
 			}
 		}

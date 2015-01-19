@@ -21,6 +21,7 @@ public:
 
 
 private:
+	bool m_isThrowing;
 	Sphere m_SmokeSphere;
 	ParticleEmitter m_particles;
 	float m_timer;
