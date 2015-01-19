@@ -73,7 +73,7 @@ wallBlock_9 -53.3823 0 -65.5091 0 1.5708 0
 wallBlockMini_44 -18.19 -0.046156 -65.9126 0 0 0
 wallBlockMini_45 -29.7172 -0.046156 -65.9126 0 0 0
 wallBlockMini_46 -41.2539 -0.046156 -65.9126 0 0 0
-wallBlock_13 54.2065 0 -66.5212 0 1.5708 0
+wallBlock_13 54.2065 0 -65.3163 0 1.5708 0
 wallBlockMini_50 18.8906 -0.046156 -65.7485 0 0 0
 wallBlockMini_51 30.4775 -0.046156 -65.7485 0 0 0
 wallBlockMini_52 42.0644 -0.046156 -65.7485 0 0 0
@@ -123,9 +123,8 @@ decorative_small_box_6 -29 0 -32 0 0 0
 decorative_small_box_7 -29 0 -46 0 0 0
 decorative_small_box_8 -39 0 -46 0 0 0
 decorative_small_box_9 -39 0 -32 0 0 0
-dirtDirt_1 -40 0 0 0 0 0
-dirtDirt_14 -40 0 -20 0 0 0
-dirtDirt_10 -40 0 20 0 0 0
+dirtDirt_1 -40 0 0 0 1.5708 0
+dirtDirt_10 -40 0 20 0 1.5708 0
 grass_2 -20 0 60 0 0 0
 grass_3 20 0 60 0 0 0
 road_1 0 0 60 0 0 0
@@ -289,3 +288,4 @@ WallP_36 -12.3762 0 12.4676 0 0 0
 WallW_42 -12.373 0 9.77904 0 0 0
 WallPort_1 0.234632 0 -65.6064 0 1.5708 0
 WallPort_2 0.234632 0 73.5208 0 1.5708 0
+dirtDirtBorder -40 0 -20 0 3.14159 0
