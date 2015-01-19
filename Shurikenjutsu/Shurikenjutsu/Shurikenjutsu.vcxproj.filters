@@ -46,9 +46,6 @@
     <Filter Include="Header Files\Graphics">
       <UniqueIdentifier>{2163f61b-c825-4f28-bcf3-c01a3a91612c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics">
-      <UniqueIdentifier>{203b4b95-7f00-4e34-8b05-e5a4d9f26b8d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Scene">
       <UniqueIdentifier>{3a375898-de57-4805-995a-5c0d96324108}</UniqueIdentifier>
     </Filter>
@@ -112,12 +109,6 @@
     <Filter Include="Header Files\Graphics\Shader Bridges">
       <UniqueIdentifier>{1e8c5c16-9775-4b31-9ab3-cd6c5d58c7e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics\Shader Bridges">
-      <UniqueIdentifier>{e86672ab-06e6-4a96-bb09-b0d6d418edff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics\Particles">
-      <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Particle">
       <UniqueIdentifier>{f17db6bb-41a5-4400-9258-b0dd33a5820f}</UniqueIdentifier>
     </Filter>
@@ -126,9 +117,6 @@
     </Filter>
     <Filter Include="Header Files\Graphics\ShadowShapes">
       <UniqueIdentifier>{b2b29137-b677-4fc3-8443-eac2df52888f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics\ShadowShapes">
-      <UniqueIdentifier>{78714b5b-d56b-426c-901b-465d94674519}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Core\Camera">
       <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
@@ -166,6 +154,18 @@
     <Filter Include="Header Files\GUI\Menu\Menu Items">
       <UniqueIdentifier>{4cd81acc-f6cd-467c-80cb-edf01ec328bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameState\Graphics">
+      <UniqueIdentifier>{203b4b95-7f00-4e34-8b05-e5a4d9f26b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameState\Graphics\Shader Bridges">
+      <UniqueIdentifier>{e86672ab-06e6-4a96-bb09-b0d6d418edff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameState\Graphics\Particles">
+      <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameState\Graphics\ShadowShapes">
+      <UniqueIdentifier>{78714b5b-d56b-426c-901b-465d94674519}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -184,13 +184,13 @@
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
     <ClCompile Include="DirectX.cpp">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Source Files\GameState\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsEngine.cpp">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Source Files\GameState\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Source Files\GameState\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>Source Files\Debug</Filter>
@@ -235,7 +235,7 @@
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
-      <Filter>Source Files\Graphics</Filter>
+      <Filter>Source Files\GameState\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Source Files\Utility\DebugDraw</Filter>
@@ -271,22 +271,22 @@
       <Filter>Source Files\Models</Filter>
     </ClCompile>
     <ClCompile Include="DepthShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="GUIShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="InstancedShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="SceneShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEmitter.cpp">
-      <Filter>Source Files\Graphics\Particles</Filter>
+      <Filter>Source Files\GameState\Graphics\Particles</Filter>
     </ClCompile>
     <ClCompile Include="ParticleShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Source Files\Physics</Filter>
@@ -301,7 +301,7 @@
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="ShadowShapes.cpp">
-      <Filter>Source Files\Graphics\ShadowShapes</Filter>
+      <Filter>Source Files\GameState\Graphics\ShadowShapes</Filter>
     </ClCompile>
     <ClCompile Include="HealthBar.cpp">
       <Filter>Source Files\GUI</Filter>
@@ -359,6 +359,9 @@
     </ClCompile>
     <ClCompile Include="QuadTree.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChooseState.cpp">
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -565,6 +568,9 @@
     </ClInclude>
     <ClInclude Include="QuadTree.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChooseState.h">
+      <Filter>Header Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
