@@ -3,6 +3,7 @@
 
 #include "StatusEffect.h"
 #include "Globals.h"
+#include "AnimatedObject.h"
 
 class Ability
 {
