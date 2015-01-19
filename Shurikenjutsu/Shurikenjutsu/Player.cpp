@@ -135,7 +135,10 @@ void Player::UpdateMe()
 	// Count down cooldowns
 	UpdateAbilities();
 	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
-	m_ability->Execute(temp);
+	if (m_ability->Execute(temp))
+	{
+		DoAnimation();
+	}
 }
 
 void Player::CheckForSpecialAttack()
@@ -457,4 +460,29 @@ void Player::Render()
 void Player::SetIsAlive(bool p_isAlive)
 {
 	m_isAlive = p_isAlive;
+}
+
+void Player::DoAnimation()
+{
+	// DO THIS WITH STATES
+	if (m_ability == m_meleeSwing)
+	{
+		AnimatedObject::MeleeAttackAnimation();
+	}
+	else if (m_ability == m_dash)
+	{
+		;
+	}
+	else if (m_ability == m_megaShuriken)
+	{
+		AnimatedObject::RangeAttackAnimation();
+	}
+	else if (m_ability == m_smokeBombAbility)
+	{
+		AnimatedObject::RangeAttackAnimation();
+	}
+	else if (m_ability == m_shurikenAbility)
+	{
+		AnimatedObject::RangeAttackAnimation();
+	}
 }

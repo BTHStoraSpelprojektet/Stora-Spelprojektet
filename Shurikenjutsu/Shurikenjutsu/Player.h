@@ -51,6 +51,8 @@ public:
 
 	void ResetCooldowns();
 
+	void DoAnimation();
+
 private:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
