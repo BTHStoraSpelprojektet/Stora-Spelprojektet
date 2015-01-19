@@ -357,6 +357,9 @@
     <ClCompile Include="MenuItem.cpp">
       <Filter>Source Files\GUI\Menu\Menu Items</Filter>
     </ClCompile>
+    <ClCompile Include="QuadTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -559,6 +562,9 @@
     </ClInclude>
     <ClInclude Include="MenuItem.h">
       <Filter>Header Files\GUI\Menu\Menu Items</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
