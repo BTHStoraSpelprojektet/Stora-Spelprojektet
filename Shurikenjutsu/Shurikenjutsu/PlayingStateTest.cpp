@@ -1,4 +1,5 @@
 #include "PlayingStateTest.h"
+#include "CollisionManager.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}

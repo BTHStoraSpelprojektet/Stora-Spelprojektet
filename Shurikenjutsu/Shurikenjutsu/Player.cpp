@@ -1,5 +1,16 @@
 #include "Player.h"
 
+#include "SmokeBombAbility.h"
+#include "CollisionManager.h"
+#include "Dash.h"
+#include "Collisions.h"
+#include "Globals.h"
+#include "MeleeSwing.h"
+#include "InputManager.h"
+#include "ShurikenAbility.h"
+#include "MegaShuriken.h"
+#include "Ability.h"
+
 Player::Player(){}
 Player::~Player(){}
 

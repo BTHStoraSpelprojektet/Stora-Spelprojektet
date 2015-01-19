@@ -3,17 +3,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include "AnimatedObject.h"
-#include "InputManager.h"
-#include "Collisions.h"
-#include "Globals.h"
-#include "Dash.h"
-#include "MeleeSwing.h"
-#include "ShurikenAbility.h"
-#include "MegaShuriken.h"
-#include "CollisionManager.h"
 #include "HealthBar.h"
-#include "SmokeBombAbility.h"
 
+class Ability;
 
 class Player :
 	public AnimatedObject

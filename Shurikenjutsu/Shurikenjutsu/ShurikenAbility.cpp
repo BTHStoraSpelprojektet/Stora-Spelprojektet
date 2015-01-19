@@ -1,5 +1,8 @@
 #include "ShurikenAbility.h"
-
+#include "Network.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "StatusEffect.h"
+#include "Globals.h"
 
 ShurikenAbility::ShurikenAbility(){}
 ShurikenAbility::~ShurikenAbility(){}
@@ -7,7 +10,7 @@ bool ShurikenAbility::Initialize()
 {
 	SetDamage(SHURIKEN_DAMAGE);
 	SetTime(0.0);
-	SetStatusEffect(StatusEffect());
+	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	m_stacks = SHURIKEN_MAX_STACK;
 	m_gcd = ALL_AROUND_GOLOBAL_COOLDOWN + 1.0f;

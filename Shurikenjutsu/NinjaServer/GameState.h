@@ -4,8 +4,9 @@
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
-#include "MapManager.h"
-#include "CollisionManager.h"
+
+class MapManager;
+class CollisionManager;
 
 class GameState
 {
@@ -32,10 +33,10 @@ public:
 	void BroadcastPlayers();
 protected:
 	RakNet::RakPeerInterface* m_serverPeer;
-	PlayerManager m_playerManager;
-	ShurikenManager m_shurikenManager;
-	SmokeBombManager m_smokeBombManager;
-	MapManager m_mapManager;
+	PlayerManager* m_playerManager;
+	ShurikenManager* m_shurikenManager;
+	SmokeBombManager* m_smokeBombManager;
+	MapManager* m_mapManager;
 	CollisionManager* m_collisionManager;
 };
 

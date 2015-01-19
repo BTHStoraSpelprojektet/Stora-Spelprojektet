@@ -1,13 +1,8 @@
 #include "PlayerManager.h"
 
 
-PlayerManager::PlayerManager()
-{
-}
-
-PlayerManager::~PlayerManager()
-{
-}
+PlayerManager::PlayerManager(){}
+PlayerManager::~PlayerManager(){}
 
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
@@ -27,9 +22,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	return true;
 }
 
-void PlayerManager::Shutdown()
-{
-}
+void PlayerManager::Shutdown(){}
 
 void PlayerManager::Update(double p_deltaTime)
 {

@@ -1,4 +1,6 @@
 #include "Level.h"
+#include <iostream>
+#include <string>
 
 Level::Level(std::string p_level){
 	if (!loadLevel(p_level)){

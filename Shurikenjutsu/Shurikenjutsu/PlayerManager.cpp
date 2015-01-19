@@ -1,5 +1,5 @@
 #include "PlayerManager.h"
-
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
