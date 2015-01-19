@@ -137,6 +137,7 @@ void Player::UpdateMe()
 	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
 	if (m_ability->Execute(temp))
 	{
+		// Play ability animation if we did any
 		DoAnimation();
 	}
 }
