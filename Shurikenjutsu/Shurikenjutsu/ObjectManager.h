@@ -33,6 +33,7 @@ private:
 	std::vector<SmokeBomb> m_smokeBombList;
 	std::vector<Shuriken> m_shurikens;
 	std::vector<Object> m_staticObjects;
+	std::vector<Object> m_objectsToRender;
 
 	Frustum m_frustum;
 

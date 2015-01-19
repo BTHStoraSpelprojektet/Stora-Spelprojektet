@@ -43,6 +43,12 @@ void Object::RenderDepth()
 	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
 }
 
+void Object::RenderInstanced()
+{
+	//GraphicsEngine::RenderInstanced();
+	//GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
+}
+
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
 	m_position = p_pos;

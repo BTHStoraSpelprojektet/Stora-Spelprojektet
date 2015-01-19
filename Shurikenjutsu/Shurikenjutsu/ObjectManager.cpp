@@ -109,15 +109,17 @@ void ObjectManager::Render()
 	{
 		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
 		{
-			m_staticObjects[i].Render();
-
+			m_objectsToRender.push_back(m_staticObjects[i]);
 			if (FLAG_DEBUG)
 			{
 				m_staticObjects[i].RenderDebugBoxes();
 			}
 		}
 	}
-
+	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
+	{
+		m_objectsToRender[i].Render();
+	}
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		if (m_frustum.CheckSphere(m_shurikens[i].GetFrustumSphere(), 1.0f))

@@ -21,6 +21,7 @@ public:
 	virtual void Shutdown();
 	virtual void Render();
 	virtual void RenderDepth();
+	virtual void RenderInstanced();
 	void RenderDebugBoxes();
 
 	virtual DirectX::XMFLOAT3 GetPosition() const;

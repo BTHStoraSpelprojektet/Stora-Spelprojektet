@@ -200,23 +200,6 @@ bool InstancedShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_
 		return false;
 	}
 
-
-	// Setup the description of the dynamic fog constant buffer that is in the vertex shader.
-	D3D11_BUFFER_DESC fogBuffer;
-	fogBuffer.Usage = D3D11_USAGE_DYNAMIC;
-	fogBuffer.ByteWidth = sizeof(FogBuffer);
-	fogBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	fogBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	fogBuffer.MiscFlags = 0;
-	fogBuffer.StructureByteStride = 0;
-
-	// Create the fog buffer.
-	if (FAILED(p_device->CreateBuffer(&fogBuffer, NULL, &m_fogBuffer)))
-	{
-		ConsolePrintErrorAndQuit("Failed to create instance fog buffer.");
-		return false;
-	}
-
 	m_instanceBufferList = std::vector<ID3D11Buffer*>();
 	return true;
 }
@@ -232,7 +215,6 @@ void InstancedShader::Shutdown()
 	m_rasterizerStateBackCulled->Release();
 	m_rasterizerStateNoneCulled->Release();
 	m_matrixBuffer->Release();
-	m_fogBuffer->Release();
 
 	for (unsigned int i = 0; i < m_instanceBufferList.size(); i++)
 	{
@@ -279,31 +261,6 @@ void InstancedShader::UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, 
 	m_projectionMatrix = p_projectionMatrix;
 }
 
-void InstancedShader::UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogStart, float p_fogEnd, float p_fogDensity)
-{
-	// Lock the fog constant buffer so it can be written to.
-	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
-	if (FAILED(p_context->Map(m_fogBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
-	{
-		ConsolePrintErrorAndQuit("Failed to map instance fog buffer.");
-	}
-
-	// Get a pointer to the data in the constant buffer.
-	FogBuffer* fogBuffer;
-	fogBuffer = (FogBuffer*)mappedBuffer.pData;
-
-	// Copy the fog information into the fog constant buffer.
-	fogBuffer->m_fogStart = p_fogStart;
-	fogBuffer->m_fogEnd = p_fogEnd;
-	fogBuffer->m_fogDensity = p_fogDensity;
-
-	// Unlock the constant buffer.
-	p_context->Unmap(m_fogBuffer, 0);
-
-	// Set the position of the fog constant buffer in the vertex shader.
-	p_context->VSSetConstantBuffers(1, 1, &m_fogBuffer);
-}
-
 void InstancedShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix)
 {
 	DirectX::XMFLOAT4X4 worldMatrix = p_worldMatrix;
@@ -348,12 +305,12 @@ void InstancedShader::TurnOffBackFaceCulling(ID3D11DeviceContext* p_context)
 	p_context->RSSetState(m_rasterizerStateNoneCulled);
 }
 
-void InstancedShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances)
+void InstancedShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
 {
 	m_numberOfInstanceList.push_back(p_numberOfInstances);
-	m_instanceBufferList.push_back(InitializeInstanceBuffer(p_device, p_numberOfInstances));
+	m_instanceBufferList.push_back(InitializeInstanceBuffer(p_device, p_numberOfInstances, p_position));
 }
-ID3D11Buffer* InstancedShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances)
+ID3D11Buffer* InstancedShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
 {
 	ID3D11Buffer* instanceBuffer;
 	// Create the instance buffer description.
@@ -361,7 +318,7 @@ ID3D11Buffer* InstancedShader::InitializeInstanceBuffer(ID3D11Device* p_device, 
 	std::vector<InstancePos> m_instances(p_numberOfInstances);
 	for (int i = 0; i < p_numberOfInstances; i++)
 	{
-		DirectX::XMStoreFloat3(&m_instances[i].position, DirectX::XMVectorSet(i * 4.0f, 0.0f, 0.0f, 0.0f));
+		DirectX::XMStoreFloat3(&m_instances[i].position, DirectX::XMVectorSet(p_position[i].x, p_position[i].y, p_position[i].z, 0.0f));
 	}
 
 	D3D11_BUFFER_DESC instanceBufferDesc;

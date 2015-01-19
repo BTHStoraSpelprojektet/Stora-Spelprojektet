@@ -160,7 +160,6 @@ void GraphicsEngine::SetShadowMap()
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
 {
 	m_sceneShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
-	m_instanceShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
 }
 
 void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
@@ -252,7 +251,8 @@ void GraphicsEngine::TurnOffAlphaBlending()
 
 void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
 {
-	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances);
+	std::vector<DirectX::XMFLOAT3> m_position;
+	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, m_position);
 }
 
 bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
