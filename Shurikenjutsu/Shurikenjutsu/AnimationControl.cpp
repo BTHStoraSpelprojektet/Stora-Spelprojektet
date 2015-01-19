@@ -225,24 +225,39 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 {
 	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
 
-	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikDirection, direction).m128_f32[0];
+	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikLegDirectionNetwork, direction).m128_f32[0];
 
-	float cross = DirectX::XMVector3Cross(m_ikDirection, m_forwardDirection).m128_f32[1];
+	float cross = DirectX::XMVector3Cross(m_ikLegDirectionNetwork, m_forwardDirection).m128_f32[1];
 
 	if (m_animationStacks.size() > 0)
 	{  
-		if (DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)
+		//if (directionAngle < (3.14f * 0.375f))			  // Forward
 		{
 			m_currentArms = m_animationStacksArray[1];
 			m_currentLegs = m_animationStacksArray[0];
 		}
-		else
-		{
-			m_currentArms = m_animationStacksArray[1];
-			m_currentLegs = m_animationStacksArray[0];
-		}
+		//else if (directionAngle >(3.14f * 0.625f))			  // Back
+		//{
+		//	m_currentArms = m_animationStacksArray[3];
+		//	m_currentLegs = m_animationStacksArray[2];
+		//}
+		//else if (cross > 0 && DirectX::XMVector3Length(direction).m128_f32[0] != 0.0f)									 // Right
+		//{
+		//	m_currentArms = m_animationStacksArray[3];
+		//	m_currentLegs = m_animationStacksArray[5];
+		//}
+		//else if (cross <= 0 && DirectX::XMVector3Length(direction).m128_f32[0] != 0.0f)	                             // Left
+		//{
+		//	m_currentArms = m_animationStacksArray[3];
+		//	m_currentLegs = m_animationStacksArray[4];
+		//}
+		//else                                                 // Idle
+		//{
+		//	m_currentArms = m_animationStacksArray[7];
+		//	m_currentLegs = m_animationStacksArray[6];
+		//}
 
-		ApplyLegDirectionNetwork(direction, directionAngle, cross);
+		ApplyLegDirectionNetwork(direction, directionAngle, cross);	
 	}
 }
 
@@ -326,7 +341,7 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, fl
 
 	if (crossD > 0)
 	{
-		/*if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
 		{
 			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle);
 		}
@@ -342,18 +357,18 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, fl
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
 		}
-		else if (cross > 0)
+		/*else if (cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
-		else*/
+		else
 		{
 			m_hipRotation = CalculateLegDirection(forwardAngle);
-		}
+		}*/
 	}
 	else
 	{
-		/*if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
 		{
 			m_hipRotation = CalculateLegDirection(forwardAngle - directionAngle);
 		}
@@ -369,17 +384,16 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, fl
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
 		}
-		else if (cross > 0)
+		/*else if (cross > 0 && DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
-		else*/
+		else
 		{
 			m_hipRotation = CalculateLegDirection(forwardAngle);
-		}
+		}*/
 	}
 }
-
 
 float AnimationControl::CalculateLegDirection(float forwardAngle)
 {
