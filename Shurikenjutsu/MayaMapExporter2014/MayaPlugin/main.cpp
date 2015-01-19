@@ -7,6 +7,7 @@
 #include <time.h>
 #include <fstream>
 #include <cmath>
+#include <algorithm>
 //#define OPENMAYA_EXPORT
 
 #include <maya/MIOStream.h>
@@ -90,6 +91,7 @@ public:
 private:
 	MStatus createEvent(MString eventName, MMessage::MBasicFunction eventCB, int);
     MStringArray events;
+	static bool acompare(worldObject lhs, worldObject rhs);
 };
 
 
@@ -445,7 +447,17 @@ void MapExporter::GetPositions(){
 		// move on to next node
 		it.next();
 	}
+
+	
+
+	
+	std::sort(world.wObjects, world.wObjects + counter, MapExporter::acompare);
+	
+	//world.wObjects->name;
 }
+
+bool MapExporter::acompare(worldObject lhs, worldObject rhs)
+{ return lhs.name < rhs.name; }
 
 void MapExporter::WriteToFile(){
 	print("WriteToFile");
