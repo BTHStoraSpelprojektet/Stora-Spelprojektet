@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 #include "Structures.h"
-#include "InputManager.h"
 
 class AnimationControl
 {
@@ -16,17 +15,25 @@ public:
 	void SetIkDirection(DirectX::XMFLOAT3 p_direction);
 	void MeleeAttack();
 	void RangeAttack();
+
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
+
+	void FindAndReferenceLayers();
+
+	void Shutdown();
 
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
 	DirectX::XMVECTOR ApplyIK(DirectX::XMVECTOR& p_quaternion);	
+
 	void ApplyLegDirection(DirectX::XMVECTOR& direction, float directionAngle, float cross);
 	void ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, float directionAngle, float cross);
+
 	float CalculateLegDirection(float forwardAngle);
 
 	std::vector<AnimationStack> m_animationStacks;
+	AnimationStack* m_animationStacksArray;
 
 	double m_frameArms;
 	double m_frameLegs;
@@ -42,12 +49,8 @@ private:
 	AnimationStack m_currentArms;
 	AnimationStack m_currentLegs;
 
-	AnimationStack* m_runForward;
-
 	std::vector<DirectX::XMFLOAT4X4> m_boneTransforms;
 	std::vector<BindPose> m_bindPoses;
-
-	InputManager* m_inputManager;
 };
 
 #endif;
