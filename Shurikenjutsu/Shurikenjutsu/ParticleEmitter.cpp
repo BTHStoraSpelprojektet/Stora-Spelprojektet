@@ -19,8 +19,8 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	{
 		case(PARTICLE_PATTERN_SMOKE) :
 		{
-			m_particlesPerSecond = 50.0f;
-			m_maxParticles = 75;
+			m_particlesPerSecond = 25.0f;
+			m_maxParticles = 100;
 
 			// Set the random offset limits for the particles when emitted.
 			m_emitionPositionOffset = DirectX::XMFLOAT3(1.0f, 0.5f, 1.0f);
@@ -231,8 +231,7 @@ void ParticleEmitter::EmitParticles()
 				angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
 
 				// Randomize a color.
-				float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.1f;
-				color = 0.0f;
+				float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.025f;
 
 				m_particleList[index].m_position = position;
 				m_particleList[index].m_direction = direction;
