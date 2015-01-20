@@ -38,7 +38,7 @@ struct ShurikenNet
 struct SmokeBombNet
 {
 	unsigned int smokeBombId;
-	float x, z;
+	float startX, startZ, endX, endZ;
 	float lifeTime;
 };
 enum Messages

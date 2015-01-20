@@ -40,9 +40,18 @@ void ObjectManager::Update()
 		m_shurikens[i].Update();
 	}	
 
+	// Update all the smokebombs
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		m_smokeBombList[i].Update();
+
+		if (!m_smokeBombList[i].GetIfActive())
+		{
+			// Remove Smoke bomb
+			m_smokeBombList[i].Shutdown();
+			m_smokeBombList.erase(m_smokeBombList.begin() + i);
+			i--;
+		}
 	}
 
 	if (Network::GetInstance()->IsShurikenListUpdated())
@@ -86,17 +95,8 @@ void ObjectManager::Update()
 		{
 			if (!IsSmokeBombInList(tempSmokeBomb[i].smokeBombId))
 			{
-				AddSmokeBomb(tempSmokeBomb[i].x, tempSmokeBomb[i].z, tempSmokeBomb[i].smokeBombId);
-			}
-		}
-		for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
-		{
-			if (!m_smokeBombList[i].GetIfActive())
-			{
-				// Remove Smoke bomb
-				m_smokeBombList[i].Shutdown();
-				m_smokeBombList.erase(m_smokeBombList.begin() + i);
-				i--;
+				// Add Smoke bomb
+				AddSmokeBomb(tempSmokeBomb[i].startX, tempSmokeBomb[i].startZ, tempSmokeBomb[i].endX, tempSmokeBomb[i].endZ, tempSmokeBomb[i].smokeBombId);
 			}
 		}
 		Network::GetInstance()->SetHaveUpdateSmokeBombList();
@@ -156,10 +156,10 @@ void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	m_shurikens.push_back(tempShuriken);
 }
 
-void ObjectManager::AddSmokeBomb(float p_xPos, float p_zPos, unsigned int p_smokeBombID)
+void ObjectManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID)
 {
 	SmokeBomb tempSmokeBomb;
-	tempSmokeBomb.Initialize(DirectX::XMFLOAT3(p_xPos, 0.0f, p_zPos), p_smokeBombID);
+	tempSmokeBomb.Initialize(DirectX::XMFLOAT3(p_startPosX, 0.0f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.0f, p_endPosZ), p_smokeBombID);
 	tempSmokeBomb.ResetTimer();
 	m_smokeBombList.push_back(tempSmokeBomb);
 }
