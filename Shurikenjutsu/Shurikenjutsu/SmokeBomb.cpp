@@ -11,7 +11,19 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_position, unsigned int p_smokeBom
 	m_isThrowing = true;
 	m_SmokeSphere = Sphere(p_position, SMOKEBOMB_SIZE_X);
 	m_smokeBombId = p_smokeBombID;
-	m_timer = 10;
+	m_timer = 0;
+
+	DirectX::XMFLOAT3 p_startPosition;
+	DirectX::XMFLOAT3 p_endPosition;
+	float x = (p_endPosition.x - p_startPosition.x);
+	float z = (p_endPosition.z - p_startPosition.z);
+	m_percentX = abs(x / (x + z));
+	m_percentZ = abs(z / (x + z));
+	float length = sqrtf(x*x + z*z);
+	float degToRad = 3.14159265359f / 180;
+	m_angle = 45 * degToRad;
+	m_speed = sqrtf((length * 9.82f) / (sinf(2 * m_angle)));
+
 	return true;
 }
 void SmokeBomb::Update()
@@ -20,7 +32,11 @@ void SmokeBomb::Update()
 
 	if (m_isThrowing)
 	{
-		if (m_timer < THROWING_DURATION)
+		float x = m_speed * m_timer * cosf(m_angle) * m_percentX;
+		float y = m_speed * m_timer * sinf(m_angle) - 0.5f * 9.82 * m_timer * m_timer;
+		float z = m_speed * m_timer * cosf(m_angle) * m_percentZ;
+
+		if (y < 0.0f)
 		{
 			ResetTimer();
 			m_isThrowing = false;

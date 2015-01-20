@@ -22,6 +22,12 @@ public:
 
 private:
 	bool m_isThrowing;
+
+	float m_speed;
+	float m_angle;
+	float m_percentX;
+	float m_percentZ;
+
 	Sphere m_SmokeSphere;
 	ParticleEmitter m_particles;
 	float m_timer;
