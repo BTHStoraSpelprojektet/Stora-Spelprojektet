@@ -41,7 +41,7 @@ const int DASH_DAMAGE = 5;
 const float SMOKEBOMB_DURATION = 3.0f;
 const int SMOKEBOMB_DAMAGE = 0;
 const float SMOKEBOMB_COOLDOWN = 1.0f;
-const float SMOKEBOMB_SPEED = 15.0f;
+const float SMOKEBOMB_SPEED = 30.0f;
 
 const float SMOKEBOMB_RANGE = 30.0f;
 const float SMOKEBOMB_POSITION_Y = 4.0f;

@@ -675,7 +675,7 @@ void Network::RemoveSmokeBomb(unsigned int p_smokeBombID)
 bool Network::IsSmokeBombListUpdated()
 {
 	return m_smokebombListUpdated;
-	}
+}
 
 void Network::SetHaveUpdateSmokeBombList()
 {

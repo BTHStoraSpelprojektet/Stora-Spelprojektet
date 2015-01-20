@@ -19,15 +19,10 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 
 	m_speed = SMOKEBOMB_SPEED;
 	float x = (p_endPosition.x - p_startPosition.x);
 	float z = (p_endPosition.z - p_startPosition.z);
-	m_percentX = x / (abs(x) + abs(z));
-	m_percentZ = z / (abs(x) + abs(z));
 	float length = sqrtf(x*x + z*z);
-
+	m_percentX = x / length;
+	m_percentZ = z / length;
 	m_angle = asinf((9.82f * length) / (m_speed * m_speed)) * 0.5f;
-
-	//float degToRad = 3.14159265359f / 180;
-	//m_angle = 45 * degToRad;
-	//m_speed = sqrtf((length * 9.82f) / (sinf(2 * m_angle)));
 	
 	
 	return true;
@@ -42,7 +37,7 @@ void SmokeBomb::Update()
 		float y = m_speed * m_timer * sinf(m_angle) - 0.5f * 9.82 * m_timer * m_timer;
 		float z = m_speed * m_timer * cosf(m_angle) * m_percentZ;
 
-		m_bomb.SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + y, m_startPosition.z + z));
+		m_bomb.SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
 
 		if (y < 0.0f)
 		{
@@ -69,11 +64,9 @@ void SmokeBomb::Shutdown()
 }
 void SmokeBomb::Render()
 {
-	if (m_isThrowing)
-	{
-		m_bomb.Render();
-	}
-	else
+	m_bomb.Render();
+
+	if(!m_isThrowing)
 	{
 		m_particles.Render();
 	}
