@@ -278,7 +278,6 @@ void ParticleEmitter::UpdateParticles()
 			for (unsigned int i = 0; i < m_currentParticles; i++)
 			{
 				// TODO bågformel.
-				float length = m_particleList[i].m_velocity * m_particleList[i].m_timeToLive;
 				float halfTime = m_particleList[i].m_timeToLive / 2.0f;
 				float angle = 30.0f * 3.14159265359 / 180;
 				float height = 3.0f;
