@@ -18,6 +18,7 @@
 
 #include "PlayingStateTest.h"
 #include "MenuState.h"
+#include "ChooseState.h"
 #include "Timer.h"
 #include "Sound.h"
 #include "GUIManager.h"
@@ -51,6 +52,7 @@ private:
 	DirectionalLight m_directionalLight;
 	Camera m_lightCamera;
 	MenuState m_menuState;
+	ChooseState	m_chooseNinjaState;
 	GameState* m_gameState;
 
 	//Sound* m_sound;

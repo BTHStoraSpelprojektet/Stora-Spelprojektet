@@ -13,8 +13,9 @@ bool MenuState::Initialize()
 
 	// Initialize main menu
 	m_main.AddButton(0, 0, 360.0f, 60.0f, MENUACTION_PLAY);
-	m_main.AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_OPTIONS);
-	m_main.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK);
+	m_main.AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_CHOOSENINJA);
+	m_main.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_OPTIONS);
+	m_main.AddButton(0, -210.0f, 360.0f, 60.0f, MENUACTION_BACK);
 
 	// Push main menu
 	m_menues.push(m_main);
@@ -36,6 +37,9 @@ GAMESTATESWITCH MenuState::Update()
 			break;
 		case MENUACTION_PLAY:
 			return GAMESTATESWITCH_PLAY;
+			break;
+		case MENUACTION_CHOOSENINJA:
+			return GAMESTATESWITCH_CHOOSENINJA;
 			break;
 		case MENUACTION_OPTIONS:
 			m_menues.push(m_options);

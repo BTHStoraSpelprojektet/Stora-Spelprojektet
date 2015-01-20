@@ -22,6 +22,7 @@ bool MegaShuriken::Execute(float p_distance)
 		Network::GetInstance()->SendAbility(ABILITIES_MEGASHURIKEN,0);
 		SetCooldown(MEGASHURIKEN_COOLDOWN);
 		std::cout << "MEGASHURIKEN" << std::endl;
+		return true;
 	}	
-	return true;
+	return false;
 }

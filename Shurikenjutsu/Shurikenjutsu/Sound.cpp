@@ -80,7 +80,7 @@ void Sound::PlaySound(PLAYSOUND p_playSound)
 	case PLAYSOUND_BACKGROUND_SOUND:
 		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
 		m_backgroundSound->setLoopCount(1);
-		//m_system->playSound(m_backgroundSound, 0, false, 0);
+		m_system->playSound(m_backgroundSound, 0, false, 0);
 		break;
 	default:
 		break;

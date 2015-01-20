@@ -19,7 +19,8 @@ bool SmokeBombAbility::Execute(float p_distance)
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_SMOKEBOMB, p_distance);
 		SetCooldown(SMOKEBOMB_COOLDOWN);
+		return true;
 	}
 
-	return true;
+	return false;
 }

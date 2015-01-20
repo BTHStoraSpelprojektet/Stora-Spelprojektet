@@ -19,8 +19,8 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	{
 		case(PARTICLE_PATTERN_SMOKE) :
 		{
-			m_particlesPerSecond = 50.0f;
-			m_maxParticles = 75;
+			m_particlesPerSecond = 25.0f;
+			m_maxParticles = 100;
 
 			// Set the random offset limits for the particles when emitted.
 			m_emitionPositionOffset = DirectX::XMFLOAT3(1.0f, 0.5f, 1.0f);
@@ -231,11 +231,11 @@ void ParticleEmitter::EmitParticles()
 				angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
 
 				// Randomize a color.
-				float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.1f;
+				float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.025f;
 
 				m_particleList[index].m_position = position;
 				m_particleList[index].m_direction = direction;
-				m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x + color, m_color.y + color, m_color.z + color, 1.0f);
+				m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
 				m_particleList[index].m_velocity = velocity;
 				m_particleList[index].m_alive = true;
 				m_particleList[index].m_timeToLive = m_timeToLive;
@@ -278,10 +278,15 @@ void ParticleEmitter::UpdateParticles()
 			for (unsigned int i = 0; i < m_currentParticles; i++)
 			{
 				// TODO bågformel.
+				float halfTime = m_particleList[i].m_timeToLive / 2.0f;
+				float angle = 30.0f * 3.14159265359 / 180;
+				float height = 3.0f;
+				float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
+
 
 				// Fly in an arc in the given xz direction.
 				m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
-				//m_particleList[i].m_position.y = ;
+				m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
 				m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
 
 				// Add time passed.
@@ -439,4 +444,9 @@ void ParticleEmitter::SetPosition(DirectX::XMFLOAT3 p_position)
 void ParticleEmitter::SetEmitParticleState(bool p_emit)
 {
 	m_emit = p_emit;
+}
+
+int ParticleEmitter::GetParticleCount()
+{
+	return m_currentParticles;
 }

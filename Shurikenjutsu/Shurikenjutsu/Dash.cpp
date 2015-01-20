@@ -23,7 +23,8 @@ bool Dash::Execute(float p_distance)
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_DASH,0);
 		SetCooldown(DASH_COOLDOWN);
+		return true;
 	}
-	return true;
+	return false;
 }
 

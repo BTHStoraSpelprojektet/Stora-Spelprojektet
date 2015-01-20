@@ -14,6 +14,8 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	TransformBoundingBoxes();
 	TransformShadowPoints();
 
+	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
+
 	return true;
 }
 
@@ -27,6 +29,9 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	TransformBoundingBoxes();
 	TransformShadowPoints();
+
+
+	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
 
 	return true;
 }
@@ -45,8 +50,7 @@ void Object::RenderDepth()
 
 void Object::RenderInstanced()
 {
-	//GraphicsEngine::RenderInstanced();
-	//GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
+	GraphicsEngine::RenderInstanced(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_InstanceIndex);
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
@@ -82,7 +86,9 @@ void Object::SetRotation(DirectX::XMFLOAT3 p_rotation)
 DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 {
 	DirectX::XMFLOAT4X4 matrix;
-	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) * DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) * DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) * 
+		DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) * 
+		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
 	
 	return matrix;
 }
@@ -210,7 +216,7 @@ Sphere Object::GetFrustumSphere()
 	return tempSphere;
 }
 
-void Object::CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_positions)
+void Object::CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_positions)
 {
 	GraphicsEngine::AddInstanceBuffer(p_numberOfInstances, p_positions);
 }
@@ -218,6 +224,7 @@ int Object::GetInstanceIndex() const
 {
 	return m_InstanceIndex;
 }
+
 void Object::SetInstanceIndex(int p_instanceIndex)
 {
 	m_InstanceIndex = p_instanceIndex;
