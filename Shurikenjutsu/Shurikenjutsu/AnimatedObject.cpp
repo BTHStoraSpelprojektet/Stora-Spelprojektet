@@ -19,6 +19,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	{
 		m_animationController.CreateNewStack(m_model->GetAnimationStacks()[i]);
 	}
+	m_animationController.FindAndReferenceLayers();
 	m_animationController.HandleInput(p_dir);
 
 	return true;
@@ -26,6 +27,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 
 void AnimatedObject::Shutdown()
 {
+	m_animationController.Shutdown();
 	Object::Shutdown();
 }
 
