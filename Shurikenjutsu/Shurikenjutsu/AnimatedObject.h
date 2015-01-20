@@ -16,8 +16,7 @@ public:
 	virtual float GetSpeed() const;
 
 	void Render();
-	void RangeAttackAnimation();
-	void MeleeAttackAnimation();
+	void ChangeAnimationState(AnimationState p_newState);
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 	void SetIkDirection(DirectX::XMFLOAT3 p_ikDirection);

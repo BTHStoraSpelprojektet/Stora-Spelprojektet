@@ -466,22 +466,22 @@ void Player::DoAnimation()
 	// DO THIS WITH STATES
 	if (m_ability == m_meleeSwing)
 	{
-		AnimatedObject::MeleeAttackAnimation();
+		AnimatedObject::ChangeAnimationState(AnimationState::Melee);
 	}
 	else if (m_ability == m_dash)
 	{
-		;
+		AnimatedObject::ChangeAnimationState(AnimationState::Special1);
 	}
 	else if (m_ability == m_megaShuriken)
 	{
-		AnimatedObject::RangeAttackAnimation();
+		AnimatedObject::ChangeAnimationState(AnimationState::Special2);
 	}
 	else if (m_ability == m_smokeBombAbility)
 	{
-		AnimatedObject::RangeAttackAnimation();
+		AnimatedObject::ChangeAnimationState(AnimationState::Special3);
 	}
 	else if (m_ability == m_shurikenAbility)
 	{
-		AnimatedObject::RangeAttackAnimation();
+		AnimatedObject::ChangeAnimationState(AnimationState::Range);
 	}
 }
