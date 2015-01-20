@@ -440,3 +440,8 @@ void ParticleEmitter::SetEmitParticleState(bool p_emit)
 {
 	m_emit = p_emit;
 }
+
+int ParticleEmitter::GetParticleCount()
+{
+	return m_currentParticles;
+}

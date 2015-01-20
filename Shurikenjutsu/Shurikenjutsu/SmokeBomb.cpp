@@ -82,7 +82,7 @@ void SmokeBomb::ResetTimer()
 }
 bool SmokeBomb::GetIfActive()
 {
-	if (m_isThrowing || m_timer < SMOKEBOMB_DURATION)
+	if (m_isThrowing || m_timer < SMOKEBOMB_DURATION || m_particles.GetParticleCount() > 5)
 	{
 		return true;
 	}

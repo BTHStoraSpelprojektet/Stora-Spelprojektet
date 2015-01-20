@@ -44,6 +44,14 @@ void ObjectManager::Update()
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		m_smokeBombList[i].Update();
+
+		if (!m_smokeBombList[i].GetIfActive())
+		{
+			// Remove Smoke bomb
+			m_smokeBombList[i].Shutdown();
+			m_smokeBombList.erase(m_smokeBombList.begin() + i);
+			i--;
+		}
 	}
 
 	if (Network::GetInstance()->IsShurikenListUpdated())
@@ -89,16 +97,6 @@ void ObjectManager::Update()
 			{
 				// Add Smoke bomb
 				AddSmokeBomb(tempSmokeBomb[i].startX, tempSmokeBomb[i].startZ, tempSmokeBomb[i].endX, tempSmokeBomb[i].endZ, tempSmokeBomb[i].smokeBombId);
-			}
-		}
-		for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
-		{
-			if (!m_smokeBombList[i].GetIfActive())
-			{
-				// Remove Smoke bomb
-				m_smokeBombList[i].Shutdown();
-				m_smokeBombList.erase(m_smokeBombList.begin() + i);
-				i--;
 			}
 		}
 		Network::GetInstance()->SetHaveUpdateSmokeBombList();
