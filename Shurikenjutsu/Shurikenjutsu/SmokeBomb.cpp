@@ -34,7 +34,7 @@ void SmokeBomb::Update()
 	if (m_isThrowing)
 	{
 		float x = m_speed * m_timer * cosf(m_angle) * m_percentX;
-		float y = m_speed * m_timer * sinf(m_angle) - 0.5f * 9.82 * m_timer * m_timer;
+		float y = m_speed * m_timer * sinf(m_angle) - 0.5f * 9.82f * m_timer * m_timer;
 		float z = m_speed * m_timer * cosf(m_angle) * m_percentZ;
 
 		m_bomb.SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));

@@ -232,10 +232,11 @@ void ParticleEmitter::EmitParticles()
 
 				// Randomize a color.
 				float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.1f;
+				color = 0.0f;
 
 				m_particleList[index].m_position = position;
 				m_particleList[index].m_direction = direction;
-				m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x + color, m_color.y + color, m_color.z + color, 1.0f);
+				m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
 				m_particleList[index].m_velocity = velocity;
 				m_particleList[index].m_alive = true;
 				m_particleList[index].m_timeToLive = m_timeToLive;
@@ -278,10 +279,16 @@ void ParticleEmitter::UpdateParticles()
 			for (unsigned int i = 0; i < m_currentParticles; i++)
 			{
 				// TODO bågformel.
+				float length = m_particleList[i].m_velocity * m_particleList[i].m_timeToLive;
+				float halfTime = m_particleList[i].m_timeToLive / 2.0f;
+				float angle = 30.0f * 3.14159265359 / 180;
+				float height = 3.0f;
+				float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
+
 
 				// Fly in an arc in the given xz direction.
 				m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
-				//m_particleList[i].m_position.y = ;
+				m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
 				m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
 
 				// Add time passed.
