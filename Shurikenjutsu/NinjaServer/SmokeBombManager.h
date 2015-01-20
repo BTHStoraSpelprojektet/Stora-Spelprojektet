@@ -12,7 +12,7 @@ public:
 	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
 	void Shutdown();
 	void Update(double p_deltaTime);
-	void AddSmokeBomb(float p_posX, float p_posZ);
+	void AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ);
 
 
 	std::vector<SmokeBombNet> GetSmokeBombs();

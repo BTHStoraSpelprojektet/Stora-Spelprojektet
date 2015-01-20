@@ -24,19 +24,23 @@ void SmokeBombManager::Update(double p_deltaTime)
 		}
 	}
 }
-void SmokeBombManager::AddSmokeBomb(float p_posX, float p_posZ)
+void SmokeBombManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ)
 {
 	SmokeBombNet temp;
-	temp.x = p_posX;
+	temp.startX = p_startPosX;
+	temp.startZ = p_startPosZ;
+	temp.endX = p_endPosX;
+	temp.endZ = p_endPosZ;
 	temp.smokeBombId = GetSmokeBombUniqueId();
-	temp.z = p_posZ;
 	temp.lifeTime = SMOKEBOMB_DURATION;
 	m_smokeBombs.push_back(temp);
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_SMOKEBOMB_THROW);
 	wBitStream.Write(temp.smokeBombId);
-	wBitStream.Write(p_posX);
-	wBitStream.Write(p_posZ);
+	wBitStream.Write(temp.startX);
+	wBitStream.Write(temp.startZ);
+	wBitStream.Write(temp.endX);
+	wBitStream.Write(temp.endZ);
 	wBitStream.Write(temp.lifeTime);
 
 

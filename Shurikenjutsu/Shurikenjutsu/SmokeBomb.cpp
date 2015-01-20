@@ -1,20 +1,18 @@
 #include "SmokeBomb.h"
 
 
-bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_position, unsigned int p_smokeBombID)
+bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {
-	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(p_position.x, SMOKEBOMB_POSITION_Y, p_position.z),
+	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(p_endPosition.x, SMOKEBOMB_POSITION_Y, p_endPosition.z),
 		DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
 		DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 
 
 	m_isThrowing = true;
-	m_SmokeSphere = Sphere(p_position, SMOKEBOMB_SIZE_X);
+	m_SmokeSphere = Sphere(p_endPosition, SMOKEBOMB_SIZE_X);
 	m_smokeBombId = p_smokeBombID;
 	m_timer = 0;
 
-	DirectX::XMFLOAT3 p_startPosition;
-	DirectX::XMFLOAT3 p_endPosition;
 	float x = (p_endPosition.x - p_startPosition.x);
 	float z = (p_endPosition.z - p_startPosition.z);
 	m_percentX = abs(x / (x + z));

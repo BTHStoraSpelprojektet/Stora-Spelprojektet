@@ -8,7 +8,7 @@
 class SmokeBomb
 {
 public:
-	bool Initialize(DirectX::XMFLOAT3 p_position, unsigned int p_smokeBombID);
+	bool Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID);
 	void Update();
 	void Shutdown();
 	void Render();
