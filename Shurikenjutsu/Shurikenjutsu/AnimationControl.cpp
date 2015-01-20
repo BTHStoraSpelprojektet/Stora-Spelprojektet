@@ -227,17 +227,6 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 
 	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikLegDirectionNetwork, direction).m128_f32[0];
 
-	tempus.push_back(directionAngle);
-
-	if (directionAngle != m_firstAngle || directionAngle != m_secondAngle || directionAngle != m_thirdAngle)
-	{
-		m_thirdAngle = m_secondAngle;
-		m_secondAngle = m_firstAngle;
-		m_firstAngle = directionAngle;
-
-		return;
-	}
-
 	float cross = DirectX::XMVector3Cross(m_ikLegDirectionNetwork, m_forwardDirection).m128_f32[1];
 
 	if (m_animationStacks.size() > 0)
@@ -368,14 +357,14 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& p_direction, 
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
 		}
-		else if (p_cross > 0)
+		/*else if (p_cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
 		else
 		{
 			m_hipRotation = CalculateLegDirection(forwardAngle);
-		}
+		}*/
 	}
 	else
 	{
@@ -395,14 +384,14 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& p_direction, 
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
 		}
-		else if (p_cross > 0)
+		/*else if (p_cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
 		else
 		{
 			m_hipRotation = CalculateLegDirection(forwardAngle);
-		}
+		}*/
 	}
 }
 
@@ -429,9 +418,6 @@ float AnimationControl::CalculateLegDirection(float p_forwardAngle)
 
 void AnimationControl::FindAndReferenceLayers()
 {
-	m_firstAngle = 0.0f;
-	m_secondAngle = 0.0f;
-
 	std::string m_animationNames[] = { "RunF", "RunA", "RunB", "RunAB", 
 									   "RunL", "RunR", "IdleL", "IdleA", 
 									   "DeadL", "DeadA", "Melee", "Range"};
