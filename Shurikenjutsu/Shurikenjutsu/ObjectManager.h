@@ -24,7 +24,7 @@ public:
 	void RenderDepth();
 
 	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID);
-	void AddSmokeBomb(float p_xPos, float p_zPos, unsigned int p_smokeBombID);
+	void AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID);
 
 	void AddStaticObject(Object p_object);
 	std::vector<Object> GetStaticObjectList()const;

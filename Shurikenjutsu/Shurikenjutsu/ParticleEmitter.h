@@ -29,6 +29,8 @@ public:
 
 	void SetEmitParticleState(bool p_emit);
 
+	int GetParticleCount();
+
 private:
 
 	bool m_emit;

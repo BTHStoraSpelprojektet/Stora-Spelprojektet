@@ -24,19 +24,30 @@ void SmokeBombManager::Update(double p_deltaTime)
 		}
 	}
 }
-void SmokeBombManager::AddSmokeBomb(float p_posX, float p_posZ)
+void SmokeBombManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ)
 {
+	float x = p_endPosX - p_startPosX;
+	float z = p_endPosZ - p_startPosZ;
+	float length = sqrtf(x*x + z*z);
+	float angle = angle = asinf((9.82f * length) / (SMOKEBOMB_SPEED * SMOKEBOMB_SPEED)) * 0.5f;
+	float speed = sqrtf((length * 9.82f) / (sinf(2 * angle)));
+	float timeToLand = length / (speed * cosf(angle));
+
 	SmokeBombNet temp;
-	temp.x = p_posX;
+	temp.startX = p_startPosX;
+	temp.startZ = p_startPosZ;
+	temp.endX = p_endPosX;
+	temp.endZ = p_endPosZ;
 	temp.smokeBombId = GetSmokeBombUniqueId();
-	temp.z = p_posZ;
-	temp.lifeTime = SMOKEBOMB_DURATION;
+	temp.lifeTime = SMOKEBOMB_DURATION + timeToLand;
 	m_smokeBombs.push_back(temp);
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_SMOKEBOMB_THROW);
 	wBitStream.Write(temp.smokeBombId);
-	wBitStream.Write(p_posX);
-	wBitStream.Write(p_posZ);
+	wBitStream.Write(temp.startX);
+	wBitStream.Write(temp.startZ);
+	wBitStream.Write(temp.endX);
+	wBitStream.Write(temp.endZ);
 	wBitStream.Write(temp.lifeTime);
 
 
