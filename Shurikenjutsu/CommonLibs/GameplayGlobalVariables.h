@@ -41,6 +41,7 @@ const int DASH_DAMAGE = 5;
 const float SMOKEBOMB_DURATION = 3.0f;
 const int SMOKEBOMB_DAMAGE = 0;
 const float SMOKEBOMB_COOLDOWN = 1.0f;
+const float SMOKEBOMB_SPEED = 30.0f;
 
 const float SMOKEBOMB_RANGE = 30.0f;
 const float SMOKEBOMB_POSITION_Y = 4.0f;
@@ -57,7 +58,7 @@ const float SMOKEBOMB_SIZE_Y = 3.0f;
 ////////////////////////////////////////////////////////////////Special Abilities
 ////////////////////////////////////////////////////////////////Character Variables
 const int CHARACTAR_KATANA_SHURIKEN_HEALTH = 100;
-const float CHARACTAR_KATANA_SHURIKEN_SPEED = 10.0f;
+const float CHARACTAR_KATANA_SHURIKEN_SPEED = 20.0f;
 ////////////////////////////////////////////////////////////////Character Variables
 
 

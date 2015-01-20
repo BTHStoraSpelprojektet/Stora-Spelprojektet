@@ -97,17 +97,17 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
-	m_sound = new Sound();
-	if (!m_sound->Initialize())
-	{
-		ConsolePrintError("Sound Initialize failed.");
-		ConsoleSkipLines(1);
-	}
-	else
-	{
-		ConsolePrintSuccess("Sound Initialize succses.");
-		ConsoleSkipLines(1);
-	}
+	//m_sound = new Sound();
+	//if (!m_sound->Initialize())
+	//{
+	//	ConsolePrintError("Sound Initialize failed.");
+	//	ConsoleSkipLines(1);
+	//}
+	//else
+	//{
+	//	ConsolePrintSuccess("Sound Initialize succses.");
+	//	ConsoleSkipLines(1);
+	//}
 
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.25f, 0.25f, 0.25f, 1.0f);
@@ -131,7 +131,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		m_debug.RunTests(p_argc, p_argv);
 	}
 
-	m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
+	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
 	return result;
 }
@@ -153,7 +153,7 @@ void System::Shutdown()
 	// Shutdown model library
 	ModelLibrary::GetInstance()->Shutdown();
 
-	m_sound->Shutdown();
+	//m_sound->Shutdown();
 
 	GUIManager::GetInstance()->Shutdown();
 }
@@ -229,7 +229,7 @@ void System::Update()
 		break;
 	}
 	
-	m_sound->Update();
+	//m_sound->Update();
 
 	// Update network
 	Network::GetInstance()->Update();
