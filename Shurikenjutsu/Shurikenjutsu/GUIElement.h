@@ -11,7 +11,7 @@ public:
 	GUIElement();
 	~GUIElement();
 
-	bool Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, const wchar_t *p_filename);
+	bool Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, std::string p_filename);
 
 	void QueueRender();
 
@@ -24,7 +24,7 @@ public:
 	void SetPosition(DirectX::XMFLOAT3 p_position);
 
 	ID3D11ShaderResourceView* GetTexture()const;
-	void SetTexture(const wchar_t *p_filename);
+	void SetTexture(std::string p_filename);
 
 private:
 	DirectX::XMFLOAT2 m_size;

@@ -94,10 +94,18 @@ void GraphicsEngine::Shutdown()
 	// TODO shutdowns for everyone!
 }
 
-ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(const wchar_t *p_filename)
+ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
 {
 	ID3D11ShaderResourceView* textureView;
-	HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX.GetDevice(), m_directX.GetContext(), p_filename, nullptr, &textureView, 0);
+	std::wstring wstring;
+	for (int i = 0; i < p_filename.length(); ++i)
+		wstring += wchar_t(p_filename[i]);
+
+	const wchar_t* your_result = wstring.c_str();
+
+
+	//const wchar_t *filepath = p_filename;
+	HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX.GetDevice(), m_directX.GetContext(), your_result, nullptr, &textureView, 0);
 	if(FAILED(hr))
 	{
 		std::cout << "FAILED LOADING TEXTURE FOR MENU" << std::endl;

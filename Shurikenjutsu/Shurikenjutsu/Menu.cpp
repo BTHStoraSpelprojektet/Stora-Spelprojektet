@@ -43,21 +43,21 @@ void Menu::Render()
 	}
 }
 
-void Menu::AddButton(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, const wchar_t *p_filename)
+void Menu::AddButton(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, std::string p_filename)
 {
 	MenuButton temp;
 	temp.Initialize(p_x, p_y, p_width, p_height, p_action, p_filename);
 	m_buttons.push_back(temp);
 }
 
-void Menu::AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action, const wchar_t *p_filename)
+void Menu::AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action, std::string p_filename)
 {
 	MenuCheckbox temp;
 	temp.Initialize(p_x, p_y, p_size, p_action, p_filename);
 	m_checkboxes.push_back(temp);
 }
 
-void Menu::AddPortrait(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, const wchar_t *p_filename)
+void Menu::AddPortrait(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, std::string p_filename)
 {
 	MenuButton temp;
 	temp.Initialize(p_x, p_y, p_width, p_height, p_action, p_filename);

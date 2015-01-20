@@ -69,6 +69,10 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("All models successfully loaded.");
 	ConsoleSkipLines(1);
 
+	TextureLibrary::GetInstance()->Initialize();
+	ConsolePrintSuccess("All Textures successfully loaded.");
+	ConsoleSkipLines(1);
+
 	// Initialize timer.
 	m_previousFPS = 0;
 	m_timer.Initialize();
@@ -152,6 +156,9 @@ void System::Shutdown()
 
 	// Shutdown model library
 	ModelLibrary::GetInstance()->Shutdown();
+
+	// Shutdown texture lib
+	TextureLibrary::GetInstance()->Shutdown();
 
 	m_sound->Shutdown();
 

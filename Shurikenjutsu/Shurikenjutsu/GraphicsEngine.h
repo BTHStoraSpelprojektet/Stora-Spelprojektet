@@ -28,7 +28,7 @@ public:
 	static ID3D11DeviceContext* GetContext();
 	static D3D_FEATURE_LEVEL GetVersion();
 	
-	static ID3D11ShaderResourceView* Create2DTexture(const wchar_t *p_filename);
+	static ID3D11ShaderResourceView* Create2DTexture(std::string p_filename);
 
 	static void RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
 
