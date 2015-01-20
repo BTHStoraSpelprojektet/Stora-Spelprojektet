@@ -60,6 +60,11 @@ private:
 
 	std::vector<DirectX::XMFLOAT4X4> m_boneTransforms;
 	std::vector<BindPose> m_bindPoses;
+
+	std::vector<float> tempus;
+	float m_firstAngle;
+	float m_secondAngle;
+	float m_thirdAngle;
 };
 
 #endif;
