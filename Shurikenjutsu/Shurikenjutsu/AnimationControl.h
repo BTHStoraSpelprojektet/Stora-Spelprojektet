@@ -10,7 +10,7 @@ enum AnimationState {
 	Range, 
 	Special1, 
 	Special2,
-	Special3
+	Tool
 };
 
 class AnimationControl

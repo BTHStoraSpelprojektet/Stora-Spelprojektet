@@ -465,7 +465,7 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 		{
 			//m_currentArms = m_animationStacksArray[9];
 		}
-		else if (p_newState == AnimationState::Special3)
+		else if (p_newState == AnimationState::Tool)
 		{
 			//m_currentArms = m_animationStacksArray[9];
 		}

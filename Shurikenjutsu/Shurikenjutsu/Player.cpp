@@ -478,7 +478,7 @@ void Player::DoAnimation()
 	}
 	else if (m_ability == m_smokeBombAbility)
 	{
-		AnimatedObject::ChangeAnimationState(AnimationState::Special3);
+		AnimatedObject::ChangeAnimationState(AnimationState::Tool);
 	}
 	else if (m_ability == m_shurikenAbility)
 	{
