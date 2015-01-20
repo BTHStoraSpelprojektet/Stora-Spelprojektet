@@ -1,5 +1,7 @@
 #ifndef SMOKEBOMB_H
 #define SMOKEBOMB_H
+
+#include "Object.h"
 #include "ParticleEmitter.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "GraphicsEngine.h"
@@ -23,6 +25,8 @@ public:
 private:
 	bool m_isThrowing;
 
+	Object m_bomb;
+	DirectX::XMFLOAT3 m_startPosition;
 	float m_speed;
 	float m_angle;
 	float m_percentX;

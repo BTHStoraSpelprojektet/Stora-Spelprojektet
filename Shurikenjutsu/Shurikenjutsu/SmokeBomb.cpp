@@ -3,11 +3,14 @@
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {
+	m_bomb.Initialize("../Shurikenjutsu/Models/SmokeBomb.SSP", p_startPosition);
+
 	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(p_endPosition.x, SMOKEBOMB_POSITION_Y, p_endPosition.z),
 		DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
 		DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 
 
+	m_startPosition = p_startPosition;
 	m_isThrowing = true;
 	m_SmokeSphere = Sphere(p_endPosition, SMOKEBOMB_SIZE_X);
 	m_smokeBombId = p_smokeBombID;
@@ -21,7 +24,8 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 
 	float degToRad = 3.14159265359f / 180;
 	m_angle = 45 * degToRad;
 	m_speed = sqrtf((length * 9.82f) / (sinf(2 * m_angle)));
-
+	
+	
 	return true;
 }
 void SmokeBomb::Update()
@@ -33,6 +37,8 @@ void SmokeBomb::Update()
 		float x = m_speed * m_timer * cosf(m_angle) * m_percentX;
 		float y = m_speed * m_timer * sinf(m_angle) - 0.5f * 9.82 * m_timer * m_timer;
 		float z = m_speed * m_timer * cosf(m_angle) * m_percentZ;
+
+		m_bomb.SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + y, m_startPosition.z + z));
 
 		if (y < 0.0f)
 		{
@@ -61,6 +67,7 @@ void SmokeBomb::Render()
 {
 	if (m_isThrowing)
 	{
+		m_bomb.Render();
 	}
 	else
 	{
@@ -90,7 +97,14 @@ bool SmokeBomb::GetIfActive()
 
 Sphere SmokeBomb::GetSmokeSphere()
 {
-	return m_SmokeSphere;
+	if (m_isThrowing)
+	{
+		return m_bomb.GetFrustumSphere();
+	}
+	else
+	{
+		return m_SmokeSphere;
+	}
 }
 
 unsigned int SmokeBomb::GetID()

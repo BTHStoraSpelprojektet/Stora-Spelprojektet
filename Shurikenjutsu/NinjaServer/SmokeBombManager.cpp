@@ -26,13 +26,21 @@ void SmokeBombManager::Update(double p_deltaTime)
 }
 void SmokeBombManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ)
 {
+	float x = p_endPosX - p_startPosX;
+	float z = p_endPosZ - p_startPosZ;
+	float length = sqrtf(x*x + z*z);
+	float degToRad = 3.14159265359f / 180;
+	float angle = 45 * degToRad;
+	float speed = sqrtf((length * 9.82f) / (sinf(2 * angle)));
+	float timeToLand = length / (speed * cosf(angle));
+
 	SmokeBombNet temp;
 	temp.startX = p_startPosX;
 	temp.startZ = p_startPosZ;
 	temp.endX = p_endPosX;
 	temp.endZ = p_endPosZ;
 	temp.smokeBombId = GetSmokeBombUniqueId();
-	temp.lifeTime = SMOKEBOMB_DURATION;
+	temp.lifeTime = SMOKEBOMB_DURATION + timeToLand;
 	m_smokeBombs.push_back(temp);
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_SMOKEBOMB_THROW);
