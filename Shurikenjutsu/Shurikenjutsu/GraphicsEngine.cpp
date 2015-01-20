@@ -247,7 +247,7 @@ void GraphicsEngine::TurnOffAlphaBlending()
 	m_directX.TurnOffAlphaBlending();
 }
 
-void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
 {	
 	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_position);
 }

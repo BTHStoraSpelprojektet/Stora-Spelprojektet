@@ -10,7 +10,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
 
 	//Stuff needed for the loop
-	std::vector<DirectX::XMFLOAT3> modelPositions;
+	std::vector<DirectX::XMFLOAT4X4> modelPositions;
 	modelPositions.clear();
 	int numberOfSameModel = 0;
 	std::string prevModelFileName = levelObjects[0].m_filePath;
@@ -23,7 +23,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	AddStaticObject(object);
 	
 	numberOfSameModel++;//Räknar antaler modeller...
-	modelPositions.push_back(m_staticObjects[0].GetPosition());//Pushbackar antalet positioner
+	modelPositions.push_back(m_staticObjects[0].GetWorldMatrix());//Pushbackar antalet positioner
 	for (unsigned int i = 1; i < levelObjects.size(); i++)
 	{		
 		if (prevModelFileName != levelObjects[i].m_filePath)
@@ -43,7 +43,7 @@ bool ObjectManager::Initialize(Level* p_level)
 
 		numberOfSameModel++;//Räknar antaler modeller...		
 		prevModelFileName = levelObjects[i].m_filePath;//Tar nästa filväg inför nästa jämnförelse
-		modelPositions.push_back(m_staticObjects[i].GetPosition());//Pushbackar antalet positioner
+		modelPositions.push_back(m_staticObjects[i].GetWorldMatrix());//Pushbackar antalet positioner
 	}
 
 	m_staticObjects[m_staticObjects.size()-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
@@ -148,8 +148,8 @@ void ObjectManager::Render()
 	m_objectsToRender.clear();
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-	/*	if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
-		{*/
+		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+		{
 			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToRender.push_back(&m_staticObjects[i]);
@@ -160,7 +160,7 @@ void ObjectManager::Render()
 			{
 				m_staticObjects[i].RenderDebugBoxes();
 			}
-		//}
+		}
 	}
 
 	//m_objectsToRender[0]->RenderInstanced();

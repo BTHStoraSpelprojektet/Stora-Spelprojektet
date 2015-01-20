@@ -216,7 +216,7 @@ Sphere Object::GetFrustumSphere()
 	return tempSphere;
 }
 
-void Object::CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_positions)
+void Object::CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_positions)
 {
 	GraphicsEngine::AddInstanceBuffer(p_numberOfInstances, p_positions);
 }

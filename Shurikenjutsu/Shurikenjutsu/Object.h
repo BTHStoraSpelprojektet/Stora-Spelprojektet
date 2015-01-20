@@ -40,7 +40,7 @@ public:
 	std::vector<OBB> GetBoundingBoxes();
 	Sphere GetFrustumSphere();
 
-	void CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_positions);
+	void CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_positions);
 
 	int GetInstanceIndex() const;
 	void SetInstanceIndex(int p_instanceIndex);

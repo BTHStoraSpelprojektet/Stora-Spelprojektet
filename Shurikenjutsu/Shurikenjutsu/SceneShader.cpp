@@ -80,7 +80,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Configure vertex layout.
-	D3D11_INPUT_ELEMENT_DESC layout[5];
+	D3D11_INPUT_ELEMENT_DESC layout[8];
 	unsigned int size;
 	
 	layout[0].SemanticName = "POSITION";
@@ -117,11 +117,36 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	layout[4].SemanticName = "INSTANCEPOS";
 	layout[4].SemanticIndex = 0;
-	layout[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	layout[4].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	layout[4].InputSlot = 1;
 	layout[4].AlignedByteOffset = 0;
 	layout[4].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
 	layout[4].InstanceDataStepRate = 1;
+
+	layout[5].SemanticName = "INSTANCEPOS";
+	layout[5].SemanticIndex = 1;
+	layout[5].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	layout[5].InputSlot = 1;
+	layout[5].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[5].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	layout[5].InstanceDataStepRate = 1;
+
+	layout[6].SemanticName = "INSTANCEPOS";
+	layout[6].SemanticIndex = 2;
+	layout[6].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	layout[6].InputSlot = 1;
+	layout[6].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[6].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	layout[6].InstanceDataStepRate = 1;
+	
+	layout[7].SemanticName = "INSTANCEPOS";
+	layout[7].SemanticIndex = 3;
+	layout[7].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	layout[7].InputSlot = 1;
+	layout[7].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[7].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	layout[7].InstanceDataStepRate = 1;
+
 
 	// Compute size of layout.
 	size = sizeof(layout) / sizeof(layout[0]);
@@ -780,7 +805,7 @@ void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	p_context->DrawInstanced(p_numberOfVertices, m_numberOfInstanceList[p_instanceIndex], 0, 0);
 }
 
-void SceneShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
+void SceneShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
 {
 	if (p_numberOfInstances > 0)
 	{
@@ -792,16 +817,18 @@ int SceneShader::GetNumberOfInstanceBuffer()
 {
 	return m_instanceBufferList.size();
 }
-ID3D11Buffer* SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
+ID3D11Buffer* SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
 {
 	ID3D11Buffer* instanceBuffer;
 	// Create the instance buffer description.
 	//Calculate position of all instanced objects
-	std::vector<InstancePos> m_instances(p_numberOfInstances);
+	std::vector<InstancePos> m_instances;
+	m_instances.clear();
 	for (int i = 0; i < p_numberOfInstances; i++)
 	{
-		DirectX::XMStoreFloat3(&m_instances[i].position, DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f));
-		//DirectX::XMStoreFloat3(&m_instances[i].position, DirectX::XMVectorSet(p_position[i].x, p_position[i].y, p_position[i].z, 0.0f));
+		InstancePos temp;
+		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_position[i])));
+		m_instances.push_back(temp);
 	}
 
 	D3D11_BUFFER_DESC instanceBufferDesc;
