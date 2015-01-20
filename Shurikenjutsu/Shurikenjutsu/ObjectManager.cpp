@@ -14,7 +14,6 @@ bool ObjectManager::Initialize(Level* p_level)
 	modelPositions.clear();
 	int numberOfSameModel = 0;
 	std::string prevModelFileName = levelObjects[0].m_filePath;
-	int instanceIndex = 0;
 
 	Object object;
 	object.Initialize(levelObjects[0].m_filePath.c_str(),
@@ -29,12 +28,10 @@ bool ObjectManager::Initialize(Level* p_level)
 	{		
 		if (prevModelFileName != levelObjects[i].m_filePath)
 		{
-			m_staticObjects[i-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
-			
+			GraphicsEngine::AddInstanceBuffer(numberOfSameModel, modelPositions);
 			//Reset for new type of model
 			numberOfSameModel = 0;
 			modelPositions.clear();
-			instanceIndex++;
 		}
 
  		Object object;
@@ -151,8 +148,8 @@ void ObjectManager::Render()
 	m_objectsToRender.clear();
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
-		{
+	/*	if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+		{*/
 			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToRender.push_back(&m_staticObjects[i]);
@@ -163,41 +160,13 @@ void ObjectManager::Render()
 			{
 				m_staticObjects[i].RenderDebugBoxes();
 			}
-		}
+		//}
 	}
-	//int end = m_objectsToRender.size();
-	//for (int i = 1; i < end; i++)
-	//{
-	//	if (m_objectsToRender[i - 1].GetModel() == m_objectsToRender[i].GetModel())
-	//	{
-	//		m_objectsToRender.erase(m_objectsToRender.begin() + i);
-	//		i--;
-	//		end--;
-	//	}
-	//}
-	//for (int i = 0; i < m_objectsToRender.size(); i++)
-	//{
-	//	//for (int j = 1; j < m_objectsToRender.size(); j++)
-	//	//{
-	//	//	if (m_objectsToRender[i].GetModel() == m_objectsToRender[j].GetModel())
-	//	//	{
-	//	//		m_objectsToRender.erase(m_objectsToRender.begin()+j);
-	//	//	}
-	//	//}
-	//}
 
-
+	//m_objectsToRender[0]->RenderInstanced();
 	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
 	{		
-		//if (m_objectsToRender[i-1].GetModel() == m_objectsToRender[i].GetModel())
-		//{
-		//m_objectsToRender[i].RenderInstanced();
-		//	m_objectsToInstance.push_back(m_objectsToRender[i]);
-		//}
-		//else
-		//{
-			m_objectsToRender[i]->RenderInstanced();
-		//}
+		m_objectsToRender[i]->RenderInstanced(); 
 	}
 
 
@@ -304,7 +273,7 @@ void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 
 bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object)
 {
-	for (int i = 0; i < m_objectsToRender.size(); i++)
+	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
 	{
 		if (m_objectsToRender[i]->GetModel() == p_object->GetModel())
 		{

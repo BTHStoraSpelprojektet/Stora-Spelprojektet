@@ -86,7 +86,9 @@ void Object::SetRotation(DirectX::XMFLOAT3 p_rotation)
 DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 {
 	DirectX::XMFLOAT4X4 matrix;
-	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) * DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) * DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) * 
+		DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) * 
+		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
 	
 	return matrix;
 }

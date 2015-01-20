@@ -25,6 +25,7 @@ struct Input
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
+	float3 instancePosition : INSTANCEPOS;
 };
 
 // Vertex output.
