@@ -16,14 +16,18 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 
 	m_smokeBombId = p_smokeBombID;
 	m_timer = 0;
 
+	m_speed = SMOKEBOMB_SPEED;
 	float x = (p_endPosition.x - p_startPosition.x);
 	float z = (p_endPosition.z - p_startPosition.z);
-	m_percentX = abs(x / (x + z));
-	m_percentZ = abs(z / (x + z));
+	m_percentX = x / (abs(x) + abs(z));
+	m_percentZ = z / (abs(x) + abs(z));
 	float length = sqrtf(x*x + z*z);
-	float degToRad = 3.14159265359f / 180;
-	m_angle = 45 * degToRad;
-	m_speed = sqrtf((length * 9.82f) / (sinf(2 * m_angle)));
+
+	m_angle = asinf((9.82f * length) / (m_speed * m_speed)) * 0.5f;
+
+	//float degToRad = 3.14159265359f / 180;
+	//m_angle = 45 * degToRad;
+	//m_speed = sqrtf((length * 9.82f) / (sinf(2 * m_angle)));
 	
 	
 	return true;

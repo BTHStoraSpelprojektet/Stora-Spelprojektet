@@ -29,8 +29,7 @@ void SmokeBombManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float 
 	float x = p_endPosX - p_startPosX;
 	float z = p_endPosZ - p_startPosZ;
 	float length = sqrtf(x*x + z*z);
-	float degToRad = 3.14159265359f / 180;
-	float angle = 45 * degToRad;
+	float angle = angle = asinf((9.82f * length) / (SMOKEBOMB_SPEED * SMOKEBOMB_SPEED)) * 0.5f;
 	float speed = sqrtf((length * 9.82f) / (sinf(2 * angle)));
 	float timeToLand = length / (speed * cosf(angle));
 
