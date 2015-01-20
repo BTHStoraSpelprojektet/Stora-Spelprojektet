@@ -18,6 +18,9 @@ public:
 
 private:
 	Menu m_chooseButton;
+
+	MenuItem m_ninjas[4];
+
 	int currentNinja;
 	int nrOfNinjas;
 };

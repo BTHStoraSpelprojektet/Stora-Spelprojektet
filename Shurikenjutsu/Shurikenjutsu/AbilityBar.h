@@ -16,7 +16,7 @@ public:
 
 private:
 	std::vector<GUIAbility> m_abilities;
-	GUIElement m_background;
+	GUIElementColor m_background;
 
 };
 #endif // !ABILITYBAR_H_

@@ -227,6 +227,10 @@ void System::Update()
 		m_gameState = &playingState;
 		m_gameState->Initialize();
 		break;
+	case GAMESTATESWITCH_MENU:
+		m_gameState = &m_menuState;
+		m_gameState->Initialize();
+		break;
 	}
 	
 	m_sound->Update();

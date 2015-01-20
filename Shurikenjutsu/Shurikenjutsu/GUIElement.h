@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include "GUIManager.h"
+#include "DirectX.h"
 
 class GUIElement
 {
@@ -10,14 +11,11 @@ public:
 	GUIElement();
 	~GUIElement();
 
-	bool Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, DirectX::XMFLOAT4 p_color);
+	bool Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, const wchar_t *p_filename);
 
 	void QueueRender();
 
 	DirectX::XMFLOAT4X4 GetWorldMatrix()const;
-
-	DirectX::XMFLOAT4 GetColor()const;
-	void SetColor(DirectX::XMFLOAT4 p_color);
 
 	DirectX::XMFLOAT2 GetSize()const;
 	void SetSize(DirectX::XMFLOAT2 p_size);
@@ -25,10 +23,14 @@ public:
 	DirectX::XMFLOAT3 GetPosition()const;
 	void SetPosition(DirectX::XMFLOAT3 p_position);
 
+	ID3D11ShaderResourceView* GetTexture()const;
+	void SetTexture(const wchar_t *p_filename);
+
 private:
 	DirectX::XMFLOAT2 m_size;
 	DirectX::XMFLOAT3 m_position;
-	DirectX::XMFLOAT4 m_color;
+	ID3D11Resource* m_texture;
+	ID3D11ShaderResourceView* m_textureView;
 };
 
 #endif

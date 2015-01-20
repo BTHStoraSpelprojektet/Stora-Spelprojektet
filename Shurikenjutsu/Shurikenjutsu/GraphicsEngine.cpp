@@ -24,7 +24,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintText(version);
 		ConsoleSkipLines(1);
 	}
-
+	
 	// Initialize the scene shader.
 	if (m_sceneShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
@@ -92,6 +92,17 @@ void GraphicsEngine::Shutdown()
 	m_depthShader.Shutdown();
 
 	// TODO shutdowns for everyone!
+}
+
+ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(const wchar_t *p_filename)
+{
+	ID3D11ShaderResourceView* textureView;
+	HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX.GetDevice(), m_directX.GetContext(), p_filename, nullptr, &textureView, 0);
+	if(FAILED(hr))
+	{
+		std::cout << "FAILED LOADING TEXTURE FOR MENU" << std::endl;
+	}
+	return textureView;
 }
 
 void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)

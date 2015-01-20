@@ -19,8 +19,9 @@ public:
 
 	MenuActionData Update();
 	void Render();
-	void AddButton(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action);
-	void AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action);
+	void AddButton(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, const wchar_t *p_filename);
+	void AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action, const wchar_t *p_filename);
+	void AddPortrait(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, const wchar_t *p_filename);
 
 private:
 	
