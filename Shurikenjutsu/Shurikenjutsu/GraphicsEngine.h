@@ -66,6 +66,8 @@ public:
 	static void TurnOnDepthStencil();
 	static void TurnOffDepthStencil();
 
+	static int GetNumberOfInstanceBuffer();
+
 private:
 	GraphicsEngine(){};
 

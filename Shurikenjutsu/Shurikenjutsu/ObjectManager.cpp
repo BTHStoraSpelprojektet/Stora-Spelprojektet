@@ -8,33 +8,48 @@ bool ObjectManager::Initialize(Level* p_level)
 {
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
-	for (unsigned int i = 0; i < levelObjects.size(); i++)
-	{
-		Object object;
+
+	//Stuff needed for the loop
+	std::vector<DirectX::XMFLOAT3> modelPositions;
+	modelPositions.clear();
+	int numberOfSameModel = 0;
+	std::string prevModelFileName = levelObjects[0].m_filePath;
+	int instanceIndex = 0;
+
+	Object object;
+	object.Initialize(levelObjects[0].m_filePath.c_str(),
+		DirectX::XMFLOAT3(levelObjects[0].m_translationX, levelObjects[0].m_translationY, levelObjects[0].m_translationZ),
+		DirectX::XMFLOAT3(levelObjects[0].m_rotationX, levelObjects[0].m_rotationY, levelObjects[0].m_rotationZ),
+		DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	AddStaticObject(object);
+	
+	numberOfSameModel++;//Räknar antaler modeller...
+	modelPositions.push_back(m_staticObjects[0].GetPosition());//Pushbackar antalet positioner
+	for (unsigned int i = 1; i < levelObjects.size(); i++)
+	{		
+		if (prevModelFileName != levelObjects[i].m_filePath)
+		{
+			m_staticObjects[i-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
+			
+			//Reset for new type of model
+			numberOfSameModel = 0;
+			modelPositions.clear();
+			instanceIndex++;
+		}
+
+ 		Object object;
 		object.Initialize(levelObjects[i].m_filePath.c_str(),
 			DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ),
 			DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ),
 			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 		AddStaticObject(object);
+
+		numberOfSameModel++;//Räknar antaler modeller...		
+		prevModelFileName = levelObjects[i].m_filePath;//Tar nästa filväg inför nästa jämnförelse
+		modelPositions.push_back(m_staticObjects[i].GetPosition());//Pushbackar antalet positioner
 	}
 
-	Model *tempModel = m_staticObjects[0].GetModel();
-	std::vector<DirectX::XMFLOAT3> modelPositions;
-	int startValues;
-	for (unsigned int i = 1; i < m_staticObjects.size(); i++)
-	{
-		modelPositions.clear();
-		startValues = i;
-		while (tempModel == m_staticObjects[i].GetModel())
-		{
-			modelPositions.push_back(m_staticObjects[i].GetPosition());
-			tempModel = m_staticObjects[i].GetModel();
-			i++;
-		}
-		int endValue = i - startValues;
-		m_staticObjects[i].CreateInstanceBuffer(endValue, modelPositions);
-	}
-
+	m_staticObjects[m_staticObjects.size()-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
 	return true;
 }
 
@@ -138,28 +153,56 @@ void ObjectManager::Render()
 	{
 		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
 		{
-			m_objectsToRender.push_back(m_staticObjects[i]);
+			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
+			{
+				m_objectsToRender.push_back(&m_staticObjects[i]);
+			}
+
+
 			if (FLAG_DEBUG)
 			{
 				m_staticObjects[i].RenderDebugBoxes();
 			}
 		}
 	}
-	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
-	{
-		//if (i < m_objectsToRender.size() - 1)
-		//{
-		//	if (m_objectsToRender[i].GetModel() == m_objectsToRender[i + 1].GetModel())
-		//	{
-		//		int abs = 1;
-		//	}
-		//	else
-		//	{
+	//int end = m_objectsToRender.size();
+	//for (int i = 1; i < end; i++)
+	//{
+	//	if (m_objectsToRender[i - 1].GetModel() == m_objectsToRender[i].GetModel())
+	//	{
+	//		m_objectsToRender.erase(m_objectsToRender.begin() + i);
+	//		i--;
+	//		end--;
+	//	}
+	//}
+	//for (int i = 0; i < m_objectsToRender.size(); i++)
+	//{
+	//	//for (int j = 1; j < m_objectsToRender.size(); j++)
+	//	//{
+	//	//	if (m_objectsToRender[i].GetModel() == m_objectsToRender[j].GetModel())
+	//	//	{
+	//	//		m_objectsToRender.erase(m_objectsToRender.begin()+j);
+	//	//	}
+	//	//}
+	//}
 
-		//	}
+
+	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
+	{		
+		//if (m_objectsToRender[i-1].GetModel() == m_objectsToRender[i].GetModel())
+		//{
+		//m_objectsToRender[i].RenderInstanced();
+		//	m_objectsToInstance.push_back(m_objectsToRender[i]);
 		//}
-		m_objectsToRender[i].Render();
+		//else
+		//{
+			m_objectsToRender[i]->RenderInstanced();
+		//}
 	}
+
+
+
+
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		if (m_frustum.CheckSphere(m_shurikens[i].GetFrustumSphere(), 1.0f))
@@ -257,4 +300,16 @@ std::vector<Object> ObjectManager::GetStaticObjectList()const
 void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 {
 	m_frustum = *p_frustum;
+}
+
+bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object)
+{
+	for (int i = 0; i < m_objectsToRender.size(); i++)
+	{
+		if (m_objectsToRender[i]->GetModel() == p_object->GetModel())
+		{
+			return false;
+		}
+	}
+	return true;
 }

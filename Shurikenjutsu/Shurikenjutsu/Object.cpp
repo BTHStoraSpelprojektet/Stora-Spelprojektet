@@ -14,6 +14,8 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	TransformBoundingBoxes();
 	TransformShadowPoints();
 
+	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
+
 	return true;
 }
 
@@ -27,6 +29,9 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	TransformBoundingBoxes();
 	TransformShadowPoints();
+
+
+	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
 
 	return true;
 }
@@ -45,8 +50,7 @@ void Object::RenderDepth()
 
 void Object::RenderInstanced()
 {
-	//GraphicsEngine::RenderInstanced();
-	//GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
+	GraphicsEngine::RenderInstanced(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_InstanceIndex);
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
@@ -218,6 +222,7 @@ int Object::GetInstanceIndex() const
 {
 	return m_InstanceIndex;
 }
+
 void Object::SetInstanceIndex(int p_instanceIndex)
 {
 	m_InstanceIndex = p_instanceIndex;

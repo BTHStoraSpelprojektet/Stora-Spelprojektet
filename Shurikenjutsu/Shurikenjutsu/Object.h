@@ -44,7 +44,6 @@ public:
 
 	int GetInstanceIndex() const;
 	void SetInstanceIndex(int p_instanceIndex);
-
 protected:
 	void TransformBoundingBoxes();
 	void TransformShadowPoints();

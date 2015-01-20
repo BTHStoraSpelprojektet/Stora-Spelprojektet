@@ -261,32 +261,45 @@ void InstancedShader::UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, 
 	m_projectionMatrix = p_projectionMatrix;
 }
 
+void InstancedShader::UpdateLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+{
+	m_lightViewMatrix = p_viewMatrix;
+	m_lightProjectionMatrix = p_projectionMatrix;
+}
 void InstancedShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix)
 {
 	DirectX::XMFLOAT4X4 worldMatrix = p_worldMatrix;
 	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
 	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
 
-	// Lock matrix buffer so that it can be written to.
-	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
-	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
-	{
-		ConsolePrintErrorAndQuit("Failed to map instance matrix buffer.");
-	}
-
-	// Get pointer to the matrix buffer data.
-	MatrixBuffer* matrixBuffer;
-	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
+	DirectX::XMFLOAT4X4 lightViewMatrix = m_lightViewMatrix;
+	DirectX::XMFLOAT4X4 lightProjectionMatrix = m_lightProjectionMatrix;
 
 	// Transpose the matrices.
 	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
 	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
 	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
 
+	DirectX::XMStoreFloat4x4(&lightViewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightViewMatrix)));
+	DirectX::XMStoreFloat4x4(&lightProjectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightProjectionMatrix)));
+
+	// Lock matrix buffer so that it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to map scene matrix buffer.");
+	}
+
+	// Get pointer to the matrix buffer data.
+	MatrixBuffer* matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
+
 	// Set matrices in buffer.
 	matrixBuffer->m_worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix);
 	matrixBuffer->m_viewMatrix = DirectX::XMLoadFloat4x4(&viewMatrix);
 	matrixBuffer->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projectionMatrix);
+
+	matrixBuffer->m_lightViewMatrix = DirectX::XMLoadFloat4x4(&lightViewMatrix);
+	matrixBuffer->m_lightProjectionMatrix = DirectX::XMLoadFloat4x4(&lightProjectionMatrix);
 
 	// Unlock the matrix buffer after it has been written to.
 	p_context->Unmap(m_matrixBuffer, 0);
@@ -312,6 +325,11 @@ void InstancedShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfIn
 		m_numberOfInstanceList.push_back(p_numberOfInstances);
 		m_instanceBufferList.push_back(InitializeInstanceBuffer(p_device, p_numberOfInstances, p_position));
 	}
+}
+
+int InstancedShader::GetNumberOfInstanceBuffer()
+{
+	return m_instanceBufferList.size();
 }
 ID3D11Buffer* InstancedShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT3> p_position)
 {

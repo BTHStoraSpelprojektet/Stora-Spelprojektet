@@ -145,6 +145,7 @@ void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix,
 {
 	m_sceneShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_instanceShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetShadowMap()
@@ -253,7 +254,10 @@ void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<Dire
 {	
 	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_position);
 }
-
+int GraphicsEngine::GetNumberOfInstanceBuffer()
+{
+	return m_instanceShader.GetNumberOfInstanceBuffer();
+}
 bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 {    
 	if (p_fullscreen)
