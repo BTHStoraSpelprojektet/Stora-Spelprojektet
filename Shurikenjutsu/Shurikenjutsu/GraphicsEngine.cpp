@@ -99,13 +99,17 @@ void GraphicsEngine::Shutdown()
 	{
 		pFontWrapper->Release();
 	}
+	pFW1Factory->Release();
+	if (pFontWrapper != NULL)
+		pFontWrapper->Release();
+	}
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
 {
 	ID3D11ShaderResourceView* textureView;
 	std::wstring wstring;
-	for (int i = 0; i < p_filename.length(); ++i)
+	for (unsigned int i = 0; i < p_filename.length(); ++i)
 		wstring += wchar_t(p_filename[i]);
 
 	const wchar_t* your_result = wstring.c_str();
@@ -133,9 +137,9 @@ void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices
 	m_sceneShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
 }
 
-void GraphicsEngine::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void GraphicsEngine::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 {
-	m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+	m_depthShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex);
 }
 
 void GraphicsEngine::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
@@ -272,9 +276,10 @@ void GraphicsEngine::TurnOffAlphaBlending()
 	m_directX.TurnOffAlphaBlending();
 }
 
-void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
 {	
-	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_position);
+	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
+	m_depthShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
 }
 int GraphicsEngine::GetNumberOfInstanceBuffer()
 {
@@ -345,7 +350,7 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 {
 
 	std::wstring wstring;
-	for (int i = 0; i < p_text.length(); ++i)
+	for (unsigned int i = 0; i < p_text.length(); ++i)
 		wstring += wchar_t(p_text[i]);
 
 	const wchar_t* your_result = wstring.c_str();

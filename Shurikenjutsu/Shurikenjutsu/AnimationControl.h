@@ -4,14 +4,7 @@
 #include <vector>
 #include <string>
 #include "Structures.h"
-
-enum AnimationState { 
-	Melee, 
-	Range, 
-	Special1, 
-	Special2,
-	Tool
-};
+#include "..\CommonLibs\CommonEnums.h"
 
 class AnimationControl
 {
