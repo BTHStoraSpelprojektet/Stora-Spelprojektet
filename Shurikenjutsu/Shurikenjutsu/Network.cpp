@@ -163,6 +163,7 @@ void Network::ReceviePacket()
 				UpdatePlayerPos(guid, x, y, z);
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
 				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
+				UpdatePlayerTeam(guid, team);
 
 				playerGuids.push_back(guid);				
 			}
