@@ -7,6 +7,8 @@ DepthShader GraphicsEngine::m_depthShader;
 ParticleShader GraphicsEngine::m_particleShader;
 HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
+IFW1Factory *GraphicsEngine::pFW1Factory;
+IFW1FontWrapper *GraphicsEngine::pFontWrapper;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -70,6 +72,14 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
+	//FONTWRAPPER -.-
+	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
+
+	hResult = pFW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &pFontWrapper);
+	if (FAILED(hResult))
+	{
+		std::cout << "FAILED FONTWRAPPER" << std::endl;
+	}
 	return result;
 }
 
@@ -81,6 +91,8 @@ void GraphicsEngine::Shutdown()
 	m_sceneShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
+	pFW1Factory->Release();
+	pFontWrapper->Release();
 
 	// TODO shutdowns for everyone!
 }
@@ -327,3 +339,25 @@ void GraphicsEngine::TurnOffDepthStencil()
 	m_directX.TurnOffDepthStencil();
 }
 
+void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color)
+{
+
+	std::wstring wstring;
+	for (int i = 0; i < p_text.length(); ++i)
+		wstring += wchar_t(p_text[i]);
+
+	const wchar_t* your_result = wstring.c_str();
+
+	if (pFontWrapper != NULL)
+	{
+		pFontWrapper->DrawString(
+			m_directX.GetContext(),
+			your_result,// String
+			p_size,// Font size
+			p_xpos,// X position
+			p_ypos,// Y position
+			p_color,// Text color, 0xAaBbGgRr
+			FW1_RESTORESTATE | FW1_CENTER | FW1_VCENTER // Flags
+			);
+	}
+}
