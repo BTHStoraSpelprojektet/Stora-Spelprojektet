@@ -59,7 +59,7 @@ void TextureLibrary::LoadTextureDirectory()
 	// Relevant files
 	while (FindNextFile(hFind, &ffd) != 0)
 	{
-		AddTexture("../Shurikenjutsu/Models/" + (std::string)ffd.cFileName);
+		AddTexture("../Shurikenjutsu/2DTextures/" + (std::string)ffd.cFileName);
 		std::cout << "Loading texture: " + (std::string)ffd.cFileName << std::endl;
 	}
 

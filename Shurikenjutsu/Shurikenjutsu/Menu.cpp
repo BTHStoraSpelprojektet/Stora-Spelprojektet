@@ -43,23 +43,23 @@ void Menu::Render()
 	}
 }
 
-void Menu::AddButton(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, std::string p_filename)
+void Menu::AddButton(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, ID3D11ShaderResourceView* p_texture)
 {
 	MenuButton temp;
-	temp.Initialize(p_x, p_y, p_width, p_height, p_action, p_filename);
+	temp.Initialize(p_x, p_y, p_width, p_height, p_action, p_texture);
 	m_buttons.push_back(temp);
 }
 
-void Menu::AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action, std::string p_filename)
+void Menu::AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action, ID3D11ShaderResourceView* p_texture)
 {
 	MenuCheckbox temp;
-	temp.Initialize(p_x, p_y, p_size, p_action, p_filename);
+	temp.Initialize(p_x, p_y, p_size, p_action, p_texture);
 	m_checkboxes.push_back(temp);
 }
 
-void Menu::AddPortrait(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, std::string p_filename)
+void Menu::AddPortrait(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, ID3D11ShaderResourceView* p_texture)
 {
 	MenuButton temp;
-	temp.Initialize(p_x, p_y, p_width, p_height, p_action, p_filename);
+	temp.Initialize(p_x, p_y, p_width, p_height, p_action, p_texture);
 	m_buttons.push_back(temp);
 }

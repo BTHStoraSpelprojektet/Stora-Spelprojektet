@@ -236,7 +236,6 @@ void System::Update()
 		break;
 	case GAMESTATESWITCH_MENU:
 		m_gameState = &m_menuState;
-		m_gameState->Initialize();
 		break;
 	}
 	

@@ -24,12 +24,12 @@ public:
 	MenuItem();
 	~MenuItem();
 
-	bool Initialize(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, std::string p_filename);
-	bool Initialize(float p_x, float p_y, float p_size, MENUACTION p_action, std::string p_filename);
+	bool Initialize(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
+	bool Initialize(float p_x, float p_y, float p_size, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
 	void Render();
 	virtual bool IsClicked();
 	MENUACTION GetAction();
-	void SetBackgroundTexture(std::string p_filename);
+	void SetBackgroundTexture(ID3D11ShaderResourceView* p_texture);
 
 protected:
 

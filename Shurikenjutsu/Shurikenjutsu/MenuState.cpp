@@ -7,15 +7,15 @@ MenuState::~MenuState(){}
 bool MenuState::Initialize()
 {
 	// Initialize options menu
-	m_options.AddCheckbox(220.0f, 0, 60.0f, MENUACTION_VSYNC, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/vs.png");
-	m_options.AddCheckbox(220.0f, -70.0f, 60.0f, MENUACTION_FULLSCREEN, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/fullscreen.png");
-	m_options.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/back.png");
+	m_options.AddCheckbox(220.0f, 0, 60.0f, MENUACTION_VSYNC, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/vs.png"));
+	m_options.AddCheckbox(220.0f, -70.0f, 60.0f, MENUACTION_FULLSCREEN, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fullscreen.png"));
+	m_options.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"));
 
 	// Initialize main menu
-	m_main.AddButton(0, 0, 360.0f, 60.0f, MENUACTION_PLAY, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/play.png");
-	m_main.AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_CHOOSENINJA, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/choose.png");
-	m_main.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_OPTIONS, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/options.png");
-	m_main.AddButton(0, -210.0f, 360.0f, 60.0f, MENUACTION_BACK, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/quit.png");
+	m_main.AddButton(0, 0, 360.0f, 60.0f, MENUACTION_PLAY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"));
+	m_main.AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_CHOOSENINJA, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/choose.png"));
+	m_main.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_OPTIONS, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/options.png"));
+	m_main.AddButton(0, -210.0f, 360.0f, 60.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"));
 
 	// Push main menu
 	m_menues.push(m_main);

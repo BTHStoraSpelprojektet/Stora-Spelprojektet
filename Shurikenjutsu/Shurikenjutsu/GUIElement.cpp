@@ -3,12 +3,12 @@
 GUIElement::GUIElement(){}
 GUIElement::~GUIElement(){}
 
-bool GUIElement::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, std::string p_filename)
+bool GUIElement::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, ID3D11ShaderResourceView* p_texture)
 {
 	m_position = p_position;
 	m_size = DirectX::XMFLOAT2((float)p_width, (float)p_height);
 	m_textureView = nullptr;
-	SetTexture(p_filename);
+	SetTexture(p_texture);
 	return true;
 }
 
@@ -49,7 +49,7 @@ ID3D11ShaderResourceView* GUIElement::GetTexture()const
 	return m_textureView;
 }
 
-void GUIElement::SetTexture(std::string p_filename)
+void GUIElement::SetTexture(ID3D11ShaderResourceView* p_texture)
 {
-	m_textureView = GraphicsEngine::Create2DTexture(p_filename);
+	m_textureView = p_texture;
 }

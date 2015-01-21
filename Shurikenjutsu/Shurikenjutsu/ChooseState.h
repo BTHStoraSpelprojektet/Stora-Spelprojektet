@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "Menu.h"
+#include "TextureLibrary.h"
 
 class ChooseState : public GameState
 {

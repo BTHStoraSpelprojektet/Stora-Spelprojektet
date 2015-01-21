@@ -16,20 +16,20 @@ bool ChooseState::Initialize()
 	currentNinja = 0;
 
 	// Play
-	m_chooseButton.AddButton(0, 0, 360.0f, 60.0f, MENUACTION_PLAY, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/play.png");
+	m_chooseButton.AddButton(0, 0, 360.0f, 60.0f, MENUACTION_PLAY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"));
 	//Back
-	m_chooseButton.AddButton(0, -70, 360.0f, 60.0f, MENUACTION_BACK, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/back.png");
+	m_chooseButton.AddButton(0, -70, 360.0f, 60.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"));
 
 	// Next ninja, right button
-	m_chooseButton.AddButton(150, 70, 60.0f, 60.0f, MENUACTION_NEXTNINJA, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/right.png");
+	m_chooseButton.AddButton(150, 70, 60.0f, 60.0f, MENUACTION_NEXTNINJA, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"));
 
 	// Prev ninja, left button
-	m_chooseButton.AddButton(-150, 70, 60.0f, 60.0f, MENUACTION_PREVNINJA, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/left.png");
+	m_chooseButton.AddButton(-150, 70, 60.0f, 60.0f, MENUACTION_PREVNINJA, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"));
 
-	m_ninjas[0].Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/ninja1.png");
-	m_ninjas[1].Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/ninja2.png");
-	m_ninjas[2].Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/ninja3.png");
-	m_ninjas[3].Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, (std::string)"C:/Users/kalle/Documents/GitHub/Stora-Spelprojektet/Shurikenjutsu/Shurikenjutsu/Buttons/ninja4.png");
+	m_ninjas[0].Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
+	m_ninjas[1].Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
+	m_ninjas[2].Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
+	m_ninjas[3].Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja4.png"));
 
 	return true;
 }
