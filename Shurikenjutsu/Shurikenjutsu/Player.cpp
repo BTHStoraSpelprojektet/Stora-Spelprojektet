@@ -148,7 +148,7 @@ void Player::UpdateMe()
 		DoAnimation();
 	}
 
-	m_abilityBar.Update();
+	UpdateAbilityBar();
 }
 
 void Player::CheckForSpecialAttack()
@@ -260,9 +260,9 @@ int Player::GetMaxHealth() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-		AnimatedObject::SetPosition(p_pos);
-
-		if (Network::GetInstance()->IsConnected())
+	AnimatedObject::SetPosition(p_pos);
+	
+	if (Network::GetInstance()->IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
 		Network::GetInstance()->SendPlayerPos(pos.x, pos.y, pos.z);
@@ -457,6 +457,15 @@ void Player::SetCalculatePlayerPosition()
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
+}
+
+void Player::UpdateAbilityBar()
+{
+	m_abilityBar.Update(m_meleeSwing->GetCooldown(), 0.5f, 0);
+	m_abilityBar.Update(m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
+	m_abilityBar.Update(m_dash->GetCooldown(), DASH_COOLDOWN, 2);
+	m_abilityBar.Update(m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
+	m_abilityBar.Update(m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()

@@ -14,6 +14,7 @@
 #include "HealthBar.h"
 #include "AbilityBar.h"
 #include "SmokeBombAbility.h"
+#include "../CommonLibs/GameplayGlobalVariables.h"
 
 
 class Player :
@@ -50,6 +51,7 @@ public:
 	void SetTeam(int p_team);
 
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
+	void UpdateAbilityBar();
 
 	void ResetCooldowns();
 

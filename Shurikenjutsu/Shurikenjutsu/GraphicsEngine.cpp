@@ -91,10 +91,14 @@ void GraphicsEngine::Shutdown()
 	m_sceneShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
-	pFW1Factory->Release();
-	pFontWrapper->Release();
-
-	// TODO shutdowns for everyone!
+	if (pFW1Factory != NULL)
+	{
+		pFW1Factory->Release();
+	}
+	if (pFontWrapper != NULL)
+	{
+		pFontWrapper->Release();
+	}
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
@@ -106,8 +110,6 @@ ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename
 
 	const wchar_t* your_result = wstring.c_str();
 
-
-	//const wchar_t *filepath = p_filename;
 	HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX.GetDevice(), m_directX.GetContext(), your_result, nullptr, &textureView, 0);
 	if(FAILED(hr))
 	{

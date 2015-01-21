@@ -18,10 +18,10 @@ void GUIAbility::Update(float p_currentCooldown, float p_maxCooldown)
 	// Update Cooldown
 	float percent = p_currentCooldown / p_maxCooldown;
 
-	float newLength = m_ability.GetSize().x * 0.5f * (1.0f - percent);
-
+	float newLength = m_ability.GetSize().x * (1.0f - percent);
+	
 	DirectX::XMFLOAT3 newPos = m_ability.GetPosition();
-	newPos.y -= newLength;
+	newPos.y -= newLength * 0.5f;
 	m_cooldown.SetPosition(newPos);
 
 	DirectX::XMFLOAT2 newSize = m_ability.GetSize();
