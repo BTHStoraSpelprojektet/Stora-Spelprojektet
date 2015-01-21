@@ -99,8 +99,8 @@ void GraphicsEngine::Shutdown()
 	{
 		pFontWrapper->Release();
 	}
-	pFW1Factory->Release();
 	if (pFontWrapper != NULL)
+	{
 		pFontWrapper->Release();
 	}
 }
