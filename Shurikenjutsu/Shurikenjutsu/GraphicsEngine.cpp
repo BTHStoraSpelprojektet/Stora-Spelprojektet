@@ -2,7 +2,6 @@
 
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;
-InstancedShader GraphicsEngine::m_instanceShader;
 GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
 ParticleShader GraphicsEngine::m_particleShader;
@@ -29,13 +28,6 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	if (m_sceneShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("Scene shader initialized successfully.");
-		ConsoleSkipLines(1);
-	}
-
-	// Initialize the instance shader
-	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
-	{
-		ConsolePrintSuccess("Instanced shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
 

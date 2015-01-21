@@ -3,7 +3,6 @@
 
 #include "DirectX.h"
 #include "SceneShader.h"
-#include "InstancedShader.h"
 #include "GUIShader.h"
 #include "DepthShader.h"
 #include "RenderTarget.h"
@@ -76,7 +75,6 @@ private:
 	static DirectXWrapper m_directX;
 
 	static SceneShader m_sceneShader;
-	static InstancedShader m_instanceShader;
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 	static ParticleShader m_particleShader;
