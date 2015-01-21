@@ -32,13 +32,14 @@ bool Network::Initialize()
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
-	m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
 
 	m_connectionCount = 0;
 	m_previousCount = 0;
+
+	m_networkStatus = NETWORKSTATUS_NONE;
 
 	return true;
 }
@@ -59,6 +60,9 @@ void Network::Update()
 
 void Network::ReceviePacket()
 {
+	// Reset status
+	m_networkStatus = NETWORKSTATUS_NONE;
+
 	unsigned char messageID;
 	for (m_packet = m_clientPeer->Receive(); m_packet; m_clientPeer->DeallocatePacket(m_packet), m_packet = m_clientPeer->Receive())
 	{
@@ -70,6 +74,7 @@ void Network::ReceviePacket()
 			ConsoleSkipLines(1);
 
 			m_connected = true;
+			m_networkStatus = NETWORKSTATUS_CONNECTED;
 
 			RakNet::BitStream bitStream;
 
@@ -81,14 +86,15 @@ void Network::ReceviePacket()
 		}
 		case ID_CONNECTION_ATTEMPT_FAILED:
 		{
-			ConsolePrintError("Connection to server failed, trying to reconnect.");
-
-			m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
+			ConsolePrintError("Connection to server failed.");
+			m_networkStatus = NETWORKSTATUS_TIMEOUT;
+			//m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
 			break;
 		}
 		case ID_DISCONNECTION_NOTIFICATION:
 		{
 			ConsolePrintError("Server shut down.");
+			m_networkStatus = NETWORKSTATUS_LOST;
 			ConsoleSkipLines(1);
 
 			break;
@@ -96,6 +102,7 @@ void Network::ReceviePacket()
 		case ID_CONNECTION_LOST:
 		{
 			ConsolePrintError("Lost connection to server.");
+			m_networkStatus = NETWORKSTATUS_LOST;
 			ConsoleSkipLines(1);
 
 			break;
@@ -156,6 +163,7 @@ void Network::ReceviePacket()
 				UpdatePlayerPos(guid, x, y, z);
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
 				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
+				UpdatePlayerTeam(guid, team);
 
 				playerGuids.push_back(guid);				
 			}
@@ -402,6 +410,13 @@ void Network::ReceviePacket()
 	}
 }
 
+void Network::Connect(std::string p_ip)
+{
+	std::cout << "Connecting to: " << p_ip << std::endl;
+	m_ip = p_ip;
+	m_clientPeer->Connect(m_ip.c_str(), SERVER_PORT, 0, 0);
+}
+
 bool Network::IsConnected()
 {
 	return m_connected;
@@ -421,7 +436,7 @@ void Network::SendPlayerPos(float p_x, float p_y, float p_z)
 	bitStream.Write(p_y);
 	bitStream.Write(p_z);
 
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 void Network::SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ)
@@ -433,7 +448,7 @@ void Network::SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ)
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
 
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z)
@@ -541,7 +556,7 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
 	
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
@@ -715,7 +730,7 @@ void Network::DoMeleeAttack()
 
 	bitStream.Write((RakNet::MessageID)ID_MELEE_ATTACK);
 	
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 bool Network::MadeInvalidMove()
@@ -779,7 +794,7 @@ void Network::SendAbility(ABILITIES p_ability, float p_distanceFromPlayer)
 	bitStream.Write(p_distanceFromPlayer);
 
 
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 bool Network::RoundRestarted()
@@ -805,4 +820,14 @@ void Network::SetHaveUpdateNewLevel()
 std::string Network::LevelName()
 {
 	return m_levelName;
+}
+
+NETWORKSTATUS Network::GetNetworkStatus()
+{
+	return m_networkStatus;
+}
+
+void Network::SetNetworkStatusConnecting()
+{
+	m_networkStatus = NETWORKSTATUS_CONNECTING;
 }

@@ -85,6 +85,12 @@ void InputManager::UpdateInput(UINT p_message, WPARAM p_wParam, LPARAM p_lParam)
 			m_rightMouseB.SetState(BUTTON_EVENT_STATE_CLICKED);
 			break;
 		}
+
+		case WM_CHAR:
+		{
+			m_lastCharRead = (TCHAR)p_wParam;
+			break;
+		}
 	}
 }
 
@@ -107,6 +113,8 @@ void InputManager::ClearInput()
 			m_events[i].SetState(BUTTON_EVENT_STATE_NONE);
 		}
 	}
+	m_lastCharRead = '\0';
+
 }
 
 bool InputManager::IsKeyClicked(int p_vkey) const
@@ -189,4 +197,9 @@ bool InputManager::IsRightMousePressed() const
 bool InputManager::IsRightMouseClicked() const
 {
 	return m_rightMouseB.IsClicked();
+}
+
+char InputManager::GetLastCharRead() const
+{
+	return m_lastCharRead;
 }

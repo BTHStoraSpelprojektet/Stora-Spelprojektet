@@ -178,6 +178,7 @@ void System::Shutdown()
 	m_sound->Shutdown();
 
 	GUIManager::GetInstance()->Shutdown();
+
 }
 
 void System::Run()

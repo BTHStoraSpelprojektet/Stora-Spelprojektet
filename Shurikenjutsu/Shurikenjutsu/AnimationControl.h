@@ -50,7 +50,7 @@ private:
 	bool m_attackAnimation;
 
 	DirectX::XMVECTOR m_ikDirection;
-	DirectX::XMVECTOR m_ikLegDirectionNetwork;
+	DirectX::XMVECTOR m_ikLegDirection;
 	DirectX::XMVECTOR m_forwardDirection;
 	DirectX::XMVECTOR m_rotationAxis;
 	float m_hipRotation;

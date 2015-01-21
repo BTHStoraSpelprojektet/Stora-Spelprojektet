@@ -39,6 +39,7 @@ public:
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
 	void SetIsAlive(bool p_isAlive);
+	void SetTeam(int p_team);
 
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
@@ -60,6 +61,7 @@ private:
 	InputManager* m_inputManager;
 	DirectX::XMFLOAT3 m_attackDir;
 	RakNet::RakNetGUID m_guid;
+	int m_team;
 
 	void SetCalculatePlayerPosition();
 	DirectX::XMFLOAT3 m_playerPrevPos;
