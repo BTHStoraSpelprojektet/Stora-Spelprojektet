@@ -12,6 +12,7 @@
 #include "MegaShuriken.h"
 #include "CollisionManager.h"
 #include "HealthBar.h"
+#include "AbilityBar.h"
 #include "SmokeBombAbility.h"
 
 
@@ -80,6 +81,7 @@ private:
 	Ability* m_megaShuriken;
 	Ability* m_smokeBombAbility;
 
+	AbilityBar m_abilityBar;
 	HealthBar m_healthbar;
 };
 #endif PLAYER

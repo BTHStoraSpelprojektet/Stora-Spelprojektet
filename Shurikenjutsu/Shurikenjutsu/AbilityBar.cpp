@@ -41,6 +41,10 @@ bool AbilityBar::Initialize(float p_positionX, float p_positionY, int p_numberOf
 	return true;
 }
 
+void AbilityBar::Shutdown()
+{
+}
+
 // TODO: Send ability information to update
 void AbilityBar::Update()
 {
@@ -58,3 +62,4 @@ void AbilityBar::Render()
 		m_abilities[i].Render();
 	}
 }
+

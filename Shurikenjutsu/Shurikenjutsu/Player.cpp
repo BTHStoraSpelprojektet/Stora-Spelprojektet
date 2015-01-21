@@ -32,8 +32,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
 
-	m_healthbar.Initialize(50.0f, 5.0f);
 	m_healthbar.Initialize(100.0f, 15.0f);
+
+	m_abilityBar.Initialize(0.0f, -420.0f, 5);
 
 	return true;
 }
@@ -76,6 +77,11 @@ void Player::Shutdown()
 		m_smokeBombAbility->Shutdown();
 		delete m_smokeBombAbility;
 	}
+
+	/*if (m_abilityBar != nullptr)
+	{
+		m_abilityBar->Shutdown();
+	}*/
 }
 
 void Player::UpdateMe()
@@ -138,6 +144,8 @@ void Player::UpdateMe()
 		// Play ability animation if we did any
 		DoAnimation();
 	}
+
+	m_abilityBar.Update();
 }
 
 void Player::CheckForSpecialAttack()
@@ -455,6 +463,7 @@ void Player::Render()
 		AnimatedObject::Render();
 		m_healthbar.Render();
 	}
+	m_abilityBar.Render();
 }
 void Player::SetIsAlive(bool p_isAlive)
 {

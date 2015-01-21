@@ -12,6 +12,7 @@ public:
 	~AbilityBar();
 
 	bool Initialize(float p_positionX, float p_positionY, int p_numberOfAbilities);
+	void Shutdown();
 	void Update();
 	void Render();
 
