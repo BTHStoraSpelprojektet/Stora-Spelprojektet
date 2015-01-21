@@ -353,13 +353,14 @@ void AnimationControl::FindAndReferenceLayers()
 {
 	std::string m_animationNames[] = { "RunF", "RunA", "RunB", "RunAB", 
 									   "RunL", "RunR", "IdleL", "IdleA", 
-									   "DeadL", "DeadA", "Melee", "Range"};
+									   "DeadL", "DeadA", "Melee", "Range",
+									   "Tool", "Spec1", "Spec2"};
 
 	m_animationStacksArray = new AnimationStack[m_animationStacks.size()];
 
 	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
 	{
-		for (unsigned int j = 0; j < 12; j++)
+		for (unsigned int j = 0; j < 15; j++)
 		{
 			if (strcmp(m_animationStacks[i].m_name, m_animationNames[j].c_str()) == 0)
 			{
@@ -392,15 +393,15 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 		}
 		else if (p_newState == AnimationState::Special1)
 		{
-			//m_currentArms = m_animationStacksArray[9];
+			m_currentArms = m_animationStacksArray[13];
 		}
 		else if (p_newState == AnimationState::Special2)
 		{
-			//m_currentArms = m_animationStacksArray[9];
+			m_currentArms = m_animationStacksArray[14];
 		}
 		else if (p_newState == AnimationState::Tool)
 		{
-			//m_currentArms = m_animationStacksArray[9];
+			m_currentArms = m_animationStacksArray[12];
 		}
 	}	
 }
