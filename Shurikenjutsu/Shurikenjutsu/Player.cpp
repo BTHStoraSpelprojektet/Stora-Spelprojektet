@@ -202,7 +202,14 @@ bool Player::CalculateDirection()
 	return moved;
 }
 
-void Player::Update(){}
+void Player::Update()
+{
+	int state = Network::GetInstance()->AnimationChanged(m_guid);
+	if (state != -1)
+	{
+		AnimatedObject::ChangeAnimationState((AnimationState)state);
+	}
+}
 
 void Player::UpdateAbilities()
 {
@@ -475,21 +482,26 @@ void Player::DoAnimation()
 	if (m_ability == m_meleeSwing)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Melee);
+		Network::GetInstance()->SendAnimationState(AnimationState::Melee);
 	}
 	else if (m_ability == m_dash)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Special1);
+		Network::GetInstance()->SendAnimationState(AnimationState::Special1);
 	}
 	else if (m_ability == m_megaShuriken)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Special2);
+		Network::GetInstance()->SendAnimationState(AnimationState::Special2);
 	}
 	else if (m_ability == m_smokeBombAbility)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Tool);
+		Network::GetInstance()->SendAnimationState(AnimationState::Tool);
 	}
 	else if (m_ability == m_shurikenAbility)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Range);
+		Network::GetInstance()->SendAnimationState(AnimationState::Range);
 	}
 }

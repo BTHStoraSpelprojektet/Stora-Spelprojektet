@@ -201,7 +201,7 @@ void Server::ReceviePacket()
 			wBitStream.Write(m_packet->guid);
 			wBitStream.Write(state);
 
-			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, true);
 			break;
 		}
 		default:

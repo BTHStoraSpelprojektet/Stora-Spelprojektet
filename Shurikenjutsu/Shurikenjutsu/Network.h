@@ -87,6 +87,7 @@ public:
 	void SetNetworkStatusConnecting();
 
 	void SendAnimationState(AnimationState p_state);
+	int AnimationChanged(RakNet::RakNetGUID p_guid);
 
 private:
 	Network();
@@ -131,6 +132,7 @@ private:
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
+	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
