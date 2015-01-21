@@ -279,7 +279,7 @@ void ParticleEmitter::UpdateParticles()
 			{
 				// TODO bågformel.
 				float halfTime = m_particleList[i].m_timeToLive / 2.0f;
-				float angle = 30.0f * 3.14159265359 / 180;
+				float angle = 30.0f * (float)3.14159265359 / 180;
 				float height = 3.0f;
 				float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
 

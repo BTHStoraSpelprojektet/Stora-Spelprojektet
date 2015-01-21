@@ -1,5 +1,7 @@
 #include "PlayerManager.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "Frustum.h"
+#include "AbilityBar.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -7,13 +9,15 @@ bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
 	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	m_playerAbilityBar.Initialize(0.0f, -420.0f, 6);
+	m_playerAbilityBar = new AbilityBar();
+	m_playerAbilityBar->Initialize(0.0f, -420.0f, 6);
 	return true;
 }
 
 void PlayerManager::Shutdown()
 {
-	m_player.Shutdown();
+	m_player->Shutdown();
+	delete m_player;
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
 		m_enemyList[i].Shutdown();
@@ -24,7 +28,7 @@ void PlayerManager::Shutdown()
 void PlayerManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	m_player.UpdateMe();
+	m_player->UpdateMe();
 
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -40,14 +44,14 @@ void PlayerManager::Update()
 		// Check if the player need to respawn
 		if (Network::GetInstance()->HasRespawned())
 		{
-			m_player.SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
+			m_player->SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 			Network::GetInstance()->SetHaveRespawned();
 		}
 
 		// Check if the player have made an invalid move
 		if (Network::GetInstance()->MadeInvalidMove())
 		{
-			m_player.SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
+			m_player->SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 			Network::GetInstance()->UpdatedMoveFromInvalidMove();
 		}
 
@@ -98,22 +102,22 @@ void PlayerManager::Update()
 
 void PlayerManager::Render()
 {
-	m_player.Render();
+	m_player->Render();
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
-		if (m_frustum.CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
+		if (m_frustum->CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
 		{
 			m_enemyList[i].Render();
 		}
 	}
-	m_playerAbilityBar.Render();
+	m_playerAbilityBar->Render();
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction);
+	Player *tempPlayer = new Player();
+	tempPlayer->Initialize(p_filepath, p_pos, p_direction);
 	m_player = tempPlayer;
 }
 
@@ -128,11 +132,11 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, 
 
 DirectX::XMFLOAT3 PlayerManager::GetPlayerPosition()
 {
-	return m_player.GetPosition();
+	return m_player->GetPosition();
 }
 DirectX::XMFLOAT3 PlayerManager::GetPlayerDirection()
 {
-	return m_player.GetDirection();
+	return m_player->GetDirection();
 }
 void PlayerManager::SetPlayerDirection(DirectX::XMFLOAT3 p_direction)
 {
@@ -140,23 +144,23 @@ void PlayerManager::SetPlayerDirection(DirectX::XMFLOAT3 p_direction)
 	tempVector = DirectX::XMVector3Normalize(tempVector);
 	DirectX::XMFLOAT3 tempFloat;
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
-	m_player.SetDirection(tempFloat);
+	m_player->SetDirection(tempFloat);
 }
 DirectX::XMFLOAT3 PlayerManager::GetFacingDirection()
 {
-	return m_player.GetFacingDirection();
+	return m_player->GetFacingDirection();
 }
 void PlayerManager::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
 {
-	m_player.SetFacingDirection(p_facingDirection);
+	m_player->SetFacingDirection(p_facingDirection);
 }
 DirectX::XMFLOAT3 PlayerManager::GetAttackDirection()
 {
-	return m_player.GetAttackDirection();
+	return m_player->GetAttackDirection();
 }
 void PlayerManager::SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection)
 {
-	m_player.SetMyAttackDirection(p_attackDirection);
+	m_player->SetMyAttackDirection(p_attackDirection);
 }
 
 bool PlayerManager::IsGuidInEnemyList(RakNet::RakNetGUID p_guid)
@@ -191,7 +195,7 @@ void PlayerManager::UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOA
 		m_enemyList[i].UpdateHealthBar(p_view, p_projection);
 	}
 
-	m_player.UpdateHealthBar(p_view, p_projection);
+	m_player->UpdateHealthBar(p_view, p_projection);
 }
 
 void PlayerManager::ResetCooldowns()
@@ -201,10 +205,10 @@ void PlayerManager::ResetCooldowns()
 		m_enemyList[i].ResetCooldowns();
 	}
 
-	m_player.ResetCooldowns();
+	m_player->ResetCooldowns();
 }
 
 void PlayerManager::UpdateFrustum(Frustum*  p_frustum)
 {
-	m_frustum = *p_frustum;
+	m_frustum = p_frustum;
 }

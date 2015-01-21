@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#include "ConsoleFunctions.h"
 bool Window::Initialize(WindowRectangle p_window)
 {
 	bool result = true;

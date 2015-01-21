@@ -3,15 +3,17 @@
 
 #include "DirectX.h"
 #include "DirectXTex\DirectXTex.h"
-#include "WICTextureLoader.h"
-#include "SceneShader.h"
-#include "GUIShader.h"
-#include "DepthShader.h"
-#include "RenderTarget.h"
-#include "ParticleShader.h"
+#include <D3D11.h>
 
-#include "Enumerations.h"
-#include "Globals.h"
+class ParticleShader;
+
+#include "SceneShader.h"
+
+//class SceneShader;
+class WICTextureLoader;
+class GUIShader;
+class DepthShader;
+class RenderTarget;
 
 class GraphicsEngine
 {

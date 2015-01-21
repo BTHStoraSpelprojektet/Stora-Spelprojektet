@@ -10,6 +10,7 @@
 #include "ShurikenAbility.h"
 #include "MegaShuriken.h"
 #include "Ability.h"
+#include "HealthBar.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -43,8 +44,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
 
-	m_healthbar.Initialize(50.0f, 5.0f);
-	m_healthbar.Initialize(100.0f, 15.0f);
+	m_healthbar = new HealthBar();
+	m_healthbar->Initialize(100.0f, 15.0f);
 
 	return true;
 }
@@ -456,7 +457,7 @@ void Player::SetCalculatePlayerPosition()
 
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
+	m_healthbar->Update(m_position, m_health, m_maxHealth, p_view, p_projection);
 }
 
 void Player::Render()
@@ -464,7 +465,7 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		AnimatedObject::Render();
-		m_healthbar.Render();
+		m_healthbar->Render();
 	}
 }
 void Player::SetIsAlive(bool p_isAlive)

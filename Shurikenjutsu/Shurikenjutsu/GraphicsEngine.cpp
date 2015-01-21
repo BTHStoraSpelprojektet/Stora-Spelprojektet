@@ -1,5 +1,14 @@
 #include "GraphicsEngine.h"
 
+#include "Enumerations.h"
+#include "Globals.h"
+#include "ParticleShader.h"
+#include "WICTextureLoader.h"
+#include "SceneShader.h"
+#include "GUIShader.h"
+#include "DepthShader.h"
+#include "RenderTarget.h"
+
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;
 GUIShader GraphicsEngine::m_GUIShader;
@@ -89,7 +98,7 @@ ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename
 {
 	ID3D11ShaderResourceView* textureView;
 	std::wstring wstring;
-	for (int i = 0; i < p_filename.length(); ++i)
+	for (unsigned int i = 0; i < p_filename.length(); ++i)
 		wstring += wchar_t(p_filename[i]);
 
 	const wchar_t* your_result = wstring.c_str();

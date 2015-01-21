@@ -3,9 +3,10 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include "AnimatedObject.h"
-#include "HealthBar.h"
 
 class Ability;
+class InputManager;
+class HealthBar;
 
 class Player :
 	public AnimatedObject
@@ -72,6 +73,6 @@ private:
 	Ability* m_megaShuriken;
 	Ability* m_smokeBombAbility;
 
-	HealthBar m_healthbar;
+	HealthBar* m_healthbar;
 };
 #endif PLAYER
