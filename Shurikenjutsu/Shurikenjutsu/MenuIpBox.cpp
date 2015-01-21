@@ -6,11 +6,10 @@ MenuIpBox::~MenuIpBox(){}
 
 bool MenuIpBox::Initialize(float p_x, float p_y, float p_width, float p_height)
 {
-	MenuItem::Initialize(p_x, p_y, p_width, p_height, MENUACTION_EMPTY);
+	MenuItem::Initialize(p_x, p_y, p_width, p_height, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/tb_bg.png"));
 
 	m_counter = 0;
 	m_active = false;
-	MenuItem::m_border.SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 	m_ip[0] = '1';
 	m_ip[1] = '9';
 	m_ip[2] = '4';
@@ -55,13 +54,11 @@ bool MenuIpBox::IsClicked()
 				m_active = true;
 				m_counter = 0;
 				ResetIp();
-				MenuItem::m_border.SetColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
 				return true;
 			}
 		}
 
 		m_active = false;
-		MenuItem::m_border.SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 		return false;
 	}
 
@@ -80,7 +77,6 @@ void MenuIpBox::GetInput()
 			if (m_counter > 14)
 			{
 				m_active = false;
-				MenuItem::m_border.SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 			}
 		}
 	}

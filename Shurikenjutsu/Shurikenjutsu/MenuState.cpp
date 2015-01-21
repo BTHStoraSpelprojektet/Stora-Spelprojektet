@@ -6,20 +6,21 @@ MenuState::~MenuState(){}
 bool MenuState::Initialize()
 {
 	// Initialize options menu
-	m_options.AddCheckbox(220.0f, 0, 60.0f, MENUACTION_VSYNC);
-	m_options.AddCheckbox(220.0f, -70.0f, 60.0f, MENUACTION_FULLSCREEN);
-	m_options.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK);
+	m_options.AddCheckbox(220.0f, 0, 60.0f, MENUACTION_VSYNC, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/vs.png"));
+	m_options.AddCheckbox(220.0f, -70.0f, 60.0f, MENUACTION_FULLSCREEN, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fullscreen.png"));
+	m_options.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"));
 
 	// Initialize main menu
-	m_main.AddButton(0, 0, 360.0f, 60.0f, MENUACTION_IP);
-	m_main.AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_OPTIONS);
-	m_main.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK);
+	m_main.AddButton(0, 0, 360.0f, 60.0f, MENUACTION_IP, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"));
+	m_main.AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_CHOOSENINJA, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/choose.png"));
+	m_main.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_OPTIONS, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/options.png"));
+	m_main.AddButton(0, -210.0f, 360.0f, 60.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"));
 
 	// Initialize play menu
 	m_ipbox.Initialize(0.0f, 0, 360.0f, 60.0f);
 	m_ipboxText.Initialize(m_ipbox.GetIp(), 36.0f, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH*1.5f*0.5f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*1.17f*0.5f, 0xffffffff);
-	m_play.AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_CONNECT);
-	m_play.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK);
+	m_play.AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_CONNECT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"));
+	m_play.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"));
 	m_hideIpBox = true;
 
 	// Initialize connecting menu;
@@ -58,6 +59,9 @@ GAMESTATESWITCH MenuState::Update()
 			m_menues.push(m_play);
 			break;
 		case MENUACTION_PLAY:
+			break;
+		case MENUACTION_CHOOSENINJA:
+			return GAMESTATESWITCH_CHOOSENINJA;
 			break;
 		case MENUACTION_OPTIONS:
 			m_menues.push(m_options);

@@ -5,6 +5,7 @@
 #include "GameState.h"
 #include <stack>
 #include "Menu.h"
+#include "TextureLibrary.h"
 #include "Network.h"
 
 class MenuState : public GameState

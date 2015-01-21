@@ -40,10 +40,11 @@ bool ShurikenAbility::Execute(float p_distance)
 			}
 			m_stacks -= 1;
 			m_gcd = 0.0;
+			return true;
 		}
 	}
 	
-	return true;
+	return false;
 }
 
 void ShurikenAbility::ResetCooldown()

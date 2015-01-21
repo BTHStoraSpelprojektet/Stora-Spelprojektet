@@ -5,6 +5,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
 	ID3D10Blob*	animatedVertexShader = 0;
+	ID3D10Blob*	instanceShader = 0;
 	ID3D10Blob* lineVertexShader = 0;
 	ID3D10Blob*	errorMessage = 0;
 
@@ -32,6 +33,33 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
+		return false;
+	}
+
+	// Compile the vertex shader.
+	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/InstanceShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/InstanceShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_VSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_VSVersion = "5.0";
+	}
+
+	// Create the vertex shader.
+	if (FAILED(p_device->CreateVertexShader(instanceShader->GetBufferPointer(), instanceShader->GetBufferSize(), NULL, &m_instanceShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create instance vertex shader.");
 		return false;
 	}
 
@@ -82,7 +110,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Configure vertex layout.
 	D3D11_INPUT_ELEMENT_DESC layout[4];
 	unsigned int size;
-	
+
 	layout[0].SemanticName = "POSITION";
 	layout[0].SemanticIndex = 0;
 	layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -120,6 +148,85 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	// Create the vertex input layout.
 	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create scene vertex input layout.");
+		return false;
+	}
+
+	// Configure vertex layout.
+	D3D11_INPUT_ELEMENT_DESC instanceLayout[8];
+	unsigned int instancedSize;
+	
+	instanceLayout[0].SemanticName = "POSITION";
+	instanceLayout[0].SemanticIndex = 0;
+	instanceLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	instanceLayout[0].InputSlot = 0;
+	instanceLayout[0].AlignedByteOffset = 0;
+	instanceLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	instanceLayout[0].InstanceDataStepRate = 0;
+
+	instanceLayout[1].SemanticName = "TEXCOORD";
+	instanceLayout[1].SemanticIndex = 0;
+	instanceLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	instanceLayout[1].InputSlot = 0;
+	instanceLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	instanceLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	instanceLayout[1].InstanceDataStepRate = 0;
+
+	instanceLayout[2].SemanticName = "NORMAL";
+	instanceLayout[2].SemanticIndex = 0;
+	instanceLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	instanceLayout[2].InputSlot = 0;
+	instanceLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	instanceLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	instanceLayout[2].InstanceDataStepRate = 0;
+
+	instanceLayout[3].SemanticName = "TANGENT";
+	instanceLayout[3].SemanticIndex = 0;
+	instanceLayout[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	instanceLayout[3].InputSlot = 0;
+	instanceLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	instanceLayout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	instanceLayout[3].InstanceDataStepRate = 0;
+
+	instanceLayout[4].SemanticName = "INSTANCEPOS";
+	instanceLayout[4].SemanticIndex = 0;
+	instanceLayout[4].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	instanceLayout[4].InputSlot = 1;
+	instanceLayout[4].AlignedByteOffset = 0;
+	instanceLayout[4].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	instanceLayout[4].InstanceDataStepRate = 1;
+
+	instanceLayout[5].SemanticName = "INSTANCEPOS";
+	instanceLayout[5].SemanticIndex = 1;
+	instanceLayout[5].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	instanceLayout[5].InputSlot = 1;
+	instanceLayout[5].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	instanceLayout[5].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	instanceLayout[5].InstanceDataStepRate = 1;
+
+	instanceLayout[6].SemanticName = "INSTANCEPOS";
+	instanceLayout[6].SemanticIndex = 2;
+	instanceLayout[6].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	instanceLayout[6].InputSlot = 1;
+	instanceLayout[6].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	instanceLayout[6].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	instanceLayout[6].InstanceDataStepRate = 1;
+	
+	instanceLayout[7].SemanticName = "INSTANCEPOS";
+	instanceLayout[7].SemanticIndex = 3;
+	instanceLayout[7].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	instanceLayout[7].InputSlot = 1;
+	instanceLayout[7].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	instanceLayout[7].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	instanceLayout[7].InstanceDataStepRate = 1;
+
+
+	// Compute size of layout.
+	instancedSize = sizeof(instanceLayout) / sizeof(instanceLayout[0]);
+
+	// Create the vertex input layout.
+	if (FAILED(p_device->CreateInputLayout(instanceLayout, instancedSize, instanceShader->GetBufferPointer(), instanceShader->GetBufferSize(), &m_instanceLayout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex input layout.");
 		return false;
@@ -214,6 +321,8 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Release useless local shaders.
 	vertexShader->Release();
 	vertexShader = 0;
+	instanceShader->Release();
+	instanceShader = 0;
 	animatedVertexShader->Release();
 	animatedVertexShader = 0;
 	lineVertexShader->Release();
@@ -427,6 +536,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 void SceneShader::Shutdown()
 {
 	m_vertexShader->Release();
+	m_instanceShader->Release();
 	m_animatedVertexShader->Release();
 	m_pixelShader->Release();
 	m_lineVertexShader->Release();
@@ -438,12 +548,20 @@ void SceneShader::Shutdown()
 	m_samplerShadowMapState->Release();
 	m_rasterizerStateBackCulled->Release();
 	m_rasterizerStateNoneCulled->Release();
-	m_shadowMap->Release();
+	if (m_shadowMap != nullptr)
+	{
+		m_shadowMap->Release();
+	}
 	m_matrixBuffer->Release();
 	m_fogBuffer->Release();
 	m_animationMatrixBuffer->Release();
 	m_frameBuffer->Release();
 	m_colorBuffer->Release();
+
+	for (unsigned int i = 0; i < m_instanceBufferList.size(); i++)
+	{
+		m_instanceBufferList[i]->Release();
+	}
 }
 
 void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
@@ -729,3 +847,143 @@ void SceneShader::SetShadowMapDimensions(ID3D11Device* p_device, ID3D11DeviceCon
 	buffer->Release();
 	buffer = 0;
 }
+
+
+
+///Instancing
+void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
+{
+	// Set parameters and then render.
+	unsigned int stride[2];
+	unsigned int offset[2];
+	ID3D11Buffer* bufferPointers[2];
+
+	stride[0] = sizeof(Vertex);
+	stride[1] = sizeof(InstancePos);
+
+	offset[0] = 0;
+	offset[1] = 0;
+
+	bufferPointers[0] = p_mesh;
+	bufferPointers[1] = m_instanceBufferList[p_instanceIndex];
+
+	UpdateWorldMatrix(p_context, p_worldMatrix);
+
+	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetShaderResources(1, 1, &p_normalMap);
+	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
+	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
+
+	p_context->IASetVertexBuffers(0, 2, bufferPointers, stride, offset);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetInputLayout(m_instanceLayout);
+
+	p_context->VSSetShader(m_instanceShader, NULL, 0);
+	p_context->PSSetShader(m_pixelShader, NULL, 0);
+
+	p_context->DrawInstanced(p_numberOfVertices, m_numberOfInstanceList[p_instanceIndex], 0, 0);
+}
+void SceneShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
+{
+	if (p_numberOfInstances > 0)
+	{
+		m_numberOfInstanceList.push_back(p_numberOfInstances);
+		InitializeInstanceBuffer(p_device, p_numberOfInstances, p_position);
+	}
+}
+int SceneShader::GetNumberOfInstanceBuffer()
+{
+	return m_instanceBufferList.size();
+}
+void SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
+{
+	ID3D11Buffer* instanceBuffer;
+	// Create the instance buffer description.
+	//Calculate position of all instanced objects
+	std::vector<InstancePos> m_instances;
+	m_instances.clear();
+	for (int i = 0; i < p_numberOfInstances; i++)
+	{
+		InstancePos temp;
+		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
+		m_instances.push_back(temp);
+	}
+
+	D3D11_BUFFER_DESC instanceBufferDesc;
+	instanceBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
+	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instanceBufferDesc.CPUAccessFlags = 0;
+	instanceBufferDesc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA instanceData;
+	instanceData.pSysMem = &m_instances[0];
+	instanceData.SysMemPitch = 0;
+	instanceData.SysMemSlicePitch = 0;
+
+	// Create the Instance buffer.
+	if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create instance buffer.");
+	}
+	m_instanceBufferList.push_back(instanceBuffer);
+}
+/*
+void SceneShader::InitializeDynamicInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
+{
+	ID3D11Buffer* instanceBuffer;
+	// Create the instance buffer description.
+	//Calculate position of all instanced objects
+	std::vector<InstancePos> m_instances;
+	m_instances.clear();
+	for (int i = 0; i < p_numberOfInstances; i++)
+	{
+		InstancePos temp;
+		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
+		m_instances.push_back(temp);
+	}
+
+	D3D11_BUFFER_DESC instanceBufferDesc;
+	instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
+	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	instanceBufferDesc.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA instanceData;
+	instanceData.pSysMem = &m_instances[0];
+	instanceData.SysMemPitch = 0;
+	instanceData.SysMemSlicePitch = 0;
+
+	// Create the Instance buffer.
+	if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create dynamic instance buffer.");
+	}
+	m_dynamicInstanceBuffers.push_back(instanceBuffer);
+}
+
+void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_matrices, int p_index)
+{
+	
+	// Lock matrix buffer so that it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_dynamicInstanceBuffers[p_index], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to map scene animated matrix buffer.");
+	}
+
+	// Get pointer to the matrix buffer data.
+	InstancePos* dynamicInstanceBuffer;
+	dynamicInstanceBuffer = (InstancePos*)mappedBuffer.pData;
+
+	// Set matrices in buffer.
+	for (unsigned int i = 0; i < p_matrices.size(); i++)
+	{
+		dynamicInstanceBuffer->position = DirectX::XMLoadFloat4x4(&p_matrices[i]);
+	}
+
+	// Unlock the matrix buffer after it has been written to.
+	p_context->Unmap(m_dynamicInstanceBuffers[p_index], 0);
+	}*/

@@ -16,8 +16,6 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_bindPoses.clear();
 	m_bindPoses = p_newStack.m_bindPoses;
 
-	m_inputManager = InputManager::GetInstance();
-
 	m_hipRotation = 0.0f;
 
 	return true;
@@ -157,7 +155,13 @@ bool AnimationControl::IsAnimated()
 
 void AnimationControl::SetIkDirection(DirectX::XMFLOAT3 p_direction)
 {
-	m_ikDirection = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_direction);
+
+	if (DirectX::XMVector3Length(direction).m128_f32[0] != 0.0f)
+	{
+		m_ikDirection = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+		m_ikLegDirection = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+	}
 }
 
 void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
@@ -172,46 +176,46 @@ void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 	{
 		if (m_attackAnimation != true)
 		{
-			m_currentArms = m_animationStacks[0];
+			m_currentArms = m_animationStacksArray[7];
 		}
 
-		m_currentLegs = m_animationStacks[3];
+		m_currentLegs = m_animationStacksArray[6];
 	}
 	else if (directionAngle < (3.14f * 0.375f))			  // Forward
 	{
 		if (m_attackAnimation != true)
 		{
-			m_currentArms = m_animationStacks[4];
+			m_currentArms = m_animationStacksArray[1];
 		}
 
-		m_currentLegs = m_animationStacks[1];
+		m_currentLegs = m_animationStacksArray[0];
 	}
 	else if (directionAngle >(3.14f * 0.625f))			  // Back
 	{
 		if (m_attackAnimation != true)
 		{
-			m_currentArms = m_animationStacks[11];
+			m_currentArms = m_animationStacksArray[3];
 		}
 
-		m_currentLegs = m_animationStacks[2];
+		m_currentLegs = m_animationStacksArray[2];
 	}
 	else if (cross > 0)									 // Right
 	{
 		if (m_attackAnimation != true)
 		{
-			m_currentArms = m_animationStacks[11];
+			m_currentArms = m_animationStacksArray[3];
 		}
 
-		m_currentLegs = m_animationStacks[5];
+		m_currentLegs = m_animationStacksArray[5];
 	}
 	else                                                  // Left
 	{
 		if (m_attackAnimation != true)
 		{
-			m_currentArms = m_animationStacks[11];
+			m_currentArms = m_animationStacksArray[3];
 		}
 
-		m_currentLegs = m_animationStacks[8];
+		m_currentLegs = m_animationStacksArray[4];
 	}
 
 	ApplyLegDirection(direction, directionAngle, cross);
@@ -221,21 +225,47 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 {
 	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
 
+	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikLegDirection, direction).m128_f32[0];
+
+	float cross = DirectX::XMVector3Cross(m_ikLegDirection, m_forwardDirection).m128_f32[1];
+
 	if (m_animationStacks.size() > 0)
-	{
-		if (DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)
+	{  
+		if (DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)	// Idle
 		{
-			m_currentArms = m_animationStacks[0];
-			m_currentLegs = m_animationStacks[3];
+			m_currentArms = m_animationStacksArray[7];
+			m_currentLegs = m_animationStacksArray[6];
 		}
+		else if (directionAngle < (3.14f * 0.375f))			  // Forward
+		{
+			m_currentArms = m_animationStacksArray[1];
+			m_currentLegs = m_animationStacksArray[0];
+		}
+		else if (directionAngle >(3.14f * 0.625f))			  // Back
+		{
+			m_currentArms = m_animationStacksArray[3];
+			m_currentLegs = m_animationStacksArray[2];
+		}
+		else if (cross > 0 && DirectX::XMVector3Length(direction).m128_f32[0] != 0.0f)		// Right
+		{
+			m_currentArms = m_animationStacksArray[3];
+			m_currentLegs = m_animationStacksArray[5];
+		}
+		else																// Left
+		{
+			m_currentArms = m_animationStacksArray[3];
+			m_currentLegs = m_animationStacksArray[4];
+		}
+
+		ApplyLegDirection(direction, directionAngle, cross);	
 	}
 }
 
-void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float directionAngle, float cross)
+void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross)
 {
-	float crossD = DirectX::XMVector3Cross(m_ikDirection, direction).m128_f32[1];
+	float crossD = DirectX::XMVector3Cross(m_ikLegDirection, p_direction).m128_f32[1];
 
-	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikDirection).m128_f32[0];
+	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikLegDirection).m128_f32[0];
 
 	float low = 3.14f * 0.125f;
 	float lowMid = 3.14f * 0.375f;
@@ -244,23 +274,23 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float dir
 
 	if (crossD > 0)
 	{
-		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle);
+			m_hipRotation = CalculateLegDirection(forwardAngle + p_directionAngle);
 		}
-		else if (directionAngle < lowMid && directionAngle > low && cross > 0)
+		else if (p_directionAngle < lowMid && p_directionAngle > low && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - directionAngle);
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - p_directionAngle);
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross <= 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
+			m_hipRotation = CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross > 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
 		}
-		else if (cross > 0)
+		else if (p_cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
@@ -271,23 +301,23 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float dir
 	}
 	else
 	{
-		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle - directionAngle);
+			m_hipRotation = CalculateLegDirection(forwardAngle - p_directionAngle);
 		}
-		else if (directionAngle < lowMid && directionAngle > low && cross > 0)
+		else if (p_directionAngle < lowMid && p_directionAngle > low && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle);
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle);
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross <= 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
+			m_hipRotation = CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross > 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
 		}
-		else if (cross > 0)
+		else if (p_cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
@@ -298,11 +328,11 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float dir
 	}
 }
 
-float AnimationControl::CalculateLegDirection(float forwardAngle)
+float AnimationControl::CalculateLegDirection(float p_forwardAngle)
 {
 	float piDivFour = 0.785000026f;
-	int a = (int)(forwardAngle / piDivFour);
-	float b = forwardAngle / piDivFour;
+	int a = (int)(p_forwardAngle / piDivFour);
+	float b = p_forwardAngle / piDivFour;
 
 	for (unsigned int i = 0; i < 8; i++)
 	{
@@ -319,22 +349,59 @@ float AnimationControl::CalculateLegDirection(float forwardAngle)
 	return piDivFour * a;
 }
 
-void AnimationControl::RangeAttack()
+void AnimationControl::FindAndReferenceLayers()
 {
-	if (!m_attackAnimation)
+	std::string m_animationNames[] = { "RunF", "RunA", "RunB", "RunAB", 
+									   "RunL", "RunR", "IdleL", "IdleA", 
+									   "DeadL", "DeadA", "Melee", "Range",
+									   "Tool", "Spec1", "Spec2"};
+
+	m_animationStacksArray = new AnimationStack[m_animationStacks.size()];
+
+	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
 	{
-		m_currentArms = m_animationStacks[7];
-		m_frameArms = 0.0f;
-		m_attackAnimation = true;
-	}	
+		for (unsigned int j = 0; j < 15; j++)
+		{
+			if (strcmp(m_animationStacks[i].m_name, m_animationNames[j].c_str()) == 0)
+			{
+				m_animationStacksArray[j] = m_animationStacks[i];
+			}
+		}		
+	}
 }
 
-void AnimationControl::MeleeAttack()
+void AnimationControl::Shutdown()
+{
+	delete[] m_animationStacksArray;
+	m_animationStacksArray = NULL;
+}
+
+void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 {
 	if (!m_attackAnimation)
 	{
-		m_currentArms = m_animationStacks[6];
 		m_frameArms = 0.0f;
 		m_attackAnimation = true;
-	}
+
+		if (p_newState == AnimationState::Melee)
+		{
+			m_currentArms = m_animationStacksArray[10];
+		}
+		else if (p_newState == AnimationState::Range)
+		{
+			m_currentArms = m_animationStacksArray[11];
+		}
+		else if (p_newState == AnimationState::Special1)
+		{
+			m_currentArms = m_animationStacksArray[13];
+		}
+		else if (p_newState == AnimationState::Special2)
+		{
+			m_currentArms = m_animationStacksArray[14];
+		}
+		else if (p_newState == AnimationState::Tool)
+		{
+			m_currentArms = m_animationStacksArray[12];
+		}
+	}	
 }

@@ -342,7 +342,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	{
 	case ABILITIES_SHURIKEN:
 		abilityString = "Shuriken";
-		p_shurikenManager.AddShuriken(p_guid, m_players[index].x, m_players[index].y, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
+		p_shurikenManager.AddShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 		break;
 	case ABILITIES_DASH:
 		abilityString = "Dash";
@@ -357,15 +357,15 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		break;
 	case ABILITIES_MEGASHURIKEN:
 		abilityString = "MegaShuriken";
-		p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
+		p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 		break;
 	case ABILITIES_SMOKEBOMB:
-		abilityString = "SmokeBooooooooobm";
+		abilityString = "SmokeBooooooooomb";
 		if (smokeBombDistance > SMOKEBOMB_RANGE)
 		{
 			smokeBombDistance = SMOKEBOMB_RANGE;
 		}
-		p_smokebomb.AddSmokeBomb(m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
+		p_smokebomb.AddSmokeBomb(m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
 		break;
 	default:
 		break;

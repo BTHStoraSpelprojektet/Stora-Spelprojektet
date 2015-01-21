@@ -21,11 +21,17 @@ void GUIManager::Render()
 	GraphicsEngine::TurnOnAlphaBlending();
 	for (unsigned int i = 0; i < m_elements.size(); i++)
 	{
-		GraphicsEngine::RenderGUIColor(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetColor());
+		GraphicsEngine::RenderGUI(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetTexture());
 	}
+	for (unsigned int i = 0; i < m_elementsColor.size(); i++)
+	{
+		GraphicsEngine::RenderGUIColor(m_elementsColor[i]->GetWorldMatrix(), m_elementsColor[i]->GetColor());
+	}
+
 	GraphicsEngine::TurnOffAlphaBlending();
 	GraphicsEngine::TurnOnDepthStencil();
 	m_elements.clear();
+	m_elementsColor.clear();
 
 	for (unsigned int i = 0; i < m_texts.size(); i++)
 	{
@@ -37,6 +43,11 @@ void GUIManager::Render()
 void GUIManager::AddToRenderQueue(GUIElement* p_element)
 {
 	m_elements.push_back(p_element);
+}
+
+void GUIManager::AddToRenderQueueColor(GUIElementColor* p_element)
+{
+	m_elementsColor.push_back(p_element);
 }
 
 void GUIManager::AddToRenderQueue(GUIText* p_text)

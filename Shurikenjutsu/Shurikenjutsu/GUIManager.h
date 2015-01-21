@@ -4,9 +4,11 @@
 #include "GraphicsEngine.h"
 #include "GUIElement.h"
 #include "GUIText.h"
+#include "GUIElementColor.h"
 
 class GUIText;
 class GUIElement;
+class GUIElementColor;
 class GUIManager
 {
 public:
@@ -19,6 +21,7 @@ public:
 
 	void Render();
 	void AddToRenderQueue(GUIElement* p_element);
+	void AddToRenderQueueColor(GUIElementColor* p_element);
 	void AddToRenderQueue(GUIText* p_text);
 
 private:
@@ -27,6 +30,7 @@ private:
 	~GUIManager();
 
 	std::vector<GUIElement*> m_elements;
+	std::vector<GUIElementColor*> m_elementsColor;
 	std::vector<GUIText*> m_texts;
 };
 

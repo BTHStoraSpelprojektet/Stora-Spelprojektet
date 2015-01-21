@@ -2,12 +2,12 @@
 
 PlayingStateTest System::playingState;
 
+
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	bool result = true;
 
 	// Set default game state.
-	playingState = PlayingStateTest();
 	m_gameState = &m_menuState;
 
 	// Set starting window values.
@@ -67,6 +67,10 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	// Initialize model library.
 	ModelLibrary::GetInstance()->Initialize(new Model());
 	ConsolePrintSuccess("All models successfully loaded.");
+	ConsoleSkipLines(1);
+
+	TextureLibrary::GetInstance()->Initialize();
+	ConsolePrintSuccess("All Textures successfully loaded.");
 	ConsoleSkipLines(1);
 
 	// Initialize timer.
@@ -153,6 +157,9 @@ void System::Shutdown()
 	// Shutdown model library
 	ModelLibrary::GetInstance()->Shutdown();
 
+	// Shutdown texture lib
+	TextureLibrary::GetInstance()->Shutdown();
+
 	m_sound->Shutdown();
 
 	GUIManager::GetInstance()->Shutdown();
@@ -220,9 +227,16 @@ void System::Update()
 
 	switch (m_gameState->Update())
 	{
+	case GAMESTATESWITCH_CHOOSENINJA:
+		m_gameState = &m_chooseNinjaState;
+		m_gameState->Initialize();
+		break;
 	case GAMESTATESWITCH_PLAY:
 		m_gameState = &playingState;
 		m_gameState->Initialize();
+		break;
+	case GAMESTATESWITCH_MENU:
+		m_gameState = &m_menuState;
 		break;
 	}
 	

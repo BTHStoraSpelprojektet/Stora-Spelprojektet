@@ -22,8 +22,6 @@ private:
 	bool m_active;
 	char m_ip[15];
 	int m_counter;
-
-	
 };
 #endif
 

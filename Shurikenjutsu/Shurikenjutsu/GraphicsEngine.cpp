@@ -2,7 +2,6 @@
 
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;
-InstancedShader GraphicsEngine::m_instanceShader;
 GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
 ParticleShader GraphicsEngine::m_particleShader;
@@ -26,18 +25,11 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintText(version);
 		ConsoleSkipLines(1);
 	}
-
+	
 	// Initialize the scene shader.
 	if (m_sceneShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("Scene shader initialized successfully.");
-		ConsoleSkipLines(1);
-	}
-
-	// Initialize the instance shader
-	if (m_instanceShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
-	{
-		ConsolePrintSuccess("Instanced shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
 
@@ -94,13 +86,31 @@ void GraphicsEngine::Shutdown()
 	m_shadowMap.Shutdown();
 
 	m_sceneShader.Shutdown();
-	m_instanceShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
 	pFW1Factory->Release();
 	pFontWrapper->Release();
 
 	// TODO shutdowns for everyone!
+}
+
+ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
+{
+	ID3D11ShaderResourceView* textureView;
+	std::wstring wstring;
+	for (int i = 0; i < p_filename.length(); ++i)
+		wstring += wchar_t(p_filename[i]);
+
+	const wchar_t* your_result = wstring.c_str();
+
+
+	//const wchar_t *filepath = p_filename;
+	HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX.GetDevice(), m_directX.GetContext(), your_result, nullptr, &textureView, 0);
+	if(FAILED(hr))
+	{
+		std::cout << "FAILED LOADING TEXTURE FOR MENU" << std::endl;
+	}
+	return textureView;
 }
 
 void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
@@ -110,7 +120,7 @@ void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 
 void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
-	m_instanceShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex);
+	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex);
 }
 
 void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
@@ -146,7 +156,6 @@ void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, Di
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
@@ -169,7 +178,6 @@ void GraphicsEngine::SetShadowMap()
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
 {
 	m_sceneShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
-	m_instanceShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
 }
 
 void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
@@ -259,11 +267,14 @@ void GraphicsEngine::TurnOffAlphaBlending()
 	m_directX.TurnOffAlphaBlending();
 }
 
-void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
-{
-	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances);
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
+{	
+	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_position);
 }
-
+int GraphicsEngine::GetNumberOfInstanceBuffer()
+{
+	return m_sceneShader.GetNumberOfInstanceBuffer();
+}
 bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 {    
 	if (p_fullscreen)

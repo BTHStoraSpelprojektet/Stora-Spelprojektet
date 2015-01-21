@@ -4,7 +4,14 @@
 #include <vector>
 #include <string>
 #include "Structures.h"
-#include "InputManager.h"
+
+enum AnimationState { 
+	Melee, 
+	Range, 
+	Special1, 
+	Special2,
+	Tool
+};
 
 class AnimationControl
 {
@@ -14,18 +21,28 @@ public:
 
 	bool IsAnimated();
 	void SetIkDirection(DirectX::XMFLOAT3 p_direction);
-	void MeleeAttack();
-	void RangeAttack();
+	void ChangeAnimationState(AnimationState p_newState);
+
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 
+	void FindAndReferenceLayers();
+
+	void Shutdown();
+
+	
+	
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
 	DirectX::XMVECTOR ApplyIK(DirectX::XMVECTOR& p_quaternion);	
-	void ApplyLegDirection(DirectX::XMVECTOR& direction, float directionAngle, float cross);
-	float CalculateLegDirection(float forwardAngle);
+
+	void ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross);
+	void ApplyLegDirectionNetwork(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross);
+
+	float CalculateLegDirection(float p_forwardAngle);
 
 	std::vector<AnimationStack> m_animationStacks;
+	AnimationStack* m_animationStacksArray;
 
 	double m_frameArms;
 	double m_frameLegs;
@@ -33,6 +50,7 @@ private:
 	bool m_attackAnimation;
 
 	DirectX::XMVECTOR m_ikDirection;
+	DirectX::XMVECTOR m_ikLegDirection;
 	DirectX::XMVECTOR m_forwardDirection;
 	DirectX::XMVECTOR m_rotationAxis;
 	float m_hipRotation;
@@ -42,8 +60,6 @@ private:
 
 	std::vector<DirectX::XMFLOAT4X4> m_boneTransforms;
 	std::vector<BindPose> m_bindPoses;
-
-	InputManager* m_inputManager;
 };
 
 #endif;

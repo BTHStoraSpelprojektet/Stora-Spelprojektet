@@ -110,14 +110,12 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		m_ability = m_meleeSwing;
-		AnimatedObject::MeleeAttackAnimation();
 	}
 
 	// Cast shuriken
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		m_ability = m_shurikenAbility;
-		AnimatedObject::RangeAttackAnimation();
 	}
 
 	// Check health from server
@@ -137,6 +135,7 @@ void Player::UpdateMe()
 	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
 	if (m_ability->Execute(temp))
 	{
+		// Play ability animation if we did any
 		DoAnimation();
 	}
 }
@@ -467,22 +466,22 @@ void Player::DoAnimation()
 	// DO THIS WITH STATES
 	if (m_ability == m_meleeSwing)
 	{
-		AnimatedObject::MeleeAttackAnimation();
+		AnimatedObject::ChangeAnimationState(AnimationState::Melee);
 	}
 	else if (m_ability == m_dash)
 	{
-		;
+		AnimatedObject::ChangeAnimationState(AnimationState::Special1);
 	}
 	else if (m_ability == m_megaShuriken)
 	{
-		AnimatedObject::RangeAttackAnimation();
+		AnimatedObject::ChangeAnimationState(AnimationState::Special2);
 	}
 	else if (m_ability == m_smokeBombAbility)
 	{
-		AnimatedObject::RangeAttackAnimation();
+		AnimatedObject::ChangeAnimationState(AnimationState::Tool);
 	}
 	else if (m_ability == m_shurikenAbility)
 	{
-		AnimatedObject::RangeAttackAnimation();
+		AnimatedObject::ChangeAnimationState(AnimationState::Range);
 	}
 }

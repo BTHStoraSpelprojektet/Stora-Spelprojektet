@@ -46,9 +46,6 @@
     <Filter Include="Header Files\Graphics">
       <UniqueIdentifier>{2163f61b-c825-4f28-bcf3-c01a3a91612c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics">
-      <UniqueIdentifier>{203b4b95-7f00-4e34-8b05-e5a4d9f26b8d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Scene">
       <UniqueIdentifier>{3a375898-de57-4805-995a-5c0d96324108}</UniqueIdentifier>
     </Filter>
@@ -69,9 +66,6 @@
     </Filter>
     <Filter Include="Source Files\Core\Input">
       <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Instanced">
-      <UniqueIdentifier>{dc7fe779-c146-488a-83d0-56d87ec51a7b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Object">
       <UniqueIdentifier>{fefb1194-3e7f-4004-a760-76dc6ad184ad}</UniqueIdentifier>
@@ -112,12 +106,6 @@
     <Filter Include="Header Files\Graphics\Shader Bridges">
       <UniqueIdentifier>{1e8c5c16-9775-4b31-9ab3-cd6c5d58c7e1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics\Shader Bridges">
-      <UniqueIdentifier>{e86672ab-06e6-4a96-bb09-b0d6d418edff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics\Particles">
-      <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Particle">
       <UniqueIdentifier>{f17db6bb-41a5-4400-9258-b0dd33a5820f}</UniqueIdentifier>
     </Filter>
@@ -126,9 +114,6 @@
     </Filter>
     <Filter Include="Header Files\Graphics\ShadowShapes">
       <UniqueIdentifier>{b2b29137-b677-4fc3-8443-eac2df52888f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Graphics\ShadowShapes">
-      <UniqueIdentifier>{78714b5b-d56b-426c-901b-465d94674519}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Core\Camera">
       <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
@@ -165,6 +150,18 @@
     </Filter>
     <Filter Include="Header Files\GUI\Menu\Menu Items">
       <UniqueIdentifier>{4cd81acc-f6cd-467c-80cb-edf01ec328bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{203b4b95-7f00-4e34-8b05-e5a4d9f26b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Shader Bridges">
+      <UniqueIdentifier>{e86672ab-06e6-4a96-bb09-b0d6d418edff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Particles">
+      <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\ShadowShapes">
+      <UniqueIdentifier>{78714b5b-d56b-426c-901b-465d94674519}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -357,8 +354,20 @@
     <ClCompile Include="MenuItem.cpp">
       <Filter>Source Files\GUI\Menu\Menu Items</Filter>
     </ClCompile>
+    <ClCompile Include="ChooseState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
     <ClCompile Include="QuadTree.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIElementColor.cpp">
+      <Filter>Source Files\GUI\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLibrary.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp">
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="MenuIpBox.cpp">
       <Filter>Source Files\GUI\Menu\Menu Items</Filter>
@@ -488,9 +497,6 @@
     <ClInclude Include="GUIShader.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
-    <ClInclude Include="InstancedShader.h">
-      <Filter>Header Files\Graphics\Shader Bridges</Filter>
-    </ClInclude>
     <ClInclude Include="SceneShader.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
@@ -569,8 +575,20 @@
     <ClInclude Include="MenuItem.h">
       <Filter>Header Files\GUI\Menu\Menu Items</Filter>
     </ClInclude>
+    <ClInclude Include="ChooseState.h">
+      <Filter>Header Files\GameState</Filter>
+    </ClInclude>
     <ClInclude Include="QuadTree.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIElementColor.h">
+      <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLibrary.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="MenuIpBox.h">
       <Filter>Header Files\GUI\Menu\Menu Items</Filter>
@@ -582,15 +600,6 @@
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
       <Filter>Shaders\Scene</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\Scene\VertexShader.hlsl">
-      <Filter>Shaders\Scene</Filter>
-    </FxCompile>
-    <FxCompile Include="InstancedPShader.hlsl">
-      <Filter>Shaders\Instanced</Filter>
-    </FxCompile>
-    <FxCompile Include="InstancedVShader.hlsl">
-      <Filter>Shaders\Instanced</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\Depth\DepthPixelShader.hlsl">
       <Filter>Shaders\Depth</Filter>
@@ -627,6 +636,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\GUI\GUIColorVertexShader.hlsl">
       <Filter>Shaders\GUI</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\InstanceShader.hlsl">
+      <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\VertexShader.hlsl">
+      <Filter>Shaders\Scene</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

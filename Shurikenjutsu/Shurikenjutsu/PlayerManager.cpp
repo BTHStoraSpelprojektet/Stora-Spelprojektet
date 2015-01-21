@@ -8,6 +8,8 @@ bool PlayerManager::Initialize()
 	m_enemyList = std::vector<Player>();
 	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	m_playerAbilityBar.Initialize(0.0f, -420.0f, 6);
+
+	m_enemyUpdatePositionTimer = 0.0f;
 	return true;
 }
 
@@ -84,10 +86,20 @@ void PlayerManager::Update()
 
 			Network::GetInstance()->SetHaveUpdatedPlayerList();
 		}
-
+		
+		m_enemyUpdatePositionTimer += (float)deltaTime;
 		for (unsigned int i = 0; i < m_enemyList.size(); i++)
 		{
-			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
+			if (m_enemyUpdatePositionTimer > 0.03f)
+			{
+				m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
+
+				if (i == (m_enemyList.size() - 1))
+				{
+					m_enemyUpdatePositionTimer = 0.0f;
+				}					
+			}
+				
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i].SetIsAlive(enemyPlayers[i].isAlive);

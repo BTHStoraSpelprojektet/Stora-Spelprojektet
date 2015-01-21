@@ -19,6 +19,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	{
 		m_animationController.CreateNewStack(m_model->GetAnimationStacks()[i]);
 	}
+	m_animationController.FindAndReferenceLayers();
 	m_animationController.HandleInput(p_dir);
 
 	return true;
@@ -26,6 +27,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 
 void AnimatedObject::Shutdown()
 {
+	m_animationController.Shutdown();
 	Object::Shutdown();
 }
 
@@ -54,14 +56,9 @@ void AnimatedObject::Render()
 	GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.UpdateAnimation());
 }
 
-void AnimatedObject::RangeAttackAnimation()
+void AnimatedObject::ChangeAnimationState(AnimationState p_newState)
 {
-	m_animationController.RangeAttack();
-}
-
-void AnimatedObject::MeleeAttackAnimation()
-{
-	m_animationController.MeleeAttack();
+	m_animationController.ChangeAnimationState(p_newState);
 }
 
 void AnimatedObject::HandleInput(DirectX::XMFLOAT3 p_dir)
