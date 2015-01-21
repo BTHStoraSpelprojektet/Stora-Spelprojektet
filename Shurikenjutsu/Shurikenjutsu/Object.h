@@ -21,6 +21,7 @@ public:
 	virtual void Shutdown();
 	virtual void Render();
 	virtual void RenderDepth();
+	virtual void RenderInstanced();
 	void RenderDebugBoxes();
 
 	virtual DirectX::XMFLOAT3 GetPosition() const;
@@ -39,6 +40,10 @@ public:
 	std::vector<OBB> GetBoundingBoxes();
 	Sphere GetFrustumSphere();
 
+	void CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_positions);
+
+	int GetInstanceIndex() const;
+	void SetInstanceIndex(int p_instanceIndex);
 protected:
 	void TransformBoundingBoxes();
 	void TransformShadowPoints();
@@ -50,5 +55,6 @@ protected:
 
 	std::vector<OBB> m_boundingBoxes;
 	std::vector<DebugShape3D> m_debugBoxes;
+	int m_InstanceIndex;
 };
 #endif

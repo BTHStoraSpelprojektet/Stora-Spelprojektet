@@ -5,6 +5,14 @@
 #include <string>
 #include "Structures.h"
 
+enum AnimationState { 
+	Melee, 
+	Range, 
+	Special1, 
+	Special2,
+	Tool
+};
+
 class AnimationControl
 {
 public:
@@ -13,8 +21,7 @@ public:
 
 	bool IsAnimated();
 	void SetIkDirection(DirectX::XMFLOAT3 p_direction);
-	void MeleeAttack();
-	void RangeAttack();
+	void ChangeAnimationState(AnimationState p_newState);
 
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
@@ -23,14 +30,16 @@ public:
 
 	void Shutdown();
 
+	
+	
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
 	DirectX::XMVECTOR ApplyIK(DirectX::XMVECTOR& p_quaternion);	
 
-	void ApplyLegDirection(DirectX::XMVECTOR& direction, float directionAngle, float cross);
-	void ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, float directionAngle, float cross);
+	void ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross);
+	void ApplyLegDirectionNetwork(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross);
 
-	float CalculateLegDirection(float forwardAngle);
+	float CalculateLegDirection(float p_forwardAngle);
 
 	std::vector<AnimationStack> m_animationStacks;
 	AnimationStack* m_animationStacksArray;

@@ -56,6 +56,6 @@ private:
 	ChooseState	m_chooseNinjaState;
 	GameState* m_gameState;
 
-	Sound* m_sound;
+	//Sound* m_sound;
 };
 #endif

@@ -87,7 +87,6 @@ void GraphicsEngine::Shutdown()
 	m_shadowMap.Shutdown();
 
 	m_sceneShader.Shutdown();
-	m_instanceShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
 
@@ -120,7 +119,7 @@ void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 
 void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
-	m_instanceShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex);
+	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex);
 }
 
 void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
@@ -156,7 +155,6 @@ void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, Di
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	m_instanceShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
@@ -179,7 +177,6 @@ void GraphicsEngine::SetShadowMap()
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
 {
 	m_sceneShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
-	m_instanceShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
 }
 
 void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
@@ -269,11 +266,14 @@ void GraphicsEngine::TurnOffAlphaBlending()
 	m_directX.TurnOffAlphaBlending();
 }
 
-void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances)
-{
-	m_instanceShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances);
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
+{	
+	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_position);
 }
-
+int GraphicsEngine::GetNumberOfInstanceBuffer()
+{
+	return m_sceneShader.GetNumberOfInstanceBuffer();
+}
 bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 {    
 	if (p_fullscreen)
