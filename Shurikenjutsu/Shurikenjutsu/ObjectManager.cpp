@@ -163,14 +163,10 @@ void ObjectManager::Render()
 		}
 	}
 
-	//m_objectsToRender[0]->RenderInstanced();
 	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
 	{		
 		m_objectsToRender[i]->RenderInstanced(); 
 	}
-
-
-
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{

@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include <stack>
 #include "Menu.h"
+#include "TextureLibrary.h"
 
 class MenuState : public GameState
 {
