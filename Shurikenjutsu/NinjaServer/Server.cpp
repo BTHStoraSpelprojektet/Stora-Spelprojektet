@@ -185,6 +185,25 @@ void Server::ReceviePacket()
 			}
 			break;
 		}
+		case ID_PLAYER_ANIMATION_CHANGED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			AnimationState state;
+
+			// Read animation state
+			bitStream.Read(messageID);
+			bitStream.Read(state);
+
+			// Broadcast
+			RakNet::BitStream wBitStream;
+			wBitStream.Write((RakNet::MessageID)ID_PLAYER_ANIMATION_CHANGED);
+			wBitStream.Write(m_packet->guid);
+			wBitStream.Write(state);
+
+			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			break;
+		}
 		default:
 			break;
 		}

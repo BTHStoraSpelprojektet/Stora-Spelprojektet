@@ -394,6 +394,21 @@ void Network::ReceviePacket()
 			std::cout << "Starting new level\n";
 			break;
 		}
+		case ID_PLAYER_ANIMATION_CHANGED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			AnimationState state;
+
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			bitStream.Read(state);
+
+			// Todo: Update local player animation
+
+			break;
+		}
 		default:
 		{
 			break;
