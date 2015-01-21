@@ -37,7 +37,7 @@ private:
 	std::vector<Shuriken> m_shurikens;
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToRender;
-	std::vector<Object> m_objectsToInstance;
+	std::vector<Object*> m_objectsToShadowRender;
 
 	Frustum m_frustum;
 

@@ -89,7 +89,8 @@ void GraphicsEngine::Shutdown()
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
 	pFW1Factory->Release();
-	pFontWrapper->Release();
+	if (pFontWrapper != NULL)
+		pFontWrapper->Release();
 
 	// TODO shutdowns for everyone!
 }
@@ -345,13 +346,14 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 
 	const wchar_t* your_result = wstring.c_str();
 
-	pFontWrapper->DrawString(
-		m_directX.GetContext(),
-		your_result,// String
-		p_size,// Font size
-		p_xpos,// X position
-		p_ypos,// Y position
-		p_color,// Text color, 0xAaBbGgRr
-		FW1_RESTORESTATE | FW1_CENTER | FW1_VCENTER // Flags
-		);
+	if (pFontWrapper != NULL)
+		pFontWrapper->DrawString(
+			m_directX.GetContext(),
+			your_result,// String
+			p_size,// Font size
+			p_xpos,// X position
+			p_ypos,// Y position
+			p_color,// Text color, 0xAaBbGgRr
+			FW1_RESTORESTATE | FW1_CENTER | FW1_VCENTER // Flags
+			);
 }
