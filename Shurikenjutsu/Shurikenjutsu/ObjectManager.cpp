@@ -187,6 +187,7 @@ void ObjectManager::Render()
 
 void ObjectManager::RenderDepth()
 {
+	m_objectsToShadowRender.clear();
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
 		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
@@ -194,8 +195,17 @@ void ObjectManager::RenderDepth()
 		sphere.m_position.z += 2.0f;
 		if (m_frustum.CheckSphere(sphere, 7.5f))
 		{
-			m_staticObjects[i].RenderDepth();
+			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
+			{
+				m_objectsToShadowRender.push_back(&m_staticObjects[i]);
+			}
 		}
+	}
+	//m_objectsToShadowRender
+
+	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
+	{
+		m_objectsToShadowRender[i]->RenderDepth();
 	}
 }
 

@@ -128,7 +128,6 @@ private:
 
 	//Instancing
 	std::vector<ID3D11Buffer*> m_instanceBufferList;
-	std::vector<ID3D11Buffer*> m_dynamicInstanceBuffers;
 	std::vector<int> m_numberOfInstanceList;
 	struct InstancePos
 	{

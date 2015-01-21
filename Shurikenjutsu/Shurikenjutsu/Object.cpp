@@ -45,7 +45,7 @@ void Object::Render()
 
 void Object::RenderDepth()
 {
-	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
+	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_InstanceIndex);
 }
 
 void Object::RenderInstanced()
