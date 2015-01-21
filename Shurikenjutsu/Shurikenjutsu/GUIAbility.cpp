@@ -4,11 +4,11 @@
 GUIAbility::GUIAbility(){}
 GUIAbility::~GUIAbility(){}
 
-bool GUIAbility::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height)
+bool GUIAbility::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, ID3D11ShaderResourceView* p_texture)
 {
 	m_border.Initialize(p_position, p_width, p_height, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-	m_ability.Initialize(p_position, p_width-4.0f, p_height-4.0f, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
-	m_cooldown.Initialize(p_position, 0, 0, DirectX::XMFLOAT4(0.2f, 0.2f, 0.2f, 0.9f));
+	m_ability.Initialize(p_position, p_width - 4.0f, p_height - 4.0f, p_texture);
+	m_cooldown.Initialize(p_position, 0, 0, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_cd.png"));
 
 	return true;
 }
@@ -31,7 +31,7 @@ void GUIAbility::Update(float p_currentCooldown, float p_maxCooldown)
 
 void GUIAbility::Render()
 {
-	m_border.QueueRender();
+	//m_border.QueueRender();
 	m_ability.QueueRender();
 	m_cooldown.QueueRender();
 }
