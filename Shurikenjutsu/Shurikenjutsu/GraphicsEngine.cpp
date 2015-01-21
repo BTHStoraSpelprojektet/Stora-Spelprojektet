@@ -99,7 +99,7 @@ ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename
 {
 	ID3D11ShaderResourceView* textureView;
 	std::wstring wstring;
-	for (int i = 0; i < p_filename.length(); ++i)
+	for (unsigned int i = 0; i < p_filename.length(); ++i)
 		wstring += wchar_t(p_filename[i]);
 
 	const wchar_t* your_result = wstring.c_str();
@@ -342,7 +342,7 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 {
 
 	std::wstring wstring;
-	for (int i = 0; i < p_text.length(); ++i)
+	for (unsigned int i = 0; i < p_text.length(); ++i)
 		wstring += wchar_t(p_text[i]);
 
 	const wchar_t* your_result = wstring.c_str();
