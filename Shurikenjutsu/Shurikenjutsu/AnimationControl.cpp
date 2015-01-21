@@ -261,9 +261,9 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 	}
 }
 
-void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float directionAngle, float cross)
+void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross)
 {
-	float crossD = DirectX::XMVector3Cross(m_ikDirection, direction).m128_f32[1];
+	float crossD = DirectX::XMVector3Cross(m_ikDirection, p_direction).m128_f32[1];
 
 	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikDirection).m128_f32[0];
 
@@ -274,23 +274,23 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float dir
 
 	if (crossD > 0)
 	{
-		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle);
+			m_hipRotation = CalculateLegDirection(forwardAngle + p_directionAngle);
 		}
-		else if (directionAngle < lowMid && directionAngle > low && cross > 0)
+		else if (p_directionAngle < lowMid && p_directionAngle > low && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - directionAngle);
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - p_directionAngle);
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross <= 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
+			m_hipRotation = CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross > 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
 		}
-		else if (cross > 0)
+		else if (p_cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
@@ -301,23 +301,23 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float dir
 	}
 	else
 	{
-		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle - directionAngle);
+			m_hipRotation = CalculateLegDirection(forwardAngle - p_directionAngle);
 		}
-		else if (directionAngle < lowMid && directionAngle > low && cross > 0)
+		else if (p_directionAngle < lowMid && p_directionAngle > low && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle);
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle);
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross <= 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
+			m_hipRotation = CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross > 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
 		}
-		else if (cross > 0)
+		else if (p_cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
@@ -328,9 +328,9 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& direction, float dir
 	}
 }
 
-void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, float directionAngle, float cross)
+void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross)
 {
-	float crossD = DirectX::XMVector3Cross(m_ikLegDirectionNetwork, direction).m128_f32[1];
+	float crossD = DirectX::XMVector3Cross(m_ikLegDirectionNetwork, p_direction).m128_f32[1];
 
 	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikLegDirectionNetwork).m128_f32[0];
 
@@ -341,23 +341,23 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, fl
 
 	if (crossD > 0)
 	{
-		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle);
+			m_hipRotation = CalculateLegDirection(forwardAngle + p_directionAngle);
 		}
-		else if (directionAngle < lowMid && directionAngle > low && cross > 0)
+		else if (p_directionAngle < lowMid && p_directionAngle > low && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - directionAngle);
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - p_directionAngle);
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross <= 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
+			m_hipRotation = CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross > 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
 		}
-		/*else if (cross > 0)
+		/*else if (p_cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
@@ -368,23 +368,23 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, fl
 	}
 	else
 	{
-		if (directionAngle < lowMid && directionAngle > low && cross <= 0)
+		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle - directionAngle);
+			m_hipRotation = CalculateLegDirection(forwardAngle - p_directionAngle);
 		}
-		else if (directionAngle < lowMid && directionAngle > low && cross > 0)
+		else if (p_directionAngle < lowMid && p_directionAngle > low && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle);
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle);
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross <= 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross <= 0)
 		{
-			m_hipRotation = CalculateLegDirection(forwardAngle - (directionAngle - 3.14f));
+			m_hipRotation = CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
 		}
-		else if (directionAngle < high && directionAngle > highMid && cross > 0)
+		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross > 0)
 		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + directionAngle) - 3.14f;
+			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
 		}
-		/*else if (cross > 0)
+		/*else if (p_cross > 0)
 		{
 			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
 		}
@@ -395,11 +395,11 @@ void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& direction, fl
 	}
 }
 
-float AnimationControl::CalculateLegDirection(float forwardAngle)
+float AnimationControl::CalculateLegDirection(float p_forwardAngle)
 {
 	float piDivFour = 0.785000026f;
-	int a = (int)(forwardAngle / piDivFour);
-	float b = forwardAngle / piDivFour;
+	int a = (int)(p_forwardAngle / piDivFour);
+	float b = p_forwardAngle / piDivFour;
 
 	for (unsigned int i = 0; i < 8; i++)
 	{
@@ -442,22 +442,32 @@ void AnimationControl::Shutdown()
 	m_animationStacksArray = NULL;
 }
 
-void AnimationControl::RangeAttack()
+void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 {
 	if (!m_attackAnimation)
 	{
-		m_currentArms = m_animationStacksArray[11];
 		m_frameArms = 0.0f;
 		m_attackAnimation = true;
-	}	
-}
 
-void AnimationControl::MeleeAttack()
-{
-	if (!m_attackAnimation)
-	{
-		m_currentArms = m_animationStacksArray[10];
-		m_frameArms = 0.0f;
-		m_attackAnimation = true;
-	}
+		if (p_newState == AnimationState::Melee)
+		{
+			m_currentArms = m_animationStacksArray[10];
+		}
+		else if (p_newState == AnimationState::Range)
+		{
+			m_currentArms = m_animationStacksArray[11];
+		}
+		else if (p_newState == AnimationState::Special1)
+		{
+			//m_currentArms = m_animationStacksArray[9];
+		}
+		else if (p_newState == AnimationState::Special2)
+		{
+			//m_currentArms = m_animationStacksArray[9];
+		}
+		else if (p_newState == AnimationState::Tool)
+		{
+			//m_currentArms = m_animationStacksArray[9];
+		}
+	}	
 }
