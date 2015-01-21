@@ -90,7 +90,7 @@ void PlayerManager::Update()
 		m_enemyUpdatePositionTimer += (float)deltaTime;
 		for (unsigned int i = 0; i < m_enemyList.size(); i++)
 		{
-			if (m_enemyUpdatePositionTimer > 0.02f)
+			if (m_enemyUpdatePositionTimer > 0.03f)
 			{
 				m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
 
