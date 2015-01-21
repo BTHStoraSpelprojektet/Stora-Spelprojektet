@@ -103,6 +103,7 @@ void PlayerManager::Update()
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i].SetIsAlive(enemyPlayers[i].isAlive);
+			m_enemyList[i].SetTeam(enemyPlayers[i].team);
 			m_enemyList[i].Update();
 		}
 	}

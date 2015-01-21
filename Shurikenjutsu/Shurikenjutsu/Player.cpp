@@ -35,6 +35,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_healthbar.Initialize(50.0f, 5.0f);
 	m_healthbar.Initialize(100.0f, 15.0f);
 
+	m_team = 0;
+
 	return true;
 }
 
@@ -80,12 +82,13 @@ void Player::Shutdown()
 
 void Player::UpdateMe()
 {
-	// Check health and isAlive from server
+	// Check values from server
 	if (Network::GetInstance()->IsConnected())
 	{
 		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
+		SetTeam(Network::GetInstance()->GetMyPlayer().team);
 	}
 
 	m_playerSphere.m_position = m_position;
@@ -459,6 +462,11 @@ void Player::Render()
 void Player::SetIsAlive(bool p_isAlive)
 {
 	m_isAlive = p_isAlive;
+}
+
+void Player::SetTeam(int p_team)
+{
+	m_team = p_team;
 }
 
 void Player::DoAnimation()
