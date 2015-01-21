@@ -1,7 +1,7 @@
 #ifndef GUIABILITY_H_
 #define GUIABILITY_H_
 
-#include "GUIElement.h"
+#include "GUIElementColor.h"
 
 class GUIAbility
 {
@@ -15,8 +15,8 @@ public:
 
 private:
 	
-	GUIElement m_border;
-	GUIElement m_ability;
-	GUIElement m_cooldown;
+	GUIElementColor m_border;
+	GUIElementColor m_ability;
+	GUIElementColor m_cooldown;
 };
 #endif // !GUIABILITY_H_

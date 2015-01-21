@@ -109,27 +109,27 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	std::vector<GUIVertex> quad;
 	
 	GUIVertex vertex;
-	vertex.m_position = DirectX::XMFLOAT3(1.0f, -1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(0.5f, -0.5f, 0);
 	vertex.m_textureCoordinates = DirectX::XMFLOAT2(1, 1);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(-1.0f, -1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(-0.5f, -0.5f, 0);
 	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 1);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(-1.0f, 1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(-0.5f, 0.5f, 0);
 	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 0);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(-1.0f, 1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(-0.5f, 0.5f, 0);
 	vertex.m_textureCoordinates = DirectX::XMFLOAT2(0, 0);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(1.0f, 1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(0.5f, 0.5f, 0);
 	vertex.m_textureCoordinates = DirectX::XMFLOAT2(1, 0);
 	quad.push_back(vertex);
 
-	vertex.m_position = DirectX::XMFLOAT3(1.0f, -1.0f, 0);
+	vertex.m_position = DirectX::XMFLOAT3(0.5f, -0.5f, 0);
 	vertex.m_textureCoordinates = DirectX::XMFLOAT2(1, 1);
 	quad.push_back(vertex);
 

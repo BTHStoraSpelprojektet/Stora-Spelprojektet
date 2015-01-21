@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "Menu.h"
+#include "TextureLibrary.h"
 
 class ChooseState : public GameState
 {
@@ -18,6 +19,9 @@ public:
 
 private:
 	Menu m_chooseButton;
+
+	MenuItem m_ninjas[4];
+
 	int currentNinja;
 	int nrOfNinjas;
 };

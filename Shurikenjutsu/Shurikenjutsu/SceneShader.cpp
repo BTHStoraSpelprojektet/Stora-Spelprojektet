@@ -548,7 +548,10 @@ void SceneShader::Shutdown()
 	m_samplerShadowMapState->Release();
 	m_rasterizerStateBackCulled->Release();
 	m_rasterizerStateNoneCulled->Release();
-	m_shadowMap->Release();
+	if (m_shadowMap != nullptr)
+	{
+		m_shadowMap->Release();
+	}
 	m_matrixBuffer->Release();
 	m_fogBuffer->Release();
 	m_animationMatrixBuffer->Release();
