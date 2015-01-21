@@ -22,6 +22,15 @@
 
 #include "ConsoleFunctions.h"
 
+enum NETWORKSTATUS
+{
+	NETWORKSTATUS_CONNECTING,
+	NETWORKSTATUS_CONNECTED,
+	NETWORKSTATUS_LOST,
+	NETWORKSTATUS_TIMEOUT,
+	NETWORKSTATUS_NONE
+};
+
 class Network
 {
 public:
@@ -35,6 +44,8 @@ public:
 	void Shutdown();
 
 	void Update();
+
+	void Connect(std::string p_ip);
 
 	bool ConnectedNow();
 	bool IsConnected();
@@ -71,6 +82,12 @@ public:
 	bool NewLevel();
 	void SetHaveUpdateNewLevel();
 	std::string LevelName();
+
+	NETWORKSTATUS GetNetworkStatus();
+	void SetNetworkStatusConnecting();
+
+	void SendAnimationState(AnimationState p_state);
+	int AnimationChanged(RakNet::RakNetGUID p_guid);
 
 private:
 	Network();
@@ -115,6 +132,10 @@ private:
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
+	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
+
+	NETWORKSTATUS m_networkStatus;
+	std::string m_ip;
 
 };
 #endif

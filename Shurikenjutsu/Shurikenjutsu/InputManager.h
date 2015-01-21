@@ -35,6 +35,9 @@ public:
 
 	void RegisterKey(int p_vkey);
 
+	char GetLastCharRead() const;
+
+
 private:
 	static InputManager* m_instance;
 
@@ -50,6 +53,8 @@ private:
 	int m_mousePositionY;
 	int m_mousePositionX_prev;
 	int m_mousePositionY_prev;
+
+	char m_lastCharRead;
 };
 
 #endif

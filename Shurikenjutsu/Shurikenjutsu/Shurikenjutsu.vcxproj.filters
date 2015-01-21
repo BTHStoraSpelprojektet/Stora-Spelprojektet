@@ -273,9 +273,6 @@
     <ClCompile Include="GUIShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
-    <ClCompile Include="InstancedShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
     <ClCompile Include="SceneShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
@@ -368,6 +365,12 @@
     </ClCompile>
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuIpBox.cpp">
+      <Filter>Source Files\GUI\Menu\Menu Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIText.cpp">
+      <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -584,6 +587,12 @@
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="MenuIpBox.h">
+      <Filter>Header Files\GUI\Menu\Menu Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIText.h">
+      <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -630,6 +639,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\Scene\VertexShader.hlsl">
       <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Depth\InstancingDepthVertexShader.hlsl">
+      <Filter>Shaders\Depth</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

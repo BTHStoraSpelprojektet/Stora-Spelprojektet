@@ -275,22 +275,24 @@ void ParticleEmitter::UpdateParticles()
 		// Smoke moves outwards in a circle.
 		case(PARTICLE_PATTERN_SMOKE) :
 		{
-			for (unsigned int i = 0; i < m_currentParticles; i++)
-			{
-				// TODO bågformel.
-				float halfTime = m_particleList[i].m_timeToLive / 2.0f;
-				float angle = 30.0f * 3.14159265359 / 180;
-				float height = 3.0f;
-				float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
+			if (m_particleList != NULL){
+				for (unsigned int i = 0; i < m_currentParticles; i++)
+				{
+					// TODO bågformel.
+					float halfTime = m_particleList[i].m_timeToLive / 2.0f;
+					float angle = 30.0f * (float)3.14159265359 / 180;
+					float height = 3.0f;
+					float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
 
 
-				// Fly in an arc in the given xz direction.
-				m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
-				m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
-				m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
+					// Fly in an arc in the given xz direction.
+					m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
+					m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
 
-				// Add time passed.
-				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
 			}
 
 			break;
@@ -299,17 +301,19 @@ void ParticleEmitter::UpdateParticles()
 		// Fire just moves right up, ignoring direction.
 		case(PARTICLE_PATTERN_FIRE) :
 		{
-			for (unsigned int i = 0; i < m_currentParticles; i++)
-			{
-				// TODO kanske ge droppform.
+			if (m_particleList != NULL){
+				for (unsigned int i = 0; i < m_currentParticles; i++)
+				{
+					// TODO kanske ge droppform.
 
-				// Burn upwards, ignoring direction.
-				//m_particleList[i].m_position.x = ;
-				m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
-				//m_particleList[i].m_position.z = ;
+					// Burn upwards, ignoring direction.
+					//m_particleList[i].m_position.x = ;
+					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+					//m_particleList[i].m_position.z = ;
 
-				// Add time passed.
-				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
 			}
 
 			break;
@@ -327,22 +331,25 @@ void ParticleEmitter::ClearOldParticles()
 	// Kill all dying particles.
 	for (unsigned int i = 0; i < m_maxParticles; i++)
 	{
-		if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive)
+		if (m_particleList != NULL)
 		{
-			m_particleList[i].m_alive = false;
-			m_currentParticles--;
-
-			// Now move all the live particles, to keep the array sorted.
-			for (unsigned int j = i; j < m_maxParticles - 1; j++)
+			if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive)
 			{
-				m_particleList[j].m_position	= m_particleList[j + 1].m_position;
-				m_particleList[j].m_direction	= m_particleList[j + 1].m_direction;
-				m_particleList[j].m_color		= m_particleList[j + 1].m_color;
-				m_particleList[j].m_velocity	= m_particleList[j + 1].m_velocity;
-				m_particleList[j].m_alive		= m_particleList[j + 1].m_alive;
-				m_particleList[j].m_timeToLive	= m_particleList[j + 1].m_timeToLive;
-				m_particleList[j].m_timePassed	= m_particleList[j + 1].m_timePassed;
-				m_particleList[j].m_rotation	= m_particleList[j + 1].m_rotation;
+				m_particleList[i].m_alive = false;
+				m_currentParticles--;
+
+				// Now move all the live particles, to keep the array sorted.
+				for (unsigned int j = i; j < m_maxParticles - 1; j++)
+				{
+					m_particleList[j].m_position = m_particleList[j + 1].m_position;
+					m_particleList[j].m_direction = m_particleList[j + 1].m_direction;
+					m_particleList[j].m_color = m_particleList[j + 1].m_color;
+					m_particleList[j].m_velocity = m_particleList[j + 1].m_velocity;
+					m_particleList[j].m_alive = m_particleList[j + 1].m_alive;
+					m_particleList[j].m_timeToLive = m_particleList[j + 1].m_timeToLive;
+					m_particleList[j].m_timePassed = m_particleList[j + 1].m_timePassed;
+					m_particleList[j].m_rotation = m_particleList[j + 1].m_rotation;
+				}
 			}
 		}
 	}
