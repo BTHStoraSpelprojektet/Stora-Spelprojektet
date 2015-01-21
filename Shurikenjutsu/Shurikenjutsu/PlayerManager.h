@@ -49,6 +49,7 @@ private:
 
 	Frustum m_frustum;
 
+	float updatePos;
 };
 
 #endif PLAYERMANAGER
