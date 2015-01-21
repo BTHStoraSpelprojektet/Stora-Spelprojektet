@@ -11,6 +11,7 @@
 #include "InputManager.h"
 #include "ObjectManager.h"
 #include "..\CommonLibs\ModelLibrary.h"
+#include "TextureLibrary.h"
 
 #include "ConsoleFunctions.h"
 
@@ -55,6 +56,6 @@ private:
 	ChooseState	m_chooseNinjaState;
 	GameState* m_gameState;
 
-	//Sound* m_sound;
+	Sound* m_sound;
 };
 #endif

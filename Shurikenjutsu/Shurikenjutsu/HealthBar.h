@@ -1,7 +1,7 @@
 #ifndef HEALTHBAR_H_
 #define HEALTHBAR_H_
 
-#include "GUIElement.h"
+#include "GUIElementColor.h"
 #include <DirectXMath.h>
 #include "Globals.h"
 
@@ -18,9 +18,9 @@ private:
 
 	void CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
-	GUIElement m_border;
-	GUIElement m_background;
-	GUIElement m_foreground;
+	GUIElementColor m_border;
+	GUIElementColor m_background;
+	GUIElementColor m_foreground;
 
 };
 

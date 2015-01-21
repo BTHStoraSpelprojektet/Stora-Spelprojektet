@@ -2,8 +2,9 @@
 #define GRAPHICSENGINE
 
 #include "DirectX.h"
+#include "DirectXTex\DirectXTex.h"
+#include "WICTextureLoader.h"
 #include "SceneShader.h"
-#include "InstancedShader.h"
 #include "GUIShader.h"
 #include "DepthShader.h"
 #include "RenderTarget.h"
@@ -26,6 +27,8 @@ public:
 	static ID3D11DeviceContext* GetContext();
 	static D3D_FEATURE_LEVEL GetVersion();
 	
+	static ID3D11ShaderResourceView* Create2DTexture(std::string p_filename);
+
 	static void RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
 
 	static void RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
@@ -76,7 +79,6 @@ private:
 	static DirectXWrapper m_directX;
 
 	static SceneShader m_sceneShader;
-	static InstancedShader m_instanceShader;
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 	static ParticleShader m_particleShader;
