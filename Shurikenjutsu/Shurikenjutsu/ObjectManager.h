@@ -32,6 +32,7 @@ public:
 	void UpdateFrustum(Frustum* p_frustum);
 private:
 	bool CheckIfModelIsInObjectToRenderList(Object *p_object);
+	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);
 
 	std::vector<SmokeBomb> m_smokeBombList;
 	std::vector<Shuriken> m_shurikens;
