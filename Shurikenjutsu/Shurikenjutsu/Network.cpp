@@ -821,3 +821,13 @@ std::string Network::LevelName()
 {
 	return m_levelName;
 }
+
+void Network::SendAnimationState(AnimationState p_state)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_ANIMATION_CHANGED);
+	bitStream.Write(p_state);
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(SERVER_ADDRESS, SERVER_PORT), false);
+}

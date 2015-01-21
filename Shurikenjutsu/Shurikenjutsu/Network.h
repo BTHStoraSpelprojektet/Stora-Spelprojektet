@@ -72,6 +72,8 @@ public:
 	void SetHaveUpdateNewLevel();
 	std::string LevelName();
 
+	void SendAnimationState(AnimationState p_state);
+
 private:
 	Network();
 	~Network();
