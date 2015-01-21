@@ -49,7 +49,7 @@ private:
 
 	Frustum m_frustum;
 
-	float updatePos;
+	float m_enemyUpdatePositionTimer;
 };
 
 #endif PLAYERMANAGER

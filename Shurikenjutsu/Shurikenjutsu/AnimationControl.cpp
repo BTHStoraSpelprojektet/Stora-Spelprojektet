@@ -160,7 +160,7 @@ void AnimationControl::SetIkDirection(DirectX::XMFLOAT3 p_direction)
 	if (DirectX::XMVector3Length(direction).m128_f32[0] != 0.0f)
 	{
 		m_ikDirection = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
-		m_ikLegDirectionNetwork = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+		m_ikLegDirection = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
 	}
 }
 
@@ -225,11 +225,9 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 {
 	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
 
-	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikLegDirectionNetwork, direction).m128_f32[0];
+	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikLegDirection, direction).m128_f32[0];
 
-	tempFloat.push_back(directionAngle);
-
-	float cross = DirectX::XMVector3Cross(m_ikLegDirectionNetwork, m_forwardDirection).m128_f32[1];
+	float cross = DirectX::XMVector3Cross(m_ikLegDirection, m_forwardDirection).m128_f32[1];
 
 	if (m_animationStacks.size() > 0)
 	{  
@@ -259,82 +257,15 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 			m_currentLegs = m_animationStacksArray[4];
 		}
 
-		ApplyLegDirectionNetwork(direction, directionAngle, cross);	
+		ApplyLegDirection(direction, directionAngle, cross);	
 	}
 }
 
 void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross)
 {
-	float crossD = DirectX::XMVector3Cross(m_ikDirection, p_direction).m128_f32[1];
+	float crossD = DirectX::XMVector3Cross(m_ikLegDirection, p_direction).m128_f32[1];
 
-	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikDirection).m128_f32[0];
-
-	float low = 3.14f * 0.125f;
-	float lowMid = 3.14f * 0.375f;
-	float highMid = 3.14f * 0.625f;
-	float high = 3.14f * 0.875f;
-
-	if (crossD > 0)
-	{
-		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
-		{
-			m_hipRotation = CalculateLegDirection(forwardAngle + p_directionAngle);
-		}
-		else if (p_directionAngle < lowMid && p_directionAngle > low && p_cross > 0)
-		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - p_directionAngle);
-		}
-		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross <= 0)
-		{
-			m_hipRotation = CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
-		}
-		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross > 0)
-		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
-		}
-		else if (p_cross > 0)
-		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
-		}
-		else
-		{
-			m_hipRotation = CalculateLegDirection(forwardAngle);
-		}
-	}
-	else
-	{
-		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
-		{
-			m_hipRotation = CalculateLegDirection(forwardAngle - p_directionAngle);
-		}
-		else if (p_directionAngle < lowMid && p_directionAngle > low && p_cross > 0)
-		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle);
-		}
-		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross <= 0)
-		{
-			m_hipRotation = CalculateLegDirection(forwardAngle - (p_directionAngle - 3.14f));
-		}
-		else if (p_directionAngle < high && p_directionAngle > highMid && p_cross > 0)
-		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle + p_directionAngle) - 3.14f;
-		}
-		else if (p_cross > 0)
-		{
-			m_hipRotation = 6.28f - CalculateLegDirection(forwardAngle);
-		}
-		else
-		{
-			m_hipRotation = CalculateLegDirection(forwardAngle);
-		}
-	}
-}
-
-void AnimationControl::ApplyLegDirectionNetwork(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross)
-{
-	float crossD = DirectX::XMVector3Cross(m_ikLegDirectionNetwork, p_direction).m128_f32[1];
-
-	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikLegDirectionNetwork).m128_f32[0];
+	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikLegDirection).m128_f32[0];
 
 	float low = 3.14f * 0.125f;
 	float lowMid = 3.14f * 0.375f;
