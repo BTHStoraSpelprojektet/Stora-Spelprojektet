@@ -455,7 +455,7 @@ void Player::Render()
 {
 	if (m_isAlive)
 	{
-		AnimatedObject::Render();
+		AnimatedObject::Render(m_team);
 		m_healthbar.Render();
 	}
 }
