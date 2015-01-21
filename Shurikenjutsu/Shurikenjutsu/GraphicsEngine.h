@@ -11,6 +11,7 @@
 
 #include "Enumerations.h"
 #include "Globals.h"
+#include "FW1FontWrapper.h"
 
 class GraphicsEngine
 {
@@ -38,7 +39,7 @@ public:
 	static void RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
 	static void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 	static void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-
+	static void RenderText(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color);
 	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
@@ -82,5 +83,8 @@ private:
 	static HWND m_windowHandle;
 
 	static RenderTarget m_shadowMap;
+
+	static IFW1Factory *pFW1Factory;
+	static IFW1FontWrapper *pFontWrapper;
 };
 #endif;

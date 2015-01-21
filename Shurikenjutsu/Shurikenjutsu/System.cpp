@@ -7,8 +7,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	bool result = true;
 
 	// Set default game state.
-	//playingState = PlayingStateTest();
-	m_gameState = &playingState;
+	playingState = PlayingStateTest();
+	m_gameState = &m_menuState;
 
 	// Set starting window values.
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
@@ -156,6 +156,7 @@ void System::Shutdown()
 	m_sound->Shutdown();
 
 	GUIManager::GetInstance()->Shutdown();
+
 }
 
 void System::Run()

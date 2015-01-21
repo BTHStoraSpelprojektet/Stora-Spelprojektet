@@ -43,8 +43,8 @@
     <IncludePath>..\Shurikenjutsu\GTest\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\Shurikenjutsu\GTest\libs\Debug</LibraryPath>
-    <IncludePath>..\Shurikenjutsu\GTest\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);..\Shurikenjutsu\GTest\libs\Debug;..\Shurikenjutsu\FW1FontWrapper_1_1\x86</LibraryPath>
+    <IncludePath>..\Shurikenjutsu\GTest\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);..\Shurikenjutsu\FW1FontWrapper_1_1</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -52,14 +52,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;..\Shurikenjutsu\FW1FontWrapper_1_1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;CommonLibs.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Shurikenjutsu\FMOD\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Shurikenjutsu\FMOD\lib;$(OutDir);..\Shurikenjutsu\FW1FontWrapper_1_1\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;FW1FontWrapper.lib;fmodL64_vc.lib;gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -88,6 +88,7 @@
     <ClCompile Include="AnimationControl.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="GUIText.cpp" />
     <ClCompile Include="MenuCheckbox.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Collisions.cpp" />
@@ -120,6 +121,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MeleeSwing.cpp" />
+    <ClCompile Include="MenuIpBox.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -154,6 +156,7 @@
     <ClInclude Include="AnimationControl.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="GUIText.h" />
     <ClInclude Include="MenuCheckbox.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MeleeSwing.h" />
+    <ClInclude Include="MenuIpBox.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Model.h" />

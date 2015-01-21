@@ -1,10 +1,11 @@
 #ifndef GUIMANAGER_H_
 #define GUIMANAGER_H_
 
-#include <vector>
 #include "GraphicsEngine.h"
 #include "GUIElement.h"
+#include "GUIText.h"
 
+class GUIText;
 class GUIElement;
 class GUIManager
 {
@@ -18,6 +19,7 @@ public:
 
 	void Render();
 	void AddToRenderQueue(GUIElement* p_element);
+	void AddToRenderQueue(GUIText* p_text);
 
 private:
 	static GUIManager* m_instance;
@@ -25,6 +27,7 @@ private:
 	~GUIManager();
 
 	std::vector<GUIElement*> m_elements;
+	std::vector<GUIText*> m_texts;
 };
 
 #endif

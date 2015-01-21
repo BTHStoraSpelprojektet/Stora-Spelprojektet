@@ -3,6 +3,7 @@
 
 #include "MenuButton.h"
 #include "MenuCheckbox.h"
+#include "MenuIpBox.h"
 #include <vector>
 
 struct MenuActionData
