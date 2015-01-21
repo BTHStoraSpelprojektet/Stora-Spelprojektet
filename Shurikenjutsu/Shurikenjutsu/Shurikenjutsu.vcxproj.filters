@@ -360,13 +360,13 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="..\DirectXTex\WICTextureLoader\WICTextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GUIElementColor.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
     <ClCompile Include="TextureLibrary.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -575,13 +575,13 @@
     <ClInclude Include="QuadTree.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="..\DirectXTex\WICTextureLoader\WICTextureLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GUIElementColor.h">
       <Filter>Header Files\GUI\Internal</Filter>
     </ClInclude>
     <ClInclude Include="TextureLibrary.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
