@@ -11,6 +11,7 @@
 #include "InputManager.h"
 #include "ObjectManager.h"
 #include "..\CommonLibs\ModelLibrary.h"
+#include "TextureLibrary.h"
 
 #include "ConsoleFunctions.h"
 
