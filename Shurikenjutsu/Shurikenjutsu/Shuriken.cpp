@@ -1,9 +1,9 @@
 #include "Shuriken.h"
 #include "Globals.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 
 Shuriken::Shuriken(){}
-
 Shuriken::~Shuriken(){}
 
 bool Shuriken::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID)

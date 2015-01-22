@@ -7,6 +7,7 @@
 #include "ObjectManager.h"
 #include "Frustum.h"
 #include "Camera.h"
+#include "Globals.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}

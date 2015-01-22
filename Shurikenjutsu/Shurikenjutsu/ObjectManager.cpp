@@ -2,6 +2,7 @@
 #include "Flags.h"
 #include "Network.h"
 #include "Frustum.h"
+#include "Globals.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -209,7 +210,7 @@ void ObjectManager::RenderDepth()
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
-		m_smokeBombList[i].GetBomb().RenderDepth();
+		m_smokeBombList[i].GetBomb()->RenderDepth();
 	}
 
 }
