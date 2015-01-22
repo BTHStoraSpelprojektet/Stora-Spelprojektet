@@ -24,7 +24,10 @@ bool MapManager::Initialize(std::string p_levelName)
 		std::vector<Sphere> boundingSpheres = ModelLibrary::GetInstance()->GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingSpheres();
 		for each(Sphere sphere in boundingSpheres)
 		{
-			m_boundingSpheres.push_back(sphere);
+			Sphere tmp;
+			tmp.m_position = DirectX::XMFLOAT3(sphere.m_position.x + mapObject.m_translationX, sphere.m_position.y + mapObject.m_translationY, sphere.m_position.z + mapObject.m_translationZ);
+			tmp.m_radius = sphere.m_radius;
+			m_boundingSpheres.push_back(tmp);
 		}
 
 		std::vector<Box> boundingBoxes = ModelLibrary::GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingBoxes();
