@@ -17,6 +17,7 @@ public:
 	std::vector<Sphere> GetBoundingSpheres();
 private:
 	std::vector<OBB> TransformToOBB(std::vector<Box> p_boxList, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_rotation);
+	std::vector<Sphere> TransformToSphere(std::vector<Sphere> p_sphereInList, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_rotation);
 
 	std::vector<LevelImporter::CommonObject> m_mapObjects;
 	std::vector<OBB> m_boundingBoxes;

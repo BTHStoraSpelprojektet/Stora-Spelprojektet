@@ -21,19 +21,21 @@ bool MapManager::Initialize(std::string p_levelName)
 
 	for each (LevelImporter::CommonObject mapObject in m_mapObjects)
 	{
+		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(mapObject.m_translationX, mapObject.m_translationY, mapObject.m_translationZ);
+		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(mapObject.m_rotationX, mapObject.m_rotationY, mapObject.m_rotationZ);
+
+
 		std::vector<Sphere> boundingSpheres = ModelLibrary::GetInstance()->GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingSpheres();
-		for each(Sphere sphere in boundingSpheres)
+		std::vector<Sphere> sphereList = TransformToSphere(boundingSpheres, position, rotation);
+		for each(Sphere sphere in sphereList)
 		{
 			Sphere tmp;
-			tmp.m_position = DirectX::XMFLOAT3(sphere.m_position.x + mapObject.m_translationX, sphere.m_position.y + mapObject.m_translationY, sphere.m_position.z + mapObject.m_translationZ);
+			tmp.m_position = DirectX::XMFLOAT3(sphere.m_position.x + (mapObject.m_translationX * mapObject.m_rotationX), sphere.m_position.y + (mapObject.m_translationY * mapObject.m_rotationY), sphere.m_position.z + (mapObject.m_translationZ * mapObject.m_rotationZ));
 			tmp.m_radius = sphere.m_radius;
 			m_boundingSpheres.push_back(tmp);
 		}
 
 		std::vector<Box> boundingBoxes = ModelLibrary::GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingBoxes();
-		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(mapObject.m_translationX, mapObject.m_translationY, mapObject.m_translationZ);
-		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(mapObject.m_rotationX, mapObject.m_rotationY, mapObject.m_rotationZ);
-		
 		std::vector<OBB> obbList = TransformToOBB(boundingBoxes, position, rotation);
 		for each(OBB box in obbList)
 		{
@@ -95,4 +97,33 @@ std::vector<OBB> MapManager::TransformToOBB(std::vector<Box> p_boxList, DirectX:
 	}
 
 	return obbList;
+}
+
+std::vector<Sphere> MapManager::TransformToSphere(std::vector<Sphere> p_sphereInList, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_rotation)
+{
+	std::vector<Sphere> sphereOutList = std::vector<Sphere>();
+
+	DirectX::XMFLOAT4X4 world;
+	DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f); // scale = 1?
+
+	DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&scale)) *
+		DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation)) *
+		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&p_position)));
+
+	DirectX::XMFLOAT4 orientation;
+	DirectX::XMStoreFloat4(&orientation, DirectX::XMQuaternionRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&p_rotation)));
+
+	for each(Sphere sphere in p_sphereInList)
+	{
+		Sphere temp;
+		temp.m_position = sphere.m_position;
+		DirectX::XMFLOAT4 center = DirectX::XMFLOAT4(temp.m_position.x, temp.m_position.y, temp.m_position.z, 1.0f);
+		DirectX::XMVECTOR transCenter = DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&center), DirectX::XMLoadFloat4x4(&world));
+		DirectX::XMStoreFloat3(&temp.m_position, transCenter);
+		temp.m_radius = sphere.m_radius;
+
+		sphereOutList.push_back(temp);
+	}
+
+	return sphereOutList;
 }
