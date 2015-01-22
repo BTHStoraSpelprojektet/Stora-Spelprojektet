@@ -9,7 +9,6 @@
 #include "AnimationControl.h"
 #include <DirectXCollision.h>
 #include "DebugDraw.h"
-#include "ShadowShapes.h"
 
 class Object
 {
