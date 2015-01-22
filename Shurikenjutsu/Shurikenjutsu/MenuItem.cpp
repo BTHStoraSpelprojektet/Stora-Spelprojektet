@@ -1,5 +1,8 @@
 #include "MenuItem.h"
-
+#include "Globals.h"
+#include "GUIElement.h"
+#include "InputManager.h"
+#include "GUIElement.h"
 
 MenuItem::MenuItem(){}
 MenuItem::~MenuItem(){}
@@ -13,8 +16,8 @@ bool MenuItem::Initialize(float p_x, float p_y, float p_width, float p_height, M
 	m_action = p_action;
 
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_x, p_y, 1.0f);
-
-	m_background.Initialize(position, m_width, m_height, p_texture);
+	m_background = new GUIElement();
+	m_background->Initialize(position, m_width, m_height, p_texture);
 	
 	return true;
 }
@@ -26,7 +29,7 @@ bool MenuItem::Initialize(float p_x, float p_y, float p_size, MENUACTION p_actio
 
 void MenuItem::Render()
 {
-	m_background.QueueRender();
+	m_background->QueueRender();
 }
 
 bool MenuItem::IsClicked()
@@ -66,5 +69,5 @@ MENUACTION MenuItem::GetAction()
 
 void MenuItem::SetBackgroundTexture(ID3D11ShaderResourceView* p_texture)
 {
-	m_background.SetTexture(p_texture);
+	m_background->SetTexture(p_texture);
 }

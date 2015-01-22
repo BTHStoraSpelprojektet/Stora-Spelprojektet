@@ -3,6 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include "AnimatedObject.h"
+#include "Network.h"
 
 
 class Ability;

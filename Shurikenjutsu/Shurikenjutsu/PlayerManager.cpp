@@ -1,6 +1,7 @@
 #include "PlayerManager.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "Frustum.h"
+#include "Globals.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -15,8 +16,11 @@ bool PlayerManager::Initialize()
 
 void PlayerManager::Shutdown()
 {
-	m_player->Shutdown();
-	delete m_player;
+	if (m_player != nullptr)
+	{
+		m_player->Shutdown();
+		delete m_player;
+	}
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
 		m_enemyList[i].Shutdown();

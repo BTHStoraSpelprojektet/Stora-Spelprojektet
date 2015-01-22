@@ -1,14 +1,13 @@
 #ifndef GUIMANAGER_H_
 #define GUIMANAGER_H_
 
-#include "GraphicsEngine.h"
-#include "GUIElement.h"
-#include "GUIText.h"
-#include "GUIElementColor.h"
+#include <D3D11.h>
+#include <vector>
 
 class GUIText;
 class GUIElement;
 class GUIElementColor;
+
 class GUIManager
 {
 public:

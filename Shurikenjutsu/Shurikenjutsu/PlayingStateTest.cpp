@@ -6,6 +6,7 @@
 #include "PlayerManager.h"
 #include "ObjectManager.h"
 #include "Frustum.h"
+#include "Camera.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -16,9 +17,10 @@ bool PlayingStateTest::Initialize()
 
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
-	m_camera.Initialize();
+	m_camera = new Camera();
+	m_camera->Initialize();
 
-	m_camera.ResetCamera();
+	m_camera->ResetCamera();
 
 	//Load level
 	Level level(p_levelName);
@@ -65,19 +67,26 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 void PlayingStateTest::Shutdown()
 {
-	m_camera.Shutdown();
-	m_playerManager->Shutdown();
-	delete m_playerManager;
-	m_objectManager->Shutdown();
-	delete m_objectManager;
+	m_camera->Shutdown();
+	delete m_camera;
+	if (m_playerManager != NULL)
+	{
+		m_playerManager->Shutdown();
+		delete m_playerManager;
+	}
+	if (m_objectManager != NULL)
+	{
+		m_objectManager->Shutdown();
+		delete m_objectManager;
+	}
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-	m_circle1.Shutdown();
-	m_circle2.Shutdown();
-	m_circle3.Shutdown();
+		m_circle1.Shutdown();
+		m_circle2.Shutdown();
+		m_circle3.Shutdown();
 
-	m_debugDot.Shutdown();
+		m_debugDot.Shutdown();
 	}
 
 	//m_particles.Shutdown();
@@ -104,12 +113,12 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager->Update();
 
 	// Handle camera input.
-	m_camera.HandleInput();
+	m_camera->HandleInput();
 
 	// The camera should follow the character if not flying.
 	if (!GLOBAL::GetInstance().CAMERA_FLYING)
 	{
-		m_camera.FollowCharacter(m_playerManager->GetPlayerPosition());
+		m_camera->FollowCharacter(m_playerManager->GetPlayerPosition());
 	}
 
 	// Get picking data.
@@ -122,7 +131,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update the particles.
 	//m_particles.Update();
 	// ========== DEBUG TEMP LINES ==========
-	m_playerManager->UpdateHealthbars(m_camera.GetViewMatrix(), m_camera.GetProjectionMatrix());
+	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	// Update frustum
@@ -136,7 +145,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	}
 	if (m_updateFrustum)
 	{
-		m_frustum->ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+		m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 		m_objectManager->UpdateFrustum(m_frustum);
 		m_playerManager->UpdateFrustum(m_frustum);
 	}
@@ -202,7 +211,7 @@ void PlayingStateTest::Render()
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 {
-	m_camera.ToggleFullscreen(p_fullscreen);
+	m_camera->ToggleFullscreen(p_fullscreen);
 }
 
 void PlayingStateTest::BasicPicking()
@@ -222,7 +231,7 @@ void PlayingStateTest::BasicPicking()
 	DirectX::XMFLOAT3 rayDir;
 	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
-	DirectX::XMFLOAT4X4 proj = m_camera.GetProjectionMatrix();
+	DirectX::XMFLOAT4X4 proj = m_camera->GetProjectionMatrix();
 	float viewSpaceX = (2.0f * (float)mousePosX / (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 1) / proj._11;
 	float viewSpaceY = -((2.0f * (float)mousePosY / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT - 1) / proj._22);
 	float viewSpaceZ = 1.0f;
@@ -231,7 +240,7 @@ void PlayingStateTest::BasicPicking()
 
 	DirectX::XMFLOAT4X4 viewInverse;
 	DirectX::XMVECTOR determinant;
-	DirectX::XMStoreFloat4x4(&viewInverse, DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&m_camera.GetViewMatrix())));
+	DirectX::XMStoreFloat4x4(&viewInverse, DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 
 	DirectX::XMStoreFloat3(&rayPos,DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&rayPos), DirectX::XMLoadFloat4x4(&viewInverse)));
 	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&rayDir), DirectX::XMLoadFloat4x4(&viewInverse)));

@@ -19,6 +19,7 @@ public:
 	~Menu();
 
 	MenuActionData Update();
+	void Shutdown();
 	void Render();
 	void AddButton(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
 	void AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
@@ -26,8 +27,8 @@ public:
 
 private:
 	
-	std::vector<MenuButton> m_buttons;
-	std::vector<MenuCheckbox> m_checkboxes;
+	std::vector<MenuButton*> m_buttons;
+	std::vector<MenuCheckbox*> m_checkboxes;
 };
 
 #endif

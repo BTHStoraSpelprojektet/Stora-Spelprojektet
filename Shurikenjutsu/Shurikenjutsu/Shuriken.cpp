@@ -1,4 +1,5 @@
 #include "Shuriken.h"
+#include "Globals.h"
 
 
 Shuriken::Shuriken(){}

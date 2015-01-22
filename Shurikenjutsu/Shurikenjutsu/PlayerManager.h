@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "Player.h"
 #include <vector>
+#include <DirectXCollision.h>
 
 class Frustum;
 class AbilityBar;

@@ -13,6 +13,7 @@
 #include "HealthBar.h"
 #include "AbilityBar.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
+#include "AnimationControl.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -94,6 +95,11 @@ void Player::Shutdown()
 	{
 		m_smokeBombAbility->Shutdown();
 		delete m_smokeBombAbility;
+	}
+	if (m_healthbar != nullptr)
+	{
+		m_healthbar->Shutdown();
+		delete m_healthbar;
 	}
 
 	/*if (m_abilityBar != nullptr)

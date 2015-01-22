@@ -12,12 +12,16 @@
 #include "GameState.h"
 #include "..\CommonLibs\ModelLibrary.h"
 #include "Model.h"
+#include "InputManager.h"
+#include "Globals.h"
+#include "TextureLibrary.h"
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	bool result = true;
 	
-	// Set default game state.
+	// Set default game state.s
+	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
 	m_playingState = new PlayingStateTest();
 	m_gameState = m_menuState;
@@ -160,9 +164,14 @@ void System::Shutdown()
 	InputManager::GetInstance()->Shutdown();
 
 	//Shutdown current state
-	m_playingState->Shutdown();
+	if (m_playingState != NULL)
+	{
+		m_playingState->Shutdown();
+		delete m_playingState;
+	}
 	m_menuState->Shutdown();
 
+	
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown();
 

@@ -1,14 +1,8 @@
 #include "MovingObject.h"
 
 
-MovingObject::MovingObject()
-{
-}
-
-
-MovingObject::~MovingObject()
-{
-}
+MovingObject::MovingObject(){}
+MovingObject::~MovingObject(){}
 
 bool MovingObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed)
 {

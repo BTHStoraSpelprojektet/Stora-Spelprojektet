@@ -8,6 +8,7 @@
 #include "GUIShader.h"
 #include "DepthShader.h"
 #include "RenderTarget.h"
+#include "ConsoleFunctions.h"
 
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;

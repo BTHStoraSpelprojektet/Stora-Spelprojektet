@@ -5,7 +5,6 @@
 #include <vector>
 #include "Structures.h"
 #include "Enumerations.h"
-#include "ConsoleFunctions.h"
 
 class Buffer
 {

@@ -3,12 +3,12 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "GameState.h"
-#include "Camera.h"
 #include "DebugDraw.h"
 
 class PlayerManager;
 class ObjectManager;
 class Frustum;
+class Camera;
 
 class PlayingStateTest : public GameState
 {
@@ -28,7 +28,7 @@ private:
 
 	PlayerManager* m_playerManager;
 	ObjectManager* m_objectManager;
-	Camera m_camera;
+	Camera* m_camera;
 
 	float twoPi = 6.28318530718f;
 

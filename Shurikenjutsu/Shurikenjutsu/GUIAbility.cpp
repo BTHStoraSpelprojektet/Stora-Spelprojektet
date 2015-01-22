@@ -1,4 +1,5 @@
 #include "GUIAbility.h"
+#include "TextureLibrary.h"
 
 
 GUIAbility::GUIAbility(){}

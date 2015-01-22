@@ -1,4 +1,5 @@
 #include "GUIElementColor.h"
+#include "GUIManager.h"
 
 GUIElementColor::GUIElementColor(){}
 GUIElementColor::~GUIElementColor(){}

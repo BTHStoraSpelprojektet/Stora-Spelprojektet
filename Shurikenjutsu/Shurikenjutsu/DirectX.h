@@ -2,8 +2,6 @@
 #define DIRECTX
 
 #include <D3D11.h>
-#include "ConsoleFunctions.h"
-#include "Globals.h"
 
 class DirectXWrapper
 {

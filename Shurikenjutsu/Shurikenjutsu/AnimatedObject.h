@@ -2,7 +2,7 @@
 #define ANIMATEDOBJECT_H_
 
 #include "Object.h"
-#include "TextureLibrary.h"
+#include "AnimationControl.h"
 
 class AnimatedObject : public Object
 {
