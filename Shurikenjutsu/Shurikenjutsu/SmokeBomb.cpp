@@ -30,9 +30,9 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 
 	m_percentZ = z / length;
 	m_angle = asinf((9.82f * length) / (m_speed * m_speed)) * 0.5f;
 	
-	
 	return true;
 }
+
 void SmokeBomb::Update()
 {
 	m_timer += (float)GLOBAL::GetInstance().GetDeltaTime();
@@ -64,33 +64,41 @@ void SmokeBomb::Update()
 		}
 	}
 }
+
 void SmokeBomb::Shutdown()
 {
 	m_bomb->Shutdown();
 	delete m_bomb;
 	m_particles->Shutdown();
 }
+
 void SmokeBomb::Render()
 {
-	m_bomb->Render();
+	if(m_isThrowing)
+	{
+		m_bomb->Render();
+	}
 
-	if(!m_isThrowing)
+	else
 	{
 		m_particles->Render();
 	}
 }
+
 void SmokeBomb::SetPosition(DirectX::XMFLOAT3 p_position)
 {
 	m_SmokeSphere.m_position = p_position;
 	m_particles->SetPosition(DirectX::XMFLOAT3(p_position.x, SMOKEBOMB_POSITION_Y, p_position.z));
 }
+
 void SmokeBomb::ResetTimer()
 {
 	m_timer = 0;
 }
+
 bool SmokeBomb::GetIfActive()
 {
-	if (m_isThrowing || m_timer < SMOKEBOMB_DURATION || m_particles->GetParticleCount() > 5)
+	if (m_isThrowing || m_timer < SMOKEBOMB_DURATION || m_particles->GetParticleCount() > 0)
 	{
 		return true;
 	}

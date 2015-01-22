@@ -9,27 +9,11 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{99c94013-ae70-4a11-aefe-95183f7a9b65}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{bd49b8cf-8bf0-4f38-b691-026f1aac2144}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Textures">
-      <UniqueIdentifier>{3ad5ac3c-9376-475e-851b-86721806a963}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Models">
-      <UniqueIdentifier>{d644fc62-55a7-4f2b-890c-458fd5fdb7b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Sounds">
-      <UniqueIdentifier>{a9cf706c-ff7d-460b-b5f2-f2fca056ae2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Levels">
-      <UniqueIdentifier>{afed157a-bb36-4c04-b704-c8d128c314af}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Utility">
       <UniqueIdentifier>{50e9b74b-568e-4883-8d0d-54ac882643cc}</UniqueIdentifier>
@@ -112,9 +96,6 @@
     <Filter Include="Header Files\Graphics\Particles">
       <UniqueIdentifier>{e7ff7528-8b45-486b-b4cf-e03973d7aad8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Graphics\ShadowShapes">
-      <UniqueIdentifier>{b2b29137-b677-4fc3-8443-eac2df52888f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core\Camera">
       <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
     </Filter>
@@ -160,8 +141,11 @@
     <Filter Include="Source Files\Graphics\Particles">
       <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics\ShadowShapes">
-      <UniqueIdentifier>{78714b5b-d56b-426c-901b-465d94674519}</UniqueIdentifier>
+    <Filter Include="Header Files\ShadowShapes">
+      <UniqueIdentifier>{c449bf99-5482-450e-ac14-ce80ce1dda45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ShadowShapes">
+      <UniqueIdentifier>{1e2f7e8c-669b-4324-b30a-ec7677dd4f88}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -294,9 +278,6 @@
     <ClCompile Include="Sound.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="ShadowShapes.cpp">
-      <Filter>Source Files\Graphics\ShadowShapes</Filter>
-    </ClCompile>
     <ClCompile Include="HealthBar.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
@@ -371,6 +352,9 @@
     </ClCompile>
     <ClCompile Include="GUIText.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowShapes.cpp">
+      <Filter>Source Files\ShadowShapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -515,9 +499,6 @@
     <ClInclude Include="Sound.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="ShadowShapes.h">
-      <Filter>Header Files\Graphics\ShadowShapes</Filter>
-    </ClInclude>
     <ClInclude Include="HealthBar.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -592,6 +573,9 @@
     </ClInclude>
     <ClInclude Include="GUIText.h">
       <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowShapes.h">
+      <Filter>Header Files\ShadowShapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

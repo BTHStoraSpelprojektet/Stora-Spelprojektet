@@ -17,9 +17,8 @@ class PlayerManager;
 class CollisionManager
 {
 public:
-	void Initialize(std::vector<OBB> p_StaticObjectList/*, std::vector<Sphere> p_sphereObjectList*/);
+	void Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList);
 
-	//std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction, float p_deltaTime);
 	std::vector<bool> OuterWallCollision(Sphere p_playerSphere);
 
 
@@ -29,16 +28,14 @@ public:
 	void CalculateSmokeBombLocation();
 
 private:
-	bool OBBOBBtest(OBB p_OBB1, OBB p_OBB2);
-	bool BoxBoxtest(Box p_box1, Box p_box2);
-
-
-
+	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);
+	bool BoxBoxTest(Box p_box1, Box p_box2);
+	bool OBBSphereTest(OBB p_OBB, Sphere p_sphere);
 
 	static CollisionManager* m_instance;
-	void SetLists(std::vector<OBB> p_StaticObjectList/*, std::vector<Sphere> p_sphereObjectList*/);
-	std::vector<OBB> m_StaticObjectList;
-	//std::vector<Sphere> m_sphereObjectList;
+	void SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList);
+	std::vector<OBB> m_staticBoxList;
+	std::vector<Sphere> m_staticSphereList;
 };
 #endif
 

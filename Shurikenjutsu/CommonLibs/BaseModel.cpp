@@ -12,6 +12,7 @@ bool BaseModel::LoadModel(const char* p_filepath)
 	MeshData mData = importer.GetMesh();
 
 	m_boundingBoxes = mData.m_boundingBoxes;
+	m_boundingSpheres = mData.m_boundingSpheres;
 
 	return true;
 }
