@@ -217,7 +217,7 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	std::vector<float> distancesToTarget;
 	std::vector<float> rayLengths;
 
-	// Go through static objects
+	// Go through static boxes
 	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
 	{
 		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
@@ -228,6 +228,18 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 			}
 		}
 	}
+	// Go through static spheres
+	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	{
+		if (Collisions::RaySphereCollision(ray, m_staticSphereList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+
 	//Go through the shortest intersecting object
 	for (unsigned int i = 0; i < rayLengths.size(); i++)
 	{
