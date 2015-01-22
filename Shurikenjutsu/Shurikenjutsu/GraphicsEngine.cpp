@@ -354,7 +354,7 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 	{
 		// Convert to "vettiga" coordinates
 		float x = (p_xpos + (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_WIDTH / GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
-		float y = (p_ypos + (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_HEIGHT / GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
+		float y = (-p_ypos + (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_HEIGHT / GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 
 		m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, x, y, p_color, FW1_RESTORESTATE | FW1_VCENTER | FW1_CENTER);
 	}
