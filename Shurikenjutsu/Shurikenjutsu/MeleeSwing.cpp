@@ -1,19 +1,17 @@
 #include "MeleeSwing.h"
+#include "Network.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "StatusEffect.h"
+#include <iostream>
 
-MeleeSwing::MeleeSwing()
-{
-}
-
-
-MeleeSwing::~MeleeSwing()
-{
-}
+MeleeSwing::MeleeSwing(){}
+MeleeSwing::~MeleeSwing(){}
 
 bool MeleeSwing::Initialize()
 {
 	SetDamage(KATANA_DAMAGE);
 	SetTime(0.0);
-	SetStatusEffect(StatusEffect());
+	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	return true;
 }

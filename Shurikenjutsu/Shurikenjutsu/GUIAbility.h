@@ -2,7 +2,8 @@
 #define GUIABILITY_H_
 
 #include "GUIElementColor.h"
-
+#include "GUIElement.h"
+#include "GUIText.h"
 class GUIAbility
 {
 public:

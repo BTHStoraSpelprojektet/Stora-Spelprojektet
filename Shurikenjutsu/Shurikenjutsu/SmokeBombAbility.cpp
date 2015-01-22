@@ -1,5 +1,7 @@
 #include "SmokeBombAbility.h"
-
+#include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "Network.h"
+#include "StatusEffect.h"
 
 SmokeBombAbility::SmokeBombAbility(){}
 SmokeBombAbility::~SmokeBombAbility(){}
@@ -7,7 +9,7 @@ bool SmokeBombAbility::Initialize()
 {
 	SetDamage(SMOKEBOMB_DAMAGE);
 	SetTime(0.0);
-	SetStatusEffect(StatusEffect());
+	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	return true;
 }

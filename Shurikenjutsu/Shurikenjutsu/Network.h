@@ -3,7 +3,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <iostream>
 
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
@@ -20,7 +19,6 @@
 #include <vector>
 #include <map>
 
-#include "ConsoleFunctions.h"
 
 enum NETWORKSTATUS
 {

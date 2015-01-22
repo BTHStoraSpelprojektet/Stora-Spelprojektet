@@ -1,4 +1,5 @@
 #include "GUIAbility.h"
+#include "TextureLibrary.h"
 
 
 GUIAbility::GUIAbility(){}
@@ -34,5 +35,5 @@ void GUIAbility::Render()
 	//m_border.QueueRender();
 	m_ability.QueueRender();
 	m_cooldown.QueueRender();
-	m_stacks.Render();
+	//m_stacks.Render();
 }

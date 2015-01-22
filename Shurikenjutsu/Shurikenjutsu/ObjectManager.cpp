@@ -1,5 +1,8 @@
 #include "ObjectManager.h"
-
+#include "Flags.h"
+#include "Network.h"
+#include "Frustum.h"
+#include "Globals.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -54,7 +57,8 @@ void ObjectManager::Shutdown()
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		m_shurikens[i].Shutdown();
+		m_shurikens[i]->Shutdown();
+		delete m_shurikens[i];
 	}
 	m_shurikens.clear();
 
@@ -66,7 +70,8 @@ void ObjectManager::Shutdown()
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
-		m_smokeBombList[i].Shutdown();
+		m_smokeBombList[i]->Shutdown();
+		delete m_smokeBombList[i];
 	}
 }
 
@@ -77,18 +82,19 @@ void ObjectManager::Update()
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		m_shurikens[i].Update();
+		m_shurikens[i]->Update();
 	}	
 
 	// Update all the smokebombs
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
-		m_smokeBombList[i].Update();
+		m_smokeBombList[i]->Update();
 
-		if (!m_smokeBombList[i].GetIfActive())
+		if (!m_smokeBombList[i]->GetIfActive())
 		{
 			// Remove Smoke bomb
-			m_smokeBombList[i].Shutdown();
+			m_smokeBombList[i]->Shutdown();
+			delete m_smokeBombList[i];
 			m_smokeBombList.erase(m_smokeBombList.begin() + i);
 			i--;
 		}
@@ -116,10 +122,10 @@ void ObjectManager::Update()
 
 		for (unsigned int i = 0; i < m_shurikens.size(); i++)
 		{
-			if (!IsShurikenInNetworkList(m_shurikens[i].GetID()))
+			if (!IsShurikenInNetworkList(m_shurikens[i]->GetID()))
 			{
 				// Remove shuriken
-				m_shurikens[i].Shutdown();
+				m_shurikens[i]->Shutdown();
 				m_shurikens.erase(m_shurikens.begin() + i);
 				i--;
 			}
@@ -148,11 +154,12 @@ void ObjectManager::Render()
 	m_objectsToRender.clear();
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
 		{
 			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToRender.push_back(&m_staticObjects[i]);
+				m_staticObjects[i].RenderInstanced();
 			}
 
 
@@ -163,24 +170,20 @@ void ObjectManager::Render()
 		}
 	}
 
-	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
-	{		
-		m_objectsToRender[i]->RenderInstanced(); 
-	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		if (m_frustum.CheckSphere(m_shurikens[i].GetFrustumSphere(), 1.0f))
+		if (m_frustum->CheckSphere(m_shurikens[i]->GetFrustumSphere(), 1.0f))
 		{
-			m_shurikens[i].Render();
+			m_shurikens[i]->Render();
 		}
 	}
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
-		if (m_frustum.CheckSphere(m_smokeBombList[i].GetSmokeSphere(), 2.0f))
+		if (m_frustum->CheckSphere(m_smokeBombList[i]->GetSmokeSphere(), 2.0f))
 		{
-			m_smokeBombList[i].Render();
+			m_smokeBombList[i]->Render();
 		}
 	}
 }
@@ -191,35 +194,44 @@ void ObjectManager::RenderDepth()
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
 		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
-		sphere.m_position.x += 2.0f;
-		sphere.m_position.z += 2.0f;
-		if (m_frustum.CheckSphere(sphere, 7.5f))
+		sphere.m_position.x -= 3.0f;
+		sphere.m_position.z -= 3.0f;
+		if (m_frustum->CheckSphere(sphere, 7.5f))
 		{
 			if (CheckIfModelIsInObjectToShadowRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToShadowRender.push_back(&m_staticObjects[i]);
+				m_staticObjects[i].RenderDepthInstanced();
 			}
 		}
 	}
 
-	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		m_objectsToShadowRender[i]->RenderDepth();
+		m_shurikens[i]->RenderDepth();
 	}
+
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		m_smokeBombList[i]->GetBomb()->RenderDepth();
+	}
+
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID)
 {
-	Shuriken tempShuriken;
-	tempShuriken.Initialize(p_filepath, p_pos, p_dir, p_shurikenID);
+	Shuriken *tempShuriken;
+	tempShuriken = new Shuriken();
+	tempShuriken->Initialize(p_filepath, p_pos, p_dir, p_shurikenID);
 	m_shurikens.push_back(tempShuriken);
 }
 
 void ObjectManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID)
 {
-	SmokeBomb tempSmokeBomb;
-	tempSmokeBomb.Initialize(DirectX::XMFLOAT3(p_startPosX, 0.0f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.0f, p_endPosZ), p_smokeBombID);
-	tempSmokeBomb.ResetTimer();
+	SmokeBomb *tempSmokeBomb;
+	tempSmokeBomb = new SmokeBomb();
+	tempSmokeBomb->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.0f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.0f, p_endPosZ), p_smokeBombID);
+	tempSmokeBomb->ResetTimer();
 	m_smokeBombList.push_back(tempSmokeBomb);
 }
 void ObjectManager::AddStaticObject(Object p_object)
@@ -231,7 +243,7 @@ bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		if (p_shurikenId == m_shurikens[i].GetID())
+		if (p_shurikenId == m_shurikens[i]->GetID())
 		{
 			return true;
 		}
@@ -243,7 +255,7 @@ bool ObjectManager::IsSmokeBombInList(unsigned int p_smokeBombId)
 {
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
-		if (p_smokeBombId == m_smokeBombList[i].GetID())
+		if (p_smokeBombId == m_smokeBombList[i]->GetID())
 		{
 			return true;
 		}
@@ -273,7 +285,7 @@ std::vector<Object> ObjectManager::GetStaticObjectList()const
 
 void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 {
-	m_frustum = *p_frustum;
+	m_frustum = p_frustum;
 }
 
 bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object)

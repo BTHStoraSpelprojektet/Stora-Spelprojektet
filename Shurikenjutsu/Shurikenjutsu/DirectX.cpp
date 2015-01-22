@@ -1,4 +1,6 @@
 #include "DirectX.h"
+#include "ConsoleFunctions.h"
+#include "Globals.h"
 
 bool DirectXWrapper::Initialize(HWND p_handle)
 {

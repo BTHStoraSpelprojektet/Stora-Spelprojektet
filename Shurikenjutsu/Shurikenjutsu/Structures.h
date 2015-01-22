@@ -38,14 +38,39 @@ struct DirectionalLight
 	DirectX::XMVECTOR m_direction;
 };
 
-struct LineSegment
+struct Point
 {
-	DirectX::XMFLOAT2 m_startPoint;
-	DirectX::XMFLOAT2 m_endPoint;
+	float x;
+	float y;
+
+	Point()
+	{
+		x = 0.0f;
+		y = 0.0f;
+	}
+
+	Point(float p_x, float p_y)
+	{
+		x = p_x;
+		y = p_y;
+	}
 };
 
-struct ShadowShape
+struct Line
 {
-	std::vector<LineSegment> m_lineSegments;
+	Point a;
+	Point b;
+
+	Line(float ax, float ay, float bx, float by)
+	{
+		a = Point(ax, ay);
+		b = Point(bx, by);
+	}
+
+	Line(Point p_a, Point p_b)
+	{
+		a = p_a;
+		b = p_b;
+	}
 };
 #endif

@@ -1,4 +1,7 @@
 #include "TextureLibrary.h"
+#include <iostream>
+#include "GraphicsEngine.h"
+#include "WICTextureLoader.h"
 
 TextureLibrary* TextureLibrary::m_instance;
 

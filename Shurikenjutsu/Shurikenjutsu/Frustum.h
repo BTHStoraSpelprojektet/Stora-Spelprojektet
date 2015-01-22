@@ -1,7 +1,6 @@
 #ifndef FRUSTUM_H_
 #define FRUSTUM_H_
 
-#include <DirectXMath.h>
 #include "..\CommonLibs\CommonStructures.h"
 
 class Frustum

@@ -1,4 +1,8 @@
 #include "GUIShader.h"
+#include "ConsoleFunctions.h"
+#include "Globals.h"
+#include <D3Dcompiler.h>
+#include <DirectXMath.h>
 
 bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {

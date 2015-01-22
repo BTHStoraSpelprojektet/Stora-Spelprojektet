@@ -1,9 +1,10 @@
 #ifndef ABILITYBAR_H_
 #define ABILITYBAR_H_
 
-#include "GUIAbility.h"
 #include <vector>
-#include "TextureLibrary.h"
+
+class GUIAbility;
+class GUIElement;
 
 class AbilityBar
 {
@@ -17,8 +18,8 @@ public:
 	void Render();
 
 private:
-	std::vector<GUIAbility> m_abilities;
-	GUIElement m_background;
+	std::vector<GUIAbility*> m_abilities;
+	GUIElement* m_background;
 
 };
 #endif // !ABILITYBAR_H_

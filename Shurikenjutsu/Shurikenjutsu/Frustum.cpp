@@ -1,19 +1,10 @@
 #include "Frustum.h"
 
+#include <DirectXMath.h>
 
-Frustum::Frustum()
-{
-}
-
-Frustum::Frustum(const Frustum&)
-{
-
-}
-
-
-Frustum::~Frustum()
-{
-}
+Frustum::Frustum(){}
+Frustum::Frustum(const Frustum&){}
+Frustum::~Frustum(){}
 
 void Frustum::ConstructFrustum(float screenDepth, DirectX::XMFLOAT4X4 p_projectionMatrix, DirectX::XMFLOAT4X4 p_viewMatrix)
 {

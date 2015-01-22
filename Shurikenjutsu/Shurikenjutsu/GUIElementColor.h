@@ -2,7 +2,6 @@
 #define GUIELEMENTCOLOR_H_
 
 #include <DirectXMath.h>
-#include "GUIManager.h"
 
 class GUIElementColor
 {

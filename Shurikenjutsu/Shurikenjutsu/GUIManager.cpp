@@ -1,4 +1,8 @@
 #include "GUIManager.h"
+#include "GUIText.h"
+#include "GUIElementColor.h"
+#include "GUIElement.h"
+#include "GraphicsEngine.h"
 
 GUIManager* GUIManager::m_instance;
 
