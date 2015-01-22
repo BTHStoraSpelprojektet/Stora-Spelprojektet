@@ -15,11 +15,18 @@ bool MapManager::Initialize(std::string p_levelName)
 	Level level(p_levelName);
 
 	m_boundingBoxes = std::vector<OBB>();
+	m_boundingSpheres = std::vector<Sphere>();
 	m_mapObjects = level.GetObjects();
 	m_levelBoundingBoxes = level.getLevelBoundingBoxes();
 
 	for each (LevelImporter::CommonObject mapObject in m_mapObjects)
 	{
+		std::vector<Sphere> boundingSpheres = ModelLibrary::GetInstance()->GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingSpheres();
+		for each(Sphere sphere in boundingSpheres)
+		{
+			m_boundingSpheres.push_back(sphere);
+		}
+
 		std::vector<Box> boundingBoxes = ModelLibrary::GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingBoxes();
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(mapObject.m_translationX, mapObject.m_translationY, mapObject.m_translationZ);
 		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(mapObject.m_rotationX, mapObject.m_rotationY, mapObject.m_rotationZ);
@@ -49,6 +56,11 @@ void MapManager::Shutdown()
 std::vector<OBB> MapManager::GetBoundingBoxes()
 {
 	return m_boundingBoxes;
+}
+
+std::vector<Sphere> MapManager::GetBoundingSpheres()
+{
+	return m_boundingSpheres;
 }
 
 std::vector<OBB> MapManager::TransformToOBB(std::vector<Box> p_boxList, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_rotation)

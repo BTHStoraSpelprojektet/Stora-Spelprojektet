@@ -13,12 +13,14 @@ public:
 	bool Initialize(std::string p_levelName);
 	void Shutdown();
 
-	std::vector<OBB> GetBoundingBoxes();	
+	std::vector<OBB> GetBoundingBoxes();
+	std::vector<Sphere> GetBoundingSpheres();
 private:
 	std::vector<OBB> TransformToOBB(std::vector<Box> p_boxList, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_rotation);
 
 	std::vector<LevelImporter::CommonObject> m_mapObjects;
 	std::vector<OBB> m_boundingBoxes;
+	std::vector<Sphere> m_boundingSpheres;
 	std::vector<LevelImporter::LevelBoundingBox> m_levelBoundingBoxes;
 };
 

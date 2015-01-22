@@ -1,21 +1,23 @@
 #include "CollisionManager.h"
 
 
-void CollisionManager::Initialize(std::vector<OBB> p_StaticObjectList/*, std::vector<Sphere> p_sphereObjectList*/)
+void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
-	SetLists(p_StaticObjectList/*, p_sphereObjectList*/);
+	SetLists(p_staticBoxList, p_staticSphereList);
 }
-void CollisionManager::SetLists(std::vector<OBB> p_StaticObjectList/*, std::vector<Sphere> p_sphereObjectList*/)
+
+void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
 
-	for (unsigned int j = 0; j < p_StaticObjectList.size(); j++)
+	for (unsigned int i = 0; i < p_staticBoxList.size(); i++)
 	{
-		m_StaticObjectList.push_back(p_StaticObjectList[j]);
+		m_staticBoxList.push_back(p_staticBoxList[i]);
 	}
-	//for (unsigned int i = 0; i < p_sphereObjectList.size(); i++)
-	//{
-	//	m_sphereObjectList.push_back(p_sphereObjectList[i]);
-	//}
+
+	for (unsigned int i = 0; i < p_staticSphereList.size(); i++)
+	{
+		m_staticSphereList.push_back(p_staticSphereList[i]);
+	}
 }
 //
 //std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction, float p_deltaTime)
@@ -79,6 +81,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		}
 	}
 }
+
 void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager)
 {
 	float radius = 1.0f;
@@ -135,7 +138,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			{
 				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 				{
-					if (BoxBoxtest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
+					if (BoxBoxTest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
 						// temp shuriken dmg
 						p_playerManager->DamagePlayer(playerList[j].guid, (int)SHURIKEN_DAMAGE);
@@ -164,9 +167,29 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 		// Go through maps bounding boxes
 		for (unsigned int j = 0; j < shurikenBoundingBoxes.size(); j++)
 		{
-			for (unsigned int k = 0; k < m_StaticObjectList.size(); k++)
+			// Box list
+			for (unsigned int k = 0; k < m_staticBoxList.size(); k++)
 			{
-				if (OBBOBBtest(m_StaticObjectList[k], OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
+				if (OBBOBBTest(m_staticBoxList[k], OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
+				{
+					// Remove shuriken
+					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
+					shurikenList.erase(shurikenList.begin() + i);
+					i--;
+
+					collisionFound = true;
+					break;
+				}
+			}
+			if (collisionFound)
+			{
+				break;
+			}
+
+			// Sphere list
+			for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
+			{
+				if (OBBSphereTest(OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), m_staticSphereList[k]))
 				{
 					// Remove shuriken
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
@@ -195,9 +218,9 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	std::vector<float> rayLengths;
 
 	// Go through static objects
-	for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
+	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
 	{
-		if (Collisions::RayOBBCollision(ray, m_StaticObjectList[i]))
+		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
 		{
 			if (ray->m_distance != 0)
 			{
@@ -245,7 +268,7 @@ void CollisionManager::CalculateSmokeBombLocation()
 
 }
 //Private
-bool CollisionManager::OBBOBBtest(OBB p_OBB1, OBB p_OBB2)
+bool CollisionManager::OBBOBBTest(OBB p_OBB1, OBB p_OBB2)
 {
 	if (IntersectionTests::Intersections::SphereSphereCollision(p_OBB1.m_center, p_OBB1.m_radius, p_OBB2.m_center, p_OBB2.m_radius))
 	{
@@ -253,11 +276,20 @@ bool CollisionManager::OBBOBBtest(OBB p_OBB1, OBB p_OBB2)
 	}
 	return false;
 }
-bool CollisionManager::BoxBoxtest(Box p_box1, Box p_box2)
+bool CollisionManager::BoxBoxTest(Box p_box1, Box p_box2)
 {
 	if (IntersectionTests::Intersections::SphereSphereCollision(p_box1.m_center, p_box1.m_radius, p_box2.m_center, p_box2.m_radius))
 	{
 		return IntersectionTests::Intersections::BoxBoxCollision(p_box1.m_center, p_box1.m_extents, p_box2.m_center, p_box2.m_extents);
+	}
+	return false;
+}
+
+bool CollisionManager::OBBSphereTest(OBB p_OBB, Sphere p_sphere)
+{
+	if (IntersectionTests::Intersections::SphereSphereCollision(p_OBB.m_center, p_OBB.m_radius, p_sphere.m_position, p_sphere.m_radius))
+	{
+		return IntersectionTests::Intersections::OBBSphereCollision(p_OBB.m_center, p_OBB.m_extents, p_OBB.m_direction, p_sphere.m_position, p_sphere.m_radius);
 	}
 	return false;
 }
