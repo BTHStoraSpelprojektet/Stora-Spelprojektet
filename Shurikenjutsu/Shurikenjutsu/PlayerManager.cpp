@@ -126,6 +126,7 @@ void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, D
 	Player tempPlayer;
 	tempPlayer.Initialize(p_filepath, p_pos, p_direction);
 	m_player = tempPlayer;
+	m_player.SendPosition(m_player.GetPosition());
 }
 
 void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
