@@ -19,7 +19,6 @@ class CollisionManager
 public:
 	void Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList);
 
-	//std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction, float p_deltaTime);
 	std::vector<bool> OuterWallCollision(Sphere p_playerSphere);
 
 

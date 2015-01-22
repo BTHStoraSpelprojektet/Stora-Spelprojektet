@@ -19,30 +19,6 @@ void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sp
 		m_staticSphereList.push_back(p_staticSphereList[i]);
 	}
 }
-//
-//std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction, float p_deltaTime)
-//{
-//	std::vector<OBB> CollisionList;
-//	Sphere playerBox = p_playerSphere;
-//	float speedXDeltaTime = p_speed * p_deltaTime;
-//	if (m_StaticObjectList.size() > 0)
-//	{
-//		for (unsigned int i = 0; i < m_StaticObjectList.size(); i++)
-//		{
-//			OBB box = m_StaticObjectList[i];
-//
-//			playerBox.m_position.x = p_playerSphere.m_position.x + p_direction.x * speedXDeltaTime;
-//			playerBox.m_position.y = p_playerSphere.m_position.y + p_direction.y * speedXDeltaTime;
-//			playerBox.m_position.z = p_playerSphere.m_position.z + p_direction.z * speedXDeltaTime;
-//
-//			if (Collisions::OBBSphereCollision(box, playerBox))
-//			{
-//				CollisionList.push_back(box);
-//			}
-//		}
-//	}
-//	return CollisionList;
-//}
 
 void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
 {
