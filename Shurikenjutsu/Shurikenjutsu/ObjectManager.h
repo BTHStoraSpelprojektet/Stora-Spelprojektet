@@ -35,8 +35,8 @@ private:
 	bool CheckIfModelIsInObjectToRenderList(Object *p_object);
 	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);
 
-	std::vector<SmokeBomb> m_smokeBombList;
-	std::vector<Shuriken> m_shurikens;
+	std::vector<SmokeBomb*> m_smokeBombList;
+	std::vector<Shuriken*> m_shurikens;
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToRender;
 	std::vector<Object*> m_objectsToShadowRender;
