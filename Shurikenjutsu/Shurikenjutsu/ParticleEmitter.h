@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
+#include "TextureLibrary.h"
 #include "ConsoleFunctions.h"
 #include "Globals.h"
 #include "Enumerations.h"

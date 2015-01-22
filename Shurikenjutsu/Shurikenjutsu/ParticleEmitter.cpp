@@ -31,9 +31,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 			m_timeToLive = 2.0f;
 
-			ModelImporter importer;
-			importer.ImportModel("Models/SmokeParticle.SSP");
-			m_particleTexture = LoadTexture(importer.GetMesh().m_textureMapSize[0], importer.GetMesh().m_textureMapSize[1], importer.GetMesh().m_textureMapSize[2], importer.GetMesh().m_textureMap);
+			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particle_Smoke.png");
 
 			break;
 		}
