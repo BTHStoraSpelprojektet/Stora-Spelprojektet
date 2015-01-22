@@ -12,6 +12,7 @@
 //#include "ParticleEmitter.h"
 #include "Frustum.h"
 #include "GameState.h"
+#include "Minimap.h"
 
 class PlayingStateTest : public GameState
 {
@@ -32,6 +33,7 @@ private:
 	PlayerManager m_playerManager;
 	ObjectManager m_objectManager;
 	Camera m_camera;
+	Minimap* m_minimap;
 
 	float twoPi = 6.28318530718f;
 

@@ -126,6 +126,7 @@
     <ClCompile Include="MenuIpBox.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="Network.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="MenuIpBox.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuState.h" />
+    <ClInclude Include="Minimap.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="Network.h" />

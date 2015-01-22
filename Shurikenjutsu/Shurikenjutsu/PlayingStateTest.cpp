@@ -51,6 +51,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_frustum = Frustum();
 	m_updateFrustum = true;
 
+	// Initialize the minimap
+	m_minimap = new Minimap();
+	m_minimap->Initialize();
+
 	return true;
 }
 
@@ -72,6 +76,8 @@ void PlayingStateTest::Shutdown()
 
 	//m_particles.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
+
+	m_minimap->Shutdown();
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -124,20 +130,20 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_updateFrustum = true;
 	}
-	if (m_updateFrustum)
+	/*if (m_updateFrustum)
 	{
 		m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
 		m_objectManager.UpdateFrustum(&m_frustum);
 		m_playerManager.UpdateFrustum(&m_frustum);
-	}
+	}*/
+
+	m_minimap->Update(m_playerManager.GetPlayerPosition());
 
 	return GAMESTATESWITCH_NONE;
 }
 
 void PlayingStateTest::Render()
 {
-	
-
 	bool testBB = false;
 
 	// Draw to the shadowmap.
@@ -174,20 +180,14 @@ void PlayingStateTest::Render()
 
 	m_circle2.UpdateWorldMatrix(circleWorld);
 	m_circle2.Render();
-	if (m_frustum.CheckCube(m_playerManager.GetPlayerPosition().x, m_playerManager.GetPlayerPosition().y, m_playerManager.GetPlayerPosition().z, 1.0f))
-	{
-		testBB = true;
-	}
-	if (testBB)
-	{
-		m_debugDot.Render();
-	}
 
 	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager.GetPlayerPosition().x, 0.2f, m_playerManager.GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	}
 
 	//m_particles.Render();
 	// ========== DEBUG TEMP LINES ==========
+
+	m_minimap->Render();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)

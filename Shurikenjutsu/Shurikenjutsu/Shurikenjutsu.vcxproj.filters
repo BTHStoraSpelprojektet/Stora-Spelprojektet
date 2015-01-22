@@ -372,6 +372,9 @@
     <ClCompile Include="GUIText.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
+    <ClCompile Include="Minimap.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -592,6 +595,9 @@
     </ClInclude>
     <ClInclude Include="GUIText.h">
       <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="Minimap.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
