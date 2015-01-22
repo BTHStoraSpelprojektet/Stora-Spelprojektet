@@ -26,7 +26,8 @@ private:
 	~CollisionManager();
 	static CollisionManager* m_instance;
 	void SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/);
-	std::vector<OBB> m_StaticObjectList;
+	std::vector<OBB> m_staticBoxList;
+	std::vector<Sphere> m_staticSphereList;
 	DirectX::XMFLOAT2 m_pickedLocation;
 	//std::vector<Sphere> m_sphereObjectList;
 };

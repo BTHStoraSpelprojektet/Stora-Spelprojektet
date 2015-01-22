@@ -38,6 +38,7 @@ public:
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 
 	std::vector<OBB> GetBoundingBoxes();
+	std::vector<Sphere> GetBoundingSpheres();
 	Sphere GetFrustumSphere();
 
 	void CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_positions);

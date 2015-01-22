@@ -3,6 +3,8 @@
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
+	m_staticBoxList = std::vector<OBB>();
+	m_staticSphereList = std::vector<Sphere>();
 	SetLists(p_staticBoxList, p_staticSphereList);
 }
 
