@@ -484,6 +484,15 @@ void Player::Render()
 	}
 	m_abilityBar.Render();
 }
+
+void Player::RenderDepth()
+{
+	if (m_isAlive)
+	{
+		AnimatedObject::RenderDepth();
+	}
+}
+
 void Player::SetIsAlive(bool p_isAlive)
 {
 	m_isAlive = p_isAlive;
