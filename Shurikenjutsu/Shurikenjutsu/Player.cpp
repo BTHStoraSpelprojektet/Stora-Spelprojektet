@@ -11,6 +11,8 @@
 #include "MegaShuriken.h"
 #include "Ability.h"
 #include "HealthBar.h"
+#include "AbilityBar.h"
+#include "../CommonLibs/GameplayGlobalVariables.h"
 
 Player::Player(){}
 Player::~Player(){}

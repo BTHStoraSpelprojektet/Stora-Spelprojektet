@@ -5,6 +5,7 @@
 #include "GraphicsEngine.h"
 #include "PlayerManager.h"
 #include "ObjectManager.h"
+#include "Frustum.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -56,7 +57,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// ========== DEBUG TEMP LINES ==========
 
 	// Frustum
-	m_frustum = Frustum();
+	m_frustum = new Frustum();
 	m_updateFrustum = true;
 
 	return true;
@@ -135,9 +136,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	}
 	if (m_updateFrustum)
 	{
-		m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
-		m_objectManager->UpdateFrustum(&m_frustum);
-		m_playerManager->UpdateFrustum(&m_frustum);
+		m_frustum->ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
+		m_objectManager->UpdateFrustum(m_frustum);
+		m_playerManager->UpdateFrustum(m_frustum);
 	}
 
 	return GAMESTATESWITCH_NONE;
@@ -183,7 +184,7 @@ void PlayingStateTest::Render()
 
 	m_circle2.UpdateWorldMatrix(circleWorld);
 	m_circle2.Render();
-	if (m_frustum.CheckCube(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().y, m_playerManager->GetPlayerPosition().z, 1.0f))
+	if (m_frustum->CheckCube(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().y, m_playerManager->GetPlayerPosition().z, 1.0f))
 	{
 		testBB = true;
 	}

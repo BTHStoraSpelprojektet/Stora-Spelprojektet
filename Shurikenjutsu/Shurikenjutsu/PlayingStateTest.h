@@ -5,10 +5,10 @@
 #include "GameState.h"
 #include "Camera.h"
 #include "DebugDraw.h"
-#include "Frustum.h"
 
 class PlayerManager;
 class ObjectManager;
+class Frustum;
 
 class PlayingStateTest : public GameState
 {
@@ -47,6 +47,6 @@ private:
 	//ParticleEmitter m_particles;
 	// ========== DEBUG TEMP LINES ==========
 
-	Frustum m_frustum;
+	Frustum *m_frustum;
 };
 #endif PLAYINGSTATE
