@@ -7,8 +7,8 @@ DepthShader GraphicsEngine::m_depthShader;
 ParticleShader GraphicsEngine::m_particleShader;
 HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
-IFW1Factory *GraphicsEngine::pFW1Factory;
-IFW1FontWrapper *GraphicsEngine::pFontWrapper;
+IFW1Factory *GraphicsEngine::m_FW1Factory;
+IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -73,9 +73,9 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 
 	//FONTWRAPPER -.-
-	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
+	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
 
-	hResult = pFW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &pFontWrapper);
+	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &m_fontWrapper);
 
 	return result;
 }
@@ -88,8 +88,8 @@ void GraphicsEngine::Shutdown()
 	m_sceneShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
-	pFW1Factory->Release();
-	pFontWrapper->Release();
+	m_FW1Factory->Release();
+	m_fontWrapper->Release();
 
 	// TODO shutdowns for everyone!
 }
@@ -345,13 +345,9 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 
 	const wchar_t* your_result = wstring.c_str();
 
-	pFontWrapper->DrawString(
-		m_directX.GetContext(),
-		your_result,// String
-		p_size,// Font size
-		p_xpos,// X position
-		p_ypos,// Y position
-		p_color,// Text color, 0xAaBbGgRr
-		FW1_RESTORESTATE | FW1_CENTER | FW1_VCENTER // Flags
-		);
+	// Convert to "vettiga" coordinates
+	float x = (p_xpos + (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_WIDTH / GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
+	float y = (p_ypos + (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_HEIGHT / GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
+
+	m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, x, y, p_color, FW1_RESTORESTATE | FW1_VCENTER | FW1_CENTER);
 }
