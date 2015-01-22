@@ -17,6 +17,7 @@ public:
 	virtual float GetSpeed() const;
 
 	void Render(int p_team);
+	void RenderDepth();
 	void ChangeAnimationState(AnimationState p_newState);
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);

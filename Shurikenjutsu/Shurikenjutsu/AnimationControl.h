@@ -23,7 +23,7 @@ public:
 
 	void Shutdown();
 
-	
+	std::vector<DirectX::XMFLOAT4X4> GetBoneTransforms();
 	
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
@@ -51,6 +51,12 @@ private:
 
 	AnimationStack* m_currentArms;
 	AnimationStack* m_currentLegs;
+
+	std::vector<DirectX::XMVECTOR> m_QuaternionArms;
+	std::vector<DirectX::XMVECTOR> m_QuaternionLegs;
+
+	float m_blendWeightArms;
+	float m_blendWeightLegs;
 
 	std::vector<DirectX::XMFLOAT4X4> m_boneTransforms;
 	std::vector<BindPose> m_bindPoses;
