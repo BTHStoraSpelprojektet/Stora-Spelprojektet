@@ -3,7 +3,6 @@
 
 #include <Windows.h>
 #include "Structures.h"
-#include "ConsoleFunctions.h"
 
 class Window
 {

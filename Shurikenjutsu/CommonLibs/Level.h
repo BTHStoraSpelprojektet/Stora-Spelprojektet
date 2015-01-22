@@ -1,8 +1,8 @@
 #ifndef LEVEL_H_
 #define LEVEL_H_
 
-#include <string>
 #include "LevelImporter.h"
+class string;
 
 class Level
 {

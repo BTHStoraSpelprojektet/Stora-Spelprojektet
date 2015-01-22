@@ -2,7 +2,8 @@
 #define GUITEXT_H_
 
 #include <string>
-#include "GUIManager.h"
+
+#include <D3D11.h>
 
 class GUIText
 {
@@ -12,7 +13,6 @@ public:
 
 	bool Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color);
 	void Render();
-	void Shutdown();
 
 	void SetText(std::string p_text);
 	void SetPosition(float p_x, float p_y);

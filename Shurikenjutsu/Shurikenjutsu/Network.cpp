@@ -1,4 +1,6 @@
 #include "Network.h"
+#include <iostream>
+#include "ConsoleFunctions.h"
 
 Network* Network::m_instance;
 

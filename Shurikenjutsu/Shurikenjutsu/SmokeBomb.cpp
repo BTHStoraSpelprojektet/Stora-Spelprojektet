@@ -1,10 +1,17 @@
 #include "SmokeBomb.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "GraphicsEngine.h"
+#include "Globals.h"
+#include "ParticleEmitter.h"
+#include "Object.h"
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {
-	m_bomb.Initialize("../Shurikenjutsu/Models/SmokeBomb.SSP", p_startPosition);
+	m_bomb = new Object();
+	m_bomb->Initialize("../Shurikenjutsu/Models/SmokeBomb.SSP", p_startPosition);
 
-	m_particles.Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(p_endPosition.x, SMOKEBOMB_POSITION_Y, p_endPosition.z),
+	m_particles = new ParticleEmitter();
+	m_particles->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(p_endPosition.x, SMOKEBOMB_POSITION_Y, p_endPosition.z),
 		DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
 		DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 
@@ -36,7 +43,7 @@ void SmokeBomb::Update()
 		float y = m_speed * m_timer * sinf(m_angle) - 0.5f * 9.82f * m_timer * m_timer;
 		float z = m_speed * m_timer * cosf(m_angle) * m_percentZ;
 
-		m_bomb.SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
+		m_bomb->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
 
 		if (y < 0.0f)
 		{
@@ -46,40 +53,42 @@ void SmokeBomb::Update()
 	}
 	else
 	{		
-		m_particles.Update();
+		m_particles->Update();
 		if (m_timer < SMOKEBOMB_DURATION)
 		{
-			m_particles.SetEmitParticleState(true);
+			m_particles->SetEmitParticleState(true);
 		}
 		else
 		{
-			m_particles.SetEmitParticleState(false);
+			m_particles->SetEmitParticleState(false);
 		}
 	}
 }
 
 void SmokeBomb::Shutdown()
 {
-	m_particles.Shutdown();
+	m_bomb->Shutdown();
+	delete m_bomb;
+	m_particles->Shutdown();
 }
 
 void SmokeBomb::Render()
 {
 	if(m_isThrowing)
 	{
-		m_bomb.Render();
+		m_bomb->Render();
 	}
 
 	else
 	{
-		m_particles.Render();
+		m_particles->Render();
 	}
 }
 
 void SmokeBomb::SetPosition(DirectX::XMFLOAT3 p_position)
 {
 	m_SmokeSphere.m_position = p_position;
-	m_particles.SetPosition(DirectX::XMFLOAT3(p_position.x, SMOKEBOMB_POSITION_Y, p_position.z));
+	m_particles->SetPosition(DirectX::XMFLOAT3(p_position.x, SMOKEBOMB_POSITION_Y, p_position.z));
 }
 
 void SmokeBomb::ResetTimer()
@@ -89,7 +98,7 @@ void SmokeBomb::ResetTimer()
 
 bool SmokeBomb::GetIfActive()
 {
-	if (m_isThrowing || m_timer < SMOKEBOMB_DURATION || m_particles.GetParticleCount() > 0)
+	if (m_isThrowing || m_timer < SMOKEBOMB_DURATION || m_particles->GetParticleCount() > 0)
 	{
 		return true;
 	}
@@ -103,7 +112,7 @@ Sphere SmokeBomb::GetSmokeSphere()
 {
 	if (m_isThrowing)
 	{
-		return m_bomb.GetFrustumSphere();
+		return m_bomb->GetFrustumSphere();
 	}
 	else
 	{
@@ -114,4 +123,9 @@ Sphere SmokeBomb::GetSmokeSphere()
 unsigned int SmokeBomb::GetID()
 {
 	return m_smokeBombId;
+}
+
+Object* SmokeBomb::GetBomb()
+{
+	return m_bomb;
 }

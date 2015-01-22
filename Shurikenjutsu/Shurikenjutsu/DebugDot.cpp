@@ -29,8 +29,10 @@ void DebugDot::Initialize(DirectX::XMFLOAT3 p_centrum, int p_resolution, DirectX
 
 void DebugDot::Shutdown()
 {
-	m_mesh->Release();
-	m_mesh = 0;
+	if (m_mesh != NULL)
+	{
+		m_mesh->Release();
+	}
 }
 
 void DebugDot::Render()

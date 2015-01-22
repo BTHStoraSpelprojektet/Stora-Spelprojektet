@@ -2,10 +2,9 @@
 #define PARTICLESHADER
 
 #include <d3d11.h>
-#include <D3Dcompiler.h>
 #include <DirectXMath.h>
 
-#include "ConsoleFunctions.h"
+#include <string>
 
 class ParticleShader
 {

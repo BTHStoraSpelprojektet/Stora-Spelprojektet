@@ -1,5 +1,8 @@
 #include "ObjectManager.h"
-
+#include "Flags.h"
+#include "Network.h"
+#include "Frustum.h"
+#include "Globals.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -148,11 +151,12 @@ void ObjectManager::Render()
 	m_objectsToRender.clear();
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		if (m_frustum.CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
 		{
 			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToRender.push_back(&m_staticObjects[i]);
+				m_staticObjects[i].RenderInstanced();
 			}
 
 
@@ -163,14 +167,10 @@ void ObjectManager::Render()
 		}
 	}
 
-	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
-	{		
-		m_objectsToRender[i]->RenderInstanced(); 
-	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		if (m_frustum.CheckSphere(m_shurikens[i].GetFrustumSphere(), 1.0f))
+		if (m_frustum->CheckSphere(m_shurikens[i].GetFrustumSphere(), 1.0f))
 		{
 			m_shurikens[i].Render();
 		}
@@ -178,7 +178,7 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
-		if (m_frustum.CheckSphere(m_smokeBombList[i].GetSmokeSphere(), 2.0f))
+		if (m_frustum->CheckSphere(m_smokeBombList[i].GetSmokeSphere(), 2.0f))
 		{
 			m_smokeBombList[i].Render();
 		}
@@ -193,19 +193,26 @@ void ObjectManager::RenderDepth()
 		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
 		sphere.m_position.x += 2.0f;
 		sphere.m_position.z += 2.0f;
-		if (m_frustum.CheckSphere(sphere, 7.5f))
+		if (m_frustum->CheckSphere(sphere, 7.5f))
 		{
 			if (CheckIfModelIsInObjectToShadowRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToShadowRender.push_back(&m_staticObjects[i]);
+				m_staticObjects[i].RenderDepthInstanced();
 			}
 		}
 	}
 
-	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		m_objectsToShadowRender[i]->RenderDepth();
+		m_shurikens[i].RenderDepth();
 	}
+
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		m_smokeBombList[i].GetBomb()->RenderDepth();
+	}
+
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID)
@@ -273,7 +280,7 @@ std::vector<Object> ObjectManager::GetStaticObjectList()const
 
 void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 {
-	m_frustum = *p_frustum;
+	m_frustum = p_frustum;
 }
 
 bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object)

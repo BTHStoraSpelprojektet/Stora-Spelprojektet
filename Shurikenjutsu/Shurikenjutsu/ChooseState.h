@@ -2,8 +2,9 @@
 #define CHOOSESTATE_H_
 
 #include "GameState.h"
-#include "Menu.h"
-#include "TextureLibrary.h"
+
+class Menu;
+class MenuItem;
 
 class ChooseState : public GameState
 {
@@ -18,9 +19,9 @@ public:
 	void PrevNinja();
 
 private:
-	Menu m_chooseButton;
+	Menu* m_chooseButton;
 
-	MenuItem m_ninjas[4];
+	MenuItem *m_ninjas[4];
 
 	int currentNinja;
 	int nrOfNinjas;

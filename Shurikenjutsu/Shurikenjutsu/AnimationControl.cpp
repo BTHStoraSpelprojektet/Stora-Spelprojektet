@@ -405,3 +405,8 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 		}
 	}	
 }
+
+std::vector<DirectX::XMFLOAT4X4> AnimationControl::GetBoneTransforms()
+{
+	return m_boneTransforms;
+}

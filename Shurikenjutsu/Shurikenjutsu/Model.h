@@ -5,10 +5,6 @@
 #include <DirectXMath.h>
 #include <string>
 
-#include "GraphicsEngine.h"
-#include "Buffer.h"
-#include "ConsoleFunctions.h"
-#include "..\CommonLibs\ModelImporter.h"
 #include "..\CommonLibs\BaseModel.h"
 #include "AnimationControl.h"
 

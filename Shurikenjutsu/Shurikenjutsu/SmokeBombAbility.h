@@ -2,8 +2,6 @@
 #define SMOKEBOMBABILITY_H
 
 #include "Ability.h"
-#include "..\CommonLibs\GameplayGlobalVariables.h"
-#include "Network.h"
 
 class SmokeBombAbility : public Ability
 {

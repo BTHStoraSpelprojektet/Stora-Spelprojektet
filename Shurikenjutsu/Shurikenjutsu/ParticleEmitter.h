@@ -4,11 +4,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "TextureLibrary.h"
-#include "ConsoleFunctions.h"
-#include "Globals.h"
 #include "Enumerations.h"
-#include "GraphicsEngine.h"
 #include "../CommonLibs/ModelImporter.h"
 
 class ParticleEmitter

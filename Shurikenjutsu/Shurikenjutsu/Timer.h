@@ -1,7 +1,6 @@
 #ifndef TIMER
 #define TIMER
 
-#include <Windows.h>
 
 class Timer
 {

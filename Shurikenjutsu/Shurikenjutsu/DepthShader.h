@@ -2,12 +2,9 @@
 #define DEPTHSHADER
 
 #include <D3D11.h>
-#include <D3Dcompiler.h>
-#include <DirectXMath.h>
 #include <Windows.h>
 
 #include "Structures.h"
-#include "ConsoleFunctions.h"
 
 class DepthShader
 {
@@ -26,9 +23,15 @@ public:
 	int GetNumberOfInstanceBuffer();
 	//void UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_position, int p_index);
 
+	// Animated
+	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+	void UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+
+
 private:
 	void InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices);
 	//void InitializeDynamicInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices);
+	bool InitializeAnimatedDepth(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
 
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4& p_worldMatrix);
 
@@ -62,6 +65,15 @@ private:
 	struct InstancePos
 	{
 		DirectX::XMFLOAT4X4 position;
+	};
+
+	// Animation stuff
+	ID3D11VertexShader* m_animatedVertexShader;
+	ID3D11InputLayout* m_animatedLayout;
+	ID3D11Buffer* m_animationMatrixBuffer;
+	struct AnimationMatrixBuffer
+	{
+		DirectX::XMMATRIX m_boneTransforms[30];
 	};
 };
 #endif

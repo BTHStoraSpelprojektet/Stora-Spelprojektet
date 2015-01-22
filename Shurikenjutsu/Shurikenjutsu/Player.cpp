@@ -1,5 +1,20 @@
 #include "Player.h"
 
+#include "SmokeBombAbility.h"
+#include "CollisionManager.h"
+#include "Dash.h"
+#include "Collisions.h"
+#include "Globals.h"
+#include "MeleeSwing.h"
+#include "InputManager.h"
+#include "ShurikenAbility.h"
+#include "MegaShuriken.h"
+#include "Ability.h"
+#include "HealthBar.h"
+#include "AbilityBar.h"
+#include "../CommonLibs/GameplayGlobalVariables.h"
+#include "AnimationControl.h"
+
 Player::Player(){}
 Player::~Player(){}
 
@@ -32,11 +47,13 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
 
-	m_healthbar.Initialize(100.0f, 15.0f);
+	m_healthbar = new HealthBar();
+	m_healthbar->Initialize(100.0f, 15.0f);
 
 	m_team = 0;
 
-	m_abilityBar.Initialize(0.0f, -420.0f, 5);
+	m_abilityBar = new AbilityBar();
+	m_abilityBar->Initialize(0.0f, -420.0f, 5);
 
 	return true;
 }
@@ -78,6 +95,11 @@ void Player::Shutdown()
 	{
 		m_smokeBombAbility->Shutdown();
 		delete m_smokeBombAbility;
+	}
+	if (m_healthbar != nullptr)
+	{
+		m_healthbar->Shutdown();
+		delete m_healthbar;
 	}
 
 	/*if (m_abilityBar != nullptr)
@@ -463,26 +485,26 @@ void Player::SetCalculatePlayerPosition()
 
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
+	m_healthbar->Update(m_position, m_health, m_maxHealth, p_view, p_projection);
 }
 
 void Player::UpdateAbilityBar()
 {
-	m_abilityBar.Update((float)m_meleeSwing->GetCooldown(), 0.5f, 0);
-	m_abilityBar.Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
-	m_abilityBar.Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
-	m_abilityBar.Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	m_abilityBar.Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	m_abilityBar->Update(m_meleeSwing->GetCooldown(), 0.5f, 0);
+	m_abilityBar->Update(m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
+	m_abilityBar->Update(m_dash->GetCooldown(), DASH_COOLDOWN, 2);
+	m_abilityBar->Update(m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
+	m_abilityBar->Update(m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()
 {
 	if (m_isAlive)
 	{
+		m_healthbar->Render();
 		AnimatedObject::Render(m_team);
-		m_healthbar.Render();
 	}
-	m_abilityBar.Render();
+	m_abilityBar->Render();
 }
 void Player::SetIsAlive(bool p_isAlive)
 {

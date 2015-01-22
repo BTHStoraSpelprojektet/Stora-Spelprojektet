@@ -627,6 +627,9 @@
     <FxCompile Include="Shaders\Depth\InstancingDepthVertexShader.hlsl">
       <Filter>Shaders\Depth</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\Depth\DepthAnimatedVertexShader.hlsl">
+      <Filter>Shaders\Depth</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Scene\LightCalculation.hlsli">

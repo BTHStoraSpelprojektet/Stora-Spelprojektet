@@ -5,24 +5,15 @@
 
 #include "Network.h"
 #include "Window.h"
-#include "GraphicsEngine.h"
 
-#include "Camera.h"
-#include "InputManager.h"
-#include "ObjectManager.h"
-#include "..\CommonLibs\ModelLibrary.h"
-#include "TextureLibrary.h"
-
-#include "ConsoleFunctions.h"
-
-#include "Debug.h"
-
-#include "PlayingStateTest.h"
-#include "MenuState.h"
-#include "ChooseState.h"
-#include "Timer.h"
-#include "Sound.h"
-#include "GUIManager.h"
+class Sound;
+class Timer;
+class Debug;
+class ChooseState;
+class MenuState;
+class PlayingStateTest;
+class Camera;
+class GameState;
 
 class System
 {
@@ -31,7 +22,6 @@ public:
 	void Shutdown();
 	void Run();
 
-	static PlayingStateTest playingState;
 
 private:
 	void Update();
@@ -41,8 +31,8 @@ private:
 
 	void RenderToShadowMap();
 	Window m_window;
-	Timer m_timer;
-	Debug m_debug;
+	Timer* m_timer;
+	Debug* m_debug;
 
 	std::string m_title;
 	int m_previousFPS;
@@ -51,10 +41,11 @@ private:
 	float m_oldMouseY;
 
 	DirectionalLight m_directionalLight;
-	Camera m_lightCamera;
-	MenuState m_menuState;
-	ChooseState	m_chooseNinjaState;
+	Camera* m_lightCamera;
+	MenuState* m_menuState;
+	ChooseState* m_chooseNinjaState;
 	GameState* m_gameState;
+	PlayingStateTest* m_playingState;
 
 	Sound* m_sound;
 };
