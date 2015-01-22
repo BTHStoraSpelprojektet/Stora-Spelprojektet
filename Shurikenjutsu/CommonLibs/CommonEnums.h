@@ -10,4 +10,12 @@ enum ABILITIES
 	ABILITIES_SMOKEBOMB
 };
 
+enum AnimationState {
+	Melee,
+	Range,
+	Special1,
+	Special2,
+	Tool
+};
+
 #endif // !COMMONENUMS_H_
