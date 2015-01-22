@@ -37,7 +37,7 @@ bool ObjectManager::Initialize(Level* p_level)
 			modelPositions.clear();
 		}
 
- 		Object object;
+		Object object;
 		object.Initialize(levelObjects[i].m_filePath.c_str(),
 			DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ),
 			DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ),
@@ -154,20 +154,20 @@ void ObjectManager::Render()
 	m_objectsToRender.clear();
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+		/*if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
 		{
 			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
-			{
+			{*/
 				m_objectsToRender.push_back(&m_staticObjects[i]);
 				m_staticObjects[i].RenderInstanced();
-			}
+			/*}
 
 
 			if (FLAG_DEBUG)
 			{
 				m_staticObjects[i].RenderDebugBoxes();
 			}
-		}
+		}*/
 	}
 
 

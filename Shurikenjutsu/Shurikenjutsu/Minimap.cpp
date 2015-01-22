@@ -1,4 +1,5 @@
 #include "Minimap.h"
+#include "Globals.h"
 
 
 Minimap::Minimap()
@@ -16,7 +17,7 @@ bool Minimap::Initialize()
 	// Create minimap as guielement for instant fix for pos and rendering
 	m_minimap = new GUIElement();
 	float sizeX = 200.0f;
-	float sizeY = 200.0f;
+	float sizeY = 250.0f;
 	// Initiliaze with pos, size and textures
 	m_minimap->Initialize(DirectX::XMFLOAT3(-1 * (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) + (sizeX * 0.5f),
 		-1 * (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + (sizeY * 0.5f), 0.0f),
@@ -45,29 +46,16 @@ void Minimap::Shutdown()
 
 void Minimap::Update(DirectX::XMFLOAT3 p_playerPos)
 {
-	float xPercent, zPercent;
-	bool xPositive, zPositive;
-	xPositive = true;
-	zPositive = true;
+	float xPercent, yPercent;
 	DirectX::XMFLOAT3 playerPos = p_playerPos;
 	playerPos.y = playerPos.z;
 	playerPos.z = 0;
-	/*if (playerPos.x < 0)
-	{
-		xPositive = false;
-		playerPos.x *= -1;
-	}
-	if (playerPos.z < 0)
-	{
-		zPositive = false;
-		playerPos.z *= -1;
-	}*/
 
 	xPercent = playerPos.x / 53;	// 53 size of map in x from middle
-	zPercent = playerPos.z / 65;	// 65 size of map in z from middle
+	yPercent = playerPos.y / 65;	// 65 size of map in z from middle
 	
 	playerPos.x = xPercent * 100;
-	playerPos.z = zPercent * 100;
+	playerPos.y = yPercent * 125;
 
 	m_playerDot->SetPosition(DirectX::XMFLOAT3((m_playerDotStartPos.x + playerPos.x), (m_playerDotStartPos.y + playerPos.y), (m_playerDotStartPos.z + playerPos.z)));
 

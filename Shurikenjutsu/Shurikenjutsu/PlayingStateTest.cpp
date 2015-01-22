@@ -8,6 +8,7 @@
 #include "Frustum.h"
 #include "Camera.h"
 #include "Globals.h"
+#include "Minimap.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -140,14 +141,14 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_updateFrustum = true;
 	}
-	/*if (m_updateFrustum)
+	if (m_updateFrustum)
 	{
-		m_frustum.ConstructFrustum(1000, m_camera.GetProjectionMatrix(), m_camera.GetViewMatrix());
-		m_objectManager.UpdateFrustum(&m_frustum);
-		m_playerManager.UpdateFrustum(&m_frustum);
-	}*/
+		m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
+		m_objectManager->UpdateFrustum(m_frustum);
+		m_playerManager->UpdateFrustum(m_frustum);
+	}
 
-	m_minimap->Update(m_playerManager.GetPlayerPosition());
+	m_minimap->Update(m_playerManager->GetPlayerPosition());
 
 	return GAMESTATESWITCH_NONE;
 }
