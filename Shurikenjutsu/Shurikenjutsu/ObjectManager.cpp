@@ -161,15 +161,8 @@ void ObjectManager::Render()
 				m_objectsToRender.push_back(&m_staticObjects[i]);
 				m_staticObjects[i].RenderInstanced();
 			}
-
-
-			if (FLAG_DEBUG)
-			{
-				m_staticObjects[i].RenderDebugBoxes();
-			}
 		}
 	}
-
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
