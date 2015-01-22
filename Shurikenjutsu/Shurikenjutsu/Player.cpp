@@ -44,13 +44,13 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
 
-	//m_healthbar = new HealthBar();
-	//m_healthbar->Initialize(100.0f, 15.0f);
-	m_healthbar.Initialize(100.0f, 15.0f);
+	m_healthbar = new HealthBar();
+	m_healthbar->Initialize(100.0f, 15.0f);
 
 	m_team = 0;
 
-	m_abilityBar.Initialize(0.0f, -420.0f, 5);
+	m_abilityBar = new AbilityBar();
+	m_abilityBar->Initialize(0.0f, -420.0f, 5);
 
 	return true;
 }
@@ -477,28 +477,26 @@ void Player::SetCalculatePlayerPosition()
 
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	//m_healthbar->Update(m_position, m_health, m_maxHealth, p_view, p_projection);
-	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
+	m_healthbar->Update(m_position, m_health, m_maxHealth, p_view, p_projection);
 }
 
 void Player::UpdateAbilityBar()
 {
-	m_abilityBar.Update(m_meleeSwing->GetCooldown(), 0.5f, 0);
-	m_abilityBar.Update(m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
-	m_abilityBar.Update(m_dash->GetCooldown(), DASH_COOLDOWN, 2);
-	m_abilityBar.Update(m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	m_abilityBar.Update(m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	m_abilityBar->Update(m_meleeSwing->GetCooldown(), 0.5f, 0);
+	m_abilityBar->Update(m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
+	m_abilityBar->Update(m_dash->GetCooldown(), DASH_COOLDOWN, 2);
+	m_abilityBar->Update(m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
+	m_abilityBar->Update(m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()
 {
 	if (m_isAlive)
 	{
-		//m_healthbar->Render();
+		m_healthbar->Render();
 		AnimatedObject::Render(m_team);
-		m_healthbar.Render();
 	}
-	m_abilityBar.Render();
+	m_abilityBar->Render();
 }
 void Player::SetIsAlive(bool p_isAlive)
 {

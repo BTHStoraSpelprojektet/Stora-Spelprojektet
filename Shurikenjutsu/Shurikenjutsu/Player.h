@@ -89,8 +89,7 @@ private:
 	Ability* m_megaShuriken;
 	Ability* m_smokeBombAbility;
 
-	//HealthBar* m_healthbar;
+	HealthBar* m_healthbar;
 	AbilityBar m_abilityBar;
-	HealthBar m_healthbar;
 };
 #endif PLAYER
