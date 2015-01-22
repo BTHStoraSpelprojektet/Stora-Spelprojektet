@@ -144,6 +144,7 @@ void PlayingStateTest::Render()
 	GraphicsEngine::BeginRenderToShadowMap();
 
 	m_objectManager.RenderDepth();
+	m_playerManager.RenderDepth();
 
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();

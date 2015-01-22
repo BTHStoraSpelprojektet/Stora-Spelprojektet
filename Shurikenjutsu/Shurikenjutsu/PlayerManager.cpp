@@ -121,6 +121,16 @@ void PlayerManager::Render()
 	}
 }
 
+void PlayerManager::RenderDepth()
+{
+	m_player.RenderDepth();
+
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		m_enemyList[i].RenderDepth();
+	}
+}
+
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
 	Player tempPlayer;
