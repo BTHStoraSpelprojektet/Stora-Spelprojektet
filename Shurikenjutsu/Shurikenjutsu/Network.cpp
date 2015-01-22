@@ -1,4 +1,6 @@
 #include "Network.h"
+#include <iostream>
+#include "ConsoleFunctions.h"
 
 Network* Network::m_instance;
 
@@ -400,6 +402,21 @@ void Network::ReceviePacket()
 			SendPlayerPos(-100.0f, 100.0f, -100.0f);
 
 			std::cout << "Starting new level\n";
+			break;
+		}
+		case ID_PLAYER_ANIMATION_CHANGED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			AnimationState state;
+
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			bitStream.Read(state);
+
+			// Todo: Update local player animation
+			m_playerAnimations[guid] = state;
 			break;
 		}
 		default:
@@ -830,4 +847,25 @@ NETWORKSTATUS Network::GetNetworkStatus()
 void Network::SetNetworkStatusConnecting()
 {
 	m_networkStatus = NETWORKSTATUS_CONNECTING;
+}
+
+void Network::SendAnimationState(AnimationState p_state)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_ANIMATION_CHANGED);
+	bitStream.Write(p_state);
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+int Network::AnimationChanged(RakNet::RakNetGUID p_guid)
+{
+	if (!(m_playerAnimations.find(p_guid) == m_playerAnimations.end()))
+	{
+		AnimationState state = m_playerAnimations[p_guid];
+		m_playerAnimations.erase(p_guid);
+		return state;
+	}
+	return -1;
 }

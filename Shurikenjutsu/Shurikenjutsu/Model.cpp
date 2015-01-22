@@ -1,5 +1,8 @@
 #include "Model.h"
-
+#include "ConsoleFunctions.h"
+#include "GraphicsEngine.h"
+#include "Buffer.h"
+#include "..\CommonLibs\ModelImporter.h"
 bool Model::LoadModel(const char* p_filepath)
 {
 	// Load Mesh.

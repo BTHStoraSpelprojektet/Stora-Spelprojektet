@@ -1,5 +1,8 @@
 #include "CollisionManager.h"
 
+#include "Collisions.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "Globals.h"
 CollisionManager* CollisionManager::m_instance;
 CollisionManager::CollisionManager(){}
 CollisionManager::~CollisionManager(){}

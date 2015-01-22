@@ -2,14 +2,12 @@
 #define OBJECT
 
 #define WIN32_LEAN_AND_MEAN
-#include "Model.h"
 #include <DirectXMath.h>
-#include "Network.h"
 #include "..\CommonLibs\ModelLibrary.h"
-#include "AnimationControl.h"
-#include <DirectXCollision.h>
 #include "DebugDraw.h"
 #include "ShadowShapes.h"
+
+class Model;
 
 class Object
 {
@@ -21,6 +19,7 @@ public:
 	virtual void Shutdown();
 	virtual void Render();
 	virtual void RenderDepth();
+	virtual void RenderDepthInstanced();
 	virtual void RenderInstanced();
 	void RenderDebugBoxes();
 

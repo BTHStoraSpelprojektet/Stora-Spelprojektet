@@ -1,5 +1,9 @@
 #include "LevelImporter.h"
 
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
 LevelImporter::LevelImporter(std::string p_level){
 	m_level = p_level;
 }

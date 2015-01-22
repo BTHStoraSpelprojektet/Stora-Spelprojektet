@@ -25,7 +25,7 @@ struct Input
 	float2 m_textureCoordinate : TEXCOORD0;
 	float3 m_normal : NORMAL;
 	float3 m_tangent : TANGENT;
-	matrix instancePosition : INSTANCEPOS;
+	matrix m_instancePosition : INSTANCEPOS;
 };
 
 // Vertex output.
@@ -53,7 +53,7 @@ Output main(Input p_input)
 	// Store vertex position in world space.
 	output.m_positionWorld = p_input.m_positionWorld;
 	output.m_positionWorld.w = 1.0f;
-	output.m_positionWorld = mul(output.m_positionWorld, p_input.instancePosition);
+	output.m_positionWorld = mul(output.m_positionWorld, p_input.m_instancePosition);
 
 	output.m_lightPositionHomogenous = p_input.m_positionWorld;
 	output.m_lightPositionHomogenous.w = 1.0f;
@@ -61,7 +61,7 @@ Output main(Input p_input)
 	// Transform vertex position to homogenous clip space.
 	output.m_positionHomogenous = p_input.m_positionWorld;
 	output.m_positionHomogenous.w = 1.0f;
-	output.m_positionHomogenous = mul(output.m_positionHomogenous, p_input.instancePosition);
+	output.m_positionHomogenous = mul(output.m_positionHomogenous, p_input.m_instancePosition);
 	output.m_positionHomogenous = mul(output.m_positionHomogenous, m_viewMatrix);
 	output.m_positionHomogenous = mul(output.m_positionHomogenous, m_projectionMatrix);
 
@@ -70,20 +70,20 @@ Output main(Input p_input)
 
 	// Calculate the camera position.
 	float4 cameraPosition;
-	cameraPosition = mul(p_input.m_positionWorld, p_input.instancePosition);
+	cameraPosition = mul(p_input.m_positionWorld, p_input.m_instancePosition);
 	cameraPosition = mul(cameraPosition, m_viewMatrix);
 	output.m_cameraPosition = cameraPosition;
 
 	// Calculate the position of the vertice as viewed by the light source.
-	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, p_input.instancePosition);
+	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, p_input.m_instancePosition);
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
 	// Pass on tangent.
-	output.m_tangent = mul(float4(p_input.m_tangent, 0.0f), p_input.instancePosition).xyz;
+	output.m_tangent = mul(float4(p_input.m_tangent, 0.0f), p_input.m_instancePosition).xyz;
 
 	// Transform  the normals.
-	output.m_normal = mul(float4(p_input.m_normal, 0.0f), p_input.instancePosition).xyz;
+	output.m_normal = mul(float4(p_input.m_normal, 0.0f), p_input.m_instancePosition).xyz;
 
 	// Normalmap TBN matrix.
 	float3 N = output.m_normal;

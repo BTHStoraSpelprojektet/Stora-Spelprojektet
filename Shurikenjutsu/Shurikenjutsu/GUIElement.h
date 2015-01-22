@@ -2,9 +2,7 @@
 #define GUIELEMENT_H_
 
 #include <DirectXMath.h>
-#include "GUIManager.h"
 #include "DirectX.h"
-#include "TextureLibrary.h"
 
 class GUIElement
 {

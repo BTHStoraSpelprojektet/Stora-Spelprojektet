@@ -1,5 +1,20 @@
 #include "Player.h"
 
+#include "SmokeBombAbility.h"
+#include "CollisionManager.h"
+#include "Dash.h"
+#include "Collisions.h"
+#include "Globals.h"
+#include "MeleeSwing.h"
+#include "InputManager.h"
+#include "ShurikenAbility.h"
+#include "MegaShuriken.h"
+#include "Ability.h"
+#include "HealthBar.h"
+#include "AbilityBar.h"
+#include "../CommonLibs/GameplayGlobalVariables.h"
+#include "AnimationControl.h"
+
 Player::Player(){}
 Player::~Player(){}
 
@@ -32,10 +47,13 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
 
-	m_healthbar.Initialize(50.0f, 5.0f);
-	m_healthbar.Initialize(100.0f, 15.0f);
+	m_healthbar = new HealthBar();
+	m_healthbar->Initialize(100.0f, 15.0f);
 
 	m_team = 0;
+
+	m_abilityBar = new AbilityBar();
+	m_abilityBar->Initialize(0.0f, -420.0f, 5);
 
 	return true;
 }
@@ -78,6 +96,16 @@ void Player::Shutdown()
 		m_smokeBombAbility->Shutdown();
 		delete m_smokeBombAbility;
 	}
+	if (m_healthbar != nullptr)
+	{
+		m_healthbar->Shutdown();
+		delete m_healthbar;
+	}
+
+	/*if (m_abilityBar != nullptr)
+	{
+		m_abilityBar->Shutdown();
+	}*/
 }
 
 void Player::UpdateMe()
@@ -141,6 +169,8 @@ void Player::UpdateMe()
 		// Play ability animation if we did any
 		DoAnimation();
 	}
+
+	UpdateAbilityBar();
 }
 
 void Player::CheckForSpecialAttack()
@@ -202,7 +232,14 @@ bool Player::CalculateDirection()
 	return moved;
 }
 
-void Player::Update(){}
+void Player::Update()
+{
+	int state = Network::GetInstance()->AnimationChanged(m_guid);
+	if (state != -1)
+	{
+		AnimatedObject::ChangeAnimationState((AnimationState)state);
+	}
+}
 
 void Player::UpdateAbilities()
 {
@@ -252,9 +289,9 @@ int Player::GetMaxHealth() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-		AnimatedObject::SetPosition(p_pos);
-
-		if (Network::GetInstance()->IsConnected())
+	AnimatedObject::SetPosition(p_pos);
+	
+	if (Network::GetInstance()->IsConnected())
 	{
 		DirectX::XMFLOAT3 pos = GetPosition();
 		Network::GetInstance()->SendPlayerPos(pos.x, pos.y, pos.z);
@@ -448,16 +485,26 @@ void Player::SetCalculatePlayerPosition()
 
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	m_healthbar.Update(m_position, m_health, m_maxHealth, p_view, p_projection);
+	m_healthbar->Update(m_position, m_health, m_maxHealth, p_view, p_projection);
+}
+
+void Player::UpdateAbilityBar()
+{
+	m_abilityBar->Update((float)m_meleeSwing->GetCooldown(), 0.5f, 0);
+	m_abilityBar->Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
+	m_abilityBar->Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
+	m_abilityBar->Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
+	m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()
 {
 	if (m_isAlive)
 	{
-		AnimatedObject::Render();
-		m_healthbar.Render();
+		m_healthbar->Render();
+		AnimatedObject::Render(m_team);
 	}
+	m_abilityBar->Render();
 }
 void Player::SetIsAlive(bool p_isAlive)
 {
@@ -475,21 +522,26 @@ void Player::DoAnimation()
 	if (m_ability == m_meleeSwing)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Melee);
+		Network::GetInstance()->SendAnimationState(AnimationState::Melee);
 	}
 	else if (m_ability == m_dash)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Special1);
+		Network::GetInstance()->SendAnimationState(AnimationState::Special1);
 	}
 	else if (m_ability == m_megaShuriken)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Special2);
+		Network::GetInstance()->SendAnimationState(AnimationState::Special2);
 	}
 	else if (m_ability == m_smokeBombAbility)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Tool);
+		Network::GetInstance()->SendAnimationState(AnimationState::Tool);
 	}
 	else if (m_ability == m_shurikenAbility)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Range);
+		Network::GetInstance()->SendAnimationState(AnimationState::Range);
 	}
 }

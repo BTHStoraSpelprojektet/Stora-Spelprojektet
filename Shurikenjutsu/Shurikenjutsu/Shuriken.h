@@ -3,11 +3,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include "MovingObject.h"
-#include "..\CommonLibs\GameplayGlobalVariables.h"
-
-
-
-
 
 class Shuriken : public MovingObject
 {

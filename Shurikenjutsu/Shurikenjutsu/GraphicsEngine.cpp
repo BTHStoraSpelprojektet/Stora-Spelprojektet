@@ -1,5 +1,15 @@
 #include "GraphicsEngine.h"
 
+#include "Enumerations.h"
+#include "Globals.h"
+#include "ParticleShader.h"
+#include "WICTextureLoader.h"
+#include "SceneShader.h"
+#include "GUIShader.h"
+#include "DepthShader.h"
+#include "RenderTarget.h"
+#include "ConsoleFunctions.h"
+
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;
 GUIShader GraphicsEngine::m_GUIShader;
@@ -7,8 +17,8 @@ DepthShader GraphicsEngine::m_depthShader;
 ParticleShader GraphicsEngine::m_particleShader;
 HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
-IFW1Factory *GraphicsEngine::pFW1Factory;
-IFW1FontWrapper *GraphicsEngine::pFontWrapper;
+IFW1Factory *GraphicsEngine::m_FW1Factory;
+IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -73,9 +83,12 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 
 	//FONTWRAPPER -.-
-	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &pFW1Factory);
-
-	hResult = pFW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &pFontWrapper);
+	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
+	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &m_fontWrapper);
+	if (FAILED(hResult))
+	{
+		std::cout << "FAILED FONTWRAPPER" << std::endl;
+	}
 
 	return result;
 }
@@ -88,23 +101,25 @@ void GraphicsEngine::Shutdown()
 	m_sceneShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
-	pFW1Factory->Release();
-	pFontWrapper->Release();
-
-	// TODO shutdowns for everyone!
+	if (m_FW1Factory != NULL)
+	{
+		m_FW1Factory->Release();
+	}
+	if (m_fontWrapper != NULL)
+	{
+		m_fontWrapper->Release();
+	}
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
 {
 	ID3D11ShaderResourceView* textureView;
 	std::wstring wstring;
-	for (int i = 0; i < p_filename.length(); ++i)
+	for (unsigned int i = 0; i < p_filename.length(); ++i)
 		wstring += wchar_t(p_filename[i]);
 
 	const wchar_t* your_result = wstring.c_str();
 
-
-	//const wchar_t *filepath = p_filename;
 	HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX.GetDevice(), m_directX.GetContext(), your_result, nullptr, &textureView, 0);
 	if(FAILED(hr))
 	{
@@ -131,6 +146,16 @@ void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices
 void GraphicsEngine::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+}
+
+void GraphicsEngine::RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
+{
+	m_depthShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex);
+}
+
+void GraphicsEngine::RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+{
+	m_depthShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_boneTransforms);
 }
 
 void GraphicsEngine::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
@@ -267,9 +292,10 @@ void GraphicsEngine::TurnOffAlphaBlending()
 	m_directX.TurnOffAlphaBlending();
 }
 
-void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
+void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
 {	
-	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_position);
+	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
+	m_depthShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
 }
 int GraphicsEngine::GetNumberOfInstanceBuffer()
 {
@@ -340,18 +366,16 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 {
 
 	std::wstring wstring;
-	for (int i = 0; i < p_text.length(); ++i)
+	for (unsigned int i = 0; i < p_text.length(); ++i)
 		wstring += wchar_t(p_text[i]);
 
 	const wchar_t* your_result = wstring.c_str();
+	if (m_fontWrapper != NULL)
+	{
+		// Convert to "vettiga" coordinates
+		float x = (p_xpos + (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_WIDTH / GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
+		float y = (-p_ypos + (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_HEIGHT / GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 
-	pFontWrapper->DrawString(
-		m_directX.GetContext(),
-		your_result,// String
-		p_size,// Font size
-		p_xpos,// X position
-		p_ypos,// Y position
-		p_color,// Text color, 0xAaBbGgRr
-		FW1_RESTORESTATE | FW1_CENTER | FW1_VCENTER // Flags
-		);
+		m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, x, y, p_color, FW1_RESTORESTATE | FW1_VCENTER | FW1_CENTER);
+	}
 }

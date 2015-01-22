@@ -3,7 +3,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <iostream>
 
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
@@ -20,7 +19,6 @@
 #include <vector>
 #include <map>
 
-#include "ConsoleFunctions.h"
 
 enum NETWORKSTATUS
 {
@@ -86,6 +84,9 @@ public:
 	NETWORKSTATUS GetNetworkStatus();
 	void SetNetworkStatusConnecting();
 
+	void SendAnimationState(AnimationState p_state);
+	int AnimationChanged(RakNet::RakNetGUID p_guid);
+
 private:
 	Network();
 	~Network();
@@ -129,6 +130,7 @@ private:
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
+	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;

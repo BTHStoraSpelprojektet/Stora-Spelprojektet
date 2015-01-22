@@ -5,8 +5,6 @@
 #include <unordered_map>
 #include <string>
 #include "DirectX.h"
-#include "WICTextureLoader.h"
-#include "GraphicsEngine.h"
 
 class TextureLibrary
 {

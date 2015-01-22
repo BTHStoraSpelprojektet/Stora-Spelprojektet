@@ -1,4 +1,6 @@
 #include "HealthBar.h"
+#include "GUIElementColor.h"
+#include "Globals.h"
 
 HealthBar::HealthBar(){}
 HealthBar::~HealthBar(){}
@@ -6,37 +8,58 @@ HealthBar::~HealthBar(){}
 bool HealthBar::Initialize(float p_width, float p_height)
 {
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_border.Initialize(position, p_width, p_height, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
-	m_background.Initialize(position, p_width - 4.0f, p_height - 3.0f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-	m_foreground.Initialize(position, p_width - 4.0f, p_height - 3.0f, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+	m_border = new GUIElementColor();
+	m_border->Initialize(position, p_width, p_height, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	m_background = new GUIElementColor();
+	m_background->Initialize(position, p_width - 4.0f, p_height - 3.0f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	m_foreground = new GUIElementColor();
+	m_foreground->Initialize(position, p_width - 4.0f, p_height - 3.0f, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	return true;
 }
 
+void HealthBar::Shutdown()
+{
+	if (m_border)
+	{
+		delete m_border;
+	}
+
+	if (m_background)
+	{
+		delete m_background;
+	}
+
+	if (m_foreground)
+	{
+		delete m_foreground;
+	}
+}
 void HealthBar::Update(DirectX::XMFLOAT3 p_position, int p_health, int p_maxHealth, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	CalculatePosition(p_position, p_view, p_projection);
 
 	float percent = (float)p_health / (float)p_maxHealth;
 
-	float newLength = m_background.GetSize().x * (1.0f - percent);
+	float newLength = m_background->GetSize().x * (1.0f - percent);
 
-	DirectX::XMFLOAT3 newPos = m_background.GetPosition();
+	DirectX::XMFLOAT3 newPos = m_background->GetPosition();
 	newPos.x -= newLength * 0.5f;
-	m_foreground.SetPosition(newPos);
+	m_foreground->SetPosition(newPos);
 
-	DirectX::XMFLOAT2 newSize = m_background.GetSize();
+	DirectX::XMFLOAT2 newSize = m_background->GetSize();
 	newSize.x -= newLength;
-	m_foreground.SetSize(newSize);
+	m_foreground->SetSize(newSize);
 
 }
 
 void HealthBar::Render()
 {
-	m_border.QueueRender();
-	m_background.QueueRender();
-	m_foreground.QueueRender();
+	m_border->QueueRender();
+	m_background->QueueRender();
+	m_foreground->QueueRender();
 }
 
 void HealthBar::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
@@ -51,7 +74,7 @@ void HealthBar::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT
 	position.y *= position.z * GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT/2.0f;
 	position.z = 1.0f;
 
-	m_border.SetPosition(position);
-	m_foreground.SetPosition(position);
-	m_background.SetPosition(position);
+	m_border->SetPosition(position);
+	m_foreground->SetPosition(position);
+	m_background->SetPosition(position);
 }

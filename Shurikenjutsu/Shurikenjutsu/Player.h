@@ -3,17 +3,13 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include "AnimatedObject.h"
-#include "InputManager.h"
-#include "Collisions.h"
-#include "Globals.h"
-#include "Dash.h"
-#include "MeleeSwing.h"
-#include "ShurikenAbility.h"
-#include "MegaShuriken.h"
-#include "CollisionManager.h"
-#include "HealthBar.h"
-#include "SmokeBombAbility.h"
+#include "Network.h"
 
+
+class Ability;
+class InputManager;
+class HealthBar;
+class AbilityBar;
 
 class Player :
 	public AnimatedObject
@@ -49,6 +45,7 @@ public:
 	void SetTeam(int p_team);
 
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
+	void UpdateAbilityBar();
 
 	void ResetCooldowns();
 
@@ -82,6 +79,7 @@ private:
 	Ability* m_megaShuriken;
 	Ability* m_smokeBombAbility;
 
-	HealthBar m_healthbar;
+	HealthBar* m_healthbar;
+	AbilityBar* m_abilityBar;
 };
 #endif PLAYER

@@ -1,5 +1,6 @@
 #include "Timer.h"
 
+#include <Windows.h>
 bool Timer::Initialize()
 {
 	m_startTime = 0;

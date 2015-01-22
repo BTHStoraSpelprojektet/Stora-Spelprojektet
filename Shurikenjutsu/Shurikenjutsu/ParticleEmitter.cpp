@@ -1,4 +1,7 @@
 #include "ParticleEmitter.h"
+#include "ConsoleFunctions.h"
+#include "Globals.h"
+#include "GraphicsEngine.h"
 
 bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, DirectX::XMFLOAT2 p_size, PARTICLE_PATTERN p_pattern)
 {
@@ -280,7 +283,7 @@ void ParticleEmitter::UpdateParticles()
 				{
 					// TODO bågformel.
 					float halfTime = m_particleList[i].m_timeToLive / 2.0f;
-					float angle = 30.0f * 3.14159265359 / 180;
+					float angle = 30.0f * (float)3.14159265359 / 180;
 					float height = 3.0f;
 					float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
 

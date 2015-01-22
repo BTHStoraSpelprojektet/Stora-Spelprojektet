@@ -1,14 +1,9 @@
 #include "GUIText.h"
+#include "GUIManager.h"
 
 
-GUIText::GUIText()
-{
-}
-
-
-GUIText::~GUIText()
-{
-}
+GUIText::GUIText(){}
+GUIText::~GUIText(){}
 
 bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
 {

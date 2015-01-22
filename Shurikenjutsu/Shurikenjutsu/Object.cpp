@@ -1,4 +1,8 @@
 #include "Object.h"
+#include "Network.h"
+#include <DirectXCollision.h>
+#include "Model.h"
+#include "AnimationControl.h"
 
 
 Object::Object(){}
@@ -46,6 +50,11 @@ void Object::Render()
 void Object::RenderDepth()
 {
 	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
+}
+
+void Object::RenderDepthInstanced()
+{
+	GraphicsEngine::RenderDepthInstanced(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_InstanceIndex);
 }
 
 void Object::RenderInstanced()

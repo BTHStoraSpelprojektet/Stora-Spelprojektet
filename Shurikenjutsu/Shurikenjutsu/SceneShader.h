@@ -2,13 +2,8 @@
 #define SCENESHADER
 
 #include <D3D11.h>
-#include <D3Dcompiler.h>
-#include <DirectXMath.h>
-#include <Windows.h>
 #include <vector>
-
 #include "Structures.h"
-#include "ConsoleFunctions.h"
 
 class SceneShader
 {
@@ -128,7 +123,6 @@ private:
 
 	//Instancing
 	std::vector<ID3D11Buffer*> m_instanceBufferList;
-	std::vector<ID3D11Buffer*> m_dynamicInstanceBuffers;
 	std::vector<int> m_numberOfInstanceList;
 	struct InstancePos
 	{

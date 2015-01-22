@@ -7,8 +7,9 @@
 #include "Shuriken.h"
 #include "AnimatedObject.h"
 #include "SmokeBomb.h"
-#include "Frustum.h"
 #include "..\CommonLibs\Level.h"
+
+class Frustum;
 
 class ObjectManager
 {
@@ -32,14 +33,15 @@ public:
 	void UpdateFrustum(Frustum* p_frustum);
 private:
 	bool CheckIfModelIsInObjectToRenderList(Object *p_object);
+	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);
 
 	std::vector<SmokeBomb> m_smokeBombList;
 	std::vector<Shuriken> m_shurikens;
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToRender;
-	std::vector<Object> m_objectsToInstance;
+	std::vector<Object*> m_objectsToShadowRender;
 
-	Frustum m_frustum;
+	Frustum* m_frustum;
 
 	bool IsShurikenInList(unsigned int p_shurikenId);
 	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
