@@ -53,6 +53,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
