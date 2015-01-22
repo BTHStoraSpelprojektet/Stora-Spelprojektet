@@ -61,6 +61,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Frustum
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
+	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
+	m_objectManager->UpdateFrustum(m_frustum);
+	m_playerManager->UpdateFrustum(m_frustum);
 
 	return true;
 }
@@ -164,6 +167,7 @@ void PlayingStateTest::Render()
 
 	m_objectManager->RenderDepth();
 
+	m_playerManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
 

@@ -37,6 +37,7 @@ bool MenuState::Initialize()
 	// Initialize connecting menu;
 	//m_connecting.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK); // 
 	m_connecting = new Menu();
+
 	// Push main menu
 	m_menues.push(m_main);
 

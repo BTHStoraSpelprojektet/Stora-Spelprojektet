@@ -155,6 +155,7 @@ void ObjectManager::Render()
 			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToRender.push_back(&m_staticObjects[i]);
+				m_staticObjects[i].RenderInstanced();
 			}
 
 
@@ -165,10 +166,6 @@ void ObjectManager::Render()
 		}
 	}
 
-	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
-	{		
-		m_objectsToRender[i]->RenderInstanced(); 
-	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
@@ -200,14 +197,21 @@ void ObjectManager::RenderDepth()
 			if (CheckIfModelIsInObjectToShadowRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToShadowRender.push_back(&m_staticObjects[i]);
+				m_staticObjects[i].RenderDepthInstanced();
 			}
 		}
 	}
 
-	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
-		m_objectsToShadowRender[i]->RenderDepth();
+		m_shurikens[i].RenderDepth();
 	}
+
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		m_smokeBombList[i].GetBomb().RenderDepth();
+	}
+
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID)

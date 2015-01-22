@@ -20,6 +20,7 @@ public:
 	bool GetIfActive();
 	Sphere GetSmokeSphere();
 	unsigned int GetID();
+	Object GetBomb();
 
 
 private:

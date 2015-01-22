@@ -108,3 +108,8 @@ unsigned int SmokeBomb::GetID()
 {
 	return m_smokeBombId;
 }
+
+Object SmokeBomb::GetBomb()
+{
+	return m_bomb;
+}
