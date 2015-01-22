@@ -2,6 +2,7 @@
 #define ANIMATEDOBJECT_H_
 
 #include "Object.h"
+#include "TextureLibrary.h"
 
 class AnimatedObject : public Object
 {
@@ -15,7 +16,7 @@ public:
 	virtual void SetSpeed(float p_speed);
 	virtual float GetSpeed() const;
 
-	void Render();
+	void Render(int p_team);
 	void ChangeAnimationState(AnimationState p_newState);
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
@@ -27,6 +28,8 @@ protected:
 
 private:
 	AnimationControl m_animationController;
+
+	ID3D11ShaderResourceView* m_texture;
 };
 
 #endif ANIMATEDOBJECT_H_

@@ -6,9 +6,6 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_animationStacks.push_back(p_newStack);
 	m_boneTransforms.resize(p_newStack.m_jointCount);
 
-	m_frameArms = 0;
-	m_frameLegs = 0;
-
 	m_forwardDirection = DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
 	m_ikDirection = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
 	m_rotationAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -27,14 +24,17 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 
 	m_frameArms += deltaTime * 20;
 	m_frameLegs += deltaTime * 20;
+	
+	m_blendWeightArms = (m_frameArms - (int)m_frameArms) / 2;	//24.0f
+	m_blendWeightLegs = (m_frameLegs - (int)m_frameLegs) / 2;
 
-	if (m_frameArms >= (m_currentArms.m_endFrame - 1))
+	if (m_frameArms >= (m_currentArms->m_endFrame - 1))
 	{
 		m_frameArms = 0.0f;
 		m_attackAnimation = false;
 	}		
 
-	if (m_frameLegs >= (m_currentLegs.m_endFrame - 1))
+	if (m_frameLegs >= (m_currentLegs->m_endFrame - 1))
 	{
 		m_frameLegs = 0.0f;
 	}		
@@ -43,7 +43,7 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 	DirectX::XMVECTOR startTranslation = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 
 	int* index = new int(0);
-	CombineMatrices(index, m_currentArms.m_root[(int)m_frameArms], m_currentLegs.m_root[(int)m_frameLegs], startQuaternion, startTranslation);
+	CombineMatrices(index, m_currentArms->m_root[(int)m_frameArms], m_currentLegs->m_root[(int)m_frameLegs], startQuaternion, startTranslation);
 	delete[] index;
 
 	return m_boneTransforms;
@@ -57,6 +57,12 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 	DirectX::XMVECTOR quaternionLegs = DirectX::XMVectorSet(p_jointLegs->m_quaternion[0], p_jointLegs->m_quaternion[1], p_jointLegs->m_quaternion[2], p_jointLegs->m_quaternion[3]);
 
+	quaternionArms = DirectX::XMQuaternionSlerp(m_QuaternionArms[*p_index], quaternionArms, m_blendWeightArms);
+	m_QuaternionArms[*p_index] = quaternionArms;
+	
+	quaternionLegs = DirectX::XMQuaternionSlerp(m_QuaternionLegs[*p_index], quaternionLegs, m_blendWeightLegs);
+	m_QuaternionLegs[*p_index] = quaternionLegs;
+	
 	if (strcmp(p_jointArms->m_name, "HandR") == 0 ||
 		strcmp(p_jointArms->m_name, "HandL") == 0 ||
 		strcmp(p_jointArms->m_name, "ShoulderR") == 0 ||
@@ -174,48 +180,23 @@ void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 
 	if (DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)	// Idle
 	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = m_animationStacksArray[7];
-		}
-
-		m_currentLegs = m_animationStacksArray[6];
+		ChangeLayer(7, 6);
 	}
 	else if (directionAngle < (3.14f * 0.375f))			  // Forward
 	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = m_animationStacksArray[1];
-		}
-
-		m_currentLegs = m_animationStacksArray[0];
+		ChangeLayer(1, 0);
 	}
 	else if (directionAngle >(3.14f * 0.625f))			  // Back
 	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = m_animationStacksArray[3];
-		}
-
-		m_currentLegs = m_animationStacksArray[2];
+		ChangeLayer(3, 2);
 	}
 	else if (cross > 0)									 // Right
 	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = m_animationStacksArray[3];
-		}
-
-		m_currentLegs = m_animationStacksArray[5];
+		ChangeLayer(3, 5);
 	}
 	else                                                  // Left
 	{
-		if (m_attackAnimation != true)
-		{
-			m_currentArms = m_animationStacksArray[3];
-		}
-
-		m_currentLegs = m_animationStacksArray[4];
+		ChangeLayer(3, 4);
 	}
 
 	ApplyLegDirection(direction, directionAngle, cross);
@@ -233,32 +214,37 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 	{  
 		if (DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)	// Idle
 		{
-			m_currentArms = m_animationStacksArray[7];
-			m_currentLegs = m_animationStacksArray[6];
+			ChangeLayer(7, 6);
 		}
 		else if (directionAngle < (3.14f * 0.375f))			  // Forward
 		{
-			m_currentArms = m_animationStacksArray[1];
-			m_currentLegs = m_animationStacksArray[0];
+			ChangeLayer(1, 0);
 		}
 		else if (directionAngle >(3.14f * 0.625f))			  // Back
 		{
-			m_currentArms = m_animationStacksArray[3];
-			m_currentLegs = m_animationStacksArray[2];
+			ChangeLayer(3, 2);
 		}
 		else if (cross > 0 && DirectX::XMVector3Length(direction).m128_f32[0] != 0.0f)		// Right
 		{
-			m_currentArms = m_animationStacksArray[3];
-			m_currentLegs = m_animationStacksArray[5];
+			ChangeLayer(3, 5);
 		}
 		else																// Left
 		{
-			m_currentArms = m_animationStacksArray[3];
-			m_currentLegs = m_animationStacksArray[4];
+			ChangeLayer(3, 4);
 		}
 
 		ApplyLegDirection(direction, directionAngle, cross);	
 	}
+}
+
+void AnimationControl::ChangeLayer(int p_armIndex, int p_legIndex)
+{
+	if (m_attackAnimation != true)
+	{
+		m_currentArms = &m_animationStacksArray[p_armIndex];
+	}
+
+	m_currentLegs = &m_animationStacksArray[p_legIndex];
 }
 
 void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross)
@@ -368,6 +354,20 @@ void AnimationControl::FindAndReferenceLayers()
 			}
 		}		
 	}
+
+	m_currentLegs = &m_animationStacksArray[6];
+	m_currentArms = &m_animationStacksArray[7];
+
+	m_blendWeightArms = 0.0f;
+	m_blendWeightLegs = 0.0f;
+
+	m_QuaternionArms.resize(m_animationStacksArray[0].m_jointCount);
+	m_QuaternionLegs.resize(m_animationStacksArray[0].m_jointCount);
+	for (unsigned int i = 0; i < m_animationStacksArray[0].m_jointCount; i++)
+	{
+		m_QuaternionArms[i] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+		m_QuaternionLegs[i] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	}
 }
 
 void AnimationControl::Shutdown()
@@ -385,23 +385,23 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 
 		if (p_newState == AnimationState::Melee)
 		{
-			m_currentArms = m_animationStacksArray[10];
+			m_currentArms = &m_animationStacksArray[10];
 		}
 		else if (p_newState == AnimationState::Range)
 		{
-			m_currentArms = m_animationStacksArray[11];
+			m_currentArms = &m_animationStacksArray[11];
 		}
 		else if (p_newState == AnimationState::Special1)
 		{
-			m_currentArms = m_animationStacksArray[13];
+			m_currentArms = &m_animationStacksArray[13];
 		}
 		else if (p_newState == AnimationState::Special2)
 		{
-			m_currentArms = m_animationStacksArray[14];
+			m_currentArms = &m_animationStacksArray[14];
 		}
 		else if (p_newState == AnimationState::Tool)
 		{
-			m_currentArms = m_animationStacksArray[12];
+			m_currentArms = &m_animationStacksArray[12];
 		}
 	}	
 }

@@ -43,8 +43,6 @@ private:
 
 	Player m_player;
 
-	AbilityBar m_playerAbilityBar;
-
 	std::vector<Player> m_enemyList;
 
 	Frustum m_frustum;

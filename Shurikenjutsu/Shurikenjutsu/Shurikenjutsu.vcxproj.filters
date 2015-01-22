@@ -273,9 +273,6 @@
     <ClCompile Include="GUIShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
-    <ClCompile Include="InstancedShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
     <ClCompile Include="SceneShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
@@ -642,6 +639,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\Scene\VertexShader.hlsl">
       <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Depth\InstancingDepthVertexShader.hlsl">
+      <Filter>Shaders\Depth</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -12,6 +12,8 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 		return false;
 	}
 
+	m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/char_bluetext.png");
+
 	SetDirection(p_dir);
 	SetSpeed(p_speed);
 
@@ -51,9 +53,16 @@ float AnimatedObject::GetSpeed() const
 	return m_speed;
 }
 
-void AnimatedObject::Render()
+void AnimatedObject::Render(int p_team)
 {
-	GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.UpdateAnimation());
+	if (p_team == 1)
+	{
+		GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.UpdateAnimation());
+	}
+	else
+	{
+		GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_texture, m_model->GetNormalMap(), m_animationController.UpdateAnimation());
+	}	
 }
 
 void AnimatedObject::ChangeAnimationState(AnimationState p_newState)
