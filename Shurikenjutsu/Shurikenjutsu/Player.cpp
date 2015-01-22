@@ -490,11 +490,11 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::UpdateAbilityBar()
 {
-	m_abilityBar->Update(m_meleeSwing->GetCooldown(), 0.5f, 0);
-	m_abilityBar->Update(m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
-	m_abilityBar->Update(m_dash->GetCooldown(), DASH_COOLDOWN, 2);
-	m_abilityBar->Update(m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	m_abilityBar->Update(m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	m_abilityBar->Update((float)m_meleeSwing->GetCooldown(), 0.5f, 0);
+	m_abilityBar->Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
+	m_abilityBar->Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
+	m_abilityBar->Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
+	m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()
