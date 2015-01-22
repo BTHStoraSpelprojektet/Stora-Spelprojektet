@@ -9,14 +9,14 @@ public:
 	GUIAbility();
 	~GUIAbility();
 
-	bool Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height);
+	bool Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, ID3D11ShaderResourceView* p_texture);
 	void Update(float p_currentCooldown, float p_maxCooldown);
 	void Render();
 
 private:
 	
 	GUIElementColor m_border;
-	GUIElementColor m_ability;
-	GUIElementColor m_cooldown;
+	GUIElement m_ability;
+	GUIElement m_cooldown;
 };
 #endif // !GUIABILITY_H_

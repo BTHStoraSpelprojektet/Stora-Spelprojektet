@@ -195,13 +195,12 @@ void ObjectManager::RenderDepth()
 		sphere.m_position.z += 2.0f;
 		if (m_frustum.CheckSphere(sphere, 7.5f))
 		{
-			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
+			if (CheckIfModelIsInObjectToShadowRenderList(&m_staticObjects[i]))
 			{
 				m_objectsToShadowRender.push_back(&m_staticObjects[i]);
 			}
 		}
 	}
-	//m_objectsToShadowRender
 
 	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
 	{
@@ -282,6 +281,18 @@ bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object)
 	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
 	{
 		if (m_objectsToRender[i]->GetModel() == p_object->GetModel())
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool ObjectManager::CheckIfModelIsInObjectToShadowRenderList(Object *p_object)
+{
+	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
+	{
+		if (m_objectsToShadowRender[i]->GetModel() == p_object->GetModel())
 		{
 			return false;
 		}

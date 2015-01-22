@@ -3,6 +3,7 @@
 
 #include "GUIAbility.h"
 #include <vector>
+#include "TextureLibrary.h"
 
 class AbilityBar
 {
@@ -11,12 +12,13 @@ public:
 	~AbilityBar();
 
 	bool Initialize(float p_positionX, float p_positionY, int p_numberOfAbilities);
-	void Update();
+	void Shutdown();
+	void Update(float p_cooldown, float p_fullCooldown, int p_index);
 	void Render();
 
 private:
 	std::vector<GUIAbility> m_abilities;
-	GUIElementColor m_background;
+	GUIElement m_background;
 
 };
 #endif // !ABILITYBAR_H_

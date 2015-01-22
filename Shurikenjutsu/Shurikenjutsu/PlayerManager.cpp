@@ -1,7 +1,6 @@
 #include "PlayerManager.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "Frustum.h"
-#include "AbilityBar.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -10,8 +9,6 @@ bool PlayerManager::Initialize()
 	m_enemyList = std::vector<Player>();
 	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
-	m_playerAbilityBar = new AbilityBar();
-	m_playerAbilityBar->Initialize(0.0f, -420.0f, 6);
 	m_enemyUpdatePositionTimer = 0.0f;
 	return true;
 }
@@ -124,7 +121,6 @@ void PlayerManager::Render()
 			m_enemyList[i].Render();
 		}
 	}
-	m_playerAbilityBar->Render();
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
