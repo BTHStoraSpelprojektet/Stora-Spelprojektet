@@ -17,7 +17,8 @@ public:
 	static CollisionManager* GetInstance();
 	
 	void Update(float p_pickedx, float p_pickedZ);
-	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
+	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticBoxes(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
+	std::vector<Sphere> CalculateLocalPlayerCollisionWithStaticSpheres(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
 	float CalculateDashLength(Ray* p_ray);
 	float CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos);
 private:

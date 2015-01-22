@@ -52,7 +52,7 @@ CollisionManager* CollisionManager::GetInstance()
 	return m_instance;
 }
 
-std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObjects(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction)
+std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction)
 {
 	std::vector<OBB> CollisionList;
 	Sphere playerSphere = p_playerSphere;
@@ -74,6 +74,38 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticObject
 		}
 	}
 	return CollisionList;
+}
+
+std::vector<Sphere> CollisionManager::CalculateLocalPlayerCollisionWithStaticSpheres(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction)
+{
+	std::vector<Sphere> collisionList;
+	Sphere playerSphere = p_playerSphere;
+	float speedXDeltaTime = p_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+	
+	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	{
+		Sphere staticSphere = m_staticSphereList[i];
+
+		playerSphere.m_position.x = p_playerSphere.m_position.x + p_direction.x * speedXDeltaTime;
+		playerSphere.m_position.y = p_playerSphere.m_position.y + p_direction.y * speedXDeltaTime;
+		playerSphere.m_position.z = p_playerSphere.m_position.z + p_direction.z * speedXDeltaTime;
+
+
+		// Check so they will collide in y, othersize put both at y:0
+		if ((staticSphere.m_position.y + staticSphere.m_radius) <= (playerSphere.m_position.y - playerSphere.m_radius) || (playerSphere.m_position.y + playerSphere.m_radius) <= (staticSphere.m_position.y + staticSphere.m_radius))
+		{
+			staticSphere.m_position.y = 0;
+			playerSphere.m_position.y = 0;
+		}
+
+
+		if (Collisions::SphereSphereCollision(staticSphere, playerSphere))
+		{
+			collisionList.push_back(m_staticSphereList[i]);
+		}
+	}
+
+	return collisionList;
 }
 
 float CollisionManager::CalculateDashLength(Ray* p_ray)

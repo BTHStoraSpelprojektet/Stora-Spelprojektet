@@ -29,6 +29,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 
 	TransformBoundingBoxes();
+	TransformBoundingSpheres();
 	TransformShadowPoints();
 
 

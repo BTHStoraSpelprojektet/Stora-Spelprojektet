@@ -345,9 +345,11 @@ void Player::CalculateFacingAngle()
 	float faceAngle = atan2(y, x) - 1.57079632679f;
 	SetFacingDirection(DirectX::XMFLOAT3(GetFacingDirection().x, faceAngle, GetFacingDirection().z));
 }
+
 void Player::SetCalculatePlayerPosition()
 {
-	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticObjects(m_playerSphere, m_speed, m_direction);
+	// Check collision between player and static boxes
+	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(m_playerSphere, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{
 		bool rightOfBox = m_position.x >(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x);
@@ -457,6 +459,16 @@ void Player::SetCalculatePlayerPosition()
 
 		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 	}
+
+	// Check collision between player and static spheres
+	std::vector<Sphere> collidingSpheres = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticSpheres(m_playerSphere, m_speed, m_direction);
+	for (unsigned int i = 0; i < collidingSpheres.size(); i++)
+	{
+		// Todo: Check angle?
+		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	}
+
+
 	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
 }
