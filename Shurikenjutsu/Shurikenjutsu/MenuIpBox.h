@@ -2,6 +2,7 @@
 #define MENUIPBOX_H_
 
 #include "MenuItem.h"
+#include <string>
 
 class MenuIpBox : public MenuItem
 {

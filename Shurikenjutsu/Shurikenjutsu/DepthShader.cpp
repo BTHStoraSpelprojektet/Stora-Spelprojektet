@@ -1,4 +1,7 @@
 #include "DepthShader.h"
+#include "ConsoleFunctions.h"
+#include <D3Dcompiler.h>
+#include <DirectXMath.h>
 
 bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
@@ -260,6 +263,12 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	if (!InitializeAnimatedDepth(p_device, p_context))
+	{
+		ConsolePrintErrorAndQuit("Failed to Initialize animated depth");
+		return false;
+	}
+
 	return true;
 }
 
@@ -411,3 +420,150 @@ void DepthShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberO
 	}
 	m_instanceBufferList.push_back(instanceBuffer);
 }
+
+bool DepthShader::InitializeAnimatedDepth(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
+{
+	ID3D10Blob*	animatedVertexShader = 0;
+	ID3D10Blob*	errorMessage = 0;
+
+	// Compile animated vertex shader
+	if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthAnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthAnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile depth animated vertex shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_VSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_VSVersion = "5.0";
+	}
+
+	// Create the animated vertex shader.
+	if (FAILED(p_device->CreateVertexShader(animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), NULL, &m_animatedVertexShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create depth animated vertex shader.");
+		return false;
+	}
+
+	// Configure animated vertex layout.
+	D3D11_INPUT_ELEMENT_DESC animationLayout[4];
+	unsigned int animationSize;
+
+	animationLayout[0].SemanticName = "POSITION";
+	animationLayout[0].SemanticIndex = 0;
+	animationLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	animationLayout[0].InputSlot = 0;
+	animationLayout[0].AlignedByteOffset = 0;
+	animationLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	animationLayout[0].InstanceDataStepRate = 0;
+
+	animationLayout[1].SemanticName = "TEXCOORD";
+	animationLayout[1].SemanticIndex = 0;
+	animationLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	animationLayout[1].InputSlot = 0;
+	animationLayout[1].AlignedByteOffset = 12;
+	animationLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	animationLayout[1].InstanceDataStepRate = 0;
+
+	animationLayout[2].SemanticName = "WEIGHT";
+	animationLayout[2].SemanticIndex = 0;
+	animationLayout[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	animationLayout[2].InputSlot = 0;
+	animationLayout[2].AlignedByteOffset = 44;
+	animationLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	animationLayout[2].InstanceDataStepRate = 0;
+
+	animationLayout[3].SemanticName = "BONEINDEX";
+	animationLayout[3].SemanticIndex = 0;
+	animationLayout[3].Format = DXGI_FORMAT_R8G8B8A8_UINT;
+	animationLayout[3].InputSlot = 0;
+	animationLayout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	animationLayout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	animationLayout[3].InstanceDataStepRate = 0;
+
+	// Compute size of layout.
+	animationSize = sizeof(animationLayout) / sizeof(animationLayout[0]);
+
+	// Create the vertex input layout.
+	if (FAILED(p_device->CreateInputLayout(animationLayout, animationSize, animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), &m_animatedLayout)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create depth animated vertex input layout.");
+		return false;
+	}
+
+	animatedVertexShader->Release();
+	animatedVertexShader = 0;
+
+	// Create the animated matrix buffer description.
+	D3D11_BUFFER_DESC animatedMatrixBuffer;
+	animatedMatrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	animatedMatrixBuffer.ByteWidth = sizeof(AnimationMatrixBuffer);
+	animatedMatrixBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	animatedMatrixBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	animatedMatrixBuffer.MiscFlags = 0;
+	animatedMatrixBuffer.StructureByteStride = 0;
+
+	// Create the animated matrix buffer.
+	if (FAILED(p_device->CreateBuffer(&animatedMatrixBuffer, NULL, &m_animationMatrixBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create depth animated buffer.");
+		return false;
+	}
+
+	return true;
+}
+
+void DepthShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+{
+	// Set parameters and then render.
+	unsigned int stride = sizeof(VertexAnimated);
+	const unsigned int offset = 0;
+
+	UpdateWorldMatrix(p_context, p_worldMatrix);
+	UpdateAnimatedBuffer(p_context, p_boneTransforms);
+
+	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
+
+	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetInputLayout(m_animatedLayout);
+
+	p_context->VSSetShader(m_animatedVertexShader, NULL, 0);
+	p_context->PSSetShader(m_pixelShader, NULL, 0);
+
+	p_context->Draw(p_numberOfVertices, 0);
+}
+
+void DepthShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+{
+	// Lock matrix buffer so that it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_animationMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to map scene animated matrix buffer.");
+	}
+
+	// Get pointer to the matrix buffer data.
+	AnimationMatrixBuffer* animatedMatrixBuffer;
+	animatedMatrixBuffer = (AnimationMatrixBuffer*)mappedBuffer.pData;
+
+	// Set matrices in buffer.
+	for (unsigned int i = 0; i < p_boneTransforms.size(); i++)
+		animatedMatrixBuffer->m_boneTransforms[i] = DirectX::XMLoadFloat4x4(&p_boneTransforms[i]);
+
+	// Unlock the matrix buffer after it has been written to.
+	p_context->Unmap(m_animationMatrixBuffer, 0);
+
+	// Set the matrix buffer.
+	p_context->VSSetConstantBuffers(2, 1, &m_animationMatrixBuffer);
+}
+

@@ -1,4 +1,8 @@
 #include "Object.h"
+#include "Network.h"
+#include <DirectXCollision.h>
+#include "Model.h"
+#include "AnimationControl.h"
 
 
 Object::Object(){}
@@ -47,7 +51,12 @@ void Object::Render()
 
 void Object::RenderDepth()
 {
-	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_InstanceIndex);
+	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
+}
+
+void Object::RenderDepthInstanced()
+{
+	GraphicsEngine::RenderDepthInstanced(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_InstanceIndex);
 }
 
 void Object::RenderInstanced()
@@ -197,29 +206,7 @@ void Object::TransformShadowPoints()
 		DirectX::XMFLOAT3 position = saList[i];
 		DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
 
-		shadowPoints.push_back(position);
-	}
-
-	if (shadowPoints.size() > 0)
-	{
-		LineSegment line;
-		ShadowShape shape;
-
-		// Create all but the last shapes.
-		for (unsigned int i = 0; i < shadowPoints.size() - 1; i++)
-		{
-			line.m_startPoint = DirectX::XMFLOAT2(shadowPoints[i].x, shadowPoints[i].z);
-			line.m_endPoint = DirectX::XMFLOAT2(shadowPoints[i + 1].x, shadowPoints[i + 1].z);
-			shape.m_lineSegments.push_back(line);
-		}
-
-		// Create the last shapes.
-		line.m_startPoint = DirectX::XMFLOAT2(shadowPoints[shadowPoints.size() - 1].x, shadowPoints[shadowPoints.size() - 1].z);
-		line.m_endPoint = DirectX::XMFLOAT2(shadowPoints[0].x, shadowPoints[0].z);
-		shape.m_lineSegments.push_back(line);
-
-		// Push the shape.
-		ShadowShapes::GetInstance().AddShadowShape(shape);
+		// TODO add shapes from the map to the static shapes list here.
 	}
 }
 

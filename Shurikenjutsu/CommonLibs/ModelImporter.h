@@ -1,11 +1,9 @@
 #ifndef MODELIMPORTER
 #define MODELIMPORTER
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <string>
+
 #include "CommonStructures.h"
+class string;
 
 struct MeshData
 {

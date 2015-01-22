@@ -1,14 +1,7 @@
 #include "MapManager.h"
 
-
-MapManager::MapManager()
-{
-}
-
-
-MapManager::~MapManager()
-{
-}
+MapManager::MapManager(){}
+MapManager::~MapManager(){}
 
 bool MapManager::Initialize(std::string p_levelName)
 {

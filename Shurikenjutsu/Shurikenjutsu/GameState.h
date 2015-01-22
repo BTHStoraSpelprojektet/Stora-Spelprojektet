@@ -1,7 +1,6 @@
 #ifndef GAMESTATE
 #define GAMESTATE
 
-#include "GraphicsEngine.h"
 
 enum GAMESTATESWITCH
 {

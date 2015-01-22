@@ -1,11 +1,8 @@
 #ifndef COLLISIONMANAGER_H
 #define COLLISIONMANAGER_H
 
-#include "Collisions.h"
-#include "Globals.h"
 #include "Object.h"
 
-#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 class CollisionManager
 {

@@ -1,14 +1,8 @@
 #include "Player.h"
+#include <iostream>
 
-
-Player::Player()
-{
-}
-
-
-Player::~Player()
-{
-}
+Player::Player(){}
+Player::~Player(){}
 
 bool Player::Initialize(std::string p_modelName, RakNet::RakNetGUID p_guid, int p_team, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction)
 {

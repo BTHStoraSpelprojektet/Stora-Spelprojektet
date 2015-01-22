@@ -1,10 +1,10 @@
 #ifndef MODELLIBRARY_H_
 #define MODELLIBRARY_H_
 
-#include "BaseModel.h"
 #include <windows.h>
 #include <unordered_map>
-#include <string>
+class string;
+#include "BaseModel.h"
 
 class ModelLibrary
 {

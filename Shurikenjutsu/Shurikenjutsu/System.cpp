@@ -1,14 +1,30 @@
 #include "System.h"
-
-PlayingStateTest System::playingState;
-
+#include "Sound.h"
+#include "Timer.h"
+#include "ConsoleFunctions.h"
+#include "GraphicsEngine.h"
+#include "Debug.h"
+#include "GUIManager.h"
+#include "ChooseState.h"
+#include "MenuState.h"
+#include "PlayingStateTest.h"
+#include "Camera.h"
+#include "GameState.h"
+#include "..\CommonLibs\ModelLibrary.h"
+#include "Model.h"
+#include "InputManager.h"
+#include "Globals.h"
+#include "TextureLibrary.h"
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	bool result = true;
-
-	// Set default game state.
-	m_gameState = &m_menuState;
+	
+	// Set default game state.s
+	m_chooseNinjaState = new ChooseState();
+	m_menuState = new MenuState();
+	m_playingState = new PlayingStateTest();
+	m_gameState = m_menuState;
 
 	// Set starting window values.
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
@@ -75,8 +91,9 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize timer.
 	m_previousFPS = 0;
-	m_timer.Initialize();
-	m_timer.StartTimer();
+	m_timer = new Timer();
+	m_timer->Initialize();
+	m_timer->StartTimer();
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
@@ -114,13 +131,15 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	}
 
 	// Initialize directional light
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.25f, 0.25f, 0.25f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.5f, 0.5f, 0.5f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(0.1f, 0.1f, 0.1f, 1.0f);
-	m_directionalLight.m_direction = DirectX::XMVectorSet(1.0f, -2.0f, 1.0f, 0.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(0.225f, 0.225f, 0.225f, 1.0f);
+	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(1.0f, -4.0f, 2.0f, 1.0f);
+	m_directionalLight.m_direction = DirectX::XMVector4Normalize(DirectX::XMLoadFloat4(&direction));
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
-	m_lightCamera.Initialize();
-	m_lightCamera.ResetCameraToLight();
+	m_lightCamera = new Camera();
+	m_lightCamera->Initialize();
+	m_lightCamera->ResetCameraToLight();
 	ConsolePrintSuccess("Light source and light camera initialized successfully.");
 	ConsoleSkipLines(1);
 
@@ -132,7 +151,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	// Run all tests that are in the debug class.
 	if (FLAG_RUN_TESTS == 1)
 	{
-		m_debug.RunTests(p_argc, p_argv);
+		m_debug->RunTests(p_argc, p_argv);
 	}
 
 	m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
@@ -146,8 +165,14 @@ void System::Shutdown()
 	InputManager::GetInstance()->Shutdown();
 
 	//Shutdown current state
-	m_gameState->Shutdown();
+	if (m_playingState != NULL)
+	{
+		m_playingState->Shutdown();
+		delete m_playingState;
+	}
+	m_menuState->Shutdown();
 
+	
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown();
 
@@ -205,19 +230,19 @@ void System::Run()
 void System::Update()
 {
 	// Update the timer to enable delta time and FPS measurements.
-	m_timer.Update();
+	m_timer->Update();
 
 	// Get the delta time to use for animation etc.
-	GLOBAL::GetInstance().SetDeltaTime(m_timer.GetDeltaTime());
+	GLOBAL::GetInstance().SetDeltaTime(m_timer->GetDeltaTime());
 
 	if (FLAG_FPS == 1)
 	{
-		int fps = m_timer.GetFPS();
+		int fps = m_timer->GetFPS();
 
 		if (fps != m_previousFPS)
 		{
 			std::string title = m_title + " (FPS: ";
-			title.append(std::to_string(m_timer.GetFPS()) + ") ");
+			title.append(std::to_string(m_timer->GetFPS()) + ") ");
 
 			m_window.SetTitle(title);
 
@@ -228,15 +253,15 @@ void System::Update()
 	switch (m_gameState->Update())
 	{
 	case GAMESTATESWITCH_CHOOSENINJA:
-		m_gameState = &m_chooseNinjaState;
+		m_gameState = m_chooseNinjaState;
 		m_gameState->Initialize();
 		break;
 	case GAMESTATESWITCH_PLAY:
-		m_gameState = &playingState;
+		m_gameState = m_playingState;
 		m_gameState->Initialize();
 		break;
 	case GAMESTATESWITCH_MENU:
-		m_gameState = &m_menuState;
+		m_gameState = m_menuState;
 		break;
 	}
 	

@@ -1,14 +1,10 @@
 #include "Sound.h"
 #include <iostream>
+#include "fmod_errors.h"
 
-Sound::Sound()
-{
-}
-
-
-Sound::~Sound()
-{
-}
+#include "../CommonLibs/CommonStructures.h"
+Sound::Sound(){}
+Sound::~Sound(){}
 
 bool Sound::Initialize()
 {

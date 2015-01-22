@@ -4,6 +4,8 @@
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
+#include <d3d11.h>
+#include "..\CommonLibs\CommonStructures.h"
 
 class Player
 {

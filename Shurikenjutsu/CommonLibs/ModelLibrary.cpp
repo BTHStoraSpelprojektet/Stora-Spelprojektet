@@ -1,4 +1,6 @@
 #include "ModelLibrary.h"
+#include <iostream>
+#include <string>
 
 ModelLibrary* ModelLibrary::m_instance;
 

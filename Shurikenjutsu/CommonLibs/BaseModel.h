@@ -2,8 +2,6 @@
 #define BASEMODEL_H_
 
 #include "CommonStructures.h"
-#include <vector>
-#include "ModelImporter.h"
 #include <d3d11.h>
 
 class BaseModel

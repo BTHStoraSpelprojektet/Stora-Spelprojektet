@@ -2,11 +2,8 @@
 #define LEVELIMPORTER_H_
 
 #define WIN32_LEAN_AND_MEAN
-#include <string>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <vector>
+class string;
 
 class LevelImporter
 {

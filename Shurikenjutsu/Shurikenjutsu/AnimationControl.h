@@ -23,7 +23,7 @@ public:
 
 	void Shutdown();
 
-	
+	std::vector<DirectX::XMFLOAT4X4> GetBoneTransforms();
 	
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);

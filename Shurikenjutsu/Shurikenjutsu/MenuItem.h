@@ -1,9 +1,9 @@
 #ifndef MENUITEM_H_
 #define MENUITEM_H_
 
-#include "GUIElement.h"
-#include "InputManager.h"
+#include "DirectX.h"
 
+class GUIElement;
 enum MENUACTION
 {
 	MENUACTION_BACK,
@@ -39,7 +39,7 @@ protected:
 	float m_width;
 	float m_height;
 
-	GUIElement m_background;
+	GUIElement *m_background;
 
 	MENUACTION m_action;
 };

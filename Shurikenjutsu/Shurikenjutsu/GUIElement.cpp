@@ -1,4 +1,6 @@
 #include "GUIElement.h"
+#include "TextureLibrary.h"
+#include "GUIManager.h"
 
 GUIElement::GUIElement(){}
 GUIElement::~GUIElement(){}

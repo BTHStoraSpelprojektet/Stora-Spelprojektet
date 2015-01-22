@@ -1,14 +1,8 @@
 #include "BaseModel.h"
+#include "ModelImporter.h"
 
-
-BaseModel::BaseModel()
-{
-}
-
-
-BaseModel::~BaseModel()
-{
-}
+BaseModel::BaseModel(){}
+BaseModel::~BaseModel(){}
 
 bool BaseModel::LoadModel(const char* p_filepath)
 {
@@ -23,9 +17,7 @@ bool BaseModel::LoadModel(const char* p_filepath)
 	return true;
 }
 
-void BaseModel::Shutdown()
-{
-}
+void BaseModel::Shutdown(){}
 
 std::vector<Box> BaseModel::GetBoundingBoxes()
 {
