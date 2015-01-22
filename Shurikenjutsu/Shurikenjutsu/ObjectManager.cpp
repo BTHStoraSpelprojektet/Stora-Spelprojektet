@@ -196,7 +196,7 @@ void ObjectManager::RenderDepth()
 		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
 		sphere.m_position.x -= 3.0f;
 		sphere.m_position.z -= 3.0f;
-		if (m_frustum.CheckSphere(sphere, 7.5f))
+		if (m_frustum->CheckSphere(sphere, 7.5f))
 		{
 			if (CheckIfModelIsInObjectToShadowRenderList(&m_staticObjects[i]))
 			{
