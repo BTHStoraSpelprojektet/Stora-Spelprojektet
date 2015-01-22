@@ -12,6 +12,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 	
 	TransformBoundingBoxes();
+	TransformBoundingSpheres();
 	TransformShadowPoints();
 
 	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
@@ -153,6 +154,27 @@ void Object::TransformBoundingBoxes()
 	}
 }
 
+void Object::TransformBoundingSpheres()
+{
+	m_boundingSpheres.clear();
+
+	std::vector<Sphere> sphereList = m_model->GetBoundingSpheres();
+	DirectX::XMFLOAT4X4 world = GetWorldMatrix();
+	DirectX::XMFLOAT4 orientation;
+	DirectX::XMStoreFloat4(&orientation, DirectX::XMQuaternionRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)));
+
+	for (unsigned int i = 0; i < sphereList.size(); i++)
+	{
+		Sphere temp;
+		temp.m_position = sphereList[i].m_position;
+		DirectX::XMFLOAT4 center = DirectX::XMFLOAT4(temp.m_position.x, temp.m_position.y, temp.m_position.z, 1.0f);
+		DirectX::XMVECTOR transCenter = DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&center), DirectX::XMLoadFloat4x4(&world));
+		DirectX::XMStoreFloat3(&temp.m_position, transCenter);
+		temp.m_radius = sphereList[i].m_radius;
+		m_boundingSpheres.push_back(temp);
+	}
+}
+
 void Object::RenderDebugBoxes()
 {
 	for (unsigned int i = 0; i < m_debugBoxes.size(); i++)
@@ -207,7 +229,7 @@ std::vector<OBB> Object::GetBoundingBoxes()
 
 std::vector<Sphere> Object::GetBoundingSpheres()
 {
-	return m_model->GetBoundingSpheres();
+	return m_boundingSpheres;
 }
 
 Sphere Object::GetFrustumSphere()

@@ -47,6 +47,7 @@ public:
 	void SetInstanceIndex(int p_instanceIndex);
 protected:
 	void TransformBoundingBoxes();
+	void TransformBoundingSpheres();
 	void TransformShadowPoints();
 
 	DirectX::XMFLOAT3 m_position;
@@ -55,6 +56,7 @@ protected:
 	Model* m_model;
 
 	std::vector<OBB> m_boundingBoxes;
+	std::vector<Sphere> m_boundingSpheres;
 	std::vector<DebugShape3D> m_debugBoxes;
 	int m_InstanceIndex;
 };
