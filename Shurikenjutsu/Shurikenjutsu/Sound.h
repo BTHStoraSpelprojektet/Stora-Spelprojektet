@@ -2,8 +2,6 @@
 #define SOUND_H_
 
 #include "fmod.hpp"
-#include "fmod_errors.h"
-#include "../CommonLibs/CommonStructures.h"
 
 enum PLAYSOUND
 {

@@ -1,8 +1,8 @@
 #include "AnimatedObject.h"
-
+#include "TextureLibrary.h"
+#include "Model.h"
 
 AnimatedObject::AnimatedObject(){}
-
 AnimatedObject::~AnimatedObject(){}
 
 bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed)

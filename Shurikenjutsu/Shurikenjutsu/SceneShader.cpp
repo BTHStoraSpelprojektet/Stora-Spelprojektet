@@ -1,5 +1,11 @@
 #include "SceneShader.h"
 
+#include "ConsoleFunctions.h"
+#include <DirectXMath.h>
+#include <Windows.h>
+#include <D3Dcompiler.h>
+
+
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
 	// Set variables to initial values.

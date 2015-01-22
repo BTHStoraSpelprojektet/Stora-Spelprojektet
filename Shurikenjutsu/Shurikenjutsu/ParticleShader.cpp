@@ -1,5 +1,9 @@
 #include "ParticleShader.h"
 
+#include <D3Dcompiler.h>
+#include "ConsoleFunctions.h"
+
+
 bool ParticleShader::Initialize(ID3D11Device* p_device)
 {
 	m_vertexShader = 0;

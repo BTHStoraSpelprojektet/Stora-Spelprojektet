@@ -1,11 +1,10 @@
 #ifndef SMOKEBOMB_H
 #define SMOKEBOMB_H
 
-#include "Object.h"
-#include "ParticleEmitter.h"
-#include "..\CommonLibs\GameplayGlobalVariables.h"
-#include "GraphicsEngine.h"
-#include "Globals.h"
+#include "Structures.h"
+
+class ParticleEmitter;
+class Object;
 
 class SmokeBomb
 {
@@ -20,13 +19,13 @@ public:
 	bool GetIfActive();
 	Sphere GetSmokeSphere();
 	unsigned int GetID();
-	Object GetBomb();
+	Object* GetBomb();
 
 
 private:
 	bool m_isThrowing;
 
-	Object m_bomb;
+	Object* m_bomb;
 	DirectX::XMFLOAT3 m_startPosition;
 	float m_speed;
 	float m_angle;
@@ -34,7 +33,7 @@ private:
 	float m_percentZ;
 
 	Sphere m_SmokeSphere;
-	ParticleEmitter m_particles;
+	ParticleEmitter* m_particles;
 	float m_timer;
 	unsigned int m_smokeBombId;
 };

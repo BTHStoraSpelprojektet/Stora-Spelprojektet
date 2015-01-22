@@ -74,13 +74,11 @@
     <ClInclude Include="BaseModel.h" />
     <ClInclude Include="CommonEnums.h" />
     <ClInclude Include="CommonStructures.h" />
-    <ClInclude Include="DefaultReplica.h" />
     <ClInclude Include="GameplayGlobalVariables.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelImporter.h" />
     <ClInclude Include="ModelImporter.h" />
     <ClInclude Include="ModelLibrary.h" />
-    <ClInclude Include="PlayerReplica.h" />
     <ClInclude Include="RakNet\AutopatcherPatchContext.h" />
     <ClInclude Include="RakNet\AutopatcherRepositoryInterface.h" />
     <ClInclude Include="RakNet\Base64Encoder.h" />
@@ -232,21 +230,16 @@
     <ClInclude Include="RakNet\WindowsIncludes.h" />
     <ClInclude Include="RakNet\WSAStartupSingleton.h" />
     <ClInclude Include="RakNet\_FindFirst.h" />
-    <ClInclude Include="ReplicaConnection.h" />
-    <ClInclude Include="ReplicaManager.h" />
     <ClInclude Include="ServerGlobals.h" />
     <ClInclude Include="ServerMessages.h" />
-    <ClInclude Include="ShurikenReplica.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseModel.cpp" />
-    <ClCompile Include="DefaultReplica.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelImporter.cpp" />
     <ClCompile Include="ModelImporter.cpp" />
     <ClCompile Include="ModelLibrary.cpp" />
-    <ClCompile Include="PlayerReplica.cpp" />
     <ClCompile Include="RakNet\Base64Encoder.cpp" />
     <ClCompile Include="RakNet\BitStream.cpp" />
     <ClCompile Include="RakNet\CCRakNetSlidingWindow.cpp" />
@@ -356,10 +349,7 @@
     <ClCompile Include="RakNet\VitaIncludes.cpp" />
     <ClCompile Include="RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="RakNet\_FindFirst.cpp" />
-    <ClCompile Include="ReplicaConnection.cpp" />
-    <ClCompile Include="ReplicaManager.cpp" />
     <ClCompile Include="ServerGlobals.cpp" />
-    <ClCompile Include="ShurikenReplica.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

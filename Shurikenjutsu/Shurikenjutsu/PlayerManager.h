@@ -3,10 +3,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include "Player.h"
-#include "DebugDraw.h"
-#include "AbilityBar.h"
-#include "Frustum.h"
 #include <vector>
+#include <DirectXCollision.h>
+
+class Frustum;
+class AbilityBar;
+
 
 class PlayerManager
 {
@@ -42,11 +44,11 @@ private:
 	bool IsGuidInEnemyList(RakNet::RakNetGUID p_guid);
 	bool IsGuidInNetworkList(RakNet::RakNetGUID p_guid);
 
-	Player m_player;
+	Player* m_player;
 
 	std::vector<Player> m_enemyList;
 
-	Frustum m_frustum;
+	Frustum* m_frustum;
 
 	float m_enemyUpdatePositionTimer;
 };

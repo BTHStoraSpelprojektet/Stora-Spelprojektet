@@ -1,14 +1,8 @@
 #include "System.h"
 
 
-System::System()
-{
-}
-
-
-System::~System()
-{
-}
+System::System(){}
+System::~System(){}
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {

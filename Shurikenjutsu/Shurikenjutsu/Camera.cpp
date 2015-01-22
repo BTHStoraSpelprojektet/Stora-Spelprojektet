@@ -1,5 +1,13 @@
 #include "Camera.h"
 
+#include <Windows.h>
+#include <DirectXMath.h>
+#include <DirectXCollision.h>
+#include "Globals.h"
+#include "InputManager.h"
+#include "GraphicsEngine.h"
+
+
 bool Camera::Initialize()
 {
 	m_position = DirectX::XMFLOAT3(0, 0, 0);

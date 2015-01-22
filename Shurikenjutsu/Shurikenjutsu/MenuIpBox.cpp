@@ -1,4 +1,7 @@
 #include "MenuIpBox.h"
+#include "Globals.h"
+#include "TextureLibrary.h"
+#include "InputManager.h"
 
 MenuIpBox::MenuIpBox(){}
 MenuIpBox::~MenuIpBox(){}

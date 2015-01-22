@@ -1,14 +1,8 @@
 #include "NormalState.h"
 
 
-NormalState::NormalState()
-{
-}
-
-
-NormalState::~NormalState()
-{
-}
+NormalState::NormalState(){}
+NormalState::~NormalState(){}
 
 bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
@@ -87,7 +81,7 @@ void NormalState::Update(double p_deltaTime)
 		}
 	}
 	// Check if there is only one team remaining
-	else if (OneTeamRemaining(m_playerManager.GetPlayers()))
+	else if (OneTeamRemaining(m_playerManager->GetPlayers()))
 	{
 		// Check which team won this round
 		int winningTeam = GetRoundWinningTeam();
@@ -155,7 +149,7 @@ bool NormalState::OneTeamRemaining(std::vector<PlayerNet> p_players)
 // Make sure OneTeamRemaining is true before calling this
 int NormalState::GetRoundWinningTeam()
 {
-	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
+	std::vector<PlayerNet> players = m_playerManager->GetPlayers();
 
 	for each(PlayerNet player in players)
 	{
@@ -201,11 +195,11 @@ void NormalState::SetTeamWon(int p_winningTeam)
 
 void NormalState::RespawnAllPlayers()
 {
-	std::vector<PlayerNet> players = m_playerManager.GetPlayers();
+	std::vector<PlayerNet> players = m_playerManager->GetPlayers();
 	for each (PlayerNet player in players)
 	{
-		m_playerManager.ResetHealth(player.guid);
-		m_playerManager.RespawnPlayer(player.guid);
+		m_playerManager->ResetHealth(player.guid);
+		m_playerManager->RespawnPlayer(player.guid);
 	}
 }
 

@@ -1,29 +1,21 @@
 #include "Ability.h"
+#include "Globals.h"
 
+#include "StatusEffect.h"
+#include "AnimatedObject.h"
 
-Ability::Ability()
-{
-}
-
-
-Ability::~Ability()
-{
-}
-
+Ability::Ability(){}
+Ability::~Ability(){}
 bool Ability::Initialize()
 {
 	SetDamage(0);
 	SetTime(0.0);
-	SetStatusEffect(StatusEffect());
+	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0);
 	return true;
 }
 
-void Ability::Shutdown()
-{
-
-}
-
+void Ability::Shutdown(){}
 void Ability::Update()
 {
 	if (m_cooldown > 0.00)
@@ -72,13 +64,12 @@ double Ability::GetCooldown()
 	return m_cooldown;
 }
 
-
-void Ability::SetStatusEffect(StatusEffect p_statusEffect)
+void Ability::SetStatusEffect(StatusEffect *p_statusEffect)
 {
 	m_statusEffect = p_statusEffect;
 }
 
-StatusEffect Ability::GetStatusEffect()
+StatusEffect* Ability::GetStatusEffect()
 {
 	return m_statusEffect;
 }

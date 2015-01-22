@@ -1,5 +1,8 @@
 #include "Dash.h"
-
+#include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "Network.h"
+#include <iostream>
+#include "StatusEffect.h"
 
 Dash::Dash(){}
 Dash::Dash(const Dash& other){}
@@ -9,7 +12,7 @@ bool Dash::Initialize()
 {
 	SetDamage(DASH_DAMAGE);
 	SetTime(0.0);
-	SetStatusEffect(StatusEffect());
+	SetStatusEffect(&StatusEffect());
 	SetCooldown(DASH_COOLDOWN);
 	return true;
 }

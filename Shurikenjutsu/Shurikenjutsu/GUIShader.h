@@ -2,15 +2,10 @@
 #define GUISHADER_H_
 
 #include <D3D11.h>
-#include <D3Dcompiler.h>
-#include <DirectXMath.h>
 #include <Windows.h>
 #include <vector>
 
 #include "Structures.h"
-#include "ConsoleFunctions.h"
-#include "Globals.h"
-
 class GUIShader
 {
 public:

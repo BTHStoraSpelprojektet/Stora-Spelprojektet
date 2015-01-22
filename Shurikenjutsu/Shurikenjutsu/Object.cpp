@@ -1,4 +1,8 @@
 #include "Object.h"
+#include "Network.h"
+#include <DirectXCollision.h>
+#include "Model.h"
+#include "AnimationControl.h"
 
 
 Object::Object(){}

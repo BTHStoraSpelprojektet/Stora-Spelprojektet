@@ -1,5 +1,15 @@
 #include "GraphicsEngine.h"
 
+#include "Enumerations.h"
+#include "Globals.h"
+#include "ParticleShader.h"
+#include "WICTextureLoader.h"
+#include "SceneShader.h"
+#include "GUIShader.h"
+#include "DepthShader.h"
+#include "RenderTarget.h"
+#include "ConsoleFunctions.h"
+
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;
 GUIShader GraphicsEngine::m_GUIShader;
