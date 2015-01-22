@@ -88,7 +88,7 @@ private:
 
 	static RenderTarget m_shadowMap;
 
-	static IFW1Factory *pFW1Factory;
-	static IFW1FontWrapper *pFontWrapper;
+	static IFW1Factory *m_FW1Factory;
+	static IFW1FontWrapper *m_fontWrapper;
 };
 #endif;
