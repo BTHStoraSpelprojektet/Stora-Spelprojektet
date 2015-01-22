@@ -23,6 +23,7 @@ public:
 	void Update();
 	void UpdateAbilities();
 	void Render();
+	void RenderDepth();
 	//void SetDamage(float p_damage);
 	//float GetDamage() const;	
 	void SetHealth(int p_health);
