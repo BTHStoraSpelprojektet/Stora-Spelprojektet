@@ -5,6 +5,7 @@
 
 class ParticleEmitter;
 class Object;
+
 class SmokeBomb
 {
 public:
