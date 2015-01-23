@@ -25,7 +25,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 
 	// Initiate collision manager
 	m_collisionManager = new CollisionManager();
-	m_collisionManager->Initialize(m_mapManager->GetBoundingBoxes());
+	m_collisionManager->Initialize(m_mapManager->GetBoundingBoxes(), m_mapManager->GetBoundingSpheres());
 
 	m_smokeBombManager = new SmokeBombManager();
 	m_smokeBombManager->Initialize(m_serverPeer);

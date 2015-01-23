@@ -27,7 +27,7 @@ bool MenuState::Initialize()
 	m_ipbox = new MenuIpBox();
 	m_ipbox->Initialize(0.0f, 0, 360.0f, 60.0f);
 	m_ipboxText = new GUIText();
-	m_ipboxText->Initialize(m_ipbox->GetIp(), 36.0f, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH*1.5f*0.5f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*1.17f*0.5f, 0xffffffff);
+	m_ipboxText->Initialize(m_ipbox->GetIp(), 36.0f, 0.0f, 0.0f, 0xffffffff);
 
 	m_play = new Menu();
 	m_play->AddButton(0, -70.0f, 360.0f, 60.0f, MENUACTION_CONNECT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"));
