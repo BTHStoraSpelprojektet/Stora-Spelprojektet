@@ -12,8 +12,8 @@ bool MenuState::Initialize()
 {
 	// Initialize options menu
 	m_options = new Menu();
-	m_options->AddCheckbox(220.0f, 0, 60.0f, MENUACTION_VSYNC, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/vs.png"));
-	m_options->AddCheckbox(220.0f, -108.0f, 60.0f, MENUACTION_FULLSCREEN, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fullscreen.png"));
+	m_options->AddCheckbox(220.0f, 0, 60.0f, MENUACTION_VSYNC, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/checkbox_empty.png"));
+	m_options->AddCheckbox(220.0f, -108.0f, 60.0f, MENUACTION_FULLSCREEN, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/checkbox_empty.png"));
 	m_options->AddButton(0, -216.0f, 301.0f, 98.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"));
 
 	// Initialize main menu
