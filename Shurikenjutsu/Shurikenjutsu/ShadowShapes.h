@@ -1,10 +1,9 @@
 #ifndef SHADOWSHAPES
 #define SHADOWSHAPES
 
-#include <vector>
-
-#include "Structures.h"
 #include "DebugDraw.h"
+#include "ConsoleFunctions.h"
+#include "Structures.h"
 
 class ShadowShapes
 {
@@ -16,9 +15,13 @@ public:
 
 	void AddStaticLine(Line p_line);
 	void AddStaticShape(std::vector<Line> p_shape);
+	void AddStaticSquare(Point p_topLeft, Point p_bottomRight);
 
 	int AddDynamicLine(Line p_line);
 	int AddDynamicShape(std::vector<Line> p_shape);
+
+	int AddSmokeBombShape(Point p_center);
+	void AddMapBoundries(Point p_center, float p_width, float p_height);
 
 	void RemoveDynamicLine(int p_atIndex);
 	void RemoveDynamicShape(int p_atIndex, int p_numberOfLines);
