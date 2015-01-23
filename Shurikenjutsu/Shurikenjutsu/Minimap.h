@@ -22,7 +22,9 @@ private:
 	GUIElement* m_minimap;
 	GUIElement* m_playerDot;
 
-	DirectX::XMFLOAT3 m_playerDotStartPos;
+	float m_minimapWidth, m_minimapHeight;
+
+	DirectX::XMFLOAT3 m_centerOfMinimapPos;
 };
 #endif // !MINIMAP_H_
 
