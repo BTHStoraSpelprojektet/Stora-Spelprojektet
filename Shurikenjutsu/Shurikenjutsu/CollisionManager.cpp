@@ -7,20 +7,18 @@ CollisionManager* CollisionManager::m_instance;
 CollisionManager::CollisionManager(){}
 CollisionManager::~CollisionManager(){}
 
-void CollisionManager::Initialize(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/)
+void CollisionManager::Initialize(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList)
 {
 	m_staticBoxList = std::vector<OBB>();
 	m_staticSphereList = std::vector<Sphere>();
-	SetLists(p_StaticObjectList, p_outerWallList/*, p_sphereObjectList*/);
+	SetLists(p_StaticObjectList, p_outerWallList);
 }
 
-void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/)
+void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList)
 {
-	//m_StaticObjectList.push_back(OBB(p_outerWallList[0].m_center, p_outerWallList[0].m_extents.z, p_outerWallList[0].m_extents.y, p_outerWallList[0].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));
 	m_staticBoxList.push_back(OBB(p_outerWallList[0]));
 	m_staticBoxList.push_back(OBB(p_outerWallList[1]));
 
-	//m_StaticObjectList.push_back(OBB(p_outerWallList[2].m_center, p_outerWallList[2].m_extents.z, p_outerWallList[2].m_extents.y, p_outerWallList[2].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));	//NOT WORKING
 	m_staticBoxList.push_back(OBB(p_outerWallList[2]));
 	m_staticBoxList.push_back(OBB(p_outerWallList[3]));
 
@@ -39,11 +37,6 @@ void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vec
 			m_staticSphereList.push_back(tempSphereList[j]);
 		}
 	}
-
-	//for (unsigned int i = 0; i < p_sphereObjectList.size(); i++)
-	//{
-	//	m_sphereObjectList.push_back(p_sphereObjectList[i]);
-	//}
 }
 
 CollisionManager* CollisionManager::GetInstance()

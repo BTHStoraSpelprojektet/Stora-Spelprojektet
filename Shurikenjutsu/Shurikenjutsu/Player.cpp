@@ -371,6 +371,7 @@ void Player::CalculateFacingAngle()
 void Player::SetCalculatePlayerPosition()
 {
 	// Check collision between player and static boxes
+	//TODO: Kan ej kollidera rätt med roterade bounding boxes
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(m_playerSphere, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{
@@ -378,6 +379,7 @@ void Player::SetCalculatePlayerPosition()
 		bool leftOfBox = m_position.x < (collidingBoxes[i].m_center.x - collidingBoxes[i].m_extents.x);
 		bool aboveBox = m_position.z >(collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z);
 		bool belowBox = m_position.z < (collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z);
+		bool rotated = 0 < collidingBoxes[i].m_direction.y || 0 > collidingBoxes[i].m_direction.y;
 		float x = m_direction.x;
 		float z = m_direction.z;
 		if (x == 1 || x == -1)
@@ -399,14 +401,22 @@ void Player::SetCalculatePlayerPosition()
 			}
 			else
 			{
-				if (rightOfBox)
+				if (!rotated)
+				{
+					if (rightOfBox)
+					{
+						x = 0;
+						z = -1;
+					}
+					if (aboveBox)
+					{
+						x = -1;
+						z = 0;
+					}
+				}
+				else
 				{
 					x = 0;
-					z = -1;
-				}
-				if (aboveBox)
-				{
-					x = -1;
 					z = 0;
 				}
 			}
@@ -421,14 +431,22 @@ void Player::SetCalculatePlayerPosition()
 			}
 			else
 			{
-				if (leftOfBox)
+				if (!rotated)
+				{
+					if (leftOfBox)
+					{
+						x = 0;
+						z = -1;
+					}
+					if (aboveBox)
+					{
+						x = 1;
+						z = 0;
+					}
+				}
+				else
 				{
 					x = 0;
-					z = -1;
-				}
-				if (aboveBox)
-				{
-					x = 1;
 					z = 0;
 				}
 			}
@@ -443,14 +461,22 @@ void Player::SetCalculatePlayerPosition()
 			}
 			else
 			{
-				if (rightOfBox)
+				if (!rotated)
+				{
+					if (rightOfBox)
+					{
+						x = 0;
+						z = 1;
+					}
+					if (belowBox)
+					{
+						x = -1;
+						z = 0;
+					}
+				}
+				else
 				{
 					x = 0;
-					z = 1;
-				}
-				if (belowBox)
-				{
-					x = -1;
 					z = 0;
 				}
 			}
@@ -466,18 +492,26 @@ void Player::SetCalculatePlayerPosition()
 			}
 			else
 			{
-				if (leftOfBox)
+				if (!rotated)
 				{
-					x = 0;
-					z = 1;
-				}
-				if (belowBox)
+					if (leftOfBox)
 					{
-					x = 1;
-					z = 0;
+						x = 0;
+						z = 1;
+					}
+					if (belowBox)
+					{
+						x = 1;
+						z = 0;
 					}
 				}
+				else
+				{
+					x = 0;
+					z = 0;
+				}
 			}
+		}
 
 		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 	}
