@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Globals.h"
 #include "ShadowShapes.h"
+#include "Minimap.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -67,6 +68,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_objectManager->UpdateFrustum(m_frustum);
 	m_playerManager->UpdateFrustum(m_frustum);
 
+	// Initialize the minimap
+	m_minimap = new Minimap();
+	m_minimap->Initialize();
+	
+
 	return true;
 }
 
@@ -87,11 +93,15 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-		m_debugDot.Shutdown();
+	m_debugDot.Shutdown();
 
 		ShadowShapes::GetInstance().Shutdown();
 	}
-	// ========== DEBUG LINES ==========
+
+	//m_particles.Shutdown();
+	// ========== DEBUG TEMP LINES ==========
+
+	m_minimap->Shutdown();
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -142,14 +152,21 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_updateFrustum = true;
 	}
-
 	if (m_updateFrustum)
 	{
 		m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 		m_objectManager->UpdateFrustum(m_frustum);
 		m_playerManager->UpdateFrustum(m_frustum);
 	}
+	//m_minimap->
+	m_minimap->Update(m_playerManager->GetPlayerPosition());
+	MinimapUpdatePos(m_minimap);
 
+	m_minimap->SetPlayerTexture(m_playerManager->GetPlayerTeam());
+	for (int i = 0; i < 7; i++)
+	{
+		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
+	}
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -181,7 +198,11 @@ void PlayingStateTest::Render()
 
 		ShadowShapes::GetInstance().DebugRender();
 	}
-	// ========== DEBUG LINES ==========
+
+	//m_particles.Render();
+	// ========== DEBUG TEMP LINES ==========
+
+	m_minimap->Render();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
@@ -247,4 +268,20 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 {
 	float t2 = sqrt(p_f.x * p_f.x + p_f.y * p_f.y + p_f.z * p_f.z);
 	return DirectX::XMFLOAT3(p_f.x / t2, p_f.y / t2, p_f.z/t2);
+}
+
+void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
+{
+	for (int i = 0; i < 7; i++)
+	{
+		if (m_playerManager->IsPlayersVisible(i) || m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i))
+		{
+			m_playerManager->MinimapUpdatePos(p_minimap);
+		}
+		else
+		{
+			m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000,-1000,0));
+		}
+	}
+	
 }
