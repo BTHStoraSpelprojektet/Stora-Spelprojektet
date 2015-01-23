@@ -8,6 +8,7 @@
 #include "Frustum.h"
 #include "Camera.h"
 #include "Globals.h"
+#include "ShadowShapes.h"
 #include "Minimap.h"
 
 PlayingStateTest::PlayingStateTest(){}
@@ -19,17 +20,19 @@ bool PlayingStateTest::Initialize()
 
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
+	// Initialize the camera.
 	m_camera = new Camera();
 	m_camera->Initialize();
-
 	m_camera->ResetCamera();
 
-	//Load level
+	// Load the level.
 	Level level(p_levelName);
 
+	// Initialize the objectmanager.
 	m_objectManager = new ObjectManager();
 	m_objectManager->Initialize(&level);
 
+	// Load and place arena walls.
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
 	std::vector<Box> wallList;
 	for (unsigned int i = 0; i < temp.size(); i++)
@@ -50,6 +53,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		m_mouseX = 0;
 		m_mouseY = 0;
+
+		ShadowShapes::GetInstance().Initialize();
+		ShadowShapes::GetInstance().AddMapBoundries(Point(0.0f, 0.0f), 10.0f, 10.0f);
+		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 5.0f), Point(5.0f, 5.0f)));
+		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, -5.0f), Point(5.0f, -5.0f)));
 	}
 	// ========== DEBUG LINES ==========
 
@@ -86,6 +94,8 @@ void PlayingStateTest::Shutdown()
 	if (FLAG_DEBUG == 1)
 	{
 	m_debugDot.Shutdown();
+
+		ShadowShapes::GetInstance().Shutdown();
 	}
 
 	//m_particles.Shutdown();
@@ -185,6 +195,8 @@ void PlayingStateTest::Render()
 
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+		ShadowShapes::GetInstance().DebugRender();
 	}
 
 	//m_particles.Render();

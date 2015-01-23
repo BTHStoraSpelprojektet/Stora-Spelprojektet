@@ -6,8 +6,8 @@ ShurikenManager::~ShurikenManager(){}
 bool ShurikenManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	m_serverPeer = p_serverPeer;
-	m_shurikenSetTimeLeft = SHURIKEN_COOLDOWN;
-	m_megaShurikenSetTimeLeft = MEGASHURIKEN_COOLDOWN;
+	m_shurikenSetTimeLeft = SHURIKEN_DURATION;
+	m_megaShurikenSetTimeLeft = MEGASHURIKEN_DURATION;
 
 	m_shurikens = std::vector<ShurikenNet>();
 
@@ -36,7 +36,7 @@ void ShurikenManager::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float
 	shuriken.shurikenId = GetShurikenUniqueId();
 	shuriken.guid = p_guid;
 	shuriken.lifeTime = m_shurikenSetTimeLeft;
-	shuriken.speed = 20.0f;
+	shuriken.speed = SHURIKEN_SPEED;
 	shuriken.megaShuriken = false;
 	m_shurikens.push_back(shuriken);
 
@@ -68,7 +68,7 @@ void ShurikenManager::AddMegaShuriken(RakNet::RakNetGUID p_guid, float p_posX, f
 	shuriken.shurikenId = GetShurikenUniqueId();
 	shuriken.guid = p_guid;
 	shuriken.lifeTime = m_megaShurikenSetTimeLeft;
-	shuriken.speed = 10.0f;
+	shuriken.speed = MEGASHURIKEN_SPEED;
 	shuriken.megaShuriken = true;
 	m_shurikens.push_back(shuriken);
 
