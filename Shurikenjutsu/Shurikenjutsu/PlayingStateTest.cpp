@@ -161,14 +161,14 @@ void PlayingStateTest::Render()
 	m_objectManager->Render();
 
 	// ========== DEBUG LINES ==========
-	//if (FLAG_DEBUG == 1)
-	//{
-	//	// Draw a dot at the mouse position.
-	//	m_debugDot.Render();
+	if (FLAG_DEBUG == 1)
+	{
+		// Draw a dot at the mouse position.
+		m_debugDot.Render();
 
-	//	// Draw a line from the player to the dot.
-	//	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	//}
+		// Draw a line from the player to the dot.
+		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	}
 	// ========== DEBUG LINES ==========
 }
 
