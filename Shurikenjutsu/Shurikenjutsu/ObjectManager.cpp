@@ -3,6 +3,7 @@
 #include "Network.h"
 #include "Frustum.h"
 #include "Globals.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -110,12 +111,12 @@ void ObjectManager::Update()
 				if (tempNetShurikens[i].megaShuriken)
 				{
 					// Add Mega shuriken
-					AddShuriken("../Shurikenjutsu/Models/MegaShurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].shurikenId);
+					AddShuriken("../Shurikenjutsu/Models/MegaShurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), MEGASHURIKEN_SPEED, tempNetShurikens[i].shurikenId);
 				}
 				else
 				{
 					// Add shuriken
-					AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].shurikenId);
+					AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), SHURIKEN_SPEED, tempNetShurikens[i].shurikenId);
 				}
 			}
 		}
@@ -161,15 +162,8 @@ void ObjectManager::Render()
 				m_objectsToRender.push_back(&m_staticObjects[i]);
 				m_staticObjects[i].RenderInstanced();
 			}
-
-
-			if (FLAG_DEBUG)
-			{
-				m_staticObjects[i].RenderDebugBoxes();
-			}
 		}
 	}
-
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
@@ -218,11 +212,12 @@ void ObjectManager::RenderDepth()
 
 }
 
-void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_shurikenID)
+void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
 {
 	Shuriken *tempShuriken;
 	tempShuriken = new Shuriken();
 	tempShuriken->Initialize(p_filepath, p_pos, p_dir, p_shurikenID);
+	tempShuriken->SetSpeed(p_speed);
 	m_shurikens.push_back(tempShuriken);
 }
 
