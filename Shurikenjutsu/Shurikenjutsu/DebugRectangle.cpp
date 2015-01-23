@@ -22,10 +22,13 @@ DebugRectangle::DebugRectangle(DirectX::XMFLOAT3 p_centrum, float p_width, float
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 }
 
-DebugRectangle::~DebugRectangle()
+void DebugRectangle::Shutdown()
 {
-	m_mesh->Release();
-	m_mesh = 0;
+	if (m_mesh)
+	{
+		m_mesh->Release();
+		m_mesh = 0;
+	}
 }
 
 void DebugRectangle::Render()

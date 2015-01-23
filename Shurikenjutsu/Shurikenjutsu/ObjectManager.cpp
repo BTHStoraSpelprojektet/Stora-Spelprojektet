@@ -38,7 +38,7 @@ bool ObjectManager::Initialize(Level* p_level)
 			modelPositions.clear();
 		}
 
- 		Object object;
+		Object object;
 		object.Initialize(levelObjects[i].m_filePath.c_str(),
 			DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ),
 			DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ),

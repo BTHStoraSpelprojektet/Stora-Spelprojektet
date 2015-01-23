@@ -28,8 +28,7 @@ public:
 private:
 	DirectX::XMFLOAT2 m_size;
 	DirectX::XMFLOAT3 m_position;
-	ID3D11Resource* m_texture;
-	ID3D11ShaderResourceView* m_textureView;
+	ID3D11ShaderResourceView* m_texture;
 };
 
 #endif
