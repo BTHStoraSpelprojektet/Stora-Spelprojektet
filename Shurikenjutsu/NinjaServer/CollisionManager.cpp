@@ -118,8 +118,9 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
-						// temp shuriken dmg
-						p_playerManager->DamagePlayer(playerList[j].guid, (int)SHURIKEN_DAMAGE);
+						int damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
+						
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 
 						// Remove shuriken
 						p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
