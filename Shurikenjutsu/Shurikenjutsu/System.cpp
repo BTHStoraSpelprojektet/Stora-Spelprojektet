@@ -136,7 +136,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.225f, 0.225f, 0.225f, 1.0f);
 
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
-	m_directionalLight.m_direction = DirectX::XMVector4Normalize(DirectX::XMLoadFloat4(&direction));
+	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 	m_lightCamera = new Camera();
 	m_lightCamera->Initialize();

@@ -68,9 +68,9 @@ Output main(Input p_input)
 	output.m_textureCoordinate = p_input.m_textureCoordinate;
 
 	// Calculate the camera position.
-	float4 cameraPosition;
-	cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
-	cameraPosition = mul(cameraPosition, m_viewMatrix);
+	float4 cameraPosition = float4(0.0f, -40.0f, 20.0f, 1.0f);//float4(-39.0f, 40.0f, 37.0f, 1.0f);
+	/*cameraPosition = mul(p_input.m_positionWorld, m_worldMatrix);
+	cameraPosition = mul(cameraPosition, m_viewMatrix);*/
 	output.m_cameraPosition = cameraPosition;
 
 	// Calculate the position of the vertice as viewed by the light source.
