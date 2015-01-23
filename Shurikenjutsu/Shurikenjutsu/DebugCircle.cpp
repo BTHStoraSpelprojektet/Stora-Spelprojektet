@@ -30,9 +30,10 @@ void DebugCircle::Initialize(DirectX::XMFLOAT3 p_centrum, float p_radius, int p_
 
 void DebugCircle::Shutdown()
 {
-	if (m_mesh != NULL)
+	if (m_mesh)
 	{
 		m_mesh->Release();
+		m_mesh = 0;
 	}
 }
 

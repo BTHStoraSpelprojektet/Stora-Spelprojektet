@@ -12,7 +12,7 @@ class DebugRectangle
 {
 public:
 	DebugRectangle(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, DirectX::XMFLOAT3 p_color);
-	~DebugRectangle();
+	void Shutdown();
 
 	void Render();
 
