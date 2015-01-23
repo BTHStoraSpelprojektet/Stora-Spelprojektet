@@ -36,6 +36,8 @@ private:
 	ShadowShapes(ShadowShapes const&);
 	void operator=(ShadowShapes const&);
 
+	void AddDebugLineAndDots(Point p_a, Point p_b);
+
 	std::vector<Line> m_staticLines;
 	std::vector<Line> m_dynamicLines;
 
