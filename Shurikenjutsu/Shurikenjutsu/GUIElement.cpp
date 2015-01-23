@@ -9,7 +9,7 @@ bool GUIElement::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p
 {
 	m_position = p_position;
 	m_size = DirectX::XMFLOAT2((float)p_width, (float)p_height);
-	m_textureView = nullptr;
+	m_texture = nullptr;
 	SetTexture(p_texture);
 	return true;
 }
@@ -48,10 +48,10 @@ void GUIElement::SetPosition(DirectX::XMFLOAT3 p_position)
 
 ID3D11ShaderResourceView* GUIElement::GetTexture()const
 {
-	return m_textureView;
+	return m_texture;
 }
 
 void GUIElement::SetTexture(ID3D11ShaderResourceView* p_texture)
 {
-	m_textureView = p_texture;
+	m_texture = p_texture;
 }
