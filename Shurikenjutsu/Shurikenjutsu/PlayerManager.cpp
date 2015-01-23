@@ -2,6 +2,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "Frustum.h"
 #include "Globals.h"
+#include "Minimap.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -112,6 +113,7 @@ void PlayerManager::Update()
 			m_enemyList[i].Update();
 		}
 	}
+	CheckPlayersVisible();
 }
 
 void PlayerManager::Render()
@@ -122,7 +124,10 @@ void PlayerManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
 		{
-			m_enemyList[i].Render();
+			if (m_enemyList[i].IsVisible())
+			{
+				m_enemyList[i].Render();
+			}
 		}
 	}
 }
@@ -235,4 +240,50 @@ void PlayerManager::ResetCooldowns()
 void PlayerManager::UpdateFrustum(Frustum*  p_frustum)
 {
 	m_frustum = p_frustum;
+}
+
+void PlayerManager::CheckPlayersVisible()
+{
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
+		{
+			m_enemyList[i].SetIsVisible(true);
+		}
+		else
+		{
+			m_enemyList[i].SetIsVisible(false);
+		}
+	}
+}
+
+bool PlayerManager::IsPlayersVisible(int p_index)
+{
+	if (m_enemyList.size() <= p_index)
+	{
+		return false;
+	}
+	return m_enemyList[p_index].IsVisible();
+}
+
+void PlayerManager::MinimapUpdatePos(Minimap *p_minimap)
+{
+	for (int i = 0; i < m_enemyList.size(); i++)
+	{ 
+		p_minimap->UpdatePlayersPositon(i, m_enemyList[i].GetPosition());
+	}
+}
+
+int PlayerManager::GetPlayerTeam()
+{
+	return m_player->GetTeam();
+}
+
+int PlayerManager::GetEnemyTeam(int p_index)
+{
+	if (m_enemyList.size() <= p_index)
+	{
+		return 0;
+	}
+	return m_enemyList[p_index].GetTeam();
 }

@@ -22,6 +22,7 @@ public:
 	GAMESTATESWITCH Update();
 	void Render();
 	void ToggleFullscreen(bool p_fullscreen);
+	void MinimapUpdatePos(Minimap *p_minimap);
 
 private:
 	void BasicPicking();

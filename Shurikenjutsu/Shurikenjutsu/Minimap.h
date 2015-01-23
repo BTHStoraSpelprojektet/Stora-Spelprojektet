@@ -17,10 +17,17 @@ public:
 	void Update(DirectX::XMFLOAT3 p_playerPos);
 	void Render();
 
+	void UpdatePlayersPositon(int p_index, DirectX::XMFLOAT3 p_pos);
+	DirectX::XMFLOAT3 ConvertPosToMinimapPos(DirectX::XMFLOAT3 p_playerPos);
+	void SetTeamTexture(int p_index, int p_team);
+	void SetPlayerTexture(int p_team);
+	void SetPlayerPos(int p_index, DirectX::XMFLOAT3 p_pos);
+
 private:
 	ID3D11ShaderResourceView* m_texture;
 	GUIElement* m_minimap;
 	GUIElement* m_playerDot;
+	GUIElement* m_otherPlayers[7];
 
 	float m_minimapWidth, m_minimapHeight;
 

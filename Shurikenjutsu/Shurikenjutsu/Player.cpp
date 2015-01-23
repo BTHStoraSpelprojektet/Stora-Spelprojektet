@@ -525,6 +525,11 @@ void Player::SetTeam(int p_team)
 	m_team = p_team;
 }
 
+int Player::GetTeam()
+{
+	return m_team;
+}
+
 void Player::DoAnimation()
 {
 	// DO THIS WITH STATES
@@ -553,4 +558,14 @@ void Player::DoAnimation()
 		AnimatedObject::ChangeAnimationState(AnimationState::Range);
 		Network::GetInstance()->SendAnimationState(AnimationState::Range);
 	}
+}
+
+bool Player::IsVisible()
+{
+	return m_visible;
+}
+
+void Player::SetIsVisible(bool p_visible)
+{
+	m_visible = p_visible;
 }
