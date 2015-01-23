@@ -12,7 +12,7 @@ class DebugBox
 {
 public:
 	DebugBox(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, float p_height, DirectX::XMFLOAT3 p_color);
-	~DebugBox();
+	void Shutdown();
 
 	void Render();
 
