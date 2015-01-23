@@ -498,7 +498,16 @@ void Player::SetCalculatePlayerPosition()
 		float dx = collidingSpheres[i].m_position.x - m_position.x;
 		float a1 = atan2(dz, dx);
 		float a2 = atan2(m_direction.z, m_direction.x);
+		float diff = 0.05f;
+		
+		if (a1 > -diff && a1 < diff || a1 < DirectX::XM_PI + diff && a1 > -DirectX::XM_PI + diff)
+		{
+			// Special case
+			//m_direction.x *= -5;
+			//continue;
+		}
 		float temp = a1 - a2;
+
 		if (a2 <= 0 && a1 <= 0)
 		{
 			temp *= -1;
