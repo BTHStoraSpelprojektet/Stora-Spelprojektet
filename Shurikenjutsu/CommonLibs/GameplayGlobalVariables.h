@@ -18,9 +18,9 @@ const float SHURIKEN_SPEED = 20.0f;
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 //Megashuriken
 const float MEGASHURIKEN_COOLDOWN = 4.0f;
-const int MEGASHURIKEN_DAMAGE = 40;
+const int MEGASHURIKEN_DAMAGE = 50;
 const float MEGASHURIKEN_DURATION = 4.0f;
-const float MEGASHURIKEN_SPEED = 3.0f;
+const float MEGASHURIKEN_SPEED = 15.0f;
 
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
