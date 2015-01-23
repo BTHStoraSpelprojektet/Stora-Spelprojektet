@@ -16,6 +16,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 	
 	TransformBoundingBoxes();
+	TransformBoundingSpheres();
 	TransformShadowPoints();
 
 	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
@@ -32,6 +33,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 
 	TransformBoundingBoxes();
+	TransformBoundingSpheres();
 	TransformShadowPoints();
 
 
@@ -162,6 +164,27 @@ void Object::TransformBoundingBoxes()
 	}
 }
 
+void Object::TransformBoundingSpheres()
+{
+	m_boundingSpheres.clear();
+
+	std::vector<Sphere> sphereList = m_model->GetBoundingSpheres();
+	DirectX::XMFLOAT4X4 world = GetWorldMatrix();
+	DirectX::XMFLOAT4 orientation;
+	DirectX::XMStoreFloat4(&orientation, DirectX::XMQuaternionRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)));
+
+	for (unsigned int i = 0; i < sphereList.size(); i++)
+	{
+		Sphere temp;
+		temp.m_position = sphereList[i].m_position;
+		DirectX::XMFLOAT4 center = DirectX::XMFLOAT4(temp.m_position.x, temp.m_position.y, temp.m_position.z, 1.0f);
+		DirectX::XMVECTOR transCenter = DirectX::XMVector4Transform(DirectX::XMLoadFloat4(&center), DirectX::XMLoadFloat4x4(&world));
+		DirectX::XMStoreFloat3(&temp.m_position, transCenter);
+		temp.m_radius = sphereList[i].m_radius;
+		m_boundingSpheres.push_back(temp);
+	}
+}
+
 void Object::RenderDebugBoxes()
 {
 	for (unsigned int i = 0; i < m_debugBoxes.size(); i++)
@@ -183,35 +206,18 @@ void Object::TransformShadowPoints()
 		DirectX::XMFLOAT3 position = saList[i];
 		DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
 
-		shadowPoints.push_back(position);
-	}
-
-	if (shadowPoints.size() > 0)
-	{
-		LineSegment line;
-		ShadowShape shape;
-
-		// Create all but the last shapes.
-		for (unsigned int i = 0; i < shadowPoints.size() - 1; i++)
-		{
-			line.m_startPoint = DirectX::XMFLOAT2(shadowPoints[i].x, shadowPoints[i].z);
-			line.m_endPoint = DirectX::XMFLOAT2(shadowPoints[i + 1].x, shadowPoints[i + 1].z);
-			shape.m_lineSegments.push_back(line);
-		}
-
-		// Create the last shapes.
-		line.m_startPoint = DirectX::XMFLOAT2(shadowPoints[shadowPoints.size() - 1].x, shadowPoints[shadowPoints.size() - 1].z);
-		line.m_endPoint = DirectX::XMFLOAT2(shadowPoints[0].x, shadowPoints[0].z);
-		shape.m_lineSegments.push_back(line);
-
-		// Push the shape.
-		ShadowShapes::GetInstance().AddShadowShape(shape);
+		// TODO add shapes from the map to the static shapes list here.
 	}
 }
 
 std::vector<OBB> Object::GetBoundingBoxes()
 {
 	return m_boundingBoxes;
+}
+
+std::vector<Sphere> Object::GetBoundingSpheres()
+{
+	return m_boundingSpheres;
 }
 
 Sphere Object::GetFrustumSphere()

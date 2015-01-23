@@ -1,3 +1,4 @@
+#include "TextureLibrary.h"
 #include "ParticleEmitter.h"
 #include "ConsoleFunctions.h"
 #include "Globals.h"
@@ -22,21 +23,19 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	{
 		case(PARTICLE_PATTERN_SMOKE) :
 		{
-			m_particlesPerSecond = 25.0f;
-			m_maxParticles = 100;
+			m_particlesPerSecond = 50.0f;
+			m_maxParticles = 75;
 
 			// Set the random offset limits for the particles when emitted.
 			m_emitionPositionOffset = DirectX::XMFLOAT3(1.0f, 0.5f, 1.0f);
 
 			// Set velocity and its variation.
-			m_velocity = 2.5f;
-			m_velocityVariation = 0.1f;
+			m_velocity = 3.0f;
+			m_velocityVariation = 0.25f;
 
-			m_timeToLive = 2.0f;
+			m_timeToLive = 1.25f;
 
-			ModelImporter importer;
-			importer.ImportModel("Models/SmokeParticle.SSP");
-			m_particleTexture = LoadTexture(importer.GetMesh().m_textureMapSize[0], importer.GetMesh().m_textureMapSize[1], importer.GetMesh().m_textureMapSize[2], importer.GetMesh().m_textureMap);
+			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particle_Smoke.png");
 
 			break;
 		}
@@ -55,9 +54,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 			m_timeToLive = 1.0f;
 
-			ModelImporter importer;
-			importer.ImportModel("Models/FireParticle.SSP");
-			m_particleTexture = LoadTexture(importer.GetMesh().m_textureMapSize[0], importer.GetMesh().m_textureMapSize[1], importer.GetMesh().m_textureMapSize[2], importer.GetMesh().m_textureMap);
+			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particle_Smoke.png");
 
 			break;
 		}
@@ -118,12 +115,6 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 void ParticleEmitter::Shutdown()
 {
-	if (m_particleTexture)
-	{
-		m_particleTexture->Release();
-		m_particleTexture = 0;
-	}
-
 	if (m_particleList)
 	{
 		delete[] m_particleList;
@@ -169,102 +160,102 @@ void ParticleEmitter::EmitParticles()
 	if (m_time > (1.0f / m_particlesPerSecond))
 	{
 		m_time = 0.0f;
-	}
 
-	// If there are particles to be emited, emit one per frame.
-	if ((emit == true) && (m_currentParticles < (m_maxParticles - 1)))
-	{
-		// Increment counter.
-		m_currentParticles++;
-
-		// Generate randomized values for the particle.
-		DirectX::XMFLOAT3 position = m_emitterPosition;
-		position.x += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.x;
-		position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
-		position.z += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z;
-
-		float velocity = m_velocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_velocityVariation;
-
-		// If we want to use alpha blending, the particles must be sorted by Z depth.
-		int index = 0;
-		bool found = false;
-		while (!found)
+		// If there are particles to be emited, emit one per frame.
+		if ((emit == true) && (m_currentParticles < (m_maxParticles - 1)))
 		{
-			if ((m_particleList[index].m_alive == false) || (m_particleList[index].m_position.y > position.y))
+			// Increment counter.
+			m_currentParticles++;
+
+			// Generate randomized values for the particle.
+			DirectX::XMFLOAT3 position = m_emitterPosition;
+			position.x += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.x;
+			position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
+			position.z += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z;
+
+			float velocity = m_velocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_velocityVariation;
+
+			// If we want to use alpha blending, the particles must be sorted by Z depth.
+			int index = 0;
+			bool found = false;
+			while (!found)
 			{
-				found = true;
+				if ((m_particleList[index].m_alive == false) || (m_particleList[index].m_position.y > position.y))
+				{
+					found = true;
+				}
+
+				else
+				{
+					index++;
+				}
 			}
 
-			else
+			// Now that we know the location to insert into, we need to copy the array over by one position from the index to make room for the new particle.
+			int i = m_currentParticles;
+			int j = i - 1;
+
+			while (i != index)
 			{
-				index++;
-			}
-		}
+				// Copy data.
+				m_particleList[i].m_position = m_particleList[j].m_position;
+				m_particleList[i].m_direction = m_particleList[j].m_direction;
+				m_particleList[i].m_color = m_particleList[j].m_color;
+				m_particleList[i].m_velocity = m_particleList[j].m_velocity;
+				m_particleList[i].m_alive = m_particleList[j].m_alive;
+				m_particleList[i].m_timeToLive = m_particleList[j].m_timeToLive;
+				m_particleList[i].m_timePassed = m_particleList[j].m_timePassed;
+				m_particleList[i].m_rotation = m_particleList[j].m_rotation;
 
-		// Now that we know the location to insert into, we need to copy the array over by one position from the index to make room for the new particle.
-		int i = m_currentParticles;
-		int j = i - 1;
-
-		while (i != index)
-		{
-			// Copy data.
-			m_particleList[i].m_position	= m_particleList[j].m_position;
-			m_particleList[i].m_direction	= m_particleList[j].m_direction;
-			m_particleList[i].m_color		= m_particleList[j].m_color;
-			m_particleList[i].m_velocity	= m_particleList[j].m_velocity;
-			m_particleList[i].m_alive		= m_particleList[j].m_alive;
-			m_particleList[i].m_timeToLive	= m_particleList[j].m_timeToLive;
-			m_particleList[i].m_timePassed	= m_particleList[j].m_timePassed;
-			m_particleList[i].m_rotation	= m_particleList[j].m_rotation;
-
-			i--;
-			j--;
-		}
-
-		// Now insert the particle into the array in the correct Z depth order.
-		switch (m_pattern)
-		{
-			case(PARTICLE_PATTERN_SMOKE) :
-			{
-				// Set a random direction in xz.
-				float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
-				DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
-
-				// Randomize again to get a rotation.
-				angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
-
-				// Randomize a color.
-				float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.025f;
-
-				m_particleList[index].m_position = position;
-				m_particleList[index].m_direction = direction;
-				m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
-				m_particleList[index].m_velocity = velocity;
-				m_particleList[index].m_alive = true;
-				m_particleList[index].m_timeToLive = m_timeToLive;
-				m_particleList[index].m_timePassed = 0.0f;
-				m_particleList[index].m_rotation = angle;
-
-				break;
+				i--;
+				j--;
 			}
 
-			case(PARTICLE_PATTERN_FIRE) :
+			// Now insert the particle into the array in the correct Z depth order.
+			switch (m_pattern)
 			{
-				m_particleList[index].m_position = position;
-				m_particleList[index].m_direction = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-				m_particleList[index].m_color = m_color;
-				m_particleList[index].m_velocity = velocity;
-				m_particleList[index].m_alive = true;
-				m_particleList[index].m_timeToLive = m_timeToLive;
-				m_particleList[index].m_timePassed = 0.0f;
-				m_particleList[index].m_rotation = 0.0f;
+				case(PARTICLE_PATTERN_SMOKE) :
+				{
+					// Set a random direction in xz.
+					float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
+					DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
 
-				break;
-			}
+					// Randomize again to get a rotation.
+					angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
 
-			default:
-			{
-				break;
+					// Randomize a color.
+					float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.05f;
+
+					m_particleList[index].m_position = position;
+					m_particleList[index].m_direction = direction;
+					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = angle;
+
+					break;
+				}
+
+				case(PARTICLE_PATTERN_FIRE) :
+				{
+					m_particleList[index].m_position = position;
+					m_particleList[index].m_direction = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = 0.0f;
+
+					break;
+				}
+
+				default:
+				{
+					break;
+				}
 			}
 		}
 	}
@@ -281,12 +272,10 @@ void ParticleEmitter::UpdateParticles()
 			if (m_particleList != NULL){
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
-					// TODO bågformel.
 					float halfTime = m_particleList[i].m_timeToLive / 2.0f;
 					float angle = 30.0f * (float)3.14159265359 / 180;
 					float height = 3.0f;
 					float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
-
 
 					// Fly in an arc in the given xz direction.
 					m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;

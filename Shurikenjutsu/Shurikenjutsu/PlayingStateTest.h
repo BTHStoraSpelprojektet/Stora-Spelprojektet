@@ -34,18 +34,12 @@ private:
 
 	bool m_updateFrustum;
 
-	// ========== DEBUG TEMP LINES ==========
+	// ========== DEBUG LINES ==========
 	float m_mouseX;
 	float m_mouseY;
 
-	DebugCircle m_circle1;
-	DebugCircle m_circle2;
-	DebugCircle m_circle3;
-
 	DebugDot m_debugDot;
-
-	//ParticleEmitter m_particles;
-	// ========== DEBUG TEMP LINES ==========
+	// ========== DEBUG LINES ==========
 
 	Frustum *m_frustum;
 };
