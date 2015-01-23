@@ -30,6 +30,7 @@ void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vec
 
 		for (unsigned int j = 0; j < tempBoxList.size(); j++)
 		{ 
+			tempBoxList[j].CalculateRadius();
 			m_staticBoxList.push_back(tempBoxList[j]);
 		}
 		for (unsigned int j = 0; j < tempSphereList.size(); j++)
