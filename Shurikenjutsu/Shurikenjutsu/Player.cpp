@@ -528,14 +528,20 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 	//DirectX::XMVECTOR temp = DirectX::XMLoadFloat4(&p_collidingBoxes.m_direction);
 	//DirectX::XMVECTOR playerPos = DirectX::XMLoadFloat3(&m_direction);//Gör om värdet till en vektor
 	//playerPos = DirectX::XMVector3Transform(playerPos, DirectX::XMMatrixRotationQuaternion(temp));//Multiplicerar en rotations matris med playerPos
-
+	
 	//DirectX::XMFLOAT3 temp2;
 	//DirectX::XMStoreFloat3(&temp2, playerPos);
 
-	bool aboveBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x);
-	bool belowBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x);
-	bool rightOfBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z);
-	bool leftOfBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z);
+	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z);
+	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z);
+	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x);
+	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x);
+
+
+	//bool aboveBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x);
+	//bool belowBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x);
+	//bool rightOfBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z);
+	//bool leftOfBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z);
 
 	float x = m_direction.x;
 	float z = m_direction.z;
