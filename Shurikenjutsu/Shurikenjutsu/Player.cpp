@@ -496,30 +496,41 @@ void Player::SetCalculatePlayerPosition()
 
 		float dz = collidingSpheres[i].m_position.z - m_position.z;
 		float dx = collidingSpheres[i].m_position.x - m_position.x;
-		float a1 = atan2(dz, dx);
-		float a2 = atan2(m_direction.z, m_direction.x);
-		float diff = 0.05f;
+		float angle1 = atan2(dz, dx);
+		float angle2 = atan2(m_direction.z, m_direction.x);
+		float offset = angle1 - angle2;
 		
-		if (a1 > -diff && a1 < diff || a1 < DirectX::XM_PI + diff && a1 > -DirectX::XM_PI + diff)
-		{
-			// Special case
-			//m_direction.x *= -5;
-			//continue;
-		}
-		float temp = a1 - a2;
 
-		if (a2 <= 0 && a1 <= 0)
+		// Special cases ftw. Dont ask!
+		if (angle1 < 0 && angle2 < 0)
 		{
-			temp *= -1;
-		}			
+			offset *= -1;
+		}		
 		
-		// Formel:
+		if (angle2 >= 0 && angle1 < 0)
+		{
+			offset *= -1;
+		}
+
+		if (angle2 >= DirectX::XM_PIDIV2 && angle1 <= -DirectX::XM_PIDIV2)
+		{
+			offset *= -1;
+		}
+
+		if (angle2 <= -DirectX::XM_PIDIV2 && angle1 >= DirectX::XM_PIDIV2)
+		{
+			offset *= -1;
+		}
+
+
+		// Circel ekvation:
 		// circleX * X + circleY * Y = Radius * Radius
-		// Y = (Radius * Radius - circleX * X) / circleY
+		// Bryt ut så att y blir ensamt
+		// Y = (Radius * Radius - circleX * X) / circleY		
+		float yValue = (r * r - circleX * (circleX + offset)) / circleY;
 		
-		float y = (r * r - circleX * (circleX + temp)) / circleY;
-		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + temp) - circleX, 0, y - circleY);
-		// normalize
+		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + offset) - circleX, 0, yValue - circleY);
+		// Normalize
 		float length = sqrt(dir.x * dir.x + dir.z * dir.z);
 		dir.x = dir.x / length;
 		dir.z = dir.z / length;
