@@ -47,7 +47,6 @@ struct Output
 	float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
-	float4 m_cameraPosition : CAMERA;
 
 	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
@@ -100,9 +99,6 @@ Output main(Input p_input)
 	float3 B = cross(N, T);
 
 	output.m_tBN = float3x3(T, B, N);
-
-	float4 cameraPosition = float4(0.0f, 40.0f, -20.0f, 1.0f);
-	output.m_cameraPosition = cameraPosition;
 
 	// Calculate the position of the vertice as viewed by the light source.
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);

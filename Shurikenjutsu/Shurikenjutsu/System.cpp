@@ -137,7 +137,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
-	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
+	
 	m_lightCamera = new Camera();
 	m_lightCamera->Initialize();
 	m_lightCamera->ResetCameraToLight();
@@ -283,6 +283,9 @@ void System::Render()
 {
 	// Clear the scene to begin rendering.
 	GraphicsEngine::Clear();
+
+	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_lightCamera->GetPosition());
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	// Render Current GameState
 	m_gameState->Render();

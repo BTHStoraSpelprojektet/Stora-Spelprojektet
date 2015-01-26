@@ -33,7 +33,6 @@ struct Input
 	float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
-	float4 m_cameraPosition : CAMERA;
 
 	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
@@ -73,7 +72,7 @@ float4 main(Input p_input) : SV_Target
 		float3 normal = normalize(bumpedNormalW);
 
 		// Calculate the vector to the camera.
-		float3 toCamera = normalize(p_input.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
+		float3 toCamera = normalize(m_directionalLight.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
 
 	// Compute directional light
 	ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
@@ -115,7 +114,7 @@ float4 main(Input p_input) : SV_Target
 	}
 
 	// Add light.
-	textureColor.xyz = S.xyz;// textureColor.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
+	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
 	
 	// Add fog.
 	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;

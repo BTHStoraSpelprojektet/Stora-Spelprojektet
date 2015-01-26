@@ -17,7 +17,7 @@ struct DirectionalLight
 	float4 m_diffuse;
 	float4 m_specular;
 	float4 m_direction;
-	float m_padding;
+	float4 m_cameraPosition;
 };
 
 struct Material
