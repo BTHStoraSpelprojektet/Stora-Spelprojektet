@@ -43,8 +43,11 @@ void DebugShape3D::Initialize(std::vector<DirectX::XMFLOAT3> p_shape, float p_he
 
 void DebugShape3D::Shutdown()
 {
-	m_mesh->Release();
-	m_mesh = 0;
+	if (m_mesh)
+	{
+		m_mesh->Release();
+		m_mesh = 0;
+	}
 }
 
 void DebugShape3D::Render()

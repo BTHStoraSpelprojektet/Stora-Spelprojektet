@@ -9,6 +9,7 @@ class PlayerManager;
 class ObjectManager;
 class Frustum;
 class Camera;
+class Minimap;
 
 class PlayingStateTest : public GameState
 {
@@ -21,6 +22,7 @@ public:
 	GAMESTATESWITCH Update();
 	void Render();
 	void ToggleFullscreen(bool p_fullscreen);
+	void MinimapUpdatePos(Minimap *p_minimap);
 
 private:
 	void BasicPicking();
@@ -29,6 +31,7 @@ private:
 	PlayerManager* m_playerManager;
 	ObjectManager* m_objectManager;
 	Camera* m_camera;
+	Minimap* m_minimap;
 
 	float twoPi = 6.28318530718f;
 

@@ -19,7 +19,7 @@
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	bool result = true;
-	
+
 	// Set default game state.s
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
@@ -173,7 +173,7 @@ void System::Shutdown()
 	}
 	m_menuState->Shutdown();
 
-	
+
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown();
 
