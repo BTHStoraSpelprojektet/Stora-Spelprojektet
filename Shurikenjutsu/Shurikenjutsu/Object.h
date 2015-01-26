@@ -20,7 +20,6 @@ public:
 	virtual void RenderDepth();
 	virtual void RenderDepthInstanced();
 	virtual void RenderInstanced();
-	void RenderDebugBoxes();
 
 	virtual DirectX::XMFLOAT3 GetPosition() const;
 	virtual void SetPosition(DirectX::XMFLOAT3 p_pos);
@@ -55,7 +54,6 @@ protected:
 
 	std::vector<OBB> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
-	std::vector<DebugShape3D> m_debugBoxes;
 	int m_InstanceIndex;
 };
 #endif

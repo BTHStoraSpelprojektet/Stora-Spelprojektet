@@ -8,6 +8,8 @@
 #include "Frustum.h"
 #include "Camera.h"
 #include "Globals.h"
+#include "ShadowShapes.h"
+#include "Minimap.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -18,17 +20,19 @@ bool PlayingStateTest::Initialize()
 
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
+	// Initialize the camera.
 	m_camera = new Camera();
 	m_camera->Initialize();
-
 	m_camera->ResetCamera();
 
-	//Load level
+	// Load the level.
 	Level level(p_levelName);
 
+	// Initialize the objectmanager.
 	m_objectManager = new ObjectManager();
 	m_objectManager->Initialize(&level);
 
+	// Load and place arena walls.
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
 	std::vector<Box> wallList;
 	for (unsigned int i = 0; i < temp.size(); i++)
@@ -49,6 +53,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		m_mouseX = 0;
 		m_mouseY = 0;
+
+		ShadowShapes::GetInstance().Initialize();
+		ShadowShapes::GetInstance().AddMapBoundries(Point(0.0f, 0.0f), 10.0f, 10.0f);
+		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 5.0f), Point(5.0f, 5.0f)));
+		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, -5.0f), Point(5.0f, -5.0f)));
 	}
 	// ========== DEBUG LINES ==========
 
@@ -58,6 +67,17 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	m_objectManager->UpdateFrustum(m_frustum);
 	m_playerManager->UpdateFrustum(m_frustum);
+
+	// Initialize the minimap
+	m_minimap = new Minimap();
+	m_minimap->Initialize();
+
+	// Initialize directional light
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(0.525f, 0.525f, 0.525f, 1.0f);
+	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
+	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 
 	return true;
 }
@@ -80,8 +100,14 @@ void PlayingStateTest::Shutdown()
 	if (FLAG_DEBUG == 1)
 	{
 	m_debugDot.Shutdown();
+
+		ShadowShapes::GetInstance().Shutdown();
 	}
-	// ========== DEBUG LINES ==========
+
+	//m_particles.Shutdown();
+	// ========== DEBUG TEMP LINES ==========
+
+	m_minimap->Shutdown();
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -132,14 +158,24 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_updateFrustum = true;
 	}
-
 	if (m_updateFrustum)
 	{
 		m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 		m_objectManager->UpdateFrustum(m_frustum);
 		m_playerManager->UpdateFrustum(m_frustum);
 	}
+	//m_minimap->
+	m_minimap->Update(m_playerManager->GetPlayerPosition());
+	MinimapUpdatePos(m_minimap);
 
+	m_minimap->SetPlayerTexture(m_playerManager->GetPlayerTeam());
+	for (int i = 0; i < 7; i++)
+	{
+		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
+	}
+
+	// Update Directional Light's camera position
+	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -156,6 +192,8 @@ void PlayingStateTest::Render()
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
 
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
+
 	// Draw to the scene.
 	m_playerManager->Render();
 	m_objectManager->Render();
@@ -168,8 +206,14 @@ void PlayingStateTest::Render()
 
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+		ShadowShapes::GetInstance().DebugRender();
 	}
-	// ========== DEBUG LINES ==========
+
+	//m_particles.Render();
+	// ========== DEBUG TEMP LINES ==========
+
+	m_minimap->Render();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
@@ -235,4 +279,20 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 {
 	float t2 = sqrt(p_f.x * p_f.x + p_f.y * p_f.y + p_f.z * p_f.z);
 	return DirectX::XMFLOAT3(p_f.x / t2, p_f.y / t2, p_f.z/t2);
+}
+
+void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
+{
+	for (int i = 0; i < 7; i++)
+	{
+		if (m_playerManager->IsPlayersVisible(i) || m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i))
+		{
+			m_playerManager->MinimapUpdatePos(p_minimap);
+		}
+		else
+		{
+			m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000,-1000,0));
+		}
+	}
+	
 }

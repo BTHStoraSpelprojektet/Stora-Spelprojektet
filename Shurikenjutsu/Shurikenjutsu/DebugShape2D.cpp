@@ -21,8 +21,11 @@ void DebugShape2D::Initialize(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::X
 
 void DebugShape2D::Shutdown()
 {
-	m_mesh->Release();
-	m_mesh = 0;
+	if (m_mesh)
+	{
+		m_mesh->Release();
+		m_mesh = 0;
+	}
 }
 
 void DebugShape2D::Render()

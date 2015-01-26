@@ -486,8 +486,35 @@ void Player::SetCalculatePlayerPosition()
 	std::vector<Sphere> collidingSpheres = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticSpheres(m_playerSphere, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingSpheres.size(); i++)
 	{
-		// Todo: Check angle?
-		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+		float r = collidingSpheres[i].m_radius;
+		float deltaZ = m_position.z - collidingSpheres[i].m_position.z;
+		float deltaX = m_position.x - collidingSpheres[i].m_position.x;
+		float angle = atan2f(deltaZ, deltaX);
+
+		float circleX = cosf(angle) * r;
+		float circleY = sinf(angle) * r;
+
+		float dz = collidingSpheres[i].m_position.z - m_position.z;
+		float dx = collidingSpheres[i].m_position.x - m_position.x;
+		float a1 = atan2(dz, dx);
+		float a2 = atan2(m_direction.z, m_direction.x);
+		float temp = a1 - a2;
+		if (a2 <= 0 && a1 <= 0)
+		{
+			temp *= -1;
+		}			
+		
+		// Formel:
+		// circleX * X + circleY * Y = Radius * Radius
+		// Y = (Radius * Radius - circleX * X) / circleY
+		
+		float y = (r * r - circleX * (circleX + temp)) / circleY;
+		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + temp) - circleX, 0, y - circleY);
+		// normalize
+		float length = sqrt(dir.x * dir.x + dir.z * dir.z);
+		dir.x = dir.x / length;
+		dir.z = dir.z / length;
+		SetDirection(dir);
 	}
 
 
@@ -537,6 +564,11 @@ void Player::SetTeam(int p_team)
 	m_team = p_team;
 }
 
+int Player::GetTeam()
+{
+	return m_team;
+}
+
 void Player::DoAnimation()
 {
 	// DO THIS WITH STATES
@@ -565,4 +597,14 @@ void Player::DoAnimation()
 		AnimatedObject::ChangeAnimationState(AnimationState::Range);
 		Network::GetInstance()->SendAnimationState(AnimationState::Range);
 	}
+}
+
+bool Player::IsVisible()
+{
+	return m_visible;
+}
+
+void Player::SetIsVisible(bool p_visible)
+{
+	m_visible = p_visible;
 }
