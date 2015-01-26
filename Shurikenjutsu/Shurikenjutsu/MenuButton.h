@@ -9,8 +9,6 @@ public:
 	MenuButton();
 	~MenuButton();
 
-	bool IsClicked();
-
 
 private:
 	

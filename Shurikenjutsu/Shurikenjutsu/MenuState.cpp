@@ -4,6 +4,7 @@
 #include "GUIText.h"
 #include "Globals.h"
 #include "TextureLibrary.h"
+#include "GraphicsEngine.h"
 
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
@@ -12,8 +13,8 @@ bool MenuState::Initialize()
 {
 	// Initialize options menu
 	m_options = new Menu();
-	m_options->AddCheckbox(220.0f, 0, 60.0f, MENUACTION_VSYNC, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/vs.png"));
-	m_options->AddCheckbox(220.0f, -70.0f, 60.0f, MENUACTION_FULLSCREEN, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fullscreen.png"));
+	m_options->AddCheckbox(220.0f, 0, MENUACTION_VSYNC, false);
+	m_options->AddCheckbox(220.0f, -70.0f, MENUACTION_FULLSCREEN, false);
 	m_options->AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"));
 
 	// Initialize main menu
@@ -124,7 +125,7 @@ GAMESTATESWITCH MenuState::Update()
 			break;
 
 		case MENUACTION_VSYNC:
-
+			GraphicsEngine::ToggleFullscreen(true);
 			break;
 		case MENUACTION_FULLSCREEN:
 

@@ -22,7 +22,7 @@ public:
 	void Shutdown();
 	void Render();
 	void AddButton(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
-	void AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
+	void AddCheckbox(float p_x, float p_y, MENUACTION p_action, bool p_state);
 	void AddPortrait(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
 
 private:

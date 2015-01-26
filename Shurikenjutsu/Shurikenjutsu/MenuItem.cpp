@@ -50,6 +50,8 @@ bool MenuItem::IsClicked()
 
 	if (input->IsLeftMouseClicked())
 	{
+		std::cout << "Mouse: " << input->GetMousePositionX() << ", " << input->GetMousePositionY() << std::endl;
+		std::cout << "Half Screen: " << GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH << ", " << GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT << std::endl;
 		if ((input->GetMousePositionX() - halfScreenX) > (m_x - m_width*0.5f) && (input->GetMousePositionX() - halfScreenX) < (m_x + m_width*0.5f))
 		{
 			if ((input->GetMousePositionY() - halfScreenY)*-1 >= (m_y - m_height*0.5f) && (input->GetMousePositionY() - halfScreenY)*-1 <= (m_y + m_height*0.5f))
@@ -70,4 +72,10 @@ MENUACTION MenuItem::GetAction()
 void MenuItem::SetBackgroundTexture(ID3D11ShaderResourceView* p_texture)
 {
 	m_background->SetTexture(p_texture);
+}
+
+void MenuItem::Shutdown()
+{
+	delete m_background;
+	m_background = 0;
 }

@@ -31,6 +31,7 @@ public:
 	virtual bool IsClicked();
 	MENUACTION GetAction();
 	void SetBackgroundTexture(ID3D11ShaderResourceView* p_texture);
+	void Shutdown();
 
 protected:
 

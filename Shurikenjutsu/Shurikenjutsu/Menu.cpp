@@ -62,11 +62,11 @@ void Menu::AddButton(float p_x, float p_y, float p_width, float p_height, MENUAC
 	m_buttons.push_back(temp);
 }
 
-void Menu::AddCheckbox(float p_x, float p_y, float p_size, MENUACTION p_action, ID3D11ShaderResourceView* p_texture)
+void Menu::AddCheckbox(float p_x, float p_y, MENUACTION p_action, bool p_state)
 {
 	MenuCheckbox *temp;
 	temp = new MenuCheckbox();
-	temp->Initialize(p_x, p_y, p_size, p_action, p_texture);
+	temp->Initialize(p_x, p_y, p_action, p_state);
 	m_checkboxes.push_back(temp);
 }
 

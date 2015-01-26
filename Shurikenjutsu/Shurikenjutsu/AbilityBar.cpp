@@ -12,32 +12,32 @@ bool AbilityBar::Initialize(float p_positionX, float p_positionY, int p_numberOf
 	float halfLength = 26.0f*(p_numberOfAbilities-1);
 
 	// ABILITY 1
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(0), p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength, p_positionY, 0.0f);
 	GUIAbility *temp;
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Melee.png"));
 	m_abilities.push_back(temp);
 
 	// ABILITY 2
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(1), p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f, p_positionY, 0.0f);
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Ranged.png"));
 	m_abilities.push_back(temp);
 
 	// ABILITY 3
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(2), p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 104.0f, p_positionY, 0.0f);
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Q.png"));
 	m_abilities.push_back(temp);
 
 	// ABILITY 4
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(3), p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 156.0f, p_positionY, 0.0f);
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_E.png"));
 	m_abilities.push_back(temp);
 
 	// ABILITY 5
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(4), p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 208.0f, p_positionY, 0.0f);
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"));
 	m_abilities.push_back(temp);
@@ -51,6 +51,11 @@ bool AbilityBar::Initialize(float p_positionX, float p_positionY, int p_numberOf
 
 void AbilityBar::Shutdown()
 {
+	for (unsigned int i = 0; i < m_abilities.size(); i++)
+	{
+		delete m_abilities[i];
+		m_abilities[i] = 0;
+	}
 	m_abilities.clear();
 }
 

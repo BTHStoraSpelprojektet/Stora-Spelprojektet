@@ -37,6 +37,9 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	if (GLOBAL::GetInstance().FULLSCREEN)
 	{
 		swapChainDescription.Windowed = FALSE;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::FULLSCREEN = true;
 	}
 
 	else
@@ -221,7 +224,7 @@ void DirectXWrapper::Clear()
 
 void DirectXWrapper::Present()
 {
-	m_swapChain->Present(0, 0);
+	m_swapChain->Present(1, 0);
 }
 
 IDXGISwapChain* DirectXWrapper::GetSwapChain()
