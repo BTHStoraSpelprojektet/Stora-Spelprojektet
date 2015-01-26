@@ -33,7 +33,6 @@ struct Input
 	float3x3 m_tBN : TBN;
 
 	float m_fogFactor : FOG;
-	float4 m_cameraPosition : CAMERA;
 
 	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
@@ -54,17 +53,18 @@ float4 main(Input p_input) : SV_Target
 	Material material;
 	material.m_ambient = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.m_specular = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	
 
 	float4 A = m_directionalLight.m_ambient;
 	float4 D = 0.0f;
 	float4 S = 0.0f;
 
 	// Sample NormalMap.
-	float3 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgb;
+	float4 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgba;
+	material.m_specular = float4(1.0f, 1.0f, 1.0f, normalMapSample.a);
 
 	// Uncompress NormalMap - to get it into the right range.
-	float3 normalT = 2.0f * normalMapSample - 1.0f;
+	float3 normalT = 2.0f * normalMapSample.xyz - 1.0f;
 
 	// Transforms from tangetspace to world space.
 	float3 bumpedNormalW = mul(normalT, p_input.m_tBN);
@@ -73,7 +73,7 @@ float4 main(Input p_input) : SV_Target
 	float3 normal = normalize(bumpedNormalW);
 
 	// Calculate the vector to the camera.
-	float3 toCamera = normalize(-p_input.m_cameraPosition.xyz);
+	float3 toCamera = normalize(m_directionalLight.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
 
 	// Compute directional light
 	ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
