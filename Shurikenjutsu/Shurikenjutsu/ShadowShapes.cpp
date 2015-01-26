@@ -157,7 +157,9 @@ void ShadowShapes::AddMapBoundries(Point p_center, float p_width, float p_height
 
 void ShadowShapes::RemoveDynamicLine(int p_atIndex)
 {
-	// TODO
+	m_dynamicLines.erase(m_dynamicLines.begin() + p_atIndex);
+
+	// TODO this will fuck over every other index...
 }
 
 void ShadowShapes::RemoveDynamicShape(int p_atIndex, int p_numberOfLines)
