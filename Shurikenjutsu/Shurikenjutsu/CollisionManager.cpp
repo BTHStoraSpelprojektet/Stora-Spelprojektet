@@ -38,6 +38,20 @@ void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vec
 			m_staticSphereList.push_back(tempSphereList[j]);
 		}
 	}
+	//Failed because of instancing... -.-'
+	//int index = 8;
+	//int index2 = 9;
+	//float xPos = m_staticBoxList[index].m_center.x;
+	//float zPos = m_staticBoxList[index].m_center.z - m_staticBoxList[index2].m_center.z;
+	//float xExtent = m_staticBoxList[index].m_extents.x * 2;
+	//float yExtent = m_staticBoxList[index].m_extents.y;
+	//float zExtent = m_staticBoxList[index].m_extents.z;
+
+	//OBB temp = OBB(xPos, m_staticBoxList[index].m_center.y, m_staticBoxList[index].m_center.z + zPos, xExtent, yExtent, zExtent, m_staticBoxList[index].m_direction);
+
+	//m_staticBoxList.erase(m_staticBoxList.begin() + index);
+	//m_staticBoxList.erase(m_staticBoxList.begin() + index2);
+	//m_staticBoxList.push_back(temp);
 }
 
 CollisionManager* CollisionManager::GetInstance()

@@ -444,18 +444,6 @@ void Player::SetCalculatePlayerPosition()
 		// Special cases ftw. Dont ask!
 		if (angle1 < 0 && angle2 < 0)
 		{
-<<<<<<< HEAD
-			temp *= -1;
-		}
-
-		// Formel:
-		// circleX * X + circleY * Y = Radius * Radius
-		// Y = (Radius * Radius - circleX * X) / circleY
-
-		float y = (r * r - circleX * (circleX + temp)) / circleY;
-		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + temp) - circleX, 0, y - circleY);
-		// normalize
-=======
 			offset *= -1;
 		}		
 		
@@ -483,13 +471,11 @@ void Player::SetCalculatePlayerPosition()
 		
 		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + offset) - circleX, 0, yValue - circleY);
 		// Normalize
->>>>>>> origin/master
 		float length = sqrt(dir.x * dir.x + dir.z * dir.z);
 		dir.x = dir.x / length;
 		dir.z = dir.z / length;
 		SetDirection(dir);
 	}
-
 
 	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
