@@ -115,7 +115,7 @@ float4 main(Input p_input) : SV_Target
 	}
 
 	// Add light.
-	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz * shadowSum) + (normalMapSample.a * S.xyz) * shadowSum);
+	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
 	
 	// Add fog.
 	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
