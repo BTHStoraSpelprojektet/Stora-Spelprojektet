@@ -44,6 +44,7 @@ public:
 	void SetGuID(RakNet::RakNetGUID p_guid);
 	void SetIsAlive(bool p_isAlive);
 	void SetTeam(int p_team);
+	int GetTeam();
 
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 	void UpdateAbilityBar();
@@ -52,7 +53,11 @@ public:
 
 	void DoAnimation();
 
+	bool IsVisible();
+	void SetIsVisible(bool p_visiblie);
+
 private:
+	void CheckOBBDirectionForErrorValue(OBB p_collidingBoxes);
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
@@ -70,6 +75,7 @@ private:
 	DirectX::XMFLOAT3 m_attackDir;
 	RakNet::RakNetGUID m_guid;
 	int m_team;
+	bool m_visible;
 
 	void SetCalculatePlayerPosition();
 	DirectX::XMFLOAT3 m_playerPrevPos;

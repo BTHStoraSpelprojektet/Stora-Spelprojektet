@@ -8,7 +8,7 @@
 
 class Frustum;
 class AbilityBar;
-
+class Minimap;
 
 class PlayerManager
 {
@@ -36,6 +36,10 @@ public:
 	void ResetCooldowns();
 
 	void UpdateFrustum(Frustum* p_frustum);
+	void MinimapUpdatePos(Minimap *p_minimap);
+	bool IsPlayersVisible(int p_index);
+	int GetPlayerTeam();
+	int GetEnemyTeam(int p_index);
 
 private:
 	void AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
@@ -43,6 +47,9 @@ private:
 	
 	bool IsGuidInEnemyList(RakNet::RakNetGUID p_guid);
 	bool IsGuidInNetworkList(RakNet::RakNetGUID p_guid);
+
+	void CheckPlayersVisible();
+	
 
 	Player* m_player;
 

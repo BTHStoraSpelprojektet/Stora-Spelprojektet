@@ -40,10 +40,13 @@ DebugBox::DebugBox(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, fl
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 }
 
-DebugBox::~DebugBox()
+void DebugBox::Shutdown()
 {
-	m_mesh->Release();
-	m_mesh = 0;
+	if (m_mesh)
+	{ 
+		m_mesh->Release();
+		m_mesh = 0;
+	}
 }
 
 void DebugBox::Render()

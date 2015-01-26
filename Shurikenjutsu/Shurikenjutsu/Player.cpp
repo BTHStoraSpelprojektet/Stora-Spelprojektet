@@ -374,13 +374,12 @@ void Player::SetCalculatePlayerPosition()
 	//TODO: Kan ej kollidera rätt med roterade bounding boxes
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(m_playerSphere, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
-	{
-		//DirectX::XMVECTOR temp = DirectX::XMLoadFloat4(&collidingBoxes[i].m_direction);
-		//DirectX::XMVECTOR playerPos = DirectX::XMLoadFloat3(&m_direction);
-		//playerPos = DirectX::XMVector3Transform(playerPos, DirectX::XMMatrixRotationQuaternion(temp));
-
-		//DirectX::XMFLOAT3 temp2;
-		//DirectX::XMStoreFloat3(&temp2, playerPos);
+	{ 
+		if (collidingBoxes.size() == 2)
+		{
+			int a = 1;
+		}
+	//	CheckOBBDirectionForErrorValue(collidingBoxes[i]);
 		float temp1 = collidingBoxes[i].m_direction.y;
 		if (temp1 < 0)
 		{
@@ -396,7 +395,21 @@ void Player::SetCalculatePlayerPosition()
 		float z = m_direction.z;
 		if (x == 1 || x == -1 ||z == 1 || z == -1)
 		{
-			SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+			if (i > 0)
+			{
+				if ((collidingBoxes[i].m_center.x != collidingBoxes[i - 1].m_center.x) || (collidingBoxes[i].m_center.y != collidingBoxes[i - 1].m_center.y))
+				{
+					SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+				}
+				else
+				{
+					SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
+				}
+			}
+			else
+			{
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+			}
 		}
 		else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
 		{
@@ -405,6 +418,7 @@ void Player::SetCalculatePlayerPosition()
 		else
 		{
 			CalculatePlayerBoxCollision(collidingBoxes[i]);
+
 		}
 	}
 
@@ -412,8 +426,35 @@ void Player::SetCalculatePlayerPosition()
 	std::vector<Sphere> collidingSpheres = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticSpheres(m_playerSphere, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingSpheres.size(); i++)
 	{
-		// Todo: Check angle?
-		//SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+		float r = collidingSpheres[i].m_radius;
+		float deltaZ = m_position.z - collidingSpheres[i].m_position.z;
+		float deltaX = m_position.x - collidingSpheres[i].m_position.x;
+		float angle = atan2f(deltaZ, deltaX);
+
+		float circleX = cosf(angle) * r;
+		float circleY = sinf(angle) * r;
+
+		float dz = collidingSpheres[i].m_position.z - m_position.z;
+		float dx = collidingSpheres[i].m_position.x - m_position.x;
+		float a1 = atan2(dz, dx);
+		float a2 = atan2(m_direction.z, m_direction.x);
+		float temp = a1 - a2;
+		if (a2 <= 0 && a1 <= 0)
+		{
+			temp *= -1;
+		}
+
+		// Formel:
+		// circleX * X + circleY * Y = Radius * Radius
+		// Y = (Radius * Radius - circleX * X) / circleY
+
+		float y = (r * r - circleX * (circleX + temp)) / circleY;
+		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + temp) - circleX, 0, y - circleY);
+		// normalize
+		float length = sqrt(dir.x * dir.x + dir.z * dir.z);
+		dir.x = dir.x / length;
+		dir.z = dir.z / length;
+		SetDirection(dir);
 	}
 
 
@@ -421,6 +462,31 @@ void Player::SetCalculatePlayerPosition()
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
 }
 
+void Player::CheckOBBDirectionForErrorValue(OBB p_collidingBoxes)
+{
+	float tempY;
+	float tempW;
+
+	if (p_collidingBoxes.m_direction.y < 0)
+	{
+		tempY = p_collidingBoxes.m_direction.y * -1.0f;
+
+		if (tempY < 0.1f)
+		{
+			p_collidingBoxes.m_direction.y = 0.0f;
+		}
+	}
+	if (p_collidingBoxes.m_direction.w < 0)
+	{
+		tempW = p_collidingBoxes.m_direction.w * -1.0f;
+
+		if (tempW < 0.1f)
+		{
+			p_collidingBoxes.m_direction.w = 0.0f;
+		}
+	}
+
+}
 void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 {
 	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x);
@@ -503,8 +569,8 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 		{
 			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f));
 
-			x = 1;
-			z = 0;
+			x = 0;
+			z = -1;
 		}
 		else
 		{
@@ -525,46 +591,35 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 }
 void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 {
-	//DirectX::XMVECTOR temp = DirectX::XMLoadFloat4(&p_collidingBoxes.m_direction);
-	//DirectX::XMVECTOR playerPos = DirectX::XMLoadFloat3(&m_direction);//Gör om värdet till en vektor
-	//playerPos = DirectX::XMVector3Transform(playerPos, DirectX::XMMatrixRotationQuaternion(temp));//Multiplicerar en rotations matris med playerPos
-	
-	//DirectX::XMFLOAT3 temp2;
-	//DirectX::XMStoreFloat3(&temp2, playerPos);
-
 	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z);
 	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z);
 	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x);
 	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x);
-
-
-	//bool aboveBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x);
-	//bool belowBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x);
-	//bool rightOfBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z);
-	//bool leftOfBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z);
-
 	float x = m_direction.x;
 	float z = m_direction.z;
 	if (x < 0 && z < 0)//down left
 	{
 		if (rightOfBox == aboveBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f));
 
 			x = -1;
 			z = 0;
+			SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 		}
 		else
 		{
 			if (rightOfBox)
 			{
-				x = 1;
-				z = 0;
+				x = 0;
+				z = -1;
+				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 			if (aboveBox)
 			{
 				x = -1;
 				z = 0;
+				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 		}
 	}
@@ -572,9 +627,10 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 	{
 		if (leftOfBox == aboveBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 			x = 0;
 			z = -1;
+			SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 		}
 		else
 		{
@@ -582,11 +638,13 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			{
 				x = 0;
 				z = -1;
+				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 			if (aboveBox)
 			{
 				x = 1;
 				z = 0;
+				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 		}
 	}
@@ -594,9 +652,10 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 	{
 		if (rightOfBox == belowBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 			x = 0;
 			z = 1;
+			SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 		}
 		else
 		{
@@ -604,11 +663,13 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			{
 				x = 0;
 				z = 1;
+				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 			if (belowBox)
 			{
 				x = -1;
 				z = 0;
+				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 		}
 	}
@@ -616,10 +677,10 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 	{
 		if (leftOfBox == belowBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f));
-
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f));
 			x = 1;
 			z = 0;
+			SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 		}
 		else
 		{
@@ -627,16 +688,16 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			{
 				x = 0;
 				z = 1;
+				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 			if (belowBox)
 			{
 				x = 1;
 				z = 0;
+				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 		}
 	}
-
-	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 }
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
@@ -680,6 +741,11 @@ void Player::SetTeam(int p_team)
 	m_team = p_team;
 }
 
+int Player::GetTeam()
+{
+	return m_team;
+}
+
 void Player::DoAnimation()
 {
 	// DO THIS WITH STATES
@@ -708,4 +774,14 @@ void Player::DoAnimation()
 		AnimatedObject::ChangeAnimationState(AnimationState::Range);
 		Network::GetInstance()->SendAnimationState(AnimationState::Range);
 	}
+}
+
+bool Player::IsVisible()
+{
+	return m_visible;
+}
+
+void Player::SetIsVisible(bool p_visible)
+{
+	m_visible = p_visible;
 }

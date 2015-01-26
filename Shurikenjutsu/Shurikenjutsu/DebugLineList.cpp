@@ -9,8 +9,11 @@ void DebugLineList::Initialize(DirectX::XMFLOAT3 p_color)
 
 void DebugLineList::Shutdown()
 {
-	m_mesh->Release();
-	m_mesh = 0;
+	if (m_mesh)
+	{
+		m_mesh->Release();
+		m_mesh = 0;
+	}
 }
 
 void DebugLineList::AddLine(DirectX::XMFLOAT3 p_startPoint, DirectX::XMFLOAT3 p_endPoint)

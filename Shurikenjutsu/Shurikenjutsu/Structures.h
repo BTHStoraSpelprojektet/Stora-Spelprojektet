@@ -36,6 +36,7 @@ struct DirectionalLight
 	DirectX::XMVECTOR m_diffuse;
 	DirectX::XMVECTOR m_specular;
 	DirectX::XMVECTOR m_direction;
+	DirectX::XMVECTOR m_cameraPosition;
 };
 
 struct Point
