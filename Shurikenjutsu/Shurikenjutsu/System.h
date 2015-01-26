@@ -12,7 +12,6 @@ class Debug;
 class ChooseState;
 class MenuState;
 class PlayingStateTest;
-class Camera;
 class GameState;
 
 class System
@@ -27,9 +26,6 @@ private:
 	void Update();
 	void Render();
 
-	void TestCollisions();
-
-	void RenderToShadowMap();
 	Window m_window;
 	Timer* m_timer;
 	Debug* m_debug;
@@ -37,11 +33,6 @@ private:
 	std::string m_title;
 	int m_previousFPS;
 
-	float m_oldMouseX;
-	float m_oldMouseY;
-
-	DirectionalLight m_directionalLight;
-	Camera* m_lightCamera;
 	MenuState* m_menuState;
 	ChooseState* m_chooseNinjaState;
 	GameState* m_gameState;

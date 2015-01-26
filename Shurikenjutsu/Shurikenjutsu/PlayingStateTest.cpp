@@ -71,7 +71,13 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initialize the minimap
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
-	
+
+	// Initialize directional light
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(0.525f, 0.525f, 0.525f, 1.0f);
+	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
+	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 
 	return true;
 }
@@ -167,6 +173,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
 	}
+
+	// Update Directional Light's camera position
+	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -182,6 +191,8 @@ void PlayingStateTest::Render()
 	m_playerManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
+
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	// Draw to the scene.
 	m_playerManager->Render();

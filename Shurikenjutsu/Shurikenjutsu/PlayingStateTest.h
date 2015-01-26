@@ -32,6 +32,7 @@ private:
 	ObjectManager* m_objectManager;
 	Camera* m_camera;
 	Minimap* m_minimap;
+	DirectionalLight m_directionalLight;
 
 	float twoPi = 6.28318530718f;
 
