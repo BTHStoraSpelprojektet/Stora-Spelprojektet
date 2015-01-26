@@ -77,6 +77,11 @@ public:
 
 	static int GetNumberOfInstanceBuffer();
 
+	static void SetStencilStateOff();
+	static void SetStencilStateOn();
+
+	static bool InitializeOutling();
+
 private:
 	GraphicsEngine(){};
 

@@ -290,3 +290,10 @@ void DirectXWrapper::TurnOffDepthStencil()
 {
 	m_context->OMSetDepthStencilState(m_depthDisabled, 1);
 }
+
+bool DirectXWrapper::InitializeOutlinging()
+{
+
+
+	return true;
+}

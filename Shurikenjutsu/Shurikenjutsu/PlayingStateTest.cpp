@@ -183,6 +183,15 @@ void PlayingStateTest::Render()
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
 
+	// OUTLINING
+	GraphicsEngine::SetStencilStateOff();
+
+
+
+	GraphicsEngine::SetStencilStateOn();
+
+
+
 	// Draw to the scene.
 	m_playerManager->Render();
 	m_objectManager->Render();

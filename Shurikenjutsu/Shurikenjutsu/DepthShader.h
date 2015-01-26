@@ -31,7 +31,6 @@ private:
 	void InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices);
 	//void InitializeDynamicInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices);
 	bool InitializeAnimatedDepth(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
-	bool InitializeOutliningShader(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
 
 
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4& p_worldMatrix);

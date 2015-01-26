@@ -391,3 +391,18 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 		m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, x, y, p_color, FW1_RESTORESTATE | FW1_VCENTER | FW1_CENTER);
 	}
 }
+
+void GraphicsEngine::SetStencilStateOff()
+{
+	m_outliningShader.SetStencilStateOff(m_directX.GetDevice(), m_directX.GetContext());
+}
+
+void GraphicsEngine::SetStencilStateOn()
+{
+	m_outliningShader.SetStencilStateOn(m_directX.GetDevice(), m_directX.GetContext());
+}
+
+bool GraphicsEngine::InitializeOutling()
+{
+
+}
