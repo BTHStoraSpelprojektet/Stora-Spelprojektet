@@ -57,7 +57,6 @@ public:
 	void SetIsVisible(bool p_visiblie);
 
 private:
-	void CheckOBBDirectionForErrorValue(OBB p_collidingBoxes);
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();

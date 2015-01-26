@@ -371,29 +371,16 @@ void Player::CalculateFacingAngle()
 void Player::SetCalculatePlayerPosition()
 {
 	// Check collision between player and static boxes
-	//TODO: Kan ej kollidera rätt med roterade bounding boxes
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(m_playerSphere, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{ 
-		if (collidingBoxes.size() == 2)
-		{
-			int a = 1;
-		}
-	//	CheckOBBDirectionForErrorValue(collidingBoxes[i]);
-		float temp1 = collidingBoxes[i].m_direction.y;
-		if (temp1 < 0)
-		{
-			temp1 *= -1;
-		}
 		float temp2 = collidingBoxes[i].m_extents.x - collidingBoxes[i].m_extents.z;
 		if (temp2 < 0)
 		{
 			temp2 *= -1;
 		}
 		
-		float x = m_direction.x;
-		float z = m_direction.z;
-		if (x == 1 || x == -1 ||z == 1 || z == -1)
+		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
 			if (i > 0)
 			{
@@ -403,7 +390,7 @@ void Player::SetCalculatePlayerPosition()
 				}
 				else
 				{
-					SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
+					SetDirection(DirectX::XMFLOAT3(m_direction.x, 0.0f, m_direction.z));
 				}
 			}
 			else
@@ -418,7 +405,6 @@ void Player::SetCalculatePlayerPosition()
 		else
 		{
 			CalculatePlayerBoxCollision(collidingBoxes[i]);
-
 		}
 	}
 
@@ -480,32 +466,6 @@ void Player::SetCalculatePlayerPosition()
 	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
 }
-
-void Player::CheckOBBDirectionForErrorValue(OBB p_collidingBoxes)
-{
-	float tempY;
-	float tempW;
-
-	if (p_collidingBoxes.m_direction.y < 0)
-	{
-		tempY = p_collidingBoxes.m_direction.y * -1.0f;
-
-		if (tempY < 0.1f)
-		{
-			p_collidingBoxes.m_direction.y = 0.0f;
-		}
-	}
-	if (p_collidingBoxes.m_direction.w < 0)
-	{
-		tempW = p_collidingBoxes.m_direction.w * -1.0f;
-
-		if (tempW < 0.1f)
-		{
-			p_collidingBoxes.m_direction.w = 0.0f;
-		}
-	}
-
-}
 void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 {
 	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x);
@@ -520,7 +480,6 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 		if (rightOfBox == aboveBox)
 		{
 			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
-
 			x = -1;
 			z = 0;
 		}
@@ -587,7 +546,6 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 		if (leftOfBox == belowBox)
 		{
 			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f));
-
 			x = 0;
 			z = -1;
 		}
@@ -605,7 +563,6 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 			}
 		}
 	}
-
 	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 }
 void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
@@ -620,11 +577,9 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 	{
 		if (rightOfBox == aboveBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f));
-
+			SetPosition(DirectX::XMFLOAT3(m_position.x + m_playerSphere.m_radius*1.1f, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f));
 			x = -1;
 			z = 0;
-			SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 		}
 		else
 		{
@@ -632,13 +587,11 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			{
 				x = 0;
 				z = -1;
-				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 			if (aboveBox)
 			{
 				x = -1;
 				z = 0;
-				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 		}
 	}
@@ -649,7 +602,6 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 			x = 0;
 			z = -1;
-			SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 		}
 		else
 		{
@@ -657,13 +609,11 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			{
 				x = 0;
 				z = -1;
-				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 			if (aboveBox)
 			{
 				x = 1;
 				z = 0;
-				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 		}
 	}
@@ -674,7 +624,6 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 			x = 0;
 			z = 1;
-			SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 		}
 		else
 		{
@@ -682,13 +631,11 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			{
 				x = 0;
 				z = 1;
-				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 			if (belowBox)
 			{
 				x = -1;
 				z = 0;
-				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 		}
 	}
@@ -696,10 +643,9 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 	{
 		if (leftOfBox == belowBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f));
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f));
 			x = 1;
 			z = 0;
-			SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 		}
 		else
 		{
@@ -707,16 +653,15 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 			{
 				x = 0;
 				z = 1;
-				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 			if (belowBox)
 			{
 				x = 1;
 				z = 0;
-				SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 			}
 		}
 	}
+	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 }
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
