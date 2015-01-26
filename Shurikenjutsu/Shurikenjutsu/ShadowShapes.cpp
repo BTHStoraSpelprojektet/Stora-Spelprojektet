@@ -11,9 +11,8 @@ bool ShadowShapes::Initialize()
 {
 	m_staticLines.clear();
 	m_dynamicLines.clear();
-	m_staticDebugDots.clear();
 
-	m_staticDebugLines.Initialize(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	m_staticDebugLines.Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -22,16 +21,6 @@ void ShadowShapes::Shutdown()
 {
 	m_staticLines.clear();
 	m_dynamicLines.clear();
-
-	if (FLAG_DEBUG == 1)
-	{
-		for (unsigned int i = 0; i < m_staticDebugDots.size(); i++)
-		{
-			m_staticDebugDots[i].Shutdown();
-		}
-
-		m_staticDebugDots.clear();
-	}
 
 	m_staticDebugLines.Shutdown();
 }
@@ -44,7 +33,7 @@ void ShadowShapes::AddStaticLine(Line p_line)
 	// Add debug data.
 	if (FLAG_DEBUG == 1)
 	{
-		AddDebugLineAndDots(p_line.a, p_line.b);
+		AddDebugLines(p_line.a, p_line.b);
 	}
 }
 
@@ -63,7 +52,7 @@ void ShadowShapes::AddStaticShape(std::vector<Line> p_shape)
 		{
 			for (unsigned int i = 0; i < p_shape.size(); i++)
 			{
-				AddDebugLineAndDots(p_shape[i].a, p_shape[i].b);
+				AddDebugLines(p_shape[i].a, p_shape[i].b);
 			}
 		}
 	}
@@ -95,10 +84,10 @@ void ShadowShapes::AddStaticSquare(Point p_topLeft, Point p_bottomRight)
 	// Add debug data.
 	if (FLAG_DEBUG == 1)
 	{
-		AddDebugLineAndDots(top.a, top.b);
-		AddDebugLineAndDots(right.a, right.b);
-		AddDebugLineAndDots(bottom.a, bottom.b);
-		AddDebugLineAndDots(left.a, left.b);
+		AddDebugLines(top.a, top.b);
+		AddDebugLines(right.a, right.b);
+		AddDebugLines(bottom.a, bottom.b);
+		AddDebugLines(left.a, left.b);
 	}
 }
 
@@ -159,12 +148,14 @@ void ShadowShapes::RemoveDynamicLine(int p_atIndex)
 {
 	m_dynamicLines.erase(m_dynamicLines.begin() + p_atIndex);
 
-	// TODO this will fuck over every other index...
+	// TODO, this will fuck over every other index...
 }
 
 void ShadowShapes::RemoveDynamicShape(int p_atIndex, int p_numberOfLines)
 {
-	// TODO
+	m_dynamicLines.erase(m_dynamicLines.begin() + p_atIndex, m_dynamicLines.begin() + p_atIndex + p_numberOfLines);
+
+	// TODO, this will fuck over every other index...
 }
 
 std::vector<Line> ShadowShapes::GetStaticLines()
@@ -182,27 +173,11 @@ void ShadowShapes::DebugRender()
 	// Render every static line.
 	m_staticDebugLines.Render();
 
-	// Render every static dot.
-	for (unsigned int i = 0; i < m_staticDebugDots.size(); i++)
-	{
-		m_staticDebugDots[i].Render();
-	}
-
 	// TODO, render dynamic?
 }
 
-void ShadowShapes::AddDebugLineAndDots(Point p_a, Point p_b)
+void ShadowShapes::AddDebugLines(Point p_a, Point p_b)
 {
 	// Add line to debug.
 	m_staticDebugLines.AddLine(DirectX::XMFLOAT3(p_a.x, 0.2f, p_a.y), DirectX::XMFLOAT3(p_b.x, 0.2f, p_b.y));
-
-	// Add blue start point.
-	DebugDot start;
-	start.Initialize(DirectX::XMFLOAT3(p_a.x, 0.2f, p_a.y), 21, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-	m_staticDebugDots.push_back(start);
-
-	// Add red end point.
-	DebugDot end;
-	end.Initialize(DirectX::XMFLOAT3(p_b.x, 0.2f, p_b.y), 21, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-	m_staticDebugDots.push_back(end);
 }

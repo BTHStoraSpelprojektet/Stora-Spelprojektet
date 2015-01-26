@@ -10,6 +10,7 @@
 #include "Globals.h"
 #include "ShadowShapes.h"
 #include "Minimap.h"
+#include "VisibilityComputer.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -56,8 +57,15 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		ShadowShapes::GetInstance().Initialize();
 		ShadowShapes::GetInstance().AddMapBoundries(Point(0.0f, 0.0f), 10.0f, 10.0f);
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 5.0f), Point(5.0f, 5.0f)));
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, -5.0f), Point(5.0f, -5.0f)));
+
+		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 5.0f), Point(-2.5f, 2.5f)));
+		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-2.5f, 2.5f), Point(-5.0f, 0.0f)));
+		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 0.0f), Point(-7.5f, 2.5f)));
+		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-7.5f, 2.5f), Point(-5.0f, 5.0f)));
+
+		ShadowShapes::GetInstance().AddStaticSquare(Point(2.0f, -2.0f), Point(8.0f, -8.0f));
+
+		VisibilityComputer::GetInstance().Initialize();
 	}
 	// ========== DEBUG LINES ==========
 
@@ -152,13 +160,14 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_updateFrustum = true;
 	}
+
 	if (m_updateFrustum)
 	{
 		m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 		m_objectManager->UpdateFrustum(m_frustum);
 		m_playerManager->UpdateFrustum(m_frustum);
 	}
-	//m_minimap->
+
 	m_minimap->Update(m_playerManager->GetPlayerPosition());
 	MinimapUpdatePos(m_minimap);
 
@@ -167,6 +176,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
 	}
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -197,6 +207,8 @@ void PlayingStateTest::Render()
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 		ShadowShapes::GetInstance().DebugRender();
+
+		VisibilityComputer::GetInstance().RenderVisibilityPolygon();
 	}
 
 	//m_particles.Render();
@@ -252,14 +264,16 @@ void PlayingStateTest::BasicPicking()
 	if (FLAG_DEBUG == 1)
 	{
 		// Update dot location.
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
-	DirectX::XMStoreFloat4x4(&world, matrix);
-	m_debugDot.UpdateWorldMatrix(world);
+		DirectX::XMFLOAT4X4 world;
+		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
+		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+		DirectX::XMStoreFloat4x4(&world, matrix);
+		m_debugDot.UpdateWorldMatrix(world);
 
-	m_mouseX = shurPos.x;
-	m_mouseY = shurPos.z;
+		m_mouseX = shurPos.x;
+		m_mouseY = shurPos.z;
+
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), Point(m_mouseX, m_mouseY));
 	}
 	// ========== DEBUG LINES ==========
 }
