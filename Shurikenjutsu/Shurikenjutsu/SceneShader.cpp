@@ -23,13 +23,11 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
 			return false;
 		}
-
 		else
 		{
 			m_VSVersion = "4.0";
 		}
 	}
-
 	else
 	{
 		m_VSVersion = "5.0";
@@ -50,13 +48,11 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
 			return false;
 		}
-
 		else
 		{
 			m_VSVersion = "4.0";
 		}
 	}
-
 	else
 	{
 		m_VSVersion = "5.0";
@@ -77,13 +73,11 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 			ConsolePrintErrorAndQuit("Failed to compile scene animated vertex shader from file.");
 			return false;
 		}
-
 		else
 		{
 			m_VSVersion = "4.0";
 		}
 	}
-
 	else
 	{
 		m_VSVersion = "5.0";

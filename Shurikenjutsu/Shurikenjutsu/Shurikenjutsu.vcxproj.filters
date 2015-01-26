@@ -359,6 +359,9 @@
     <ClCompile Include="Minimap.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="OutliningShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -582,6 +585,9 @@
     </ClInclude>
     <ClInclude Include="Minimap.h">
       <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlingShader.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

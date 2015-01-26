@@ -200,6 +200,8 @@ void PlayingStateTest::Render()
 	}
 
 	//m_particles.Render();
+
+
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();

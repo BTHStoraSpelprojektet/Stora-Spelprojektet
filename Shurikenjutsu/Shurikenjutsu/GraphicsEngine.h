@@ -13,7 +13,7 @@ class DepthShader;
 class RenderTarget;
 class ParticleShader;
 class SceneShader;
-
+class OutliningShader;
 
 class GraphicsEngine
 {
@@ -88,6 +88,7 @@ private:
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 	static ParticleShader m_particleShader;
+	static OutliningShader m_outliningShader;
 
 	static HWND m_windowHandle;
 
