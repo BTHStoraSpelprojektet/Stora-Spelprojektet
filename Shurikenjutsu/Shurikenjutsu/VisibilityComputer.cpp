@@ -10,9 +10,13 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 
 bool VisibilityComputer::Initialize()
 {
+	m_intersections.clear();
+
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 	m_mesh = nullptr;
 	m_vertices = 0;
+
+	m_boundingBox = BoundingShape(Point(0.0f, 0.0f), Point(0.0f, 0.0f));
 
 	return true;
 }
@@ -26,43 +30,88 @@ void VisibilityComputer::Shutdown()
 	}
 }
 
-void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, Point p_picked)
+void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition)
 {
 	Point center = p_viewerPosition;
 
-	// TODO, all the shit here.
-
-	m_dot.Shutdown();
-
-	std::vector<Intersection> intersects;
-
-	for (unsigned int i = 0; i < ShadowShapes::GetInstance().GetStaticLines().size(); i++)
+	if (p_viewerPosition.x > m_boundingBox.m_topLeft.x && p_viewerPosition.x < m_boundingBox.m_bottomRight.x && p_viewerPosition.y < m_boundingBox.m_topLeft.y && p_viewerPosition.y > m_boundingBox.m_bottomRight.y)
 	{
-		Intersection intersection = GetIntertersectionPoint(Line(p_viewerPosition, Point(p_picked.x, p_picked.y)), ShadowShapes::GetInstance().GetStaticLines()[i]);
-		if (intersection.intersection == true)
+		m_intersections.clear();
+
+		std::vector<PolygonPoint> totalIntersections;
+		std::vector<float> uniqueAngles = GetUniquePointAngles(p_viewerPosition);
+		std::vector<Line> segments = ShadowShapes::GetInstance().GetStaticLines();
+		PolygonPoint polygonPoint = PolygonPoint();
+
+		for (unsigned int i = 0; i < uniqueAngles.size(); i++)
 		{
-			intersects.push_back(intersection);
+			// Get current angle.
+			float angle = uniqueAngles[i];
+
+			// Calculate the dx and dy from current angle.
+			float dx = cos(angle);
+			float dy = sin(angle);
+
+			// Cast a ray in that angle.
+			Line ray = Line(Point(p_viewerPosition.x, p_viewerPosition.y), Point(p_viewerPosition.x + dx, p_viewerPosition.y + dy));
+
+			// Find the closest intersection.
+			Intersection closestIntersection = Intersection();
+			for (unsigned int j = 0; j < segments.size(); j++)
+			{
+				Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
+
+				// Ignore if there is no collision.
+				if (!intersection.intersection)
+				{
+					continue;
+				}
+
+				// Sort to closest T1 value.
+				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
+				{
+					closestIntersection = intersection;
+				}
+			}
+
+			// Check to make sure the closest intersection even hit.
+			if (!closestIntersection.intersection)
+			{
+				continue;
+			}
+
+			// Point and angle.
+			polygonPoint = PolygonPoint(angle, closestIntersection.point);
+
+			// Add to list of intersects
+			totalIntersections.push_back(polygonPoint);
 		}
-	}
 
-	float T = 10000.0f;
-	int index = -1;
+		// Sort intersections by angle.
+		// TODO, ^.
 
-	for (unsigned int i = 0; i < intersects.size(); i++)
-	{
-		if (intersects[i].T1 < T)
+		// Add sorted intersections to list.
+		for (unsigned int i = 0; i < totalIntersections.size(); i++)
 		{
-			T = intersects[i].T1;
-			index = i;
+			m_intersections.push_back(totalIntersections[i].m_point);
 		}
-	}
 
-	if (index >= 0)
-	{
-		m_dot.Initialize(DirectX::XMFLOAT3(intersects[index].point.x, 0.2f, intersects[index].point.y), 21, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+		// Calculate the polyogn.
+		CalculateVisibilityPolygon();
+
+		// Reverse the polygon.
+		CalculateReversedVisibilityPolygon();
 	}
-	
-	DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(p_viewerPosition.x, 0.2f, p_viewerPosition.y), DirectX::XMFLOAT3(p_picked.x, 0.2f, p_picked.y), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+}
+
+void VisibilityComputer::CalculateVisibilityPolygon()
+{
+	// TODO, the polygon.
+}
+
+void VisibilityComputer::CalculateReversedVisibilityPolygon()
+{
+	// TODO, reverse the polygon? how?
 }
 
 Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segment)
@@ -114,14 +163,29 @@ Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segm
 	return point;
 }
 
-void VisibilityComputer::CalculateReversedVisibilityPolygon()
+inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewerPoint)
 {
-	// TODO, reverse the polygon? how?
+	std::vector<float> angles;
+
+	// Get the angles to all of the unique points.
+	for (unsigned int i = 0; i < ShadowShapes::GetInstance().GetUniquePoints().size(); i++)
+	{
+		Point uniquePoint = ShadowShapes::GetInstance().GetUniquePoints()[i];
+
+		float angle = atan2(uniquePoint.y - p_viewerPoint.y, uniquePoint.x - p_viewerPoint.x);
+
+		// Add the angle, plus two offset angles. This is to hit things next to corners.
+		angles.push_back(angle - 0.00001f);
+		angles.push_back(angle);
+		angles.push_back(angle + 0.00001f);
+	}
+
+	return angles;
 }
 
 void VisibilityComputer::RenderVisibilityPolygon()
 {
-	m_dot.Render();
+	// TODO, render unreversed.
 }
 
 void VisibilityComputer::RenderReversedVisibilityPolygon()
@@ -133,5 +197,59 @@ bool VisibilityComputer::IsPointVisible(Point p_point)
 {
 	bool isVisible = true;
 
+	// TODO, check if point is visible in any of the polygons in the list.
+
 	return isVisible;
+}
+
+void VisibilityComputer::SetBoundryBox(Point p_topLeft, Point p_bottomRight)
+{
+	m_boundingBox.m_topLeft = p_topLeft;
+	m_boundingBox.m_bottomRight = p_bottomRight;
+}
+
+std::vector<PolygonPoint> VisibilityComputer::QuickSortAngles(std::vector<PolygonPoint> p_list, int p_left, int p_right)
+{
+	int i = p_left;
+	int j = p_right;
+
+	PolygonPoint temp;
+	PolygonPoint pivot = p_list[(p_left + p_right) / 2];
+
+	// Partition.
+	while(i <= j) 
+	{
+		while (p_list[i].m_angle < pivot.m_angle)
+		{
+			i++;
+		}
+
+		while (p_list[j].m_angle > pivot.m_angle)
+		{
+			j--;
+		}
+
+		if (i <= j) 
+		{
+			temp = p_list[i];
+			p_list[i] = p_list[j];
+			p_list[j] = temp;
+
+			i++;
+			j--;
+		}
+	}
+
+	// Recursion.
+	if (p_left < j)
+	{
+		QuickSortAngles(p_list, p_left, j);
+	}
+
+	if (i < p_right)
+	{
+		QuickSortAngles(p_list, i, p_right);
+	}
+
+	return p_list;
 }
