@@ -61,7 +61,7 @@ float4 main(Input p_input) : SV_Target
 
 	// Sample NormalMap.
 	float4 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgba;
-	material.m_specular = float4(1.0f, 1.0f, 1.0f, normalMapSample.a);
+	material.m_specular = float4(normalMapSample.a, normalMapSample.a, normalMapSample.a, normalMapSample.a * 255.0f);
 
 	// Uncompress NormalMap - to get it into the right range.
 	float3 normalT = 2.0f * normalMapSample.xyz - 1.0f;
@@ -115,7 +115,7 @@ float4 main(Input p_input) : SV_Target
 	}
 
 	// Add light.
-	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
+	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz * shadowSum) + (normalMapSample.a * S.xyz) * shadowSum);
 	
 	// Add fog.
 	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
