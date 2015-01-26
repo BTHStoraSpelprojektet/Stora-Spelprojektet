@@ -359,6 +359,9 @@
     <ClCompile Include="Minimap.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="VisibilityComputer.cpp">
+      <Filter>Source Files\ShadowShapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -582,6 +585,9 @@
     </ClInclude>
     <ClInclude Include="Minimap.h">
       <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="VisibilityComputer.h">
+      <Filter>Header Files\ShadowShapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

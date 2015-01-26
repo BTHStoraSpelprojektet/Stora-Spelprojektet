@@ -664,6 +664,14 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	DirectX::XMFLOAT4X4 lightViewMatrix = m_lightViewMatrix;
 	DirectX::XMFLOAT4X4 lightProjectionMatrix = m_lightProjectionMatrix;
 
+	//0x010cf7a0 {-0.213200718, -0.852802873, -0.426401436, 0.213200718}
+	//0x0068f010 {-0.00470637996, -0.0168380570, 0.999847174, 0.0220748782}
+
+	/*DirectX::XMVECTOR hej = DirectX::XMVectorSet(-0.213200718, -0.852802873, -0.426401436, 0.213200718);
+
+	hej = DirectX::XMVector3Transform(hej, DirectX::XMLoadFloat4x4(&viewMatrix));
+	hej = DirectX::XMVector3Normalize(hej);*/
+
 	// Transpose the matrices.
 	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
 	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
