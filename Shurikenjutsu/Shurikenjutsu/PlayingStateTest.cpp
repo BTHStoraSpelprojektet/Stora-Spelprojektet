@@ -66,6 +66,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		ShadowShapes::GetInstance().AddStaticSquare(Point(2.0f, -2.0f), Point(8.0f, -8.0f));
 
 		VisibilityComputer::GetInstance().Initialize();
+		VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
 	}
 	// ========== DEBUG LINES ==========
 
@@ -186,6 +187,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 
+	// Update the visibility polygon.
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z));
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -221,8 +225,6 @@ void PlayingStateTest::Render()
 
 		VisibilityComputer::GetInstance().RenderVisibilityPolygon();
 	}
-
-	//m_particles.Render();
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();
@@ -275,16 +277,16 @@ void PlayingStateTest::BasicPicking()
 	if (FLAG_DEBUG == 1)
 	{
 		// Update dot location.
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
-	DirectX::XMStoreFloat4x4(&world, matrix);
-	m_debugDot.UpdateWorldMatrix(world);
+		DirectX::XMFLOAT4X4 world;
+		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
+		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+		DirectX::XMStoreFloat4x4(&world, matrix);
+		m_debugDot.UpdateWorldMatrix(world);
 
-	m_mouseX = shurPos.x;
-	m_mouseY = shurPos.z;
+		m_mouseX = shurPos.x;
+		m_mouseY = shurPos.z;
 
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), Point(m_mouseX, m_mouseY));
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z));
 	}
 	// ========== DEBUG LINES ==========
 }
