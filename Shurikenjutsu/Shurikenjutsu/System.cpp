@@ -15,6 +15,7 @@
 #include "InputManager.h"
 #include "Globals.h"
 #include "TextureLibrary.h"
+#include "VisibilityComputer.h"
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -79,6 +80,12 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
 	GraphicsEngine::TurnOnAlphaBlending();
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
+
+	ShadowShapes::GetInstance().Initialize();
+	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
+	VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
+	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
+	ConsoleSkipLines(1);
 
 	// Initialize model library.
 	ModelLibrary::GetInstance()->Initialize(new Model());
@@ -179,6 +186,8 @@ void System::Shutdown()
 
 	GUIManager::GetInstance()->Shutdown();
 
+	ShadowShapes::GetInstance().Shutdown();
+	VisibilityComputer::GetInstance().Shutdown();
 }
 
 void System::Run()

@@ -47,8 +47,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_playerManager->Initialize();
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), wallList);
 
-	ShadowShapes::GetInstance().Initialize();
-
 	// ========== DEBUG LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
@@ -67,11 +65,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		ShadowShapes::GetInstance().AddStaticSquare(Point(2.0f, -2.0f), Point(8.0f, -8.0f));
 	}
 	// ========== DEBUG LINES ==========
-
-	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
-	VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
-	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
-
+	
 	// Frustum
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
@@ -116,9 +110,6 @@ void PlayingStateTest::Shutdown()
 		m_debugDot.Shutdown();	
 	}
 	// ========== DEBUG TEMP LINES ==========
-
-	ShadowShapes::GetInstance().Shutdown();
-	VisibilityComputer::GetInstance().Shutdown();
 
 	m_minimap->Shutdown();
 }
