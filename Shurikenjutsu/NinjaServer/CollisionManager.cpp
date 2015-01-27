@@ -210,7 +210,9 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	// Go through static spheres
 	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
 	{
-		if (Collisions::RaySphereCollision(ray, m_staticSphereList[i]))
+		Sphere tmpSphere = m_staticSphereList[i];
+		tmpSphere.m_position.y = 0.1f;
+		if (Collisions::RaySphereCollision(ray, tmpSphere))
 		{
 			if (ray->m_distance != 0)
 			{

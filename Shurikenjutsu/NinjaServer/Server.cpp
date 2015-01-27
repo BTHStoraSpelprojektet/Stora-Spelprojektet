@@ -171,17 +171,8 @@ void Server::ReceviePacket()
 
 			if (m_gameState->CanUseAbility(index, readAbility) && player.isAlive)
 			{
-				if (readAbility == ABILITIES_DASH)
-				{
-					m_gameState->ExecuteAbility(m_packet->guid, readAbility, true, distanceFromPlayer);
-					m_gameState->UsedAbility(index, readAbility);
-				}
-				else
-				{
-
-					m_gameState->ExecuteAbility(m_packet->guid, readAbility, false, distanceFromPlayer);
-					m_gameState->UsedAbility(index, readAbility);
-				}
+				m_gameState->ExecuteAbility(m_packet->guid, readAbility, readAbility == ABILITIES_DASH, distanceFromPlayer);
+				m_gameState->UsedAbility(index, readAbility);
 			}
 			break;
 		}

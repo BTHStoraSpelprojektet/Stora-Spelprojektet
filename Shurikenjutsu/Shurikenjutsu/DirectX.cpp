@@ -31,7 +31,6 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	IDXGIOutput* adapterOutput;
 	unsigned int numModes;
 	DXGI_MODE_DESC* displayModeList;
-	DXGI_ADAPTER_DESC adapterDesc;
 
 	// Create a DirectX graphics interface factory.
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);

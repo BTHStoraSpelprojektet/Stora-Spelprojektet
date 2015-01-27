@@ -7,20 +7,18 @@ CollisionManager* CollisionManager::m_instance;
 CollisionManager::CollisionManager(){}
 CollisionManager::~CollisionManager(){}
 
-void CollisionManager::Initialize(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/)
+void CollisionManager::Initialize(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList)
 {
 	m_staticBoxList = std::vector<OBB>();
 	m_staticSphereList = std::vector<Sphere>();
-	SetLists(p_StaticObjectList, p_outerWallList/*, p_sphereObjectList*/);
+	SetLists(p_StaticObjectList, p_outerWallList);
 }
 
-void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList/*, std::vector<Sphere> p_sphereObjectList*/)
+void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList)
 {
-	//m_StaticObjectList.push_back(OBB(p_outerWallList[0].m_center, p_outerWallList[0].m_extents.z, p_outerWallList[0].m_extents.y, p_outerWallList[0].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));
 	m_staticBoxList.push_back(OBB(p_outerWallList[0]));
 	m_staticBoxList.push_back(OBB(p_outerWallList[1]));
 
-	//m_StaticObjectList.push_back(OBB(p_outerWallList[2].m_center, p_outerWallList[2].m_extents.z, p_outerWallList[2].m_extents.y, p_outerWallList[2].m_extents.x, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)));	//NOT WORKING
 	m_staticBoxList.push_back(OBB(p_outerWallList[2]));
 	m_staticBoxList.push_back(OBB(p_outerWallList[3]));
 
@@ -32,6 +30,7 @@ void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vec
 
 		for (unsigned int j = 0; j < tempBoxList.size(); j++)
 		{ 
+			tempBoxList[j].CalculateRadius();
 			m_staticBoxList.push_back(tempBoxList[j]);
 		}
 		for (unsigned int j = 0; j < tempSphereList.size(); j++)
@@ -39,11 +38,20 @@ void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vec
 			m_staticSphereList.push_back(tempSphereList[j]);
 		}
 	}
+	//Failed because of instancing... -.-'
+	//int index = 8;
+	//int index2 = 9;
+	//float xPos = m_staticBoxList[index].m_center.x;
+	//float zPos = m_staticBoxList[index].m_center.z - m_staticBoxList[index2].m_center.z;
+	//float xExtent = m_staticBoxList[index].m_extents.x * 2;
+	//float yExtent = m_staticBoxList[index].m_extents.y;
+	//float zExtent = m_staticBoxList[index].m_extents.z;
 
-	//for (unsigned int i = 0; i < p_sphereObjectList.size(); i++)
-	//{
-	//	m_sphereObjectList.push_back(p_sphereObjectList[i]);
-	//}
+	//OBB temp = OBB(xPos, m_staticBoxList[index].m_center.y, m_staticBoxList[index].m_center.z + zPos, xExtent, yExtent, zExtent, m_staticBoxList[index].m_direction);
+
+	//m_staticBoxList.erase(m_staticBoxList.begin() + index);
+	//m_staticBoxList.erase(m_staticBoxList.begin() + index2);
+	//m_staticBoxList.push_back(temp);
 }
 
 CollisionManager* CollisionManager::GetInstance()

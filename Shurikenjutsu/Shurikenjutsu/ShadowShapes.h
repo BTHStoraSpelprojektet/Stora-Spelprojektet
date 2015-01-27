@@ -28,6 +28,7 @@ public:
 
 	std::vector<Line> GetStaticLines();
 	std::vector<Line> GetDynamicLines();
+	std::vector<Point> GetUniquePoints();
 
 	void DebugRender();
 
@@ -36,12 +37,13 @@ private:
 	ShadowShapes(ShadowShapes const&);
 	void operator=(ShadowShapes const&);
 
-	void AddDebugLineAndDots(Point p_a, Point p_b);
+	void AddDebugLines(Point p_a, Point p_b);
+	inline void AddUniquePoints(Point p_point);
 
 	std::vector<Line> m_staticLines;
 	std::vector<Line> m_dynamicLines;
-
+	std::vector<Point> m_uniquePoints; 
+	
 	DebugLineList m_staticDebugLines;
-	std::vector<DebugDot> m_staticDebugDots;
 };
 #endif

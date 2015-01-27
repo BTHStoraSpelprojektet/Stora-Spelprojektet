@@ -74,7 +74,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize the graphics engine.
 	GraphicsEngine::Initialize(m_window.GetHandle());
-	GraphicsEngine::SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	GraphicsEngine::SetClearColor(0.5f, 0.5f, 1.0f, 1.0f);
 	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
 	GraphicsEngine::TurnOnAlphaBlending();
@@ -144,7 +144,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		m_debug->RunTests(p_argc, p_argv);
 	}
 
-	m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
+	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
 	return result;
 }
