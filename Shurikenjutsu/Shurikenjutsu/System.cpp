@@ -81,6 +81,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GraphicsEngine::TurnOnAlphaBlending();
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
+	ShadowShapes::GetInstance().Initialize();
+	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
+	VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
+	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
+
 	// Initialize model library.
 	ModelLibrary::GetInstance()->Initialize(new Model());
 	ConsolePrintSuccess("All models successfully loaded.");
@@ -146,12 +151,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	}
 
 	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
-
-	ShadowShapes::GetInstance().Initialize();
-
-	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
-	VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
-	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
 
 	return result;
 }
