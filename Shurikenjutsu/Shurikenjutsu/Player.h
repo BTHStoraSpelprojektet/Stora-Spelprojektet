@@ -87,6 +87,7 @@ private:
 	Ability* m_shurikenAbility;
 	Ability* m_megaShuriken;
 	Ability* m_smokeBombAbility;
+	Ability* m_spikeAbility;
 
 	HealthBar* m_healthbar;
 	AbilityBar* m_abilityBar;
