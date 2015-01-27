@@ -15,6 +15,7 @@
 #include "InputManager.h"
 #include "Globals.h"
 #include "TextureLibrary.h"
+#include "VisibilityComputer.h"
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -146,6 +147,12 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
+	ShadowShapes::GetInstance().Initialize();
+
+	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
+	VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
+	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
+
 	return result;
 }
 
@@ -179,6 +186,8 @@ void System::Shutdown()
 
 	GUIManager::GetInstance()->Shutdown();
 
+	ShadowShapes::GetInstance().Shutdown();
+	VisibilityComputer::GetInstance().Shutdown();
 }
 
 void System::Run()
