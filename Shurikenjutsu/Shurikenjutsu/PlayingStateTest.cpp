@@ -184,16 +184,19 @@ void PlayingStateTest::Render()
 	GraphicsEngine::ResetRenderTarget();
 
 	// OUTLINING
-	GraphicsEngine::SetStencilStateOff();
+	//GraphicsEngine::ClearOutlining();
+	GraphicsEngine::SetOutliningPassOne();
+	
+	m_playerManager->Render();
 
+	GraphicsEngine::SetOutliningPassTwo();
 
+	m_playerManager->RenderOutlining();
 
-	GraphicsEngine::SetStencilStateOn();
-
-
+	GraphicsEngine::ResetRenderTarget();
 
 	// Draw to the scene.
-	m_playerManager->Render();
+	//m_playerManager->Render();
 	m_objectManager->Render();
 
 	// ========== DEBUG LINES ==========
@@ -214,6 +217,17 @@ void PlayingStateTest::Render()
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();
+
+
+	GraphicsEngine::SetOutliningPassOne();
+
+	m_playerManager->Render();
+
+	GraphicsEngine::SetOutliningPassTwo();
+
+	m_playerManager->RenderOutlining();
+
+	GraphicsEngine::ResetRenderTarget();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)

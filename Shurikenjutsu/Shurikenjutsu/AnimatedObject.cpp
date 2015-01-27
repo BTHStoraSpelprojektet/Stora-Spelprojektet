@@ -70,6 +70,11 @@ void AnimatedObject::RenderDepth()
 	GraphicsEngine::RenderAnimatedDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_animationController.UpdateAnimation());
 }
 
+void AnimatedObject::RenderOutlining()
+{
+	GraphicsEngine::RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
+}
+
 void AnimatedObject::ChangeAnimationState(AnimationState p_newState)
 {
 	m_animationController.ChangeAnimationState(p_newState);

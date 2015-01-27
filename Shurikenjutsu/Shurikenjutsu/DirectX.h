@@ -8,6 +8,7 @@ class DirectXWrapper
 public:
 	bool Initialize(HWND p_handle);
 	void Clear();
+	void ClearOutlining();
 	void Present();
 
 	ID3D11Device* GetDevice();
@@ -26,6 +27,8 @@ public:
 	void ResetRenderTarget();
 
 	bool InitializeOutlinging();
+	void SetOutliningPassOne();
+	void SetOutliningPassTwo();
 
 private:
 	ID3D11Device* m_device;
@@ -46,8 +49,8 @@ private:
 
 	ID3D11DepthStencilState* m_depthEnabled;
 	ID3D11DepthStencilState* m_depthDisabled;
-	ID3D11DepthStencilState* m_depthDisabledOutlining;
-	ID3D11DepthStencilState* m_depthEnabledOutlining;
+	ID3D11DepthStencilState* m_outliningALWAYS;
+	ID3D11DepthStencilState* m_outliningNOTEQUAL;
 
 	int	m_width;
 	int m_height;

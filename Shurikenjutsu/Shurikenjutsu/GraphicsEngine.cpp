@@ -16,7 +16,7 @@ SceneShader GraphicsEngine::m_sceneShader;
 GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
 ParticleShader GraphicsEngine::m_particleShader;
-OutliningShader GraphicsEngine::m_outliningShader;
+//OutliningShader GraphicsEngine::m_outliningShader;
 HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
 IFW1Factory *GraphicsEngine::m_FW1Factory;
@@ -84,18 +84,21 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
+	/*
 	// Initialize OutliningShader
 	if (m_outliningShader.Initialize())
 	{
 		ConsolePrintSuccess("Outlining shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+	*/
 
 	//FONTWRAPPER -.-
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
 	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &m_fontWrapper);
 	if (FAILED(hResult))
 	{
+		long asd = hResult;
 		std::cout << "FAILED FONTWRAPPER" << std::endl;
 	}
 
@@ -110,7 +113,7 @@ void GraphicsEngine::Shutdown()
 	m_sceneShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
-	m_outliningShader.Shutdown();
+	//m_outliningShader.Shutdown();
 
 	if (m_FW1Factory != NULL)
 	{
@@ -152,6 +155,11 @@ void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertice
 void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	m_sceneShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
+}
+
+void GraphicsEngine::RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+{
+	m_sceneShader.RenderAnimatedOutlining(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
 }
 
 void GraphicsEngine::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
@@ -392,17 +400,22 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 	}
 }
 
-void GraphicsEngine::SetStencilStateOff()
-{
-	m_outliningShader.SetStencilStateOff(m_directX.GetDevice(), m_directX.GetContext());
-}
-
-void GraphicsEngine::SetStencilStateOn()
-{
-	m_outliningShader.SetStencilStateOn(m_directX.GetDevice(), m_directX.GetContext());
-}
-
 bool GraphicsEngine::InitializeOutling()
 {
+	return m_directX.InitializeOutlinging();
+}
 
+void GraphicsEngine::SetOutliningPassOne()
+{
+	m_directX.SetOutliningPassOne();
+}
+
+void GraphicsEngine::SetOutliningPassTwo()
+{
+	m_directX.SetOutliningPassTwo();
+}
+
+void GraphicsEngine::ClearOutlining()
+{
+	m_directX.ClearOutlining();
 }

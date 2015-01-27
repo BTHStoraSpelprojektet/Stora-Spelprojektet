@@ -554,6 +554,11 @@ void Player::RenderDepth()
 	}
 }
 
+void Player::RenderOutlining()
+{
+	AnimatedObject::RenderOutlining();
+}
+
 void Player::SetIsAlive(bool p_isAlive)
 {
 	m_isAlive = p_isAlive;

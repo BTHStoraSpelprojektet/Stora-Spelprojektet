@@ -4,7 +4,7 @@
 #include "DirectX.h"
 #include "DirectXTex\DirectXTex.h"
 #include "Structures.h"
-#include "FW1FontWrapper.h"
+#include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include <vector>
 
 class WICTextureLoader;
@@ -13,7 +13,7 @@ class DepthShader;
 class RenderTarget;
 class ParticleShader;
 class SceneShader;
-class OutliningShader;
+//class OutliningShader;
 
 class GraphicsEngine
 {
@@ -36,7 +36,7 @@ public:
 	static void RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
 
 	static void RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
-
+	static void RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
 	static void RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 
 	static void RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex);
@@ -77,10 +77,11 @@ public:
 
 	static int GetNumberOfInstanceBuffer();
 
-	static void SetStencilStateOff();
-	static void SetStencilStateOn();
+	static void SetOutliningPassOne();
+	static void SetOutliningPassTwo();
 
 	static bool InitializeOutling();
+	static void ClearOutlining();
 
 private:
 	GraphicsEngine(){};
@@ -93,7 +94,7 @@ private:
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 	static ParticleShader m_particleShader;
-	static OutliningShader m_outliningShader;
+	//static OutliningShader m_outliningShader;
 
 	static HWND m_windowHandle;
 
