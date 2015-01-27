@@ -144,7 +144,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		m_debug->RunTests(p_argc, p_argv);
 	}
 
-	m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
+	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
 	return result;
 }
