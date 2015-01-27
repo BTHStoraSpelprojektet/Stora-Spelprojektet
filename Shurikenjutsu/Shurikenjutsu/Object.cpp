@@ -195,6 +195,7 @@ void Object::CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::
 {
 	GraphicsEngine::AddInstanceBuffer(p_numberOfInstances, p_positions);
 }
+
 int Object::GetInstanceIndex() const
 {
 	return m_InstanceIndex;

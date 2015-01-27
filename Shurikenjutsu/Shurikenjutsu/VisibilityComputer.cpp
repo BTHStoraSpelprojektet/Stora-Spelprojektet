@@ -480,8 +480,10 @@ bool VisibilityComputer::IsPointVisible(Point p_point)
 	return isVisible;
 }
 
-void VisibilityComputer::SetBoundryBox(Point p_topLeft, Point p_bottomRight)
+void VisibilityComputer::SetMapBoundries(Point p_topLeft, Point p_bottomRight)
 {
+	ShadowShapes::GetInstance().AddStaticSquare(p_topLeft, p_bottomRight);
+
 	m_boundingBox.m_topLeft = p_topLeft;
 	m_boundingBox.m_bottomRight = p_bottomRight;
 }

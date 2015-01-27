@@ -62,7 +62,7 @@ public:
 	void Shutdown();
 
 	void UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device);
-	void SetBoundryBox(Point p_topLeft, Point p_bottomRight);
+	void SetMapBoundries(Point p_topLeft, Point p_bottomRight);
 
 	void RenderVisibilityPolygon(ID3D11DeviceContext* p_context);
 
