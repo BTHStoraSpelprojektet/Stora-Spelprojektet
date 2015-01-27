@@ -16,7 +16,7 @@ PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 bool PlayingStateTest::Initialize()
 {
-	return Initialize("../Shurikenjutsu/Levels/ciliasTestLevel3.SSPL");
+	return Initialize("../Shurikenjutsu/Levels/ciliasTestLevel.SSPL");
 }
 
 bool PlayingStateTest::Initialize(std::string p_levelName)
