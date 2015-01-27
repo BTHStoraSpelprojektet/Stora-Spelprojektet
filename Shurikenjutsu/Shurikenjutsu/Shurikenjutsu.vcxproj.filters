@@ -147,6 +147,9 @@
     <Filter Include="Source Files\ShadowShapes">
       <UniqueIdentifier>{1e2f7e8c-669b-4324-b30a-ec7677dd4f88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\ShadowShapes">
+      <UniqueIdentifier>{944e469a-b192-4ce9-abb6-7205312b24bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -361,6 +364,12 @@
     </ClCompile>
     <ClCompile Include="VisibilityComputer.cpp">
       <Filter>Source Files\ShadowShapes</Filter>
+    </ClCompile>
+    <ClCompile Include="SpikeAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Spikes.cpp">
+      <Filter>Source Files\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -589,6 +598,12 @@
     <ClInclude Include="VisibilityComputer.h">
       <Filter>Header Files\ShadowShapes</Filter>
     </ClInclude>
+    <ClInclude Include="SpikeAbility.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Spikes.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -641,6 +656,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\Depth\DepthAnimatedVertexShader.hlsl">
       <Filter>Shaders\Depth</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSPixelShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSVertexShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

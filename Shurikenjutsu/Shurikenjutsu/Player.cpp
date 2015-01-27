@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include "SmokeBombAbility.h"
+#include "SpikeAbility.h"
 #include "CollisionManager.h"
 #include "Dash.h"
 #include "Collisions.h"
@@ -14,6 +15,7 @@
 #include "AbilityBar.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
+#include "VisibilityComputer.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -46,6 +48,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
+
+	m_spikeAbility = new SpikeAbility();
+	m_spikeAbility->Initialize();
 
 	m_healthbar = new HealthBar();
 	m_healthbar->Initialize(100.0f, 15.0f);
@@ -97,6 +102,11 @@ void Player::Shutdown()
 		m_smokeBombAbility->Shutdown();
 		delete m_smokeBombAbility;
 	}
+	if (m_spikeAbility != nullptr)
+	{
+		m_spikeAbility->Shutdown();
+		delete m_spikeAbility;
+	}
 	if (m_healthbar != nullptr)
 	{
 		m_healthbar->Shutdown();
@@ -121,6 +131,11 @@ void Player::UpdateMe()
 	}
 
 	m_playerSphere.m_position = m_position;
+	// Move
+	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
+	{
+		SetCalculatePlayerPosition();
+	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -130,21 +145,17 @@ void Player::UpdateMe()
 
 	// Check for dash
 	if (Network::GetInstance()->HaveDashed())
-	{
-		// Check position = check network position
-		
-		// Calc distance?
+	{		
+		// Calc distance
 		float dx = Network::GetInstance()->GetDashLocation().x - m_position.x;
 		float dz = Network::GetInstance()->GetDashLocation().z - m_position.z;
 		m_dashDistanceLeft = sqrt(dx * dx + dz * dz);
+
 		// Calc dir
 		DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(dx, 0, dz));
 		tempVector = DirectX::XMVector3Normalize(tempVector);
 		DirectX::XMStoreFloat3(&m_dashDirection, tempVector);
-		// Move with increased speed
-		//m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-		//m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-		// Set finished when we arrive (whitin a certain radius? or after x seconds?)
+
 		m_isDashing = true;
 	}
 	
@@ -164,7 +175,11 @@ void Player::UpdateMe()
 			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
 			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
 			m_dashDistanceLeft -= distance;
-		}		
+		}
+
+		// If we dashed, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+
 		SendPosition(m_position);
 	}
 
@@ -172,8 +187,11 @@ void Player::UpdateMe()
 	if ((CalculateDirection() || Network::GetInstance()->ConnectedNow()) && !m_isDashing)
 	{
 		SetCalculatePlayerPosition();
+
+		// If we moved, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 	}
-		
+	
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
 
@@ -226,7 +244,8 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-		m_ability = m_smokeBombAbility;		
+//		m_ability = m_smokeBombAbility;
+		m_ability = m_spikeAbility;
 	}
 }
 bool Player::CalculateDirection()
@@ -289,6 +308,7 @@ void Player::UpdateAbilities()
 	m_shurikenAbility->Update();
 	m_megaShuriken->Update();
 	m_smokeBombAbility->Update();
+	m_spikeAbility->Update();
 }
 
 void Player::ResetCooldowns()
@@ -298,6 +318,7 @@ void Player::ResetCooldowns()
 	m_shurikenAbility->ResetCooldown();
 	m_megaShuriken->ResetCooldown();
 	m_smokeBombAbility->ResetCooldown();
+	m_spikeAbility->ResetCooldown();
 
 	UpdateAbilities();
 }
@@ -715,7 +736,8 @@ void Player::UpdateAbilityBar()
 	m_abilityBar->Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
 	m_abilityBar->Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
 	m_abilityBar->Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	m_abilityBar->Update((float)m_spikeAbility->GetCooldown(), SPIKE_COOLDOWN, 4);
+	//m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()
