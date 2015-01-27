@@ -4,6 +4,7 @@
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
+#include "..\CommonLibs\ModelNames.h"
 
 class MapManager;
 class CollisionManager;

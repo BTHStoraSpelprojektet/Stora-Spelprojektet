@@ -519,6 +519,9 @@
     <ClInclude Include="GameplayGlobalVariables.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModelNames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RakNet\_FindFirst.cpp">

@@ -11,12 +11,13 @@
 #include "ShadowShapes.h"
 #include "Minimap.h"
 #include "VisibilityComputer.h"
+#include "..\CommonLibs\ModelNames.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 bool PlayingStateTest::Initialize()
 {
-	return Initialize("../Shurikenjutsu/Levels/ciliasTestLevel.SSPL");
+	return Initialize(LEVEL_NAME);
 }
 
 bool PlayingStateTest::Initialize(std::string p_levelName)

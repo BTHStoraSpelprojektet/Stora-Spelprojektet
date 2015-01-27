@@ -7,11 +7,6 @@
 //#define SERVER_ADDRESS "194.47.150.36" // Alexander's IP
 //#define SERVER_ADDRESS "127.0.0.1"
 
-// Model names
-#define LEVEL_NAME "../Shurikenjutsu/Levels/firstLevel.SSPL"
-#define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
-#define MEGA_SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/MegaShurikenShape.SSP"
-#define PLAYER_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 
 class ServerGlobals
 {

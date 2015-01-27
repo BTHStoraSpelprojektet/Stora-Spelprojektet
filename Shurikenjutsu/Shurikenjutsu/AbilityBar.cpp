@@ -2,6 +2,7 @@
 #include "TextureLibrary.h"
 #include "GUIAbility.h"
 #include "GUIElement.h"
+#include "..\CommonLibs\ModelNames.h"
 
 AbilityBar::AbilityBar(){}
 AbilityBar::~AbilityBar(){}
@@ -15,36 +16,36 @@ bool AbilityBar::Initialize(float p_positionX, float p_positionY, int p_numberOf
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(0), p_positionY, 0.0f);
 	GUIAbility *temp;
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Melee.png"));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_KATANA_TEXTURE));
 	m_abilities.push_back(temp);
 
 	// ABILITY 2
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(1), p_positionY, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Ranged.png"));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_SHURIKEN_TEXTURE));
 	m_abilities.push_back(temp);
 
 	// ABILITY 3
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(2), p_positionY, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Q.png"));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_DASH_TEXTURE));
 	m_abilities.push_back(temp);
 
 	// ABILITY 4
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(3), p_positionY, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_E.png"));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_MEGA_SHURIKEN_TEXTURE));
 	m_abilities.push_back(temp);
 
 	// ABILITY 5
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f * float(4), p_positionY, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_SMOKE_BOMB_TEXTURE));
 	m_abilities.push_back(temp);
 
 	position = DirectX::XMFLOAT3(p_positionX, p_positionY, 0.0f);
 	m_background = new GUIElement();
-	m_background->Initialize(position, 52.0f*p_numberOfAbilities + 4.0f, 56.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/tb_bg.png"));
+	m_background->Initialize(position, 52.0f*p_numberOfAbilities + 4.0f, 56.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_BG_TEXTURE));
 
 	return true;
 }

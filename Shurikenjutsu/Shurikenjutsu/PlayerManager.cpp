@@ -3,13 +3,14 @@
 #include "Frustum.h"
 #include "Globals.h"
 #include "Minimap.h"
+#include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	AddPlayer(PLAYER_MODEL_NAME, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	m_enemyUpdatePositionTimer = 0.0f;
 	return true;
