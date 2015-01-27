@@ -365,6 +365,12 @@
     <ClCompile Include="VisibilityComputer.cpp">
       <Filter>Source Files\ShadowShapes</Filter>
     </ClCompile>
+    <ClCompile Include="SpikeAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Spikes.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -591,6 +597,12 @@
     </ClInclude>
     <ClInclude Include="VisibilityComputer.h">
       <Filter>Header Files\ShadowShapes</Filter>
+    </ClInclude>
+    <ClInclude Include="SpikeAbility.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Spikes.h">
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include "SmokeBombAbility.h"
+#include "SpikeAbility.h"
 #include "CollisionManager.h"
 #include "Dash.h"
 #include "Collisions.h"
@@ -47,6 +48,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
+
+	m_spikeAbility = new SpikeAbility();
+	m_spikeAbility->Initialize();
 
 	m_healthbar = new HealthBar();
 	m_healthbar->Initialize(100.0f, 15.0f);
@@ -96,6 +100,11 @@ void Player::Shutdown()
 	{
 		m_smokeBombAbility->Shutdown();
 		delete m_smokeBombAbility;
+	}
+	if (m_spikeAbility != nullptr)
+	{
+		m_spikeAbility->Shutdown();
+		delete m_spikeAbility;
 	}
 	if (m_healthbar != nullptr)
 	{
@@ -189,7 +198,8 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-		m_ability = m_smokeBombAbility;		
+//		m_ability = m_smokeBombAbility;
+		m_ability = m_spikeAbility;
 	}
 }
 bool Player::CalculateDirection()
@@ -252,6 +262,7 @@ void Player::UpdateAbilities()
 	m_shurikenAbility->Update();
 	m_megaShuriken->Update();
 	m_smokeBombAbility->Update();
+	m_spikeAbility->Update();
 }
 
 void Player::ResetCooldowns()
@@ -261,6 +272,7 @@ void Player::ResetCooldowns()
 	m_shurikenAbility->ResetCooldown();
 	m_megaShuriken->ResetCooldown();
 	m_smokeBombAbility->ResetCooldown();
+	m_spikeAbility->ResetCooldown();
 
 	UpdateAbilities();
 }
@@ -678,7 +690,8 @@ void Player::UpdateAbilityBar()
 	m_abilityBar->Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
 	m_abilityBar->Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
 	m_abilityBar->Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	m_abilityBar->Update((float)m_spikeAbility->GetCooldown(), SPIKE_COOLDOWN, 4);
+	//m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()
