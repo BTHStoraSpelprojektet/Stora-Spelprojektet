@@ -85,6 +85,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
 	VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
 	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
+	ConsoleSkipLines(1);
 
 	// Initialize model library.
 	ModelLibrary::GetInstance()->Initialize(new Model());
