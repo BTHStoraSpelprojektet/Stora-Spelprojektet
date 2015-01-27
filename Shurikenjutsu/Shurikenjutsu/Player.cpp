@@ -15,6 +15,7 @@
 #include "AbilityBar.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
+#include "VisibilityComputer.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -133,6 +134,9 @@ void Player::UpdateMe()
 	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
 		SetCalculatePlayerPosition();
+
+		// If we moved, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 	}
 
 	// Don't update player if he is dead
