@@ -58,16 +58,19 @@ class VisibilityComputer
 public:
 	static VisibilityComputer& GetInstance();
 
-	bool Initialize();
+	bool Initialize(ID3D11Device* p_device);
 	void Shutdown();
 
-	void UpdateVisibilityPolygon(Point p_viewerPosition);
+	void UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device);
 	void SetBoundryBox(Point p_topLeft, Point p_bottomRight);
 
-	void RenderVisibilityPolygon();
-	void RenderReversedVisibilityPolygon();
+	void RenderVisibilityPolygon(ID3D11DeviceContext* p_context);
 
 	bool IsPointVisible(Point p_point);
+
+	void SetReversedRenderMode(bool p_value);
+
+	void SetMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 
 private:
 	VisibilityComputer() {};
@@ -76,15 +79,42 @@ private:
 
 	Intersection GetIntertersectionPoint(Line p_ray, Line p_segment);
 	inline std::vector<float> GetUniquePointAngles(Point p_viewerPoint);
-	std::vector<PolygonPoint> QuickSortAngles(std::vector<PolygonPoint> p_list, int p_left, int p_right);
 
-	void CalculateVisibilityPolygon();
-	void CalculateReversedVisibilityPolygon();
+	void QuickSortAngles(std::vector<PolygonPoint>& p_list);
+	void QuickSortAngles(std::vector<PolygonPoint>& p_list, int p_left, int p_right);
+
+	void CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device);
+	void CalculateReversedVisibilityPolygon(ID3D11Device* p_device);
+
+	void UpdateMatrices(ID3D11DeviceContext* p_context);
 
 	std::vector<Point> m_intersections;
-	DirectX::XMFLOAT4X4 m_worldMatrix;
-	ID3D11Buffer* m_mesh;
-	int m_vertices;
+	std::vector<DirectX::XMFLOAT3> m_vertices;
+
 	BoundingShape m_boundingBox;
+
+	std::string m_VSVersion;
+	std::string m_PSVersion;
+	
+	ID3D11VertexShader* m_vertexShader;
+	ID3D11PixelShader* m_pixelShader;
+	ID3D11InputLayout* m_layout;
+	ID3D11Buffer* m_mesh;
+	ID3D11Buffer* m_reversedMesh;
+
+	DirectX::XMFLOAT4X4 m_worldMatrix;
+	DirectX::XMFLOAT4X4 m_viewMatrix;
+	DirectX::XMFLOAT4X4 m_projectionMatrix;
+
+	ID3D11Buffer* m_matrixBuffer;
+	struct MatrixBuffer
+	{
+		DirectX::XMMATRIX m_worldMatrix;
+		DirectX::XMMATRIX m_viewMatrix;
+		DirectX::XMMATRIX m_projectionMatrix;
+	};
+
+	bool m_renderReversed;
+	bool m_render;
 };
 #endif
