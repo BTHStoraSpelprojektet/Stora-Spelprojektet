@@ -40,7 +40,7 @@ void SpikeManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_en
 	temp.endX = p_endPosX;
 	temp.endZ = p_endPosZ;
 	temp.spikeId = GetSpikeTrapUniqueId();
-	temp.lifeTime = SMOKEBOMB_DURATION + timeToLand;
+	temp.lifeTime = timeToLand;
 	m_spikeTrapList.push_back(temp);
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_SPIKETRAP_THROW);
