@@ -1,6 +1,8 @@
 #include "VisibilityComputer.h"
 #include "InputManager.h"
 
+#include <D3Dcompiler.h>
+
 VisibilityComputer& VisibilityComputer::GetInstance()
 {
 	static VisibilityComputer instance;
@@ -8,34 +10,183 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 	return instance;
 }
 
-bool VisibilityComputer::Initialize()
+bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 {
+	m_render = false;
+	m_renderReversed = true;
+
 	m_intersections.clear();
+	m_vertices.clear();
 
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 	m_mesh = nullptr;
-	m_vertices = 0;
 
 	m_boundingBox = BoundingShape(Point(0.0f, 0.0f), Point(0.0f, 0.0f));
+
+	// Set variables to initial values.
+	ID3D10Blob*	vertexShader = 0;
+	ID3D10Blob*	errorMessage = 0;
+
+	// Compile the vertex shader.
+	if (FAILED(D3DCompileFromFile(L"Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile shadow shapes vertex shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_VSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_VSVersion = "5.0";
+	}
+
+	// Create the vertex shader.
+	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create shadow shapes vertex shader.");
+		return false;
+	}
+
+	// Configure vertex layout.
+	D3D11_INPUT_ELEMENT_DESC layout[1];
+	unsigned int size;
+
+	layout[0].SemanticName = "POSITION";
+	layout[0].SemanticIndex = 0;
+	layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	layout[0].InputSlot = 0;
+	layout[0].AlignedByteOffset = 0;
+	layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layout[0].InstanceDataStepRate = 0;
+
+	// Compute size of layout.
+	size = sizeof(layout) / sizeof(layout[0]);
+
+	// Create the vertex input layout.
+	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create shadow shapes vertex input layout.");
+		return false;
+	}
+
+	ConsolePrintSuccess("Shadow shapes vertex shader compiled successfully.");
+	ConsolePrintText("Shader version: VS " + m_VSVersion);
+
+	// Release useless local shaders.
+	vertexShader->Release();
+	vertexShader = 0;
+
+	// Set variables to initial values.
+	ID3D10Blob*	pixelShader = 0;
+	errorMessage = 0;
+
+	// Compile the pixel shader.
+	if (FAILED(D3DCompileFromFile(L"Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile shadow shapes pixel shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_PSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_PSVersion = "5.0";
+	}
+
+	// Create the pixel shader.
+	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create shadow shapes pixel shader");
+		return false;
+	}
+
+	ConsolePrintSuccess("Shadow shapes pixel shader compiled successfully.");
+	ConsolePrintText("Shader version: PS " + m_PSVersion);
+
+	// Release useless local variables.
+	pixelShader->Release();
+	pixelShader = 0;
+
+	// Create the matrix buffer description.
+	D3D11_BUFFER_DESC matrixBuffer;
+	matrixBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBuffer.ByteWidth = sizeof(MatrixBuffer);
+	matrixBuffer.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBuffer.MiscFlags = 0;
+	matrixBuffer.StructureByteStride = 0;
+
+	// Create the matrix buffer.
+	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create shadow shapes matrix buffer.");
+		return false;
+	}
 
 	return true;
 }
 
 void VisibilityComputer::Shutdown()
 {
+	if (m_vertexShader)
+	{
+		m_vertexShader->Release();
+		m_vertexShader = 0;
+	}
+
+	if (m_pixelShader)
+	{
+		m_pixelShader->Release();
+		m_pixelShader = 0;
+	}
+
+	if (m_layout)
+	{
+		m_layout->Release();
+		m_layout = 0;
+	}
+
 	if (m_mesh)
 	{
 		m_mesh->Release();
 		m_mesh = 0;
 	}
+
+	if (m_reversedMesh)
+	{
+		m_reversedMesh->Release();
+		m_reversedMesh = 0;
+	}
+
+	if (m_matrixBuffer)
+	{
+		m_matrixBuffer->Release();
+		m_matrixBuffer = 0;
+	}
 }
 
-void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition)
+void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
+	m_render = false;
 	Point center = p_viewerPosition;
 
 	if (p_viewerPosition.x > m_boundingBox.m_topLeft.x && p_viewerPosition.x < m_boundingBox.m_bottomRight.x && p_viewerPosition.y < m_boundingBox.m_topLeft.y && p_viewerPosition.y > m_boundingBox.m_bottomRight.y)
 	{
+		m_render = true;
 		m_intersections.clear();
 
 		std::vector<PolygonPoint> totalIntersections;
@@ -88,7 +239,7 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition)
 		}
 
 		// Sort intersections by angle.
-		// TODO, ^.
+		QuickSortAngles(totalIntersections);
 
 		// Add sorted intersections to list.
 		for (unsigned int i = 0; i < totalIntersections.size(); i++)
@@ -97,21 +248,88 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition)
 		}
 
 		// Calculate the polyogn.
-		CalculateVisibilityPolygon();
+		CalculateVisibilityPolygon(p_viewerPosition, p_device);
 
 		// Reverse the polygon.
-		CalculateReversedVisibilityPolygon();
+		CalculateReversedVisibilityPolygon(p_device);
 	}
 }
 
-void VisibilityComputer::CalculateVisibilityPolygon()
+void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
-	// TODO, the polygon.
+	m_vertices.clear();
+
+	// All but the last polygon can be made by this loop.
+	for (unsigned int i = 0; i < m_intersections.size() - 1; i++)
+	{
+		m_vertices.push_back(DirectX::XMFLOAT3(p_viewerPosition.x, 0.2f, p_viewerPosition.y));
+		m_vertices.push_back(DirectX::XMFLOAT3(m_intersections[i].x, 0.2f, m_intersections[i].y));
+		m_vertices.push_back(DirectX::XMFLOAT3(m_intersections[i + 1].x, 0.2f, m_intersections[i + 1].y));
+	}
+
+	// Last polygon is constructed from the last and the first list element.
+	m_vertices.push_back(DirectX::XMFLOAT3(p_viewerPosition.x, 0.2f, p_viewerPosition.y));
+	m_vertices.push_back(DirectX::XMFLOAT3(m_intersections[m_intersections.size() - 1].x, 0.2f, m_intersections[m_intersections.size() - 1].y));
+	m_vertices.push_back(DirectX::XMFLOAT3(m_intersections[0].x, 0.2f, m_intersections[0].y));
+
+	if (!m_renderReversed)
+	{
+		if (m_mesh)
+		{ 
+			m_mesh->Release();
+			m_mesh = 0;
+		}
+		
+		// Setup vertex buffer description.
+		D3D11_BUFFER_DESC vertexBuffer;
+		vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
+		vertexBuffer.ByteWidth = sizeof(DirectX::XMFLOAT3) * m_vertices.size();
+		vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBuffer.CPUAccessFlags = 0;
+		vertexBuffer.MiscFlags = 0;
+		vertexBuffer.StructureByteStride = 0;
+
+		// Setup vertex buffer data.
+		D3D11_SUBRESOURCE_DATA vertexData;
+		vertexData.pSysMem = m_vertices.data();
+		vertexData.SysMemPitch = 0;
+		vertexData.SysMemSlicePitch = 0;
+
+		// Create the vertex buffer.
+		p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_mesh);
+	}
 }
 
-void VisibilityComputer::CalculateReversedVisibilityPolygon()
+void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11Device* p_device)
 {
 	// TODO, reverse the polygon? how?
+
+	if (m_renderReversed)
+	{
+		if (m_reversedMesh)
+		{
+			m_reversedMesh->Release();
+			m_reversedMesh = 0;
+		}
+
+		// Setup vertex buffer description.
+		D3D11_BUFFER_DESC vertexBuffer;
+		vertexBuffer.Usage = D3D11_USAGE_DYNAMIC;
+		vertexBuffer.ByteWidth = sizeof(DirectX::XMFLOAT3) * m_vertices.size();
+		vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vertexBuffer.CPUAccessFlags = 0;
+		vertexBuffer.MiscFlags = 0;
+		vertexBuffer.StructureByteStride = 0;
+
+		// Setup vertex buffer data.
+		D3D11_SUBRESOURCE_DATA vertexData;
+		vertexData.pSysMem = m_vertices.data();
+		vertexData.SysMemPitch = 0;
+		vertexData.SysMemSlicePitch = 0;
+
+		// Create the vertex buffer.
+		p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_reversedMesh);
+	}
 }
 
 Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segment)
@@ -183,57 +401,138 @@ inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewe
 	return angles;
 }
 
-void VisibilityComputer::RenderVisibilityPolygon()
+void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
-	// TODO, render unreversed.
+	if (m_render)
+	{
+		GraphicsEngine::TurnOnAlphaBlending();
+
+		// Set parameters and then render.
+		unsigned int stride = sizeof(DirectX::XMFLOAT3);
+		const unsigned int offset = 0;
+
+		UpdateMatrices(p_context);
+
+		p_context->VSSetShader(m_vertexShader, NULL, 0);
+		p_context->PSSetShader(m_pixelShader, NULL, 0);
+
+		if (m_renderReversed)
+		{
+			p_context->IASetVertexBuffers(0, 1, &m_reversedMesh, &stride, &offset);
+			p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			p_context->IASetInputLayout(m_layout);
+
+			p_context->Draw(m_vertices.size(), 0);
+		}
+
+		else
+		{
+			p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
+			p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			p_context->IASetInputLayout(m_layout);
+
+			p_context->Draw(m_vertices.size(), 0);
+		}
+
+		GraphicsEngine::TurnOffAlphaBlending();
+	}
 }
 
-void VisibilityComputer::RenderReversedVisibilityPolygon()
+void VisibilityComputer::UpdateMatrices(ID3D11DeviceContext* p_context)
 {
-	// TODO, render reversed.
+	DirectX::XMFLOAT4X4 worldMatrix = m_worldMatrix;
+	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
+	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
+
+	// Transpose the matrices.
+	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
+	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
+	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
+
+	// Lock matrix buffer so that it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to map shadow shapes matrix buffer.");
+	}
+
+	// Get pointer to the matrix buffer data.
+	MatrixBuffer* matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
+
+	// Set matrices in buffer.
+	matrixBuffer->m_worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix);
+	matrixBuffer->m_viewMatrix = DirectX::XMLoadFloat4x4(&viewMatrix);
+	matrixBuffer->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projectionMatrix);
+
+	// Unlock the matrix buffer after it has been written to.
+	p_context->Unmap(m_matrixBuffer, 0);
+
+	// Set the matrix buffer.
+	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
 }
 
 bool VisibilityComputer::IsPointVisible(Point p_point)
 {
-	bool isVisible = true;
+	int intersections = 0;
 
-	// TODO, check if point is visible in any of the polygons in the list.
+	// Generate a ray just going right.
+	Line ray = Line(Point(p_point.x, p_point.y), Point(p_point.x + 1.0f, p_point.y));
 
-	return isVisible;
+	// Get number of total intersections with polygon segments.
+	for (unsigned int i = 0; i < m_intersections.size(); i++)
+	{
+		// Line from this point to the next
+		Point startPoint = m_intersections[i];
+		Point endPoint = (i == m_intersections.size() - 1) ? m_intersections[0] : m_intersections[i + 1];
+
+		Line segment = Line(Point(startPoint.x, startPoint.y), Point(endPoint.x, endPoint.y)); 
+
+		if (GetIntertersectionPoint(ray, segment).intersection)
+		{
+			intersections++;
+		}
+	}
+
+	// If and only if it is odd, the point is inside the visibility polygon.
+	return (intersections % 2 == 1);
 }
 
-void VisibilityComputer::SetBoundryBox(Point p_topLeft, Point p_bottomRight)
+void VisibilityComputer::SetMapBoundries(Point p_topLeft, Point p_bottomRight)
 {
+	ShadowShapes::GetInstance().AddStaticSquare(p_topLeft, p_bottomRight);
+
 	m_boundingBox.m_topLeft = p_topLeft;
 	m_boundingBox.m_bottomRight = p_bottomRight;
 }
 
-std::vector<PolygonPoint> VisibilityComputer::QuickSortAngles(std::vector<PolygonPoint> p_list, int p_left, int p_right)
+void VisibilityComputer::QuickSortAngles(std::vector<PolygonPoint>& p_list)
+{
+	QuickSortAngles(p_list, 0, p_list.size() - 1);
+}
+
+void VisibilityComputer::QuickSortAngles(std::vector<PolygonPoint>& p_list, int p_left, int p_right)
 {
 	int i = p_left;
 	int j = p_right;
 
-	PolygonPoint temp;
 	PolygonPoint pivot = p_list[(p_left + p_right) / 2];
 
 	// Partition.
 	while(i <= j) 
 	{
-		while (p_list[i].m_angle < pivot.m_angle)
+		while (p_list[i].m_angle > pivot.m_angle)
 		{
 			i++;
 		}
 
-		while (p_list[j].m_angle > pivot.m_angle)
+		while (p_list[j].m_angle < pivot.m_angle)
 		{
 			j--;
 		}
 
 		if (i <= j) 
 		{
-			temp = p_list[i];
-			p_list[i] = p_list[j];
-			p_list[j] = temp;
+			std::swap(p_list[i], p_list[j]);
 
 			i++;
 			j--;
@@ -250,6 +549,15 @@ std::vector<PolygonPoint> VisibilityComputer::QuickSortAngles(std::vector<Polygo
 	{
 		QuickSortAngles(p_list, i, p_right);
 	}
+}
 
-	return p_list;
+void VisibilityComputer::SetReversedRenderMode(bool p_bool)
+{
+	m_renderReversed = p_bool;
+}
+
+void VisibilityComputer::SetMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+{
+	m_viewMatrix = p_viewMatrix;
+	m_projectionMatrix = p_projectionMatrix;
 }
