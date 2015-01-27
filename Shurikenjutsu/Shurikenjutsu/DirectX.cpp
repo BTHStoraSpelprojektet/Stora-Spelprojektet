@@ -2,9 +2,15 @@
 #include "ConsoleFunctions.h"
 #include "Globals.h"
 
+#pragma comment(lib, "dxgi.lib")
+
+#include <dxgi.h>
+
 bool DirectXWrapper::Initialize(HWND p_handle)
 {
 	HRESULT result = S_OK;
+
+	m_vsync = 0;
 
 	m_clearColor[0] = 0.0f;
 	m_clearColor[1] = 0.0f;
@@ -20,6 +26,72 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	m_width = (window.right - window.left);
 	m_height = (window.bottom - window.top);
 
+	IDXGIFactory* factory;
+	IDXGIAdapter* adapter;
+	IDXGIOutput* adapterOutput;
+	unsigned int numModes;
+	DXGI_MODE_DESC* displayModeList;
+	DXGI_ADAPTER_DESC adapterDesc;
+
+	// Create a DirectX graphics interface factory.
+	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Use the factory to create an adapter for the primary graphics interface (video card).
+	result = factory->EnumAdapters(0, &adapter);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Enumerate the primary adapter output (monitor).
+	result = adapter->EnumOutputs(0, &adapterOutput);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
+	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Create a list to hold all the possible display modes for this monitor/video card combination.
+	displayModeList = new DXGI_MODE_DESC[numModes];
+	if (!displayModeList)
+	{
+		return false;
+	}
+
+	// Now fill the display mode list structures.
+	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	unsigned int numerator;
+	unsigned int denominator;
+
+	// Now go through all the display modes and find the one that matches the screen width and height.
+	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
+	for (unsigned int i = 0; i<numModes; i++)
+	{
+		if (displayModeList[i].Width == (unsigned int)GLOBAL::GetInstance().MAX_SCREEN_WIDTH)
+		{
+			if (displayModeList[i].Height == (unsigned int)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT)
+			{
+				numerator = displayModeList[i].RefreshRate.Numerator;
+				denominator = displayModeList[i].RefreshRate.Denominator;
+			}
+		}
+	}
+
 	// Initialize swap chain.
 	DXGI_SWAP_CHAIN_DESC swapChainDescription;
 	ZeroMemory(&swapChainDescription, sizeof(swapChainDescription));
@@ -27,8 +99,8 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	swapChainDescription.BufferDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 	swapChainDescription.BufferDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	swapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swapChainDescription.BufferDesc.RefreshRate.Numerator = 60;
-	swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
+	swapChainDescription.BufferDesc.RefreshRate.Numerator = numerator;
+	swapChainDescription.BufferDesc.RefreshRate.Denominator = denominator;
 	swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDescription.OutputWindow = p_handle;
 	swapChainDescription.SampleDesc.Count = 1;
@@ -37,9 +109,6 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	if (GLOBAL::GetInstance().FULLSCREEN)
 	{
 		swapChainDescription.Windowed = FALSE;
-		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::FULLSCREEN = true;
 	}
 
 	else
@@ -64,6 +133,27 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		ConsolePrintErrorAndQuit("DirectX swap chain and device failed to create.");
 		return false;
 	}
+
+	IDXGIDevice* device;
+	m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&device);
+
+	adapter;
+	device->GetParent(__uuidof(IDXGIAdapter), (void **)&adapter);
+
+	factory;
+	adapter->GetParent(__uuidof(IDXGIFactory), (void **)&factory);
+
+	if (FAILED(factory->MakeWindowAssociation(p_handle, DXGI_MWA_NO_ALT_ENTER)))
+	{
+		ConsolePrintErrorAndQuit("Failed to disable alt enter.");
+		return false;
+	}
+
+	delete[] displayModeList;
+	displayModeList = 0;
+	adapter->Release();
+	adapterOutput->Release();
+	factory->Release();
 
 	// Retrieve the backbuffer texture from the swap chain.
 	ID3D11Texture2D* backBuffer = NULL;
@@ -197,21 +287,6 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
-	IDXGIDevice* device;
-	m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&device);
-
-	IDXGIAdapter* adapter;
-	device->GetParent(__uuidof(IDXGIAdapter), (void **)&adapter);
-
-	IDXGIFactory * factory;
-	adapter->GetParent(__uuidof(IDXGIFactory), (void **)&factory);
-
-	if (FAILED(factory->MakeWindowAssociation(p_handle, DXGI_MWA_NO_ALT_ENTER)))
-	{
-		ConsolePrintErrorAndQuit("Failed to disable alt enter.");
-		return false;
-	}
-
 	return true;
 }
 
@@ -224,7 +299,7 @@ void DirectXWrapper::Clear()
 
 void DirectXWrapper::Present()
 {
-	m_swapChain->Present(1, 0);
+	m_swapChain->Present(m_vsync, 0);
 }
 
 IDXGISwapChain* DirectXWrapper::GetSwapChain()
@@ -292,4 +367,16 @@ void DirectXWrapper::TurnOnDepthStencil()
 void DirectXWrapper::TurnOffDepthStencil()
 {
 	m_context->OMSetDepthStencilState(m_depthDisabled, 1);
+}
+
+void DirectXWrapper::SetVsync(bool p_state)
+{
+	if (p_state)
+	{
+		m_vsync = 1;
+	}
+	else
+	{
+		m_vsync = 0;
+	}
 }

@@ -1,10 +1,10 @@
 #ifndef MENUIPBOX_H_
 #define MENUIPBOX_H_
 
-#include "MenuItem.h"
+#include "MenuButton.h"
 #include <string>
 
-class MenuIpBox : public MenuItem
+class MenuIpBox : public MenuButton
 {
 public:
 	MenuIpBox();

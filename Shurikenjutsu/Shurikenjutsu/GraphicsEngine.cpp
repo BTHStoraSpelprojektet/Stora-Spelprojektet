@@ -312,6 +312,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		}        
 
 		GLOBAL::GetInstance().FULLSCREEN = true;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	}    
 	
 	else    
@@ -323,6 +325,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		}    
 		
 		GLOBAL::GetInstance().FULLSCREEN = false;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}    
 
 	return true;
@@ -379,3 +383,9 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 		m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, x, y, p_color, FW1_RESTORESTATE | FW1_VCENTER | FW1_CENTER);
 	}
 }
+
+void GraphicsEngine::SetVsync(bool p_state)
+{
+	m_directX.SetVsync(p_state);
+}
+

@@ -77,6 +77,8 @@ public:
 
 	static int GetNumberOfInstanceBuffer();
 
+	static void SetVsync(bool p_state);
+
 private:
 	GraphicsEngine(){};
 

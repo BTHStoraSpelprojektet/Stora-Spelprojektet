@@ -7,12 +7,15 @@ MenuCheckbox::~MenuCheckbox(){}
 
 bool MenuCheckbox::Initialize(float p_x, float p_y, MENUACTION p_action, bool p_state)
 {
-	MenuItem::Initialize(p_x, p_y, 60.0f, p_action, NULL);
+	MenuItem::Initialize(p_x, p_y, 100.0f, NULL);
 
+	m_action = p_action;
 	SetState(p_state);
 
 	return true;
 }
+
+
 
 bool MenuCheckbox::GetState()const
 {
@@ -25,17 +28,17 @@ void MenuCheckbox::SetState(bool p_state)
 
 	if (m_state)
 	{
-		m_background->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/cbtrue.png"));
+		m_background->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/checkbox_checked.png"));
 	}
 	else
 	{
-		m_background->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/cbfalse.png"));
+		m_background->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/checkbox_empty.png"));
 	}
 }
 
 bool MenuCheckbox::IsClicked()
 {
-	if (MenuItem::IsClicked())
+	if (MenuButton::IsClicked())
 	{
 		if (m_state)
 		{
