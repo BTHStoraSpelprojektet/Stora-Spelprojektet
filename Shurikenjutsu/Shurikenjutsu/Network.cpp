@@ -30,6 +30,7 @@ bool Network::Initialize()
 	m_roundRestarted = false;
 	m_newLevel = false;
 	m_levelName = "";
+	m_dashed = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -293,10 +294,6 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(abilityEnum);
 			bitStream.Read(abilityString);
-			if (abilityEnum == ABILITIES_DASH)
-			{
-				m_invalidMove = true;
-			}
 
 			std::cout << " " << abilityString << std::endl;
 
@@ -417,6 +414,22 @@ void Network::ReceviePacket()
 
 			// Todo: Update local player animation
 			m_playerAnimations[guid] = state;
+			break;
+		}
+		case ID_DASH_TO_LOCATION:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			float x, y, z;
+
+			bitStream.Read(messageID);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+
+			m_dashLocation = DirectX::XMFLOAT3(x, y, z);
+
+			m_dashed = true;
 			break;
 		}
 		default:
@@ -868,4 +881,20 @@ int Network::AnimationChanged(RakNet::RakNetGUID p_guid)
 		return state;
 	}
 	return -1;
+}
+
+bool Network::HaveDashed()
+{
+	if (m_dashed)
+	{
+		m_dashed = false;
+		return true;
+	}
+
+	return false;
+}
+
+DirectX::XMFLOAT3 Network::GetDashLocation()
+{
+	return m_dashLocation;
 }

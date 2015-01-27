@@ -78,6 +78,10 @@ private:
 
 	void SetCalculatePlayerPosition();
 	DirectX::XMFLOAT3 m_playerPrevPos;
+	
+	DirectX::XMFLOAT3 m_dashDirection;
+	float m_dashDistanceLeft;
+	bool m_isDashing;
 
 	Sphere m_playerSphere;
 	Ability* m_ability;

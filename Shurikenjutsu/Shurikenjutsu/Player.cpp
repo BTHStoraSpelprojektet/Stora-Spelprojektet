@@ -51,6 +51,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_healthbar->Initialize(100.0f, 15.0f);
 
 	m_team = 0;
+	m_isDashing = false;
 
 	m_abilityBar = new AbilityBar();
 	m_abilityBar->Initialize(0.0f, -420.0f, 5);
@@ -120,11 +121,6 @@ void Player::UpdateMe()
 	}
 
 	m_playerSphere.m_position = m_position;
-	// Move
-	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
-	{
-		SetCalculatePlayerPosition();
-	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -132,7 +128,52 @@ void Player::UpdateMe()
 		return;
 	}
 
+	// Check for dash
+	if (Network::GetInstance()->HaveDashed())
+	{
+		// Check position = check network position
+		
+		// Calc distance?
+		float dx = Network::GetInstance()->GetDashLocation().x - m_position.x;
+		float dz = Network::GetInstance()->GetDashLocation().z - m_position.z;
+		m_dashDistanceLeft = sqrt(dx * dx + dz * dz);
+		// Calc dir
+		DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(dx, 0, dz));
+		tempVector = DirectX::XMVector3Normalize(tempVector);
+		DirectX::XMStoreFloat3(&m_dashDirection, tempVector);
+		// Move with increased speed
+		//m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+		//m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+		// Set finished when we arrive (whitin a certain radius? or after x seconds?)
+		m_isDashing = true;
+	}
 	
+	// Dash movement
+	if (m_isDashing)
+	{
+		float distance = DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+		if (distance >= m_dashDistanceLeft)
+		{
+			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+			m_dashDistanceLeft = 0.0f;
+			m_isDashing = false;
+		}
+		else
+		{
+			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+			m_dashDistanceLeft -= distance;
+		}		
+		SendPosition(m_position);
+	}
+
+	// Move
+	if ((CalculateDirection() || Network::GetInstance()->ConnectedNow()) && !m_isDashing)
+	{
+		SetCalculatePlayerPosition();
+	}
+		
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
 
