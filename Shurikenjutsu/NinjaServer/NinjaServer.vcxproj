@@ -94,6 +94,7 @@
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="ShurikenManager.cpp" />
     <ClCompile Include="SmokeBombManager.cpp" />
+    <ClCompile Include="SpikeManager.cpp" />
     <ClCompile Include="System.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +110,7 @@
     <ClInclude Include="Server.h" />
     <ClInclude Include="ShurikenManager.h" />
     <ClInclude Include="SmokeBombManager.h" />
+    <ClInclude Include="SpikeManager.h" />
     <ClInclude Include="System.h" />
   </ItemGroup>
   <ItemGroup>

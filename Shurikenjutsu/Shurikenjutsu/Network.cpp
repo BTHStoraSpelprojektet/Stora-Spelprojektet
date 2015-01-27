@@ -25,6 +25,7 @@ bool Network::Initialize()
 	m_newOrRemovedPlayers = false;
 	m_shurikenListUpdated = false;
 	m_smokebombListUpdated = false;
+	m_spikeTrapListUpdated = false;
 	m_respawned = false;
 	m_invalidMove = false;
 	m_roundRestarted = false;
@@ -419,6 +420,34 @@ void Network::ReceviePacket()
 			m_playerAnimations[guid] = state;
 			break;
 		}
+		case ID_SPIKETRAP_THROW:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int spikeTrapId;
+			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
+			bitStream.Read(messageID);
+			bitStream.Read(spikeTrapId);
+			bitStream.Read(startPosX);
+			bitStream.Read(startPosZ);
+			bitStream.Read(endPosX);
+			bitStream.Read(endPosZ);
+			bitStream.Read(lifetime);
+
+			UpdateSpikeTrap(spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime);
+			break;
+		}
+		case ID_SPIKETRAP_REMOVE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int spikeTrapId;
+			bitStream.Read(messageID);
+			bitStream.Read(spikeTrapId);
+
+			RemoveSpikeTrap(spikeTrapId);
+			break;
+		}
 		default:
 		{
 			break;
@@ -602,6 +631,34 @@ void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, flo
 		m_smokebombListUpdated = true;
 	}
 }
+
+void Network::UpdateSpikeTrap(unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
+{
+
+	bool addSpikeTrap = true;
+	SpikeNet temp;
+	temp.spikeId = p_spikeTrapId;
+	temp.startX = p_startPosX;
+	temp.startZ = p_startPosZ;
+	temp.endX = p_endPosX;
+	temp.endZ = p_endPosZ;
+	temp.lifeTime = p_lifetime;
+
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		if (m_spikeTrapList[i].spikeId == temp.spikeId)
+		{
+			addSpikeTrap = false;
+			break;
+		}
+	}
+	if (addSpikeTrap)
+	{
+		m_spikeTrapList.push_back(temp);
+		m_spikeTrapListUpdated = true;
+	}
+}
+
 void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken)
 {
 	bool addShuriken = true;
@@ -636,7 +693,9 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 std::vector<ShurikenNet> Network::GetShurikens()
 {
 	return m_shurikensList;
-}std::vector<SmokeBombNet> Network::GetSmokeBombs()
+}
+
+std::vector<SmokeBombNet> Network::GetSmokeBombs()
 {
 	return m_smokeBombList;
 }
@@ -692,6 +751,7 @@ void Network::RemoveShuriken(unsigned int p_shurikenID)
 		}
 	}
 }
+
 void Network::RemoveSmokeBomb(unsigned int p_smokeBombID)
 {
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
@@ -704,9 +764,38 @@ void Network::RemoveSmokeBomb(unsigned int p_smokeBombID)
 		}
 	}
 }
+
+void Network::RemoveSpikeTrap(unsigned int p_spikeId)
+{
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		if (m_spikeTrapList[i].spikeId == p_spikeId)
+		{
+			m_spikeTrapList.erase(m_spikeTrapList.begin() + i);
+			m_spikeTrapListUpdated = true;
+			break;
+		}
+	}
+}
+
 bool Network::IsSmokeBombListUpdated()
 {
 	return m_smokebombListUpdated;
+}
+
+bool Network::IsSpikeTrapListUpdated()
+{
+	return m_spikeTrapListUpdated;
+}
+
+void Network::SetHaveUpdateSpikeTrapList()
+{
+	m_spikeTrapListUpdated = false;
+}
+
+std::vector<SpikeNet> Network::GetSpikeTraps()
+{
+	return m_spikeTrapList;
 }
 
 void Network::SetHaveUpdateSmokeBombList()
@@ -718,6 +807,7 @@ bool Network::IsShurikenListUpdated()
 {
 	return m_shurikenListUpdated;
 }
+
 void Network::SetHaveUpdateShurikenList()
 {
 	m_shurikenListUpdated = false;

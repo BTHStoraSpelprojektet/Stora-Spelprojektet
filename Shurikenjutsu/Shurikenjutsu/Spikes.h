@@ -14,7 +14,7 @@ public:
 
 	void SetPosition(DirectX::XMFLOAT3 p_position);
 	void ResetTimer();
-	bool GetIfActive();
+	bool GetIfThrowing();
 	Sphere GetSpikeSphere();
 	unsigned int GetID();
 	Object* GetSpikes();

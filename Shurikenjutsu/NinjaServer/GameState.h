@@ -7,6 +7,7 @@
 
 class MapManager;
 class CollisionManager;
+class SpikeManager;
 
 class GameState
 {
@@ -36,6 +37,7 @@ protected:
 	PlayerManager* m_playerManager;
 	ShurikenManager* m_shurikenManager;
 	SmokeBombManager* m_smokeBombManager;
+	SpikeManager *m_spikeManager;
 	MapManager* m_mapManager;
 	CollisionManager* m_collisionManager;
 };

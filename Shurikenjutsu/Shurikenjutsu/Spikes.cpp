@@ -67,9 +67,16 @@ void Spikes::ResetTimer()
 	m_timer = 0;
 }
 
-bool Spikes::GetIfActive()
+bool Spikes::GetIfThrowing()
 {
-	return m_hasInflictedDamage;
+	if (m_isThrowing)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 Sphere Spikes::GetSpikeSphere()

@@ -68,6 +68,10 @@ public:
 	void SetHaveUpdateSmokeBombList();
 	std::vector<SmokeBombNet> GetSmokeBombs();
 
+	bool IsSpikeTrapListUpdated();
+	void SetHaveUpdateSpikeTrapList();
+	std::vector<SpikeNet> GetSpikeTraps();
+
 	bool HasRespawned();
 	void SetHaveRespawned();
 
@@ -88,6 +92,9 @@ public:
 	int AnimationChanged(RakNet::RakNetGUID p_guid);
 
 private:
+
+	void UpdateSpikeTrap(unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
+	void RemoveSpikeTrap(unsigned int p_spikeTrapId);
 	Network();
 	~Network();
 	
@@ -121,6 +128,7 @@ private:
 	bool m_newOrRemovedPlayers;
 	bool m_shurikenListUpdated;
 	bool m_smokebombListUpdated;
+	bool m_spikeTrapListUpdated;	
 	bool m_respawned;
 	bool m_invalidMove;
 	bool m_roundRestarted;
@@ -130,6 +138,7 @@ private:
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
+	std::vector<SpikeNet> m_spikeTrapList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 
 	NETWORKSTATUS m_networkStatus;

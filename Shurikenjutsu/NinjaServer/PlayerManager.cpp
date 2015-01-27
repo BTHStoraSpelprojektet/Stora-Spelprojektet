@@ -1,4 +1,5 @@
 #include "PlayerManager.h"
+#include "SpikeManager.h"
 
 
 PlayerManager::PlayerManager(){}
@@ -312,7 +313,10 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 				result = true; // controlled locally atmresult = false;
 				break;
 			case ABILITIES_SMOKEBOMB:
-				result = true; 
+				result = true;
+				break;
+			case ABILITIES_SPIKETRAP:
+				result = true;
 				break;
 			default:
 				result = false;
@@ -324,9 +328,10 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	return result;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
+	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
 	float dashDistance = 10.0f;
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
@@ -359,6 +364,15 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 			smokeBombDistance = SMOKEBOMB_RANGE;
 		}
 		p_smokebomb.AddSmokeBomb(m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
+		break;
+	case ABILITIES_SPIKETRAP:
+		abilityString = "spike tarp";
+		if (spikeTrapDistance > SPIKE_RANGE)
+		{
+			spikeTrapDistance = SPIKE_RANGE;
+		}
+		p_spikeTrap.AddSpikeTrap(m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
+
 		break;
 	default:
 		break;

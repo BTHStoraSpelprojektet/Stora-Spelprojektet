@@ -41,6 +41,12 @@ struct SmokeBombNet
 	float startX, startZ, endX, endZ;
 	float lifeTime;
 };
+struct SpikeNet
+{
+	unsigned int spikeId;
+	float startX, startZ, endX, endZ;
+	float lifeTime;
+};
 enum Messages
 {
 	ID_NR_CONNECTIONS = ID_USER_PACKET_ENUM + 1,
@@ -62,7 +68,9 @@ enum Messages
 	ID_SMOKEBOMB_REMOVE,
 	ID_MATCH_OVER,
 	ID_NEW_LEVEL,
-	ID_PLAYER_ANIMATION_CHANGED
+	ID_PLAYER_ANIMATION_CHANGED,
+	ID_SPIKETRAP_THROW,
+	ID_SPIKETRAP_REMOVE
 };
 
 #endif
