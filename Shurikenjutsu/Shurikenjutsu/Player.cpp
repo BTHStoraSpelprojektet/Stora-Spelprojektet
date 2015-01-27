@@ -373,113 +373,39 @@ void Player::SetCalculatePlayerPosition()
 	// Check collision between player and static boxes
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(m_playerSphere, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
-	{
-		bool rightOfBox = m_position.x >(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x);
-		bool leftOfBox = m_position.x < (collidingBoxes[i].m_center.x - collidingBoxes[i].m_extents.x);
-		bool aboveBox = m_position.z >(collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z);
-		bool belowBox = m_position.z < (collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z);
-		float x = m_direction.x;
-		float z = m_direction.z;
-		if (x == 1 || x == -1)
+	{ 
+		float temp2 = collidingBoxes[i].m_extents.x - collidingBoxes[i].m_extents.z;
+		if (temp2 < 0)
 		{
-			x = 0;
+			temp2 *= -1;
 		}
-		else if (z == 1 || z == -1)
+		
+		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
-			z = 0;
-		}
-		else if (x < 0 && z < 0)//down left
-		{
-			if (rightOfBox == aboveBox)
+			if (i > 0)
 			{
-				SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z + m_playerSphere.m_radius*1.1f));
-
-				x = -1;
-				z = 0;
+				if ((collidingBoxes[i].m_center.x != collidingBoxes[i - 1].m_center.x) || (collidingBoxes[i].m_center.y != collidingBoxes[i - 1].m_center.y))
+				{
+					SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+				}
+				else
+				{
+					SetDirection(DirectX::XMFLOAT3(m_direction.x, 0.0f, m_direction.z));
+				}
 			}
 			else
 			{
-				if (rightOfBox)
-				{
-					x = 0;
-					z = -1;
-				}
-				if (aboveBox)
-				{
-					x = -1;
-					z = 0;
-				}
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
 		}
-		else if (x > 0 && z < 0)//down right
+		else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
 		{
-			if (leftOfBox == aboveBox)
-			{
-				SetPosition(DirectX::XMFLOAT3(m_position.x , m_position.y, collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z + m_playerSphere.m_radius*1.1f));
-				x = 0;
-				z = -1;
-			}
-			else
-			{
-				if (leftOfBox)
-				{
-					x = 0;
-					z = -1;
-				}
-				if (aboveBox)
-				{
-					x = 1;
-					z = 0;
-				}
-			}
+			CalculatePlayerCubeCollision(collidingBoxes[i]);
 		}
-		else if (x < 0 && z > 0)//up left // works goood
+		else
 		{
-			if (rightOfBox == belowBox)
-			{
-				SetPosition(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
-				x = 0;
-				z = 1;
-			}
-			else
-			{
-				if (rightOfBox)
-				{
-					x = 0;
-					z = 1;
-				}
-				if (belowBox)
-				{
-					x = -1;
-					z = 0;
-				}
-			}
+			CalculatePlayerBoxCollision(collidingBoxes[i]);
 		}
-		else if (x > 0 && z > 0)//up right // works goood
-		{
-			if (leftOfBox == belowBox)
-			{
-				SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z - m_playerSphere.m_radius*1.1f));
-
-				x = 1;
-				z = 0;
-			}
-			else
-			{
-				if (leftOfBox)
-				{
-					x = 0;
-					z = 1;
-				}
-				if (belowBox)
-					{
-					x = 1;
-					z = 0;
-					}
-				}
-			}
-
-		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 	}
 
 	// Check collision between player and static spheres
@@ -537,11 +463,206 @@ void Player::SetCalculatePlayerPosition()
 		SetDirection(dir);
 	}
 
-
 	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
 }
+void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
+{
+	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x);
+	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x);
+	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z);
+	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z);
 
+	float x = m_direction.x;
+	float z = m_direction.z;
+	if (x < 0 && z < 0)//down left
+	{
+		if (rightOfBox == aboveBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
+			x = -1;
+			z = 0;
+		}
+		else
+		{
+			if (rightOfBox)
+			{
+				x = 0;
+				z = -1;
+			}
+			if (aboveBox)
+			{
+				x = -1;
+				z = 0;
+			}
+		}
+	}
+	else if (x > 0 && z < 0)//down right
+	{
+		if (leftOfBox == aboveBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
+			x = 0;
+			z = -1;
+		}
+		else
+		{
+			if (leftOfBox)
+			{
+				x = 0;
+				z = -1;
+			}
+			if (aboveBox)
+			{
+				x = 1;
+				z = 0;
+			}
+		}
+	}
+	else if (x < 0 && z > 0)//up left // works goood
+	{
+		if (rightOfBox == belowBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			x = 0;
+			z = 1;
+		}
+		else
+		{
+			if (rightOfBox)
+			{
+				x = 0;
+				z = 1;
+			}
+			if (belowBox)
+			{
+				x = -1;
+				z = 0;
+			}
+		}
+	}
+	else if (x > 0 && z > 0)//up right // works goood
+	{
+		if (leftOfBox == belowBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f));
+			x = 0;
+			z = -1;
+		}
+		else
+		{
+			if (leftOfBox)
+			{
+				x = 0;
+				z = 1;
+			}
+			if (belowBox)
+			{
+				x = 1;
+				z = 0;
+			}
+		}
+	}
+	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
+}
+void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
+{
+	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z);
+	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z);
+	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x);
+	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x);
+	float x = m_direction.x;
+	float z = m_direction.z;
+	if (x < 0 && z < 0)//down left
+	{
+		if (rightOfBox == aboveBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x + m_playerSphere.m_radius*1.1f, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f));
+			x = -1;
+			z = 0;
+		}
+		else
+		{
+			if (rightOfBox)
+			{
+				x = 0;
+				z = -1;
+			}
+			if (aboveBox)
+			{
+				x = -1;
+				z = 0;
+			}
+		}
+	}
+	else if (x > 0 && z < 0)//down right
+	{
+		if (leftOfBox == aboveBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			x = 0;
+			z = -1;
+		}
+		else
+		{
+			if (leftOfBox)
+			{
+				x = 0;
+				z = -1;
+			}
+			if (aboveBox)
+			{
+				x = 1;
+				z = 0;
+			}
+		}
+	}
+	else if (x < 0 && z > 0)//up left // works goood
+	{
+		if (rightOfBox == belowBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			x = 0;
+			z = 1;
+		}
+		else
+		{
+			if (rightOfBox)
+			{
+				x = 0;
+				z = 1;
+			}
+			if (belowBox)
+			{
+				x = -1;
+				z = 0;
+			}
+		}
+	}
+	else if (x > 0 && z > 0)//up right // works goood
+	{
+		if (leftOfBox == belowBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f));
+			x = 1;
+			z = 0;
+		}
+		else
+		{
+			if (leftOfBox)
+			{
+				x = 0;
+				z = 1;
+			}
+			if (belowBox)
+			{
+				x = 1;
+				z = 0;
+			}
+		}
+	}
+	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
+}
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar->Update(m_position, m_health, m_maxHealth, p_view, p_projection);
