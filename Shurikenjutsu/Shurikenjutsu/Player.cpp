@@ -61,6 +61,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_abilityBar = new AbilityBar();
 	m_abilityBar->Initialize(0.0f, -420.0f, 5);
 
+	m_directionUpdateTimer = 0.0f;
+
 	return true;
 }
 
@@ -362,14 +364,20 @@ void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 
 void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
-	DirectX::XMFLOAT3 oldPos = Object::GetPosition();
-	Object::SetPosition(p_pos);
+	m_directionUpdateTimer += (float)GLOBAL::GetInstance().GetDeltaTime();
+	if (m_directionUpdateTimer > 0.03f)
+	{
+		DirectX::XMFLOAT3 dir;
+		dir.x = p_pos.x - m_oldPosition.x;
+		dir.y = p_pos.y - m_oldPosition.y;
+		dir.z = p_pos.z - m_oldPosition.z;
+		AnimatedObject::NetworkInput(dir);
+		m_directionUpdateTimer = 0.0f;
 
-	DirectX::XMFLOAT3 dir;
-	dir.x = p_pos.x - oldPos.x;
-	dir.y = p_pos.y - oldPos.y;
-	dir.z = p_pos.z - oldPos.z;
-	AnimatedObject::NetworkInput(dir);
+		m_oldPosition = p_pos;
+	}
+
+	Object::SetPosition(p_pos);
 }
 
 DirectX::XMFLOAT3 Player::GetFacingDirection()

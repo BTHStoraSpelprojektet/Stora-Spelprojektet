@@ -95,5 +95,8 @@ private:
 
 	HealthBar* m_healthbar;
 	AbilityBar* m_abilityBar;
+
+	float m_directionUpdateTimer;
+	DirectX::XMFLOAT3 m_oldPosition;
 };
 #endif PLAYER
