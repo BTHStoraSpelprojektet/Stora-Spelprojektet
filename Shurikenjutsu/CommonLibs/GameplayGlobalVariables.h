@@ -34,6 +34,7 @@ const float KATANA_RANGE = 2.5f;
 const float DASH_MAX_RANGE = 10.0f;
 const float DASH_COOLDOWN = 8.0f;
 const int DASH_DAMAGE = 5;
+const float DASH_SPEED = 8.0f;
 
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 ////////////////////////////////////////////////////////////////Tools

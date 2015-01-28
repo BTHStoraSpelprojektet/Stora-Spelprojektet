@@ -18,6 +18,7 @@
 #include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 #include <map>
+#include <DirectXMath.h>
 
 
 enum NETWORKSTATUS
@@ -87,6 +88,9 @@ public:
 	void SendAnimationState(AnimationState p_state);
 	int AnimationChanged(RakNet::RakNetGUID p_guid);
 
+	bool HaveDashed();
+	DirectX::XMFLOAT3 GetDashLocation();
+
 private:
 	Network();
 	~Network();
@@ -125,12 +129,14 @@ private:
 	bool m_invalidMove;
 	bool m_roundRestarted;
 	bool m_newLevel;
+	bool m_dashed;
 	std::string m_levelName;
 	PlayerNet m_myPlayer;
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
+	DirectX::XMFLOAT3 m_dashLocation;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;

@@ -4,11 +4,12 @@
 #include "Globals.h"
 #include "ParticleEmitter.h"
 #include "Object.h"
+#include "..\CommonLibs\ModelNames.h"
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {
 	m_bomb = new Object();
-	m_bomb->Initialize("../Shurikenjutsu/Models/SmokeBomb.SSP", p_startPosition);
+	m_bomb->Initialize(SMOKE_BOMB, p_startPosition);
 
 	m_particles = new ParticleEmitter();
 	m_particles->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(p_endPosition.x, SMOKEBOMB_POSITION_Y, p_endPosition.z),
