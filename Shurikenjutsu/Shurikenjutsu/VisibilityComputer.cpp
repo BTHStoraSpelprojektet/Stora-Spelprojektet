@@ -473,15 +473,34 @@ void VisibilityComputer::UpdateMatrices(ID3D11DeviceContext* p_context)
 
 bool VisibilityComputer::IsPointVisible(Point p_point)
 {
-	bool isVisible = true;
+	int intersections = 0;
 
-	// TODO, check if point is visible in any of the polygons in the list.
+	// Generate a ray just going right.
+	Line ray = Line(Point(p_point.x, p_point.y), Point(p_point.x + 1.0f, p_point.y));
 
-	return isVisible;
+	// Get number of total intersections with polygon segments.
+	for (unsigned int i = 0; i < m_intersections.size(); i++)
+	{
+		// Line from this point to the next
+		Point startPoint = m_intersections[i];
+		Point endPoint = (i == m_intersections.size() - 1) ? m_intersections[0] : m_intersections[i + 1];
+
+		Line segment = Line(Point(startPoint.x, startPoint.y), Point(endPoint.x, endPoint.y)); 
+
+		if (GetIntertersectionPoint(ray, segment).intersection)
+		{
+			intersections++;
+		}
+	}
+
+	// If and only if it is odd, the point is inside the visibility polygon.
+	return (intersections % 2 == 1);
 }
 
-void VisibilityComputer::SetBoundryBox(Point p_topLeft, Point p_bottomRight)
+void VisibilityComputer::SetMapBoundries(Point p_topLeft, Point p_bottomRight)
 {
+	ShadowShapes::GetInstance().AddStaticSquare(p_topLeft, p_bottomRight);
+
 	m_boundingBox.m_topLeft = p_topLeft;
 	m_boundingBox.m_bottomRight = p_bottomRight;
 }

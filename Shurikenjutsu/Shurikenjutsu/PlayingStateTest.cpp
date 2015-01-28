@@ -55,15 +55,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		m_mouseX = 0;
 		m_mouseY = 0;
+		
+		// TODO, change this to use the loaded maps values.
+		VisibilityComputer::GetInstance().SetMapBoundries(Point(-51.0f, 51.0f), Point(51.0f, -51.0f));
 
-		ShadowShapes::GetInstance().AddMapBoundries(Point(0.0f, 0.0f), 10.0f, 10.0f);
-
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 5.0f), Point(-2.5f, 2.5f)));
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-2.5f, 2.5f), Point(-5.0f, 0.0f)));
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 0.0f), Point(-7.5f, 2.5f)));
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-7.5f, 2.5f), Point(-5.0f, 5.0f)));
-
-		ShadowShapes::GetInstance().AddStaticSquare(Point(2.0f, -2.0f), Point(8.0f, -8.0f));
+		ShadowShapes::GetInstance().AddStaticSquare(Point(-0.5f, 0.5f), Point(0.5f, -0.5f));
 	}
 	// ========== DEBUG LINES ==========
 	

@@ -164,12 +164,6 @@ int ShadowShapes::AddSmokeBombShape(Point p_center)
 	return index;
 }
 
-void ShadowShapes::AddMapBoundries(Point p_center, float p_width, float p_height)
-{
-	// Use static square function.
-	AddStaticSquare(Point(p_center.x - p_width, p_center.y + p_height), Point(p_center.x + p_width, p_center.y - p_height));
-}
-
 void ShadowShapes::RemoveDynamicLine(int p_atIndex)
 {
 	m_dynamicLines.erase(m_dynamicLines.begin() + p_atIndex);
