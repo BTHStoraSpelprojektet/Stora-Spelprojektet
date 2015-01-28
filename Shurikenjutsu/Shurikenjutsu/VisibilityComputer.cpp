@@ -191,6 +191,7 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 
 		std::vector<PolygonPoint> totalIntersections;
 		std::vector<float> uniqueAngles = GetUniquePointAngles(p_viewerPosition);
+		std::vector<Line> boundries = ShadowShapes::GetInstance().GetBoundryLines();
 		std::vector<Line> segments = ShadowShapes::GetInstance().GetStaticLines();
 		PolygonPoint polygonPoint = PolygonPoint();
 
@@ -206,11 +207,12 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 			// Cast a ray in that angle.
 			Line ray = Line(Point(p_viewerPosition.x, p_viewerPosition.y), Point(p_viewerPosition.x + dx, p_viewerPosition.y + dy));
 
-			// Find the closest intersection.
 			Intersection closestIntersection = Intersection();
-			for (unsigned int j = 0; j < segments.size(); j++)
+
+			// Find the closest intersection in boundries.
+			for (unsigned int j = 0; j < boundries.size(); j++)
 			{
-				Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
+				Intersection intersection = GetIntertersectionPoint(ray, boundries[j]);
 
 				// Ignore if there is no collision.
 				if (!intersection.intersection)
@@ -222,6 +224,31 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
 				{
 					closestIntersection = intersection;
+				}
+			}
+
+			// Find the closest intersection in segments.
+			for (unsigned int j = 0; j < segments.size(); j++)
+			{
+				// Is the segment within the boundry.
+				if (segments[j].a.x > m_boundingBox.m_topLeft.x && segments[j].a.x < m_boundingBox.m_bottomRight.x && segments[j].a.y < m_boundingBox.m_topLeft.y && segments[j].a.y > m_boundingBox.m_bottomRight.y)
+				{
+					if (segments[j].b.x > m_boundingBox.m_topLeft.x && segments[j].b.x < m_boundingBox.m_bottomRight.x && segments[j].b.y < m_boundingBox.m_topLeft.y && segments[j].b.y > m_boundingBox.m_bottomRight.y)
+					{
+						Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
+
+						// Ignore if there is no collision.
+						if (!intersection.intersection)
+						{
+							continue;
+						}
+
+						// Sort to closest T1 value.
+						if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
+						{
+							closestIntersection = intersection;
+						}
+					}
 				}
 			}
 
@@ -473,17 +500,22 @@ void VisibilityComputer::UpdateMatrices(ID3D11DeviceContext* p_context)
 
 bool VisibilityComputer::IsPointVisible(Point p_point)
 {
+	return IsPointInPolygon(p_point, m_intersections);
+}
+
+bool VisibilityComputer::IsPointInPolygon(Point p_point, std::vector<Point> p_polygon)
+{
 	int intersections = 0;
 
 	// Generate a ray just going right.
 	Line ray = Line(Point(p_point.x, p_point.y), Point(p_point.x + 1.0f, p_point.y));
 
 	// Get number of total intersections with polygon segments.
-	for (unsigned int i = 0; i < m_intersections.size(); i++)
+	for (unsigned int i = 0; i < p_polygon.size(); i++)
 	{
 		// Line from this point to the next
-		Point startPoint = m_intersections[i];
-		Point endPoint = (i == m_intersections.size() - 1) ? m_intersections[0] : m_intersections[i + 1];
+		Point startPoint = p_polygon[i];
+		Point endPoint = (i == p_polygon.size() - 1) ? p_polygon[0] : p_polygon[i + 1];
 
 		Line segment = Line(Point(startPoint.x, startPoint.y), Point(endPoint.x, endPoint.y)); 
 
@@ -497,9 +529,9 @@ bool VisibilityComputer::IsPointVisible(Point p_point)
 	return (intersections % 2 == 1);
 }
 
-void VisibilityComputer::SetMapBoundries(Point p_topLeft, Point p_bottomRight)
+void VisibilityComputer::UpdateMapBoundries(Point p_topLeft, Point p_bottomRight)
 {
-	ShadowShapes::GetInstance().AddStaticSquare(p_topLeft, p_bottomRight);
+	ShadowShapes::GetInstance().UpdateBoundries(p_topLeft, p_bottomRight);
 
 	m_boundingBox.m_topLeft = p_topLeft;
 	m_boundingBox.m_bottomRight = p_bottomRight;
