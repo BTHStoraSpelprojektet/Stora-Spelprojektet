@@ -2,6 +2,7 @@
 #include "Menu.h"
 #include "MenuItem.h"
 #include "TextureLibrary.h"
+#include "Network.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -31,7 +32,7 @@ bool ChooseState::Initialize()
 	m_chooseButton->AddButton(0.0f, -OFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
 	
 	// Back
-	//m_chooseButton->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*OFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	m_chooseButton->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*OFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 
 	// Next ninja, right button
 	m_chooseButton->AddButton(BUTTONWIDTH*0.5f + NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
@@ -61,6 +62,7 @@ GAMESTATESWITCH ChooseState::Update()
 		return GAMESTATESWITCH_PLAY;
 		break;
 	case MENUACTION_BACK:
+		Network::GetInstance()->Disconnect();
 		return GAMESTATESWITCH_MENU;
 		break;
 	case MENUACTION_NEXTNINJA:

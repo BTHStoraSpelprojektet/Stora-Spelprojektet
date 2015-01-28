@@ -447,6 +447,13 @@ void Network::Connect(std::string p_ip)
 	m_clientPeer->Connect(m_ip.c_str(), SERVER_PORT, 0, 0);
 }
 
+void Network::Disconnect()
+{
+	std::cout << "Disconnecting from server" << std::endl;
+	m_clientPeer->Shutdown(300);
+	m_clientPeer->Startup(1, &m_socketDesc, 1);
+}
+
 bool Network::IsConnected()
 {
 	return m_connected;
