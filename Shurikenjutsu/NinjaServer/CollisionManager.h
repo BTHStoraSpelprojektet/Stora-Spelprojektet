@@ -10,10 +10,12 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include <vector>
 #include "Collisions.h"
-#include "PlayerManager.h"
-#include "ShurikenManager.h"
+#include "..\CommonLibs\ServerMessages.h"
 
+
+class ShurikenManager;
 class PlayerManager;
+class SpikeManager;
 class CollisionManager
 {
 public:

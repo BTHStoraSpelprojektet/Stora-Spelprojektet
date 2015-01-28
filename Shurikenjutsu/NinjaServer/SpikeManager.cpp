@@ -1,10 +1,8 @@
 #include "SpikeManager.h"
-
-
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 bool SpikeManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
-
 	m_serverPeer = p_serverPeer;
 
 	return true;

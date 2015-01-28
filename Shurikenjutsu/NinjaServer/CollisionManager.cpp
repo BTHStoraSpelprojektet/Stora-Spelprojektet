@@ -1,5 +1,7 @@
 #include "CollisionManager.h"
-
+#include "PlayerManager.h"
+#include "SpikeManager.h"
+#include "ShurikenManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
@@ -256,6 +258,10 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	return dashLength;
 }
 
+void CollisionManager::SpikaTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager)
+{
+
+}
 void CollisionManager::CalculateSmokeBombLocation()
 {
 

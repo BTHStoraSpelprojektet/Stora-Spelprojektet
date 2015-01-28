@@ -272,6 +272,7 @@ void Player::ResetCooldowns()
 
 	UpdateAbilities();
 }
+
 void Player::SetHealth(int p_health)
 {
 	if (p_health < 0)

@@ -113,9 +113,9 @@ void ObjectManager::Update()
 	{
 		m_spikeTrapList[i]->Update();
 
-		if (!m_spikeTrapList[i]->GetIfThrowing())
+		if (!m_spikeTrapList[i]->GetIsAlive())
 		{
-			// Remove Smoke bomb
+			// Remove Spike Trap
 			m_spikeTrapList[i]->Shutdown();
 			delete m_spikeTrapList[i];
 			m_spikeTrapList.erase(m_spikeTrapList.begin() + i);

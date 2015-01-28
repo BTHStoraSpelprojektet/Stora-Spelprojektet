@@ -10,6 +10,10 @@ bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_e
 	m_spikes->Initialize("../Shurikenjutsu/Models/SmokeBomb.SSP", p_startPosition);
 
 
+	m_spikesTrap = new Object();
+	m_spikesTrap->Initialize("../Shurikenjutsu/Models/SmokeBomb.SSP", p_startPosition);
+
+
 	m_startPosition = p_startPosition;
 	m_isThrowing = true;
 	m_spikeSphere = Sphere(p_endPosition, SMOKEBOMB_SIZE_X);
@@ -37,12 +41,17 @@ void Spikes::Update()
 		float z = m_speed * m_timer * cosf(m_angle) * m_percentZ;
 
 		m_spikes->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
+		m_spikesTrap->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
 
 		if (y < 0.0f)
 		{
-			ResetTimer();
+			//ResetTimer();
 			m_isThrowing = false;
 		}
+	}
+	else
+	{
+
 	}
 }
 
@@ -50,11 +59,20 @@ void Spikes::Shutdown()
 {
 	m_spikes->Shutdown();
 	delete m_spikes;
+	m_spikesTrap->Shutdown();
+	delete m_spikesTrap;
 }
 
 void Spikes::Render()
 {
-	m_spikes->Render();
+	if (m_isThrowing)
+	{
+		m_spikes->Render();
+	}
+	else
+	{
+		m_spikesTrap->Render();
+	}
 }
 
 void Spikes::SetPosition(DirectX::XMFLOAT3 p_position)
@@ -65,18 +83,6 @@ void Spikes::SetPosition(DirectX::XMFLOAT3 p_position)
 void Spikes::ResetTimer()
 {
 	m_timer = 0;
-}
-
-bool Spikes::GetIfThrowing()
-{
-	if (m_isThrowing)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
 
 Sphere Spikes::GetSpikeSphere()
@@ -98,5 +104,17 @@ unsigned int Spikes::GetID()
 
 Object* Spikes::GetSpikes()
 {
-	return m_spikes;
+	return m_spikesTrap;
+}
+
+bool Spikes::GetIsAlive()
+{
+	if (m_timer < SPIKE_DURATION)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

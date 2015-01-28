@@ -5,7 +5,6 @@
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\ModelLibrary.h"
 #include <vector>
-#include "..\CommonLibs\GameplayGlobalVariables.h"
 class SpikeManager
 {
 public:
