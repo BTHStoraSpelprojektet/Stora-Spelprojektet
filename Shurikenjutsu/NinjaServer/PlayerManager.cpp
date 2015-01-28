@@ -1,5 +1,5 @@
 #include "PlayerManager.h"
-
+#include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -331,6 +331,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
 	int index = GetPlayerIndex(p_guid);
+	RakNet::BitStream l_bitStream;
 	switch (p_readAbility)
 	{
 	case ABILITIES_SHURIKEN:
@@ -342,7 +343,15 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		//Calculate new location for the dashing player and inflict damage on enemies
 		player = GetPlayer(p_guid);
 		dashDistance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
-		MovePlayer(p_guid, player.x + dashDistance*player.dirX, player.y, player.z + dashDistance*player.dirZ, p_nrOfConnections, true);
+
+		
+		l_bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
+		l_bitStream.Write(player.x + dashDistance * player.dirX);
+		l_bitStream.Write(player.y);
+		l_bitStream.Write(player.z + dashDistance * player.dirZ);
+		m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+
+		//MovePlayer(p_guid, player.x + dashDistance*player.dirX, player.y, player.z + dashDistance*player.dirZ, p_nrOfConnections, true);
 		break;
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
@@ -364,23 +373,13 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		break;
 	}
 
-	player = GetPlayer(p_guid);
-	RakNet::BitStream l_bitStream;
-	l_bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
-	l_bitStream.Write(player.guid);
-	l_bitStream.Write(player.x);
-	l_bitStream.Write(player.y);
-	l_bitStream.Write(player.z);
-
-	m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
-
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_ABILITY);
 	bitStream.Write(p_readAbility);
 	bitStream.Write(abilityString);
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }
 
 int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)

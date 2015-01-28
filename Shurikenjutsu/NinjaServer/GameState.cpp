@@ -3,7 +3,6 @@
 #include "MapManager.h"
 #include "CollisionManager.h"
 
-
 GameState::GameState(){}
 GameState::~GameState(){}
 

@@ -62,8 +62,12 @@ void TextureLibrary::LoadTextureDirectory()
 	// Relevant files
 	while (FindNextFile(hFind, &ffd) != 0)
 	{
-		AddTexture("../Shurikenjutsu/2DTextures/" + (std::string)ffd.cFileName);
-		std::cout << "Loading texture: " + (std::string)ffd.cFileName << std::endl;
+		// Avoid loading the windows folder thumb file.
+		if ((std::string)ffd.cFileName != "Thumbs.db")
+		{
+			AddTexture("../Shurikenjutsu/2DTextures/" + (std::string)ffd.cFileName);
+			std::cout << "Loading texture: " + (std::string)ffd.cFileName << std::endl;
+		}
 	}
 
 	FindClose(hFind);

@@ -11,12 +11,13 @@
 #include "ShadowShapes.h"
 #include "Minimap.h"
 #include "VisibilityComputer.h"
+#include "..\CommonLibs\ModelNames.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 bool PlayingStateTest::Initialize()
 {
-	return Initialize("../Shurikenjutsu/Levels/ciliasTestLevel.SSPL");
+	return Initialize(LEVEL_NAME);
 }
 
 bool PlayingStateTest::Initialize(std::string p_levelName)
@@ -39,7 +40,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	for (unsigned int i = 0; i < temp.size(); i++)
 	{
 		LevelImporter::LevelBoundingBox box = temp[i];
-		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
+		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth, box.m_halfHeight, box.m_halfWidth));
 	}
 
 	// Initiate player
@@ -54,22 +55,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		m_mouseX = 0;
 		m_mouseY = 0;
+		
+		// TODO, change this to use the loaded maps values.
+		VisibilityComputer::GetInstance().SetMapBoundries(Point(-51.0f, 51.0f), Point(51.0f, -51.0f));
 
-		ShadowShapes::GetInstance().Initialize();
-		ShadowShapes::GetInstance().AddMapBoundries(Point(0.0f, 0.0f), 10.0f, 10.0f);
-
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 5.0f), Point(-2.5f, 2.5f)));
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-2.5f, 2.5f), Point(-5.0f, 0.0f)));
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 0.0f), Point(-7.5f, 2.5f)));
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-7.5f, 2.5f), Point(-5.0f, 5.0f)));
-
-		ShadowShapes::GetInstance().AddStaticSquare(Point(2.0f, -2.0f), Point(8.0f, -8.0f));
-
-		VisibilityComputer::GetInstance().Initialize();
-		VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
+		ShadowShapes::GetInstance().AddStaticSquare(Point(-0.5f, 0.5f), Point(0.5f, -0.5f));
 	}
 	// ========== DEBUG LINES ==========
-
+	
 	// Frustum
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
@@ -95,25 +88,24 @@ void PlayingStateTest::Shutdown()
 {
 	m_camera->Shutdown();
 	delete m_camera;
+
 	if (m_playerManager != NULL)
 	{
 		m_playerManager->Shutdown();
 		delete m_playerManager;
 	}
+
 	if (m_objectManager != NULL)
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
 	}
+
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-	m_debugDot.Shutdown();
-
-		ShadowShapes::GetInstance().Shutdown();
+		m_debugDot.Shutdown();	
 	}
-
-	//m_particles.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Shutdown();
@@ -186,10 +178,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
-
-	// Update the visibility polygon.
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z));
-
+	
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -223,7 +212,7 @@ void PlayingStateTest::Render()
 
 		ShadowShapes::GetInstance().DebugRender();
 
-		VisibilityComputer::GetInstance().RenderVisibilityPolygon();
+		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -285,8 +274,6 @@ void PlayingStateTest::BasicPicking()
 
 		m_mouseX = shurPos.x;
 		m_mouseY = shurPos.z;
-
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z));
 	}
 	// ========== DEBUG LINES ==========
 }
