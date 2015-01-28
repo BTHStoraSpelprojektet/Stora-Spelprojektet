@@ -183,6 +183,8 @@ void VisibilityComputer::Shutdown()
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
+	perframe = 0;
+
 	m_render = false;
 	Point center = p_viewerPosition;
 
@@ -217,15 +219,13 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 				Intersection intersection = GetIntertersectionPoint(ray, boundries[j]);
 
 				// Ignore if there is no collision.
-				if (!intersection.intersection)
+				if (intersection.intersection)
 				{
-					continue;
-				}
-
-				// Sort to closest T1 value.
-				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
-				{
-					closestIntersection = intersection;
+					// Sort to closest T1 value.
+					if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
+					{
+						closestIntersection = intersection;
+					}
 				}
 			}
 
@@ -235,29 +235,25 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 				Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
 
 				// Ignore if there is no collision.
-				if (!intersection.intersection)
+				if (intersection.intersection)
 				{
-					continue;
-				}
-
-				// Sort to closest T1 value.
-				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
-				{
-					closestIntersection = intersection;
+					// Sort to closest T1 value.
+					if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
+					{
+						closestIntersection = intersection;
+					}
 				}
 			}
 
 			// Check to make sure the closest intersection even hit.
-			if (!closestIntersection.intersection)
+			if (closestIntersection.intersection)
 			{
-				continue;
+				// Point and angle.
+				polygonPoint = PolygonPoint(angle, closestIntersection.point);
+
+				// Add to list of intersects
+				totalIntersections.push_back(polygonPoint);
 			}
-
-			// Point and angle.
-			polygonPoint = PolygonPoint(angle, closestIntersection.point);
-
-			// Add to list of intersects
-			totalIntersections.push_back(polygonPoint);
 		}
 
 		// Sort intersections by angle.
@@ -277,7 +273,7 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 		// Reverse the polygon.
 		CalculateReversedVisibilityPolygon(p_device);
 
-		int lol = perframe;
+		std::cout << perframe << std::endl;
 	}
 }
 
@@ -360,6 +356,8 @@ void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11Device* p_devi
 
 Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segment)
 {
+	perframe++;
+
 	// Set point to false initially.
 	Intersection point;
 	point.intersection = false;
