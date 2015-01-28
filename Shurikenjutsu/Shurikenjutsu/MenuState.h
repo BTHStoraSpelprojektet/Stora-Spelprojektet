@@ -17,8 +17,9 @@ public:
 	~MenuState();
 
 	bool Initialize();
-	GAMESTATESWITCH Update();
 	void Shutdown();
+
+	GAMESTATESWITCH Update();
 	void Render();
 
 private:
@@ -32,6 +33,11 @@ private:
 	MenuIpBox* m_ipbox;
 	bool m_hideIpBox;
 	GUIText* m_ipboxText;
+
+	bool m_lastvsync;
+	bool m_lastfullscreen;
+	int m_vsyncIndex;
+	int m_fullscreenIndex;
 };
 
 #endif

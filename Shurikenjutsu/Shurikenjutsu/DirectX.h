@@ -25,6 +25,8 @@ public:
 
 	void ResetRenderTarget();
 
+	void SetVsync(bool p_state);
+
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_context;
@@ -47,5 +49,7 @@ private:
 	int m_height;
 
 	float m_clearColor[4];
+
+	int m_vsync;
 };
 #endif;

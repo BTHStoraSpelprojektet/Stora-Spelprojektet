@@ -10,7 +10,7 @@ MenuIpBox::~MenuIpBox(){}
 
 bool MenuIpBox::Initialize(float p_x, float p_y, float p_width, float p_height)
 {
-	MenuItem::Initialize(p_x, p_y, p_width, p_height, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture(ABILITY_BG_TEXTURE));
+	MenuItem::Initialize(p_x, p_y, p_width, p_height, TextureLibrary::GetInstance()->GetTexture(ABILITY_BG_TEXTURE));
 
 	m_counter = 0;
 	m_active = false;
@@ -35,38 +35,19 @@ bool MenuIpBox::Initialize(float p_x, float p_y, float p_width, float p_height)
 
 bool MenuIpBox::IsClicked()
 {
-	InputManager* input = InputManager::GetInstance();
-
-	int mouseOffsetX = 0;
-	int mouseOffsetY = 0;
-
-	if (!GLOBAL::GetInstance().FULLSCREEN)
+	if (MenuButton::IsClicked())
 	{
-		mouseOffsetX = 9;
-		mouseOffsetY = 18;
-	}
-
-	float halfScreenX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - mouseOffsetX;
-	float halfScreenY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - mouseOffsetY;
-
-	if (input->IsLeftMouseClicked())
-	{
-		if ((input->GetMousePositionX() - halfScreenX) > (m_x - m_width*0.5f) && (input->GetMousePositionX() - halfScreenX) < (m_x + m_width*0.5f))
-		{
-			if ((input->GetMousePositionY() - halfScreenY)*-1 >= (m_y - m_height*0.5f) && (input->GetMousePositionY() - halfScreenY)*-1 <= (m_y + m_height*0.5f))
-			{
 				m_active = true;
 				m_counter = 0;
 				ResetIp();
 				return true;
 			}
-		}
 
+	else
+	{
 		m_active = false;
 		return false;
 	}
-
-	return false;
 }
 
 void MenuIpBox::GetInput()

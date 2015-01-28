@@ -17,6 +17,7 @@ enum MENUACTION
 	MENUACTION_IP,
 	MENUACTION_CONNECT,
 	MENUACTION_EMPTY,
+	MENUACTION_OPTIONAPPLY
 };
 
 class MenuItem
@@ -25,12 +26,12 @@ public:
 	MenuItem();
 	~MenuItem();
 
-	bool Initialize(float p_x, float p_y, float p_width, float p_height, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
-	bool Initialize(float p_x, float p_y, float p_size, MENUACTION p_action, ID3D11ShaderResourceView* p_texture);
+	bool Initialize(float p_x, float p_y, float p_width, float p_height, ID3D11ShaderResourceView* p_texture);
+	bool Initialize(float p_x, float p_y, float p_size, ID3D11ShaderResourceView* p_texture);
 	void Render();
-	virtual bool IsClicked();
-	MENUACTION GetAction();
+	
 	void SetBackgroundTexture(ID3D11ShaderResourceView* p_texture);
+	virtual void Shutdown();
 
 protected:
 
@@ -40,8 +41,6 @@ protected:
 	float m_height;
 
 	GUIElement *m_background;
-
-	MENUACTION m_action;
 };
 
 #endif // !MENUITEM_H_
