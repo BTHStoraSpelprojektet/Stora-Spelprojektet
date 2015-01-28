@@ -194,7 +194,7 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-//		m_ability = m_smokeBombAbility;
+		//m_ability = m_smokeBombAbility;
 		m_ability = m_spikeAbility;
 	}
 }
