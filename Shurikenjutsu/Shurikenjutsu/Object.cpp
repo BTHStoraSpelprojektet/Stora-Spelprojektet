@@ -155,19 +155,19 @@ void Object::TransformBoundingSpheres()
 
 void Object::TransformShadowPoints()
 {
-	std::vector<DirectX::XMFLOAT3> shadowPoints;
-	shadowPoints.clear();
+	//std::vector<DirectX::XMFLOAT3> shadowPoints;
+	//shadowPoints.clear();
 
-	std::vector<DirectX::XMFLOAT3> saList = m_model->GetShadowPoints();
-	DirectX::XMFLOAT4X4 world = GetWorldMatrix();
+	//std::vector<DirectX::XMFLOAT3> saList = m_model->GetShadowPoints();
+	//DirectX::XMFLOAT4X4 world = GetWorldMatrix();
 
-	for (unsigned int i = 0; i < saList.size(); i++)
-	{
-		DirectX::XMFLOAT3 position = saList[i];
-		DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
+	//for (unsigned int i = 0; i < saList.size(); i++)
+	//{
+	//	DirectX::XMFLOAT3 position = saList[i];
+	//	DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
 
-		// TODO add shapes from the map to the static shapes list here.
-	}
+	//	// TODO add shapes from the map to the static shapes list here.
+	//}
 }
 
 std::vector<OBB> Object::GetBoundingBoxes()

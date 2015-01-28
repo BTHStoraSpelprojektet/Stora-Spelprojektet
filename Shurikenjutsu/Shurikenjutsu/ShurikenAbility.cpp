@@ -13,7 +13,7 @@ bool ShurikenAbility::Initialize()
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	m_stacks = SHURIKEN_MAX_STACK;
-	m_gcd = ALL_AROUND_GOLOBAL_COOLDOWN + 1.0f;
+	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN + 1.0f;
 	return true;
 }
 void ShurikenAbility::Update()
@@ -32,7 +32,7 @@ void ShurikenAbility::Update()
 }
 bool ShurikenAbility::Execute(float p_distance)
 {
-	if (m_gcd > ALL_AROUND_GOLOBAL_COOLDOWN)
+	if (m_gcd > ALL_AROUND_GLOBAL_COOLDOWN)
 	{
 		if (m_stacks > 0)
 		{

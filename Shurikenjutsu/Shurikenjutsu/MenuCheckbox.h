@@ -1,13 +1,15 @@
 #ifndef MENUCHECKBOX_H_
 #define MENUCHECKBOX_H_
 
-#include "MenuItem.h"
+#include "MenuButton.h"
 
-class MenuCheckbox : public MenuItem
+class MenuCheckbox : public MenuButton
 {
 public:
 	MenuCheckbox();
 	~MenuCheckbox();
+
+	bool Initialize(float p_x, float p_y, MENUACTION p_action, bool p_state);
 
 	bool IsClicked();
 	bool GetState()const;

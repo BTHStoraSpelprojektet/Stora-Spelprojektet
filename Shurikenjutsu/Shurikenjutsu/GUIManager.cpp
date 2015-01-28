@@ -3,6 +3,7 @@
 #include "GUIElementColor.h"
 #include "GUIElement.h"
 #include "GraphicsEngine.h"
+#include "FW1FontWrapper.h"
 
 GUIManager* GUIManager::m_instance;
 
@@ -39,9 +40,20 @@ void GUIManager::Render()
 
 	for (unsigned int i = 0; i < m_texts.size(); i++)
 	{
-		GraphicsEngine::RenderText(m_texts[i]->GetText(),m_texts[i]->GetSize(), m_texts[i]->GetPositionX(), m_texts[i]->GetPositionY(), m_texts[i]->GetColor());
+		GraphicsEngine::RenderText(m_texts[i]->GetText(), m_texts[i]->GetSize(), m_texts[i]->GetPositionX(), m_texts[i]->GetPositionY(), m_texts[i]->GetColor());
 	}
 	m_texts.clear();
+
+	if (m_texts2.size() < 0)
+	{
+		GraphicsEngine::RenderText2(m_texts2[0]->GetText(), m_texts2[0]->GetSize(), m_texts2[0]->GetPositionX(), m_texts2[0]->GetPositionY(), m_texts2[0]->GetColor(), FW1_STATEPREPARED);
+		for (unsigned int i = 1; i < m_texts2.size() - 1; i++)
+		{
+			GraphicsEngine::RenderText2(m_texts2[i]->GetText(), m_texts2[i]->GetSize(), m_texts2[i]->GetPositionX(), m_texts2[i]->GetPositionY(), m_texts2[i]->GetColor(), FW1_IMMEDIATECALL);
+		}
+		GraphicsEngine::RenderText2(m_texts2[m_texts2.size() - 1]->GetText(), m_texts2[m_texts2.size() - 1]->GetSize(), m_texts2[m_texts2.size() - 1]->GetPositionX(), m_texts2[m_texts2.size() - 1]->GetPositionY(), m_texts2[m_texts2.size() - 1]->GetColor(), FW1_IMMEDIATECALL);
+		m_texts2.clear();
+	}
 }
 
 void GUIManager::AddToRenderQueue(GUIElement* p_element)
@@ -57,6 +69,11 @@ void GUIManager::AddToRenderQueueColor(GUIElementColor* p_element)
 void GUIManager::AddToRenderQueue(GUIText* p_text)
 {
 	m_texts.push_back(p_text);
+}
+
+void GUIManager::AddToRenderQueue2(GUIText* p_text)
+{
+	m_texts2.push_back(p_text);
 }
 
 void GUIManager::Shutdown()
