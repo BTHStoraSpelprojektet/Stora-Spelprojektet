@@ -1,7 +1,7 @@
 #ifndef GAMEPLAYGLOBALVARIABLES_H_
 #define GAMEPLAYGLOBALVARIABLES_H_
 
-const float ALL_AROUND_GOLOBAL_COOLDOWN = 0.5f;
+const float ALL_AROUND_GLOBAL_COOLDOWN = 0.5f;
 
 
 ////////////////////////////////////////////////////////////////Ranged Attacks

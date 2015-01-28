@@ -7,7 +7,7 @@ PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = (int)CHARACTAR_KATANA_SHURIKEN_HEALTH;
-	m_gcd = ALL_AROUND_GOLOBAL_COOLDOWN;
+	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
 	m_serverPeer = p_serverPeer;
 
 	m_players = std::vector<PlayerNet>();
@@ -271,13 +271,13 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 		switch (p_ability)
 		{
 		case ABILITIES_SHURIKEN:
-			m_players[p_index].cooldownAbilites.shurikenCD = ALL_AROUND_GOLOBAL_COOLDOWN;
+			m_players[p_index].cooldownAbilites.shurikenCD = ALL_AROUND_GLOBAL_COOLDOWN;
 			break;
 		case ABILITIES_DASH:
 			m_players[p_index].cooldownAbilites.dashCD = DASH_COOLDOWN;
 			break;
 		case ABILITIES_MELEESWING:
-			m_players[p_index].cooldownAbilites.meleeSwingCD = ALL_AROUND_GOLOBAL_COOLDOWN;
+			m_players[p_index].cooldownAbilites.meleeSwingCD = ALL_AROUND_GLOBAL_COOLDOWN;
 			break;
 		case ABILITIES_MEGASHURIKEN:
 			m_players[p_index].cooldownAbilites.megaShurikenCD = MEGASHURIKEN_COOLDOWN;
