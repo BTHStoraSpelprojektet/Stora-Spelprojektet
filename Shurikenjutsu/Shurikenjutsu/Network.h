@@ -45,6 +45,7 @@ public:
 	void Update();
 
 	void Connect(std::string p_ip);
+	void Disconnect();
 
 	bool ConnectedNow();
 	bool IsConnected();
