@@ -11,12 +11,13 @@
 #include "ShadowShapes.h"
 #include "Minimap.h"
 #include "VisibilityComputer.h"
+#include "..\CommonLibs\ModelNames.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 bool PlayingStateTest::Initialize()
 {
-	return Initialize("../Shurikenjutsu/Levels/ciliasTestLevel.SSPL");
+	return Initialize(LEVEL_NAME);
 }
 
 bool PlayingStateTest::Initialize(std::string p_levelName)
@@ -39,7 +40,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	for (unsigned int i = 0; i < temp.size(); i++)
 	{
 		LevelImporter::LevelBoundingBox box = temp[i];
-		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
+		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth, box.m_halfHeight, box.m_halfWidth));
 	}
 
 	// Initiate player

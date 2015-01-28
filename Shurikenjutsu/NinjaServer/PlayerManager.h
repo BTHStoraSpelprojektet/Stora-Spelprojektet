@@ -5,7 +5,6 @@
 
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
-#include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"

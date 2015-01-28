@@ -1,6 +1,6 @@
 #include "Minimap.h"
 #include "Globals.h"
-
+#include "..\CommonLibs\ModelNames.h"
 
 Minimap::Minimap()
 {
@@ -24,15 +24,15 @@ bool Minimap::Initialize()
 		-1 * (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + (m_minimapHeight * 0.5f), 0.0f);
 	
 	// Initiliaze with pos, size and textures, draw center of texture at center of minimap..
-	m_minimap->Initialize(m_centerOfMinimapPos,	m_minimapWidth, m_minimapHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/minimap.png"));
+	m_minimap->Initialize(m_centerOfMinimapPos,	m_minimapWidth, m_minimapHeight, TextureLibrary::GetInstance()->GetTexture(MINIMAP_TEXTURE));
 	
-	m_playerDot->Initialize(m_centerOfMinimapPos, 10, 10, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/minimap_redDot.png"));
+	m_playerDot->Initialize(m_centerOfMinimapPos, 10, 10, TextureLibrary::GetInstance()->GetTexture(MINIMAP_RED_DOT_TEXTURE));
 
 	DirectX::XMFLOAT3 startPosForOtherPlayers = DirectX::XMFLOAT3(-1000, -1000, 0);
 	for (int i = 0; i < 7; i++)
 	{
 		m_otherPlayers[i] = new GUIElement();
-		m_otherPlayers[i]->Initialize(startPosForOtherPlayers, 10, 10, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/minimap_blueDot.png"));
+		m_otherPlayers[i]->Initialize(startPosForOtherPlayers, 10, 10, TextureLibrary::GetInstance()->GetTexture(MINIMAP_BLUE_DOT_TEXTURE));
 	}
 	
 	return true;
@@ -106,11 +106,11 @@ void Minimap::SetTeamTexture(int p_index, int p_team)
 {
 	if (p_team == 1)
 	{
-		m_otherPlayers[p_index]->SetTexture(TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/minimap_redDot.png"));
+		m_otherPlayers[p_index]->SetTexture(TextureLibrary::GetInstance()->GetTexture(MINIMAP_RED_DOT_TEXTURE));
 	}
 	else
 	{
-		m_otherPlayers[p_index]->SetTexture(TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/minimap_blueDot.png"));
+		m_otherPlayers[p_index]->SetTexture(TextureLibrary::GetInstance()->GetTexture(MINIMAP_BLUE_DOT_TEXTURE));
 	}
 }
 
@@ -118,11 +118,11 @@ void Minimap::SetPlayerTexture(int p_team)
 {
 	if (p_team == 1)
 	{
-		m_playerDot->SetTexture(TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/minimap_redDot.png"));
+		m_playerDot->SetTexture(TextureLibrary::GetInstance()->GetTexture(MINIMAP_RED_DOT_TEXTURE));
 	}
 	else
 	{
-		m_playerDot->SetTexture(TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/minimap_blueDot.png"));
+		m_playerDot->SetTexture(TextureLibrary::GetInstance()->GetTexture(MINIMAP_BLUE_DOT_TEXTURE));
 	}
 }
 
