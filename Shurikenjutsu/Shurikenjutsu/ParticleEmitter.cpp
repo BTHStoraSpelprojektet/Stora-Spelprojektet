@@ -31,7 +31,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 			// Set velocity and its variation.
 			m_velocity = 3.0f;
-			m_velocityVariation = 0.25f;
+			m_velocityVariation = 0.1f;
 
 			m_timeToLive = 1.25f;
 
@@ -180,7 +180,7 @@ void ParticleEmitter::EmitParticles()
 			bool found = false;
 			while (!found)
 			{
-				if ((m_particleList[index].m_alive == false) || (m_particleList[index].m_position.y > position.y))
+				if ((m_particleList[index].m_alive == false) || (m_particleList[index].m_position.y < position.y))
 				{
 					found = true;
 				}
@@ -279,7 +279,7 @@ void ParticleEmitter::UpdateParticles()
 
 					// Fly in an arc in the given xz direction.
 					m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
-					//m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
+					m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
 					m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
 
 					// Add time passed.
