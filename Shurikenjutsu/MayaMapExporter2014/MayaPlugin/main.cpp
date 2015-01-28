@@ -47,7 +47,7 @@
 #include <maya/MFloatPointArray.h>
 
 static const int NUMOFWORLDOBJECTS = 4096;
-bool enable_workaround_for_boundingbox_positions = true;
+bool enable_workaround_for_boundingbox_positions = false;
 
 struct worldObject{
 	std::string name;
