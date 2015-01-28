@@ -141,7 +141,7 @@ void Network::ReceviePacket()
 			float x, y, z;
 			float dirX, dirY, dirZ;
 			int team;
-			int maxHP, currentHP;
+			float maxHP, currentHP;
 			bool isAlive;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -273,7 +273,7 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID guid;
-			int currentHP;
+			float currentHP;
 			bool isAlive;
 
 			bitStream.Read(messageID);
@@ -850,7 +850,7 @@ void Network::UpdatedMoveFromInvalidMove()
 	m_invalidMove = false;
 }
 
-void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP, bool p_isAlive)
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive)
 {
 	if (p_guid == m_myPlayer.guid)
 	{
@@ -870,7 +870,7 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP, bool p_
 	}
 }
 
-void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_currentHP, bool p_isAlive)
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive)
 {
 	if (p_guid == m_myPlayer.guid)
 	{

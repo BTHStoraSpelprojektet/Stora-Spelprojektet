@@ -46,6 +46,7 @@ struct SpikeNet
 	unsigned int spikeId;
 	float startX, startZ, endX, endZ;
 	float lifeTime;
+	RakNet::RakNetGUID guid;
 };
 enum Messages
 {

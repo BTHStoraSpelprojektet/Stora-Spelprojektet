@@ -34,12 +34,12 @@ bool Ability::Execute(float p_distance)
 	return false;
 }
 
-void Ability::SetDamage(unsigned int p_damage)
+void Ability::SetDamage(float p_damage)
 {
 	m_damage = p_damage;
 }
 
-unsigned int Ability::GetDamage()
+float Ability::GetDamage()
 {
 	return m_damage;
 }

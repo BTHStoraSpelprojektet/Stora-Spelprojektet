@@ -120,7 +120,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
-						float damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
+						float damage = shurikenList[i].megaShuriken ? (float)MEGASHURIKEN_DAMAGE : (float)SHURIKEN_DAMAGE;
 						
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 
@@ -274,12 +274,12 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 			//	continue;
 			//}
 
-			//// Check so you are not on the same team
-			//PlayerNet shootingPlayer = p_playerManager->GetPlayer(shurikenList[i].guid);
-			//if (playerList[j].team == shootingPlayer.team)
-			//{
-			//	continue;
-			//}
+			// Check so you are not on the same team
+			PlayerNet shootingPlayer = p_playerManager->GetPlayer(spikeList[i].guid);
+			if (playerList[j].team == shootingPlayer.team)
+			{
+				continue;
+			}
 
 			//// Check so the player aren't already dead
 			//if (!playerList[j].isAlive)

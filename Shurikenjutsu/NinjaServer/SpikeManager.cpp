@@ -23,7 +23,7 @@ void SpikeManager::Update(double p_deltaTime)
 		}
 	}
 }
-void SpikeManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ)
+void SpikeManager::AddSpikeTrap(RakNet::RakNetGUID p_guid, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ)
 {
 	float x = p_endPosX - p_startPosX;
 	float z = p_endPosZ - p_startPosZ;

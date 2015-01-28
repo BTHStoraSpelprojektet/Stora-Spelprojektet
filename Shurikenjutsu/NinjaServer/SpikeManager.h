@@ -11,7 +11,7 @@ public:
 	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
 	void Shutdown();
 	void Update(double p_deltaTime);
-	void AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ);
+	void AddSpikeTrap(RakNet::RakNetGUID p_guid, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ);
 
 
 	std::vector<SpikeNet> GetSpikeTraps();
