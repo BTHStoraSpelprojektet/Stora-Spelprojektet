@@ -231,23 +231,20 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 			for (unsigned int j = 0; j < segments.size(); j++)
 			{
 				// Is the segment within the boundry.
-				if (segments[j].a.x > m_boundingBox.m_topLeft.x && segments[j].a.x < m_boundingBox.m_bottomRight.x && segments[j].a.y < m_boundingBox.m_topLeft.y && segments[j].a.y > m_boundingBox.m_bottomRight.y)
+				if ((segments[j].a.x > m_boundingBox.m_topLeft.x && segments[j].a.x < m_boundingBox.m_bottomRight.x && segments[j].a.y < m_boundingBox.m_topLeft.y && segments[j].a.y > m_boundingBox.m_bottomRight.y) || (segments[j].b.x > m_boundingBox.m_topLeft.x && segments[j].b.x < m_boundingBox.m_bottomRight.x && segments[j].b.y < m_boundingBox.m_topLeft.y && segments[j].b.y > m_boundingBox.m_bottomRight.y))
 				{
-					if (segments[j].b.x > m_boundingBox.m_topLeft.x && segments[j].b.x < m_boundingBox.m_bottomRight.x && segments[j].b.y < m_boundingBox.m_topLeft.y && segments[j].b.y > m_boundingBox.m_bottomRight.y)
+					Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
+
+					// Ignore if there is no collision.
+					if (!intersection.intersection)
 					{
-						Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
+						continue;
+					}
 
-						// Ignore if there is no collision.
-						if (!intersection.intersection)
-						{
-							continue;
-						}
-
-						// Sort to closest T1 value.
-						if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
-						{
-							closestIntersection = intersection;
-						}
+					// Sort to closest T1 value.
+					if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
+					{
+						closestIntersection = intersection;
 					}
 				}
 			}
@@ -273,6 +270,8 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 		{
 			m_intersections.push_back(totalIntersections[i].m_point);
 		}
+
+		std::vector<Point> wat = ShadowShapes::GetInstance().GetUniquePoints();
 
 		// Calculate the polyogn.
 		CalculateVisibilityPolygon(p_viewerPosition, p_device);

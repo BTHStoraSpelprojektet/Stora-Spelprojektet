@@ -3,7 +3,7 @@
 #include <DirectXCollision.h>
 #include "Model.h"
 #include "AnimationControl.h"
-
+#include "ShadowShapes.h"
 
 Object::Object(){}
 Object::~Object(){}
@@ -155,19 +155,29 @@ void Object::TransformBoundingSpheres()
 
 void Object::TransformShadowPoints()
 {
-	//std::vector<DirectX::XMFLOAT3> shadowPoints;
-	//shadowPoints.clear();
+	std::vector<Line> lines = m_model->GetShadowLines();
 
-	//std::vector<DirectX::XMFLOAT3> saList = m_model->GetShadowPoints();
-	//DirectX::XMFLOAT4X4 world = GetWorldMatrix();
+	if (lines.size() > 0)
+	{
+		DirectX::XMFLOAT4X4 world = GetWorldMatrix();
 
-	//for (unsigned int i = 0; i < saList.size(); i++)
-	//{
-	//	DirectX::XMFLOAT3 position = saList[i];
-	//	DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
+		DirectX::XMFLOAT3 a;
+		DirectX::XMFLOAT3 b;
 
-	//	// TODO add shapes from the map to the static shapes list here.
-	//}
+		for (unsigned int i = 0; i < lines.size(); i++)
+		{
+			a = DirectX::XMFLOAT3(lines[i].a.x, 0.0f, lines[i].a.y);
+			b = DirectX::XMFLOAT3(lines[i].b.x, 0.0f, lines[i].b.y);
+
+			DirectX::XMStoreFloat3(&a, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat4x4(&world)));
+			DirectX::XMStoreFloat3(&b, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&b), DirectX::XMLoadFloat4x4(&world)));
+
+			lines[i].a = Point(a.x, a.z);
+			lines[i].b = Point(b.x, b.z);
+		}
+
+		ShadowShapes::GetInstance().AddStaticShape(lines);
+	}
 }
 
 std::vector<OBB> Object::GetBoundingBoxes()
