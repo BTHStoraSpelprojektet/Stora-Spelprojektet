@@ -260,11 +260,87 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 
 void CollisionManager::SpikaTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager)
 {
+	//float radius = 1.0f;
+	//std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	//std::vector<SpikeNet> spikeList = p_spikeManager->GetSpikeTraps();
+	//for (unsigned int i = 0; i < spikeList.size(); i++)
+	//{
+	//	bool collisionFound = false;
+	//	// Get the shurikens position
+	//	float newPosX = p_shurikenManager->GetShurikenPosX(i);
+	//	float newPosY = p_shurikenManager->GetShurikenPosY(i);
+	//	float newPosZ = p_shurikenManager->GetShurikenPosZ(i);
 
-}
-void CollisionManager::CalculateSmokeBombLocation()
-{
+	//	// Get the shuriken bounding boxes
+	//	std::vector<Box> shurikenBoundingBoxes;
+	//	if (shurikenList[i].megaShuriken)
+	//	{
+	//		shurikenBoundingBoxes = p_shurikenManager->GetMegaBoundingBoxes(i);
+	//	}
+	//	else
+	//	{
+	//		shurikenBoundingBoxes = p_shurikenManager->GetBoundingBoxes(i);
+	//	}
 
+
+	//	// Go through player list
+	//	for (unsigned int j = 0; j < playerList.size(); j++)
+	//	{
+	//		// This is so you don't collide with your own shurikens
+	//		if (playerList[j].guid == shurikenList[i].guid)
+	//		{
+	//			continue;
+	//		}
+
+	//		// Check so you are not on the same team
+	//		PlayerNet shootingPlayer = p_playerManager->GetPlayer(shurikenList[i].guid);
+	//		if (playerList[j].team == shootingPlayer.team)
+	//		{
+	//			continue;
+	//		}
+
+	//		// Check so the player aren't already dead
+	//		if (!playerList[j].isAlive)
+	//		{
+	//			continue;
+	//		}
+
+
+	//		// Get the players bounding boxes
+	//		std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+	//		// Make collision test
+	//		for (unsigned int k = 0; k < shurikenBoundingBoxes.size(); k++)
+	//		{
+	//			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+	//			{
+	//				if (BoxBoxTest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
+	//				{
+	//					int damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
+
+	//					p_playerManager->DamagePlayer(playerList[j].guid, damage);
+
+	//					// Remove shuriken
+	//					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
+	//					shurikenList.erase(shurikenList.begin() + i);
+	//					i--;
+
+	//					collisionFound = true;
+	//					break;
+	//				}
+	//			}
+	//			if (collisionFound)
+	//			{
+	//				break;
+	//			}
+	//		}
+
+	//		if (collisionFound)
+	//		{
+	//			break;
+	//		}
+	//	}
+	//}
 }
 //Private
 bool CollisionManager::OBBOBBTest(OBB p_OBB1, OBB p_OBB2)

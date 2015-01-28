@@ -17,13 +17,13 @@ public:
 	bool GetIsAlive();
 	Sphere GetSpikeSphere();
 	unsigned int GetID();
-	Object* GetSpikes();
+	Object* GetSpikesBag();
 
 private:
 	bool m_isThrowing;
 	bool m_hasInflictedDamage;
 
-	Object* m_spikes;
+	Object* m_spikeBag;
 	Object* m_spikesTrap;
 	DirectX::XMFLOAT3 m_startPosition;
 	float m_speed;

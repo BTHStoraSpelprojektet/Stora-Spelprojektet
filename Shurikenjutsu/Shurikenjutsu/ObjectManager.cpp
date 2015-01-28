@@ -259,7 +259,7 @@ void ObjectManager::RenderDepth()
 
 	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
 	{
-		m_spikeTrapList[i]->GetSpikes()->RenderDepth();
+		m_spikeTrapList[i]->GetSpikesBag()->RenderDepth();
 	}
 
 }
@@ -286,7 +286,7 @@ void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_e
 {
 	Spikes *tempSpikeTrap;
 	tempSpikeTrap = new Spikes();
-	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.0f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.0f, p_endPosZ), p_smokeBombID);
+	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.01f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.01f, p_endPosZ), p_smokeBombID);
 	tempSpikeTrap->ResetTimer();
 	m_spikeTrapList.push_back(tempSpikeTrap);
 }

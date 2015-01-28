@@ -76,6 +76,7 @@ void GameState::Update(double p_deltaTime)
 	m_spikeManager->Update(p_deltaTime);
 
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
+	m_collisionManager->SpikaTrapCollisionChecks(m_spikeManager, m_playerManager);
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid)

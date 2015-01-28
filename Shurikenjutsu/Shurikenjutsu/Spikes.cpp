@@ -6,20 +6,18 @@
 
 bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {
-	m_spikes = new Object();
-	m_spikes->Initialize("../Shurikenjutsu/Models/SmokeBomb.SSP", p_startPosition);
-
+	m_spikeBag = new Object();
+	m_spikeBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
 
 	m_spikesTrap = new Object();
-	m_spikesTrap->Initialize("../Shurikenjutsu/Models/SmokeBomb.SSP", p_startPosition);
-
+	m_spikesTrap->Initialize("../Shurikenjutsu/Models/CaltropFieldShape.SSP", p_endPosition);
 
 	m_startPosition = p_startPosition;
 	m_isThrowing = true;
-	m_spikeSphere = Sphere(p_endPosition, SMOKEBOMB_SIZE_X);
+	m_spikeSphere = Sphere(p_endPosition, SPIKE_SIZE_X);
 	m_spikeId = p_smokeBombID;
 
-	m_speed = SMOKEBOMB_SPEED;
+	m_speed = SPIKE_SPEED;
 	float x = (p_endPosition.x - p_startPosition.x);
 	float z = (p_endPosition.z - p_startPosition.z);
 	float length = sqrtf(x*x + z*z);
@@ -40,25 +38,20 @@ void Spikes::Update()
 		float y = m_speed * m_timer * sinf(m_angle) - 0.5f * 9.82f * m_timer * m_timer;
 		float z = m_speed * m_timer * cosf(m_angle) * m_percentZ;
 
-		m_spikes->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
-		m_spikesTrap->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
+		m_spikeBag->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
 
 		if (y < 0.0f)
 		{
-			//ResetTimer();
+			ResetTimer();
 			m_isThrowing = false;
 		}
-	}
-	else
-	{
-
 	}
 }
 
 void Spikes::Shutdown()
 {
-	m_spikes->Shutdown();
-	delete m_spikes;
+	m_spikeBag->Shutdown();
+	delete m_spikeBag;
 	m_spikesTrap->Shutdown();
 	delete m_spikesTrap;
 }
@@ -67,7 +60,7 @@ void Spikes::Render()
 {
 	if (m_isThrowing)
 	{
-		m_spikes->Render();
+		m_spikeBag->Render();
 	}
 	else
 	{
@@ -89,7 +82,7 @@ Sphere Spikes::GetSpikeSphere()
 {
 	if (m_isThrowing)
 	{
-		return m_spikes->GetFrustumSphere();
+		return m_spikeBag->GetFrustumSphere();
 	}
 	else
 	{
@@ -102,9 +95,17 @@ unsigned int Spikes::GetID()
 	return m_spikeId;
 }
 
-Object* Spikes::GetSpikes()
+Object* Spikes::GetSpikesBag()
 {
-	return m_spikesTrap;
+	if (m_isThrowing)
+	{
+		return m_spikeBag;
+	}
+	else
+	{
+		return m_spikesTrap;
+	}
+	
 }
 
 bool Spikes::GetIsAlive()

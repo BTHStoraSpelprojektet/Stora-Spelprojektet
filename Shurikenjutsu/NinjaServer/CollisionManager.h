@@ -16,6 +16,7 @@
 class ShurikenManager;
 class PlayerManager;
 class SpikeManager;
+
 class CollisionManager
 {
 public:
@@ -23,11 +24,11 @@ public:
 
 	std::vector<bool> OuterWallCollision(Sphere p_playerSphere);
 
-
 	void NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager);
+	void SpikaTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager);
 	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
-	void CalculateSmokeBombLocation();
+
 
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);
