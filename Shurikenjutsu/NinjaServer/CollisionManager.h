@@ -33,6 +33,7 @@ public:
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);
 	bool BoxBoxTest(Box p_box1, Box p_box2);
+	bool SphereSphereTest(Sphere p_spikeTrap, Sphere p_player);
 	bool OBBSphereTest(OBB p_OBB, Sphere p_sphere);
 
 	static CollisionManager* m_instance;

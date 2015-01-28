@@ -10,7 +10,7 @@ bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_e
 	m_spikeBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
 
 	m_spikesTrap = new Object();
-	m_spikesTrap->Initialize("../Shurikenjutsu/Models/CaltropFieldTCShape.SSP", p_endPosition);
+	m_spikesTrap->Initialize("../Shurikenjutsu/Models/CaltropFieldShape.SSP", p_endPosition);
 
 	m_startPosition = p_startPosition;
 	m_isThrowing = true;
@@ -103,7 +103,7 @@ Object* Spikes::GetSpikesBag()
 	}
 	else
 	{
-		return m_spikesTrap;
+		return NULL;
 	}
 	
 }

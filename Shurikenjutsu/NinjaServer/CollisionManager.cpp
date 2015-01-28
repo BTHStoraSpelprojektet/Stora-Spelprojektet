@@ -294,7 +294,7 @@ void CollisionManager::SpikaTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 			//// Make collision test	
 			//for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 			//{
-			//	if (BoxBoxTest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
+			//	if (SphereSphereTest(shurikenBoundingBoxes[k], Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 			//	{
 			//		int damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
 

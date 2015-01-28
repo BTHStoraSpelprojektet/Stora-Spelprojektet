@@ -224,7 +224,9 @@ void ObjectManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_spikeTrapList[i]->GetSpikeSphere(), 2.0f))
 		{
+			GraphicsEngine::TurnOnAlphaBlending();
 			m_spikeTrapList[i]->Render();
+			GraphicsEngine::TurnOffAlphaBlending();
 		}
 	}
 }
@@ -259,7 +261,11 @@ void ObjectManager::RenderDepth()
 
 	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
 	{
-		m_spikeTrapList[i]->GetSpikesBag()->RenderDepth();
+		Object* temp = m_spikeTrapList[i]->GetSpikesBag();
+		if (temp != NULL)
+		{
+			temp->RenderDepth();
+		}
 	}
 
 }
@@ -286,7 +292,7 @@ void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_e
 {
 	Spikes *tempSpikeTrap;
 	tempSpikeTrap = new Spikes();
-	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.1f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.1f, p_endPosZ), p_smokeBombID);
+	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.01f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.01f, p_endPosZ), p_smokeBombID);
 	tempSpikeTrap->ResetTimer();
 	m_spikeTrapList.push_back(tempSpikeTrap);
 }
