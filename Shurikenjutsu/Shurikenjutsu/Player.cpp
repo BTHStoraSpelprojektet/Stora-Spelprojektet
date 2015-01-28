@@ -246,8 +246,8 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-//		m_ability = m_smokeBombAbility;
-		m_ability = m_spikeAbility;
+		m_ability = m_smokeBombAbility;
+		//m_ability = m_spikeAbility;
 	}
 }
 bool Player::CalculateDirection()
@@ -744,8 +744,8 @@ void Player::UpdateAbilityBar()
 	m_abilityBar->Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
 	m_abilityBar->Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
 	m_abilityBar->Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	m_abilityBar->Update((float)m_spikeAbility->GetCooldown(), SPIKE_COOLDOWN, 4);
-	//m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	//m_abilityBar->Update((float)m_spikeAbility->GetCooldown(), SPIKE_COOLDOWN, 4);
+	m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()
