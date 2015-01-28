@@ -168,7 +168,12 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			// Sphere list
 			for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
 			{
-				if (OBBSphereTest(OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), m_staticSphereList[k]))
+				Sphere sphere = m_staticSphereList[k];
+				if (sphere.m_position.y + sphere.m_radius < shurikenBoundingBoxes[j].m_center.y - shurikenBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > shurikenBoundingBoxes[j].m_center.y + shurikenBoundingBoxes[j].m_extents.y)
+				{
+					sphere.m_position.y = shurikenBoundingBoxes[j].m_center.y;
+				}
+				if (OBBSphereTest(OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
 				{
 					// Remove shuriken
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
@@ -210,7 +215,9 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	// Go through static spheres
 	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
 	{
-		if (Collisions::RaySphereCollision(ray, m_staticSphereList[i]))
+		Sphere tmpSphere = m_staticSphereList[i];
+		tmpSphere.m_position.y = 0.1f;
+		if (Collisions::RaySphereCollision(ray, tmpSphere))
 		{
 			if (ray->m_distance != 0)
 			{

@@ -11,9 +11,9 @@ bool ShadowShapes::Initialize()
 {
 	m_staticLines.clear();
 	m_dynamicLines.clear();
-	m_staticDebugDots.clear();
+	m_uniquePoints.clear();
 
-	m_staticDebugLines.Initialize(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	m_staticDebugLines.Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -22,16 +22,7 @@ void ShadowShapes::Shutdown()
 {
 	m_staticLines.clear();
 	m_dynamicLines.clear();
-
-	if (FLAG_DEBUG == 1)
-	{
-		for (unsigned int i = 0; i < m_staticDebugDots.size(); i++)
-		{
-			m_staticDebugDots[i].Shutdown();
-		}
-
-		m_staticDebugDots.clear();
-	}
+	m_uniquePoints.clear();
 
 	m_staticDebugLines.Shutdown();
 }
@@ -44,8 +35,12 @@ void ShadowShapes::AddStaticLine(Line p_line)
 	// Add debug data.
 	if (FLAG_DEBUG == 1)
 	{
-		AddDebugLineAndDots(p_line.a, p_line.b);
+		AddDebugLines(p_line.a, p_line.b);
 	}
+
+	// Check if the points are unique, if so add the to the list.
+	AddUniquePoints(p_line.a);
+	AddUniquePoints(p_line.b);
 }
 
 void ShadowShapes::AddStaticShape(std::vector<Line> p_shape)
@@ -56,6 +51,10 @@ void ShadowShapes::AddStaticShape(std::vector<Line> p_shape)
 		for (unsigned int i = 0; i < p_shape.size(); i++)
 		{
 			m_staticLines.push_back(p_shape[i]);
+
+			// Check if the points are unique, if so add the to the list.
+			AddUniquePoints(p_shape[i].a);
+			AddUniquePoints(p_shape[i].b);
 		}
 
 		// Add debug data.
@@ -63,7 +62,7 @@ void ShadowShapes::AddStaticShape(std::vector<Line> p_shape)
 		{
 			for (unsigned int i = 0; i < p_shape.size(); i++)
 			{
-				AddDebugLineAndDots(p_shape[i].a, p_shape[i].b);
+				AddDebugLines(p_shape[i].a, p_shape[i].b);
 			}
 		}
 	}
@@ -79,26 +78,42 @@ void ShadowShapes::AddStaticSquare(Point p_topLeft, Point p_bottomRight)
 	// Add top line.
 	Line top = Line(p_topLeft, Point(p_bottomRight.x, p_topLeft.y));
 	m_staticLines.push_back(top); 
+
+	// Check if the points are unique, if so add the to the list.
+	AddUniquePoints(top.a);
+	AddUniquePoints(top.b);
 	
 	// Add right line.
 	Line right = Line(Point(p_bottomRight.x, p_topLeft.y), p_bottomRight);
 	m_staticLines.push_back(right);
 
+	// Check if the points are unique, if so add the to the list.
+	AddUniquePoints(right.a);
+	AddUniquePoints(right.b);
+
 	// Add bottom line.
 	Line bottom = Line(p_bottomRight, Point(p_topLeft.x, p_bottomRight.y));
 	m_staticLines.push_back(bottom);
+
+	// Check if the points are unique, if so add the to the list.
+	AddUniquePoints(bottom.a);
+	AddUniquePoints(bottom.b);
 
 	// Add left line.
 	Line left = Line(Point(p_topLeft.x, p_bottomRight.y), p_topLeft);
 	m_staticLines.push_back(left);
 
+	// Check if the points are unique, if so add the to the list.
+	AddUniquePoints(left.a);
+	AddUniquePoints(left.b);
+
 	// Add debug data.
 	if (FLAG_DEBUG == 1)
 	{
-		AddDebugLineAndDots(top.a, top.b);
-		AddDebugLineAndDots(right.a, right.b);
-		AddDebugLineAndDots(bottom.a, bottom.b);
-		AddDebugLineAndDots(left.a, left.b);
+		AddDebugLines(top.a, top.b);
+		AddDebugLines(right.a, right.b);
+		AddDebugLines(bottom.a, bottom.b);
+		AddDebugLines(left.a, left.b);
 	}
 }
 
@@ -149,20 +164,18 @@ int ShadowShapes::AddSmokeBombShape(Point p_center)
 	return index;
 }
 
-void ShadowShapes::AddMapBoundries(Point p_center, float p_width, float p_height)
-{
-	// Use static square function.
-	AddStaticSquare(Point(p_center.x - p_width, p_center.y + p_height), Point(p_center.x + p_width, p_center.y - p_height));
-}
-
 void ShadowShapes::RemoveDynamicLine(int p_atIndex)
 {
-	// TODO
+	m_dynamicLines.erase(m_dynamicLines.begin() + p_atIndex);
+
+	// TODO, this will fuck over every other index...
 }
 
 void ShadowShapes::RemoveDynamicShape(int p_atIndex, int p_numberOfLines)
 {
-	// TODO
+	m_dynamicLines.erase(m_dynamicLines.begin() + p_atIndex, m_dynamicLines.begin() + p_atIndex + p_numberOfLines);
+
+	// TODO, this will fuck over every other index...
 }
 
 std::vector<Line> ShadowShapes::GetStaticLines()
@@ -180,27 +193,32 @@ void ShadowShapes::DebugRender()
 	// Render every static line.
 	m_staticDebugLines.Render();
 
-	// Render every static dot.
-	for (unsigned int i = 0; i < m_staticDebugDots.size(); i++)
-	{
-		m_staticDebugDots[i].Render();
-	}
-
-	// TODO, render dynamic?
+	// TODO, perhaps render dynamic?
 }
 
-void ShadowShapes::AddDebugLineAndDots(Point p_a, Point p_b)
+void ShadowShapes::AddDebugLines(Point p_a, Point p_b)
 {
 	// Add line to debug.
 	m_staticDebugLines.AddLine(DirectX::XMFLOAT3(p_a.x, 0.2f, p_a.y), DirectX::XMFLOAT3(p_b.x, 0.2f, p_b.y));
+}
 
-	// Add blue start point.
-	DebugDot start;
-	start.Initialize(DirectX::XMFLOAT3(p_a.x, 0.2f, p_a.y), 21, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-	m_staticDebugDots.push_back(start);
+inline void ShadowShapes::AddUniquePoints(Point p_point)
+{
+	// Check uniqueness.
+	for (unsigned int i = 0; i < m_uniquePoints.size(); i++)
+	{
+		if (m_uniquePoints[i].x == p_point.x && m_uniquePoints[i].y == p_point.y)
+		{
+			// If not, break early.
+			return;
+		}
+	}
+	
+	// If unique, add to list.
+	m_uniquePoints.push_back(p_point);
+}
 
-	// Add red end point.
-	DebugDot end;
-	end.Initialize(DirectX::XMFLOAT3(p_b.x, 0.2f, p_b.y), 21, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-	m_staticDebugDots.push_back(end);
+std::vector<Point> ShadowShapes::GetUniquePoints()
+{
+	return m_uniquePoints;
 }

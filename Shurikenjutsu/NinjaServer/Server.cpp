@@ -110,20 +110,22 @@ void Server::ReceviePacket()
 			rBitStream.Read(z);
 
 			// Can player move?
-			m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
+			bool canMove = m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
 
-			// Get player pos
-			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
+			if (canMove)
+			{
+				// Get player pos
+				PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
-			RakNet::BitStream wBitStream;
-			wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
-			wBitStream.Write(player.guid);
-			wBitStream.Write(player.x);
-			wBitStream.Write(player.y);
-			wBitStream.Write(player.z);
+				RakNet::BitStream wBitStream;
+				wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
+				wBitStream.Write(player.guid);
+				wBitStream.Write(player.x);
+				wBitStream.Write(player.y);
+				wBitStream.Write(player.z);
 
-			m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
-
+				m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			}
 			break;
 		}
 		case ID_PLAYER_ROTATED:
@@ -137,18 +139,21 @@ void Server::ReceviePacket()
 			bitStream.Read(dirY);
 			bitStream.Read(dirZ);
 
-			m_gameState->RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
+			bool canRotate = m_gameState->RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
 
-			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
+			if (canRotate)
+			{
+				PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
-			RakNet::BitStream wBitStream;
-			wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
-			wBitStream.Write(player.guid);
-			wBitStream.Write(player.dirX);
-			wBitStream.Write(player.dirY);
-			wBitStream.Write(player.dirZ);
+				RakNet::BitStream wBitStream;
+				wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
+				wBitStream.Write(player.guid);
+				wBitStream.Write(player.dirX);
+				wBitStream.Write(player.dirY);
+				wBitStream.Write(player.dirZ);
 
-			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+				m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			}
 			break;
 		}
 		case ID_DOWNLOAD_PLAYERS:
@@ -167,19 +172,13 @@ void Server::ReceviePacket()
 			rBitStream.Read(distanceFromPlayer);
 
 			int index = m_gameState->GetPlayerIndex(m_packet->guid);
-			PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
-
-			if (m_gameState->CanUseAbility(index, readAbility) && player.isAlive)
+			if (index != -1)
 			{
-				if (readAbility == ABILITIES_DASH)
-				{
-					m_gameState->ExecuteAbility(m_packet->guid, readAbility, true, distanceFromPlayer);
-					m_gameState->UsedAbility(index, readAbility);
-				}
-				else
-				{
+				PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
-					m_gameState->ExecuteAbility(m_packet->guid, readAbility, false, distanceFromPlayer);
+				if (m_gameState->CanUseAbility(index, readAbility) && player.isAlive)
+				{
+					m_gameState->ExecuteAbility(m_packet->guid, readAbility, readAbility == ABILITIES_DASH, distanceFromPlayer);
 					m_gameState->UsedAbility(index, readAbility);
 				}
 			}
@@ -195,13 +194,16 @@ void Server::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(state);
 
-			// Broadcast
-			RakNet::BitStream wBitStream;
-			wBitStream.Write((RakNet::MessageID)ID_PLAYER_ANIMATION_CHANGED);
-			wBitStream.Write(m_packet->guid);
-			wBitStream.Write(state);
+			if (m_gameState->GetPlayerIndex(m_packet->guid) != -1)
+			{
+				// Broadcast
+				RakNet::BitStream wBitStream;
+				wBitStream.Write((RakNet::MessageID)ID_PLAYER_ANIMATION_CHANGED);
+				wBitStream.Write(m_packet->guid);
+				wBitStream.Write(state);
 
-			m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, true);
+				m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, true);
+			}
 			break;
 		}
 		default:

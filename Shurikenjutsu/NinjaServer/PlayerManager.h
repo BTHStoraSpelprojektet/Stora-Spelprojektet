@@ -5,7 +5,6 @@
 
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
-#include "..\CommonLibs\ServerGlobals.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
@@ -30,8 +29,8 @@ public:
 	std::vector<PlayerNet> GetPlayers();
 	std::vector<Box> GetBoundingBoxes(int p_index);
 	void AddPlayer(RakNet::RakNetGUID p_guid);
-	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed);
-	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
+	bool MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed);
+	bool RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);

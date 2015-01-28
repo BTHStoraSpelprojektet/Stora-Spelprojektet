@@ -15,6 +15,7 @@
 #include "InputManager.h"
 #include "Globals.h"
 #include "TextureLibrary.h"
+#include "VisibilityComputer.h"
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -74,7 +75,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize the graphics engine.
 	GraphicsEngine::Initialize(m_window.GetHandle());
-	GraphicsEngine::SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	GraphicsEngine::SetClearColor(0.5f, 0.5f, 1.0f, 1.0f);
 	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
 	GraphicsEngine::TurnOnAlphaBlending();
@@ -82,11 +83,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize model library.
 	ModelLibrary::GetInstance()->Initialize(new Model());
-	ConsolePrintSuccess("All models successfully loaded.");
+	ConsolePrintSuccess("No more models to load.");
 	ConsoleSkipLines(1);
 
 	TextureLibrary::GetInstance()->Initialize();
-	ConsolePrintSuccess("All Textures successfully loaded.");
+	ConsolePrintSuccess("No more textures to load.");
 	ConsoleSkipLines(1);
 
 	// Initialize timer.
@@ -126,21 +127,10 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	}
 	else
 	{
-		ConsolePrintSuccess("Sound Initialize succses.");
+		ConsolePrintSuccess("Sound initialized successfully.");
 		ConsoleSkipLines(1);
 	}
-
-	// Initialize directional light
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(0.225f, 0.225f, 0.225f, 1.0f);
-
-	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
-	m_directionalLight.m_direction = DirectX::XMVector4Normalize(DirectX::XMLoadFloat4(&direction));
-	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
-	m_lightCamera = new Camera();
-	m_lightCamera->Initialize();
-	m_lightCamera->ResetCameraToLight();
+	
 	ConsolePrintSuccess("Light source and light camera initialized successfully.");
 	ConsoleSkipLines(1);
 
@@ -155,7 +145,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		m_debug->RunTests(p_argc, p_argv);
 	}
 
-	m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
+	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
 	return result;
 }
@@ -190,6 +180,8 @@ void System::Shutdown()
 
 	GUIManager::GetInstance()->Shutdown();
 
+	ShadowShapes::GetInstance().Shutdown();
+	VisibilityComputer::GetInstance().Shutdown();
 }
 
 void System::Run()

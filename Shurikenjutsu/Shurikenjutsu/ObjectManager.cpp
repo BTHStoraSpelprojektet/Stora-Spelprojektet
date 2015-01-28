@@ -4,6 +4,7 @@
 #include "Frustum.h"
 #include "Globals.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "..\CommonLibs\ModelNames.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -25,6 +26,7 @@ bool ObjectManager::Initialize(Level* p_level)
 		DirectX::XMFLOAT3(levelObjects[0].m_rotationX, levelObjects[0].m_rotationY, levelObjects[0].m_rotationZ),
 		DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	AddStaticObject(object);
+	
 	
 	numberOfSameModel++;//Räknar antaler modeller...
 	modelPositions.push_back(m_staticObjects[0].GetWorldMatrix());//Pushbackar antalet positioner
@@ -111,12 +113,12 @@ void ObjectManager::Update()
 				if (tempNetShurikens[i].megaShuriken)
 				{
 					// Add Mega shuriken
-					AddShuriken("../Shurikenjutsu/Models/MegaShurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), MEGASHURIKEN_SPEED, tempNetShurikens[i].shurikenId);
+					AddShuriken(MEGA_SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), MEGASHURIKEN_SPEED, tempNetShurikens[i].shurikenId);
 				}
 				else
 				{
 					// Add shuriken
-					AddShuriken("../Shurikenjutsu/Models/shurikenShape.SSP", DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), SHURIKEN_SPEED, tempNetShurikens[i].shurikenId);
+					AddShuriken(SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), SHURIKEN_SPEED, tempNetShurikens[i].shurikenId);
 				}
 			}
 		}

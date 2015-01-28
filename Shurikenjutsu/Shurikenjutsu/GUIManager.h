@@ -22,6 +22,7 @@ public:
 	void AddToRenderQueue(GUIElement* p_element);
 	void AddToRenderQueueColor(GUIElementColor* p_element);
 	void AddToRenderQueue(GUIText* p_text);
+	void AddToRenderQueue2(GUIText* p_text);
 
 private:
 	static GUIManager* m_instance;
@@ -31,6 +32,7 @@ private:
 	std::vector<GUIElement*> m_elements;
 	std::vector<GUIElementColor*> m_elementsColor;
 	std::vector<GUIText*> m_texts;
+	std::vector<GUIText*> m_texts2;
 };
 
 #endif

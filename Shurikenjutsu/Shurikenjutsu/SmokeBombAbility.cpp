@@ -8,7 +8,7 @@ SmokeBombAbility::~SmokeBombAbility(){}
 bool SmokeBombAbility::Initialize()
 {
 	SetDamage(SMOKEBOMB_DAMAGE);
-	SetTime(0.0);
+	SetTime(0.0f);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	return true;

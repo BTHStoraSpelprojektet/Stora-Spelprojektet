@@ -21,13 +21,13 @@ public:
 	int AddDynamicShape(std::vector<Line> p_shape);
 
 	int AddSmokeBombShape(Point p_center);
-	void AddMapBoundries(Point p_center, float p_width, float p_height);
 
 	void RemoveDynamicLine(int p_atIndex);
 	void RemoveDynamicShape(int p_atIndex, int p_numberOfLines);
 
 	std::vector<Line> GetStaticLines();
 	std::vector<Line> GetDynamicLines();
+	std::vector<Point> GetUniquePoints();
 
 	void DebugRender();
 
@@ -36,12 +36,13 @@ private:
 	ShadowShapes(ShadowShapes const&);
 	void operator=(ShadowShapes const&);
 
-	void AddDebugLineAndDots(Point p_a, Point p_b);
+	void AddDebugLines(Point p_a, Point p_b);
+	inline void AddUniquePoints(Point p_point);
 
 	std::vector<Line> m_staticLines;
 	std::vector<Line> m_dynamicLines;
-
+	std::vector<Point> m_uniquePoints; 
+	
 	DebugLineList m_staticDebugLines;
-	std::vector<DebugDot> m_staticDebugDots;
 };
 #endif

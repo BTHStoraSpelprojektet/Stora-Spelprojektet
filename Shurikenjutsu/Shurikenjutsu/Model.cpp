@@ -144,7 +144,7 @@ std::vector<AnimationStack> Model::GetAnimationStacks()const
 	return m_animationStacks;
 }
 
-std::vector<DirectX::XMFLOAT3> Model::GetShadowPoints()const
+std::vector<Line> Model::GetShadowPoints()const
 {
 	return m_shadowPoints;
 }
