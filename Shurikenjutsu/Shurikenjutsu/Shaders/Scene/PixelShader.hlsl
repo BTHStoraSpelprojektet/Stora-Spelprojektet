@@ -15,7 +15,7 @@ cbuffer ShadowMapSize : register(b1)
 };
 
 Texture2D m_texture : register(t0);
-Texture2D m_normalMap  : register(t1);
+Texture2D m_normalMap : register(t1);
 Texture2D m_shadowMap : register(t2);
 
 SamplerState m_sampler : register(s0);

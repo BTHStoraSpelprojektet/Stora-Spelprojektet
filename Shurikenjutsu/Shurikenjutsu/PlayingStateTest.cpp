@@ -13,6 +13,7 @@
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
+
 bool PlayingStateTest::Initialize()
 {
 	return Initialize("../Shurikenjutsu/Levels/ciliasTestLevel.SSPL");
@@ -72,6 +73,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
+	GraphicsEngine::InitializeOutling();
 
 	return true;
 }
@@ -176,27 +178,13 @@ void PlayingStateTest::Render()
 
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
-
 	m_objectManager->RenderDepth();
-
 	m_playerManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
 
-	// OUTLINING
-	//GraphicsEngine::ClearOutlining();
-	GraphicsEngine::SetOutliningPassOne();
-	
-	m_playerManager->Render();
-
-	GraphicsEngine::SetOutliningPassTwo();
-
-	m_playerManager->RenderOutlining();
-
-	GraphicsEngine::ResetRenderTarget();
-
 	// Draw to the scene.
-	//m_playerManager->Render();
+	m_playerManager->Render();
 	m_objectManager->Render();
 
 	// ========== DEBUG LINES ==========
@@ -218,15 +206,12 @@ void PlayingStateTest::Render()
 
 	m_minimap->Render();
 
-
+	// OUTLINING
+	GraphicsEngine::ClearOutlining();
 	GraphicsEngine::SetOutliningPassOne();
-
 	m_playerManager->Render();
-
 	GraphicsEngine::SetOutliningPassTwo();
-
 	m_playerManager->RenderOutlining();
-
 	GraphicsEngine::ResetRenderTarget();
 }
 

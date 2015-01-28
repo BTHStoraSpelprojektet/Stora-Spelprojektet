@@ -226,8 +226,7 @@ void DirectXWrapper::Clear()
 
 void DirectXWrapper::ClearOutlining()
 {
-	m_context->ClearRenderTargetView(m_renderTarget, m_clearColor);
-	m_context->ClearDepthStencilView(m_depthStencilViewOutlining, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_context->ClearDepthStencilView(m_depthStencilViewOutlining, D3D11_CLEAR_STENCIL | D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
 void DirectXWrapper::Present()
@@ -307,13 +306,13 @@ bool DirectXWrapper::InitializeOutlinging()
 	D3D11_DEPTH_STENCIL_DESC stencilDesc;
 	stencilDesc.DepthEnable = true;
 	stencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-	stencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+	stencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	stencilDesc.StencilEnable = true;
 	stencilDesc.StencilReadMask = 0xFF;
 	stencilDesc.StencilWriteMask = 0xFF;
 	stencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	stencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-	stencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	stencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR_SAT;
 	stencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 	stencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	stencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
@@ -329,12 +328,12 @@ bool DirectXWrapper::InitializeOutlinging()
 
 	stencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	stencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
-	stencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
-	stencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+	stencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
 	stencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 	stencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 	stencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-	stencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+	stencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
 
 	if (FAILED(m_device->CreateDepthStencilState(&stencilDesc, &m_outliningNOTEQUAL)))
 	{

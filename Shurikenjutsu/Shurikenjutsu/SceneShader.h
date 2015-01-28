@@ -14,7 +14,7 @@ public:
 
 	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
 	void RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
-	void RenderAnimatedOutlining(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+	void RenderAnimatedOutlining(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
 	void RenderLine(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 
 	void UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
@@ -45,6 +45,7 @@ private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix);
 	void UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
 	void UpdateColorBuffer(ID3D11DeviceContext* p_context, float R, float G, float B);
+	void UpdateWorldMatrixOutlining(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix);
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11VertexShader* m_instanceShader;
@@ -53,6 +54,11 @@ private:
 
 	ID3D11VertexShader* m_lineVertexShader;
 	ID3D11PixelShader* m_linePixelShader;
+
+	// Outlining
+	ID3D11VertexShader* m_vertexShaderOutlining;
+	ID3D11PixelShader* m_pixelShaderOutlining;
+	ID3D11InputLayout* m_layoutOutlining;
 
 	ID3D11InputLayout* m_layout;
 	ID3D11InputLayout* m_instanceLayout;
@@ -84,6 +90,14 @@ private:
 
 		DirectX::XMMATRIX m_lightViewMatrix;
 		DirectX::XMMATRIX m_lightProjectionMatrix;
+	};
+
+	ID3D11Buffer* m_matrixBufferOutlining;
+	struct MatrixBufferOutlining
+	{
+		DirectX::XMMATRIX m_worldMatrix;
+		DirectX::XMMATRIX m_viewMatrix;
+		DirectX::XMMATRIX m_projectionMatrix;
 	};
 
 	ID3D11Buffer* m_fogBuffer;
