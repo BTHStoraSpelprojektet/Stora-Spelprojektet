@@ -47,6 +47,8 @@ public:
 	void Connect(std::string p_ip);
 	void Disconnect();
 
+	void ChooseChar();
+
 	bool ConnectedNow();
 	bool IsConnected();
 

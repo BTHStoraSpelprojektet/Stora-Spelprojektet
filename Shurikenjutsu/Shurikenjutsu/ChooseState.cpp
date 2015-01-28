@@ -59,6 +59,7 @@ GAMESTATESWITCH ChooseState::Update()
 	switch (action.m_action)
 	{
 	case MENUACTION_PLAY:
+		Network::GetInstance()->ChooseChar();
 		return GAMESTATESWITCH_PLAY;
 		break;
 	case MENUACTION_BACK:

@@ -63,8 +63,6 @@ void Server::ReceviePacket()
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-			m_gameState->AddPlayer(m_packet->guid);
-
 			break;
 		}
 		case ID_CONNECTION_REQUEST_ACCEPTED:
@@ -203,6 +201,20 @@ void Server::ReceviePacket()
 				wBitStream.Write(state);
 
 				m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, true);
+			}
+			break;
+		}
+		case ID_CHOOSE_CHAR:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			std::cout << "Connection " << m_packet->guid.ToString() << " have choosen a character\n";
+
+			bitStream.Read(messageID);
+
+			if (m_gameState->GetPlayerIndex(m_packet->guid) == -1)
+			{
+				m_gameState->AddPlayer(m_packet->guid);
 			}
 			break;
 		}

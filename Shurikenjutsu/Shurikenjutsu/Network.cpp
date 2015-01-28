@@ -454,6 +454,15 @@ void Network::Disconnect()
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }
 
+void Network::ChooseChar()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
 bool Network::IsConnected()
 {
 	return m_connected;

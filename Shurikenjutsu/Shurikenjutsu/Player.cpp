@@ -20,6 +20,16 @@
 Player::Player(){}
 Player::~Player(){}
 
+void* Player::operator new(size_t p_i)
+{
+	return _mm_malloc(p_i, 16);
+}
+
+void Player::operator delete(void* p_p)
+{
+	_mm_free(p_p);
+}
+
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
 	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, CHARACTAR_KATANA_SHURIKEN_SPEED))

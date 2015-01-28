@@ -253,7 +253,7 @@ void PlayerManager::CheckPlayersVisible()
 
 bool PlayerManager::IsPlayersVisible(int p_index)
 {
-	if (m_enemyList.size() <= p_index)
+	if (m_enemyList.size() <= (unsigned int)p_index)
 	{
 		return false;
 	}
@@ -262,7 +262,7 @@ bool PlayerManager::IsPlayersVisible(int p_index)
 
 void PlayerManager::MinimapUpdatePos(Minimap *p_minimap)
 {
-	for (int i = 0; i < m_enemyList.size(); i++)
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{ 
 		p_minimap->UpdatePlayersPositon(i, m_enemyList[i].GetPosition());
 	}
@@ -275,7 +275,7 @@ int PlayerManager::GetPlayerTeam()
 
 int PlayerManager::GetEnemyTeam(int p_index)
 {
-	if (m_enemyList.size() <= p_index)
+	if (m_enemyList.size() <= (unsigned int)p_index)
 	{
 		return 0;
 	}
