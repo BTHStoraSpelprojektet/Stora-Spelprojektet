@@ -258,7 +258,7 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	return dashLength;
 }
 
-void CollisionManager::SpikaTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager)
+void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager, float p_deltaTime)
 {
 	float radius = 1.0f;
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
@@ -291,32 +291,17 @@ void CollisionManager::SpikaTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 			// Get the players bounding boxes
 			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
 
-			//// Make collision test	
-			//for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
-			//{
-			//	if (SphereSphereTest(shurikenBoundingBoxes[k], Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
-			//	{
-			//		int damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
-
-			//		p_playerManager->DamagePlayer(playerList[j].guid, damage);
-
-			//		// Remove shuriken
-			//		p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
-			//		shurikenList.erase(shurikenList.begin() + i);
-			//		i--;
-
-			//		collisionFound = true;
-			//		break;
-			//	}
-			//}
-			//if (collisionFound)
-			//{
-			//	break;
-			//}
-			//if (collisionFound)
-			//{
-			//	break;
-			//}
+			// Make collision test	
+			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+			{
+				DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, 0.0f, spikeList[i].endX);
+				if (SphereSphereTest(Sphere(spikeTrapPos, 1.5f), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+				{
+					float damage = SPIKE_DAMAGE * p_deltaTime;
+					p_playerManager->DamagePlayer(playerList[j].guid, damage);
+					break;
+				}
+			}
 		}
 	}
 }
