@@ -61,6 +61,9 @@ private:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
+	void CalculatePlayerCubeCollision(OBB p_collidingBoxes);
+	void CalculatePlayerBoxCollision(OBB p_collidingBoxes);
+
 
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	//int m_spells; // antalet spells om det behövs - skapa lista
@@ -76,6 +79,10 @@ private:
 
 	void SetCalculatePlayerPosition();
 	DirectX::XMFLOAT3 m_playerPrevPos;
+	
+	DirectX::XMFLOAT3 m_dashDirection;
+	float m_dashDistanceLeft;
+	bool m_isDashing;
 
 	Sphere m_playerSphere;
 	Ability* m_ability;
@@ -85,8 +92,12 @@ private:
 	Ability* m_shurikenAbility;
 	Ability* m_megaShuriken;
 	Ability* m_smokeBombAbility;
+	Ability* m_spikeAbility;
 
 	HealthBar* m_healthbar;
 	AbilityBar* m_abilityBar;
+
+	float m_directionUpdateTimer;
+	DirectX::XMFLOAT3 m_oldPosition;
 };
 #endif PLAYER

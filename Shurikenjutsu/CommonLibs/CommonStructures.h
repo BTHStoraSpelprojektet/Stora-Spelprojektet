@@ -13,6 +13,14 @@ struct Vertex
 	DirectX::XMFLOAT3 m_tangent;
 
 	// Constructors.
+	Vertex()
+	{
+		m_position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_textureCoordinates = DirectX::XMFLOAT2(0.0f, 0.0f);
+		m_normal = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_tangent = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	}
+
 	Vertex(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT2 p_textureCoordinates, DirectX::XMFLOAT3 p_normal, DirectX::XMFLOAT3 p_tangent)
 	{
 		m_position = p_position;
@@ -268,6 +276,46 @@ struct AnimationStack
 
 	std::vector<BoneFrame*> m_root;
 	std::vector<BindPose> m_bindPoses;
+};
+
+struct Point
+{
+	float x;
+	float y;
+
+	Point()
+	{
+		x = 0.0f;
+		y = 0.0f;
+	}
+
+	Point(float p_x, float p_y)
+	{
+		x = p_x;
+		y = p_y;
+	}
+};
+
+struct Line
+{
+	Point a;
+	Point b;
+
+	Line()
+	{
+	}
+
+	Line(float ax, float ay, float bx, float by)
+	{
+		a = Point(ax, ay);
+		b = Point(bx, by);
+	}
+
+	Line(Point p_a, Point p_b)
+	{
+		a = p_a;
+		b = p_b;
+	}
 };
 
 #endif

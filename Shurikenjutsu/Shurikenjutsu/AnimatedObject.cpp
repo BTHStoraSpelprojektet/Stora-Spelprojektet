@@ -1,6 +1,7 @@
 #include "AnimatedObject.h"
 #include "TextureLibrary.h"
 #include "Model.h"
+#include "..\CommonLibs\ModelNames.h"
 
 AnimatedObject::AnimatedObject(){}
 AnimatedObject::~AnimatedObject(){}
@@ -12,7 +13,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 		return false;
 	}
 
-	m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/char_bluetext.png");
+	m_texture = TextureLibrary::GetInstance()->GetTexture(NINJA_TEXTURE);
 
 	SetDirection(p_dir);
 	SetSpeed(p_speed);

@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include "SmokeBombAbility.h"
+#include "SpikeAbility.h"
 #include "CollisionManager.h"
 #include "Dash.h"
 #include "Collisions.h"
@@ -14,6 +15,7 @@
 #include "AbilityBar.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
+#include "VisibilityComputer.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -47,13 +49,19 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_smokeBombAbility = new SmokeBombAbility();
 	m_smokeBombAbility->Initialize();
 
+	m_spikeAbility = new SpikeAbility();
+	m_spikeAbility->Initialize();
+
 	m_healthbar = new HealthBar();
 	m_healthbar->Initialize(100.0f, 15.0f);
 
 	m_team = 0;
+	m_isDashing = false;
 
 	m_abilityBar = new AbilityBar();
 	m_abilityBar->Initialize(0.0f, -420.0f, 5);
+
+	m_directionUpdateTimer = 0.0f;
 
 	return true;
 }
@@ -96,6 +104,11 @@ void Player::Shutdown()
 		m_smokeBombAbility->Shutdown();
 		delete m_smokeBombAbility;
 	}
+	if (m_spikeAbility != nullptr)
+	{
+		m_spikeAbility->Shutdown();
+		delete m_spikeAbility;
+	}
 	if (m_healthbar != nullptr)
 	{
 		m_healthbar->Shutdown();
@@ -132,6 +145,54 @@ void Player::UpdateMe()
 		return;
 	}
 
+	// Check for dash
+	if (Network::GetInstance()->HaveDashed())
+	{		
+		// Calc distance
+		float dx = Network::GetInstance()->GetDashLocation().x - m_position.x;
+		float dz = Network::GetInstance()->GetDashLocation().z - m_position.z;
+		m_dashDistanceLeft = sqrt(dx * dx + dz * dz);
+
+		// Calc dir
+		DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(dx, 0, dz));
+		tempVector = DirectX::XMVector3Normalize(tempVector);
+		DirectX::XMStoreFloat3(&m_dashDirection, tempVector);
+
+		m_isDashing = true;
+	}
+	
+	// Dash movement
+	if (m_isDashing)
+	{
+		float distance = DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+		if (distance >= m_dashDistanceLeft)
+		{
+			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+			m_dashDistanceLeft = 0.0f;
+			m_isDashing = false;
+		}
+		else
+		{
+			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+			m_dashDistanceLeft -= distance;
+		}
+
+		// If we dashed, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+
+		SendPosition(m_position);
+	}
+
+	// Move
+	if ((CalculateDirection() || Network::GetInstance()->ConnectedNow()) && !m_isDashing)
+	{
+		SetCalculatePlayerPosition();
+
+		// If we moved, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+	}
 	
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
@@ -185,7 +246,8 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-		m_ability = m_smokeBombAbility;		
+		m_ability = m_smokeBombAbility;
+		//m_ability = m_spikeAbility;
 	}
 }
 bool Player::CalculateDirection()
@@ -248,6 +310,7 @@ void Player::UpdateAbilities()
 	m_shurikenAbility->Update();
 	m_megaShuriken->Update();
 	m_smokeBombAbility->Update();
+	m_spikeAbility->Update();
 }
 
 void Player::ResetCooldowns()
@@ -257,6 +320,7 @@ void Player::ResetCooldowns()
 	m_shurikenAbility->ResetCooldown();
 	m_megaShuriken->ResetCooldown();
 	m_smokeBombAbility->ResetCooldown();
+	m_spikeAbility->ResetCooldown();
 
 	UpdateAbilities();
 }
@@ -300,14 +364,20 @@ void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 
 void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
-	DirectX::XMFLOAT3 oldPos = Object::GetPosition();
-	Object::SetPosition(p_pos);
+	m_directionUpdateTimer += (float)GLOBAL::GetInstance().GetDeltaTime();
+	if (m_directionUpdateTimer > 0.03f)
+	{
+		DirectX::XMFLOAT3 dir;
+		dir.x = p_pos.x - m_oldPosition.x;
+		dir.y = p_pos.y - m_oldPosition.y;
+		dir.z = p_pos.z - m_oldPosition.z;
+		AnimatedObject::NetworkInput(dir);
+		m_directionUpdateTimer = 0.0f;
 
-	DirectX::XMFLOAT3 dir;
-	dir.x = p_pos.x - oldPos.x;
-	dir.y = p_pos.y - oldPos.y;
-	dir.z = p_pos.z - oldPos.z;
-	AnimatedObject::NetworkInput(dir);
+		m_oldPosition = p_pos;
+	}
+
+	Object::SetPosition(p_pos);
 }
 
 DirectX::XMFLOAT3 Player::GetFacingDirection()
@@ -373,113 +443,39 @@ void Player::SetCalculatePlayerPosition()
 	// Check collision between player and static boxes
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(m_playerSphere, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
-	{
-		bool rightOfBox = m_position.x >(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x);
-		bool leftOfBox = m_position.x < (collidingBoxes[i].m_center.x - collidingBoxes[i].m_extents.x);
-		bool aboveBox = m_position.z >(collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z);
-		bool belowBox = m_position.z < (collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z);
-		float x = m_direction.x;
-		float z = m_direction.z;
-		if (x == 1 || x == -1)
+	{ 
+		float temp2 = collidingBoxes[i].m_extents.x - collidingBoxes[i].m_extents.z;
+		if (temp2 < 0)
 		{
-			x = 0;
+			temp2 *= -1;
 		}
-		else if (z == 1 || z == -1)
+		
+		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
-			z = 0;
-		}
-		else if (x < 0 && z < 0)//down left
-		{
-			if (rightOfBox == aboveBox)
+			if (i > 0)
 			{
-				SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z + m_playerSphere.m_radius*1.1f));
-
-				x = -1;
-				z = 0;
+				if ((collidingBoxes[i].m_center.x != collidingBoxes[i - 1].m_center.x) || (collidingBoxes[i].m_center.y != collidingBoxes[i - 1].m_center.y))
+				{
+					SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+				}
+				else
+				{
+					SetDirection(DirectX::XMFLOAT3(m_direction.x, 0.0f, m_direction.z));
+				}
 			}
 			else
 			{
-				if (rightOfBox)
-				{
-					x = 0;
-					z = -1;
-				}
-				if (aboveBox)
-				{
-					x = -1;
-					z = 0;
-				}
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
 		}
-		else if (x > 0 && z < 0)//down right
+		else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
 		{
-			if (leftOfBox == aboveBox)
-			{
-				SetPosition(DirectX::XMFLOAT3(m_position.x , m_position.y, collidingBoxes[i].m_center.z + collidingBoxes[i].m_extents.z + m_playerSphere.m_radius*1.1f));
-				x = 0;
-				z = -1;
-			}
-			else
-			{
-				if (leftOfBox)
-				{
-					x = 0;
-					z = -1;
-				}
-				if (aboveBox)
-				{
-					x = 1;
-					z = 0;
-				}
-			}
+			CalculatePlayerCubeCollision(collidingBoxes[i]);
 		}
-		else if (x < 0 && z > 0)//up left // works goood
+		else
 		{
-			if (rightOfBox == belowBox)
-			{
-				SetPosition(DirectX::XMFLOAT3(collidingBoxes[i].m_center.x + collidingBoxes[i].m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
-				x = 0;
-				z = 1;
-			}
-			else
-			{
-				if (rightOfBox)
-				{
-					x = 0;
-					z = 1;
-				}
-				if (belowBox)
-				{
-					x = -1;
-					z = 0;
-				}
-			}
+			CalculatePlayerBoxCollision(collidingBoxes[i]);
 		}
-		else if (x > 0 && z > 0)//up right // works goood
-		{
-			if (leftOfBox == belowBox)
-			{
-				SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, collidingBoxes[i].m_center.z - collidingBoxes[i].m_extents.z - m_playerSphere.m_radius*1.1f));
-
-				x = 1;
-				z = 0;
-			}
-			else
-			{
-				if (leftOfBox)
-				{
-					x = 0;
-					z = 1;
-				}
-				if (belowBox)
-					{
-					x = 1;
-					z = 0;
-					}
-				}
-			}
-
-		SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 	}
 
 	// Check collision between player and static spheres
@@ -496,32 +492,247 @@ void Player::SetCalculatePlayerPosition()
 
 		float dz = collidingSpheres[i].m_position.z - m_position.z;
 		float dx = collidingSpheres[i].m_position.x - m_position.x;
-		float a1 = atan2(dz, dx);
-		float a2 = atan2(m_direction.z, m_direction.x);
-		float temp = a1 - a2;
-		if (a2 <= 0 && a1 <= 0)
+		float angle1 = atan2(dz, dx);
+		float angle2 = atan2(m_direction.z, m_direction.x);
+		float offset = angle1 - angle2;
+		
+
+		// Special cases ftw. Dont ask!
+		if (angle1 < 0 && angle2 < 0)
 		{
-			temp *= -1;
-		}			
+			offset *= -1;
+		}		
 		
-		// Formel:
+		if (angle2 >= 0 && angle1 < 0)
+		{
+			offset *= -1;
+		}
+
+		if (angle2 >= DirectX::XM_PIDIV2 && angle1 <= -DirectX::XM_PIDIV2)
+		{
+			offset *= -1;
+		}
+
+		if (angle2 <= -DirectX::XM_PIDIV2 && angle1 >= DirectX::XM_PIDIV2)
+		{
+			offset *= -1;
+		}
+
+
+		// Circel ekvation:
 		// circleX * X + circleY * Y = Radius * Radius
-		// Y = (Radius * Radius - circleX * X) / circleY
+		// Bryt ut så att y blir ensamt
+		// Y = (Radius * Radius - circleX * X) / circleY		
+		float yValue = (r * r - circleX * (circleX + offset)) / circleY;
 		
-		float y = (r * r - circleX * (circleX + temp)) / circleY;
-		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + temp) - circleX, 0, y - circleY);
-		// normalize
+		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + offset) - circleX, 0, yValue - circleY);
+		// Normalize
 		float length = sqrt(dir.x * dir.x + dir.z * dir.z);
 		dir.x = dir.x / length;
 		dir.z = dir.z / length;
 		SetDirection(dir);
 	}
 
-
 	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
 }
+void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
+{
+	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x);
+	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x);
+	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z);
+	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z);
 
+	float x = m_direction.x;
+	float z = m_direction.z;
+	if (x < 0 && z < 0)//down left
+	{
+		if (rightOfBox == aboveBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
+			x = -1;
+			z = 0;
+		}
+		else
+		{
+			if (rightOfBox)
+			{
+				x = 0;
+				z = -1;
+			}
+			if (aboveBox)
+			{
+				x = -1;
+				z = 0;
+			}
+		}
+	}
+	else if (x > 0 && z < 0)//down right
+	{
+		if (leftOfBox == aboveBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
+			x = 0;
+			z = -1;
+		}
+		else
+		{
+			if (leftOfBox)
+			{
+				x = 0;
+				z = -1;
+			}
+			if (aboveBox)
+			{
+				x = 1;
+				z = 0;
+			}
+		}
+	}
+	else if (x < 0 && z > 0)//up left // works goood
+	{
+		if (rightOfBox == belowBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			x = 0;
+			z = 1;
+		}
+		else
+		{
+			if (rightOfBox)
+			{
+				x = 0;
+				z = 1;
+			}
+			if (belowBox)
+			{
+				x = -1;
+				z = 0;
+			}
+		}
+	}
+	else if (x > 0 && z > 0)//up right // works goood
+	{
+		if (leftOfBox == belowBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f));
+			x = 0;
+			z = -1;
+		}
+		else
+		{
+			if (leftOfBox)
+			{
+				x = 0;
+				z = 1;
+			}
+			if (belowBox)
+			{
+				x = 1;
+				z = 0;
+			}
+		}
+	}
+	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
+}
+void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
+{
+	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z);
+	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z);
+	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x);
+	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x);
+	float x = m_direction.x;
+	float z = m_direction.z;
+	if (x < 0 && z < 0)//down left
+	{
+		if (rightOfBox == aboveBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x + m_playerSphere.m_radius*1.1f, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f));
+			x = -1;
+			z = 0;
+		}
+		else
+		{
+			if (rightOfBox)
+			{
+				x = 0;
+				z = -1;
+			}
+			if (aboveBox)
+			{
+				x = -1;
+				z = 0;
+			}
+		}
+	}
+	else if (x > 0 && z < 0)//down right
+	{
+		if (leftOfBox == aboveBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			x = 0;
+			z = -1;
+		}
+		else
+		{
+			if (leftOfBox)
+			{
+				x = 0;
+				z = -1;
+			}
+			if (aboveBox)
+			{
+				x = 1;
+				z = 0;
+			}
+		}
+	}
+	else if (x < 0 && z > 0)//up left // works goood
+	{
+		if (rightOfBox == belowBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			x = 0;
+			z = 1;
+		}
+		else
+		{
+			if (rightOfBox)
+			{
+				x = 0;
+				z = 1;
+			}
+			if (belowBox)
+			{
+				x = -1;
+				z = 0;
+			}
+		}
+	}
+	else if (x > 0 && z > 0)//up right // works goood
+	{
+		if (leftOfBox == belowBox)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f));
+			x = 1;
+			z = 0;
+		}
+		else
+		{
+			if (leftOfBox)
+			{
+				x = 0;
+				z = 1;
+			}
+			if (belowBox)
+			{
+				x = 1;
+				z = 0;
+			}
+		}
+	}
+	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
+}
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar->Update(m_position, m_health, m_maxHealth, p_view, p_projection);
@@ -533,6 +744,7 @@ void Player::UpdateAbilityBar()
 	m_abilityBar->Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
 	m_abilityBar->Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
 	m_abilityBar->Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
+	//m_abilityBar->Update((float)m_spikeAbility->GetCooldown(), SPIKE_COOLDOWN, 4);
 	m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 

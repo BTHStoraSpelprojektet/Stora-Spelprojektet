@@ -9,6 +9,7 @@
 #include "DepthShader.h"
 #include "RenderTarget.h"
 #include "ConsoleFunctions.h"
+#include "VisibilityComputer.h"
 #include "OutlingShader.h"
 
 DirectXWrapper GraphicsEngine::m_directX;
@@ -72,6 +73,12 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
+	// Initialize the visibility computer.
+	ShadowShapes::GetInstance().Initialize();
+	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
+	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
+	ConsoleSkipLines(1);
+
 	// Initialize shadow map.
 	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
 	{
@@ -93,14 +100,18 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 	*/
 
-	//FONTWRAPPER -.-
+	// Create the font wrapper.
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
-	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &m_fontWrapper);
+	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Calibri", &m_fontWrapper);
 	if (FAILED(hResult))
 	{
-		long asd = hResult;
-		std::cout << "FAILED FONTWRAPPER" << std::endl;
+		ConsolePrintError("Failed to create the font wrapper!");
 	}
+	else
+	{
+		ConsolePrintSuccess("Successfully created the font wrapper.");
+	}
+	ConsoleSkipLines(1);
 
 	return result;
 }
@@ -129,16 +140,25 @@ ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename
 {
 	ID3D11ShaderResourceView* textureView;
 	std::wstring wstring;
+
 	for (unsigned int i = 0; i < p_filename.length(); ++i)
+	{
 		wstring += wchar_t(p_filename[i]);
+	}
 
 	const wchar_t* your_result = wstring.c_str();
 
 	HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX.GetDevice(), m_directX.GetContext(), your_result, nullptr, &textureView, 0);
 	if(FAILED(hr))
 	{
-		std::cout << "FAILED LOADING TEXTURE FOR MENU" << std::endl;
+		std::string text = "Filepath: ";
+		text.append("'" + p_filename);
+		text.append("'!");
+
+		ConsolePrintError("Failed to create 2D texture from file! Missing or corrupt file?");
+		ConsolePrintError(text);
 	}
+
 	return textureView;
 }
 
@@ -194,13 +214,18 @@ void GraphicsEngine::RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XM
 
 void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
+	TurnOnAlphaBlending();
+
 	m_particleShader.Render(m_directX.GetContext(), p_mesh, p_vertexCount, p_worldMatrix, p_texture);
+
+	TurnOffAlphaBlending();
 }
 
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	VisibilityComputer::GetInstance().SetMatrices(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
@@ -332,6 +357,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		}        
 
 		GLOBAL::GetInstance().FULLSCREEN = true;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	}    
 	
 	else    
@@ -343,6 +370,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		}    
 		
 		GLOBAL::GetInstance().FULLSCREEN = false;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}    
 
 	return true;
@@ -384,7 +413,6 @@ void GraphicsEngine::TurnOffDepthStencil()
 
 void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color)
 {
-
 	std::wstring wstring;
 	for (unsigned int i = 0; i < p_text.length(); ++i)
 		wstring += wchar_t(p_text[i]);
@@ -398,6 +426,24 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 
 		m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, x, y, p_color, FW1_RESTORESTATE | FW1_VCENTER | FW1_CENTER);
 	}
+}
+
+void GraphicsEngine::RenderText2(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color, UINT p_flags)
+{
+	std::wstring wstring;
+	for (unsigned int i = 0; i < p_text.length(); ++i)
+	{
+		wstring += wchar_t(p_text[i]);
+	}
+
+	const wchar_t* your_result = wstring.c_str();
+
+	m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, p_xpos, p_ypos, p_color, p_flags);
+}
+
+void GraphicsEngine::SetVsync(bool p_state)
+{
+	m_directX.SetVsync(p_state);
 }
 
 bool GraphicsEngine::InitializeOutling()

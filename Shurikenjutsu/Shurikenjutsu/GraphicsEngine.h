@@ -48,6 +48,7 @@ public:
 	static void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 	static void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 	static void RenderText(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color);
+	static void RenderText2(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color, UINT p_flags);
 	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
@@ -76,6 +77,8 @@ public:
 	static void TurnOffDepthStencil();
 
 	static int GetNumberOfInstanceBuffer();
+
+	static void SetVsync(bool p_state);
 
 	static void SetOutliningPassOne();
 	static void SetOutliningPassTwo();

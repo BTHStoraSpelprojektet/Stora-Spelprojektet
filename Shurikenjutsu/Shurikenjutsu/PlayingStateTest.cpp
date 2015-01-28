@@ -10,13 +10,15 @@
 #include "Globals.h"
 #include "ShadowShapes.h"
 #include "Minimap.h"
+#include "VisibilityComputer.h"
+#include "..\CommonLibs\ModelNames.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 
 bool PlayingStateTest::Initialize()
 {
-	return Initialize("../Shurikenjutsu/Levels/ciliasTestLevel.SSPL");
+	return Initialize(LEVEL_NAME);
 }
 
 bool PlayingStateTest::Initialize(std::string p_levelName)
@@ -39,7 +41,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	for (unsigned int i = 0; i < temp.size(); i++)
 	{
 		LevelImporter::LevelBoundingBox box = temp[i];
-		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth*2, box.m_halfHeight*2, box.m_halfWidth*2));
+		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth, box.m_halfHeight, box.m_halfWidth));
 	}
 
 	// Initiate player
@@ -55,10 +57,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		m_mouseX = 0;
 		m_mouseY = 0;
 
-		ShadowShapes::GetInstance().Initialize();
-		ShadowShapes::GetInstance().AddMapBoundries(Point(0.0f, 0.0f), 10.0f, 10.0f);
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, 5.0f), Point(5.0f, 5.0f)));
-		ShadowShapes::GetInstance().AddStaticLine(Line(Point(-5.0f, -5.0f), Point(5.0f, -5.0f)));
+		// TODO, change this to use the loaded maps values.
+		VisibilityComputer::GetInstance().SetMapBoundries(Point(-51.0f, 51.0f), Point(51.0f, -51.0f));
+
+		ShadowShapes::GetInstance().AddStaticSquare(Point(-0.5f, 0.5f), Point(0.5f, -0.5f));
 	}
 	// ========== DEBUG LINES ==========
 
@@ -73,6 +75,12 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
+	// Initialize directional light
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
+	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
+	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 	GraphicsEngine::InitializeOutling();
 
 	return true;
@@ -82,25 +90,24 @@ void PlayingStateTest::Shutdown()
 {
 	m_camera->Shutdown();
 	delete m_camera;
+
 	if (m_playerManager != NULL)
 	{
 		m_playerManager->Shutdown();
 		delete m_playerManager;
 	}
+
 	if (m_objectManager != NULL)
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
 	}
+
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
 	m_debugDot.Shutdown();
-
-		ShadowShapes::GetInstance().Shutdown();
 	}
-
-	//m_particles.Shutdown();
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Shutdown();
@@ -154,13 +161,14 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_updateFrustum = true;
 	}
+
 	if (m_updateFrustum)
 	{
 		m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 		m_objectManager->UpdateFrustum(m_frustum);
 		m_playerManager->UpdateFrustum(m_frustum);
 	}
-	//m_minimap->
+
 	m_minimap->Update(m_playerManager->GetPlayerPosition());
 	MinimapUpdatePos(m_minimap);
 
@@ -169,6 +177,10 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
 	}
+
+	// Update Directional Light's camera position
+	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
+	
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -182,6 +194,8 @@ void PlayingStateTest::Render()
 	m_playerManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
+
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	// Draw to the scene.
 	m_playerManager->Render();
@@ -197,11 +211,9 @@ void PlayingStateTest::Render()
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 		ShadowShapes::GetInstance().DebugRender();
+
+		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 	}
-
-	//m_particles.Render();
-
-
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();

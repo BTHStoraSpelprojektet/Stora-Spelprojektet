@@ -26,6 +26,8 @@ public:
 
 	void ResetRenderTarget();
 
+	void SetVsync(bool p_state);
+
 	bool InitializeOutlinging();
 	void SetOutliningPassOne();
 	void SetOutliningPassTwo();
@@ -56,5 +58,7 @@ private:
 	int m_height;
 
 	float m_clearColor[4];
+
+	int m_vsync;
 };
 #endif;
