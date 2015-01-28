@@ -140,7 +140,7 @@ void Network::ReceviePacket()
 			int nrOfPlayers = 0;
 			float x, y, z;
 			float dirX, dirY, dirZ;
-			int team;
+			int team, charNr;;
 			int maxHP, currentHP;
 			bool isAlive;
 			RakNet::RakNetGUID guid;
@@ -158,6 +158,7 @@ void Network::ReceviePacket()
 				bitStream.Read(dirY);
 				bitStream.Read(dirZ);
 				bitStream.Read(team);
+				bitStream.Read(charNr);
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
@@ -454,11 +455,12 @@ void Network::Disconnect()
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }
 
-void Network::ChooseChar()
+void Network::ChooseChar(int p_charNr)
 {
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
+	bitStream.Write(p_charNr);
 
 	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
@@ -575,6 +577,24 @@ void Network::UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team)
 			if (m_enemyPlayers[i].guid == p_owner)
 			{
 				m_enemyPlayers[i].team = p_team;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr)
+{
+	if (p_owner == m_clientPeer->GetMyGUID())
+	{
+		m_myPlayer.charNr = p_charNr;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].charNr = p_charNr;
 			}
 		}
 	}

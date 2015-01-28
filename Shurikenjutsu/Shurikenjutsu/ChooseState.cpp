@@ -55,11 +55,11 @@ bool ChooseState::Initialize()
 GAMESTATESWITCH ChooseState::Update()
 {
 	MenuActionData action = m_chooseButton->Update();
-
+	
 	switch (action.m_action)
 	{
 	case MENUACTION_PLAY:
-		Network::GetInstance()->ChooseChar();
+		Network::GetInstance()->ChooseChar(currentNinja);
 		return GAMESTATESWITCH_PLAY;
 		break;
 	case MENUACTION_BACK:
