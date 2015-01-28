@@ -22,6 +22,11 @@ void GUIText::Render()
 	GUIManager::GetInstance()->AddToRenderQueue(this);
 }
 
+void GUIText::Render2()
+{
+	GUIManager::GetInstance()->AddToRenderQueue2(this);
+}
+
 void GUIText::SetText(std::string p_text)
 {
 	m_text = p_text;
