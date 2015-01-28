@@ -236,7 +236,7 @@ void ShadowShapes::DebugRender()
 void ShadowShapes::AddDebugLines(Point p_a, Point p_b)
 {
 	// Add line to debug.
-	//m_staticDebugLines.AddLine(DirectX::XMFLOAT3(p_a.x, 0.2f, p_a.y), DirectX::XMFLOAT3(p_b.x, 0.2f, p_b.y));
+	m_staticDebugLines.AddLine(DirectX::XMFLOAT3(p_a.x, 0.2f, p_a.y), DirectX::XMFLOAT3(p_b.x, 0.2f, p_b.y));
 }
 
 inline void ShadowShapes::AddUniquePoints(Point p_point)

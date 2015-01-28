@@ -131,7 +131,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	float x = m_playerManager->GetPlayerPosition().x;
 	float y = m_playerManager->GetPlayerPosition().z;
-	VisibilityComputer::GetInstance().UpdateMapBoundries(Point(x - 5.0f, y + 5.0f), Point(x + 5.0f, y - 5.0f));
+	VisibilityComputer::GetInstance().UpdateMapBoundries(Point(x - 15.0f, y + 15.0f), Point(x + 15.0f, y - 15.0f));
 
 	// Handle camera input.
 	m_camera->HandleInput();
@@ -213,7 +213,7 @@ void PlayingStateTest::Render()
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-		//ShadowShapes::GetInstance().DebugRender();
+		ShadowShapes::GetInstance().DebugRender();
 
 		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 	}

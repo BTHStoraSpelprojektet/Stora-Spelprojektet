@@ -12,6 +12,8 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 
 bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 {
+	perframe = 0;
+
 	m_render = false;
 	m_renderReversed = true;
 
@@ -230,22 +232,18 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 			// Find the closest intersection in segments.
 			for (unsigned int j = 0; j < segments.size(); j++)
 			{
-				// Is the segment within the boundry.
-				if ((segments[j].a.x > m_boundingBox.m_topLeft.x && segments[j].a.x < m_boundingBox.m_bottomRight.x && segments[j].a.y < m_boundingBox.m_topLeft.y && segments[j].a.y > m_boundingBox.m_bottomRight.y) || (segments[j].b.x > m_boundingBox.m_topLeft.x && segments[j].b.x < m_boundingBox.m_bottomRight.x && segments[j].b.y < m_boundingBox.m_topLeft.y && segments[j].b.y > m_boundingBox.m_bottomRight.y))
+				Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
+
+				// Ignore if there is no collision.
+				if (!intersection.intersection)
 				{
-					Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
+					continue;
+				}
 
-					// Ignore if there is no collision.
-					if (!intersection.intersection)
-					{
-						continue;
-					}
-
-					// Sort to closest T1 value.
-					if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
-					{
-						closestIntersection = intersection;
-					}
+				// Sort to closest T1 value.
+				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
+				{
+					closestIntersection = intersection;
 				}
 			}
 
@@ -278,6 +276,8 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 
 		// Reverse the polygon.
 		CalculateReversedVisibilityPolygon(p_device);
+
+		int lol = perframe;
 	}
 }
 
@@ -410,18 +410,22 @@ Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segm
 inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewerPoint)
 {
 	std::vector<float> angles;
+	std::vector<Point> list = ShadowShapes::GetInstance().GetUniquePoints();
 
 	// Get the angles to all of the unique points.
-	for (unsigned int i = 0; i < ShadowShapes::GetInstance().GetUniquePoints().size(); i++)
+	for (unsigned int i = 0; i < list.size(); i++)
 	{
-		Point uniquePoint = ShadowShapes::GetInstance().GetUniquePoints()[i];
+		if (list[i].x >= m_boundingBox.m_topLeft.x && list[i].x <= m_boundingBox.m_bottomRight.x && list[i].y <= m_boundingBox.m_topLeft.y && list[i].y >= m_boundingBox.m_bottomRight.y)
+		{
+			Point uniquePoint = ShadowShapes::GetInstance().GetUniquePoints()[i];
 
-		float angle = atan2(uniquePoint.y - p_viewerPoint.y, uniquePoint.x - p_viewerPoint.x);
+			float angle = atan2(uniquePoint.y - p_viewerPoint.y, uniquePoint.x - p_viewerPoint.x);
 
-		// Add the angle, plus two offset angles. This is to hit things next to corners.
-		angles.push_back(angle - 0.00001f);
-		angles.push_back(angle);
-		angles.push_back(angle + 0.00001f);
+			// Add the angle, plus two offset angles. This is to hit things next to corners.
+			angles.push_back(angle - 0.00001f);
+			angles.push_back(angle);
+			angles.push_back(angle + 0.00001f);
+		}
 	}
 
 	return angles;
