@@ -76,10 +76,8 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid)
 	BroadcastPlayers();
 }
 
-void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
+bool PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
 {
-	bool found = false;
-
 	// See if player can move to target position and then update position
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -101,19 +99,14 @@ void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, 
 				}
 			}
 
-			found = true;
-			break;
+			return true;
 		}
 	}
 
-	// Add player if he doesn't exist in the vector
-	if (!found)
-	{
-		AddPlayer(p_guid);
-	}
+	return false;
 }
 
-void PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
+bool PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -125,9 +118,11 @@ void PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float 
 				m_players[i].dirY = p_dirY;
 				m_players[i].dirZ = p_dirZ;
 			}
-			break;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
