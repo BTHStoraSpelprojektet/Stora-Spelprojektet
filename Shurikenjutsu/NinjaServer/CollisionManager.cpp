@@ -120,7 +120,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
-						int damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
+						float damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
 						
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 
@@ -294,7 +294,7 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 			// Make collision test	
 			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 			{
-				DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endX);
+				DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
 				if (SphereSphereTest(Sphere(spikeTrapPos, 1.5f), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 				{
 					float damage = SPIKE_DAMAGE * p_deltaTime;

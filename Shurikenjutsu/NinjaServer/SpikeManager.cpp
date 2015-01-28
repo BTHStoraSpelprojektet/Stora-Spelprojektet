@@ -28,7 +28,7 @@ void SpikeManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_en
 	float x = p_endPosX - p_startPosX;
 	float z = p_endPosZ - p_startPosZ;
 	float length = sqrtf(x*x + z*z);
-	float angle = angle = asinf((9.82f * length) / (SMOKEBOMB_SPEED * SMOKEBOMB_SPEED)) * 0.5f;
+	float angle = angle = asinf((9.82f * length) / (SPIKE_SPEED * SPIKE_SPEED)) * 0.5f;
 	float speed = sqrtf((length * 9.82f) / (sinf(2 * angle)));
 	float timeToLand = length / (speed * cosf(angle));
 

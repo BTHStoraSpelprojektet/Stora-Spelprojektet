@@ -54,7 +54,7 @@ const float SMOKEBOMB_SIZE_Y = 3.0f;
 ////////////////////////////////////////////////////////////////Tools
 ////////////////////////////////////////////////////////////////Special Abilities
 
-const int SPIKE_DAMAGE = 10;
+const float SPIKE_DAMAGE = 1000.0f;
 const float SPIKE_COOLDOWN = 0.5f;
 const float SPIKE_RANGE = 30.0f;
 const float SPIKE_DURATION = 3.0f;

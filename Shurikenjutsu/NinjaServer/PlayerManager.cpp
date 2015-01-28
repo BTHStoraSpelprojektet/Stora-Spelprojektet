@@ -410,7 +410,7 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -426,7 +426,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
 	}
 }
 
-void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p_isAlive)
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive)
 {
 	RakNet::BitStream bitStream;
 
@@ -439,7 +439,7 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
-int PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
+float PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
 {
 	return GetPlayer(p_guid).currentHP;
 }

@@ -273,7 +273,7 @@ void Player::ResetCooldowns()
 	UpdateAbilities();
 }
 
-void Player::SetHealth(int p_health)
+void Player::SetHealth(float p_health)
 {
 	if (p_health < 0)
 	{
@@ -285,17 +285,17 @@ void Player::SetHealth(int p_health)
 	}	
 }
 
-int Player::GetHealth() const
+float Player::GetHealth() const
 {
 	return m_health;
 }
 
-void Player::SetMaxHealth(int p_maxHealth)
+void Player::SetMaxHealth(float p_maxHealth)
 {
 	m_maxHealth = p_maxHealth;
 }
 
-int Player::GetMaxHealth() const
+float Player::GetMaxHealth() const
 {
 	return m_maxHealth;
 }

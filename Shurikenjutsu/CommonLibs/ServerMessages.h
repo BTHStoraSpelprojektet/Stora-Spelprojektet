@@ -18,8 +18,8 @@ struct PlayerNet
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
 	int team;
-	int maxHP;
-	int currentHP;
+	float maxHP;
+	float currentHP;
 	bool isAlive;
 	float gcd;
 	Cooldowns cooldownAbilites;
