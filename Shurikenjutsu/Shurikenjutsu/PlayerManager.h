@@ -56,8 +56,6 @@ private:
 	std::vector<Player> m_enemyList;
 
 	Frustum* m_frustum;
-
-	float m_enemyUpdatePositionTimer;
 };
 
 #endif PLAYERMANAGER
