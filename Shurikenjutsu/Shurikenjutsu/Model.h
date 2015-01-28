@@ -26,7 +26,7 @@ public:
 
 	std::vector<Box> GetBoundingBoxes()const;
 	std::vector<Sphere> GetBoundingSpheres()const;
-	std::vector<DirectX::XMFLOAT3> GetShadowPoints()const;
+	std::vector<Line> GetShadowPoints()const;
 	std::vector<AnimationStack> GetAnimationStacks()const;
 	Sphere GetFrustumSphere()const;
 
