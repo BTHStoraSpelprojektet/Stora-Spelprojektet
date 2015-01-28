@@ -26,6 +26,7 @@ bool ObjectManager::Initialize(Level* p_level)
 		DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	AddStaticObject(object);
 	
+	
 	numberOfSameModel++;//Räknar antaler modeller...
 	modelPositions.push_back(m_staticObjects[0].GetWorldMatrix());//Pushbackar antalet positioner
 	for (unsigned int i = 1; i < levelObjects.size(); i++)

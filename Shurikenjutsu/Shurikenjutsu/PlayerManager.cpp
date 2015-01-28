@@ -3,6 +3,7 @@
 #include "Frustum.h"
 #include "Globals.h"
 #include "Minimap.h"
+#include "VisibilityComputer.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -124,7 +125,7 @@ void PlayerManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
 		{
-			if (m_enemyList[i].IsVisible())
+			if (m_enemyList[i].IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i].GetPosition().x, m_enemyList[i].GetPosition().z)))
 			{
 				m_enemyList[i].Render();
 			}
@@ -138,7 +139,10 @@ void PlayerManager::RenderDepth()
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
-		m_enemyList[i].RenderDepth();
+		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i].GetPosition().x, m_enemyList[i].GetPosition().z)))
+		{
+			m_enemyList[i].RenderDepth();
+		}
 	}
 }
 

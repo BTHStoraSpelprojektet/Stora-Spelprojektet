@@ -81,19 +81,13 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GraphicsEngine::TurnOnAlphaBlending();
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
-	ShadowShapes::GetInstance().Initialize();
-	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
-	VisibilityComputer::GetInstance().SetBoundryBox(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
-	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
-	ConsoleSkipLines(1);
-
 	// Initialize model library.
 	ModelLibrary::GetInstance()->Initialize(new Model());
-	ConsolePrintSuccess("All models successfully loaded.");
+	ConsolePrintSuccess("No more models to load.");
 	ConsoleSkipLines(1);
 
 	TextureLibrary::GetInstance()->Initialize();
-	ConsolePrintSuccess("All Textures successfully loaded.");
+	ConsolePrintSuccess("No more textures to load.");
 	ConsoleSkipLines(1);
 
 	// Initialize timer.
@@ -133,7 +127,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	}
 	else
 	{
-		ConsolePrintSuccess("Sound Initialize succses.");
+		ConsolePrintSuccess("Sound initialized successfully.");
 		ConsoleSkipLines(1);
 	}
 	

@@ -71,6 +71,12 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
+	// Initialize the visibility computer.
+	ShadowShapes::GetInstance().Initialize();
+	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
+	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
+	ConsoleSkipLines(1);
+
 	// Initialize shadow map.
 	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
 	{
@@ -83,13 +89,18 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
-	//FONTWRAPPER -.-
+	// Create the font wrapper.
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
 	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &m_fontWrapper);
 	if (FAILED(hResult))
 	{
-		std::cout << "FAILED FONTWRAPPER" << std::endl;
+		ConsolePrintError("Failed to create the font wrapper!");
 	}
+	else
+	{
+		ConsolePrintSuccess("Successfully created the font wrapper.");
+	}
+	ConsoleSkipLines(1);
 
 	return result;
 }
@@ -116,16 +127,25 @@ ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename
 {
 	ID3D11ShaderResourceView* textureView;
 	std::wstring wstring;
+
 	for (unsigned int i = 0; i < p_filename.length(); ++i)
+	{
 		wstring += wchar_t(p_filename[i]);
+	}
 
 	const wchar_t* your_result = wstring.c_str();
 
 	HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX.GetDevice(), m_directX.GetContext(), your_result, nullptr, &textureView, 0);
 	if(FAILED(hr))
 	{
-		std::cout << "FAILED LOADING TEXTURE FOR MENU" << std::endl;
+		std::string text = "Filepath: ";
+		text.append("'" + p_filename);
+		text.append("'!");
+
+		ConsolePrintError("Failed to create 2D texture from file! Missing or corrupt file?");
+		ConsolePrintError(text);
 	}
+
 	return textureView;
 }
 
