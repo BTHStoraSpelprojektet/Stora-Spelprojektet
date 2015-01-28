@@ -84,7 +84,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 
 	//FONTWRAPPER -.-
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
-	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Arial", &m_fontWrapper);
+	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Calibri", &m_fontWrapper);
 	if (FAILED(hResult))
 	{
 		std::cout << "FAILED FONTWRAPPER" << std::endl;
@@ -327,7 +327,7 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().FULLSCREEN = false;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
-	}    
+	}
 
 	return true;
 }
@@ -382,6 +382,19 @@ void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, 
 
 		m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, x, y, p_color, FW1_RESTORESTATE | FW1_VCENTER | FW1_CENTER);
 	}
+}
+
+void GraphicsEngine::RenderText2(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color, UINT p_flags)
+{
+	std::wstring wstring;
+	for (unsigned int i = 0; i < p_text.length(); ++i)
+	{
+		wstring += wchar_t(p_text[i]);
+	}
+
+	const wchar_t* your_result = wstring.c_str();
+
+	m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, p_xpos, p_ypos, p_color, p_flags);
 }
 
 void GraphicsEngine::SetVsync(bool p_state)

@@ -104,6 +104,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	swapChainDescription.OutputWindow = p_handle;
 	swapChainDescription.SampleDesc.Count = 1;
 	swapChainDescription.SampleDesc.Quality = 0;
+	swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	if (GLOBAL::GetInstance().FULLSCREEN)
 	{
@@ -115,7 +116,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		swapChainDescription.Windowed = TRUE;
 	}
 	
-	
+
 	// DirectX versions to try and initialize.
 	D3D_FEATURE_LEVEL versions[] =
 	{
