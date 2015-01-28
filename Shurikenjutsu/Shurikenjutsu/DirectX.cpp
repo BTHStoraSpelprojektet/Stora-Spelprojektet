@@ -470,3 +470,15 @@ void DirectXWrapper::SetOutliningPassTwo()
 	m_context->OMSetRenderTargets(1, &m_renderTarget, m_depthStencilViewOutlining);
 	m_context->OMSetDepthStencilState(m_outliningNOTEQUAL, 0);
 }
+
+void DirectXWrapper::SetVsync(bool p_state)
+{
+	if (p_state)
+	{
+		m_vsync = 1;
+	}
+	else
+	{
+		m_vsync = 0;
+	}
+}
