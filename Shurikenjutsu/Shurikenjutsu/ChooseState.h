@@ -1,6 +1,8 @@
 #ifndef CHOOSESTATE_H_
 #define CHOOSESTATE_H_
 
+#define WIN32_LEAN_AND_MEAN
+
 #include "GameState.h"
 
 class Menu;
