@@ -29,6 +29,8 @@ protected:
 	float m_speed;
 
 private:
+	void LoadTexture(const char* p_filepath);
+
 	AnimationControl m_animationController;
 
 	ID3D11ShaderResourceView* m_texture;
