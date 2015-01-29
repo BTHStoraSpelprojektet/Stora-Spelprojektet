@@ -18,6 +18,7 @@ struct PlayerNet
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
 	int team;
+	int charNr;
 	int maxHP;
 	int currentHP;
 	bool isAlive;
@@ -63,7 +64,8 @@ enum Messages
 	ID_MATCH_OVER,
 	ID_NEW_LEVEL,
 	ID_PLAYER_ANIMATION_CHANGED,
-	ID_DASH_TO_LOCATION
+	ID_DASH_TO_LOCATION,
+	ID_CHOOSE_CHAR
 };
 
 #endif

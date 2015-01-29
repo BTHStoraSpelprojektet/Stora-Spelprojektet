@@ -47,6 +47,8 @@ public:
 	void Connect(std::string p_ip);
 	void Disconnect();
 
+	void ChooseChar(int p_charNr);
+
 	bool ConnectedNow();
 	bool IsConnected();
 
@@ -103,6 +105,7 @@ private:
 	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
+	void UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP, bool p_isAlive);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_currentHP, bool p_isAlive);
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);

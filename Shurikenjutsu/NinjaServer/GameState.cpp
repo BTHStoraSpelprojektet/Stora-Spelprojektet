@@ -71,9 +71,9 @@ void GameState::Update(double p_deltaTime)
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
 }
 
-void GameState::AddPlayer(RakNet::RakNetGUID p_guid)
+void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
-	m_playerManager->AddPlayer(p_guid);
+	m_playerManager->AddPlayer(p_guid, p_charNr);
 }
 
 void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)

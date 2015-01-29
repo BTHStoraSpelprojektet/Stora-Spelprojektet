@@ -52,11 +52,12 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 	return m_players;
 }
 
-void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid)
+void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
 	PlayerNet player;
 	player.guid = p_guid;
 	player.team = (m_players.size() % 2) + 1;
+	player.charNr = p_charNr;
 	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
 	player.x = spawnPoint.m_translationX;
 	player.y = spawnPoint.m_translationY;
@@ -159,6 +160,7 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].dirY);
 		bitStream.Write(m_players[i].dirZ);
 		bitStream.Write(m_players[i].team);
+		bitStream.Write(m_players[i].charNr);
 		bitStream.Write(m_players[i].maxHP);
 		bitStream.Write(m_players[i].currentHP);
 		bitStream.Write(m_players[i].isAlive);
