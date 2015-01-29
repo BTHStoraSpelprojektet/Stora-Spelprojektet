@@ -424,6 +424,7 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+			RakNet::RakNetGUID guid;
 			unsigned int spikeTrapId;
 			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
 			bitStream.Read(messageID);
@@ -433,8 +434,10 @@ void Network::ReceviePacket()
 			bitStream.Read(endPosX);
 			bitStream.Read(endPosZ);
 			bitStream.Read(lifetime);
+			bitStream.Read(guid);
 
-			UpdateSpikeTrap(spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime);
+
+			UpdateSpikeTrap(guid, spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime);
 			break;
 		}
 		case ID_SPIKETRAP_REMOVE:
@@ -632,7 +635,7 @@ void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, flo
 	}
 }
 
-void Network::UpdateSpikeTrap(unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
+void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
 {
 
 	bool addSpikeTrap = true;
@@ -643,6 +646,7 @@ void Network::UpdateSpikeTrap(unsigned int p_spikeTrapId, float p_startPosX, flo
 	temp.endX = p_endPosX;
 	temp.endZ = p_endPosZ;
 	temp.lifeTime = p_lifetime;
+	temp.guid = p_guid;
 
 	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
 	{

@@ -13,6 +13,7 @@ void SpikeManager::Update(double p_deltaTime)
 	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
 	{
 		m_spikeTrapList[i].lifeTime -= (float)p_deltaTime;
+		m_spikeTrapList[i].timeToLand -= (float)p_deltaTime;
 
 		if (m_spikeTrapList[i].lifeTime <= 0)
 		{
@@ -38,7 +39,9 @@ void SpikeManager::AddSpikeTrap(RakNet::RakNetGUID p_guid, float p_startPosX, fl
 	temp.endX = p_endPosX;
 	temp.endZ = p_endPosZ;
 	temp.spikeId = GetSpikeTrapUniqueId();
-	temp.lifeTime = timeToLand;
+	temp.lifeTime = SPIKE_DURATION + timeToLand;
+	temp.guid = p_guid;
+	temp.timeToLand = timeToLand;
 	m_spikeTrapList.push_back(temp);
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_SPIKETRAP_THROW);
@@ -48,6 +51,7 @@ void SpikeManager::AddSpikeTrap(RakNet::RakNetGUID p_guid, float p_startPosX, fl
 	wBitStream.Write(temp.endX);
 	wBitStream.Write(temp.endZ);
 	wBitStream.Write(temp.lifeTime);
+	wBitStream.Write(temp.guid);
 	
 	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

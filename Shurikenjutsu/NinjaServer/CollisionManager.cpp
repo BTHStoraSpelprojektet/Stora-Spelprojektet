@@ -268,25 +268,25 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 		// Go through player list
 		for (unsigned int j = 0; j < playerList.size(); j++)
 		{
-			//// This is so you don't collide with your own shurikens
-			//if (playerList[j].guid == shurikenList[i].guid)
-			//{
-			//	continue;
-			//}
-
-			// Check so you are not on the same team
-			PlayerNet shootingPlayer = p_playerManager->GetPlayer(spikeList[i].guid);
-			if (playerList[j].team == shootingPlayer.team)
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == spikeList[i].guid)
 			{
 				continue;
 			}
 
-			//// Check so the player aren't already dead
-			//if (!playerList[j].isAlive)
-			//{
-			//	continue;
-			//}
+			// Check so you are not on the same team
+			PlayerNet owner = p_playerManager->GetPlayer(spikeList[i].guid);
+			if (playerList[j].team == owner.team)
+			{
+				continue;
+			}
 
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+			
 
 			// Get the players bounding boxes
 			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
@@ -294,12 +294,15 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 			// Make collision test	
 			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 			{
-				DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
-				if (SphereSphereTest(Sphere(spikeTrapPos, 1.5f), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+				if (spikeList[i].timeToLand <= 0)
 				{
-					float damage = SPIKE_DAMAGE * p_deltaTime;
-					p_playerManager->DamagePlayer(playerList[j].guid, damage);
-					break;
+					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
+					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+					{
+						float damage = SPIKE_DAMAGE * p_deltaTime;
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+						break;
+					}
 				}
 			}
 		}

@@ -93,7 +93,7 @@ public:
 
 private:
 
-	void UpdateSpikeTrap(unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
+	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
 	void RemoveSpikeTrap(unsigned int p_spikeTrapId);
 	Network();
 	~Network();
