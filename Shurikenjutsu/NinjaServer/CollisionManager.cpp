@@ -56,7 +56,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, KATANA_RANGE, attackDirection, boxPosition, boxExtent, 2.5f))
 		{
 			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, (int)KATANA_DAMAGE);
+			p_playerManager->DamagePlayer(playerList[i].guid, KATANA_DAMAGE);
 			break;
 		}
 	}
