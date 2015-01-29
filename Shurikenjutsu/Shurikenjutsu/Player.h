@@ -61,7 +61,7 @@ public:
 	bool IsVisible();
 	void SetIsVisible(bool p_visiblie);
 
-private:
+protected:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
@@ -91,12 +91,11 @@ private:
 	Sphere m_playerSphere;
 	Ability* m_ability;
 	Ability* m_noAbility;
-	Ability* m_dash;
-	Ability* m_meleeSwing;
-	Ability* m_shurikenAbility;
-	Ability* m_megaShuriken;
-	Ability* m_smokeBombAbility;
-	Ability* m_spikeAbility;
+	Ability* m_meleeAttack;
+	Ability* m_meleeSpecialAttack;
+	Ability* m_rangeAttack;
+	Ability* m_rangeSpecialAttack;
+	Ability* m_toolAbility;
 
 	HealthBar* m_healthbar;
 	AbilityBar* m_abilityBar;

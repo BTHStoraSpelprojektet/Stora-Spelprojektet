@@ -1,15 +1,8 @@
 #include "Player.h"
-
-#include "SmokeBombAbility.h"
-#include "SpikeAbility.h"
 #include "CollisionManager.h"
-#include "Dash.h"
 #include "Collisions.h"
 #include "Globals.h"
-#include "MeleeSwing.h"
 #include "InputManager.h"
-#include "ShurikenAbility.h"
-#include "MegaShuriken.h"
 #include "Ability.h"
 #include "HealthBar.h"
 #include "AbilityBar.h"
@@ -43,25 +36,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_ability = new Ability();
 	m_noAbility = new Ability();
 
-	m_dash = new Dash();
-	m_dash->Initialize();
-
-	m_meleeSwing = new MeleeSwing();
-	m_meleeSwing->Initialize();
-
-	m_shurikenAbility = new ShurikenAbility();
-	m_shurikenAbility->Initialize();
-	m_isAlive = true;
-
-	m_megaShuriken = new MegaShuriken();
-	m_megaShuriken->Initialize();
-
-	m_smokeBombAbility = new SmokeBombAbility();
-	m_smokeBombAbility->Initialize();
-
-	m_spikeAbility = new SpikeAbility();
-	m_spikeAbility->Initialize();
-
 	m_healthbar = new HealthBar();
 	m_healthbar->Initialize(100.0f, 15.0f);
 
@@ -85,40 +59,36 @@ void Player::Shutdown()
 		delete m_noAbility;
 	}
 
-	if (m_dash != nullptr)
+	if (m_meleeAttack != nullptr)
 	{
-		m_dash->Shutdown();
-		delete m_dash;
+		m_meleeAttack->Shutdown();
+		delete m_meleeAttack;
 	}
 
-	if (m_meleeSwing != nullptr)
+	if (m_meleeSpecialAttack != nullptr)
 	{
-		m_meleeSwing->Shutdown();
-		delete m_meleeSwing;
+		m_meleeSpecialAttack->Shutdown();
+		delete m_meleeSpecialAttack;
 	}
 
-	if (m_shurikenAbility != nullptr)
+	if (m_rangeAttack != nullptr)
 	{
-		m_shurikenAbility->Shutdown();
-		delete m_shurikenAbility;
+		m_rangeAttack->Shutdown();
+		delete m_rangeAttack;
 	}
 
-	if (m_megaShuriken != nullptr)
+	if (m_rangeSpecialAttack != nullptr)
 	{
-		m_megaShuriken->Shutdown();
-		delete m_megaShuriken;
+		m_rangeSpecialAttack->Shutdown();
+		delete m_rangeSpecialAttack;
 	}
 
-	if (m_smokeBombAbility != nullptr)
+	if (m_toolAbility != nullptr)
 	{
-		m_smokeBombAbility->Shutdown();
-		delete m_smokeBombAbility;
+		m_toolAbility->Shutdown();
+		delete m_toolAbility;
 	}
-	if (m_spikeAbility != nullptr)
-	{
-		m_spikeAbility->Shutdown();
-		delete m_spikeAbility;
-	}
+
 	if (m_healthbar != nullptr)
 	{
 		m_healthbar->Shutdown();
@@ -211,13 +181,13 @@ void Player::UpdateMe()
 	// Melee attack
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
-		m_ability = m_meleeSwing;
+		m_ability = m_meleeAttack;
 	}
 
-	// Cast shuriken
+	// Range attack
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
-		m_ability = m_shurikenAbility;
+		m_ability = m_rangeAttack;
 	}
 
 	// Check health from server
@@ -248,16 +218,15 @@ void Player::CheckForSpecialAttack()
 {
 	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	{
-		m_ability = m_megaShuriken;
+		m_ability = m_rangeSpecialAttack;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
-		m_ability = m_dash;
+		m_ability = m_meleeSpecialAttack;
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-		m_ability = m_smokeBombAbility;
-		//m_ability = m_spikeAbility;
+		m_ability = m_toolAbility;
 	}
 }
 bool Player::CalculateDirection()
@@ -315,22 +284,20 @@ void Player::Update()
 
 void Player::UpdateAbilities()
 {
-	m_dash->Update();
-	m_meleeSwing->Update();
-	m_shurikenAbility->Update();
-	m_megaShuriken->Update();
-	m_smokeBombAbility->Update();
-	m_spikeAbility->Update();
+	m_meleeAttack->Update();
+	m_meleeSpecialAttack->Update();
+	m_rangeAttack->Update();
+	m_rangeSpecialAttack->Update();
+	m_toolAbility->Update();
 }
 
 void Player::ResetCooldowns()
 {
-	m_dash->ResetCooldown();
-	m_meleeSwing->ResetCooldown();
-	m_shurikenAbility->ResetCooldown();
-	m_megaShuriken->ResetCooldown();
-	m_smokeBombAbility->ResetCooldown();
-	m_spikeAbility->ResetCooldown();
+	m_meleeAttack->ResetCooldown();
+	m_meleeSpecialAttack->ResetCooldown();
+	m_rangeAttack->ResetCooldown();
+	m_rangeSpecialAttack->ResetCooldown();
+	m_toolAbility->ResetCooldown();
 
 	UpdateAbilities();
 }
@@ -531,7 +498,7 @@ void Player::SetCalculatePlayerPosition()
 
 		// Circel ekvation:
 		// circleX * X + circleY * Y = Radius * Radius
-		// Bryt ut så att y blir ensamt
+		// Bryt ut så att y blir ensam
 		// Y = (Radius * Radius - circleX * X) / circleY		
 		float yValue = (r * r - circleX * (circleX + offset)) / circleY;
 		
@@ -645,6 +612,7 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	}
 	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 }
+
 void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 {
 	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z);
@@ -750,12 +718,11 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::UpdateAbilityBar()
 {
-	m_abilityBar->Update((float)m_meleeSwing->GetCooldown(), 0.5f, 0);
-	m_abilityBar->Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
-	m_abilityBar->Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
-	m_abilityBar->Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	//m_abilityBar->Update((float)m_spikeAbility->GetCooldown(), SPIKE_COOLDOWN, 4);
-	m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), 0.5f, 0);
+	m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), SHURIKEN_COOLDOWN, 1);
+	m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), DASH_COOLDOWN, 2);
+	m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
+	m_abilityBar->Update((float)m_toolAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()

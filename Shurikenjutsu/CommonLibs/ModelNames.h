@@ -7,7 +7,7 @@
 #define LEVEL_NAME "../Shurikenjutsu/Levels/ciliasTestLevel.SSPL"
 
 // Players
-#define PLAYER_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
+#define NINJA1_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 
 // Shurikens
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
@@ -32,6 +32,6 @@
 #define ABILITY_SMOKE_BOMB_TEXTURE "../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"
 
 // Pictures
-#define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/char_bluetext.png"
+#define NINJA1_TEXTURE "../Shurikenjutsu/2DTextures/char_bluetext.png"
 
 #endif

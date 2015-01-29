@@ -150,6 +150,12 @@
     <Filter Include="Shaders\ShadowShapes">
       <UniqueIdentifier>{944e469a-b192-4ce9-abb6-7205312b24bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Ninjas">
+      <UniqueIdentifier>{0847c2a7-a67c-423a-9d08-53d0f5e1148c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Ninjas">
+      <UniqueIdentifier>{a6867d01-73db-4cd3-a267-4f0ea3cb3317}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -373,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="OutliningShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="KatanaNinja.cpp">
+      <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -609,6 +618,9 @@
     </ClInclude>
     <ClInclude Include="OutlingShader.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="KatanaNinja.h">
+      <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
