@@ -313,19 +313,8 @@ void PlayingStateTest::OutliningRays()
 	float rayDist = 0;
 	float collisionDist = 0;
 
-	DirectX::XMFLOAT4X4 proj = m_camera->GetProjectionMatrix();
-	float viewSpaceX = m_playerManager->GetPlayerPosition().x / proj._11;
-	float viewSpaceY = -m_playerManager->GetPlayerPosition().z / proj._22;
-	float viewSpaceZ = 1.0f;
 
-
-	DirectX::XMFLOAT4X4 viewInverse;
-	DirectX::XMVECTOR determinant;
-	DirectX::XMStoreFloat4x4(&viewInverse, DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
-
-	DirectX::XMStoreFloat3(&rayPos, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&rayPos), DirectX::XMLoadFloat4x4(&viewInverse)));
-	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&rayDir), DirectX::XMLoadFloat4x4(&viewInverse)));
-
+	rayPos = m_camera->GetPosition();
 	rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
 	Ray* rayTest = new Ray(rayPos, rayDir);
 

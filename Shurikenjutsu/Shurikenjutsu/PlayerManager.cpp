@@ -128,11 +128,6 @@ void PlayerManager::Render()
 void PlayerManager::RenderOutliningPassOne()
 {
 	m_player->Render();
-
-	for (unsigned int i = 0; i < m_enemyList.size(); i++)
-	{
-		m_enemyList[i].Render();
-	}
 }
 
 void PlayerManager::RenderDepth()
@@ -144,23 +139,13 @@ void PlayerManager::RenderDepth()
 		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i].GetPosition().x, m_enemyList[i].GetPosition().z)))
 		{
 		m_enemyList[i].RenderDepth();
+		}
 	}
-}
 }
 
 void PlayerManager::RenderOutliningPassTwo()
 {
 	m_player->RenderOutlining();
-	for (unsigned int i = 0; i < m_enemyList.size(); i++)
-	{
-		//if (m_frustum->CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
-		//{
-			//if (m_enemyList[i].IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i].GetPosition().x, m_enemyList[i].GetPosition().z)))
-			//{
-				m_enemyList[i].RenderOutlining();
-			//}
-		//}
-	}
 }
 
 void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
