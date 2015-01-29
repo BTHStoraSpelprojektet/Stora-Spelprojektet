@@ -13,7 +13,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 		return false;
 	}
 
-	m_texture = TextureLibrary::GetInstance()->GetTexture(NINJA_TEXTURE);
+	m_texture = TextureLibrary::GetInstance()->GetTexture(NINJA1_TEXTURE);
 
 	SetDirection(p_dir);
 	SetSpeed(p_speed);

@@ -5,13 +5,14 @@
 #include "Minimap.h"
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "KatanaNinja.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer(NINJA1_MODEL_NAME, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	AddPlayer(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	return true;
 }
@@ -86,7 +87,7 @@ void PlayerManager::Update()
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), 
+					AddEnemy(enemyPlayers[i].guid, DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), 
 						DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX));
 				}
 			}
@@ -141,18 +142,18 @@ void PlayerManager::RenderOutlining()
 	m_player->RenderOutlining();
 }
 
-void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+void PlayerManager::AddPlayer(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	Player *tempPlayer = new Player();
-	tempPlayer->Initialize(p_filepath, p_pos, p_direction);
+	KatanaNinja *tempPlayer = new KatanaNinja();
+	tempPlayer->Initialize(p_pos, p_direction);
 	m_player = tempPlayer;
 	m_player->SendPosition(m_player->GetPosition());
 }
 
-void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction);
+	KatanaNinja tempPlayer;
+	tempPlayer.Initialize(p_pos, p_direction);
 	tempPlayer.SetGuID(p_guid);
 	tempPlayer.SetMaxHealth(CHARACTAR_KATANA_SHURIKEN_HEALTH);
 	m_enemyList.push_back(tempPlayer);

@@ -12,6 +12,7 @@ bool Ability::Initialize()
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0);
+	m_totalCooldown = 0.0f;
 	return true;
 }
 
@@ -77,4 +78,9 @@ StatusEffect* Ability::GetStatusEffect()
 void Ability::ResetCooldown()
 {
 	SetCooldown(0.0);
+}
+
+float Ability::GetTotalCooldown()
+{
+	return m_totalCooldown;
 }

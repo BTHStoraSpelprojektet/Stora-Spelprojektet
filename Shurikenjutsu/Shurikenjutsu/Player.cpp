@@ -190,18 +190,6 @@ void Player::UpdateMe()
 		m_ability = m_rangeAttack;
 	}
 
-	// Check health from server
-	if (Network::GetInstance()->IsConnected())
-	{
-		SetHealth(Network::GetInstance()->GetMyPlayer().currentHP);
-	}
-
-	// Temp to set max health
-	if (Network::GetInstance()->ConnectedNow())
-	{
-		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
-	}
-
 	// Count down cooldowns
 	UpdateAbilities();
 	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
@@ -718,11 +706,11 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::UpdateAbilityBar()
 {
-	m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), 0.5f, 0);
-	m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), SHURIKEN_COOLDOWN, 1);
-	m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), DASH_COOLDOWN, 2);
-	m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	m_abilityBar->Update((float)m_toolAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), 0);
+	m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), 1);
+	m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), 2);
+	m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), 3);
+	m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), 4);
 }
 
 void Player::Render()
@@ -766,27 +754,27 @@ int Player::GetTeam()
 void Player::DoAnimation()
 {
 	// DO THIS WITH STATES
-	if (m_ability == m_meleeSwing)
+	if (m_ability == m_meleeAttack)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Melee);
 		Network::GetInstance()->SendAnimationState(AnimationState::Melee);
 	}
-	else if (m_ability == m_dash)
+	else if (m_ability == m_meleeSpecialAttack)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Special1);
 		Network::GetInstance()->SendAnimationState(AnimationState::Special1);
 	}
-	else if (m_ability == m_megaShuriken)
+	else if (m_ability == m_rangeSpecialAttack)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Special2);
 		Network::GetInstance()->SendAnimationState(AnimationState::Special2);
 	}
-	else if (m_ability == m_smokeBombAbility)
+	else if (m_ability == m_toolAbility)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Tool);
 		Network::GetInstance()->SendAnimationState(AnimationState::Tool);
 	}
-	else if (m_ability == m_shurikenAbility)
+	else if (m_ability == m_rangeAttack)
 	{
 		AnimatedObject::ChangeAnimationState(AnimationState::Range);
 		Network::GetInstance()->SendAnimationState(AnimationState::Range);
