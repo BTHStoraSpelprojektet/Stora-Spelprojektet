@@ -17,7 +17,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 
 	SetDirection(p_dir);
 
-	for (unsigned i = 0; i < m_model->GetAnimationStacks().size(); i++)
+	for (unsigned int i = 0; i < m_model->GetAnimationStacks().size(); i++)
 	{
 		m_animationController.CreateNewStack(m_model->GetAnimationStacks()[i]);
 	}
