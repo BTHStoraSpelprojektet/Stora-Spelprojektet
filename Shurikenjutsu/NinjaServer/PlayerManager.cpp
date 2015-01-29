@@ -334,6 +334,9 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 			case ABILITIES_SPIKETRAP:
 				result = true;
 				break;
+			case ABILITIES_WHIP_PRIMARY:
+				result = true;
+				break;
 			default:
 				result = false;
 				break;
@@ -398,6 +401,11 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		}
 		p_spikeTrap.AddSpikeTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
 
+		break;
+	case ABILITIES_WHIP_PRIMARY:
+		abilityString = "whipping the shit out of fuck";
+
+		p_collisionManager.WhipPrimaryAttack(p_guid, this);
 		break;
 	default:
 		break;

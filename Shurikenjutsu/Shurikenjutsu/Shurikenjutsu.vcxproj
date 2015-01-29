@@ -159,6 +159,7 @@
     <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VisibilityComputer.cpp" />
+    <ClCompile Include="WhipPrimaryAttackAbility.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +241,7 @@
     <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VisibilityComputer.h" />
+    <ClInclude Include="WhipPrimaryAttackAbility.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

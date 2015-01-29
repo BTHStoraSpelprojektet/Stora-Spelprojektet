@@ -3,18 +3,12 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "MeleeSwing.h"
 #include "Dash.h"
-#include "ShurikenAbility.h"
+#include "WhipPrimaryAttackAbility.h"
 #include "MegaShuriken.h"
 #include "SpikeAbility.h"
 
-TessenNinja::TessenNinja()
-{
-}
-
-
-TessenNinja::~TessenNinja()
-{
-}
+TessenNinja::TessenNinja(){}
+TessenNinja::~TessenNinja(){}
 
 bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
@@ -34,7 +28,7 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_meleeSpecialAttack = new Dash();
 	m_meleeSpecialAttack->Initialize();
 
-	m_rangeAttack = new ShurikenAbility();
+	m_rangeAttack = new WhipPrimaryAttackAbility();
 	m_rangeAttack->Initialize();
 
 	m_rangeSpecialAttack = new MegaShuriken();
@@ -48,4 +42,5 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 
 void TessenNinja::Shutdown()
 {
+	Player::Shutdown();
 }

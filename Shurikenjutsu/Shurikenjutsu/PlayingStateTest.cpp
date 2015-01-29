@@ -133,8 +133,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		std::string levelName = Network::GetInstance()->LevelName();
 		Network::GetInstance()->SetHaveUpdateNewLevel();
 		Shutdown();
-		Initialize(levelName);
-		return GAMESTATESWITCH_NONE;
+		//Initialize(levelName);
+		return GAMESTATESWITCH_CHOOSENINJA;
 	}
 
 	// Update global delta time.

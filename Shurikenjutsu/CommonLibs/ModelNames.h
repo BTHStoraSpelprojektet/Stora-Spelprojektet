@@ -26,11 +26,18 @@
 // Abilities
 #define ABILITY_BG_TEXTURE "../Shurikenjutsu/2DTextures/tb_bg.png"
 #define ABILITY_CD_TEXTURE "../Shurikenjutsu/2DTextures/TB_cd.png"
+
 #define ABILITY_KATANA_TEXTURE "../Shurikenjutsu/2DTextures/TB_N1_Melee.png"
 #define ABILITY_SHURIKEN_TEXTURE "../Shurikenjutsu/2DTextures/TB_N1_Ranged.png"
 #define ABILITY_MEGA_SHURIKEN_TEXTURE "../Shurikenjutsu/2DTextures/TB_N1_E.png"
 #define ABILITY_DASH_TEXTURE "../Shurikenjutsu/2DTextures/TB_N1_Q.png"
 #define ABILITY_SMOKE_BOMB_TEXTURE "../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"
+
+#define ABILITY_TESSEN_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_Melee.png"
+#define ABILITY_TESSEN_THROWING_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_Q.png"
+#define ABILITY_WHIP_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_Ranged.png"
+#define ABILITY_WHIP_SPECIAL_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_E.png"
+#define ABILITY_CALTROP_TEXTURE "../Shurikenjutsu/2DTextures/TB_Caltrops.png"
 
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"

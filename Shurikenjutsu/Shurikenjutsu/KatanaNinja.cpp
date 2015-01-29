@@ -7,14 +7,8 @@
 #include "MegaShuriken.h"
 #include "SmokeBombAbility.h"
 
-KatanaNinja::KatanaNinja()
-{
-}
-
-
-KatanaNinja::~KatanaNinja()
-{
-}
+KatanaNinja::KatanaNinja(){}
+KatanaNinja::~KatanaNinja(){}
 
 bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
