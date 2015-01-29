@@ -14,6 +14,7 @@ bool ShurikenAbility::Initialize()
 	SetCooldown(0.0f);
 	m_stacks = SHURIKEN_MAX_STACK;
 	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN + 1.0f;
+	m_totalCooldown = SHURIKEN_COOLDOWN;
 	return true;
 }
 void ShurikenAbility::Update()

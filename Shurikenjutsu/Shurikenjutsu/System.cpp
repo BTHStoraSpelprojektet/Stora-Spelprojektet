@@ -25,6 +25,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
 	m_playingState = new PlayingStateTest();
+	//void *prt = _aligned_malloc(100, 16);
 	m_gameState = m_menuState;
 
 	// Set starting window values.

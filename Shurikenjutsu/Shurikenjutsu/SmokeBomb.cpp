@@ -74,12 +74,9 @@ void SmokeBomb::Shutdown()
 
 void SmokeBomb::Render()
 {
-	if(m_isThrowing)
-	{
-		m_bomb->Render();
-	}
+	m_bomb->Render();
 
-	else
+	if(!m_isThrowing)
 	{
 		m_particles->Render();
 	}

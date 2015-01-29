@@ -25,8 +25,8 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 	m_frameArms += deltaTime * 20;
 	m_frameLegs += deltaTime * 20;
 	
-	m_blendWeightArms = (m_frameArms - (int)m_frameArms) / 2;	//24.0f
-	m_blendWeightLegs = (m_frameLegs - (int)m_frameLegs) / 2;
+	m_blendWeightArms = (float)(m_frameArms - (int)m_frameArms) / 2;	//24.0f
+	m_blendWeightLegs = (float)(m_frameLegs - (int)m_frameLegs) / 2;
 
 	if (m_frameArms >= (m_currentArms->m_endFrame - 1))
 	{
@@ -57,11 +57,11 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 	DirectX::XMVECTOR quaternionLegs = DirectX::XMVectorSet(p_jointLegs->m_quaternion[0], p_jointLegs->m_quaternion[1], p_jointLegs->m_quaternion[2], p_jointLegs->m_quaternion[3]);
 
-	quaternionArms = DirectX::XMQuaternionSlerp(m_QuaternionArms[*p_index], quaternionArms, m_blendWeightArms);
-	m_QuaternionArms[*p_index] = quaternionArms;
+	quaternionArms = DirectX::XMQuaternionSlerp(DirectX::XMLoadFloat4(&m_QuaternionArms[*p_index]), quaternionArms, m_blendWeightArms);
+	DirectX::XMStoreFloat4(&m_QuaternionArms[*p_index], quaternionArms);
 	
-	quaternionLegs = DirectX::XMQuaternionSlerp(m_QuaternionLegs[*p_index], quaternionLegs, m_blendWeightLegs);
-	m_QuaternionLegs[*p_index] = quaternionLegs;
+	quaternionLegs = DirectX::XMQuaternionSlerp(DirectX::XMLoadFloat4(&m_QuaternionLegs[*p_index]), quaternionLegs, m_blendWeightLegs);
+	DirectX::XMStoreFloat4(&m_QuaternionLegs[*p_index], quaternionLegs);
 	
 	if (strcmp(p_jointArms->m_name, "HandR") == 0 ||
 		strcmp(p_jointArms->m_name, "HandL") == 0 ||
@@ -363,10 +363,12 @@ void AnimationControl::FindAndReferenceLayers()
 
 	m_QuaternionArms.resize(m_animationStacksArray[0].m_jointCount);
 	m_QuaternionLegs.resize(m_animationStacksArray[0].m_jointCount);
-	for (unsigned int i = 0; i < m_animationStacksArray[0].m_jointCount; i++)
+	for (int i = 0; i < m_animationStacksArray[0].m_jointCount; i++)
 	{
-		m_QuaternionArms[i] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-		m_QuaternionLegs[i] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+		DirectX::XMVECTOR temp = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+
+		DirectX::XMStoreFloat4(&m_QuaternionArms[i], temp);
+		DirectX::XMStoreFloat4(&m_QuaternionLegs[i], temp);
 	}
 }
 

@@ -17,6 +17,15 @@
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 
+void* PlayingStateTest::operator new(size_t i)
+{
+	return _mm_malloc(i, 16);
+}
+void PlayingStateTest::operator delete(void* p)
+{
+	_mm_free(p);
+}
+
 bool PlayingStateTest::Initialize()
 {
 	return Initialize(LEVEL_NAME);

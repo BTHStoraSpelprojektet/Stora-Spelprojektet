@@ -23,6 +23,10 @@ public:
 	void Render();
 	void ToggleFullscreen(bool p_fullscreen);
 	void MinimapUpdatePos(Minimap *p_minimap);
+
+	void* operator new(size_t i);
+	void operator delete(void* p);
+
 	void OutliningRays();
 private:
 	void BasicPicking();
@@ -37,7 +41,7 @@ private:
 	float twoPi = 6.28318530718f;
 
 	bool m_updateFrustum;
-	
+
 	bool m_renderOutlining;
 
 	// ========== DEBUG LINES ==========
