@@ -57,7 +57,8 @@ private:
 
 	std::vector<PlayerNet> m_players;
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
-	std::vector<Box> m_boundingBoxes;
+	std::vector<Box> m_katanaBoundingBoxes;
+	std::vector<Box> m_tessenBoundingBoxes;
 
 	float m_gcd;
 	float m_playerHealth;

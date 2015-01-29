@@ -21,7 +21,8 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_spawnPoints = level.GetSpawnPoints();
 
 	// Todo: move to player
-	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(KATANA_NINJA_MODEL_NAME)->GetBoundingBoxes();
+	m_katanaBoundingBoxes = ModelLibrary::GetInstance()->GetModel(KATANA_NINJA_MODEL_NAME)->GetBoundingBoxes();
+	m_tessenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(TESSEN_NINJA_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
@@ -244,9 +245,24 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 		return boundingBoxes;
 	}
 
-	for (unsigned int i = 0; i < m_boundingBoxes.size(); i++)
+	std::vector<Box> tmpBB = std::vector<Box>();
+	switch (m_players[p_index].charNr)
 	{
-		Box box = m_boundingBoxes[i];
+		case 0:
+		{
+			tmpBB = m_katanaBoundingBoxes;
+			break;
+		}
+		case 1:
+		{
+			tmpBB = m_tessenBoundingBoxes;
+			break;
+		}
+	}
+
+	for (unsigned int i = 0; i < tmpBB.size(); i++)
+	{
+		Box box = tmpBB[i];
 		box.m_center.x += m_players[p_index].x;
 		box.m_center.y += m_players[p_index].y;
 		box.m_center.z += m_players[p_index].z;
