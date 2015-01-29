@@ -24,6 +24,9 @@ public:
 	void ToggleFullscreen(bool p_fullscreen);
 	void MinimapUpdatePos(Minimap *p_minimap);
 
+	void* operator new(size_t i);
+	void operator delete(void* p);
+
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
