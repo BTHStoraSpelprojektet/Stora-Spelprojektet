@@ -171,6 +171,10 @@ void Player::UpdateMe()
 		m_isDashing = true;
 	}
 	
+	if (m_dashDistanceLeft > 20)
+	{
+		int a = 1;
+	}
 	// Dash movement
 	if (m_isDashing)
 	{

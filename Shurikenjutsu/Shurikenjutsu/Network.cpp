@@ -447,6 +447,7 @@ void Network::ReceviePacket()
 			bitStream.Read(spikeTrapId);
 
 			RemoveSpikeTrap(spikeTrapId);
+			break;
 		}
 		case ID_DASH_TO_LOCATION:
 		{
