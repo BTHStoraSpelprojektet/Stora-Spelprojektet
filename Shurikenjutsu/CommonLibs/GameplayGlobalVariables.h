@@ -18,7 +18,7 @@ const float SHURIKEN_SPEED = 20.0f;
 ////////////////////////////////////////////////////////////////Ranged Attacks
 //Shuriken
 const float WHIP_DAMAGE = 10.0f;
-const float WHIP_COOLDOWN = 0.5f;
+const float WHIP_COOLDOWN = 10.0f;
 const float WHIP_SPEED = 20.0f;
 const float WHIP_RANGE = 20.0f;
 
