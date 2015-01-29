@@ -22,7 +22,7 @@ const float WHIP_COOLDOWN = 10.0f;
 const float WHIP_RANGE = 20.0f;
 
 //Whip special attack
-const float WHIP_SP_DAMAGE = 5.0f;
+const float WHIP_SP_DAMAGE = 10.0f;
 const float WHIP_SP_COOLDOWN = 0.5f;
 const float WHIP_SP_RANGE = 10.0f;
 
@@ -83,7 +83,7 @@ const float CHARACTER_KATANA_SHURIKEN_HEALTH = 100.0f;
 const float CHARACTER_KATANA_SHURIKEN_SPEED = 5.0f;
 
 const float CHARACTER_TESSEN_HEALTH = 100.0f;
-const float CHARACTER_TESSEN_SPEED = 5.0f;
+const float CHARACTER_TESSEN_SPEED = 6.0f;
 
 ////////////////////////////////////////////////////////////////Character Variables
 
