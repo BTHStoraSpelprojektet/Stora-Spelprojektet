@@ -25,8 +25,8 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 	m_frameArms += deltaTime * 20;
 	m_frameLegs += deltaTime * 20;
 	
-	m_blendWeightArms = (m_frameArms - (int)m_frameArms) / 2;	//24.0f
-	m_blendWeightLegs = (m_frameLegs - (int)m_frameLegs) / 2;
+	m_blendWeightArms = (float)(m_frameArms - (int)m_frameArms) / 2;	//24.0f
+	m_blendWeightLegs = (float)(m_frameLegs - (int)m_frameLegs) / 2;
 
 	if (m_frameArms >= (m_currentArms->m_endFrame - 1))
 	{
@@ -363,7 +363,7 @@ void AnimationControl::FindAndReferenceLayers()
 
 	m_QuaternionArms.resize(m_animationStacksArray[0].m_jointCount);
 	m_QuaternionLegs.resize(m_animationStacksArray[0].m_jointCount);
-	for (unsigned int i = 0; i < m_animationStacksArray[0].m_jointCount; i++)
+	for (int i = 0; i < m_animationStacksArray[0].m_jointCount; i++)
 	{
 		m_QuaternionArms[i] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 		m_QuaternionLegs[i] = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);

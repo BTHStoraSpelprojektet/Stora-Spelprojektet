@@ -14,8 +14,8 @@ public:
 	virtual void Update();
 	virtual bool Execute(float p_distance);
 
-	virtual void SetDamage(unsigned int p_damage);
-	virtual unsigned int GetDamage();
+	virtual void SetDamage(float p_damage);
+	virtual float GetDamage();
 	virtual void SetTime(double p_time);
 	virtual double GetTime();
 	virtual void SetCooldown(double p_cooldown);
@@ -26,7 +26,7 @@ public:
 	virtual void ResetCooldown();
 
 protected:
-	unsigned int m_damage;
+	float m_damage;
 	double m_time;
 	double m_cooldown;
 	float m_totalCooldown;

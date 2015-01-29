@@ -141,6 +141,10 @@ void Player::UpdateMe()
 		m_isDashing = true;
 	}
 	
+	if (m_dashDistanceLeft > 20)
+	{
+		int a = 1;
+	}
 	// Dash movement
 	if (m_isDashing)
 	{
@@ -289,7 +293,8 @@ void Player::ResetCooldowns()
 
 	UpdateAbilities();
 }
-void Player::SetHealth(int p_health)
+
+void Player::SetHealth(float p_health)
 {
 	if (p_health < 0)
 	{
@@ -301,17 +306,17 @@ void Player::SetHealth(int p_health)
 	}	
 }
 
-int Player::GetHealth() const
+float Player::GetHealth() const
 {
 	return m_health;
 }
 
-void Player::SetMaxHealth(int p_maxHealth)
+void Player::SetMaxHealth(float p_maxHealth)
 {
 	m_maxHealth = p_maxHealth;
 }
 
-int Player::GetMaxHealth() const
+float Player::GetMaxHealth() const
 {
 	return m_maxHealth;
 }
@@ -701,7 +706,7 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 }
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	m_healthbar->Update(m_position, m_health, m_maxHealth, p_view, p_projection);
+	m_healthbar->Update(m_position, (int)m_health, (int)m_maxHealth, p_view, p_projection);
 }
 
 void Player::UpdateAbilityBar()

@@ -1,4 +1,6 @@
 #include "PlayerManager.h"
+#include "SpikeManager.h"
+
 #include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
@@ -6,8 +8,9 @@ PlayerManager::~PlayerManager(){}
 
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
-	m_playerHealth = (int)CHARACTAR_KATANA_SHURIKEN_HEALTH;
+	m_playerHealth = CHARACTAR_KATANA_SHURIKEN_HEALTH;
 	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
+
 	m_serverPeer = p_serverPeer;
 
 	m_players = std::vector<PlayerNet>();
@@ -310,7 +313,10 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 				result = true; // controlled locally atmresult = false;
 				break;
 			case ABILITIES_SMOKEBOMB:
-				result = true; 
+				result = true;
+				break;
+			case ABILITIES_SPIKETRAP:
+				result = true;
 				break;
 			default:
 				result = false;
@@ -322,9 +328,10 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	return result;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
+	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
 	float dashDistance = 10.0f;
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
@@ -367,6 +374,15 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		}
 		p_smokebomb.AddSmokeBomb(m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
 		break;
+	case ABILITIES_SPIKETRAP:
+		abilityString = "spike tarp";
+		if (spikeTrapDistance > SPIKE_RANGE)
+		{
+			spikeTrapDistance = SPIKE_RANGE;
+		}
+		p_spikeTrap.AddSpikeTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
+
+		break;
 	default:
 		break;
 	}
@@ -393,7 +409,7 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -409,7 +425,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
 	}
 }
 
-void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p_isAlive)
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive)
 {
 	RakNet::BitStream bitStream;
 
@@ -422,7 +438,7 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
-int PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
+float PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
 {
 	return GetPlayer(p_guid).currentHP;
 }
