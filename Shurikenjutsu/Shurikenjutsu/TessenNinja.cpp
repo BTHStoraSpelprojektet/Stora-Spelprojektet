@@ -4,7 +4,7 @@
 #include "MeleeSwing.h"
 #include "Dash.h"
 #include "WhipPrimaryAttackAbility.h"
-#include "MegaShuriken.h"
+#include "WhipSecondaryAttackAbility.h"
 #include "SpikeAbility.h"
 
 TessenNinja::TessenNinja(){}
@@ -31,7 +31,7 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_rangeAttack = new WhipPrimaryAttackAbility();
 	m_rangeAttack->Initialize();
 
-	m_rangeSpecialAttack = new MegaShuriken();
+	m_rangeSpecialAttack = new WhipSecondaryAttackAbility();
 	m_rangeSpecialAttack->Initialize();
 
 	m_toolAbility = new SpikeAbility();

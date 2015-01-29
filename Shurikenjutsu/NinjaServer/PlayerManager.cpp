@@ -337,6 +337,9 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 			case ABILITIES_WHIP_PRIMARY:
 				result = true;
 				break;
+			case ABILITIES_WHIP_SECONDARY:
+				result = true;
+				break;
 			default:
 				result = false;
 				break;
@@ -404,8 +407,11 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		break;
 	case ABILITIES_WHIP_PRIMARY:
 		abilityString = "whipping the shit out of fuck";
-
 		p_collisionManager.WhipPrimaryAttack(p_guid, this);
+		break;
+	case ABILITIES_WHIP_SECONDARY:
+		abilityString = "not whipping enough!";
+		p_collisionManager.WhipSecondaryAttack(p_guid, this);
 		break;
 	default:
 		break;

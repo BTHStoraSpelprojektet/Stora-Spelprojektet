@@ -356,6 +356,42 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 	}
 }
 
+void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+{
+	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		// So you don't collide with yourself.
+		if (playerList[i].guid == attackingPlayer.guid)
+		{
+			continue;
+		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
+		// Check so the player aren't already dead
+		if (!playerList[i].isAlive)
+		{
+			continue;
+		}
+
+		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+
+		// Make collision test
+		if (IntersectionTests::Intersections::SphereSphereCollision(attackPosition, WHIP_SP_RANGE, spherePosition, 1.0f))
+		{
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
+		}
+	}
+}
+
 //Private
 bool CollisionManager::OBBOBBTest(OBB p_OBB1, OBB p_OBB2)
 {
