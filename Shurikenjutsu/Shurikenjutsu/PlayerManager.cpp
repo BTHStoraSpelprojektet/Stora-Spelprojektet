@@ -380,6 +380,11 @@ int PlayerManager::GetEnemyTeam(int p_index)
 	return m_enemyList[p_index].GetTeam();
 }
 
+OBB PlayerManager::GetPlayerBoundingBox()
+{
+	return m_player->GetOBB();
+}
+
 Sphere PlayerManager::GetPlayerSphere()
 {
 	return m_player->GetSphere();

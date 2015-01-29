@@ -17,7 +17,7 @@ public:
 	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticBoxes(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
 	std::vector<Sphere> CalculateLocalPlayerCollisionWithStaticSpheres(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
 	float CalculateDashLength(Ray* p_ray);
-	float CalculateRayLength(Ray* p_ray, float p_rayDistance, Sphere p_playerSphere);
+	bool CalculateRayLength(Ray* p_ray, float p_rayDistance);
 	float CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos);
 private:
 

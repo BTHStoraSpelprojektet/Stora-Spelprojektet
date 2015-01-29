@@ -146,7 +146,7 @@ float CollisionManager::CalculateDashLength(Ray* p_ray)
 	return dashLength;
 }
 
-float CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance, Sphere p_playerSphere)
+bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 {
 	Ray* ray = p_ray;
 	float rayLength = p_rayDistance;
@@ -169,18 +169,11 @@ float CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance, Sphe
 			rayLength = rayLengths[i];
 		}
 	}
+	if (rayLength < p_rayDistance)
+			return true;
 
-	if (Collisions::RaySphereCollision(ray, p_playerSphere))
-	{
-		if (ray->m_distance != 0)
-		{
-			if (rayLength < ray->m_distance)
-			{
-				return -1;
-			}
-		}
-	}
-	return rayLength;
+	return false;
+	//return rayLength;
 }
 
 float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos)

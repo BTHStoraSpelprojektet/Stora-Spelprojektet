@@ -61,9 +61,10 @@ public:
 	bool IsVisible();
 	void SetIsVisible(bool p_visiblie);
 
-protected:
 	Sphere GetSphere();
+	OBB GetOBB();
 
+protected:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();

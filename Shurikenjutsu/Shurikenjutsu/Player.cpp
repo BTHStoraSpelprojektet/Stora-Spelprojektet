@@ -804,3 +804,13 @@ Sphere Player::GetSphere()
 	}
 	return m_boundingSpheres[0];
 }
+
+OBB Player::GetOBB()
+{
+	/*if (m_boundingSpheres.size() <= 0)
+	{
+		return Sphere(1000.0f, 1000.0f, 1000.0f, 1.0f);
+	}*/
+	TransformBoundingBoxes();
+	return m_boundingBoxes[0];
+}

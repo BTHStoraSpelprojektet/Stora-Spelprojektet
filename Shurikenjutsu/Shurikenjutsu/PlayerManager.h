@@ -31,7 +31,7 @@ public:
 	DirectX::XMFLOAT3 GetAttackDirection();
 	void SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection);
 
-	DirectX::BoundingBox GetPlayerBoundingBox();
+	OBB GetPlayerBoundingBox();
 	Sphere GetPlayerSphere();
 
 	void UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
