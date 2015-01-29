@@ -32,6 +32,6 @@
 #define ABILITY_SMOKE_BOMB_TEXTURE "../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"
 
 // Pictures
-#define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/char_bluetext.png"
+#define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"
 
 #endif

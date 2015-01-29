@@ -13,7 +13,13 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 		return false;
 	}
 
-	m_texture = TextureLibrary::GetInstance()->GetTexture(NINJA_TEXTURE);
+	std::string filePathString = p_filepath;
+	int positionToCutStringBegin = filePathString.find_last_of('/');	
+	filePathString = filePathString.substr((positionToCutStringBegin + 1), filePathString.size());
+	int positionToCutStringEnd = filePathString.find_last_of('.');
+	filePathString = filePathString.substr(0, positionToCutStringEnd);
+
+	m_texture = TextureLibrary::GetInstance()->GetTexture(NINJA_TEXTURE + filePathString + ".png");
 
 	SetDirection(p_dir);
 	SetSpeed(p_speed);
