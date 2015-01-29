@@ -4,12 +4,9 @@
 #include "Frustum.h"
 #include "Globals.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
-<<<<<<< HEAD
 #include "SmokeBomb.h"
 #include "Spikes.h"
-=======
 #include "..\CommonLibs\ModelNames.h"
->>>>>>> origin/master
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}

@@ -256,13 +256,8 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-<<<<<<< HEAD
 		//m_ability = m_smokeBombAbility;
 		m_ability = m_spikeAbility;
-=======
-		m_ability = m_smokeBombAbility;
-		//m_ability = m_spikeAbility;
->>>>>>> origin/master
 	}
 }
 bool Player::CalculateDirection()
