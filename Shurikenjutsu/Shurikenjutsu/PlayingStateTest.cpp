@@ -13,6 +13,7 @@
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 
+
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 
@@ -82,6 +83,8 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 	GraphicsEngine::InitializeOutling();
+
+	m_renderOutlining = false;
 
 	return true;
 }
@@ -219,11 +222,16 @@ void PlayingStateTest::Render()
 	m_minimap->Render();
 
 	// OUTLINING
-	GraphicsEngine::ClearOutlining();
-	GraphicsEngine::SetOutliningPassOne();
-	m_playerManager->Render();
-	GraphicsEngine::SetOutliningPassTwo();
-	m_playerManager->RenderOutlining();
+	if (m_renderOutlining)
+	{
+		GraphicsEngine::ClearOutlining();
+		GraphicsEngine::SetOutliningPassOne();
+		//m_objectManager->Render();
+		m_playerManager->RenderOutliningPassOne();
+		GraphicsEngine::SetOutliningPassTwo();
+		m_playerManager->RenderOutliningPassTwo();
+	}
+
 	GraphicsEngine::ResetRenderTarget();
 }
 
@@ -242,7 +250,7 @@ void PlayingStateTest::BasicPicking()
 		mouseOffsetX = 6;
 		mouseOffsetY = 20;
 	}
-
+	
 	int mousePosX = InputManager::GetInstance()->GetMousePositionX() + mouseOffsetX;
 	int mousePosY = InputManager::GetInstance()->GetMousePositionY() + mouseOffsetY;
 
@@ -274,16 +282,48 @@ void PlayingStateTest::BasicPicking()
 	if (FLAG_DEBUG == 1)
 	{
 		// Update dot location.
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
-	DirectX::XMStoreFloat4x4(&world, matrix);
-	m_debugDot.UpdateWorldMatrix(world);
+		DirectX::XMFLOAT4X4 world;
+		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
+		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+		DirectX::XMStoreFloat4x4(&world, matrix);
+		m_debugDot.UpdateWorldMatrix(world);
 
-	m_mouseX = shurPos.x;
-	m_mouseY = shurPos.z;
+		m_mouseX = shurPos.x;
+		m_mouseY = shurPos.z;
 	}
 	// ========== DEBUG LINES ==========
+}
+
+void PlayingStateTest::OutliningRays()
+{
+
+	DirectX::XMFLOAT3 rayDir;
+	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	float rayDist = 0;
+	float collisionDist = 0;
+
+	DirectX::XMFLOAT4X4 proj = m_camera->GetProjectionMatrix();
+	float viewSpaceX = m_playerManager->GetPlayerPosition().x / proj._11;
+	float viewSpaceY = -m_playerManager->GetPlayerPosition().z / proj._22;
+	float viewSpaceZ = 1.0f;
+
+	rayDir = DirectX::XMFLOAT3(viewSpaceX, viewSpaceY, viewSpaceZ);
+
+	DirectX::XMFLOAT4X4 viewInverse;
+	DirectX::XMVECTOR determinant;
+	DirectX::XMStoreFloat4x4(&viewInverse, DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
+
+	DirectX::XMStoreFloat3(&rayPos, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&rayPos), DirectX::XMLoadFloat4x4(&viewInverse)));
+	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&rayDir), DirectX::XMLoadFloat4x4(&viewInverse)));
+
+	Ray* rayTest = new Ray(rayPos, rayDir);
+
+	collisionDist = CollisionManager::GetInstance()->CalculateRayLength(rayTest, rayDist, m_playerManager->GetPlayerSphere());
+
+	if (collisionDist == -1)
+	{
+		m_renderOutlining = true;
+	}
 }
 
 DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
@@ -304,6 +344,5 @@ void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 		{
 			m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000,-1000,0));
 		}
-	}
-	
+	}	
 }

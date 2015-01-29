@@ -61,6 +61,8 @@ public:
 	bool IsVisible();
 	void SetIsVisible(bool p_visiblie);
 
+	Sphere GetSphere();
+
 private:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();

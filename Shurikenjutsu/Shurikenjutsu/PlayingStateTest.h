@@ -23,7 +23,7 @@ public:
 	void Render();
 	void ToggleFullscreen(bool p_fullscreen);
 	void MinimapUpdatePos(Minimap *p_minimap);
-
+	void OutliningRays();
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
@@ -37,6 +37,8 @@ private:
 	float twoPi = 6.28318530718f;
 
 	bool m_updateFrustum;
+	
+	bool m_renderOutlining;
 
 	// ========== DEBUG LINES ==========
 	float m_mouseX;

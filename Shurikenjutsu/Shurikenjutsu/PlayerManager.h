@@ -20,7 +20,8 @@ public:
 	void Update();
 	void Render();
 	void RenderDepth();
-	void RenderOutlining();
+	void RenderOutliningPassOne();
+	void RenderOutliningPassTwo();
 	DirectX::XMFLOAT3 GetPlayerPosition();
 	DirectX::XMFLOAT3 GetPlayerDirection();
 	void SetPlayerDirection(DirectX::XMFLOAT3 p_direction); 
@@ -31,6 +32,7 @@ public:
 	void SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection);
 
 	DirectX::BoundingBox GetPlayerBoundingBox();
+	Sphere GetPlayerSphere();
 
 	void UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 

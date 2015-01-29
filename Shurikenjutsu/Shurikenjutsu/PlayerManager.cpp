@@ -123,6 +123,16 @@ void PlayerManager::Render()
 	}
 }
 
+void PlayerManager::RenderOutliningPassOne()
+{
+	m_player->Render();
+
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		m_enemyList[i].Render();
+	}
+}
+
 void PlayerManager::RenderDepth()
 {
 	m_player->RenderDepth();
@@ -136,9 +146,19 @@ void PlayerManager::RenderDepth()
 }
 }
 
-void PlayerManager::RenderOutlining()
+void PlayerManager::RenderOutliningPassTwo()
 {
 	m_player->RenderOutlining();
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
+	{
+		//if (m_frustum->CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
+		//{
+			//if (m_enemyList[i].IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i].GetPosition().x, m_enemyList[i].GetPosition().z)))
+			//{
+				m_enemyList[i].RenderOutlining();
+			//}
+		//}
+	}
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
@@ -285,4 +305,9 @@ int PlayerManager::GetEnemyTeam(int p_index)
 		return 0;
 	}
 	return m_enemyList[p_index].GetTeam();
+}
+
+Sphere PlayerManager::GetPlayerSphere()
+{
+	return m_player->GetSphere();
 }

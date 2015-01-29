@@ -146,6 +146,43 @@ float CollisionManager::CalculateDashLength(Ray* p_ray)
 	return dashLength;
 }
 
+float CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance, Sphere p_playerSphere)
+{
+	Ray* ray = p_ray;
+	float rayLength = p_rayDistance;
+	std::vector<float> rayLengths;
+
+	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+	{
+		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
+	{
+		if (rayLengths[i] < rayLength)
+		{
+			rayLength = rayLengths[i];
+		}
+	}
+
+	if (Collisions::RaySphereCollision(ray, p_playerSphere))
+	{
+		if (ray->m_distance != 0)
+		{
+			if (rayLength < ray->m_distance)
+			{
+				return -1;
+			}
+		}
+	}
+	return rayLength;
+}
+
 float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos)
 {
 	float x = m_pickedLocation.x - p_playerPos.x;

@@ -835,3 +835,8 @@ void Player::SetIsVisible(bool p_visible)
 {
 	m_visible = p_visible;
 }
+
+Sphere Player::GetSphere()
+{
+	return m_boundingSpheres[0];
+}
