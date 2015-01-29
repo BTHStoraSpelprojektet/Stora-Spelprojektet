@@ -20,6 +20,7 @@ public:
 	void Update();
 	void Render();
 	void RenderDepth();
+	void RenderOutlining();
 	DirectX::XMFLOAT3 GetPlayerPosition();
 	DirectX::XMFLOAT3 GetPlayerDirection();
 	void SetPlayerDirection(DirectX::XMFLOAT3 p_direction); 
@@ -56,8 +57,6 @@ private:
 	std::vector<Player> m_enemyList;
 
 	Frustum* m_frustum;
-
-	float m_enemyUpdatePositionTimer;
 };
 
 #endif PLAYERMANAGER

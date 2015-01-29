@@ -11,6 +11,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
 	ID3D10Blob*	animatedVertexShader = 0;
+	ID3D10Blob*	vertexShaderOutlining = 0;
 	ID3D10Blob*	instanceShader = 0;
 	ID3D10Blob* lineVertexShader = 0;
 	ID3D10Blob*	errorMessage = 0;
@@ -23,13 +24,11 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
 			return false;
 		}
-
 		else
 		{
 			m_VSVersion = "4.0";
 		}
 	}
-
 	else
 	{
 		m_VSVersion = "5.0";
@@ -50,13 +49,11 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
 			return false;
 		}
-
 		else
 		{
 			m_VSVersion = "4.0";
 		}
 	}
-
 	else
 	{
 		m_VSVersion = "5.0";
@@ -77,13 +74,11 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 			ConsolePrintErrorAndQuit("Failed to compile scene animated vertex shader from file.");
 			return false;
 		}
-
 		else
 		{
 			m_VSVersion = "4.0";
 		}
 	}
-
 	else
 	{
 		m_VSVersion = "5.0";
@@ -111,6 +106,30 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	{
 		ConsolePrintErrorAndQuit("Failed to create line vertex shader.");
 		return false;
+	}
+
+	// Compile the vertex shader.
+	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile OUTLINING vertex shader from file.");
+			return false;
+		}
+		else
+		{
+			m_VSVersion = "4.0";
+		}
+	}
+	else
+	{
+		m_VSVersion = "5.0";
+	}
+
+	// Create the vertex shader.
+	if (FAILED(p_device->CreateVertexShader(vertexShaderOutlining->GetBufferPointer(), vertexShaderOutlining->GetBufferSize(), NULL, &m_vertexShaderOutlining)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
 	}
 
 	// Configure vertex layout.
@@ -324,6 +343,47 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("Scene vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
+	D3D11_INPUT_ELEMENT_DESC layoutOutlining[3];
+	unsigned int outlineSize;
+
+	layoutOutlining[0].SemanticName = "POSITION";
+	layoutOutlining[0].SemanticIndex = 0;
+	layoutOutlining[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	layoutOutlining[0].InputSlot = 0;
+	layoutOutlining[0].AlignedByteOffset = 0;
+	layoutOutlining[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layoutOutlining[0].InstanceDataStepRate = 0;
+
+	layoutOutlining[1].SemanticName = "WEIGHT";
+	layoutOutlining[1].SemanticIndex = 0;
+	layoutOutlining[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	layoutOutlining[1].InputSlot = 0;
+	layoutOutlining[1].AlignedByteOffset = 44;
+	layoutOutlining[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layoutOutlining[1].InstanceDataStepRate = 0;
+
+	layoutOutlining[2].SemanticName = "BONEINDEX";
+	layoutOutlining[2].SemanticIndex = 0;
+	layoutOutlining[2].Format = DXGI_FORMAT_R8G8B8A8_UINT;
+	layoutOutlining[2].InputSlot = 0;
+	layoutOutlining[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layoutOutlining[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layoutOutlining[2].InstanceDataStepRate = 0;
+
+
+	// Compute size of layout.
+	outlineSize = sizeof(layoutOutlining) / sizeof(layoutOutlining[0]);
+
+	// Create the vertex input layout.
+	if (FAILED(p_device->CreateInputLayout(layoutOutlining, outlineSize, vertexShaderOutlining->GetBufferPointer(), vertexShaderOutlining->GetBufferSize(), &m_layoutOutlining)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create outline vertex input layout.");
+		return false;
+	}
+
+	ConsolePrintSuccess("OUTLINING Scene vertex shader compiled successfully.");
+	ConsolePrintText("Shader version: VS " + m_VSVersion);
+
 	// Release useless local shaders.
 	vertexShader->Release();
 	vertexShader = 0;
@@ -333,10 +393,13 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	animatedVertexShader = 0;
 	lineVertexShader->Release();
 	lineVertexShader = 0;
+	vertexShaderOutlining->Release();
+	vertexShaderOutlining = 0;
 
 	// Set variables to initial values.
 	ID3D10Blob*	pixelShader = 0;
 	ID3D10Blob*	linePixelShader = 0;
+	ID3D10Blob* pixelShaderOutlining = 0;
 	errorMessage = 0;
 
 	// Compile the pixel shader.
@@ -383,6 +446,23 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	// Compile the line pixel shader.
+	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShaderOutlining.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderOutlining, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShaderOutlining.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderOutlining, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile line pixel shader from file.");
+			return false;
+		}
+	}
+
+	// Create the line pixel shader.
+	if (FAILED(p_device->CreatePixelShader(pixelShaderOutlining->GetBufferPointer(), pixelShaderOutlining->GetBufferSize(), NULL, &m_pixelShaderOutlining)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create line pixel shader");
+		return false;
+	}
+
 	ConsolePrintSuccess("Scene pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
 
@@ -390,6 +470,8 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	pixelShader = 0;
 	linePixelShader->Release();
 	linePixelShader = 0;
+	pixelShaderOutlining->Release();
+	pixelShaderOutlining = 0;
 
 	// Create the rasterizer description.
 	D3D11_RASTERIZER_DESC rasterizer;
@@ -469,6 +551,22 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene matrix buffer.");
+		return false;
+	}
+
+	// Create the matrix buffer description. for outlining
+	D3D11_BUFFER_DESC matrixBufferOutlining;
+	matrixBufferOutlining.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferOutlining.ByteWidth = sizeof(MatrixBufferOutlining);
+	matrixBufferOutlining.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferOutlining.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferOutlining.MiscFlags = 0;
+	matrixBufferOutlining.StructureByteStride = 0;
+
+	// Create the matrix buffer. outlining
+	if (FAILED(p_device->CreateBuffer(&matrixBufferOutlining, NULL, &m_matrixBufferOutlining)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create Outlining matrix buffer.");
 		return false;
 	}
 
@@ -618,6 +716,30 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 
 	p_context->Draw(p_numberOfVertices, 0);
 }
+void SceneShader::RenderAnimatedOutlining(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+{
+	// Set parameters and then render.
+	unsigned int stride = sizeof(VertexAnimated);
+	const unsigned int offset = 0;
+
+	UpdateWorldMatrixOutlining(p_context, p_worldMatrix);
+	UpdateAnimatedBuffer(p_context, p_boneTransforms);
+
+	//p_context->PSSetShaderResources(0, 1, &p_texture);
+	//p_context->PSSetShaderResources(1, 1, &p_normalMap);
+	//p_context->PSSetShaderResources(2, 1, &m_shadowMap);
+	//p_context->PSSetSamplers(0, 1, &m_samplerState);
+	//p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
+
+	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetInputLayout(m_layoutOutlining);
+
+	p_context->VSSetShader(m_vertexShaderOutlining, NULL, 0);
+	p_context->PSSetShader(m_pixelShaderOutlining, NULL, 0);
+
+	p_context->Draw(p_numberOfVertices, 0);
+}
 
 void SceneShader::RenderLine(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix)
 {
@@ -663,14 +785,6 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 
 	DirectX::XMFLOAT4X4 lightViewMatrix = m_lightViewMatrix;
 	DirectX::XMFLOAT4X4 lightProjectionMatrix = m_lightProjectionMatrix;
-
-	//0x010cf7a0 {-0.213200718, -0.852802873, -0.426401436, 0.213200718}
-	//0x0068f010 {-0.00470637996, -0.0168380570, 0.999847174, 0.0220748782}
-
-	/*DirectX::XMVECTOR hej = DirectX::XMVectorSet(-0.213200718, -0.852802873, -0.426401436, 0.213200718);
-
-	hej = DirectX::XMVector3Transform(hej, DirectX::XMLoadFloat4x4(&viewMatrix));
-	hej = DirectX::XMVector3Normalize(hej);*/
 
 	// Transpose the matrices.
 	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
@@ -756,6 +870,39 @@ void SceneShader::UpdateColorBuffer(ID3D11DeviceContext* p_context, float R, flo
 	p_context->VSSetConstantBuffers(3, 1, &m_colorBuffer);
 }
 
+void SceneShader::UpdateWorldMatrixOutlining(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix)
+{
+	DirectX::XMFLOAT4X4 worldMatrix = p_worldMatrix;
+	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
+	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
+
+	// Transpose the matrices.
+	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
+	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
+	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
+
+	// Lock matrix buffer so that it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_matrixBufferOutlining, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to map outlining matrix buffer.");
+	}
+
+	// Get pointer to the matrix buffer data.
+	MatrixBufferOutlining* matrixBuffer = (MatrixBufferOutlining*)mappedBuffer.pData;
+
+	// Set matrices in buffer.
+	matrixBuffer->m_worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix);
+	matrixBuffer->m_viewMatrix = DirectX::XMLoadFloat4x4(&viewMatrix);
+	matrixBuffer->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projectionMatrix);
+
+	// Unlock the matrix buffer after it has been written to.
+	p_context->Unmap(m_matrixBufferOutlining, 0);
+
+	// Set the matrix buffer.
+	p_context->VSSetConstantBuffers(0, 1, &m_matrixBufferOutlining);
+}
+
 void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	// Lock matrix buffer so that it can be written to.
@@ -777,7 +924,7 @@ void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vect
 	p_context->Unmap(m_animationMatrixBuffer, 0);
 
 	// Set the matrix buffer.
-	p_context->VSSetConstantBuffers(2, 1, &m_animationMatrixBuffer);
+	p_context->VSSetConstantBuffers(2, 1, & m_animationMatrixBuffer);
 }
 
 void SceneShader::TurnOnBackFaceCulling(ID3D11DeviceContext* p_context)

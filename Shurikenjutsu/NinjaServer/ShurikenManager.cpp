@@ -1,5 +1,5 @@
 #include "ShurikenManager.h"
-
+#include "..\CommonLibs\ModelNames.h"
 
 ShurikenManager::ShurikenManager(){}
 ShurikenManager::~ShurikenManager(){}

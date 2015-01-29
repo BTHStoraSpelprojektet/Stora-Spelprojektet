@@ -4,7 +4,7 @@
 #include "DirectX.h"
 #include "DirectXTex\DirectXTex.h"
 #include "Structures.h"
-#include "FW1FontWrapper.h"
+#include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include <vector>
 
 class WICTextureLoader;
@@ -13,7 +13,7 @@ class DepthShader;
 class RenderTarget;
 class ParticleShader;
 class SceneShader;
-
+//class OutliningShader;
 
 class GraphicsEngine
 {
@@ -36,7 +36,7 @@ public:
 	static void RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
 
 	static void RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
-
+	static void RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
 	static void RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 
 	static void RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex);
@@ -48,6 +48,7 @@ public:
 	static void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 	static void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 	static void RenderText(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color);
+	static void RenderText2(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color, UINT p_flags);
 	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
@@ -77,6 +78,14 @@ public:
 
 	static int GetNumberOfInstanceBuffer();
 
+	static void SetVsync(bool p_state);
+
+	static void SetOutliningPassOne();
+	static void SetOutliningPassTwo();
+
+	static bool InitializeOutling();
+	static void ClearOutlining();
+
 private:
 	GraphicsEngine(){};
 
@@ -88,6 +97,7 @@ private:
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 	static ParticleShader m_particleShader;
+	//static OutliningShader m_outliningShader;
 
 	static HWND m_windowHandle;
 

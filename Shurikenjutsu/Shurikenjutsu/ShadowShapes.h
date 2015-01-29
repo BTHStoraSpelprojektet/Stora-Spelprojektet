@@ -21,7 +21,6 @@ public:
 	int AddDynamicShape(std::vector<Line> p_shape);
 
 	int AddSmokeBombShape(Point p_center);
-	void AddMapBoundries(Point p_center, float p_width, float p_height);
 
 	void RemoveDynamicLine(int p_atIndex);
 	void RemoveDynamicShape(int p_atIndex, int p_numberOfLines);

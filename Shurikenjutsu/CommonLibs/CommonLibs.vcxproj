@@ -79,6 +79,7 @@
     <ClInclude Include="LevelImporter.h" />
     <ClInclude Include="ModelImporter.h" />
     <ClInclude Include="ModelLibrary.h" />
+    <ClInclude Include="ModelNames.h" />
     <ClInclude Include="RakNet\AutopatcherPatchContext.h" />
     <ClInclude Include="RakNet\AutopatcherRepositoryInterface.h" />
     <ClInclude Include="RakNet\Base64Encoder.h" />

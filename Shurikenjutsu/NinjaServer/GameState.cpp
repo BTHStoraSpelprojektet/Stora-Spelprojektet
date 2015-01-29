@@ -4,7 +4,6 @@
 #include "CollisionManager.h"
 #include "SpikeManager.h"
 
-
 GameState::GameState(){}
 GameState::~GameState(){}
 
@@ -79,9 +78,9 @@ void GameState::Update(double p_deltaTime)
 	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager, (float)p_deltaTime);
 }
 
-void GameState::AddPlayer(RakNet::RakNetGUID p_guid)
+void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
-	m_playerManager->AddPlayer(p_guid);
+	m_playerManager->AddPlayer(p_guid, p_charNr);
 }
 
 void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)
@@ -89,9 +88,9 @@ void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)
 	m_playerManager->RemovePlayer(p_guid);
 }
 
-void GameState::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash)
+bool GameState::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash)
 {
-	m_playerManager->MovePlayer(p_guid, p_x, p_y, p_z, p_nrOfConnections, p_dash);
+	return m_playerManager->MovePlayer(p_guid, p_x, p_y, p_z, p_nrOfConnections, p_dash);
 }
 
 PlayerNet GameState::GetPlayer(RakNet::RakNetGUID p_guid)
@@ -104,9 +103,9 @@ int GameState::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return m_playerManager->GetPlayerIndex(p_guid);
 }
 
-void GameState::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
+bool GameState::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
 {
-	m_playerManager->RotatePlayer(p_guid, p_dirX, p_dirY, p_dirZ);
+	return m_playerManager->RotatePlayer(p_guid, p_dirX, p_dirY, p_dirZ);
 }
 
 bool GameState::CanUseAbility(int p_index, ABILITIES p_ability)

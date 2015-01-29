@@ -18,6 +18,7 @@
 #include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 #include <map>
+#include <DirectXMath.h>
 
 
 enum NETWORKSTATUS
@@ -44,6 +45,9 @@ public:
 	void Update();
 
 	void Connect(std::string p_ip);
+	void Disconnect();
+
+	void ChooseChar(int p_charNr);
 
 	bool ConnectedNow();
 	bool IsConnected();
@@ -91,6 +95,9 @@ public:
 	void SendAnimationState(AnimationState p_state);
 	int AnimationChanged(RakNet::RakNetGUID p_guid);
 
+	bool HaveDashed();
+	DirectX::XMFLOAT3 GetDashLocation();
+
 private:
 
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
@@ -105,8 +112,14 @@ private:
 	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
+<<<<<<< HEAD
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive);
+=======
+	void UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr);
+	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP, bool p_isAlive);
+	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_currentHP, bool p_isAlive);
+>>>>>>> origin/master
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken);
@@ -133,6 +146,7 @@ private:
 	bool m_invalidMove;
 	bool m_roundRestarted;
 	bool m_newLevel;
+	bool m_dashed;
 	std::string m_levelName;
 	PlayerNet m_myPlayer;
 	std::vector<PlayerNet> m_enemyPlayers;
@@ -140,6 +154,7 @@ private:
 	std::vector<SmokeBombNet> m_smokeBombList;
 	std::vector<SpikeNet> m_spikeTrapList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
+	DirectX::XMFLOAT3 m_dashLocation;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;

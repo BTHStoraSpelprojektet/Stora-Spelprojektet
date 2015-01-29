@@ -4,6 +4,7 @@
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
+#include "..\CommonLibs\ModelNames.h"
 
 class MapManager;
 class CollisionManager;
@@ -22,12 +23,12 @@ public:
 	virtual void Update(double p_deltaTime);
 	
 public:
-	void AddPlayer(RakNet::RakNetGUID p_guid);
+	void AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr);
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
-	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash);
+	bool MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
-	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
+	bool RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
 	void UsedAbility(int p_index, ABILITIES p_ability);
 	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash, float p_distanceFromPlayer);

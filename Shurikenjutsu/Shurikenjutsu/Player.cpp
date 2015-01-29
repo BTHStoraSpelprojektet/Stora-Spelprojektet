@@ -15,9 +15,20 @@
 #include "AbilityBar.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
+#include "VisibilityComputer.h"
 
 Player::Player(){}
 Player::~Player(){}
+
+void* Player::operator new(size_t p_i)
+{
+	return _mm_malloc(p_i, 16);
+}
+
+void Player::operator delete(void* p_p)
+{
+	_mm_free(p_p);
+}
 
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
@@ -55,9 +66,12 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_healthbar->Initialize(100.0f, 15.0f);
 
 	m_team = 0;
+	m_isDashing = false;
 
 	m_abilityBar = new AbilityBar();
 	m_abilityBar->Initialize(0.0f, -420.0f, 5);
+
+	m_directionUpdateTimer = 0.0f;
 
 	return true;
 }
@@ -141,6 +155,54 @@ void Player::UpdateMe()
 		return;
 	}
 
+	// Check for dash
+	if (Network::GetInstance()->HaveDashed())
+	{		
+		// Calc distance
+		float dx = Network::GetInstance()->GetDashLocation().x - m_position.x;
+		float dz = Network::GetInstance()->GetDashLocation().z - m_position.z;
+		m_dashDistanceLeft = sqrt(dx * dx + dz * dz);
+
+		// Calc dir
+		DirectX::XMVECTOR tempVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(dx, 0, dz));
+		tempVector = DirectX::XMVector3Normalize(tempVector);
+		DirectX::XMStoreFloat3(&m_dashDirection, tempVector);
+
+		m_isDashing = true;
+	}
+	
+	// Dash movement
+	if (m_isDashing)
+	{
+		float distance = DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+		if (distance >= m_dashDistanceLeft)
+		{
+			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+			m_dashDistanceLeft = 0.0f;
+			m_isDashing = false;
+		}
+		else
+		{
+			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+			m_dashDistanceLeft -= distance;
+		}
+
+		// If we dashed, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+
+		SendPosition(m_position);
+	}
+
+	// Move
+	if ((CalculateDirection() || Network::GetInstance()->ConnectedNow()) && !m_isDashing)
+	{
+		SetCalculatePlayerPosition();
+
+		// If we moved, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+	}
 	
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
@@ -194,8 +256,13 @@ void Player::CheckForSpecialAttack()
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
+<<<<<<< HEAD
 		//m_ability = m_smokeBombAbility;
 		m_ability = m_spikeAbility;
+=======
+		m_ability = m_smokeBombAbility;
+		//m_ability = m_spikeAbility;
+>>>>>>> origin/master
 	}
 }
 bool Player::CalculateDirection()
@@ -313,14 +380,20 @@ void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 
 void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 {
-	DirectX::XMFLOAT3 oldPos = Object::GetPosition();
-	Object::SetPosition(p_pos);
+	m_directionUpdateTimer += (float)GLOBAL::GetInstance().GetDeltaTime();
+	if (m_directionUpdateTimer > 0.03f)
+	{
+		DirectX::XMFLOAT3 dir;
+		dir.x = p_pos.x - m_oldPosition.x;
+		dir.y = p_pos.y - m_oldPosition.y;
+		dir.z = p_pos.z - m_oldPosition.z;
+		AnimatedObject::NetworkInput(dir);
+		m_directionUpdateTimer = 0.0f;
 
-	DirectX::XMFLOAT3 dir;
-	dir.x = p_pos.x - oldPos.x;
-	dir.y = p_pos.y - oldPos.y;
-	dir.z = p_pos.z - oldPos.z;
-	AnimatedObject::NetworkInput(dir);
+		m_oldPosition = p_pos;
+	}
+
+	Object::SetPosition(p_pos);
 }
 
 DirectX::XMFLOAT3 Player::GetFacingDirection()
@@ -687,8 +760,8 @@ void Player::UpdateAbilityBar()
 	m_abilityBar->Update((float)m_shurikenAbility->GetCooldown(), SHURIKEN_COOLDOWN, 1);
 	m_abilityBar->Update((float)m_dash->GetCooldown(), DASH_COOLDOWN, 2);
 	m_abilityBar->Update((float)m_megaShuriken->GetCooldown(), MEGASHURIKEN_COOLDOWN, 3);
-	m_abilityBar->Update((float)m_spikeAbility->GetCooldown(), SPIKE_COOLDOWN, 4);
-	//m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
+	//m_abilityBar->Update((float)m_spikeAbility->GetCooldown(), SPIKE_COOLDOWN, 4);
+	m_abilityBar->Update((float)m_smokeBombAbility->GetCooldown(), SMOKEBOMB_COOLDOWN, 4);
 }
 
 void Player::Render()
@@ -707,6 +780,11 @@ void Player::RenderDepth()
 	{
 		AnimatedObject::RenderDepth();
 	}
+}
+
+void Player::RenderOutlining()
+{
+	AnimatedObject::RenderOutlining();
 }
 
 void Player::SetIsAlive(bool p_isAlive)

@@ -104,6 +104,17 @@ DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 	return matrix;
 }
 
+DirectX::XMFLOAT4X4 Object::GetWorldMatrixScaled(float p_scale)
+{
+
+	DirectX::XMFLOAT4X4 matrix;
+	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixTranslation(0.0f,-0.1f, 0.0f) *
+		DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(p_scale, p_scale, p_scale))) *
+		DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) *
+		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+
+	return matrix;
+}
 
 Model* Object::GetModel()
 {
@@ -155,19 +166,19 @@ void Object::TransformBoundingSpheres()
 
 void Object::TransformShadowPoints()
 {
-	std::vector<DirectX::XMFLOAT3> shadowPoints;
-	shadowPoints.clear();
+	//std::vector<DirectX::XMFLOAT3> shadowPoints;
+	//shadowPoints.clear();
 
-	std::vector<DirectX::XMFLOAT3> saList = m_model->GetShadowPoints();
-	DirectX::XMFLOAT4X4 world = GetWorldMatrix();
+	//std::vector<DirectX::XMFLOAT3> saList = m_model->GetShadowPoints();
+	//DirectX::XMFLOAT4X4 world = GetWorldMatrix();
 
-	for (unsigned int i = 0; i < saList.size(); i++)
-	{
-		DirectX::XMFLOAT3 position = saList[i];
-		DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
+	//for (unsigned int i = 0; i < saList.size(); i++)
+	//{
+	//	DirectX::XMFLOAT3 position = saList[i];
+	//	DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&world)));
 
-		// TODO add shapes from the map to the static shapes list here.
-	}
+	//	// TODO add shapes from the map to the static shapes list here.
+	//}
 }
 
 std::vector<OBB> Object::GetBoundingBoxes()
@@ -195,6 +206,7 @@ void Object::CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::
 {
 	GraphicsEngine::AddInstanceBuffer(p_numberOfInstances, p_positions);
 }
+
 int Object::GetInstanceIndex() const
 {
 	return m_InstanceIndex;

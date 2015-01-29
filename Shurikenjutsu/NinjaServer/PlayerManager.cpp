@@ -1,6 +1,7 @@
 #include "PlayerManager.h"
 #include "SpikeManager.h"
 
+#include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -8,7 +9,8 @@ PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = CHARACTAR_KATANA_SHURIKEN_HEALTH;
-	m_gcd = ALL_AROUND_GOLOBAL_COOLDOWN;
+	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
+
 	m_serverPeer = p_serverPeer;
 
 	m_players = std::vector<PlayerNet>();
@@ -53,11 +55,12 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 	return m_players;
 }
 
-void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid)
+void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
 	PlayerNet player;
 	player.guid = p_guid;
 	player.team = (m_players.size() % 2) + 1;
+	player.charNr = p_charNr;
 	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
 	player.x = spawnPoint.m_translationX;
 	player.y = spawnPoint.m_translationY;
@@ -77,10 +80,8 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid)
 	BroadcastPlayers();
 }
 
-void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
+bool PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
 {
-	bool found = false;
-
 	// See if player can move to target position and then update position
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -102,19 +103,14 @@ void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, 
 				}
 			}
 
-			found = true;
-			break;
+			return true;
 		}
 	}
 
-	// Add player if he doesn't exist in the vector
-	if (!found)
-	{
-		AddPlayer(p_guid);
-	}
+	return false;
 }
 
-void PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
+bool PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -126,9 +122,11 @@ void PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float 
 				m_players[i].dirY = p_dirY;
 				m_players[i].dirZ = p_dirZ;
 			}
-			break;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
@@ -165,6 +163,7 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].dirY);
 		bitStream.Write(m_players[i].dirZ);
 		bitStream.Write(m_players[i].team);
+		bitStream.Write(m_players[i].charNr);
 		bitStream.Write(m_players[i].maxHP);
 		bitStream.Write(m_players[i].currentHP);
 		bitStream.Write(m_players[i].isAlive);
@@ -272,13 +271,13 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 		switch (p_ability)
 		{
 		case ABILITIES_SHURIKEN:
-			m_players[p_index].cooldownAbilites.shurikenCD = ALL_AROUND_GOLOBAL_COOLDOWN;
+			m_players[p_index].cooldownAbilites.shurikenCD = ALL_AROUND_GLOBAL_COOLDOWN;
 			break;
 		case ABILITIES_DASH:
 			m_players[p_index].cooldownAbilites.dashCD = DASH_COOLDOWN;
 			break;
 		case ABILITIES_MELEESWING:
-			m_players[p_index].cooldownAbilites.meleeSwingCD = ALL_AROUND_GOLOBAL_COOLDOWN;
+			m_players[p_index].cooldownAbilites.meleeSwingCD = ALL_AROUND_GLOBAL_COOLDOWN;
 			break;
 		case ABILITIES_MEGASHURIKEN:
 			m_players[p_index].cooldownAbilites.megaShurikenCD = MEGASHURIKEN_COOLDOWN;
@@ -336,6 +335,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
 	int index = GetPlayerIndex(p_guid);
+	RakNet::BitStream l_bitStream;
 	switch (p_readAbility)
 	{
 	case ABILITIES_SHURIKEN:
@@ -347,7 +347,15 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		//Calculate new location for the dashing player and inflict damage on enemies
 		player = GetPlayer(p_guid);
 		dashDistance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
-		MovePlayer(p_guid, player.x + dashDistance*player.dirX, player.y, player.z + dashDistance*player.dirZ, p_nrOfConnections, true);
+
+		
+		l_bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
+		l_bitStream.Write(player.x + dashDistance * player.dirX);
+		l_bitStream.Write(player.y);
+		l_bitStream.Write(player.z + dashDistance * player.dirZ);
+		m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+
+		//MovePlayer(p_guid, player.x + dashDistance*player.dirX, player.y, player.z + dashDistance*player.dirZ, p_nrOfConnections, true);
 		break;
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
@@ -378,23 +386,13 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		break;
 	}
 
-	player = GetPlayer(p_guid);
-	RakNet::BitStream l_bitStream;
-	l_bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
-	l_bitStream.Write(player.guid);
-	l_bitStream.Write(player.x);
-	l_bitStream.Write(player.y);
-	l_bitStream.Write(player.z);
-
-	m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
-
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_ABILITY);
 	bitStream.Write(p_readAbility);
 	bitStream.Write(abilityString);
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }
 
 int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)

@@ -1,6 +1,7 @@
 #include "AnimatedObject.h"
 #include "TextureLibrary.h"
 #include "Model.h"
+#include "..\CommonLibs\ModelNames.h"
 
 AnimatedObject::AnimatedObject(){}
 AnimatedObject::~AnimatedObject(){}
@@ -12,7 +13,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 		return false;
 	}
 
-	m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/char_bluetext.png");
+	LoadTexture(p_filepath);
 
 	SetDirection(p_dir);
 	SetSpeed(p_speed);
@@ -70,6 +71,11 @@ void AnimatedObject::RenderDepth()
 	GraphicsEngine::RenderAnimatedDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_animationController.UpdateAnimation());
 }
 
+void AnimatedObject::RenderOutlining()
+{
+	GraphicsEngine::RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaled(1.05f), m_animationController.GetBoneTransforms());
+}
+
 void AnimatedObject::ChangeAnimationState(AnimationState p_newState)
 {
 	m_animationController.ChangeAnimationState(p_newState);
@@ -90,3 +96,13 @@ void AnimatedObject::SetIkDirection(DirectX::XMFLOAT3 p_ikDirection)
 	m_animationController.SetIkDirection(p_ikDirection);
 }
 
+void AnimatedObject::LoadTexture(const char* p_filepath)
+{
+	std::string filePathString = p_filepath;
+	int positionToCutStringBegin = filePathString.find_last_of('/');
+	filePathString = filePathString.substr((positionToCutStringBegin + 1), filePathString.size());
+	int positionToCutStringEnd = filePathString.find_last_of('.');
+	filePathString = filePathString.substr(0, positionToCutStringEnd);
+
+	m_texture = TextureLibrary::GetInstance()->GetTexture(NINJA_TEXTURE + filePathString + ".png");
+}

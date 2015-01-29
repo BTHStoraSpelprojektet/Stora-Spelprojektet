@@ -170,7 +170,12 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			// Sphere list
 			for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
 			{
-				if (OBBSphereTest(OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), m_staticSphereList[k]))
+				Sphere sphere = m_staticSphereList[k];
+				if (sphere.m_position.y + sphere.m_radius < shurikenBoundingBoxes[j].m_center.y - shurikenBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > shurikenBoundingBoxes[j].m_center.y + shurikenBoundingBoxes[j].m_extents.y)
+				{
+					sphere.m_position.y = shurikenBoundingBoxes[j].m_center.y;
+				}
+				if (OBBSphereTest(OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
 				{
 					// Remove shuriken
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);

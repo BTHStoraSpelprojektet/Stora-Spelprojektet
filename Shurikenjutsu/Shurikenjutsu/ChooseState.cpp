@@ -2,34 +2,52 @@
 #include "Menu.h"
 #include "MenuItem.h"
 #include "TextureLibrary.h"
+#include "Network.h"
 
+// BUTTON
+const float BUTTONWIDTH = 301.0f;
+const float BUTTONHEIGHT = 98.0f;
+
+// LEFT / RIGHT
+const float NEXTWIDTH = 100.0f;
+const float NEXTHEIGHT = 98.0f;
+
+// PORTRAIT
+const float PORTRAITWIDTH = 242.0f;
+const float PORTRAITHEIGHT = 300.0f;
+
+// OFFSET
+const float OFFSET = 10.0f;
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
+
 bool ChooseState::Initialize()
 {
 	nrOfNinjas = 4;
 	currentNinja = 0;
 	m_chooseButton = new Menu();
+
 	// Play
-	m_chooseButton->AddButton(0, 0, 301.0f, 98.0f, MENUACTION_PLAY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"));
-	//Back
-	m_chooseButton->AddButton(0, -108, 301.0f, 98.0f, MENUACTION_BACK, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"));
+	m_chooseButton->AddButton(0.0f, -OFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
+	
+	// Back
+	m_chooseButton->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*OFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 
 	// Next ninja, right button
-	m_chooseButton->AddButton(190, 100, 100.0f, 98.0f, MENUACTION_NEXTNINJA, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"));
+	m_chooseButton->AddButton(BUTTONWIDTH*0.5f + NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
 
 	// Prev ninja, left button
-	m_chooseButton->AddButton(-190, 100, 100.0f, 98.0f, MENUACTION_PREVNINJA, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"));
+	m_chooseButton->AddButton(-BUTTONWIDTH*0.5f - NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVNINJA);
 
 	m_ninjas[0] = new MenuItem();
 	m_ninjas[1] = new MenuItem();
 	m_ninjas[2] = new MenuItem();
 	m_ninjas[3] = new MenuItem();
-	m_ninjas[0]->Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
-	m_ninjas[1]->Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
-	m_ninjas[2]->Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
-	m_ninjas[3]->Initialize(0, 190, 220.0f, 300.0f, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja4.png"));
+	m_ninjas[0]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
+	m_ninjas[1]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
+	m_ninjas[2]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
+	m_ninjas[3]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja4.png"));
 
 	return true;
 }
@@ -37,13 +55,15 @@ bool ChooseState::Initialize()
 GAMESTATESWITCH ChooseState::Update()
 {
 	MenuActionData action = m_chooseButton->Update();
-
+	
 	switch (action.m_action)
 	{
 	case MENUACTION_PLAY:
+		Network::GetInstance()->ChooseChar(currentNinja);
 		return GAMESTATESWITCH_PLAY;
 		break;
 	case MENUACTION_BACK:
+		Network::GetInstance()->Disconnect();
 		return GAMESTATESWITCH_MENU;
 		break;
 	case MENUACTION_NEXTNINJA:

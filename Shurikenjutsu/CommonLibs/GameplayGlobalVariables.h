@@ -1,7 +1,7 @@
 #ifndef GAMEPLAYGLOBALVARIABLES_H_
 #define GAMEPLAYGLOBALVARIABLES_H_
 
-const float ALL_AROUND_GOLOBAL_COOLDOWN = 0.5f;
+const float ALL_AROUND_GLOBAL_COOLDOWN = 0.5f;
 
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
@@ -34,6 +34,7 @@ const float KATANA_RANGE = 2.5f;
 const float DASH_MAX_RANGE = 10.0f;
 const float DASH_COOLDOWN = 8.0f;
 const float DASH_DAMAGE = 5.0f;
+const float DASH_SPEED = 8.0f;
 
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 ////////////////////////////////////////////////////////////////Tools
@@ -64,8 +65,10 @@ const float SPIKE_RADIUS = 1.5f;
 
 ////////////////////////////////////////////////////////////////Special Abilities
 ////////////////////////////////////////////////////////////////Character Variables
+
 const float CHARACTAR_KATANA_SHURIKEN_HEALTH = 100.0f;
-const float CHARACTAR_KATANA_SHURIKEN_SPEED = 10.0f;
+const float CHARACTAR_KATANA_SHURIKEN_SPEED = 5.0f;
+
 ////////////////////////////////////////////////////////////////Character Variables
 
 

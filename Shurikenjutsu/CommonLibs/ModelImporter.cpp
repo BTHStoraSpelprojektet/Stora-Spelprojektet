@@ -143,8 +143,8 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 
 		for (unsigned int i = 0; i < shadowVolumeCount; i++)
 		{
-			memcpy(&m_importedMesh.m_shadowPoints[i], (char*)data + readPosition, (sizeof(float)* 3));
-			readPosition += (sizeof(float)* 3);
+			memcpy(&m_importedMesh.m_shadowPoints[i], (char*)data + readPosition, (sizeof(Line)));
+			readPosition += (sizeof(Line));
 		}
 	}
 

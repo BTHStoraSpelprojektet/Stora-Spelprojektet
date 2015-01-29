@@ -17,6 +17,10 @@ class Player :
 public:
 	Player();
 	~Player();
+
+	void* operator new(size_t p_i);
+	void operator delete(void* p_p);
+
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
 	void Shutdown();
 	void UpdateMe();
@@ -24,6 +28,7 @@ public:
 	void UpdateAbilities();
 	void Render();
 	void RenderDepth();
+	void RenderOutlining();
 	//void SetDamage(float p_damage);
 	//float GetDamage() const;	
 	void SetHealth(float p_health);
@@ -78,6 +83,10 @@ private:
 
 	void SetCalculatePlayerPosition();
 	DirectX::XMFLOAT3 m_playerPrevPos;
+	
+	DirectX::XMFLOAT3 m_dashDirection;
+	float m_dashDistanceLeft;
+	bool m_isDashing;
 
 	Sphere m_playerSphere;
 	Ability* m_ability;
@@ -91,5 +100,8 @@ private:
 
 	HealthBar* m_healthbar;
 	AbilityBar* m_abilityBar;
+
+	float m_directionUpdateTimer;
+	DirectX::XMFLOAT3 m_oldPosition;
 };
 #endif PLAYER

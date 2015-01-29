@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "TextureLibrary.h"
 #include "InputManager.h"
+#include "..\CommonLibs\ModelNames.h"
 
 MenuIpBox::MenuIpBox(){}
 MenuIpBox::~MenuIpBox(){}
@@ -9,7 +10,7 @@ MenuIpBox::~MenuIpBox(){}
 
 bool MenuIpBox::Initialize(float p_x, float p_y, float p_width, float p_height)
 {
-	MenuItem::Initialize(p_x, p_y, p_width, p_height, MENUACTION_EMPTY, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/tb_bg.png"));
+	MenuItem::Initialize(p_x, p_y, p_width, p_height, TextureLibrary::GetInstance()->GetTexture(ABILITY_BG_TEXTURE));
 
 	m_counter = 0;
 	m_active = false;
@@ -60,9 +61,10 @@ bool MenuIpBox::IsClicked()
 				return true;
 			}
 		}
-
-		m_active = false;
-		return false;
+		else
+		{
+			m_active = false;
+		}
 	}
 
 	return false;

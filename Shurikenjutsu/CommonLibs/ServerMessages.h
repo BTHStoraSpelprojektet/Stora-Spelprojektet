@@ -20,6 +20,7 @@ struct PlayerNet
 	int team;
 	float maxHP;
 	float currentHP;
+	int charNr;
 	bool isAlive;
 	float gcd;
 	Cooldowns cooldownAbilites;
@@ -71,7 +72,9 @@ enum Messages
 	ID_NEW_LEVEL,
 	ID_PLAYER_ANIMATION_CHANGED,
 	ID_SPIKETRAP_THROW,
-	ID_SPIKETRAP_REMOVE
+	ID_SPIKETRAP_REMOVE,
+	ID_DASH_TO_LOCATION,
+	ID_CHOOSE_CHAR
 };
 
 #endif

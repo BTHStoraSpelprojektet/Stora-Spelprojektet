@@ -3,15 +3,16 @@
 #include "Frustum.h"
 #include "Globals.h"
 #include "Minimap.h"
+#include "VisibilityComputer.h"
+#include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer("../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	AddPlayer(PLAYER_MODEL_NAME, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
-	m_enemyUpdatePositionTimer = 0.0f;
 	return true;
 }
 
@@ -93,19 +94,9 @@ void PlayerManager::Update()
 			Network::GetInstance()->SetHaveUpdatedPlayerList();
 		}
 		
-		m_enemyUpdatePositionTimer += (float)deltaTime;
 		for (unsigned int i = 0; i < m_enemyList.size(); i++)
-		{
-			if (m_enemyUpdatePositionTimer > 0.03f)
-			{
-				m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));
-
-				if (i == (m_enemyList.size() - 1))
-				{
-					m_enemyUpdatePositionTimer = 0.0f;
-				}					
-			}
-				
+		{			
+			m_enemyList[i].SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));				
 			m_enemyList[i].SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i].SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i].SetIsAlive(enemyPlayers[i].isAlive);
@@ -124,7 +115,7 @@ void PlayerManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i].GetFrustumSphere(), 1.0f))
 		{
-			if (m_enemyList[i].IsVisible())
+			if (m_enemyList[i].IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i].GetPosition().x, m_enemyList[i].GetPosition().z)))
 			{
 				m_enemyList[i].Render();
 			}
@@ -138,8 +129,16 @@ void PlayerManager::RenderDepth()
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
+		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i].GetPosition().x, m_enemyList[i].GetPosition().z)))
+		{
 		m_enemyList[i].RenderDepth();
 	}
+}
+}
+
+void PlayerManager::RenderOutlining()
+{
+	m_player->RenderOutlining();
 }
 
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
@@ -259,7 +258,7 @@ void PlayerManager::CheckPlayersVisible()
 
 bool PlayerManager::IsPlayersVisible(int p_index)
 {
-	if (m_enemyList.size() <= p_index)
+	if (m_enemyList.size() <= (unsigned int)p_index)
 	{
 		return false;
 	}
@@ -268,7 +267,7 @@ bool PlayerManager::IsPlayersVisible(int p_index)
 
 void PlayerManager::MinimapUpdatePos(Minimap *p_minimap)
 {
-	for (int i = 0; i < m_enemyList.size(); i++)
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{ 
 		p_minimap->UpdatePlayersPositon(i, m_enemyList[i].GetPosition());
 	}
@@ -281,7 +280,7 @@ int PlayerManager::GetPlayerTeam()
 
 int PlayerManager::GetEnemyTeam(int p_index)
 {
-	if (m_enemyList.size() <= p_index)
+	if (m_enemyList.size() <= (unsigned int)p_index)
 	{
 		return 0;
 	}

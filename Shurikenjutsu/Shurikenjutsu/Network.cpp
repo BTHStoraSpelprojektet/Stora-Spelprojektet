@@ -31,6 +31,7 @@ bool Network::Initialize()
 	m_roundRestarted = false;
 	m_newLevel = false;
 	m_levelName = "";
+	m_dashed = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -140,8 +141,8 @@ void Network::ReceviePacket()
 			int nrOfPlayers = 0;
 			float x, y, z;
 			float dirX, dirY, dirZ;
-			int team;
 			float maxHP, currentHP;
+			int team, charNr;;
 			bool isAlive;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -158,6 +159,7 @@ void Network::ReceviePacket()
 				bitStream.Read(dirY);
 				bitStream.Read(dirZ);
 				bitStream.Read(team);
+				bitStream.Read(charNr);
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
@@ -294,10 +296,6 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(abilityEnum);
 			bitStream.Read(abilityString);
-			if (abilityEnum == ABILITIES_DASH)
-			{
-				m_invalidMove = true;
-			}
 
 			std::cout << " " << abilityString << std::endl;
 
@@ -449,6 +447,21 @@ void Network::ReceviePacket()
 			bitStream.Read(spikeTrapId);
 
 			RemoveSpikeTrap(spikeTrapId);
+		}
+		case ID_DASH_TO_LOCATION:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			float x, y, z;
+
+			bitStream.Read(messageID);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+
+			m_dashLocation = DirectX::XMFLOAT3(x, y, z);
+
+			m_dashed = true;
 			break;
 		}
 		default:
@@ -464,6 +477,23 @@ void Network::Connect(std::string p_ip)
 	std::cout << "Connecting to: " << p_ip << std::endl;
 	m_ip = p_ip;
 	m_clientPeer->Connect(m_ip.c_str(), SERVER_PORT, 0, 0);
+}
+
+void Network::Disconnect()
+{
+	std::cout << "Disconnecting from server" << std::endl;
+	m_clientPeer->Shutdown(300);
+	m_clientPeer->Startup(1, &m_socketDesc, 1);
+}
+
+void Network::ChooseChar(int p_charNr)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
+	bitStream.Write(p_charNr);
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 bool Network::IsConnected()
@@ -578,6 +608,24 @@ void Network::UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team)
 			if (m_enemyPlayers[i].guid == p_owner)
 			{
 				m_enemyPlayers[i].team = p_team;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr)
+{
+	if (p_owner == m_clientPeer->GetMyGUID())
+	{
+		m_myPlayer.charNr = p_charNr;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].charNr = p_charNr;
 			}
 		}
 	}
@@ -962,4 +1010,20 @@ int Network::AnimationChanged(RakNet::RakNetGUID p_guid)
 		return state;
 	}
 	return -1;
+}
+
+bool Network::HaveDashed()
+{
+	if (m_dashed)
+	{
+		m_dashed = false;
+		return true;
+	}
+
+	return false;
+}
+
+DirectX::XMFLOAT3 Network::GetDashLocation()
+{
+	return m_dashLocation;
 }

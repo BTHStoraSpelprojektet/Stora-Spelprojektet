@@ -2,9 +2,20 @@
 #include "ConsoleFunctions.h"
 #include "Globals.h"
 
+#pragma comment(lib, "dxgi.lib")
+
+#include <dxgi.h>
+
 bool DirectXWrapper::Initialize(HWND p_handle)
 {
+	m_depthStencilViewOutlining = NULL;
+	m_depthStencilOutlining = NULL;
+	m_outliningALWAYS = NULL;
+	m_outliningNOTEQUAL = NULL;
+
 	HRESULT result = S_OK;
+
+	m_vsync = 0;
 
 	m_clearColor[0] = 0.0f;
 	m_clearColor[1] = 0.0f;
@@ -20,6 +31,71 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	m_width = (window.right - window.left);
 	m_height = (window.bottom - window.top);
 
+	IDXGIFactory* factory;
+	IDXGIAdapter* adapter;
+	IDXGIOutput* adapterOutput;
+	unsigned int numModes;
+	DXGI_MODE_DESC* displayModeList;
+
+	// Create a DirectX graphics interface factory.
+	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Use the factory to create an adapter for the primary graphics interface (video card).
+	result = factory->EnumAdapters(0, &adapter);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Enumerate the primary adapter output (monitor).
+	result = adapter->EnumOutputs(0, &adapterOutput);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Get the number of modes that fit the DXGI_FORMAT_R8G8B8A8_UNORM display format for the adapter output (monitor).
+	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Create a list to hold all the possible display modes for this monitor/video card combination.
+	displayModeList = new DXGI_MODE_DESC[numModes];
+	if (!displayModeList)
+	{
+		return false;
+	}
+
+	// Now fill the display mode list structures.
+	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	unsigned int numerator;
+	unsigned int denominator;
+
+	// Now go through all the display modes and find the one that matches the screen width and height.
+	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
+	for (unsigned int i = 0; i<numModes; i++)
+	{
+		if (displayModeList[i].Width == (unsigned int)GLOBAL::GetInstance().MAX_SCREEN_WIDTH)
+		{
+			if (displayModeList[i].Height == (unsigned int)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT)
+			{
+				numerator = displayModeList[i].RefreshRate.Numerator;
+				denominator = displayModeList[i].RefreshRate.Denominator;
+			}
+		}
+	}
+
 	// Initialize swap chain.
 	DXGI_SWAP_CHAIN_DESC swapChainDescription;
 	ZeroMemory(&swapChainDescription, sizeof(swapChainDescription));
@@ -27,12 +103,13 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	swapChainDescription.BufferDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 	swapChainDescription.BufferDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	swapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	swapChainDescription.BufferDesc.RefreshRate.Numerator = 60;
-	swapChainDescription.BufferDesc.RefreshRate.Denominator = 1;
+	swapChainDescription.BufferDesc.RefreshRate.Numerator = numerator;
+	swapChainDescription.BufferDesc.RefreshRate.Denominator = denominator;
 	swapChainDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDescription.OutputWindow = p_handle;
 	swapChainDescription.SampleDesc.Count = 1;
 	swapChainDescription.SampleDesc.Quality = 0;
+	swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
 	if (GLOBAL::GetInstance().FULLSCREEN)
 	{
@@ -61,6 +138,27 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		ConsolePrintErrorAndQuit("DirectX swap chain and device failed to create.");
 		return false;
 	}
+
+	IDXGIDevice* device;
+	m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&device);
+
+	adapter;
+	device->GetParent(__uuidof(IDXGIAdapter), (void **)&adapter);
+
+	factory;
+	adapter->GetParent(__uuidof(IDXGIFactory), (void **)&factory);
+
+	if (FAILED(factory->MakeWindowAssociation(p_handle, DXGI_MWA_NO_ALT_ENTER)))
+	{
+		ConsolePrintErrorAndQuit("Failed to disable alt enter.");
+		return false;
+	}
+
+	delete[] displayModeList;
+	displayModeList = 0;
+	adapter->Release();
+	adapterOutput->Release();
+	factory->Release();
 
 	// Retrieve the backbuffer texture from the swap chain.
 	ID3D11Texture2D* backBuffer = NULL;
@@ -194,21 +292,6 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
-	IDXGIDevice* device;
-	m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&device);
-
-	IDXGIAdapter* adapter;
-	device->GetParent(__uuidof(IDXGIAdapter), (void **)&adapter);
-
-	IDXGIFactory * factory;
-	adapter->GetParent(__uuidof(IDXGIFactory), (void **)&factory);
-
-	if (FAILED(factory->MakeWindowAssociation(p_handle, DXGI_MWA_NO_ALT_ENTER)))
-	{
-		ConsolePrintErrorAndQuit("Failed to disable alt enter.");
-		return false;
-	}
-
 	return true;
 }
 
@@ -219,9 +302,14 @@ void DirectXWrapper::Clear()
 	m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void DirectXWrapper::ClearOutlining()
+{
+	m_context->ClearDepthStencilView(m_depthStencilViewOutlining, D3D11_CLEAR_STENCIL | D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
 void DirectXWrapper::Present()
 {
-	m_swapChain->Present(0, 0);
+	m_swapChain->Present(m_vsync, 0);
 }
 
 IDXGISwapChain* DirectXWrapper::GetSwapChain()
@@ -289,4 +377,108 @@ void DirectXWrapper::TurnOnDepthStencil()
 void DirectXWrapper::TurnOffDepthStencil()
 {
 	m_context->OMSetDepthStencilState(m_depthDisabled, 1);
+}
+
+bool DirectXWrapper::InitializeOutlinging()
+{
+	D3D11_DEPTH_STENCIL_DESC stencilDesc;
+	stencilDesc.DepthEnable = true;
+	stencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	stencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	stencilDesc.StencilEnable = true;
+	stencilDesc.StencilReadMask = 0xFF;
+	stencilDesc.StencilWriteMask = 0xFF;
+	stencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR_SAT;
+	stencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	stencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+
+	// Create depth stencil state
+	if (FAILED(m_device->CreateDepthStencilState(&stencilDesc, &m_outliningALWAYS)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil enabled state failed to create. OutliningShader-SetOff");
+		return false;
+	}
+
+	stencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+	stencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+
+	if (FAILED(m_device->CreateDepthStencilState(&stencilDesc, &m_outliningNOTEQUAL)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil disabled state failed to create.");
+		return false;
+	}
+
+	// Initialize the depth stencil.
+	D3D11_TEXTURE2D_DESC depthStencilDescription;
+	ZeroMemory(&depthStencilDescription, sizeof(depthStencilDescription));
+	depthStencilDescription.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	depthStencilDescription.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	depthStencilDescription.MipLevels = 1;
+	depthStencilDescription.ArraySize = 1;
+	depthStencilDescription.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDescription.SampleDesc.Count = 1;
+	depthStencilDescription.SampleDesc.Quality = 0;
+	depthStencilDescription.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDescription.CPUAccessFlags = 0;
+	depthStencilDescription.MiscFlags = 0;
+
+	// Create depth stencil texture.
+	if (FAILED(m_device->CreateTexture2D(&depthStencilDescription, NULL, &m_depthStencilOutlining)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil failed to create.");
+		return false;
+	}
+
+	// Initialize the depth stencil view.
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDescription;
+	ZeroMemory(&depthStencilViewDescription, sizeof(depthStencilViewDescription));
+	depthStencilViewDescription.Format = depthStencilViewDescription.Format;
+	depthStencilViewDescription.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDescription.Texture2D.MipSlice = 0;
+
+	// Create the depth stencil view.
+	if (FAILED(m_device->CreateDepthStencilView(m_depthStencilOutlining, &depthStencilViewDescription, &m_depthStencilViewOutlining)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil view failed to create.");
+		return false;
+	}
+	
+
+	return true;
+}
+
+void DirectXWrapper::SetOutliningPassOne()
+{
+	m_context->OMSetRenderTargets(0, NULL, m_depthStencilViewOutlining);
+	m_context->OMSetDepthStencilState(m_outliningALWAYS, 0);
+}
+
+void DirectXWrapper::SetOutliningPassTwo()
+{
+	m_context->OMSetRenderTargets(1, &m_renderTarget, m_depthStencilViewOutlining);
+	m_context->OMSetDepthStencilState(m_outliningNOTEQUAL, 0);
+}
+
+void DirectXWrapper::SetVsync(bool p_state)
+{
+	if (p_state)
+	{
+		m_vsync = 1;
+	}
+	else
+	{
+		m_vsync = 0;
+	}
 }
