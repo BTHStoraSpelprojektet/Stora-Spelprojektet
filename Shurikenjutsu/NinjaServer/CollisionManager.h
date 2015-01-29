@@ -10,10 +10,13 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include <vector>
 #include "Collisions.h"
-#include "PlayerManager.h"
-#include "ShurikenManager.h"
+#include "..\CommonLibs\ServerMessages.h"
 
+
+class ShurikenManager;
 class PlayerManager;
+class SpikeManager;
+
 class CollisionManager
 {
 public:
@@ -21,15 +24,16 @@ public:
 
 	std::vector<bool> OuterWallCollision(Sphere p_playerSphere);
 
-
 	void NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager);
+	void SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager, float p_deltaTime);
 	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
-	void CalculateSmokeBombLocation();
+
 
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);
 	bool BoxBoxTest(Box p_box1, Box p_box2);
+	bool SphereSphereTest(Sphere p_spikeTrap, Sphere p_player);
 	bool OBBSphereTest(OBB p_OBB, Sphere p_sphere);
 
 	static CollisionManager* m_instance;

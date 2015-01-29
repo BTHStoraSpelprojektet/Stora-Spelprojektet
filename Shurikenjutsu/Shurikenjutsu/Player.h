@@ -31,10 +31,10 @@ public:
 	void RenderOutlining();
 	//void SetDamage(float p_damage);
 	//float GetDamage() const;	
-	void SetHealth(int p_health);
-	int GetHealth() const;
-	void SetMaxHealth(int p_maxHealth);
-	int GetMaxHealth() const;
+	void SetHealth(float p_health);
+	float GetHealth() const;
+	void SetMaxHealth(float p_maxHealth);
+	float GetMaxHealth() const;
 	//void SetAgility(float p_agility);
 	//float GetAgility() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
@@ -61,7 +61,7 @@ public:
 	bool IsVisible();
 	void SetIsVisible(bool p_visiblie);
 
-private:
+protected:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
@@ -71,8 +71,8 @@ private:
 
 	float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	//int m_spells; // antalet spells om det behövs - skapa lista
-	int m_health; // Player health
-	int m_maxHealth; // Max player health
+	float m_health; // Player health
+	float m_maxHealth; // Max player health
 	//float m_agility; // Speed på attacker och rullning m.m
 	bool m_isAlive; // bool to check if the player should render and update itself
 	InputManager* m_inputManager;
@@ -91,12 +91,11 @@ private:
 	Sphere m_playerSphere;
 	Ability* m_ability;
 	Ability* m_noAbility;
-	Ability* m_dash;
-	Ability* m_meleeSwing;
-	Ability* m_shurikenAbility;
-	Ability* m_megaShuriken;
-	Ability* m_smokeBombAbility;
-	Ability* m_spikeAbility;
+	Ability* m_meleeAttack;
+	Ability* m_meleeSpecialAttack;
+	Ability* m_rangeAttack;
+	Ability* m_rangeSpecialAttack;
+	Ability* m_toolAbility;
 
 	HealthBar* m_healthbar;
 	AbilityBar* m_abilityBar;

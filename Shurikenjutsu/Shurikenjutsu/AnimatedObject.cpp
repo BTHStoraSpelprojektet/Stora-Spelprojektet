@@ -6,7 +6,7 @@
 AnimatedObject::AnimatedObject(){}
 AnimatedObject::~AnimatedObject(){}
 
-bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed)
+bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir)
 {
 	if (!Object::Initialize(p_filepath, p_pos))
 	{
@@ -16,9 +16,8 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	LoadTexture(p_filepath);
 
 	SetDirection(p_dir);
-	SetSpeed(p_speed);
 
-	for (unsigned i = 0; i < m_model->GetAnimationStacks().size(); i++)
+	for (unsigned int i = 0; i < m_model->GetAnimationStacks().size(); i++)
 	{
 		m_animationController.CreateNewStack(m_model->GetAnimationStacks()[i]);
 	}

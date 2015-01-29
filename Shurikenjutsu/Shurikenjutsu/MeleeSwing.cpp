@@ -13,6 +13,7 @@ bool MeleeSwing::Initialize()
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
+	m_totalCooldown = 0.5f;
 	return true;
 }
 
