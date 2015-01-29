@@ -183,6 +183,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
+
+	OutliningRays();
 	
 	return GAMESTATESWITCH_NONE;
 }

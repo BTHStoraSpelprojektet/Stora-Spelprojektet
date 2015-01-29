@@ -838,5 +838,9 @@ void Player::SetIsVisible(bool p_visible)
 
 Sphere Player::GetSphere()
 {
+	if (m_boundingSpheres.size() <= 0)
+	{
+		return Sphere(1000.0f, 1000.0f, 1000.0f, 1.0f);
+	}
 	return m_boundingSpheres[0];
 }
