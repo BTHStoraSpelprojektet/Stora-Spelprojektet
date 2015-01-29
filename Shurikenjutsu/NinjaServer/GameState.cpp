@@ -29,6 +29,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_smokeBombManager = new SmokeBombManager();
 	m_smokeBombManager->Initialize(m_serverPeer);
 
+	m_fanBoomerangManager = new FanBoomerangManager();
+	m_fanBoomerangManager->Initialize(m_serverPeer);
+
 	return true;
 }
 
@@ -53,11 +56,13 @@ void GameState::Shutdown()
 	m_shurikenManager->Shutdown();
 	m_smokeBombManager->Shutdown();
 	m_mapManager->Shutdown();
+	m_fanBoomerangManager->Shutdown();
 
 	delete m_playerManager;
 	delete m_shurikenManager;
 	delete m_smokeBombManager;
 	delete m_mapManager;
+	delete m_fanBoomerangManager;
 
 	delete m_collisionManager;
 }
@@ -67,8 +72,9 @@ void GameState::Update(double p_deltaTime)
 	m_playerManager->Update(p_deltaTime);
 	m_shurikenManager->Update(p_deltaTime);
 	m_smokeBombManager->Update(p_deltaTime);
-
+	m_fanBoomerangManager->Update(p_deltaTime);
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
+	m_collisionManager->FanCollisionChecks(m_fanBoomerangManager, m_playerManager);
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid)

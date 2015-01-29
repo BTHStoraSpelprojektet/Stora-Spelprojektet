@@ -10,6 +10,7 @@
 #include "InputManager.h"
 #include "ShurikenAbility.h"
 #include "MegaShuriken.h"
+#include "FanBoomerangAbility.h"
 #include "Ability.h"
 #include "HealthBar.h"
 #include "AbilityBar.h"
@@ -115,10 +116,10 @@ void Player::Shutdown()
 		delete m_healthbar;
 	}
 
-	/*if (m_abilityBar != nullptr)
+	if (m_abilityBar != nullptr)
 	{
 		m_abilityBar->Shutdown();
-	}*/
+	}
 }
 
 void Player::UpdateMe()

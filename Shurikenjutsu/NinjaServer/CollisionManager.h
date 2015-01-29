@@ -12,6 +12,7 @@
 #include "Collisions.h"
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
+#include "FanBoomerangManager.h"
 
 class PlayerManager;
 class CollisionManager
@@ -24,6 +25,8 @@ public:
 
 	void NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager);
+	void FanCollisionChecks(FanBoomerangManager* p_fanBoomerangManager, PlayerManager* p_playerManager);
+
 	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 	void CalculateSmokeBombLocation();
 

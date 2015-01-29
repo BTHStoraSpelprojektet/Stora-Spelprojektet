@@ -282,6 +282,7 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 		case ABILITIES_MEGASHURIKEN:
 			m_players[p_index].cooldownAbilites.megaShurikenCD = MEGASHURIKEN_COOLDOWN;
 			break;
+
 		default:
 			break;
 		}

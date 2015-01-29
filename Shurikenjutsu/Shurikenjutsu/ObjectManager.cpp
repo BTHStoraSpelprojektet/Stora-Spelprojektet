@@ -53,6 +53,11 @@ bool ObjectManager::Initialize(Level* p_level)
 	}
 
 	m_staticObjects[m_staticObjects.size()-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
+
+	FanBoomerang* tempfan = new FanBoomerang;
+	tempfan->Initialize(SMOKE_BOMB, DirectX::XMFLOAT3(0.0f, 7.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
+	m_fans.push_back(tempfan);
+
 	return true;
 }
 
@@ -76,11 +81,23 @@ void ObjectManager::Shutdown()
 		m_smokeBombList[i]->Shutdown();
 		delete m_smokeBombList[i];
 	}
+
+	for (unsigned int i = 0; i < m_fans.size(); i++)
+	{
+		m_fans[i]->Shutdown();
+		delete m_fans[i];
+	}
 }
 
 void ObjectManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+
+	// Update all the fans
+	for (unsigned int i = 0; i < m_fans.size(); i++)
+	{
+		m_fans[i]->Update();
+	}
 
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -175,6 +192,14 @@ void ObjectManager::Render()
 		}
 	}
 
+	for (unsigned int i = 0; i < m_fans.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_fans[i]->GetFrustumSphere(), 1.0f))
+		{
+			m_fans[i]->Render();
+		}
+	}
+
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_smokeBombList[i]->GetSmokeSphere(), 2.0f))
@@ -205,6 +230,14 @@ void ObjectManager::RenderDepth()
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		m_shurikens[i]->RenderDepth();
+	}
+
+	for (unsigned int i = 0; i < m_fans.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_fans[i]->GetFrustumSphere(), 1.0f))
+		{
+			m_fans[i]->RenderDepth();
+		}
 	}
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)

@@ -7,6 +7,7 @@
 #include "Shuriken.h"
 #include "AnimatedObject.h"
 #include "SmokeBomb.h"
+#include "FanBoomerang.h"
 #include "..\CommonLibs\Level.h"
 
 class Frustum;
@@ -37,14 +38,17 @@ private:
 
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Shuriken*> m_shurikens;
+	std::vector<FanBoomerang*> m_fans;
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToRender;
 	std::vector<Object*> m_objectsToShadowRender;
-
+	
 	Frustum* m_frustum;
 
 	bool IsShurikenInList(unsigned int p_shurikenId);
 	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
 	bool IsSmokeBombInList(unsigned int p_shurikenId);
+
+	
 };
 #endif

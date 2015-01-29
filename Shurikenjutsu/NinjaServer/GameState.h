@@ -5,6 +5,7 @@
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "FanBoomerangManager.h"
 
 class MapManager;
 class CollisionManager;
@@ -39,6 +40,7 @@ protected:
 	SmokeBombManager* m_smokeBombManager;
 	MapManager* m_mapManager;
 	CollisionManager* m_collisionManager;
+	FanBoomerangManager* m_fanBoomerangManager;
 };
 
 #endif
