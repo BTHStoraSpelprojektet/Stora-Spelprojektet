@@ -7,7 +7,8 @@
 #define LEVEL_NAME "../Shurikenjutsu/Levels/ciliasTestLevel.SSPL"
 
 // Players
-#define NINJA1_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
+#define KATANA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
+#define TESSEN_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja2Shape.SSP"
 
 // Shurikens
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"

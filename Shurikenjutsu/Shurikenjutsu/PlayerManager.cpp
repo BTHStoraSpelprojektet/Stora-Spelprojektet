@@ -6,6 +6,7 @@
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "KatanaNinja.h"
+#include "TessenNinja.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -144,7 +145,7 @@ void PlayerManager::RenderOutlining()
 
 void PlayerManager::AddPlayer(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	KatanaNinja *tempPlayer = new KatanaNinja();
+	TessenNinja *tempPlayer = new TessenNinja();
 	tempPlayer->Initialize(p_pos, p_direction);
 	m_player = tempPlayer;
 	m_player->SendPosition(m_player->GetPosition());
@@ -152,7 +153,7 @@ void PlayerManager::AddPlayer(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direc
 
 void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	KatanaNinja tempPlayer;
+	TessenNinja tempPlayer;
 	tempPlayer.Initialize(p_pos, p_direction);
 	tempPlayer.SetGuID(p_guid);
 	tempPlayer.SetMaxHealth(CHARACTAR_KATANA_SHURIKEN_HEALTH);

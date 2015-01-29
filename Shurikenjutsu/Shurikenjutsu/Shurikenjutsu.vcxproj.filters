@@ -383,6 +383,9 @@
     <ClCompile Include="KatanaNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
+    <ClCompile Include="TessenNinja.cpp">
+      <Filter>Source Files\Ninjas</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -620,6 +623,9 @@
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
     <ClInclude Include="KatanaNinja.h">
+      <Filter>Header Files\Ninjas</Filter>
+    </ClInclude>
+    <ClInclude Include="TessenNinja.h">
       <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
   </ItemGroup>

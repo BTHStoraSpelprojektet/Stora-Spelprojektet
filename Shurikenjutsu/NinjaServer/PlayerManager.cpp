@@ -21,7 +21,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_spawnPoints = level.GetSpawnPoints();
 
 	// Todo: move to player
-	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(NINJA1_MODEL_NAME)->GetBoundingBoxes();
+	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(KATANA_NINJA_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }

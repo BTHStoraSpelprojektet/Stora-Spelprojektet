@@ -1,4 +1,4 @@
-#include "KatanaNinja.h"
+#include "TessenNinja.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "MeleeSwing.h"
 #include "Dash.h"
@@ -6,20 +6,20 @@
 #include "MegaShuriken.h"
 #include "SmokeBombAbility.h"
 
-KatanaNinja::KatanaNinja()
+TessenNinja::TessenNinja()
 {
 }
 
 
-KatanaNinja::~KatanaNinja()
+TessenNinja::~TessenNinja()
 {
 }
 
-bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
 	bool result;
 
-	result = Player::Initialize(KATANA_NINJA_MODEL_NAME, p_pos, p_direction);
+	result = Player::Initialize(TESSEN_NINJA_MODEL_NAME, p_pos, p_direction);
 	if (!result)
 	{
 		return false;
@@ -43,7 +43,6 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	return true;
 }
 
-void KatanaNinja::Shutdown()
+void TessenNinja::Shutdown()
 {
-	Player::Shutdown();
 }
