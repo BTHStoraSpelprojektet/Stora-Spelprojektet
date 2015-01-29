@@ -422,21 +422,21 @@ void Player::SetCalculatePlayerPosition()
 		
 		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
-			if (i > 0)
-			{
-				if ((collidingBoxes[i].m_center.x != collidingBoxes[i - 1].m_center.x) || (collidingBoxes[i].m_center.y != collidingBoxes[i - 1].m_center.y))
-				{
-					SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-				}
-				else
-				{
-					SetDirection(DirectX::XMFLOAT3(m_direction.x, 0.0f, m_direction.z));
-				}
-			}
-			else
-			{
+			//if (i > 0)
+			//{
+			//	if ((collidingBoxes[i].m_center.x != collidingBoxes[i - 1].m_center.x) || (collidingBoxes[i].m_center.y != collidingBoxes[i - 1].m_center.y))
+			//	{
+			//		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+			//	}
+			//	else
+			//	{
+			//		SetDirection(DirectX::XMFLOAT3(m_direction.x, 0.0f, m_direction.z));
+			//	}
+			//}
+			//else
+			//{
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-			}
+			//}
 		}
 		else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
 		{
