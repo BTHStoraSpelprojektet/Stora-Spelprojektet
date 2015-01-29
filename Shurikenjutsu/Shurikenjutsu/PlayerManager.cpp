@@ -136,6 +136,11 @@ void PlayerManager::RenderDepth()
 }
 }
 
+void PlayerManager::RenderOutlining()
+{
+	m_player->RenderOutlining();
+}
+
 void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
 	Player *tempPlayer = new Player();

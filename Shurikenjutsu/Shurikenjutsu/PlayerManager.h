@@ -20,6 +20,7 @@ public:
 	void Update();
 	void Render();
 	void RenderDepth();
+	void RenderOutlining();
 	DirectX::XMFLOAT3 GetPlayerPosition();
 	DirectX::XMFLOAT3 GetPlayerDirection();
 	void SetPlayerDirection(DirectX::XMFLOAT3 p_direction); 

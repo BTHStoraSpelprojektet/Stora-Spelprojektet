@@ -371,6 +371,9 @@
     <ClCompile Include="Spikes.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="OutliningShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -604,6 +607,9 @@
     <ClInclude Include="Spikes.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
+    <ClInclude Include="OutlingShader.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -662,6 +668,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\ShadowShapes\SSVertexShader.hlsl">
       <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\PixelShaderOutlining.hlsl">
+      <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\VertexShaderOutlining.hlsl">
+      <Filter>Shaders\Scene</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
