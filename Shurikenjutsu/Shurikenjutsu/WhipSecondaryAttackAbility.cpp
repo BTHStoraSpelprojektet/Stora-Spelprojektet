@@ -9,7 +9,7 @@ WhipSecondaryAttackAbility::WhipSecondaryAttackAbility(){}
 WhipSecondaryAttackAbility::~WhipSecondaryAttackAbility(){}
 bool WhipSecondaryAttackAbility::Initialize()
 {
-	SetDamage(WHIP_DAMAGE);
+	SetDamage(WHIP_SP_DAMAGE);
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
@@ -21,9 +21,9 @@ bool WhipSecondaryAttackAbility::Execute(float p_distance)
 {
 	if (Ability::Execute(p_distance))
 	{
-		Network::GetInstance()->SendAbility(ABILITIES_WHIP_PRIMARY, 0);
+		Network::GetInstance()->SendAbility(ABILITIES_WHIP_SECONDARY, 0);
 		SetCooldown(ALL_AROUND_GLOBAL_COOLDOWN);
-		std::cout << "Just whip it!" << std::endl;
+		std::cout << "Spin that whip!!" << std::endl;
 		return true;
 	}
 	return false;
