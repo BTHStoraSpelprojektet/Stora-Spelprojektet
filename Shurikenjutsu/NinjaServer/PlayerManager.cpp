@@ -8,7 +8,7 @@ PlayerManager::~PlayerManager(){}
 
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
-	m_playerHealth = CHARACTAR_KATANA_SHURIKEN_HEALTH;
+	m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
 	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
 
 	m_serverPeer = p_serverPeer;

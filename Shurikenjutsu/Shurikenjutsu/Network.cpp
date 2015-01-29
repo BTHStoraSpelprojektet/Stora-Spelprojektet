@@ -169,6 +169,7 @@ void Network::ReceviePacket()
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
 				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
 				UpdatePlayerTeam(guid, team);
+				UpdatePlayerChar(guid, charNr);
 
 				playerGuids.push_back(guid);				
 			}
@@ -495,6 +496,8 @@ void Network::ChooseChar(int p_charNr)
 	bitStream.Write(p_charNr);
 
 	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+
+	m_myPlayer.charNr = p_charNr;
 }
 
 bool Network::IsConnected()

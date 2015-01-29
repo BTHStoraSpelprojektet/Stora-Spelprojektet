@@ -1,5 +1,6 @@
 #include "TessenNinja.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "../CommonLibs/GameplayGlobalVariables.h"
 #include "MeleeSwing.h"
 #include "Dash.h"
 #include "ShurikenAbility.h"
@@ -24,6 +25,8 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	{
 		return false;
 	}
+
+	SetSpeed(CHARACTER_TESSEN_SPEED);
 
 	m_meleeAttack = new MeleeSwing();
 	m_meleeAttack->Initialize();

@@ -25,7 +25,7 @@ void Player::operator delete(void* p_p)
 
 bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction, CHARACTAR_KATANA_SHURIKEN_SPEED))
+	if (!AnimatedObject::Initialize(p_filepath, p_pos, p_direction))
 	{
 		return false;
 	}

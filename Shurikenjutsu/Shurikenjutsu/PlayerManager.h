@@ -43,8 +43,8 @@ public:
 	int GetEnemyTeam(int p_index);
 
 private:
-	void AddPlayer(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
-	void AddEnemy(RakNet::RakNetGUID p_guid, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
+	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
+	void AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
 	
 	bool IsGuidInEnemyList(RakNet::RakNetGUID p_guid);
 	bool IsGuidInNetworkList(RakNet::RakNetGUID p_guid);

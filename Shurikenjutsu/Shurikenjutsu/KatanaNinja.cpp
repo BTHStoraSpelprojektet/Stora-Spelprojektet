@@ -1,5 +1,6 @@
 #include "KatanaNinja.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "../CommonLibs/GameplayGlobalVariables.h"
 #include "MeleeSwing.h"
 #include "Dash.h"
 #include "ShurikenAbility.h"
@@ -24,6 +25,8 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	{
 		return false;
 	}
+
+	SetSpeed(CHARACTER_KATANA_SHURIKEN_SPEED);
 
 	m_meleeAttack = new MeleeSwing();
 	m_meleeAttack->Initialize();
