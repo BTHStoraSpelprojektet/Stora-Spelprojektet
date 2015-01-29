@@ -386,6 +386,9 @@
     <ClCompile Include="TessenNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
+    <ClCompile Include="WhipPrimaryAttackAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -627,6 +630,9 @@
     </ClInclude>
     <ClInclude Include="TessenNinja.h">
       <Filter>Header Files\Ninjas</Filter>
+    </ClInclude>
+    <ClInclude Include="WhipPrimaryAttackAbility.h">
+      <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
