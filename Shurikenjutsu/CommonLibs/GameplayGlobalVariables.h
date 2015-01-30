@@ -6,12 +6,12 @@ const float ALL_AROUND_GLOBAL_COOLDOWN = 0.5f;
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
 //Shuriken
-const float SHURIKEN_DAMAGE = 25.0f;
+const float SHURIKEN_DAMAGE = 20.0f;
 const float SHURIKEN_COOLDOWN = 2.0f;
 const float SHURIKEN_DURATION = 3.0f;
 const int SHURIKEN_MAX_STACK = 3;
 const float SHURIKEN_ROTATION_SPEED = 15.70f;
-const float SHURIKEN_SPEED = 20.0f;
+const float SHURIKEN_SPEED = 40.0f;
 
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
@@ -30,23 +30,23 @@ const float WHIP_SP_RANGE = 10.0f;
 ////////////////////////////////////////////////////////////////Ranged Attacks
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 //Megashuriken
-const float MEGASHURIKEN_COOLDOWN = 4.0f;
-const float MEGASHURIKEN_DAMAGE = 50.0f;
+const float MEGASHURIKEN_COOLDOWN = 5.0f;
+const float MEGASHURIKEN_DAMAGE = 40.0f;
 const float MEGASHURIKEN_DURATION = 4.0f;
-const float MEGASHURIKEN_SPEED = 15.0f;
+const float MEGASHURIKEN_SPEED = 25.0f;
 
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
 //Katana
-const float KATANA_DAMAGE = 50.0f;
+const float KATANA_DAMAGE = 40.0f;
 const float KATANA_RANGE = 2.5f;
 
 ////////////////////////////////////////////////////////////////Melee Attacks
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 //Dash
 const float DASH_MAX_RANGE = 10.0f;
-const float DASH_COOLDOWN = 8.0f;
-const float DASH_DAMAGE = 5.0f;
+const float DASH_COOLDOWN = 6.0f;
+const float DASH_DAMAGE = 10.0f;
 const float DASH_SPEED = 8.0f;
 
 ////////////////////////////////////////////////////////////////Special Melee Attacks
@@ -82,7 +82,7 @@ const float SPIKE_RADIUS = 1.5f;
 const float CHARACTER_KATANA_SHURIKEN_HEALTH = 100.0f;
 const float CHARACTER_KATANA_SHURIKEN_SPEED = 5.0f;
 
-const float CHARACTER_TESSEN_HEALTH = 100.0f;
+const float CHARACTER_TESSEN_HEALTH = 90.0f;
 const float CHARACTER_TESSEN_SPEED = 6.0f;
 
 ////////////////////////////////////////////////////////////////Character Variables
