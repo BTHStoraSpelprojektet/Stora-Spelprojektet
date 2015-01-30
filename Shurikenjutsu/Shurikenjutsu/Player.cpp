@@ -458,10 +458,9 @@ void Player::SetCalculatePlayerPosition()
 
 	if (CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 	{
-		SendPosition(DirectX::XMFLOAT3(m_position.x, m_position.y , m_position.z ));
 		float x = m_direction.x;
 		float z = m_direction.z;
-
+		playerSphere.m_radius = m_playerSphere.m_radius - 0.25f;
 		if (x == 1 || x == -1 || z == 1 || z == -1)
 		{
 			SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -495,7 +494,30 @@ void Player::SetCalculatePlayerPosition()
 		}
 		else if (x > 0 && z < 0)//down right
 		{
+			SetPosition(m_position);
+			playerSphere.m_position.x = m_playerSphere.m_position.x + 0.0f * speedXDeltaTime;
+			playerSphere.m_position.z = m_playerSphere.m_position.z - 1.0f * speedXDeltaTime;
+			bool down = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
 
+			playerSphere.m_position.x = m_playerSphere.m_position.x + 1.0f * speedXDeltaTime;
+			playerSphere.m_position.z = m_playerSphere.m_position.z + 0.0f * speedXDeltaTime;
+			bool right = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+
+			if (down && right)
+			{
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+				std::cout << "down and right" << std::endl;
+			}
+			else if (down)
+			{
+				SetDirection(DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+				std::cout << "down" << std::endl;
+			}
+			else if (right)
+			{
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f));
+				std::cout << "right" << std::endl;
+			}
 		}
 		else if (x < 0 && z > 0)//up left 
 		{
