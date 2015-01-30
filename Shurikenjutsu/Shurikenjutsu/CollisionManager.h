@@ -19,6 +19,8 @@ public:
 	float CalculateDashLength(Ray* p_ray);
 	bool CalculateRayLength(Ray* p_ray, float p_rayDistance);
 	float CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos);
+	bool CheckCollisionWithAllStaticObjects(Sphere p_sphere);
+
 private:
 
 	CollisionManager();
