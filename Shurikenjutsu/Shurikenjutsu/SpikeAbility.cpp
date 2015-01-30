@@ -11,13 +11,14 @@ bool SpikeAbility::Initialize()
 	SetTime(0.0f);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
+	m_totalCooldown = SPIKE_COOLDOWN;
 	return true;
 }
 bool SpikeAbility::Execute(float p_distance)
 {
 	if (Ability::Execute(p_distance))
 	{
-		Network::GetInstance()->SendAbility(ABILITIES_SMOKEBOMB, p_distance);
+		Network::GetInstance()->SendAbility(ABILITIES_SPIKETRAP, p_distance);
 		SetCooldown(SPIKE_COOLDOWN);
 		return true;
 	}

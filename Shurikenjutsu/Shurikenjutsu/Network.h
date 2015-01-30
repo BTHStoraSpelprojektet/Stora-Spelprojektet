@@ -45,6 +45,9 @@ public:
 	void Update();
 
 	void Connect(std::string p_ip);
+	void Disconnect();
+
+	void ChooseChar(int p_charNr);
 
 	bool ConnectedNow();
 	bool IsConnected();
@@ -69,6 +72,14 @@ public:
 	void SetHaveUpdateSmokeBombList();
 	std::vector<SmokeBombNet> GetSmokeBombs();
 
+	bool IsSpikeTrapListUpdated();
+	void SetHaveUpdateSpikeTrapList();
+	std::vector<SpikeNet> GetSpikeTraps();
+
+	bool IsFanListUpdated();
+	void SetHaveUpdateFanList();
+	std::vector<FanNet> GetFanList();
+
 	bool HasRespawned();
 	void SetHaveRespawned();
 
@@ -92,6 +103,9 @@ public:
 	DirectX::XMFLOAT3 GetDashLocation();
 
 private:
+
+	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
+	void RemoveSpikeTrap(unsigned int p_spikeTrapId);
 	Network();
 	~Network();
 	
@@ -102,13 +116,15 @@ private:
 	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
-	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP, bool p_isAlive);
-	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_currentHP, bool p_isAlive);
+	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive);
+	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive);
+	void UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr);
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken);
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
+	void AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed);
 
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
 	RakNet::RakPeerInterface *m_clientPeer;
@@ -125,6 +141,8 @@ private:
 	bool m_newOrRemovedPlayers;
 	bool m_shurikenListUpdated;
 	bool m_smokebombListUpdated;
+	bool m_spikeTrapListUpdated;	
+	bool m_fanListUpdated;
 	bool m_respawned;
 	bool m_invalidMove;
 	bool m_roundRestarted;
@@ -135,6 +153,8 @@ private:
 	std::vector<PlayerNet> m_enemyPlayers;
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
+	std::vector<SpikeNet> m_spikeTrapList;
+	std::vector<FanNet> m_fanList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 	DirectX::XMFLOAT3 m_dashLocation;
 

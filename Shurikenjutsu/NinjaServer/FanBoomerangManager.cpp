@@ -25,18 +25,24 @@ void FanBoomerangManager::Update(double p_deltaTime)
 	// Update all the fans
 	for (unsigned int i = 0; i < m_fans.size(); i++)
 	{
-		m_fans[i].lifeTime -= (float)p_deltaTime;
-
-		// Check if the time has run out for the fan and remove it
-		if (m_fans[i].lifeTime <= 0)
+		// Update life, it sucks
+		if (m_fans[i].lifeTime > 0)
 		{
-			// Send removal of fans to clients
-			BroadcastDestoyed(m_fans[i].id);
-
-			m_fans.erase(m_fans.begin() + i);
-			i--;
+			m_fans[i].lifeTime -= (float)p_deltaTime;
+			m_fans[i].x += m_fans[i].dirX*m_fans[i].speed*(float)p_deltaTime;
+			m_fans[i].y += m_fans[i].dirY*m_fans[i].speed*(float)p_deltaTime;
+			m_fans[i].z += m_fans[i].dirZ*m_fans[i].speed*(float)p_deltaTime;
 		}
+		else
+		{
+			m_fans[i].x += m_fans[i].dirX*m_fans[i].speed*(float)-p_deltaTime;
+			m_fans[i].y += m_fans[i].dirY*m_fans[i].speed*(float)-p_deltaTime;
+			m_fans[i].z += m_fans[i].dirZ*m_fans[i].speed*(float)-p_deltaTime;
+		}
+		
 	}
+
+	UpdateClients();
 }
 
 void FanBoomerangManager::Add(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)
@@ -50,7 +56,7 @@ void FanBoomerangManager::Add(RakNet::RakNetGUID p_guid, float p_posX, float p_p
 	fan.dirZ = p_dirZ;
 	fan.id = GetUniqueId();
 	fan.guid = p_guid;
-	fan.lifeTime = SHURIKEN_DURATION;
+	fan.lifeTime = 3.0f;
 	fan.speed = SHURIKEN_SPEED;
 	m_fans.push_back(fan);
 
@@ -80,6 +86,30 @@ void FanBoomerangManager::Remove(unsigned int p_id)
 			break;
 		}
 	}
+}
+
+void FanBoomerangManager::UpdateClients()
+{
+	int nrOfFans = m_fans.size();
+
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_FAN_UPDATE);
+	bitStream.Write(nrOfFans);
+
+	for (int i = 0; i < nrOfFans; i++)
+	{
+		bitStream.Write(m_fans[i].id);
+		bitStream.Write(m_fans[i].x);
+		bitStream.Write(m_fans[i].y);
+		bitStream.Write(m_fans[i].z);
+		bitStream.Write(m_fans[i].dirX);
+		bitStream.Write(m_fans[i].dirY);
+		bitStream.Write(m_fans[i].dirZ);
+		bitStream.Write(m_fans[i].speed);
+	}
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 std::vector<FanNet> FanBoomerangManager::GetObjects()
@@ -118,8 +148,7 @@ float FanBoomerangManager::GetPosX(int p_index)
 		return 0;
 	}
 
-	float lifeTime = SHURIKEN_DURATION - m_fans[p_index].lifeTime;
-	return m_fans[p_index].x + m_fans[p_index].dirX * m_fans[p_index].speed * lifeTime;
+	return m_fans[p_index].x;
 }
 
 float FanBoomerangManager::GetPosY(int p_index)
@@ -130,8 +159,7 @@ float FanBoomerangManager::GetPosY(int p_index)
 		return 0;
 	}
 
-	float lifeTime = SHURIKEN_DURATION - m_fans[p_index].lifeTime;
-	return m_fans[p_index].y + m_fans[p_index].dirY * m_fans[p_index].speed * lifeTime;
+	return m_fans[p_index].y;
 }
 
 float FanBoomerangManager::GetPosZ(int p_index)
@@ -142,8 +170,7 @@ float FanBoomerangManager::GetPosZ(int p_index)
 		return 0;
 	}
 
-	float lifeTime = SHURIKEN_DURATION - m_fans[p_index].lifeTime;
-	return m_fans[p_index].z + m_fans[p_index].dirZ * m_fans[p_index].speed * lifeTime;
+	return m_fans[p_index].z;
 }
 
 void FanBoomerangManager::BroadcastDestoyed(unsigned int p_id)
@@ -178,4 +205,9 @@ unsigned int FanBoomerangManager::GetUniqueId()
 	} while (found);
 
 	return ID;
+}
+
+float FanBoomerangManager::SetLifeTime(int p_index, float p_lifeTime)
+{
+	return m_fans[p_index].lifeTime = p_lifeTime;
 }

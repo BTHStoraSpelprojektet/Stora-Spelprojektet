@@ -25,6 +25,8 @@ bool Network::Initialize()
 	m_newOrRemovedPlayers = false;
 	m_shurikenListUpdated = false;
 	m_smokebombListUpdated = false;
+	m_spikeTrapListUpdated = false;
+	m_fanListUpdated = false;
 	m_respawned = false;
 	m_invalidMove = false;
 	m_roundRestarted = false;
@@ -38,6 +40,7 @@ bool Network::Initialize()
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
+	m_fanList = std::vector<FanNet>();
 
 	m_connectionCount = 0;
 	m_previousCount = 0;
@@ -140,8 +143,8 @@ void Network::ReceviePacket()
 			int nrOfPlayers = 0;
 			float x, y, z;
 			float dirX, dirY, dirZ;
-			int team;
-			int maxHP, currentHP;
+			float maxHP, currentHP;
+			int team, charNr;;
 			bool isAlive;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -158,6 +161,7 @@ void Network::ReceviePacket()
 				bitStream.Read(dirY);
 				bitStream.Read(dirZ);
 				bitStream.Read(team);
+				bitStream.Read(charNr);
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
@@ -167,6 +171,7 @@ void Network::ReceviePacket()
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
 				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
 				UpdatePlayerTeam(guid, team);
+				UpdatePlayerChar(guid, charNr);
 
 				playerGuids.push_back(guid);				
 			}
@@ -273,7 +278,7 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID guid;
-			int currentHP;
+			float currentHP;
 			bool isAlive;
 
 			bitStream.Read(messageID);
@@ -416,6 +421,37 @@ void Network::ReceviePacket()
 			m_playerAnimations[guid] = state;
 			break;
 		}
+		case ID_SPIKETRAP_THROW:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			unsigned int spikeTrapId;
+			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
+			bitStream.Read(messageID);
+			bitStream.Read(spikeTrapId);
+			bitStream.Read(startPosX);
+			bitStream.Read(startPosZ);
+			bitStream.Read(endPosX);
+			bitStream.Read(endPosZ);
+			bitStream.Read(lifetime);
+			bitStream.Read(guid);
+
+
+			UpdateSpikeTrap(guid, spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime);
+			break;
+		}
+		case ID_SPIKETRAP_REMOVE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int spikeTrapId;
+			bitStream.Read(messageID);
+			bitStream.Read(spikeTrapId);
+
+			RemoveSpikeTrap(spikeTrapId);
+			break;
+		}
 		case ID_DASH_TO_LOCATION:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -432,10 +468,75 @@ void Network::ReceviePacket()
 			m_dashed = true;
 			break;
 		}
+		case ID_FAN_THROWN:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float x, y, z;
+			float dirX, dirY, dirZ;
+			unsigned int id;
+			float speed;
+
+			bitStream.Read(messageID);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+			bitStream.Read(dirX);
+			bitStream.Read(dirY);
+			bitStream.Read(dirZ);
+			bitStream.Read(id);
+			bitStream.Read(guid);
+			bitStream.Read(speed);
+
+			AddFans(x, y, z, dirX, dirY, dirZ, id, guid, speed);
+			break;
+		}
+		case ID_FAN_UPDATE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float x, y, z;
+			float dirX, dirY, dirZ;
+			unsigned int id;
+			float speed;
+			int nrOfFans;
+
+			bitStream.Read(messageID);
+			bitStream.Read(nrOfFans);
+			
+			for (int i = 0; i < nrOfFans; i++)
+			{
+				bitStream.Read(id);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+				bitStream.Read(dirX);
+				bitStream.Read(dirY);
+				bitStream.Read(dirZ);
+				bitStream.Read(speed);
+
+				for (int j = 0; j < m_fanList.size(); j++)
+				{
+					if (id == m_fanList[j].id)
+					{
+						m_fanList[j].dirX = dirX;
+						m_fanList[j].dirY = dirY;
+						m_fanList[j].dirZ = dirZ;
+						m_fanList[j].speed = speed;
+						m_fanList[j].x = x;
+						m_fanList[j].y = y;
+						m_fanList[j].z = z;
+					}
+				}
+			}
+		}
 		default:
 		{
 			break;
 		}
+
 		}
 	}
 }
@@ -445,6 +546,25 @@ void Network::Connect(std::string p_ip)
 	std::cout << "Connecting to: " << p_ip << std::endl;
 	m_ip = p_ip;
 	m_clientPeer->Connect(m_ip.c_str(), SERVER_PORT, 0, 0);
+}
+
+void Network::Disconnect()
+{
+	std::cout << "Disconnecting from server" << std::endl;
+	m_clientPeer->Shutdown(300);
+	m_clientPeer->Startup(1, &m_socketDesc, 1);
+}
+
+void Network::ChooseChar(int p_charNr)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
+	bitStream.Write(p_charNr);
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+
+	m_myPlayer.charNr = p_charNr;
 }
 
 bool Network::IsConnected()
@@ -564,6 +684,24 @@ void Network::UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team)
 	}
 }
 
+void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr)
+{
+	if (p_owner == m_clientPeer->GetMyGUID())
+	{
+		m_myPlayer.charNr = p_charNr;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].charNr = p_charNr;
+			}
+		}
+	}
+}
+
 std::vector<PlayerNet> Network::GetOtherPlayers()
 {
 	return m_enemyPlayers;
@@ -615,6 +753,35 @@ void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, flo
 		m_smokebombListUpdated = true;
 	}
 }
+
+void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
+{
+
+	bool addSpikeTrap = true;
+	SpikeNet temp;
+	temp.spikeId = p_spikeTrapId;
+	temp.startX = p_startPosX;
+	temp.startZ = p_startPosZ;
+	temp.endX = p_endPosX;
+	temp.endZ = p_endPosZ;
+	temp.lifeTime = p_lifetime;
+	temp.guid = p_guid;
+
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		if (m_spikeTrapList[i].spikeId == temp.spikeId)
+		{
+			addSpikeTrap = false;
+			break;
+		}
+	}
+	if (addSpikeTrap)
+	{
+		m_spikeTrapList.push_back(temp);
+		m_spikeTrapListUpdated = true;
+	}
+}
+
 void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken)
 {
 	bool addShuriken = true;
@@ -646,10 +813,42 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 	}
 }
 
+void Network::AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed)
+{
+	bool add = true;
+	FanNet temp;
+	temp = FanNet();
+	temp.x = p_x;
+	temp.y = p_y;
+	temp.z = p_z;
+	temp.dirX = p_dirX;
+	temp.dirY = p_dirY;
+	temp.dirZ = p_dirZ;
+	temp.id = p_id;
+	temp.guid = p_guid;
+	temp.speed = p_speed;
+
+	for (unsigned int i = 0; i < m_fanList.size(); i++)
+	{
+		if (m_fanList[i].guid == temp.guid && m_fanList[i].id == temp.id)
+		{
+			add = false;
+			break;
+		}
+	}
+	if (add)
+	{
+		m_fanList.push_back(temp);
+		m_fanListUpdated = true;
+	}
+}
+
 std::vector<ShurikenNet> Network::GetShurikens()
 {
 	return m_shurikensList;
-}std::vector<SmokeBombNet> Network::GetSmokeBombs()
+}
+
+std::vector<SmokeBombNet> Network::GetSmokeBombs()
 {
 	return m_smokeBombList;
 }
@@ -705,6 +904,7 @@ void Network::RemoveShuriken(unsigned int p_shurikenID)
 		}
 	}
 }
+
 void Network::RemoveSmokeBomb(unsigned int p_smokeBombID)
 {
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
@@ -717,9 +917,38 @@ void Network::RemoveSmokeBomb(unsigned int p_smokeBombID)
 		}
 	}
 }
+
+void Network::RemoveSpikeTrap(unsigned int p_spikeId)
+{
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		if (m_spikeTrapList[i].spikeId == p_spikeId)
+		{
+			m_spikeTrapList.erase(m_spikeTrapList.begin() + i);
+			m_spikeTrapListUpdated = true;
+			break;
+		}
+	}
+}
+
 bool Network::IsSmokeBombListUpdated()
 {
 	return m_smokebombListUpdated;
+}
+
+bool Network::IsSpikeTrapListUpdated()
+{
+	return m_spikeTrapListUpdated;
+}
+
+void Network::SetHaveUpdateSpikeTrapList()
+{
+	m_spikeTrapListUpdated = false;
+}
+
+std::vector<SpikeNet> Network::GetSpikeTraps()
+{
+	return m_spikeTrapList;
 }
 
 void Network::SetHaveUpdateSmokeBombList()
@@ -731,6 +960,7 @@ bool Network::IsShurikenListUpdated()
 {
 	return m_shurikenListUpdated;
 }
+
 void Network::SetHaveUpdateShurikenList()
 {
 	m_shurikenListUpdated = false;
@@ -773,7 +1003,7 @@ void Network::UpdatedMoveFromInvalidMove()
 	m_invalidMove = false;
 }
 
-void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP, bool p_isAlive)
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive)
 {
 	if (p_guid == m_myPlayer.guid)
 	{
@@ -793,7 +1023,7 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_currentHP, bool p_
 	}
 }
 
-void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, int p_maxHP, int p_currentHP, bool p_isAlive)
+void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive)
 {
 	if (p_guid == m_myPlayer.guid)
 	{
@@ -897,4 +1127,19 @@ bool Network::HaveDashed()
 DirectX::XMFLOAT3 Network::GetDashLocation()
 {
 	return m_dashLocation;
+}
+
+bool Network::IsFanListUpdated()
+{
+	return m_fanListUpdated;
+}
+
+void Network::SetHaveUpdateFanList()
+{
+	m_fanListUpdated = false;
+}
+
+std::vector<FanNet> Network::GetFanList()
+{
+	return m_fanList;
 }

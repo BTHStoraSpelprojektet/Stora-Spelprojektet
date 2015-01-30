@@ -150,6 +150,12 @@
     <Filter Include="Shaders\ShadowShapes">
       <UniqueIdentifier>{944e469a-b192-4ce9-abb6-7205312b24bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Ninjas">
+      <UniqueIdentifier>{0847c2a7-a67c-423a-9d08-53d0f5e1148c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Ninjas">
+      <UniqueIdentifier>{a6867d01-73db-4cd3-a267-4f0ea3cb3317}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -370,6 +376,15 @@
     </ClCompile>
     <ClCompile Include="Spikes.cpp">
       <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="OutliningShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="KatanaNinja.cpp">
+      <Filter>Source Files\Ninjas</Filter>
+    </ClCompile>
+    <ClCompile Include="TessenNinja.cpp">
+      <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
     <ClCompile Include="FanBoomerang.cpp">
       <Filter>Source Files\Object</Filter>
@@ -610,6 +625,15 @@
     <ClInclude Include="Spikes.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
+    <ClInclude Include="OutlingShader.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="KatanaNinja.h">
+      <Filter>Header Files\Ninjas</Filter>
+    </ClInclude>
+    <ClInclude Include="TessenNinja.h">
+      <Filter>Header Files\Ninjas</Filter>
+    </ClInclude>
     <ClInclude Include="FanBoomerang.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
@@ -674,6 +698,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\ShadowShapes\SSVertexShader.hlsl">
       <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\PixelShaderOutlining.hlsl">
+      <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\VertexShaderOutlining.hlsl">
+      <Filter>Shaders\Scene</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

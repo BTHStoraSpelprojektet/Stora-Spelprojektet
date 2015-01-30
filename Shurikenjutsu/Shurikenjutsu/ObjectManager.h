@@ -6,11 +6,12 @@
 #include <vector>
 #include "Shuriken.h"
 #include "AnimatedObject.h"
-#include "SmokeBomb.h"
-#include "FanBoomerang.h"
 #include "..\CommonLibs\Level.h"
 
 class Frustum;
+class SmokeBomb;
+class Spikes;
+class FanBoomerang;
 
 class ObjectManager
 {
@@ -27,9 +28,12 @@ public:
 
 	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);
 	void AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID);
-
+	void AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeTrapID);
 	void AddStaticObject(Object p_object);
 	std::vector<Object> GetStaticObjectList()const;
+
+	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id);
+
 
 	void UpdateFrustum(Frustum* p_frustum);
 private:
@@ -37,18 +41,20 @@ private:
 	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);
 
 	std::vector<SmokeBomb*> m_smokeBombList;
+	std::vector<Spikes*> m_spikeTrapList;
 	std::vector<Shuriken*> m_shurikens;
 	std::vector<FanBoomerang*> m_fans;
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToRender;
 	std::vector<Object*> m_objectsToShadowRender;
-	
+
 	Frustum* m_frustum;
 
 	bool IsShurikenInList(unsigned int p_shurikenId);
 	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
-	bool IsSmokeBombInList(unsigned int p_shurikenId);
-
-	
+	bool IsSmokeBombInList(unsigned int p_smokeBombId);
+	bool IsSpikeTrapInList(unsigned int p_spikeTrapId);
+	bool IsFanInList(unsigned int p_fanId);
+	bool IsFanInNetworkList(unsigned int p_fanId);
 };
 #endif

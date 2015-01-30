@@ -15,6 +15,16 @@
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
+
+void* PlayingStateTest::operator new(size_t i)
+{
+	return _mm_malloc(i, 16);
+}
+void PlayingStateTest::operator delete(void* p)
+{
+	_mm_free(p);
+}
+
 bool PlayingStateTest::Initialize()
 {
 	return Initialize(LEVEL_NAME);
@@ -55,14 +65,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		m_mouseX = 0;
 		m_mouseY = 0;
-		
+
 		// TODO, change this to use the loaded maps values.
 		VisibilityComputer::GetInstance().SetMapBoundries(Point(-51.0f, 51.0f), Point(51.0f, -51.0f));
 
 		ShadowShapes::GetInstance().AddStaticSquare(Point(-0.5f, 0.5f), Point(0.5f, -0.5f));
 	}
 	// ========== DEBUG LINES ==========
-	
+
 	// Frustum
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
@@ -80,6 +90,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
+	GraphicsEngine::InitializeOutling();
 
 	return true;
 }
@@ -104,7 +115,7 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-		m_debugDot.Shutdown();	
+	m_debugDot.Shutdown();
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -119,8 +130,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		std::string levelName = Network::GetInstance()->LevelName();
 		Network::GetInstance()->SetHaveUpdateNewLevel();
 		Shutdown();
-		Initialize(levelName);
-		return GAMESTATESWITCH_NONE;
+		//Initialize(levelName);
+		return GAMESTATESWITCH_CHOOSENINJA;
 	}
 
 	// Update global delta time.
@@ -188,9 +199,7 @@ void PlayingStateTest::Render()
 
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
-
 	m_objectManager->RenderDepth();
-
 	m_playerManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
@@ -217,6 +226,14 @@ void PlayingStateTest::Render()
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();
+
+	// OUTLINING
+	GraphicsEngine::ClearOutlining();
+	GraphicsEngine::SetOutliningPassOne();
+	m_playerManager->Render();
+	GraphicsEngine::SetOutliningPassTwo();
+	m_playerManager->RenderOutlining();
+	GraphicsEngine::ResetRenderTarget();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
@@ -266,14 +283,14 @@ void PlayingStateTest::BasicPicking()
 	if (FLAG_DEBUG == 1)
 	{
 		// Update dot location.
-		DirectX::XMFLOAT4X4 world;
-		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
-		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
-		DirectX::XMStoreFloat4x4(&world, matrix);
-		m_debugDot.UpdateWorldMatrix(world);
+	DirectX::XMFLOAT4X4 world;
+	DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
+	DirectX::XMStoreFloat4x4(&world, matrix);
+	m_debugDot.UpdateWorldMatrix(world);
 
-		m_mouseX = shurPos.x;
-		m_mouseY = shurPos.z;
+	m_mouseX = shurPos.x;
+	m_mouseY = shurPos.z;
 	}
 	// ========== DEBUG LINES ==========
 }

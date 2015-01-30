@@ -3,6 +3,7 @@
 #include "GUIAbility.h"
 #include "GUIElement.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "Network.h"
 
 AbilityBar::AbilityBar(){}
 AbilityBar::~AbilityBar(){}
@@ -16,31 +17,31 @@ bool AbilityBar::Initialize(float p_positionX, float p_positionY, int p_numberOf
 	position = DirectX::XMFLOAT3(p_positionX - halfLength, p_positionY, 0.0f);
 	GUIAbility *temp;
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_KATANA_TEXTURE));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility1Name()));
 	m_abilities.push_back(temp);
 
 	// ABILITY 2
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f, p_positionY, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_SHURIKEN_TEXTURE));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility2Name()));
 	m_abilities.push_back(temp);
 
 	// ABILITY 3
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 104.0f, p_positionY, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_DASH_TEXTURE));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility3Name()));
 	m_abilities.push_back(temp);
 
 	// ABILITY 4
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 156.0f, p_positionY, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_MEGA_SHURIKEN_TEXTURE));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility4Name()));
 	m_abilities.push_back(temp);
 
 	// ABILITY 5
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 208.0f, p_positionY, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_SMOKE_BOMB_TEXTURE));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility5Name()));
 	m_abilities.push_back(temp);
 
 	position = DirectX::XMFLOAT3(p_positionX, p_positionY, 0.0f);
@@ -63,7 +64,7 @@ void AbilityBar::Shutdown()
 // TODO: Send ability information to update
 void AbilityBar::Update(float p_cooldown, float p_fullCooldown, int p_index)
 {
-		m_abilities[p_index]->Update(p_cooldown, p_fullCooldown);
+	m_abilities[p_index]->Update(p_cooldown, p_fullCooldown);
 }
 
 void AbilityBar::Render()
@@ -75,3 +76,97 @@ void AbilityBar::Render()
 	}
 }
 
+std::string AbilityBar::GetAbility1Name()
+{
+	switch (Network::GetInstance()->GetMyPlayer().charNr)
+	{
+	case 0:
+	{
+		return ABILITY_KATANA_TEXTURE;
+		break;
+	}
+	case 1:
+	{
+		return ABILITY_TESSEN_TEXTURE;
+		break;
+	}
+	}
+
+	return ABILITY_CD_TEXTURE;
+}
+
+std::string AbilityBar::GetAbility2Name()
+{
+	switch (Network::GetInstance()->GetMyPlayer().charNr)
+	{
+	case 0:
+	{
+		return ABILITY_SHURIKEN_TEXTURE;
+		break;
+	}
+	case 1:
+	{
+		return ABILITY_WHIP_TEXTURE;
+		break;
+	}
+	}
+
+	return ABILITY_CD_TEXTURE;
+}
+
+std::string AbilityBar::GetAbility3Name()
+{
+	switch (Network::GetInstance()->GetMyPlayer().charNr)
+	{
+	case 0:
+	{
+		return ABILITY_DASH_TEXTURE;
+		break;
+	}
+	case 1:
+	{
+		return ABILITY_TESSEN_THROWING_TEXTURE;
+		break;
+	}
+	}
+
+	return ABILITY_CD_TEXTURE;
+}
+
+std::string AbilityBar::GetAbility4Name()
+{
+	switch (Network::GetInstance()->GetMyPlayer().charNr)
+	{
+	case 0:
+	{
+		return ABILITY_MEGA_SHURIKEN_TEXTURE;
+		break;
+	}
+	case 1:
+	{
+		return ABILITY_WHIP_SPECIAL_TEXTURE;
+		break;
+	}
+	}
+
+	return ABILITY_CD_TEXTURE;
+}
+
+std::string AbilityBar::GetAbility5Name()
+{
+	switch (Network::GetInstance()->GetMyPlayer().charNr)
+	{
+	case 0:
+	{
+		return ABILITY_SMOKE_BOMB_TEXTURE;
+		break;
+	}
+	case 1:
+	{
+		return ABILITY_CALTROP_TEXTURE;
+		break;
+	}
+	}
+
+	return ABILITY_CD_TEXTURE;
+}

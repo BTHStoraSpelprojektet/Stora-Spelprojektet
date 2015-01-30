@@ -15,6 +15,8 @@
 #include "SmokeBombManager.h"
 #include <vector>
 
+class FanBoomerangManager;
+class SpikeManager;
 class CollisionManager;
 class PlayerManager
 {
@@ -28,37 +30,38 @@ public:
 
 	std::vector<PlayerNet> GetPlayers();
 	std::vector<Box> GetBoundingBoxes(int p_index);
-	void AddPlayer(RakNet::RakNetGUID p_guid);
-	void MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed);
-	void RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
+	void AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr);
+	bool MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed);
+	bool RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
-	void DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage);
+	void DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 
-	int GetPlayerHealth(RakNet::RakNetGUID p_guid);
+	float GetPlayerHealth(RakNet::RakNetGUID p_guid);
 	void ResetHealth(RakNet::RakNetGUID p_guid);
 
 	void UsedAbility(int p_index, ABILITIES p_ability);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
-	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb);
+	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang);
 
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
-	void UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p_isAlive);
+	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 
 	std::vector<PlayerNet> m_players;
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
-	std::vector<Box> m_boundingBoxes;
+	std::vector<Box> m_katanaBoundingBoxes;
+	std::vector<Box> m_tessenBoundingBoxes;
 
 	float m_gcd;
-	int m_playerHealth;
+	float m_playerHealth;
 };
 
 #endif

@@ -2,6 +2,7 @@
 
 #include "MapManager.h"
 #include "CollisionManager.h"
+#include "SpikeManager.h"
 
 GameState::GameState(){}
 GameState::~GameState(){}
@@ -29,6 +30,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_smokeBombManager = new SmokeBombManager();
 	m_smokeBombManager->Initialize(m_serverPeer);
 
+	m_spikeManager = new SpikeManager();
+	m_spikeManager->Initialize(m_serverPeer);
+
 	m_fanBoomerangManager = new FanBoomerangManager();
 	m_fanBoomerangManager->Initialize(m_serverPeer);
 
@@ -55,6 +59,7 @@ void GameState::Shutdown()
 	m_playerManager->Shutdown();
 	m_shurikenManager->Shutdown();
 	m_smokeBombManager->Shutdown();
+	m_spikeManager->Shutdown();
 	m_mapManager->Shutdown();
 	m_fanBoomerangManager->Shutdown();
 
@@ -72,14 +77,17 @@ void GameState::Update(double p_deltaTime)
 	m_playerManager->Update(p_deltaTime);
 	m_shurikenManager->Update(p_deltaTime);
 	m_smokeBombManager->Update(p_deltaTime);
+	m_spikeManager->Update(p_deltaTime);
 	m_fanBoomerangManager->Update(p_deltaTime);
+
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
+	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager, (float)p_deltaTime);
 	m_collisionManager->FanCollisionChecks(m_fanBoomerangManager, m_playerManager);
 }
 
-void GameState::AddPlayer(RakNet::RakNetGUID p_guid)
+void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
-	m_playerManager->AddPlayer(p_guid);
+	m_playerManager->AddPlayer(p_guid, p_charNr);
 }
 
 void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)
@@ -87,9 +95,9 @@ void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)
 	m_playerManager->RemovePlayer(p_guid);
 }
 
-void GameState::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash)
+bool GameState::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash)
 {
-	m_playerManager->MovePlayer(p_guid, p_x, p_y, p_z, p_nrOfConnections, p_dash);
+	return m_playerManager->MovePlayer(p_guid, p_x, p_y, p_z, p_nrOfConnections, p_dash);
 }
 
 PlayerNet GameState::GetPlayer(RakNet::RakNetGUID p_guid)
@@ -102,9 +110,9 @@ int GameState::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return m_playerManager->GetPlayerIndex(p_guid);
 }
 
-void GameState::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
+bool GameState::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
 {
-	m_playerManager->RotatePlayer(p_guid, p_dirX, p_dirY, p_dirZ);
+	return m_playerManager->RotatePlayer(p_guid, p_dirX, p_dirY, p_dirZ);
 }
 
 bool GameState::CanUseAbility(int p_index, ABILITIES p_ability)
@@ -120,7 +128,8 @@ void GameState::UsedAbility(int p_index, ABILITIES p_ability)
 void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash, float p_distanceFromPlayer)
 {
 	m_smokeBombManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
-	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, p_dash, *m_smokeBombManager);
+	m_spikeManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
+	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, p_dash, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager);
 }
 
 void GameState::BroadcastPlayers()

@@ -1,5 +1,8 @@
 #include "CollisionManager.h"
-
+#include "PlayerManager.h"
+#include "SpikeManager.h"
+#include "ShurikenManager.h"
+#include "FanBoomerangManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
@@ -54,7 +57,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, KATANA_RANGE, attackDirection, boxPosition, boxExtent, 2.5f))
 		{
 			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, (int)KATANA_DAMAGE);
+			p_playerManager->DamagePlayer(playerList[i].guid, KATANA_DAMAGE);
 			break;
 		}
 	}
@@ -118,7 +121,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
-						int damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
+						float damage = shurikenList[i].megaShuriken ? (float)MEGASHURIKEN_DAMAGE : (float)SHURIKEN_DAMAGE;
 						
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 
@@ -243,14 +246,14 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], fanBoundingBoxes[k]))
 					{
-						int damage = SHURIKEN_DAMAGE;
+						float damage = SHURIKEN_DAMAGE;
 
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 
-						// Remove shuriken
-						p_fanBoomerangManager->Remove(fanList[i].id);
-						fanList.erase(fanList.begin() + i);
-						i--;
+						// END LIFE!
+						p_fanBoomerangManager->SetLifeTime(i, -1.0f);
+
+						// SOMETHING MORE, HMMMM...
 
 						collisionFound = true;
 						break;
@@ -276,9 +279,8 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 			{
 				if (OBBOBBTest(m_staticBoxList[k], OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
 				{
-					// Remove shuriken
-					p_fanBoomerangManager->Remove(fanList[i].id);
-					fanList.erase(fanList.begin() + i);
+					// END LIFE!
+					p_fanBoomerangManager->SetLifeTime(i, -1.0f);
 					i--;
 
 					collisionFound = true;
@@ -300,10 +302,8 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 				}
 				if (OBBSphereTest(OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
 				{
-					// Remove shuriken
-					p_fanBoomerangManager->Remove(fanList[i].id);
-					fanList.erase(fanList.begin() + i);
-					i--;
+					// END LIFE!
+					p_fanBoomerangManager->SetLifeTime(i, -1.0f);
 
 					collisionFound = true;
 					break;
@@ -386,9 +386,55 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	return dashLength;
 }
 
-void CollisionManager::CalculateSmokeBombLocation()
+void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager, float p_deltaTime)
 {
+	float radius = 1.0f;
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<SpikeNet> spikeList = p_spikeManager->GetSpikeTraps();
+	for (unsigned int i = 0; i < spikeList.size(); i++)
+	{
+		// Go through player list
+		for (unsigned int j = 0; j < playerList.size(); j++)
+		{
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == spikeList[i].guid)
+			{
+				continue;
+			}
 
+			// Check so you are not on the same team
+			PlayerNet owner = p_playerManager->GetPlayer(spikeList[i].guid);
+			if (playerList[j].team == owner.team)
+			{
+				continue;
+			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+			
+
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+			// Make collision test	
+			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+			{
+				if (spikeList[i].timeToLand <= 0)
+				{
+					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
+					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+					{
+						float damage = SPIKE_DAMAGE * p_deltaTime;
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+						break;
+					}
+				}
+			}
+		}
+	}
 }
 //Private
 bool CollisionManager::OBBOBBTest(OBB p_OBB1, OBB p_OBB2)
@@ -415,4 +461,8 @@ bool CollisionManager::OBBSphereTest(OBB p_OBB, Sphere p_sphere)
 		return IntersectionTests::Intersections::OBBSphereCollision(p_OBB.m_center, p_OBB.m_extents, p_OBB.m_direction, p_sphere.m_position, p_sphere.m_radius);
 	}
 	return false;
+}
+bool CollisionManager::SphereSphereTest(Sphere p_spikeTrap, Sphere p_player)
+{
+	return IntersectionTests::Intersections::SphereSphereCollision(p_spikeTrap.m_position, p_spikeTrap.m_radius, p_player.m_position, p_player.m_radius);
 }

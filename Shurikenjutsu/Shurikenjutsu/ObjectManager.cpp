@@ -4,7 +4,10 @@
 #include "Frustum.h"
 #include "Globals.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "SmokeBomb.h"
+#include "Spikes.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "FanBoomerang.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -54,10 +57,6 @@ bool ObjectManager::Initialize(Level* p_level)
 
 	m_staticObjects[m_staticObjects.size()-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
 
-	FanBoomerang* tempfan = new FanBoomerang;
-	tempfan->Initialize(SMOKE_BOMB, DirectX::XMFLOAT3(0.0f, 7.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
-	m_fans.push_back(tempfan);
-
 	return true;
 }
 
@@ -81,23 +80,23 @@ void ObjectManager::Shutdown()
 		m_smokeBombList[i]->Shutdown();
 		delete m_smokeBombList[i];
 	}
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		m_spikeTrapList[i]->Shutdown();
+		delete m_spikeTrapList[i];
+	}
 
 	for (unsigned int i = 0; i < m_fans.size(); i++)
 	{
 		m_fans[i]->Shutdown();
 		delete m_fans[i];
+
 	}
 }
 
 void ObjectManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-
-	// Update all the fans
-	for (unsigned int i = 0; i < m_fans.size(); i++)
-	{
-		m_fans[i]->Update();
-	}
 
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -120,6 +119,21 @@ void ObjectManager::Update()
 		}
 	}
 
+	// Update all the spikes
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		m_spikeTrapList[i]->Update();
+
+		if (!m_spikeTrapList[i]->GetIsAlive())
+		{
+			// Remove Spike Trap
+			m_spikeTrapList[i]->Shutdown();
+			delete m_spikeTrapList[i];
+			m_spikeTrapList.erase(m_spikeTrapList.begin() + i);
+			i--;
+		}
+	}
+
 	if (Network::GetInstance()->IsShurikenListUpdated())
 	{
 		std::vector<ShurikenNet> tempNetShurikens = Network::GetInstance()->GetShurikens();
@@ -130,12 +144,12 @@ void ObjectManager::Update()
 				if (tempNetShurikens[i].megaShuriken)
 				{
 					// Add Mega shuriken
-					AddShuriken(MEGA_SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), MEGASHURIKEN_SPEED, tempNetShurikens[i].shurikenId);
+					AddShuriken(MEGA_SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].speed, tempNetShurikens[i].shurikenId);
 				}
 				else
 				{
 					// Add shuriken
-					AddShuriken(SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), SHURIKEN_SPEED, tempNetShurikens[i].shurikenId);
+					AddShuriken(SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].speed, tempNetShurikens[i].shurikenId);
 				}
 			}
 		}
@@ -167,6 +181,63 @@ void ObjectManager::Update()
 		}
 		Network::GetInstance()->SetHaveUpdateSmokeBombList();
 	}
+
+	///
+	if (Network::GetInstance()->IsSpikeTrapListUpdated())
+	{
+		std::vector<SpikeNet> tempSpikeTrapList = Network::GetInstance()->GetSpikeTraps();
+		std::vector<Spikes> spikeTrapList;
+		for (unsigned int i = 0; i < tempSpikeTrapList.size(); i++)
+		{
+			if (!IsSpikeTrapInList(tempSpikeTrapList[i].spikeId))
+			{
+				// Add Smoke bomb
+				AddSpikeTrap(tempSpikeTrapList[i].startX, tempSpikeTrapList[i].startZ, tempSpikeTrapList[i].endX, tempSpikeTrapList[i].endZ, tempSpikeTrapList[i].spikeId);
+			}
+		}
+		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
+	}
+
+	// Get fans from server
+	std::vector<FanNet> tempNetFans = Network::GetInstance()->GetFanList();
+
+	if (Network::GetInstance()->IsFanListUpdated())
+	{
+		// Add nonexisting fans
+		for (unsigned int i = 0; i < tempNetFans.size(); i++)
+		{
+			if (!IsFanInList(tempNetFans[i].id))
+			{
+				AddFan(SMOKE_BOMB, DirectX::XMFLOAT3(tempNetFans[i].x, tempNetFans[i].y, tempNetFans[i].z), DirectX::XMFLOAT3(tempNetFans[i].dirX, tempNetFans[i].dirY, tempNetFans[i].dirZ), tempNetFans[i].speed, tempNetFans[i].id);
+			}
+		}
+
+		// Remove dead fans
+		for (unsigned int i = 0; i < m_fans.size(); i++)
+		{
+			if (!IsFanInNetworkList(m_fans[i]->GetID()))
+			{
+				m_fans[i]->Shutdown();
+				m_fans.erase(m_fans.begin() + i);
+				i--;
+			}
+		}
+		Network::GetInstance()->SetHaveUpdateFanList();
+	}
+
+	// Update all the fans
+	for (unsigned int i = 0; i < tempNetFans.size(); i++)
+	{
+		for (unsigned int j = 0; j < m_fans.size(); j++)
+		{
+			if (tempNetFans[i].id == m_fans[j]->GetID())
+			{
+				m_fans[j]->Update(tempNetFans[i].x, tempNetFans[i].y, tempNetFans[i].z, tempNetFans[i].dirX, tempNetFans[i].dirY, tempNetFans[i].dirZ, tempNetFans[i].speed);
+			}
+		}
+		
+	}
+	
 }
 
 void ObjectManager::Render()
@@ -207,6 +278,16 @@ void ObjectManager::Render()
 			m_smokeBombList[i]->Render();
 		}
 	}
+
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_spikeTrapList[i]->GetSpikeSphere(), 2.0f))
+		{
+			GraphicsEngine::TurnOnAlphaBlending();
+			m_spikeTrapList[i]->Render();
+			GraphicsEngine::TurnOffAlphaBlending();
+		}
+}
 }
 
 void ObjectManager::RenderDepth()
@@ -245,6 +326,15 @@ void ObjectManager::RenderDepth()
 		m_smokeBombList[i]->GetBomb()->RenderDepth();
 	}
 
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		Object* temp = m_spikeTrapList[i]->GetSpikesBag();
+		if (temp != NULL)
+		{
+			temp->RenderDepth();
+}
+	}
+
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
@@ -264,9 +354,28 @@ void ObjectManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_e
 	tempSmokeBomb->ResetTimer();
 	m_smokeBombList.push_back(tempSmokeBomb);
 }
+
+void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID)
+{
+	Spikes *tempSpikeTrap;
+	tempSpikeTrap = new Spikes();
+	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_smokeBombID);
+	tempSpikeTrap->ResetTimer();
+	m_spikeTrapList.push_back(tempSpikeTrap);
+}
+
 void ObjectManager::AddStaticObject(Object p_object)
 {
 	m_staticObjects.push_back(p_object);
+}
+
+void ObjectManager::AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id)
+{
+	FanBoomerang* temp;
+	temp = new FanBoomerang();
+	temp->Initialize(p_filepath, p_pos, p_dir, p_speed, p_id);
+	temp->SetSpeed(p_speed);
+	m_fans.push_back(temp);
 }
 
 bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
@@ -281,6 +390,7 @@ bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
 
 	return false;
 }
+
 bool ObjectManager::IsSmokeBombInList(unsigned int p_smokeBombId)
 {
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
@@ -293,6 +403,20 @@ bool ObjectManager::IsSmokeBombInList(unsigned int p_smokeBombId)
 
 	return false;
 }
+
+bool ObjectManager::IsSpikeTrapInList(unsigned int p_spikeTrapId)
+{
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		if (p_spikeTrapId == m_spikeTrapList[i]->GetID())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 {
 	std::vector<ShurikenNet> shurikenList = Network::GetInstance()->GetShurikens();
@@ -340,4 +464,32 @@ bool ObjectManager::CheckIfModelIsInObjectToShadowRenderList(Object *p_object)
 		}
 	}
 	return true;
+}
+
+bool ObjectManager::IsFanInList(unsigned int p_fanId)
+{
+	for (unsigned int i = 0; i < m_fans.size(); i++)
+	{
+		if (p_fanId == m_fans[i]->GetID())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool ObjectManager::IsFanInNetworkList(unsigned int p_fanId)
+{
+	std::vector<FanNet> list = Network::GetInstance()->GetFanList();
+
+	for (unsigned int i = 0; i < list.size(); i++)
+	{
+		if (p_fanId == list[i].id)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

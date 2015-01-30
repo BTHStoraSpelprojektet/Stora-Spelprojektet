@@ -69,6 +69,9 @@
     <ClCompile Include="SmokeBombManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpikeManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="FanBoomerangManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SmokeBombManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpikeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FanBoomerangManager.h">

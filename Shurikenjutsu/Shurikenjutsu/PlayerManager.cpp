@@ -5,13 +5,15 @@
 #include "Minimap.h"
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "KatanaNinja.h"
+#include "TessenNinja.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize()
 {
 	m_enemyList = std::vector<Player>();
-	AddPlayer(PLAYER_MODEL_NAME, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	return true;
 }
@@ -86,7 +88,7 @@ void PlayerManager::Update()
 				if (!IsGuidInEnemyList(enemyPlayers[i].guid))
 				{
 					// Add player
-					AddEnemy(enemyPlayers[i].guid, "../Shurikenjutsu/Models/Ninja1Shape.SSP", DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), 
+					AddEnemy(enemyPlayers[i].guid, enemyPlayers[i].charNr, DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), 
 						DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX));
 				}
 			}
@@ -136,21 +138,97 @@ void PlayerManager::RenderDepth()
 }
 }
 
-void PlayerManager::AddPlayer(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+void PlayerManager::RenderOutlining()
 {
-	Player *tempPlayer = new Player();
-	tempPlayer->Initialize(p_filepath, p_pos, p_direction);
-	m_player = tempPlayer;
-	m_player->SendPosition(m_player->GetPosition());
+	m_player->RenderOutlining();
 }
 
-void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
-	Player tempPlayer;
-	tempPlayer.Initialize(p_filepath, p_pos, p_direction);
-	tempPlayer.SetGuID(p_guid);
-	tempPlayer.SetMaxHealth(CHARACTAR_KATANA_SHURIKEN_HEALTH);
-	m_enemyList.push_back(tempPlayer);
+	switch (p_charNr)
+	{
+	case 0:
+	{
+		KatanaNinja *tempPlayer = new KatanaNinja();
+		tempPlayer->Initialize(p_pos, p_direction);
+		m_player = tempPlayer;
+		m_player->SendPosition(m_player->GetPosition());
+		break;
+	}
+	case 1:
+	{
+		TessenNinja *tempPlayer = new TessenNinja();
+		tempPlayer->Initialize(p_pos, p_direction);
+		m_player = tempPlayer;
+		m_player->SendPosition(m_player->GetPosition());
+		break;
+	}
+	case 2:
+	{
+		// Todo change to ninja 3
+		KatanaNinja *tempPlayer = new KatanaNinja();
+		tempPlayer->Initialize(p_pos, p_direction);
+		m_player = tempPlayer;
+		m_player->SendPosition(m_player->GetPosition());
+		break;
+	}
+	case 3:
+	{
+		// Todo change to ninja 4
+		KatanaNinja *tempPlayer = new KatanaNinja();
+		tempPlayer->Initialize(p_pos, p_direction);
+		m_player = tempPlayer;
+		m_player->SendPosition(m_player->GetPosition());
+		break;
+	}
+	}
+	
+}
+
+void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+{
+	switch (p_charNr)
+	{
+	case 0:
+	{
+		KatanaNinja tempPlayer;
+		tempPlayer.Initialize(p_pos, p_direction);
+		tempPlayer.SetGuID(p_guid);
+		tempPlayer.SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
+		m_enemyList.push_back(tempPlayer);
+		break;
+	}
+	case 1:
+	{
+		TessenNinja tempPlayer;
+		tempPlayer.Initialize(p_pos, p_direction);
+		tempPlayer.SetGuID(p_guid);
+		tempPlayer.SetMaxHealth(CHARACTER_TESSEN_HEALTH);
+		m_enemyList.push_back(tempPlayer);
+		break;
+	}
+	case 2:
+	{
+		// Todo change to ninja 3
+		KatanaNinja tempPlayer;
+		tempPlayer.Initialize(p_pos, p_direction);
+		tempPlayer.SetGuID(p_guid);
+		tempPlayer.SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
+		m_enemyList.push_back(tempPlayer);
+		break;
+	}
+	case 3:
+	{
+		// Todo change to ninja 4
+		KatanaNinja tempPlayer;
+		tempPlayer.Initialize(p_pos, p_direction);
+		tempPlayer.SetGuID(p_guid);
+		tempPlayer.SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
+		m_enemyList.push_back(tempPlayer);
+		break;
+	}
+	}
+	
 }
 
 DirectX::XMFLOAT3 PlayerManager::GetPlayerPosition()
@@ -253,7 +331,7 @@ void PlayerManager::CheckPlayersVisible()
 
 bool PlayerManager::IsPlayersVisible(int p_index)
 {
-	if (m_enemyList.size() <= p_index)
+	if (m_enemyList.size() <= (unsigned int)p_index)
 	{
 		return false;
 	}
@@ -262,7 +340,7 @@ bool PlayerManager::IsPlayersVisible(int p_index)
 
 void PlayerManager::MinimapUpdatePos(Minimap *p_minimap)
 {
-	for (int i = 0; i < m_enemyList.size(); i++)
+	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{ 
 		p_minimap->UpdatePlayersPositon(i, m_enemyList[i].GetPosition());
 	}
@@ -275,7 +353,7 @@ int PlayerManager::GetPlayerTeam()
 
 int PlayerManager::GetEnemyTeam(int p_index)
 {
-	if (m_enemyList.size() <= p_index)
+	if (m_enemyList.size() <= (unsigned int)p_index)
 	{
 		return 0;
 	}

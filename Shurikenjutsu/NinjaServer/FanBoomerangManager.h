@@ -22,11 +22,14 @@ public:
 
 	void Add(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
 	void Remove(unsigned int p_id);
+	void UpdateClients();
 	std::vector<FanNet> GetObjects();
 	std::vector<Box> GetBoundingBoxes(int p_index);
 	float GetPosX(int p_index);
 	float GetPosY(int p_index);
 	float GetPosZ(int p_index);
+
+	float SetLifeTime(int p_index, float p_lifeTime);
 
 private:
 	void BroadcastDestoyed(unsigned int p_id);

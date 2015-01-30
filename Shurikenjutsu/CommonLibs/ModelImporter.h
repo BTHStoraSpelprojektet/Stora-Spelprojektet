@@ -19,7 +19,7 @@ struct MeshData
 	std::vector<AnimationStack> m_stacks;
 	std::vector<Box> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
-	std::vector<DirectX::XMFLOAT3> m_shadowPoints;
+	std::vector<Line> m_shadowPoints;
 	Sphere m_frustumSphere;
 };
 
