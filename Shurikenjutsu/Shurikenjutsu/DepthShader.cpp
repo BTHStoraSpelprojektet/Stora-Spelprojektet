@@ -566,4 +566,3 @@ void DepthShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vect
 	// Set the matrix buffer.
 	p_context->VSSetConstantBuffers(2, 1, &m_animationMatrixBuffer);
 }
-

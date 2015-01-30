@@ -104,6 +104,17 @@ DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 	return matrix;
 }
 
+DirectX::XMFLOAT4X4 Object::GetWorldMatrixScaled(float p_scale)
+{
+
+	DirectX::XMFLOAT4X4 matrix;
+	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixTranslation(0.0f,-0.1f, 0.0f) *
+		DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(p_scale, p_scale, p_scale))) *
+		DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) *
+		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
+
+	return matrix;
+}
 
 Model* Object::GetModel()
 {

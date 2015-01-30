@@ -13,8 +13,19 @@
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 
+
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
+
+void* PlayingStateTest::operator new(size_t i)
+{
+	return _mm_malloc(i, 16);
+}
+void PlayingStateTest::operator delete(void* p)
+{
+	_mm_free(p);
+}
+
 bool PlayingStateTest::Initialize()
 {
 	return Initialize(LEVEL_NAME);
@@ -55,14 +66,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		m_mouseX = 0;
 		m_mouseY = 0;
-		
+
 		// TODO, change this to use the loaded maps values.
 		VisibilityComputer::GetInstance().SetMapBoundries(Point(-51.0f, 51.0f), Point(51.0f, -51.0f));
 
 		ShadowShapes::GetInstance().AddStaticSquare(Point(-0.5f, 0.5f), Point(0.5f, -0.5f));
 	}
 	// ========== DEBUG LINES ==========
-	
+
 	// Frustum
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
@@ -80,6 +91,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
+	GraphicsEngine::InitializeOutling();
+
+	m_renderOutlining = false;
 
 	return true;
 }
@@ -104,7 +118,7 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-		m_debugDot.Shutdown();	
+	m_debugDot.Shutdown();
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -119,8 +133,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		std::string levelName = Network::GetInstance()->LevelName();
 		Network::GetInstance()->SetHaveUpdateNewLevel();
 		Shutdown();
-		Initialize(levelName);
-		return GAMESTATESWITCH_NONE;
+		//Initialize(levelName);
+		return GAMESTATESWITCH_CHOOSENINJA;
 	}
 
 	// Update global delta time.
@@ -178,6 +192,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
+
+	OutliningRays();
 	
 	return GAMESTATESWITCH_NONE;
 }
@@ -188,9 +204,7 @@ void PlayingStateTest::Render()
 
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
-
 	m_objectManager->RenderDepth();
-
 	m_playerManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
@@ -217,6 +231,19 @@ void PlayingStateTest::Render()
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();
+
+	// OUTLINING
+	if (m_renderOutlining)
+	{
+		GraphicsEngine::ClearOutlining();
+		GraphicsEngine::SetOutliningPassOne();
+		//m_objectManager->Render();
+		m_playerManager->RenderOutliningPassOne();
+		GraphicsEngine::SetOutliningPassTwo();
+		m_playerManager->RenderOutliningPassTwo();
+	}
+
+	GraphicsEngine::ResetRenderTarget();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
@@ -234,7 +261,7 @@ void PlayingStateTest::BasicPicking()
 		mouseOffsetX = 6;
 		mouseOffsetY = 20;
 	}
-
+	
 	int mousePosX = InputManager::GetInstance()->GetMousePositionX() + mouseOffsetX;
 	int mousePosY = InputManager::GetInstance()->GetMousePositionY() + mouseOffsetY;
 
@@ -278,6 +305,39 @@ void PlayingStateTest::BasicPicking()
 	// ========== DEBUG LINES ==========
 }
 
+void PlayingStateTest::OutliningRays()
+{
+
+	DirectX::XMFLOAT3 rayDir;
+	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	float rayDist = 0;
+	float collisionDist = 0;
+
+
+	rayPos = m_camera->GetPosition();
+	rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
+	Ray* rayTest = new Ray(rayPos, rayDir);
+
+	if (Collisions::RayOBBCollision(rayTest, m_playerManager->GetPlayerBoundingBox()))
+	{
+		if (rayTest->m_distance != 0)
+		{
+			rayDist = rayTest->m_distance;
+		}
+	}
+
+	if (CollisionManager::GetInstance()->CalculateRayLength(rayTest, rayDist))
+	{
+		m_renderOutlining = true;
+	}
+	else
+	{
+		m_renderOutlining = false;
+	}
+	
+	//m_renderOutlining = true;
+}
+
 DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 {
 	float t2 = sqrt(p_f.x * p_f.x + p_f.y * p_f.y + p_f.z * p_f.z);
@@ -296,6 +356,5 @@ void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 		{
 			m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000,-1000,0));
 		}
-	}
-	
+	}	
 }

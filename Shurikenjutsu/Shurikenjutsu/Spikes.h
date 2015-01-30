@@ -14,16 +14,17 @@ public:
 
 	void SetPosition(DirectX::XMFLOAT3 p_position);
 	void ResetTimer();
-	bool GetIfActive();
+	bool GetIsAlive();
 	Sphere GetSpikeSphere();
 	unsigned int GetID();
-	Object* GetSpikes();
+	Object* GetSpikesBag();
 
 private:
 	bool m_isThrowing;
 	bool m_hasInflictedDamage;
 
-	Object* m_spikes;
+	Object* m_spikeBag;
+	Object* m_spikesTrap;
 	DirectX::XMFLOAT3 m_startPosition;
 	float m_speed;
 	float m_angle;

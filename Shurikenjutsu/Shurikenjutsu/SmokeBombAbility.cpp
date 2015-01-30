@@ -11,6 +11,7 @@ bool SmokeBombAbility::Initialize()
 	SetTime(0.0f);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
+	m_totalCooldown = SMOKEBOMB_COOLDOWN;
 	return true;
 }
 bool SmokeBombAbility::Execute(float p_distance)

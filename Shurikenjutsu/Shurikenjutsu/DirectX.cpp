@@ -8,6 +8,11 @@
 
 bool DirectXWrapper::Initialize(HWND p_handle)
 {
+	m_depthStencilViewOutlining = NULL;
+	m_depthStencilOutlining = NULL;
+	m_outliningALWAYS = NULL;
+	m_outliningNOTEQUAL = NULL;
+
 	HRESULT result = S_OK;
 
 	m_vsync = 0;
@@ -116,7 +121,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		swapChainDescription.Windowed = TRUE;
 	}
 	
-
+	
 	// DirectX versions to try and initialize.
 	D3D_FEATURE_LEVEL versions[] =
 	{
@@ -297,6 +302,11 @@ void DirectXWrapper::Clear()
 	m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
+void DirectXWrapper::ClearOutlining()
+{
+	m_context->ClearDepthStencilView(m_depthStencilViewOutlining, D3D11_CLEAR_STENCIL | D3D11_CLEAR_DEPTH, 1.0f, 0);
+}
+
 void DirectXWrapper::Present()
 {
 	m_swapChain->Present(m_vsync, 0);
@@ -367,6 +377,98 @@ void DirectXWrapper::TurnOnDepthStencil()
 void DirectXWrapper::TurnOffDepthStencil()
 {
 	m_context->OMSetDepthStencilState(m_depthDisabled, 1);
+}
+
+bool DirectXWrapper::InitializeOutlinging()
+{
+	D3D11_DEPTH_STENCIL_DESC stencilDesc;
+	stencilDesc.DepthEnable = true;
+	stencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	stencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	stencilDesc.StencilEnable = true;
+	stencilDesc.StencilReadMask = 0xFF;
+	stencilDesc.StencilWriteMask = 0xFF;
+	stencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_INCR_SAT;
+	stencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	stencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+
+	// Create depth stencil state
+	if (FAILED(m_device->CreateDepthStencilState(&stencilDesc, &m_outliningALWAYS)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil enabled state failed to create. OutliningShader-SetOff");
+		return false;
+	}
+
+	stencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
+	stencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	stencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_NEVER;
+
+	if (FAILED(m_device->CreateDepthStencilState(&stencilDesc, &m_outliningNOTEQUAL)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil disabled state failed to create.");
+		return false;
+	}
+
+	// Initialize the depth stencil.
+	D3D11_TEXTURE2D_DESC depthStencilDescription;
+	ZeroMemory(&depthStencilDescription, sizeof(depthStencilDescription));
+	depthStencilDescription.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	depthStencilDescription.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	depthStencilDescription.MipLevels = 1;
+	depthStencilDescription.ArraySize = 1;
+	depthStencilDescription.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDescription.SampleDesc.Count = 1;
+	depthStencilDescription.SampleDesc.Quality = 0;
+	depthStencilDescription.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDescription.CPUAccessFlags = 0;
+	depthStencilDescription.MiscFlags = 0;
+
+	// Create depth stencil texture.
+	if (FAILED(m_device->CreateTexture2D(&depthStencilDescription, NULL, &m_depthStencilOutlining)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil failed to create.");
+		return false;
+	}
+
+	// Initialize the depth stencil view.
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDescription;
+	ZeroMemory(&depthStencilViewDescription, sizeof(depthStencilViewDescription));
+	depthStencilViewDescription.Format = depthStencilViewDescription.Format;
+	depthStencilViewDescription.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDescription.Texture2D.MipSlice = 0;
+
+	// Create the depth stencil view.
+	if (FAILED(m_device->CreateDepthStencilView(m_depthStencilOutlining, &depthStencilViewDescription, &m_depthStencilViewOutlining)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil view failed to create.");
+		return false;
+	}
+	
+
+	return true;
+}
+
+void DirectXWrapper::SetOutliningPassOne()
+{
+	m_context->OMSetRenderTargets(0, NULL, m_depthStencilViewOutlining);
+	m_context->OMSetDepthStencilState(m_outliningALWAYS, 0);
+}
+
+void DirectXWrapper::SetOutliningPassTwo()
+{
+	m_context->OMSetRenderTargets(1, &m_renderTarget, m_depthStencilViewOutlining);
+	m_context->OMSetDepthStencilState(m_outliningNOTEQUAL, 0);
 }
 
 void DirectXWrapper::SetVsync(bool p_state)
