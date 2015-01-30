@@ -741,7 +741,6 @@ void Player::Render()
 		m_healthbar->Render();
 		AnimatedObject::Render(m_team);
 	}
-	m_abilityBar->Render();
 }
 
 void Player::RenderDepth()
@@ -755,6 +754,11 @@ void Player::RenderDepth()
 void Player::RenderOutlining()
 {
 	AnimatedObject::RenderOutlining();
+}
+
+void Player::RenderAbilityBar()
+{
+	m_abilityBar->Render();
 }
 
 void Player::SetIsAlive(bool p_isAlive)
