@@ -411,40 +411,99 @@ void Player::CalculateFacingAngle()
 void Player::SetCalculatePlayerPosition()
 {
 	// Check collision between player and static boxes
-	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(m_playerSphere, m_speed, m_direction);
-	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
-	{ 
-		float temp2 = collidingBoxes[i].m_extents.x - collidingBoxes[i].m_extents.z;
-		if (temp2 < 0)
+	//std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(m_playerSphere, m_speed, m_direction);
+	//for (unsigned int i = 0; i < collidingBoxes.size(); i++)
+	//{ 
+	//	//float temp2 = collidingBoxes[i].m_extents.x - collidingBoxes[i].m_extents.z;
+	//	//if (temp2 < 0)
+	//	//{
+	//	//	temp2 *= -1;
+	//	//}
+	//	//
+	//	//if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
+	//	//{
+	//	//	//if (i > 0)
+	//	//	//{
+	//	//	//	if ((collidingBoxes[i].m_center.x != collidingBoxes[i - 1].m_center.x) || (collidingBoxes[i].m_center.y != collidingBoxes[i - 1].m_center.y))
+	//	//	//	{
+	//	//	//		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	//	//	//	}
+	//	//	//	else
+	//	//	//	{
+	//	//	//		SetDirection(DirectX::XMFLOAT3(m_direction.x, 0.0f, m_direction.z));
+	//	//	//	}
+	//	//	//}
+	//	//	//else
+	//	//	//{
+	//	//		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	//	//	//}
+	//	//}
+	//	//else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
+	//	//{
+	//	//	CalculatePlayerCubeCollision(collidingBoxes[i]);
+	//	//}
+	//	//else
+	//	//{
+	//	//	CalculatePlayerBoxCollision(collidingBoxes[i]);
+	//	//}
+	//}
+
+	float speedXDeltaTime = m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+
+	Sphere playerSphere;
+	playerSphere.m_position.x = m_playerSphere.m_position.x + m_direction.x * speedXDeltaTime;
+	playerSphere.m_position.y = 0.0f;
+	playerSphere.m_position.z = m_playerSphere.m_position.z + m_direction.z * speedXDeltaTime;
+	playerSphere.m_radius = m_playerSphere.m_radius;
+
+	if (CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
+	{
+		SendPosition(DirectX::XMFLOAT3(m_position.x, m_position.y , m_position.z ));
+		float x = m_direction.x;
+		float z = m_direction.z;
+
+		if (x == 1 || x == -1 || z == 1 || z == -1)
 		{
-			temp2 *= -1;
+			SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 		}
-		
-		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
+		else if (x < 0 && z < 0)//down left
 		{
-			//if (i > 0)
-			//{
-			//	if ((collidingBoxes[i].m_center.x != collidingBoxes[i - 1].m_center.x) || (collidingBoxes[i].m_center.y != collidingBoxes[i - 1].m_center.y))
-			//	{
-			//		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-			//	}
-			//	else
-			//	{
-			//		SetDirection(DirectX::XMFLOAT3(m_direction.x, 0.0f, m_direction.z));
-			//	}
-			//}
-			//else
-			//{
+			SetPosition(m_position);
+			playerSphere.m_position.x = m_playerSphere.m_position.x + 0.0f * speedXDeltaTime;
+			playerSphere.m_position.z = m_playerSphere.m_position.z - 1.0f * speedXDeltaTime;
+			bool down = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+
+			playerSphere.m_position.x = m_playerSphere.m_position.x - 1.0f * speedXDeltaTime;
+			playerSphere.m_position.z = m_playerSphere.m_position.z + 0.0f * speedXDeltaTime;
+			bool left = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+
+			if (down && left)
+			{
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-			//}
+				std::cout << "down and left" << std::endl;
+			}
+			else if (down)
+			{
+				SetDirection(DirectX::XMFLOAT3(-1.0f, 0.0f, 0.0f));
+				std::cout << "down" << std::endl;
+			}
+			else if (left)
+			{
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f));
+				std::cout << "left" << std::endl;
+			}
 		}
-		else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
+		else if (x > 0 && z < 0)//down right
 		{
-			CalculatePlayerCubeCollision(collidingBoxes[i]);
+
 		}
-		else
+		else if (x < 0 && z > 0)//up left 
 		{
-			CalculatePlayerBoxCollision(collidingBoxes[i]);
+
+		}
+		else if (x > 0 && z > 0)//up right 
+		{
+
 		}
 	}
 
@@ -503,8 +562,8 @@ void Player::SetCalculatePlayerPosition()
 		SetDirection(dir);
 	}
 
-	float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
-	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speed_X_Delta, m_position.y + m_direction.y * speed_X_Delta, m_position.z + m_direction.z * speed_X_Delta));
+	//float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
+	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speedXDeltaTime, m_position.y + m_direction.y * speedXDeltaTime, m_position.z + m_direction.z * speedXDeltaTime));
 }
 void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 {
