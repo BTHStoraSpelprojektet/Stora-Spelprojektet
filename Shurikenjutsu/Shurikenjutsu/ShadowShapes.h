@@ -30,7 +30,7 @@ public:
 	std::vector<Line> GetStaticLines(Point a, Point b);
 	std::vector<Line> GetDynamicLines();
 
-	std::vector<Point> GetUniquePoints();
+	std::vector<Point> GetUniquePoints(Point a, Point b);
 	std::vector<Point> GetBoundryPoints();
 
 	void DebugRender();

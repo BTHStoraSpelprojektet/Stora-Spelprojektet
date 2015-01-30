@@ -403,22 +403,19 @@ Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segm
 inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewerPoint)
 {
 	std::vector<float> angles;
-	std::vector<Point> list = ShadowShapes::GetInstance().GetUniquePoints();
+	std::vector<Point> list = ShadowShapes::GetInstance().GetUniquePoints(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
 
 	// Get the angles to all of the unique points.
 	for (unsigned int i = 0; i < list.size(); i++)
 	{
-		if (list[i].x >= m_boundingBox.m_topLeft.x && list[i].x <= m_boundingBox.m_bottomRight.x && list[i].y <= m_boundingBox.m_topLeft.y && list[i].y >= m_boundingBox.m_bottomRight.y)
-		{
-			Point uniquePoint = ShadowShapes::GetInstance().GetUniquePoints()[i];
+		Point uniquePoint = list[i];
 
-			float angle = atan2(uniquePoint.y - p_viewerPoint.y, uniquePoint.x - p_viewerPoint.x);
+		float angle = atan2(uniquePoint.y - p_viewerPoint.y, uniquePoint.x - p_viewerPoint.x);
 
-			// Add the angle, plus two offset angles. This is to hit things next to corners.
-			angles.push_back(angle - 0.00001f);
-			angles.push_back(angle);
-			angles.push_back(angle + 0.00001f);
-		}
+		// Add the angle, plus two offset angles. This is to hit things next to corners.
+		angles.push_back(angle - 0.00001f);
+		angles.push_back(angle);
+		angles.push_back(angle + 0.00001f);
 	}
 
 	return angles;

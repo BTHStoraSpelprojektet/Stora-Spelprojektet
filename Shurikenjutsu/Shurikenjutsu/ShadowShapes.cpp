@@ -265,13 +265,16 @@ inline void ShadowShapes::AddUniquePoints(Point p_point)
 	m_uniquePoints.push_back(p_point);
 }
 
-std::vector<Point> ShadowShapes::GetUniquePoints()
+std::vector<Point> ShadowShapes::GetUniquePoints(Point a, Point b)
 {
 	std::vector<Point> points;
 
 	for (unsigned int i = 0; i < m_uniquePoints.size(); i++)
 	{
-		points.push_back(m_uniquePoints[i]);
+		if (m_uniquePoints[i].x > a.x && m_uniquePoints[i].x < b.x && m_uniquePoints[i].y < a.y && m_uniquePoints[i].y > b.y)
+		{
+			points.push_back(m_uniquePoints[i]);
+		}
 	}
 
 	for (unsigned int i = 0; i < m_uniqueBoundryPoints.size(); i++)
