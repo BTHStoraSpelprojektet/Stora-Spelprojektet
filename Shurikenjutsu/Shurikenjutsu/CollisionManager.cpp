@@ -87,6 +87,24 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(
 	return CollisionList;
 }
 
+bool CollisionManager::CheckCollisionWithAllStaticObjects(Sphere p_sphere)
+{
+	if (m_staticBoxList.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+		{
+			if (Collisions::SphereSphereCollision(Sphere(m_staticBoxList[i].m_center, m_staticBoxList[i].m_radius), p_sphere))
+			{
+				if (Collisions::OBBSphereCollision(m_staticBoxList[i], p_sphere))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 std::vector<Sphere> CollisionManager::CalculateLocalPlayerCollisionWithStaticSpheres(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction)
 {
 	std::vector<Sphere> collisionList;
