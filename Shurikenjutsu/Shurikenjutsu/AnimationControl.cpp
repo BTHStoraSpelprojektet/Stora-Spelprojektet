@@ -15,6 +15,10 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 
 	m_hipRotation = 0.0f;
 
+	m_surujinChild = false;
+
+	m_state = AnimationState::None;
+
 	return true;
 }
 
@@ -32,6 +36,7 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 	{
 		m_frameArms = 0.0f;
 		m_attackAnimation = false;
+		m_state = AnimationState::None;
 	}		
 
 	if (m_frameLegs >= (m_currentLegs->m_endFrame - 1))
@@ -45,6 +50,8 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 	int* index = new int(0);
 	CombineMatrices(index, m_currentArms->m_root[(int)m_frameArms], m_currentLegs->m_root[(int)m_frameLegs], startQuaternion, startTranslation);
 	delete[] index;
+
+	m_surujinChild = false;
 
 	return m_boneTransforms;
 }
@@ -124,13 +131,22 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	DirectX::XMMATRIX bindPose = DirectX::XMLoadFloat4x4(&m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform);
 	transformMatrix = DirectX::XMMatrixMultiply(bindPose, transformMatrix);
 
-	if (strcmp(p_jointArms->m_name, "ShoulderR") == 0)
+	if (strcmp(p_jointArms->m_name, "Surujin9") == 0 || m_surujinChild == true)
 	{
-		transformMatrix = DirectX::XMMatrixIdentity();
-		transformMatrix.r[0].m128_f32[0] = 0.0f;
-		transformMatrix.r[1].m128_f32[1] = 0.0f;
-		transformMatrix.r[2].m128_f32[2] = 0.0f;
-	}
+		if (m_state == AnimationState::Range || m_state == AnimationState::Special2)
+		{
+			// Scale lator
+		}		
+		else
+		{			
+			transformMatrix = DirectX::XMMatrixIdentity();
+			transformMatrix.r[0].m128_f32[0] = 0.0f;
+			transformMatrix.r[1].m128_f32[1] = 0.0f;
+			transformMatrix.r[2].m128_f32[2] = 0.0f;
+		}
+
+		m_surujinChild = true;
+	}	
 
 	DirectX::XMStoreFloat4x4(&m_boneTransforms[*p_index], DirectX::XMMatrixTranspose(transformMatrix));
 
@@ -138,6 +154,11 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	{
 		(*p_index)++;
 		CombineMatrices(p_index, p_jointArms->m_children[i], p_jointLegs->m_children[i], quaternion, jointTranslation);
+	}
+
+	if (p_jointArms->m_children.size() == 0)
+	{
+		m_surujinChild = false;
 	}
 }
 
@@ -393,6 +414,7 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 	{
 		m_frameArms = 0.0f;
 		m_attackAnimation = true;
+		m_state = p_newState;
 
 		if (p_newState == AnimationState::Melee)
 		{
@@ -413,7 +435,7 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 		else if (p_newState == AnimationState::Tool)
 		{
 			m_currentArms = &m_animationStacksArray[12];
-		}
+		}		
 	}	
 }
 

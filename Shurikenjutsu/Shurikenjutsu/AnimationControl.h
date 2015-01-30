@@ -60,6 +60,9 @@ private:
 
 	std::vector<DirectX::XMFLOAT4X4> m_boneTransforms;
 	std::vector<BindPose> m_bindPoses;
+
+	bool m_surujinChild;
+	AnimationState m_state;
 };
 
 #endif;
