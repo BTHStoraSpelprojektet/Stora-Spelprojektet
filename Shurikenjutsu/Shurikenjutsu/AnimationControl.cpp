@@ -123,6 +123,15 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 	DirectX::XMMATRIX bindPose = DirectX::XMLoadFloat4x4(&m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform);
 	transformMatrix = DirectX::XMMatrixMultiply(bindPose, transformMatrix);
+
+	if (strcmp(p_jointArms->m_name, "ShoulderR") == 0)
+	{
+		transformMatrix = DirectX::XMMatrixIdentity();
+		transformMatrix.r[0].m128_f32[0] = 0.0f;
+		transformMatrix.r[1].m128_f32[1] = 0.0f;
+		transformMatrix.r[2].m128_f32[2] = 0.0f;
+	}
+
 	DirectX::XMStoreFloat4x4(&m_boneTransforms[*p_index], DirectX::XMMatrixTranspose(transformMatrix));
 
 	for (unsigned int i = 0; i < p_jointArms->m_children.size(); i++)
