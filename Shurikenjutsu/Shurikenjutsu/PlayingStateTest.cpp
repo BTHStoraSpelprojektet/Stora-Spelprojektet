@@ -145,7 +145,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	float x = m_playerManager->GetPlayerPosition().x;
 	float y = m_playerManager->GetPlayerPosition().z;
-	VisibilityComputer::GetInstance().UpdateMapBoundries(Point(x - 15.0f, y + 15.0f), Point(x + 15.0f, y - 15.0f));
+	VisibilityComputer::GetInstance().UpdateMapBoundries(Point(x - 25.0f, y + 25.0f), Point(x + 25.0f, y - 25.0f));
 
 	// Handle camera input.
 	m_camera->HandleInput();
