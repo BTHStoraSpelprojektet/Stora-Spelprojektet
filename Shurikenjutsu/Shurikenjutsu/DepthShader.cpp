@@ -11,9 +11,9 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile depth vertex shader from file.");
 			return false;
@@ -71,9 +71,9 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Depth/InstancingDepthVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceVertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/InstancingDepthVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceVertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Depth/InstancingDepthVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceVertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/InstancingDepthVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceVertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile depth vertex shader from file.");
 			return false;
@@ -172,9 +172,9 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	errorMessage = 0;
 
 	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile depth pixel shader from file.");
 			return false;
@@ -427,9 +427,9 @@ bool DepthShader::InitializeAnimatedDepth(ID3D11Device* p_device, ID3D11DeviceCo
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile animated vertex shader
-	if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthAnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthAnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Depth/DepthAnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthAnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile depth animated vertex shader from file.");
 			return false;
