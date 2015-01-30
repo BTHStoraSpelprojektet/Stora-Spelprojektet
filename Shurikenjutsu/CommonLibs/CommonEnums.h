@@ -19,7 +19,8 @@ enum AnimationState {
 	Range,
 	Special1,
 	Special2,
-	Tool
+	Tool,
+	None
 };
 
 #endif // !COMMONENUMS_H_
