@@ -9,7 +9,7 @@ class AnimatedObject : public Object
 public:
 	AnimatedObject();
 	~AnimatedObject();
-	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed);
+	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir);
 	virtual void Shutdown();
 	virtual void SetDirection(DirectX::XMFLOAT3 p_direction);
 	virtual DirectX::XMFLOAT3 GetDirection();
@@ -18,6 +18,7 @@ public:
 
 	void Render(int p_team);
 	void RenderDepth();
+	void RenderOutlining();
 	void ChangeAnimationState(AnimationState p_newState);
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
@@ -28,6 +29,8 @@ protected:
 	float m_speed;
 
 private:
+	void LoadTexture(const char* p_filepath);
+
 	AnimationControl m_animationController;
 
 	ID3D11ShaderResourceView* m_texture;

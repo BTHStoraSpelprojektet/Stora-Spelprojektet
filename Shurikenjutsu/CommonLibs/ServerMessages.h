@@ -18,8 +18,9 @@ struct PlayerNet
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
 	int team;
-	int maxHP;
-	int currentHP;
+	float maxHP;
+	float currentHP;
+	int charNr;
 	bool isAlive;
 	float gcd;
 	Cooldowns cooldownAbilites;
@@ -40,6 +41,13 @@ struct SmokeBombNet
 	unsigned int smokeBombId;
 	float startX, startZ, endX, endZ;
 	float lifeTime;
+};
+struct SpikeNet
+{
+	unsigned int spikeId;
+	float startX, startZ, endX, endZ;
+	float lifeTime, timeToLand;
+	RakNet::RakNetGUID guid;
 };
 enum Messages
 {
@@ -63,7 +71,10 @@ enum Messages
 	ID_MATCH_OVER,
 	ID_NEW_LEVEL,
 	ID_PLAYER_ANIMATION_CHANGED,
-	ID_DASH_TO_LOCATION
+	ID_SPIKETRAP_THROW,
+	ID_SPIKETRAP_REMOVE,
+	ID_DASH_TO_LOCATION,
+	ID_CHOOSE_CHAR
 };
 
 #endif

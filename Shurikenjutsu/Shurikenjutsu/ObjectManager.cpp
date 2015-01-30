@@ -4,6 +4,8 @@
 #include "Frustum.h"
 #include "Globals.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "SmokeBomb.h"
+#include "Spikes.h"
 #include "..\CommonLibs\ModelNames.h"
 
 ObjectManager::ObjectManager(){}
@@ -76,6 +78,11 @@ void ObjectManager::Shutdown()
 		m_smokeBombList[i]->Shutdown();
 		delete m_smokeBombList[i];
 	}
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		m_spikeTrapList[i]->Shutdown();
+		delete m_spikeTrapList[i];
+	}	
 }
 
 void ObjectManager::Update()
@@ -99,6 +106,21 @@ void ObjectManager::Update()
 			m_smokeBombList[i]->Shutdown();
 			delete m_smokeBombList[i];
 			m_smokeBombList.erase(m_smokeBombList.begin() + i);
+			i--;
+		}
+	}
+
+	// Update all the spikes
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		m_spikeTrapList[i]->Update();
+
+		if (!m_spikeTrapList[i]->GetIsAlive())
+		{
+			// Remove Spike Trap
+			m_spikeTrapList[i]->Shutdown();
+			delete m_spikeTrapList[i];
+			m_spikeTrapList.erase(m_spikeTrapList.begin() + i);
 			i--;
 		}
 	}
@@ -150,6 +172,23 @@ void ObjectManager::Update()
 		}
 		Network::GetInstance()->SetHaveUpdateSmokeBombList();
 	}
+
+	///
+	if (Network::GetInstance()->IsSpikeTrapListUpdated())
+	{
+		std::vector<SpikeNet> tempSpikeTrapList = Network::GetInstance()->GetSpikeTraps();
+		std::vector<Spikes> spikeTrapList;
+		for (unsigned int i = 0; i < tempSpikeTrapList.size(); i++)
+		{
+			if (!IsSpikeTrapInList(tempSpikeTrapList[i].spikeId))
+			{
+				// Add Smoke bomb
+				AddSpikeTrap(tempSpikeTrapList[i].startX, tempSpikeTrapList[i].startZ, tempSpikeTrapList[i].endX, tempSpikeTrapList[i].endZ, tempSpikeTrapList[i].spikeId);
+			}
+		}
+		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
+	}
+	////
 }
 
 void ObjectManager::Render()
@@ -174,12 +213,22 @@ void ObjectManager::Render()
 			m_shurikens[i]->Render();
 		}
 	}
-
+	
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_smokeBombList[i]->GetSmokeSphere(), 2.0f))
 		{
 			m_smokeBombList[i]->Render();
+		}
+	}
+
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_spikeTrapList[i]->GetSpikeSphere(), 2.0f))
+		{
+			GraphicsEngine::TurnOnAlphaBlending();
+			m_spikeTrapList[i]->Render();
+			GraphicsEngine::TurnOffAlphaBlending();
 		}
 	}
 }
@@ -212,6 +261,15 @@ void ObjectManager::RenderDepth()
 		m_smokeBombList[i]->GetBomb()->RenderDepth();
 	}
 
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		Object* temp = m_spikeTrapList[i]->GetSpikesBag();
+		if (temp != NULL)
+		{
+			temp->RenderDepth();
+		}
+	}
+
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
@@ -231,6 +289,16 @@ void ObjectManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_e
 	tempSmokeBomb->ResetTimer();
 	m_smokeBombList.push_back(tempSmokeBomb);
 }
+
+void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID)
+{
+	Spikes *tempSpikeTrap;
+	tempSpikeTrap = new Spikes();
+	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_smokeBombID);
+	tempSpikeTrap->ResetTimer();
+	m_spikeTrapList.push_back(tempSpikeTrap);
+}
+
 void ObjectManager::AddStaticObject(Object p_object)
 {
 	m_staticObjects.push_back(p_object);
@@ -248,6 +316,7 @@ bool ObjectManager::IsShurikenInList(unsigned int p_shurikenId)
 
 	return false;
 }
+
 bool ObjectManager::IsSmokeBombInList(unsigned int p_smokeBombId)
 {
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
@@ -260,6 +329,20 @@ bool ObjectManager::IsSmokeBombInList(unsigned int p_smokeBombId)
 
 	return false;
 }
+
+bool ObjectManager::IsSpikeTrapInList(unsigned int p_spikeTrapId)
+{
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		if (p_spikeTrapId == m_spikeTrapList[i]->GetID())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 {
 	std::vector<ShurikenNet> shurikenList = Network::GetInstance()->GetShurikens();

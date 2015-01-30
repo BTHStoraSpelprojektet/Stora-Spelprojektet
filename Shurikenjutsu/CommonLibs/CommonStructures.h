@@ -30,6 +30,18 @@ struct Vertex
 	}
 };
 
+struct VertexOutlining
+{
+	// Variables.
+	DirectX::XMFLOAT3 m_position;
+
+	// Constructors.
+	VertexOutlining(DirectX::XMFLOAT3 p_position)
+	{
+		m_position = p_position;
+	}
+};
+
 struct VertexAnimated
 {
 	// Variables.

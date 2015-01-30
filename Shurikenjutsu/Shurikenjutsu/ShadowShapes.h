@@ -27,7 +27,7 @@ public:
 	void RemoveDynamicShape(int p_atIndex, int p_numberOfLines);
 
 	std::vector<Line> GetBoundryLines();
-	std::vector<Line> GetStaticLines();
+	std::vector<Line> GetStaticLines(Point a, Point b);
 	std::vector<Line> GetDynamicLines();
 
 	std::vector<Point> GetUniquePoints();

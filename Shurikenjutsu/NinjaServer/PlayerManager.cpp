@@ -1,4 +1,6 @@
 #include "PlayerManager.h"
+#include "SpikeManager.h"
+
 #include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
@@ -6,8 +8,9 @@ PlayerManager::~PlayerManager(){}
 
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
-	m_playerHealth = (int)CHARACTAR_KATANA_SHURIKEN_HEALTH;
+	m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
 	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
+
 	m_serverPeer = p_serverPeer;
 
 	m_players = std::vector<PlayerNet>();
@@ -17,7 +20,9 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	Level level(p_levelName);
 	m_spawnPoints = level.GetSpawnPoints();
 
-	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(PLAYER_MODEL_NAME)->GetBoundingBoxes();
+	// Todo: move to player
+	m_katanaBoundingBoxes = ModelLibrary::GetInstance()->GetModel(KATANA_NINJA_MODEL_NAME)->GetBoundingBoxes();
+	m_tessenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(TESSEN_NINJA_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
@@ -52,11 +57,12 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 	return m_players;
 }
 
-void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid)
+void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
 	PlayerNet player;
 	player.guid = p_guid;
 	player.team = (m_players.size() % 2) + 1;
+	player.charNr = p_charNr;
 	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
 	player.x = spawnPoint.m_translationX;
 	player.y = spawnPoint.m_translationY;
@@ -76,10 +82,8 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid)
 	BroadcastPlayers();
 }
 
-void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
+bool PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
 {
-	bool found = false;
-
 	// See if player can move to target position and then update position
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -101,19 +105,14 @@ void PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, 
 				}
 			}
 
-			found = true;
-			break;
+			return true;
 		}
 	}
 
-	// Add player if he doesn't exist in the vector
-	if (!found)
-	{
-		AddPlayer(p_guid);
-	}
+	return false;
 }
 
-void PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
+bool PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -125,9 +124,11 @@ void PlayerManager::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float 
 				m_players[i].dirY = p_dirY;
 				m_players[i].dirZ = p_dirZ;
 			}
-			break;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
@@ -164,6 +165,7 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].dirY);
 		bitStream.Write(m_players[i].dirZ);
 		bitStream.Write(m_players[i].team);
+		bitStream.Write(m_players[i].charNr);
 		bitStream.Write(m_players[i].maxHP);
 		bitStream.Write(m_players[i].currentHP);
 		bitStream.Write(m_players[i].isAlive);
@@ -243,9 +245,24 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 		return boundingBoxes;
 	}
 
-	for (unsigned int i = 0; i < m_boundingBoxes.size(); i++)
+	std::vector<Box> tmpBB = std::vector<Box>();
+	switch (m_players[p_index].charNr)
 	{
-		Box box = m_boundingBoxes[i];
+		case 0:
+		{
+			tmpBB = m_katanaBoundingBoxes;
+			break;
+		}
+		case 1:
+		{
+			tmpBB = m_tessenBoundingBoxes;
+			break;
+		}
+	}
+
+	for (unsigned int i = 0; i < tmpBB.size(); i++)
+	{
+		Box box = tmpBB[i];
 		box.m_center.x += m_players[p_index].x;
 		box.m_center.y += m_players[p_index].y;
 		box.m_center.z += m_players[p_index].z;
@@ -312,7 +329,16 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 				result = true; // controlled locally atmresult = false;
 				break;
 			case ABILITIES_SMOKEBOMB:
-				result = true; 
+				result = true;
+				break;
+			case ABILITIES_SPIKETRAP:
+				result = true;
+				break;
+			case ABILITIES_WHIP_PRIMARY:
+				result = true;
+				break;
+			case ABILITIES_WHIP_SECONDARY:
+				result = true;
 				break;
 			default:
 				result = false;
@@ -324,9 +350,10 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	return result;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
+	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
 	float dashDistance = 10.0f;
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
@@ -369,6 +396,23 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		}
 		p_smokebomb.AddSmokeBomb(m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
 		break;
+	case ABILITIES_SPIKETRAP:
+		abilityString = "spike tarp";
+		if (spikeTrapDistance > SPIKE_RANGE)
+		{
+			spikeTrapDistance = SPIKE_RANGE;
+		}
+		p_spikeTrap.AddSpikeTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
+
+		break;
+	case ABILITIES_WHIP_PRIMARY:
+		abilityString = "whipping the shit out of fuck";
+		p_collisionManager.WhipPrimaryAttack(p_guid, this);
+		break;
+	case ABILITIES_WHIP_SECONDARY:
+		abilityString = "not whipping enough!";
+		p_collisionManager.WhipSecondaryAttack(p_guid, this);
+		break;
 	default:
 		break;
 	}
@@ -395,7 +439,7 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -411,7 +455,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, int p_damage)
 	}
 }
 
-void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p_isAlive)
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive)
 {
 	RakNet::BitStream bitStream;
 
@@ -424,7 +468,7 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, int p_health, bool p
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
-int PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
+float PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
 {
 	return GetPlayer(p_guid).currentHP;
 }

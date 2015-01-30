@@ -1,6 +1,8 @@
 #ifndef ABILITYBAR_H_
 #define ABILITYBAR_H_
 
+#define WIN32_LEAN_AND_MEAN
+
 #include <vector>
 
 class GUIAbility;
@@ -18,6 +20,12 @@ public:
 	void Render();
 
 private:
+	std::string GetAbility1Name();
+	std::string GetAbility2Name();
+	std::string GetAbility3Name();
+	std::string GetAbility4Name();
+	std::string GetAbility5Name();
+
 	std::vector<GUIAbility*> m_abilities;
 	GUIElement* m_background;
 

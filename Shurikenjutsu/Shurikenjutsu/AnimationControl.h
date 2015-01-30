@@ -52,8 +52,8 @@ private:
 	AnimationStack* m_currentArms;
 	AnimationStack* m_currentLegs;
 
-	std::vector<DirectX::XMVECTOR> m_QuaternionArms;
-	std::vector<DirectX::XMVECTOR> m_QuaternionLegs;
+	std::vector<DirectX::XMFLOAT4> m_QuaternionArms;
+	std::vector<DirectX::XMFLOAT4> m_QuaternionLegs;
 
 	float m_blendWeightArms;
 	float m_blendWeightLegs;

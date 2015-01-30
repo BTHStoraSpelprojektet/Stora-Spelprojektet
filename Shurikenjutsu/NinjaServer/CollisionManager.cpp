@@ -1,5 +1,7 @@
 #include "CollisionManager.h"
-
+#include "PlayerManager.h"
+#include "SpikeManager.h"
+#include "ShurikenManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
@@ -51,10 +53,10 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		// Make collision test
-		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, KATANA_RANGE, attackDirection, boxPosition, boxExtent, 2.5f))
+		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, KATANA_RANGE, attackDirection, boxPosition, boxExtent, KATANA_RANGE))
 		{
 			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, (int)KATANA_DAMAGE);
+			p_playerManager->DamagePlayer(playerList[i].guid, KATANA_DAMAGE);
 			break;
 		}
 	}
@@ -118,7 +120,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shurikenBoundingBoxes[k]))
 					{
-						int damage = shurikenList[i].megaShuriken ? MEGASHURIKEN_DAMAGE : SHURIKEN_DAMAGE;
+						float damage = shurikenList[i].megaShuriken ? (float)MEGASHURIKEN_DAMAGE : (float)SHURIKEN_DAMAGE;
 						
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 
@@ -261,10 +263,135 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	return dashLength;
 }
 
-void CollisionManager::CalculateSmokeBombLocation()
+void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager, float p_deltaTime)
 {
+	float radius = 1.0f;
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<SpikeNet> spikeList = p_spikeManager->GetSpikeTraps();
+	for (unsigned int i = 0; i < spikeList.size(); i++)
+	{
+		// Go through player list
+		for (unsigned int j = 0; j < playerList.size(); j++)
+		{
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == spikeList[i].guid)
+			{
+				continue;
+			}
 
+			// Check so you are not on the same team
+			PlayerNet owner = p_playerManager->GetPlayer(spikeList[i].guid);
+			if (playerList[j].team == owner.team)
+			{
+				continue;
+			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+			
+
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+			// Make collision test	
+			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+			{
+				if (spikeList[i].timeToLand <= 0)
+				{
+					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
+					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+					{
+						float damage = SPIKE_DAMAGE * p_deltaTime;
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+						break;
+					}
+				}
+			}
+		}
+	}
 }
+
+void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+{
+	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		// So you don't collide with yourself.
+		if (playerList[i].guid == attackingPlayer.guid)
+		{
+			continue;
+		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
+		// Check so the player aren't already dead
+		if (!playerList[i].isAlive)
+		{
+			continue;
+		}
+
+		DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
+		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+		Ray* whipRay = new Ray(attackPosition, attackDirection);
+		float *distance = new float(0);
+		// Make collision test
+		if (IntersectionTests::Intersections::RaySphereCollision(whipRay->m_position, whipRay->m_direction, spherePosition, 1.0f, distance))
+		{
+			if (*distance <= WHIP_RANGE)
+			{
+				// Damage the player
+				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
+				break;
+			}
+		}
+	}
+}
+
+void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+{
+	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		// So you don't collide with yourself.
+		if (playerList[i].guid == attackingPlayer.guid)
+		{
+			continue;
+		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
+		// Check so the player aren't already dead
+		if (!playerList[i].isAlive)
+		{
+			continue;
+		}
+
+		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+
+		// Make collision test
+		if (IntersectionTests::Intersections::SphereSphereCollision(attackPosition, WHIP_SP_RANGE, spherePosition, 1.0f))
+		{
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
+		}
+	}
+}
+
 //Private
 bool CollisionManager::OBBOBBTest(OBB p_OBB1, OBB p_OBB2)
 {
@@ -290,4 +417,8 @@ bool CollisionManager::OBBSphereTest(OBB p_OBB, Sphere p_sphere)
 		return IntersectionTests::Intersections::OBBSphereCollision(p_OBB.m_center, p_OBB.m_extents, p_OBB.m_direction, p_sphere.m_position, p_sphere.m_radius);
 	}
 	return false;
+}
+bool CollisionManager::SphereSphereTest(Sphere p_spikeTrap, Sphere p_player)
+{
+	return IntersectionTests::Intersections::SphereSphereCollision(p_spikeTrap.m_position, p_spikeTrap.m_radius, p_player.m_position, p_player.m_radius);
 }

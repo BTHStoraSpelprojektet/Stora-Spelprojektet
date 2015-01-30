@@ -34,6 +34,7 @@ public:
 	Model* GetModel();
 
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
+	DirectX::XMFLOAT4X4 GetWorldMatrixScaled(float p_scale);
 
 	std::vector<OBB> GetBoundingBoxes();
 	std::vector<Sphere> GetBoundingSpheres();
