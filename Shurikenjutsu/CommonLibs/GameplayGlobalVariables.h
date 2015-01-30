@@ -17,14 +17,14 @@ const float SHURIKEN_SPEED = 40.0f;
 ////////////////////////////////////////////////////////////////Ranged Attacks
 ////////////////////////////////////////////////////////////////Ranged Attacks
 //Whip
-const float WHIP_DAMAGE = 10.0f;
-const float WHIP_COOLDOWN = 10.0f;
-const float WHIP_RANGE = 20.0f;
+const float WHIP_DAMAGE = 15.0f;
+const float WHIP_COOLDOWN = 2.0f;
+const float WHIP_RANGE = 15.0f;
 
 //Whip special attack
-const float WHIP_SP_DAMAGE = 10.0f;
-const float WHIP_SP_COOLDOWN = 0.5f;
-const float WHIP_SP_RANGE = 10.0f;
+const float WHIP_SP_DAMAGE = 25.0f;
+const float WHIP_SP_COOLDOWN = 5.0f;
+const float WHIP_SP_RANGE = 7.0f;
 
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
@@ -68,8 +68,8 @@ const float SMOKEBOMB_SIZE_Y = 3.0f;
 ////////////////////////////////////////////////////////////////Tools
 ////////////////////////////////////////////////////////////////Special Abilities
 
-const float SPIKE_DAMAGE = 1.0f;
-const float SPIKE_COOLDOWN = 10.0f;
+const float SPIKE_DAMAGE = 3.0f;
+const float SPIKE_COOLDOWN = 6.0f;
 const float SPIKE_RANGE = 30.0f;
 const float SPIKE_DURATION = 20.0f;
 const float SPIKE_SPEED = 30.0f;

@@ -299,6 +299,12 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 		case ABILITIES_MEGASHURIKEN:
 			m_players[p_index].cooldownAbilites.megaShurikenCD = MEGASHURIKEN_COOLDOWN;
 			break;
+		case ABILITIES_WHIP_PRIMARY:
+			m_players[p_index].cooldownAbilites.whipAttack = WHIP_COOLDOWN;
+			break;
+		case ABILITIES_WHIP_SECONDARY:
+			m_players[p_index].cooldownAbilites.megaShurikenCD = WHIP_SP_COOLDOWN;
+			break;
 		default:
 			break;
 		}
