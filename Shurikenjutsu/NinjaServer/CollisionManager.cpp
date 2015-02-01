@@ -203,12 +203,12 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 	for (unsigned int i = 0; i < fanList.size(); i++)
 	{
 		bool collisionFound = false;
-		// Get the shurikens position
+		// Get the fans position
 		float newPosX = p_fanBoomerangManager->GetPosX(i);
 		float newPosY = p_fanBoomerangManager->GetPosY(i);
 		float newPosZ = p_fanBoomerangManager->GetPosZ(i);
 
-		// Get the shuriken bounding boxes
+		// Get the fan bounding boxes
 		std::vector<Box> fanBoundingBoxes;
 
 		fanBoundingBoxes = p_fanBoomerangManager->GetBoundingBoxes(i);
@@ -216,7 +216,43 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 		// Go through player list
 		for (unsigned int j = 0; j < playerList.size(); j++)
 		{
-			// This is so you don't collide with your own shurikens
+			if (fanList[i].lifeTime <= 0)
+			{
+				if (playerList[j].guid == fanList[i].guid)
+				{
+					// Get the players bounding boxes
+					std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+					// Make collision test
+					for (unsigned int k = 0; k < fanBoundingBoxes.size(); k++)
+					{
+						for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+						{
+							if (BoxBoxTest(playerBoundingBoxes[l], fanBoundingBoxes[k]))
+							{
+								p_fanBoomerangManager->Remove(fanList[i].id);
+								fanList.erase(fanList.begin() + i);
+								i--;
+
+								collisionFound = true;
+								break;
+							}
+						}
+
+						if (collisionFound)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			if (collisionFound)
+			{
+				break;
+			}
+
+			// This is so you don't collide with your own fan if it's alive.
 			if (playerList[j].guid == fanList[i].guid)
 			{
 				continue;
@@ -235,7 +271,6 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 				continue;
 			}
 
-
 			// Get the players bounding boxes
 			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
 
@@ -246,14 +281,13 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], fanBoundingBoxes[k]))
 					{
-						float damage = SHURIKEN_DAMAGE;
+						float damage = FANBOOMERANG_DAMAGE;
 
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 
-						// END LIFE!
-						p_fanBoomerangManager->SetLifeTime(i, -1.0f);
-
-						// SOMETHING MORE, HMMMM...
+						p_fanBoomerangManager->Remove(fanList[i].id);
+						fanList.erase(fanList.begin() + i);
+						i--;
 
 						collisionFound = true;
 						break;
@@ -271,6 +305,11 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 			}
 		}
 
+		if (collisionFound)
+		{
+			continue;
+		}
+
 		// Go through maps bounding boxes
 		for (unsigned int j = 0; j < fanBoundingBoxes.size(); j++)
 		{
@@ -281,7 +320,6 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 				{
 					// END LIFE!
 					p_fanBoomerangManager->SetLifeTime(i, -1.0f);
-					i--;
 
 					collisionFound = true;
 					break;

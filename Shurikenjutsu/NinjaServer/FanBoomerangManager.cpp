@@ -10,7 +10,7 @@ bool FanBoomerangManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 
 	m_fans = std::vector<FanNet>();
 
-	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(SMOKE_BOMB)->GetBoundingBoxes();
+	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(FANBOOMERANG_MODEL_NAME)->GetBoundingBoxes();
 	
 	return true;
 }
@@ -20,11 +20,14 @@ void FanBoomerangManager::Shutdown()
 
 }
 
-void FanBoomerangManager::Update(double p_deltaTime)
+void FanBoomerangManager::Update(double p_deltaTime, PlayerManager* p_playerManager)
 {
+	std::vector<PlayerNet> players = p_playerManager->GetPlayers();
+
 	// Update all the fans
 	for (unsigned int i = 0; i < m_fans.size(); i++)
 	{
+		
 		// Update life, it sucks
 		if (m_fans[i].lifeTime > 0)
 		{
@@ -33,13 +36,31 @@ void FanBoomerangManager::Update(double p_deltaTime)
 			m_fans[i].y += m_fans[i].dirY*m_fans[i].speed*(float)p_deltaTime;
 			m_fans[i].z += m_fans[i].dirZ*m_fans[i].speed*(float)p_deltaTime;
 		}
+
+		// pepsi
 		else
 		{
-			m_fans[i].x += m_fans[i].dirX*m_fans[i].speed*(float)-p_deltaTime;
-			m_fans[i].y += m_fans[i].dirY*m_fans[i].speed*(float)-p_deltaTime;
-			m_fans[i].z += m_fans[i].dirZ*m_fans[i].speed*(float)-p_deltaTime;
+			for (unsigned int j = 0; j < players.size(); j++)
+			{
+				if (m_fans[i].guid == players[j].guid)
+				{
+					// Calculate new direction
+					float dirX = m_fans[i].x - players[j].x;
+					float dirZ = m_fans[i].z - players[j].z;
+					float length = sqrt(dirX*dirX + dirZ*dirZ);
+
+					dirX /= length;
+					dirZ /= length;
+
+					m_fans[i].dirX = dirX;
+					m_fans[i].dirZ = dirZ;
+
+					m_fans[i].x += m_fans[i].dirX*m_fans[i].speed*(float)-p_deltaTime;
+					m_fans[i].y += m_fans[i].dirY*m_fans[i].speed*(float)-p_deltaTime;
+					m_fans[i].z += m_fans[i].dirZ*m_fans[i].speed*(float)-p_deltaTime;
+				}
+			}
 		}
-		
 	}
 
 	UpdateClients();
@@ -56,8 +77,8 @@ void FanBoomerangManager::Add(RakNet::RakNetGUID p_guid, float p_posX, float p_p
 	fan.dirZ = p_dirZ;
 	fan.id = GetUniqueId();
 	fan.guid = p_guid;
-	fan.lifeTime = 3.0f;
-	fan.speed = SHURIKEN_SPEED;
+	fan.lifeTime = FANBOOMERANG_DURATION;
+	fan.speed = FANBOOMERANG_SPEED;
 	m_fans.push_back(fan);
 
 	RakNet::BitStream wBitStream;

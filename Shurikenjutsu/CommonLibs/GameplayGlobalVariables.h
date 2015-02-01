@@ -22,6 +22,12 @@ const float MEGASHURIKEN_DAMAGE = 50.0f;
 const float MEGASHURIKEN_DURATION = 4.0f;
 const float MEGASHURIKEN_SPEED = 15.0f;
 
+// Fan Boomerang
+const float FANBOOMERANG_DAMAGE = 25.0f;
+const float FANBOOMERANG_COOLDOWN = 2.0f;
+const float FANBOOMERANG_DURATION = 3.0f;
+const float FANBOOMERANG_SPEED = 20.0f;
+
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
 //Katana

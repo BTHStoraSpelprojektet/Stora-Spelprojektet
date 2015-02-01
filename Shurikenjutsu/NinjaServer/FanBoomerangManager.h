@@ -9,6 +9,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "..\CommonLibs\CommonStructures.h"
 #include <vector>
+#include "PlayerManager.h"
 
 class FanBoomerangManager
 {
@@ -18,7 +19,7 @@ public:
 
 	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
 	void Shutdown();
-	void Update(double p_deltaTime);
+	void Update(double p_deltaTime, PlayerManager* p_playerManager);
 
 	void Add(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
 	void Remove(unsigned int p_id);

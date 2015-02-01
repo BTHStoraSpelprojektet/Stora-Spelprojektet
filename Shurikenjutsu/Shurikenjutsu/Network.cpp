@@ -173,7 +173,7 @@ void Network::ReceviePacket()
 				UpdatePlayerTeam(guid, team);
 				UpdatePlayerChar(guid, charNr);
 
-				playerGuids.push_back(guid);				
+				playerGuids.push_back(guid);
 			}
 
 			// Check for removed players
@@ -505,7 +505,7 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			bitStream.Read(nrOfFans);
-			
+
 			for (int i = 0; i < nrOfFans; i++)
 			{
 				bitStream.Read(id);
@@ -531,12 +531,22 @@ void Network::ReceviePacket()
 					}
 				}
 			}
+			break;
+		}
+		case ID_FAN_REMOVE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int fanId;
+			bitStream.Read(messageID);
+			bitStream.Read(fanId);
+			RemoveFan(fanId);
+			break;
 		}
 		default:
 		{
 			break;
 		}
-
 		}
 	}
 }
@@ -900,6 +910,19 @@ void Network::RemoveShuriken(unsigned int p_shurikenID)
 		{
 			m_shurikensList.erase(m_shurikensList.begin() + i);
 			m_shurikenListUpdated = true;
+			break;
+		}
+	}
+}
+
+void Network::RemoveFan(unsigned int p_id)
+{
+	for (unsigned int i = 0; i < m_fanList.size(); i++)
+	{
+		if (m_fanList[i].id == p_id)
+		{
+			m_fanList.erase(m_fanList.begin() + i);
+			m_fanListUpdated = true;
 			break;
 		}
 	}

@@ -17,6 +17,8 @@
 // Smoke Bomb
 #define SMOKE_BOMB "../Shurikenjutsu/Models/SmokeBomb.SSP"
 
+// Fan Boomerang
+#define FANBOOMERANG_MODEL_NAME "../Shurikenjutsu/Models/MegaShurikenShape.SSP"
 
 // Minimap
 #define MINIMAP_TEXTURE "../Shurikenjutsu/2DTextures/minimap.png"

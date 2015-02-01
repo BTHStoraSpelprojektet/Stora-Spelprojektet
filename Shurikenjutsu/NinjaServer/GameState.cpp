@@ -78,7 +78,7 @@ void GameState::Update(double p_deltaTime)
 	m_shurikenManager->Update(p_deltaTime);
 	m_smokeBombManager->Update(p_deltaTime);
 	m_spikeManager->Update(p_deltaTime);
-	m_fanBoomerangManager->Update(p_deltaTime);
+	m_fanBoomerangManager->Update(p_deltaTime, m_playerManager);
 
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
 	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager, (float)p_deltaTime);
