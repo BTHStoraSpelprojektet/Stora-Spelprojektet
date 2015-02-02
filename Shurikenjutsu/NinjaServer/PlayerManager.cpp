@@ -59,6 +59,15 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 
 void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
+	if (p_charNr == 0)
+	{
+		m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
+	}
+	else if (p_charNr == 1)
+	{
+		m_playerHealth = CHARACTER_TESSEN_HEALTH;
+	}
+
 	PlayerNet player;
 	player.guid = p_guid;
 	player.team = (m_players.size() % 2) + 1;
