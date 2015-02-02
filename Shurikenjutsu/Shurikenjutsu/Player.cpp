@@ -47,6 +47,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_directionUpdateTimer = 0.0f;
 
+	throwDistance = 0.0f;
+
 	m_globalCooldown = 0.0f;
 	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
 
@@ -113,14 +115,20 @@ void Player::UpdateMe()
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
 		SetTeam(Network::GetInstance()->GetMyPlayer().team);
+		//SetPosition(DirectX::XMFLOAT3(Network::GetInstance()->GetMyPlayer().x, Network::GetInstance()->GetMyPlayer().y, Network::GetInstance()->GetMyPlayer().z));
 	}
 
-	m_playerSphere.m_position = m_position;
 	// Move
-	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
+
+	//////////////////////*********************************************************************************************
+	////	VARFÖR UPPDATERAS MOVE TVÅ GÅNGER?? HÄNDER ÄVEN LÄNGRE NER
+	////////////////////**********************************************************************
+	/*if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
 		SetCalculatePlayerPosition();
-	}
+	}*/
+
+	
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -180,6 +188,7 @@ void Player::UpdateMe()
 		// If we moved, update shadow shapes.
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 	}
+	m_playerSphere.m_position = m_position;
 	
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
@@ -206,10 +215,10 @@ void Player::UpdateMe()
 
 	// Count down cooldowns
 	UpdateAbilities();
-	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
+	throwDistance = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_position);//m_playerSphere.m_position);
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
-		if (m_ability->Execute(temp))
+		if (m_ability->Execute(throwDistance))
 		{
 			// Play ability animation if we did any
 			DoAnimation();
@@ -355,7 +364,7 @@ float Player::GetMaxHealth() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-	AnimatedObject::SetPosition(p_pos);
+	SetPosition(p_pos);
 	
 	if (Network::GetInstance()->IsConnected())
 	{

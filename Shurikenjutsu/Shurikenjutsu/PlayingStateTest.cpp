@@ -139,6 +139,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update global delta time.
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+	
+	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	BasicPicking();
 
@@ -161,7 +163,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
-	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	// Update frustum
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && FLAG_DEBUG == 1)
@@ -299,10 +300,11 @@ void PlayingStateTest::BasicPicking()
 		DirectX::XMStoreFloat4x4(&world, matrix);
 		m_debugDot.UpdateWorldMatrix(world);
 
-		m_mouseX = shurPos.x;
-		m_mouseY = shurPos.z;
 	}
 	// ========== DEBUG LINES ==========
+	
+	m_mouseX = shurPos.x;
+	m_mouseY = shurPos.z;
 }
 
 void PlayingStateTest::OutliningRays()

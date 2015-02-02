@@ -91,6 +91,7 @@ protected:
 	DirectX::XMFLOAT3 m_dashDirection;
 	float m_dashDistanceLeft;
 	bool m_isDashing;
+	float throwDistance;
 
 	float m_globalCooldown;
 	float m_maxGlobalCooldown;
