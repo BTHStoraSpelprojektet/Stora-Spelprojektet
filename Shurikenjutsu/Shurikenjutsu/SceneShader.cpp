@@ -1070,7 +1070,7 @@ void SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberO
 		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
 		m_instances.push_back(temp);
 	}
-
+	//https://msdn.microsoft.com/en-us/library/windows/desktop/dn508285(v=vs.85).aspx
 	D3D11_BUFFER_DESC instanceBufferDesc;
 	instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
