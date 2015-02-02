@@ -164,7 +164,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	// Update frustum
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && FLAG_DEBUG == 1)
 	{
 		m_updateFrustum = false;
 	}
