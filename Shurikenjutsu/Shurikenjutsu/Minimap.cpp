@@ -2,6 +2,9 @@
 #include "Globals.h"
 #include "..\CommonLibs\ModelNames.h"
 
+#define MAPSIZEX 43
+#define MAPSIZEY 50
+
 Minimap::Minimap()
 {
 }
@@ -53,20 +56,7 @@ void Minimap::Shutdown()
 
 void Minimap::Update(DirectX::XMFLOAT3 p_playerPos)
 {
-	float xPercent, yPercent;
-	DirectX::XMFLOAT3 playerPos = p_playerPos;
-	playerPos.y = playerPos.z;
-	playerPos.z = 0;
-
-	// Calc where the player is on the minimap in precent from center
-	xPercent = playerPos.x / 53;	// 53 size of map in x from middle
-	yPercent = playerPos.y / 65;	// 67 size of map in z from middle
-	playerPos.x = xPercent * m_minimapWidth * 0.5f;
-	playerPos.y = yPercent * m_minimapHeight * 0.5f; 
-	playerPos.x = m_centerOfMinimapPos.x + playerPos.x;
-	playerPos.y = m_centerOfMinimapPos.y + playerPos.y;
-	m_playerDot->SetPosition(playerPos);
-
+	m_playerDot->SetPosition(ConvertPosToMinimapPos(p_playerPos));
 }
 
 void Minimap::Render()
@@ -91,12 +81,13 @@ DirectX::XMFLOAT3 Minimap::ConvertPosToMinimapPos(DirectX::XMFLOAT3 p_playerPos)
 	DirectX::XMFLOAT3 playerPos = p_playerPos;
 	playerPos.y = playerPos.z;
 	playerPos.z = 0;
-
+	// offset for map being higher than width..
+	float offset = 25;
 	// Calc where the player is on the minimap in precent from center
-	xPercent = playerPos.x / 53;	// 53 size of map in x from middle
-	yPercent = playerPos.y / 65;	// 67 size of map in z from middle
+	xPercent = playerPos.x / MAPSIZEX;	// 43 size of map in x from middle
+	yPercent = playerPos.y / MAPSIZEY;	// 50 size of map in z from middle
 	playerPos.x = xPercent * m_minimapWidth * 0.5f;
-	playerPos.y = yPercent * m_minimapHeight * 0.5f;
+	playerPos.y = yPercent * (m_minimapHeight - offset) * 0.5f;
 	playerPos.x = m_centerOfMinimapPos.x + playerPos.x;
 	playerPos.y = m_centerOfMinimapPos.y + playerPos.y;
 	return playerPos;
