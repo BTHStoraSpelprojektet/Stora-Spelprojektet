@@ -517,7 +517,7 @@ void Network::ReceviePacket()
 				bitStream.Read(dirZ);
 				bitStream.Read(speed);
 
-				for (int j = 0; j < m_fanList.size(); j++)
+				for (unsigned int j = 0; j < m_fanList.size(); j++)
 				{
 					if (id == m_fanList[j].id)
 					{

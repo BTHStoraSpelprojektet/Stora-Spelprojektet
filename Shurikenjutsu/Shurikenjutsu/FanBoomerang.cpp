@@ -20,8 +20,8 @@ void FanBoomerang::Update(float p_x, float p_y, float p_z, float p_dirX, float p
 	m_speed = 0;
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
-	m_rotation.x += (float)(SHURIKEN_ROTATION_SPEED*deltaTime*0.1f);
-	m_rotation.y += (float)(SHURIKEN_ROTATION_SPEED*deltaTime*0.1f);
+	//m_rotation.x += (float)(SHURIKEN_ROTATION_SPEED*deltaTime*0.1f);
+	m_rotation.y += (float)(SHURIKEN_ROTATION_SPEED*deltaTime);
 	//m_rotation.z += (float)(SHURIKEN_ROTATION_SPEED*deltaTime*0.1f);
 }
 

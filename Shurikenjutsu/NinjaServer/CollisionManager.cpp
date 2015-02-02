@@ -195,7 +195,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 	}
 }
 
-void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangManager, PlayerManager* p_playerManager)
+void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManager* p_fanBoomerangManager, PlayerManager* p_playerManager)
 {
 	float radius = 1.0f;
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
@@ -281,7 +281,7 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], fanBoundingBoxes[k]))
 					{
-						float damage = FANBOOMERANG_DAMAGE;
+						float damage = FANBOOMERANG_DAMAGE*(float)p_deltaTime;
 
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 
@@ -310,46 +310,99 @@ void CollisionManager::FanCollisionChecks(FanBoomerangManager* p_fanBoomerangMan
 			continue;
 		}
 
-		// Go through maps bounding boxes
-		for (unsigned int j = 0; j < fanBoundingBoxes.size(); j++)
+		if (fanList[i].lifeTime <= 0)
 		{
-			// Box list
-			for (unsigned int k = 0; k < m_staticBoxList.size(); k++)
+			// Go through maps bounding boxes
+			for (unsigned int j = 0; j < fanBoundingBoxes.size(); j++)
 			{
-				if (OBBOBBTest(m_staticBoxList[k], OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
+				// Box list
+				for (unsigned int k = 0; k < m_staticBoxList.size(); k++)
 				{
-					// END LIFE!
-					p_fanBoomerangManager->SetLifeTime(i, -1.0f);
+					if (OBBOBBTest(m_staticBoxList[k], OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
+					{
+						// Remove
+						p_fanBoomerangManager->Remove(fanList[i].id);
+						fanList.erase(fanList.begin() + i);
+						i--;
 
-					collisionFound = true;
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
+
+				// Sphere list
+				for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
+				{
+					Sphere sphere = m_staticSphereList[k];
+					if (sphere.m_position.y + sphere.m_radius < fanBoundingBoxes[j].m_center.y - fanBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > fanBoundingBoxes[j].m_center.y + fanBoundingBoxes[j].m_extents.y)
+					{
+						sphere.m_position.y = fanBoundingBoxes[j].m_center.y;
+					}
+					if (OBBSphereTest(OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
+					{
+						// Remove
+						p_fanBoomerangManager->Remove(fanList[i].id);
+						fanList.erase(fanList.begin() + i);
+						i--;
+
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
 					break;
 				}
 			}
-			if (collisionFound)
-			{
-				break;
-			}
+		}
 
-			// Sphere list
-			for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
+		else
+		{
+			// Go through maps bounding boxes
+			for (unsigned int j = 0; j < fanBoundingBoxes.size(); j++)
 			{
-				Sphere sphere = m_staticSphereList[k];
-				if (sphere.m_position.y + sphere.m_radius < fanBoundingBoxes[j].m_center.y - fanBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > fanBoundingBoxes[j].m_center.y + fanBoundingBoxes[j].m_extents.y)
+				// Box list
+				for (unsigned int k = 0; k < m_staticBoxList.size(); k++)
 				{
-					sphere.m_position.y = fanBoundingBoxes[j].m_center.y;
+					if (OBBOBBTest(m_staticBoxList[k], OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
+					{
+						// END LIFE!
+						p_fanBoomerangManager->SetLifeTime(i, -1.0f);
+
+						collisionFound = true;
+						break;
+					}
 				}
-				if (OBBSphereTest(OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
+				if (collisionFound)
 				{
-					// END LIFE!
-					p_fanBoomerangManager->SetLifeTime(i, -1.0f);
-
-					collisionFound = true;
 					break;
 				}
-			}
-			if (collisionFound)
-			{
-				break;
+
+				// Sphere list
+				for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
+				{
+					Sphere sphere = m_staticSphereList[k];
+					if (sphere.m_position.y + sphere.m_radius < fanBoundingBoxes[j].m_center.y - fanBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > fanBoundingBoxes[j].m_center.y + fanBoundingBoxes[j].m_extents.y)
+					{
+						sphere.m_position.y = fanBoundingBoxes[j].m_center.y;
+					}
+					if (OBBSphereTest(OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
+					{
+						// END LIFE!
+						p_fanBoomerangManager->SetLifeTime(i, -1.0f);
+
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
 			}
 		}
 	}
