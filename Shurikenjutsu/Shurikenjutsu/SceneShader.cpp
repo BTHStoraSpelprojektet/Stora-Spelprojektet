@@ -1072,11 +1072,12 @@ void SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberO
 	}
 
 	D3D11_BUFFER_DESC instanceBufferDesc;
-	instanceBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
 	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	instanceBufferDesc.CPUAccessFlags = 0;
+	instanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	instanceBufferDesc.MiscFlags = 0;
+	instanceBufferDesc.StructureByteStride = 0;
 
 	D3D11_SUBRESOURCE_DATA instanceData;
 	instanceData.pSysMem = &m_instances[0];
