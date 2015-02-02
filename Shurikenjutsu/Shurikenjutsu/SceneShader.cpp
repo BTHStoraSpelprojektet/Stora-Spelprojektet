@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <Windows.h>
 #include <D3Dcompiler.h>
+#include "Object.h"
 
 
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
@@ -1090,6 +1091,46 @@ void SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberO
 		ConsolePrintErrorAndQuit("Failed to create instance buffer.");
 	}
 	m_instanceBufferList.push_back(instanceBuffer);
+}
+
+void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<Object> p_ObjectList)
+{
+	//TODO: Re mappar bufferns information med den inkommande vector med objekt med objektets instance index.
+	//TODO 2: Skapa en vektor med objekt, utav varje typ av objekt, som skickas in i denna funktionen.
+
+
+
+
+	//ID3D11Buffer* instanceBuffer;
+	//// Create the instance buffer description.
+	////Calculate position of all instanced objects
+	//std::vector<InstancePos> m_instances;
+	//m_instances.clear();
+	//for (int i = 0; i < p_numberOfInstances; i++)
+	//{
+	//	InstancePos temp;
+	//	DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
+	//	m_instances.push_back(temp);
+	//}
+
+	//D3D11_BUFFER_DESC instanceBufferDesc;
+	//instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	//instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
+	//instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	//instanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//instanceBufferDesc.MiscFlags = 0;
+
+	//D3D11_SUBRESOURCE_DATA instanceData;
+	//instanceData.pSysMem = &m_instances[0];
+	//instanceData.SysMemPitch = 0;
+	//instanceData.SysMemSlicePitch = 0;
+
+	//// Create the Instance buffer.
+	//if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
+	//{
+	//	ConsolePrintErrorAndQuit("Failed to create dynamic instance buffer.");
+	//}
+	//m_dynamicInstanceBuffers.push_back(instanceBuffer);
 }
 /*
 void SceneShader::InitializeDynamicInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
