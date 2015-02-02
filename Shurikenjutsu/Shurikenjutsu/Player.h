@@ -92,6 +92,9 @@ protected:
 	float m_dashDistanceLeft;
 	bool m_isDashing;
 
+	float m_globalCooldown;
+	float m_maxGlobalCooldown;
+
 	Sphere m_playerSphere;
 	Ability* m_ability;
 	Ability* m_noAbility;

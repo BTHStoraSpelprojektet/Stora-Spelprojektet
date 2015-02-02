@@ -47,6 +47,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_directionUpdateTimer = 0.0f;
 
+	m_globalCooldown = 0.0f;
+	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+
 	return true;
 }
 
@@ -181,26 +184,39 @@ void Player::UpdateMe()
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
 
+	// Range attack
+	if (InputManager::GetInstance()->IsRightMousePressed())
+	{
+		// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
+		if ((float)m_rangeAttack->GetCooldown() <= 0.0f)
+		{
+			m_ability = m_rangeAttack;
+		}
+	}
 
 	// Melee attack
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
-		m_ability = m_meleeAttack;
+		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		{
+			m_ability = m_meleeAttack;
+		}
 	}
 
-	// Range attack
-	if (InputManager::GetInstance()->IsRightMousePressed())
-	{
-		m_ability = m_rangeAttack;
-	}
 
 	// Count down cooldowns
 	UpdateAbilities();
 	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
-	if (m_ability->Execute(temp))
+	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
-		// Play ability animation if we did any
-		DoAnimation();
+		if (m_ability->Execute(temp))
+		{
+			// Play ability animation if we did any
+			DoAnimation();
+
+			// Set global cooldown
+			m_globalCooldown = m_maxGlobalCooldown;
+		}
 	}
 
 	UpdateAbilityBar();
@@ -210,17 +226,27 @@ void Player::CheckForSpecialAttack()
 {
 	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	{
-		m_ability = m_rangeSpecialAttack;
+		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+			m_ability = m_rangeSpecialAttack;
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
-		m_ability = m_meleeSpecialAttack;
+		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+			m_ability = m_meleeSpecialAttack;
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
-		m_ability = m_toolAbility;
+		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+		{
+			m_ability = m_toolAbility;
+		}
 	}
 }
+
 bool Player::CalculateDirection()
 {
 	float x, y, z;
@@ -281,6 +307,12 @@ void Player::UpdateAbilities()
 	m_rangeAttack->Update();
 	m_rangeSpecialAttack->Update();
 	m_toolAbility->Update();
+
+	if (m_globalCooldown > 0.0f)
+	{
+		m_globalCooldown -= (float)GLOBAL::GetInstance().GetDeltaTime();
+	}
+
 }
 
 void Player::ResetCooldowns()
@@ -731,6 +763,7 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 	}
 	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 }
+
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar->Update(m_position, (int)m_health, (int)m_maxHealth, p_view, p_projection);
@@ -738,11 +771,30 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::UpdateAbilityBar()
 {
-	m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), 0);
-	m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), 1);
-	m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), 2);
-	m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), 3);
-	m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), 4);
+	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), 0);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 0);
+	
+	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
+		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), 1);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 1);
+
+	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
+		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), 2);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 2);
+
+	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
+		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), 3);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 3);
+
+	if ((float)m_toolAbility->GetCooldown() > 0.0f)
+		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), 4);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 4);
 }
 
 void Player::Render()
