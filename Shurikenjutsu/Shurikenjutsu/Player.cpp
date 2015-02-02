@@ -120,8 +120,11 @@ void Player::UpdateMe()
 
 	// Move
 
+
 	//////////////////////*********************************************************************************************
 	////	VARFÖR UPPDATERAS MOVE TVÅ GÅNGER?? HÄNDER ÄVEN LÄNGRE NER
+	////    Detta löser även problemet med att man rör sig efter man är död.
+	////	Speeden var dock tvungen att dubblas nu när den bara uppdateras en gång per update.
 	////////////////////**********************************************************************
 	/*if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
