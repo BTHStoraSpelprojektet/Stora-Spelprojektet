@@ -112,6 +112,7 @@ void PlayerManager::Update()
 void PlayerManager::Render()
 {
 	m_player->Render();
+	m_player->RenderAbilityBar();
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{

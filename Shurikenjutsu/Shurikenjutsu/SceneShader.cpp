@@ -17,9 +17,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
 			return false;
@@ -42,9 +42,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/InstanceShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/InstanceShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/InstanceShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/InstanceShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
 			return false;
@@ -67,9 +67,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Compile the animated vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile scene animated vertex shader from file.");
 			return false;
@@ -92,9 +92,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Compile the line vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Line/LineVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &lineVertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LineVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &lineVertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Line/LineVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &lineVertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LineVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &lineVertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile line vertex shader from file.");
 			return false;
@@ -109,9 +109,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile OUTLINING vertex shader from file.");
 			return false;
@@ -403,9 +403,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	errorMessage = 0;
 
 	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile scene pixel shader from file.");
 			return false;
@@ -430,9 +430,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Compile the line pixel shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile line pixel shader from file.");
 			return false;
@@ -447,9 +447,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Compile the line pixel shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShaderOutlining.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderOutlining, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShaderOutlining.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderOutlining, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/Scene/PixelShaderOutlining.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderOutlining, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShaderOutlining.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderOutlining, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile line pixel shader from file.");
 			return false;

@@ -30,9 +30,9 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile shadow shapes vertex shader from file.");
 			return false;
@@ -90,9 +90,9 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 	errorMessage = 0;
 
 	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile shadow shapes pixel shader from file.");
 			return false;

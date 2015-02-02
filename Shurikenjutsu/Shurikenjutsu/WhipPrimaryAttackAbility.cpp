@@ -13,7 +13,7 @@ bool WhipPrimaryAttackAbility::Initialize()
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
-	m_totalCooldown = 0.5f;
+	m_totalCooldown = WHIP_COOLDOWN;
 	return true;
 }
 
@@ -22,7 +22,7 @@ bool WhipPrimaryAttackAbility::Execute(float p_distance)
 	if (Ability::Execute(p_distance))
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_WHIP_PRIMARY, 0);
-		SetCooldown(ALL_AROUND_GLOBAL_COOLDOWN);
+		SetCooldown(WHIP_COOLDOWN);
 		std::cout << "Just whip it!" << std::endl;
 		return true;
 	}

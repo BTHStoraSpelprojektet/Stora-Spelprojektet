@@ -454,13 +454,14 @@ void Player::SetCalculatePlayerPosition()
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
 		}
-		else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
-		{
-			CalculatePlayerCubeCollision(collidingBoxes[i]);
-		}
+		//else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
+		//{
+		//	CalculatePlayerCubeCollision(collidingBoxes[i]);
+		//}
 		else
 		{
-			CalculatePlayerBoxCollision(collidingBoxes[i]);
+			//CalculatePlayerBoxCollision(collidingBoxes[i]);
+			CalculatePlayerCubeCollision(collidingBoxes[i]);
 		}
 	}
 
@@ -524,16 +525,26 @@ void Player::SetCalculatePlayerPosition()
 }
 void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 {
-	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x);
-	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x);
-	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z);
-	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z);
+	float speedXDeltaTime = m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+	Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
+	playerSphere.m_position.x = m_position.x;
+	playerSphere.m_position.z = m_position.z - 1.0f * speedXDeltaTime;
+	bool aboveBox = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x;
+	playerSphere.m_position.z = m_position.z + 1.0f * speedXDeltaTime;
+	bool belowBox = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x + 1.0f * speedXDeltaTime;
+	playerSphere.m_position.z = m_position.z;
+	bool leftOfBox = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x - 1.0f * speedXDeltaTime;
+	playerSphere.m_position.z = m_position.z;
+	bool rightOfBox = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
 
 	float x = m_direction.x;
 	float z = m_direction.z;
 	if (x < 0 && z < 0)//down left
 	{
-		if (rightOfBox == aboveBox)
+		if (rightOfBox && aboveBox)
 		{
 			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
 			x = -1;
@@ -555,9 +566,9 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	}
 	else if (x > 0 && z < 0)//down right
 	{
-		if (leftOfBox == aboveBox)
+		if (leftOfBox && aboveBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
+			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 			x = 0;
 			z = -1;
 		}
@@ -577,7 +588,7 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	}
 	else if (x < 0 && z > 0)//up left // works goood
 	{
-		if (rightOfBox == belowBox)
+		if (rightOfBox && belowBox)
 		{
 			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 			x = 0;
@@ -599,11 +610,11 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	}
 	else if (x > 0 && z > 0)//up right // works goood
 	{
-		if (leftOfBox == belowBox)
+		if (leftOfBox && belowBox)
 		{
 			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f));
-			x = 0;
-			z = -1;
+			x = 1;
+			z = 0;
 		}
 		else
 		{
@@ -741,7 +752,6 @@ void Player::Render()
 		m_healthbar->Render();
 		AnimatedObject::Render(m_team);
 	}
-	m_abilityBar->Render();
 }
 
 void Player::RenderDepth()
@@ -755,6 +765,11 @@ void Player::RenderDepth()
 void Player::RenderOutlining()
 {
 	AnimatedObject::RenderOutlining();
+}
+
+void Player::RenderAbilityBar()
+{
+	m_abilityBar->Render();
 }
 
 void Player::SetIsAlive(bool p_isAlive)
