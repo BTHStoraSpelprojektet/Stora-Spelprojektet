@@ -91,6 +91,8 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChooseState.cpp" />
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp" />
+    <ClCompile Include="FanBoomerang.cpp" />
+    <ClCompile Include="FanBoomerangAbility.cpp" />
     <ClCompile Include="GUIElementColor.cpp" />
     <ClCompile Include="GUIText.cpp" />
     <ClCompile Include="KatanaNinja.cpp" />
@@ -171,6 +173,8 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChooseState.h" />
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h" />
+    <ClInclude Include="FanBoomerang.h" />
+    <ClInclude Include="FanBoomerangAbility.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="KatanaNinja.h" />

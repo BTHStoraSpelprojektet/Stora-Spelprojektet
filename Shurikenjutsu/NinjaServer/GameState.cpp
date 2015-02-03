@@ -33,6 +33,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_spikeManager = new SpikeManager();
 	m_spikeManager->Initialize(m_serverPeer);
 
+	m_fanBoomerangManager = new FanBoomerangManager();
+	m_fanBoomerangManager->Initialize(m_serverPeer);
+
 	return true;
 }
 
@@ -58,11 +61,13 @@ void GameState::Shutdown()
 	m_smokeBombManager->Shutdown();
 	m_spikeManager->Shutdown();
 	m_mapManager->Shutdown();
+	m_fanBoomerangManager->Shutdown();
 
 	delete m_playerManager;
 	delete m_shurikenManager;
 	delete m_smokeBombManager;
 	delete m_mapManager;
+	delete m_fanBoomerangManager;
 
 	delete m_collisionManager;
 }
@@ -73,9 +78,11 @@ void GameState::Update(double p_deltaTime)
 	m_shurikenManager->Update(p_deltaTime);
 	m_smokeBombManager->Update(p_deltaTime);
 	m_spikeManager->Update(p_deltaTime);
+	m_fanBoomerangManager->Update(p_deltaTime, m_playerManager);
 
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
 	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager, (float)p_deltaTime);
+	m_collisionManager->FanCollisionChecks(p_deltaTime, m_fanBoomerangManager, m_playerManager);
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
@@ -122,7 +129,7 @@ void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, b
 {
 	m_smokeBombManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_spikeManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
-	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, p_dash, *m_smokeBombManager, *m_spikeManager);
+	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, p_dash, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager);
 }
 
 void GameState::BroadcastPlayers()

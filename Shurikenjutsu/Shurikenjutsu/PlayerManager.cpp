@@ -348,7 +348,10 @@ void PlayerManager::MinimapUpdatePos(Minimap *p_minimap)
 {
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{ 
-		p_minimap->UpdatePlayersPositon(i, m_enemyList[i].GetPosition());
+		if (m_enemyList[i].GetIsAlive())
+		{
+			p_minimap->UpdatePlayersPositon(i, m_enemyList[i].GetPosition());
+		}
 	}
 }
 

@@ -12,6 +12,7 @@ bool SpikeAbility::Initialize()
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	m_totalCooldown = SPIKE_COOLDOWN;
+	m_stacks = 0;
 	return true;
 }
 bool SpikeAbility::Execute(float p_distance)

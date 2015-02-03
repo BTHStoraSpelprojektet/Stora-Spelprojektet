@@ -11,6 +11,7 @@
 class Frustum;
 class SmokeBomb;
 class Spikes;
+class FanBoomerang;
 
 class ObjectManager
 {
@@ -31,6 +32,9 @@ public:
 	void AddStaticObject(Object p_object);
 	std::vector<Object> GetStaticObjectList()const;
 
+	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id);
+
+
 	void UpdateFrustum(Frustum* p_frustum);
 private:
 	bool CheckIfModelIsInObjectToRenderList(Object *p_object);
@@ -39,6 +43,7 @@ private:
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
 	std::vector<Shuriken*> m_shurikens;
+	std::vector<FanBoomerang*> m_fans;
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToRender;
 	std::vector<Object*> m_objectsToShadowRender;
@@ -49,5 +54,7 @@ private:
 	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
 	bool IsSmokeBombInList(unsigned int p_smokeBombId);
 	bool IsSpikeTrapInList(unsigned int p_spikeTrapId);
+	bool IsFanInList(unsigned int p_fanId);
+	bool IsFanInNetworkList(unsigned int p_fanId);
 };
 #endif

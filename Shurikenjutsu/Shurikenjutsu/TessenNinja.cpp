@@ -6,6 +6,7 @@
 #include "WhipPrimaryAttackAbility.h"
 #include "WhipSecondaryAttackAbility.h"
 #include "SpikeAbility.h"
+#include "FanBoomerangAbility.h"
 
 TessenNinja::TessenNinja(){}
 TessenNinja::~TessenNinja(){}
@@ -25,7 +26,7 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_meleeAttack = new MeleeSwing();
 	m_meleeAttack->Initialize();
 
-	m_meleeSpecialAttack = new Dash();
+	m_meleeSpecialAttack = new FanBoomerangAbility();
 	m_meleeSpecialAttack->Initialize();
 
 	m_rangeAttack = new WhipPrimaryAttackAbility();
