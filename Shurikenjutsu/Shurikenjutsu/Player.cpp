@@ -559,7 +559,7 @@ void Player::SetCalculatePlayerPosition()
 		}
 
 
-		// Circel ekvation:
+		// Circle equation:
 		// circleX * X + circleY * Y = Radius * Radius
 		// Bryt ut så att y blir ensam
 		// Y = (Radius * Radius - circleX * X) / circleY		
@@ -571,6 +571,11 @@ void Player::SetCalculatePlayerPosition()
 		dir.x = dir.x / length;
 		dir.z = dir.z / length;
 		SetDirection(dir);
+	}
+
+	if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
+	{
+		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 
 	//float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
