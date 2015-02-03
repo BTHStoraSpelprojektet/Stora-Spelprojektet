@@ -221,7 +221,7 @@ std::vector<Line> ShadowShapes::GetStaticLines(Point a, Point b)
 
 	for (unsigned int i = 0; i < m_staticLines.size(); i++)
 	{
-		if ((m_staticLines[i].a.x >= a.x && m_staticLines[i].a.x <= b.x && m_staticLines[i].a.y <= a.y && m_staticLines[i].a.y >= b.y) || (m_staticLines[i].b.x >= a.x && m_staticLines[i].b.x <= b.x && m_staticLines[i].b.y <= a.y && m_staticLines[i].b.y >= b.y))
+		if ((m_staticLines[i].a.x >= a.x && m_staticLines[i].a.x <= b.x && m_staticLines[i].a.y <= a.y && m_staticLines[i].a.y >= b.y) && (m_staticLines[i].b.x >= a.x && m_staticLines[i].b.x <= b.x && m_staticLines[i].b.y <= a.y && m_staticLines[i].b.y >= b.y))
 		{
 				list.push_back(m_staticLines[i]);
 		}
