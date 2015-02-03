@@ -12,6 +12,13 @@ ProjectileManager::~ProjectileManager()
 
 bool ProjectileManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
+	m_serverPeer = p_serverPeer;
+
+	m_Projectiles = std::vector<ProjectileNet>();
+
+	m_shurikenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(SHURIKEN_MODEL_NAME)->GetBoundingBoxes();
+	m_megaShurikenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(MEGA_SHURIKEN_MODEL_NAME)->GetBoundingBoxes();
+	m_kunaiBoundingBoxes = ModelLibrary::GetInstance()->GetModel(KUNAI_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
