@@ -19,6 +19,7 @@
 #include <vector>
 #include <map>
 #include <DirectXMath.h>
+#include "ObjectManager.h"
 
 
 enum NETWORKSTATUS
@@ -41,7 +42,7 @@ public:
 
 	static Network* GetInstance();
 
-	bool Initialize(ObjectManager* p_objectManager);
+	bool Initialize();
 	void Shutdown();
 
 	void Update();
@@ -103,6 +104,8 @@ public:
 
 	bool HaveDashed();
 	DirectX::XMFLOAT3 GetDashLocation();
+
+	void SetObjectManager(ObjectManager* p_objectManager);
 
 private:
 

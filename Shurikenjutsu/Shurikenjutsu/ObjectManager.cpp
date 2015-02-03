@@ -15,7 +15,7 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize(Level* p_level)
 {
-	m_projectiles = std::vector<Projectile*>();
+	//m_projectiles = std::vector<Projectile*>();
 	
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
@@ -277,6 +277,14 @@ void ObjectManager::Render()
 		}
 	}
 
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_projectiles[i]->GetFrustumSphere(), 1.0f))
+		{
+			m_projectiles[i]->Render();
+		}
+	}
+
 	for (unsigned int i = 0; i < m_fans.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_fans[i]->GetFrustumSphere(), 1.0f))
@@ -325,6 +333,11 @@ void ObjectManager::RenderDepth()
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		m_shurikens[i]->RenderDepth();
+	}
+
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		m_projectiles[i]->RenderDepth();
 	}
 
 	for (unsigned int i = 0; i < m_fans.size(); i++)

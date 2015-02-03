@@ -45,6 +45,8 @@
 #define ABILITY_WHIP_SPECIAL_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_E.png"
 #define ABILITY_CALTROP_TEXTURE "../Shurikenjutsu/2DTextures/TB_Caltrops.png"
 
+#define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Ranged.png"
+
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"
 

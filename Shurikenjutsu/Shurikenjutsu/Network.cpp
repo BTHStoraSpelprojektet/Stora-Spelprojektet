@@ -18,7 +18,7 @@ Network* Network::GetInstance()
 	return m_instance;
 }
 
-bool Network::Initialize(ObjectManager* p_objectManager)
+bool Network::Initialize()
 {
 	ServerGlobals::IS_SERVER = false;
 	m_connected = false;
@@ -48,9 +48,12 @@ bool Network::Initialize(ObjectManager* p_objectManager)
 
 	m_networkStatus = NETWORKSTATUS_NONE;
 
-	m_objectManager = p_objectManager;
-
 	return true;
+}
+
+void Network::SetObjectManager(ObjectManager* p_objectManager)
+{
+	m_objectManager = p_objectManager;
 }
 
 void Network::Shutdown()
@@ -59,6 +62,9 @@ void Network::Shutdown()
 	RakNet::RakPeerInterface::DestroyInstance(m_clientPeer);
 
 	delete m_instance;
+
+	// Add delete objetmanager?
+
 }
 
 void Network::Update()

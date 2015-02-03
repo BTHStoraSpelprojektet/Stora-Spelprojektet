@@ -109,6 +109,9 @@ std::string AbilityBar::GetAbility2Name()
 		return ABILITY_WHIP_TEXTURE;
 		break;
 	}
+	case 2:
+		return ABILITY_KUNAI_TEXTURE;
+		break;
 	}
 
 	return ABILITY_CD_TEXTURE;

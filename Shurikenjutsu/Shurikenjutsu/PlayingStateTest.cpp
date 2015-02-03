@@ -238,7 +238,6 @@ void PlayingStateTest::Render()
 	{
 		GraphicsEngine::ClearOutlining();
 		GraphicsEngine::SetOutliningPassOne();
-		//m_objectManager->Render();
 		m_playerManager->RenderOutliningPassOne();
 		GraphicsEngine::SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();

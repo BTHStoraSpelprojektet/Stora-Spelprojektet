@@ -136,7 +136,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsoleSkipLines(1);
 
 	// Initialize network
-	Network::GetInstance()->Initialize(m_playingState->GetObjectManager());
+	Network::GetInstance()->Initialize();
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
 
@@ -253,6 +253,7 @@ void System::Update()
 	case GAMESTATESWITCH_PLAY:
 		m_gameState = m_playingState;
 		m_gameState->Initialize();
+		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		break;
 	case GAMESTATESWITCH_MENU:
 		m_gameState = m_menuState;
