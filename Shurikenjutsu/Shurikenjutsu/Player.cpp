@@ -47,6 +47,15 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_directionUpdateTimer = 0.0f;
 
+	m_health = 100.0f;
+	m_maxHealth = 100.0f;
+	m_isAlive = true;
+	m_guid = RakNet::RakNetGUID();
+	m_visible = true;
+	m_dashDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_dashDistanceLeft = 0.0f;
+	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
 	return true;
 }
 
@@ -229,7 +238,7 @@ bool Player::CalculateDirection()
 	x = 0;
 	y = 0;//Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)))
 	z = 0;
-	m_playerPrevPos = m_position;
+	//m_playerPrevPos = m_position;
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
