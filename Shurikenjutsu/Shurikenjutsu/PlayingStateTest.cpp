@@ -301,7 +301,6 @@ void PlayingStateTest::BasicPicking()
 		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
 		DirectX::XMStoreFloat4x4(&world, matrix);
 		m_debugDot.UpdateWorldMatrix(world);
-
 	}
 	// ========== DEBUG LINES ==========
 	
