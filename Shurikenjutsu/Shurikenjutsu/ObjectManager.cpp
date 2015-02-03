@@ -222,16 +222,17 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
-		int temp = CheckAmountOfSameModels(tempList[i],tempList);// Return vector med de ombjekt som finns i templist som är lika dana
-		if (temp == 1)
+		std::vector<Object*>  temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
+		if (temp.size() == 1)
 		{
 			m_objectsToRender.push_back(tempList[i]);
 		}
-		else if (temp > 1)
+		else if (temp.size() > 1)
 		{
-			if (!CheckIfModelIsInObjectToRenderList(tempList[i], m_objectsToInstanceRender))
+			if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
 			{
 				m_objectsToInstanceRender.push_back(tempList[i]);
+				//GraphicsEngine::UpdateInstanceBuffers(temp);
 			}
 		}
 	}
@@ -442,7 +443,7 @@ void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 	m_frustum = p_frustum;
 }
 
-bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object, std::vector<Object*> p_list)
+bool ObjectManager::CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list)
 {
 	if (!p_list.empty())
 	{
@@ -466,18 +467,18 @@ bool ObjectManager::CheckIfModelIsInObjectToShadowRenderList(Object *p_object)
 	return true;
 }
 
-int ObjectManager::CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list)
+std::vector<Object*> ObjectManager::CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list)
 {
-	int retrunValue = 0;
+	std::vector<Object*> returnList;
 	if (!p_list.empty())
 	{
 		for (int i = 0; i < p_list.size(); i++)
 		{
 			if (p_list[i]->GetModel() == p_object->GetModel())
 			{
-				retrunValue++;
+				returnList.push_back(p_list[i]);
 			}
 		}
 	}
-	return retrunValue;
+	return returnList;
 }

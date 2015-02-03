@@ -34,7 +34,6 @@ public:
 
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 	DirectX::XMFLOAT4X4 GetWorldMatrixScaled(float p_scale);
-	void UpdateInstanceBuffers(std::vector<Object*> p_ObjectList);
 
 	std::vector<OBB> GetBoundingBoxes();
 	std::vector<Sphere> GetBoundingSpheres();

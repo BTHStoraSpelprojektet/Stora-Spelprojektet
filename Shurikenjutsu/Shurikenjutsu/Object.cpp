@@ -216,8 +216,3 @@ void Object::SetInstanceIndex(int p_instanceIndex)
 {
 	m_InstanceIndex = p_instanceIndex;
 }
-
-void Object::UpdateInstanceBuffers(std::vector<Object*> p_ObjectList)
-{
-	GraphicsEngine::UpdateInstanceBuffers(p_ObjectList);
-}
