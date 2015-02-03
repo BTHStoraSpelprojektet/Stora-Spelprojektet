@@ -14,7 +14,7 @@ bool ProjectileManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	m_serverPeer = p_serverPeer;
 
-	m_Projectiles = std::vector<ProjectileNet>();
+	m_projectiles = std::vector<ProjectileNet>();
 
 	m_shurikenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(SHURIKEN_MODEL_NAME)->GetBoundingBoxes();
 	m_megaShurikenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(MEGA_SHURIKEN_MODEL_NAME)->GetBoundingBoxes();
@@ -35,17 +35,17 @@ void ProjectileManager::Update(double p_deltaTime)
 
 void ProjectileManager::UpdateProjectiles(double p_deltaTime)
 {
-	for (unsigned int i = 0; i < m_Projectiles.size(); i++)
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
 	{
-		m_Projectiles[i].lifeTime -= (float)p_deltaTime;
+		m_projectiles[i].lifeTime -= (float)p_deltaTime;
 
 		// Check if the time has run out for the shuriken and remove it
-		if (m_Projectiles[i].lifeTime <= 0)
+		if (m_projectiles[i].lifeTime <= 0)
 		{
 			// Send removal of shuriken to clients
-			BroadcastDestoyedProjectile(m_Projectiles[i].uniqueId);
+			BroadcastDestoyedProjectile(m_projectiles[i].uniqueId);
 
-			m_Projectiles.erase(m_Projectiles.begin() + i);
+			m_projectiles.erase(m_projectiles.begin() + i);
 			i--;
 		}
 	}
@@ -77,7 +77,7 @@ void ProjectileManager::AddProjectile(RakNet::RakNetGUID p_guid, float p_posX, f
 	tempProj.guid = p_guid;
 	tempProj.lifeTime = KUNAI_DURATION;
 	tempProj.speed = KUNAI_SPEED;
-	m_Projectiles.push_back(tempProj);
+	m_projectiles.push_back(tempProj);
 
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_PROJECTILE_THROWN);
@@ -105,9 +105,9 @@ unsigned int ProjectileManager::GetProjectileUniqueId()
 		ID = (unsigned int)(rand() % 10000);
 		found = false;
 
-		for (unsigned int i = 0; i < m_Projectiles.size(); i++)
+		for (unsigned int i = 0; i < m_projectiles.size(); i++)
 		{
-			if (m_Projectiles[i].uniqueId == ID)
+			if (m_projectiles[i].uniqueId == ID)
 			{
 				found = true;
 				break;
@@ -121,12 +121,12 @@ unsigned int ProjectileManager::GetProjectileUniqueId()
 
 void ProjectileManager::RemoveProjectile(unsigned int p_id)
 {
-	for (unsigned int i = 0; i < m_Projectiles.size(); i++)
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
 	{
-		if (m_Projectiles[i].uniqueId == p_id)
+		if (m_projectiles[i].uniqueId == p_id)
 		{
 			BroadcastDestoyedProjectile(p_id);
-			m_Projectiles.erase(m_Projectiles.begin() + i);
+			m_projectiles.erase(m_projectiles.begin() + i);
 			break;
 		}
 	}
@@ -144,7 +144,7 @@ void ProjectileManager::BroadcastDestoyedProjectile(unsigned int p_id)
 
 std::vector<ProjectileNet> ProjectileManager::GetProjectiles()
 {
-	return m_Projectiles;
+	return m_projectiles;
 }
 
 std::vector<Box> ProjectileManager::GetKunaiBoundingBoxes(int p_index)
@@ -152,7 +152,7 @@ std::vector<Box> ProjectileManager::GetKunaiBoundingBoxes(int p_index)
 	std::vector<Box> boundingBoxes = std::vector<Box>();
 
 	// Check so index is not out of bounds
-	if (p_index < 0 || p_index >(int)m_Projectiles.size() - 1)
+	if (p_index < 0 || p_index >(int)m_projectiles.size() - 1)
 	{
 		return boundingBoxes;
 	}
@@ -173,44 +173,44 @@ std::vector<Box> ProjectileManager::GetKunaiBoundingBoxes(int p_index)
 float ProjectileManager::GetProjectilePosX(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index >(int)m_Projectiles.size() - 1)
+	if (p_index < 0 || p_index >(int)m_projectiles.size() - 1)
 	{
 		return 0;
 	}
 
-	float setTimeLeft = m_Projectiles[p_index].projType == 1 ? MEGASHURIKEN_DURATION : SHURIKEN_DURATION;
-	if (m_Projectiles[p_index].projType == 2)
+	float setTimeLeft = m_projectiles[p_index].projType == 1 ? MEGASHURIKEN_DURATION : SHURIKEN_DURATION;
+	if (m_projectiles[p_index].projType == 2)
 		setTimeLeft = KUNAI_DURATION;
-	float lifeTime = setTimeLeft - m_Projectiles[p_index].lifeTime;
-	return m_Projectiles[p_index].x + m_Projectiles[p_index].dirX * m_Projectiles[p_index].speed * lifeTime;
+	float lifeTime = setTimeLeft - m_projectiles[p_index].lifeTime;
+	return m_projectiles[p_index].x + m_projectiles[p_index].dirX * m_projectiles[p_index].speed * lifeTime;
 }
 
 float ProjectileManager::GetProjectilePosY(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index >(int)m_Projectiles.size() - 1)
+	if (p_index < 0 || p_index >(int)m_projectiles.size() - 1)
 	{
 		return 0;
 	}
 
-	float setTimeLeft = m_Projectiles[p_index].projType == 1 ? MEGASHURIKEN_DURATION : SHURIKEN_DURATION;
-	if (m_Projectiles[p_index].projType == 2)
+	float setTimeLeft = m_projectiles[p_index].projType == 1 ? MEGASHURIKEN_DURATION : SHURIKEN_DURATION;
+	if (m_projectiles[p_index].projType == 2)
 		setTimeLeft = KUNAI_DURATION;
-	float lifeTime = setTimeLeft - m_Projectiles[p_index].lifeTime;
-	return m_Projectiles[p_index].y + m_Projectiles[p_index].dirY * m_Projectiles[p_index].speed * lifeTime;
+	float lifeTime = setTimeLeft - m_projectiles[p_index].lifeTime;
+	return m_projectiles[p_index].y + m_projectiles[p_index].dirY * m_projectiles[p_index].speed * lifeTime;
 }
 
 float ProjectileManager::GetProjectilePosZ(int p_index)
 {
 	// Check the index value is in the range of the vector
-	if (p_index < 0 || p_index >(int)m_Projectiles.size() - 1)
+	if (p_index < 0 || p_index >(int)m_projectiles.size() - 1)
 	{
 		return 0;
 	}
 
-	float setTimeLeft = m_Projectiles[p_index].projType == 1 ? MEGASHURIKEN_DURATION : SHURIKEN_DURATION;
-	if (m_Projectiles[p_index].projType == 2)
+	float setTimeLeft = m_projectiles[p_index].projType == 1 ? MEGASHURIKEN_DURATION : SHURIKEN_DURATION;
+	if (m_projectiles[p_index].projType == 2)
 		setTimeLeft = KUNAI_DURATION;
-	float lifeTime = setTimeLeft - m_Projectiles[p_index].lifeTime;
-	return m_Projectiles[p_index].z + m_Projectiles[p_index].dirZ * m_Projectiles[p_index].speed * lifeTime;
+	float lifeTime = setTimeLeft - m_projectiles[p_index].lifeTime;
+	return m_projectiles[p_index].z + m_projectiles[p_index].dirZ * m_projectiles[p_index].speed * lifeTime;
 }

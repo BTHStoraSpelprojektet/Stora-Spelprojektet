@@ -35,7 +35,7 @@ private:
 
 	RakNet::RakPeerInterface *m_serverPeer;
 
-	std::vector<ProjectileNet> m_Projectiles;
+	std::vector<ProjectileNet> m_projectiles;
 
 	std::vector<Box> m_shurikenBoundingBoxes;
 	std::vector<Box> m_megaShurikenBoundingBoxes;

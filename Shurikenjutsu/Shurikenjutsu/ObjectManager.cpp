@@ -15,6 +15,7 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize(Level* p_level)
 {
+	m_projectiles = std::vector<Projectile*>();
 	
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
