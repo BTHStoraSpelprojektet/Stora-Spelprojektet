@@ -49,6 +49,7 @@ public:
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
 	void SetIsAlive(bool p_isAlive);
+	bool GetIsAlive(void);
 	void SetTeam(int p_team);
 	int GetTeam();
 

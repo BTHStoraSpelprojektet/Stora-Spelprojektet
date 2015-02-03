@@ -841,6 +841,11 @@ void Player::SetIsAlive(bool p_isAlive)
 	m_isAlive = p_isAlive;
 }
 
+bool Player::GetIsAlive()
+{
+	return m_isAlive;
+}
+
 void Player::SetTeam(int p_team)
 {
 	m_team = p_team;
