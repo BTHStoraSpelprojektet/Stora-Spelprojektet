@@ -828,16 +828,14 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		m_healthbar->Render();
-		AnimatedObject::Render(m_team);
 	}
+
+	AnimatedObject::Render(m_team);
 }
 
 void Player::RenderDepth()
 {
-	if (m_isAlive)
-	{
-		AnimatedObject::RenderDepth();
-	}
+	AnimatedObject::RenderDepth();
 }
 
 void Player::RenderOutlining()
@@ -852,7 +850,19 @@ void Player::RenderAbilityBar()
 
 void Player::SetIsAlive(bool p_isAlive)
 {
-	m_isAlive = p_isAlive;
+	if (m_isAlive != p_isAlive)
+	{
+		if (!p_isAlive)
+		{
+			AnimatedObject::ChangeAnimationState(AnimationState::Death);
+		}
+		else
+		{
+			AnimatedObject::ChangeAnimationState(AnimationState::Spawn);
+		}
+	}
+
+	m_isAlive = p_isAlive;	
 }
 
 bool Player::GetIsAlive()

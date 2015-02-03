@@ -16,6 +16,8 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_hipRotation = 0.0f;
 
 	m_surujinChild = false;
+	m_isAlive = true;
+	m_stopAnimation = false;
 
 	m_state = AnimationState::None;
 
@@ -24,6 +26,11 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 
 std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 {
+	if (!m_isAlive && m_stopAnimation)
+	{
+		return m_boneTransforms;
+	}
+
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
 	m_frameArms += deltaTime * 20;
@@ -37,11 +44,24 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 		m_frameArms = 0.0f;
 		m_attackAnimation = false;
 		m_state = AnimationState::None;
+		m_stopAnimation = true;
+
+		if (!m_isAlive)
+		{
+			m_blendWeightArms = 1.0f;
+			m_frameArms = m_currentArms->m_root.size() - 1;
+		}
 	}		
 
 	if (m_frameLegs >= (m_currentLegs->m_endFrame - 1))
 	{
 		m_frameLegs = 0.0f;
+
+		if (!m_isAlive)
+		{
+			m_blendWeightLegs = 1.0f;
+			m_frameLegs = m_currentLegs->m_root.size() - 1;
+		}
 	}		
 
 	DirectX::XMVECTOR startQuaternion = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
@@ -70,16 +90,16 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	quaternionLegs = DirectX::XMQuaternionSlerp(DirectX::XMLoadFloat4(&m_QuaternionLegs[*p_index]), quaternionLegs, m_blendWeightLegs);
 	DirectX::XMStoreFloat4(&m_QuaternionLegs[*p_index], quaternionLegs);
 	
-	if (strcmp(p_jointArms->m_name, "HandR") == 0 ||
-		strcmp(p_jointArms->m_name, "HandL") == 0 ||
-		strcmp(p_jointArms->m_name, "ShoulderR") == 0 ||
-		strcmp(p_jointArms->m_name, "ShoulderL") == 0)
+	if (strcmp(p_jointLegs->m_name, "HandR") == 0 ||
+		strcmp(p_jointLegs->m_name, "HandL") == 0 ||
+		strcmp(p_jointLegs->m_name, "ShoulderR") == 0 ||
+		strcmp(p_jointLegs->m_name, "ShoulderL") == 0)
 	{
 		quaternionLegs = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
-	if (strcmp(p_jointLegs->m_name, "FootR") == 0 || 
-		strcmp(p_jointLegs->m_name, "FootL") == 0 || 
+	if (strcmp(p_jointArms->m_name, "FootR") == 0 ||
+		strcmp(p_jointArms->m_name, "FootL") == 0 ||
 		strcmp(p_jointArms->m_name, "HipR") == 0 || 
 		strcmp(p_jointArms->m_name, "HipL") == 0 ||
 		strcmp(p_jointArms->m_name, "KneeR") == 0 ||
@@ -90,6 +110,13 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 	DirectX::XMVECTOR quaternion = DirectX::XMQuaternionMultiply(quaternionArms, quaternionLegs);
 
+	DirectX::XMVECTOR jointTranslation = DirectX::XMVectorSet(p_jointArms->m_translation[0], p_jointArms->m_translation[1], p_jointArms->m_translation[2], 1.0f);
+
+	DirectX::XMMATRIX parentMatrix = DirectX::XMMatrixRotationQuaternion(p_parentQuaternion);
+	parentMatrix.r[3].m128_f32[0] = p_parentTranslation.m128_f32[0];
+	parentMatrix.r[3].m128_f32[1] = p_parentTranslation.m128_f32[1];
+	parentMatrix.r[3].m128_f32[2] = p_parentTranslation.m128_f32[2];
+
 	if (strcmp(p_jointArms->m_name, "Hip") == 0)
 	{
 		DirectX::XMVECTOR hipRotationAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -97,6 +124,13 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 		DirectX::XMVECTOR hipRotation = DirectX::XMQuaternionRotationAxis(hipRotationAxis, m_hipRotation);
 		quaternion = DirectX::XMQuaternionMultiply(quaternion, hipRotation);
+
+		jointTranslation = DirectX::XMVectorSet(p_jointLegs->m_translation[0], p_jointLegs->m_translation[1], p_jointLegs->m_translation[2], 1.0f);
+
+		parentMatrix = DirectX::XMMatrixRotationY(m_hipRotation);
+		parentMatrix.r[3].m128_f32[0] = p_parentTranslation.m128_f32[0];
+		parentMatrix.r[3].m128_f32[1] = p_parentTranslation.m128_f32[1];
+		parentMatrix.r[3].m128_f32[2] = p_parentTranslation.m128_f32[2];
 	}
 
 	quaternion = DirectX::XMQuaternionMultiply(quaternion, orientQuaternion);	
@@ -112,16 +146,14 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 		m_forwardDirection = DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
 	}
 
-	DirectX::XMMATRIX parentMatrix = DirectX::XMMatrixRotationQuaternion(p_parentQuaternion);
-	parentMatrix.r[3].m128_f32[0] = p_parentTranslation.m128_f32[0];
-	parentMatrix.r[3].m128_f32[1] = p_parentTranslation.m128_f32[1];
-	parentMatrix.r[3].m128_f32[2] = p_parentTranslation.m128_f32[2];
+	quaternion = DirectX::XMQuaternionMultiply(quaternion, p_parentQuaternion);
 
-	DirectX::XMVECTOR jointTranslation = DirectX::XMVectorSet(p_jointArms->m_translation[0], p_jointArms->m_translation[1], p_jointArms->m_translation[2], 1.0f);
+	if (strcmp(p_jointArms->m_name, "Hip") == 0)
+	{
+		
+	}
 
 	jointTranslation = DirectX::XMVector4Transform(jointTranslation, parentMatrix);
-
-	quaternion = DirectX::XMQuaternionMultiply(quaternion, p_parentQuaternion);
 
 	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixRotationQuaternion(quaternion);
 	transformMatrix.r[3].m128_f32[0] = jointTranslation.m128_f32[0];
@@ -165,10 +197,10 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 DirectX::XMVECTOR AnimationControl::ApplyIK(DirectX::XMVECTOR& p_quaternion)
 {
 	DirectX::XMMATRIX forwardRotation = DirectX::XMMatrixRotationY(-m_hipRotation);
-	m_ikDirection = DirectX::XMVector3TransformNormal(m_ikDirection, forwardRotation);
+	DirectX::XMVECTOR lIkDirection = DirectX::XMVector3TransformNormal(m_ikDirection, forwardRotation);
 
-	float cross = DirectX::XMVector3Cross(m_ikDirection, m_forwardDirection).m128_f32[1];
-	float angle = acosf(DirectX::XMVector3Dot(m_ikDirection, m_forwardDirection).m128_f32[0]);
+	float cross = DirectX::XMVector3Cross(lIkDirection, m_forwardDirection).m128_f32[1];
+	float angle = acosf(DirectX::XMVector3Dot(lIkDirection, m_forwardDirection).m128_f32[0]);
 
 	if (cross > 0)
 	{
@@ -191,6 +223,11 @@ bool AnimationControl::IsAnimated()
 
 void AnimationControl::SetIkDirection(DirectX::XMFLOAT3 p_direction)
 {
+	if (!m_isAlive)
+	{
+		return;
+	}
+
 	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_direction);
 
 	if (DirectX::XMVector3Length(direction).m128_f32[0] != 0.0f)
@@ -202,6 +239,11 @@ void AnimationControl::SetIkDirection(DirectX::XMFLOAT3 p_direction)
 
 void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 {
+	if (!m_isAlive)
+	{
+		return;
+	}
+
 	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
 
 	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikDirection, direction).m128_f32[0];
@@ -234,6 +276,11 @@ void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 
 void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 {
+	if (!m_isAlive)
+	{
+		return;
+	}
+
 	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
 
 	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikLegDirection, direction).m128_f32[0];
@@ -410,7 +457,21 @@ void AnimationControl::Shutdown()
 
 void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 {
-	if (!m_attackAnimation)
+	if (p_newState == AnimationState::Death)
+	{
+		m_currentArms = &m_animationStacksArray[9];
+		m_currentLegs = &m_animationStacksArray[8];
+		m_isAlive = false;
+		m_attackAnimation = true;
+		m_stopAnimation = false;
+		m_frameArms = 0.0f;
+		m_frameLegs = 0.0f;
+	}
+	else if (p_newState == AnimationState::Spawn)
+	{
+		m_isAlive = true;
+	}
+	else if (!m_attackAnimation && m_isAlive == true)
 	{
 		m_frameArms = 0.0f;
 		m_attackAnimation = true;
