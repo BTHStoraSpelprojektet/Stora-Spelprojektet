@@ -27,11 +27,12 @@ void FanBoomerangManager::Update(double p_deltaTime, PlayerManager* p_playerMana
 	// Update all the fans
 	for (unsigned int i = 0; i < m_fans.size(); i++)
 	{
-		
+		m_fans[i].lifeTime -= (float)p_deltaTime;
+
 		// Update life, it sucks
 		if (m_fans[i].lifeTime > 0)
 		{
-			m_fans[i].lifeTime -= (float)p_deltaTime;
+			
 			m_fans[i].x += m_fans[i].dirX*m_fans[i].speed*(float)p_deltaTime;
 			m_fans[i].y += m_fans[i].dirY*m_fans[i].speed*(float)p_deltaTime;
 			m_fans[i].z += m_fans[i].dirZ*m_fans[i].speed*(float)p_deltaTime;

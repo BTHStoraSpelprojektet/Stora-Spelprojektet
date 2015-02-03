@@ -284,11 +284,6 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 						float damage = FANBOOMERANG_DAMAGE*(float)p_deltaTime;
 
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
-
-						p_fanBoomerangManager->Remove(fanList[i].id);
-						fanList.erase(fanList.begin() + i);
-						i--;
-
 						collisionFound = true;
 						break;
 					}
@@ -310,7 +305,7 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 			continue;
 		}
 
-		if (fanList[i].lifeTime <= 0)
+		if (fanList[i].lifeTime <= -0.5f)
 		{
 			// Go through maps bounding boxes
 			for (unsigned int j = 0; j < fanBoundingBoxes.size(); j++)
@@ -371,7 +366,7 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 					if (OBBOBBTest(m_staticBoxList[k], OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
 					{
 						// END LIFE!
-						p_fanBoomerangManager->SetLifeTime(i, -1.0f);
+						p_fanBoomerangManager->SetLifeTime(i, 0.0f);
 
 						collisionFound = true;
 						break;
@@ -393,7 +388,7 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 					if (OBBSphereTest(OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
 					{
 						// END LIFE!
-						p_fanBoomerangManager->SetLifeTime(i, -1.0f);
+						p_fanBoomerangManager->SetLifeTime(i, 0.0f);
 
 						collisionFound = true;
 						break;
