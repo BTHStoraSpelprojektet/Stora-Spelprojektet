@@ -52,11 +52,15 @@ private:
 	bool IsGuidInNetworkList(RakNet::RakNetGUID p_guid);
 
 	void CheckPlayersVisible();
+
+	void AddEnemyToList(Player* p_enemy);
+	void RemoveEnemyFromList(RakNet::RakNetGUID p_guid);
 	
 
 	Player* m_player;
 
-	std::vector<Player> m_enemyList;
+	Player** m_enemyList;
+	unsigned int m_enemyListSize;
 
 	Frustum* m_frustum;
 };
