@@ -305,7 +305,7 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 			continue;
 		}
 
-		if (fanList[i].lifeTime <= -0.8f)
+		if (fanList[i].lifeTime <= -0.3f)
 		{
 			// Go through maps bounding boxes
 			for (unsigned int j = 0; j < fanBoundingBoxes.size(); j++)
