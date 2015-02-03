@@ -222,7 +222,7 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
-		int temp = CheckAmountOfSameModels(tempList[i],tempList);
+		int temp = CheckAmountOfSameModels(tempList[i],tempList);// Return vector med de ombjekt som finns i templist som är lika dana
 		if (temp == 1)
 		{
 			m_objectsToRender.push_back(tempList[i]);
