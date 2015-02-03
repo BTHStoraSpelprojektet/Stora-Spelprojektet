@@ -1,6 +1,7 @@
 #include "Network.h"
 #include <iostream>
 #include "ConsoleFunctions.h"
+#include "ObjectManager.h"
 
 Network* Network::m_instance;
 
@@ -17,7 +18,7 @@ Network* Network::GetInstance()
 	return m_instance;
 }
 
-bool Network::Initialize()
+bool Network::Initialize(ObjectManager* p_objectManager)
 {
 	ServerGlobals::IS_SERVER = false;
 	m_connected = false;
@@ -46,6 +47,8 @@ bool Network::Initialize()
 	m_previousCount = 0;
 
 	m_networkStatus = NETWORKSTATUS_NONE;
+
+	m_objectManager = p_objectManager;
 
 	return true;
 }
@@ -251,6 +254,42 @@ void Network::ReceviePacket()
 			bitStream.Read(shurikenId);
 
 			RemoveShuriken(shurikenId);
+
+			break;
+		}
+		case ID_PROJECTILE_THROWN:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float x, y, z;
+			float dirX, dirY, dirZ;
+			unsigned int projId;
+			float speed;
+
+			bitStream.Read(messageID);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+			bitStream.Read(dirX);
+			bitStream.Read(dirY);
+			bitStream.Read(dirZ);
+			bitStream.Read(projId);
+			bitStream.Read(guid);
+			bitStream.Read(speed);
+
+			ProjectileThrown(x, y, z, dirX, dirY, dirZ, projId, guid, speed, 2);
+			break;
+		}
+		case ID_PROJECTILE_REMOVE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int projId;
+			bitStream.Read(messageID);
+			bitStream.Read(projId);
+
+			RemoveShuriken(projId);
 
 			break;
 		}
@@ -1076,7 +1115,6 @@ void Network::SendAbility(ABILITIES p_ability, float p_distanceFromPlayer)
 	bitStream.Write(p_ability);
 	bitStream.Write(p_distanceFromPlayer);
 
-
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
@@ -1165,4 +1203,9 @@ void Network::SetHaveUpdateFanList()
 std::vector<FanNet> Network::GetFanList()
 {
 	return m_fanList;
+}
+
+void Network::ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_projId, RakNet::RakNetGUID p_guid, float p_speed, int p_projType)
+{
+	m_objectManager->AddProjectile(p_x, p_y, p_z, p_dirX, p_dirY, p_dirZ, p_projId, p_guid, p_speed, p_projType);
 }

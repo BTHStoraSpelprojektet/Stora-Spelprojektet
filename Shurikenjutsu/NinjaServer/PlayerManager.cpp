@@ -329,48 +329,10 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 {
 	bool result = true;
-
-	/*if (p_index >= 0 && p_index < (int)m_players.size())
-	{
-		if (m_players[p_index].gcd <= 0.0f)
-		{
-			switch (p_ability)
-			{
-			case ABILITIES_SHURIKEN:
-				result = true; // controlled locally atm
-				break;
-			case ABILITIES_DASH:
-				result = true; // controlled locally atm
-				break;
-			case ABILITIES_MELEESWING:
-				result = true; // controlled locally atm
-				break;
-			case ABILITIES_MEGASHURIKEN:
-				result = true; // controlled locally atmresult = false;
-				break;
-			case ABILITIES_SMOKEBOMB:
-				result = true;
-				break;
-			case ABILITIES_SPIKETRAP:
-				result = true;
-				break;
-			case ABILITIES_WHIP_PRIMARY:
-				result = true;
-				break;
-			case ABILITIES_WHIP_SECONDARY:
-				result = true;
-				break;
-			default:
-				result = false;
-				break;
-			}
-		}
-	}*/
-
 	return result;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
 	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
@@ -390,15 +352,12 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		//Calculate new location for the dashing player and inflict damage on enemies
 		player = GetPlayer(p_guid);
 		dashDistance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
-
 		
 		l_bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
 		l_bitStream.Write(player.x + dashDistance * player.dirX);
 		l_bitStream.Write(player.y);
 		l_bitStream.Write(player.z + dashDistance * player.dirZ);
 		m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
-
-		//MovePlayer(p_guid, player.x + dashDistance*player.dirX, player.y, player.z + dashDistance*player.dirZ, p_nrOfConnections, true);
 		break;
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
@@ -440,6 +399,10 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	case ABILITIES_NAGINATASLASH:
 		abilityString = "sluush";
 		p_collisionManager.NormalMeleeAttack(p_guid, this, p_readAbility);
+		break;
+	case ABILITIES_KUNAI:
+		abilityString = "kunai throooow";
+
 		break;
 	default:
 		break;

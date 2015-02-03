@@ -39,6 +39,16 @@ struct ShurikenNet
 	bool megaShuriken;
 };
 
+struct ProjectileNet
+{
+	float x, y, z;
+	float dirX, dirY, dirZ;
+	unsigned int projId;
+	RakNet::RakNetGUID guid;
+	float lifeTime;
+	float speed;
+};
+
 struct FanNet
 {
 	float x, y, z;
@@ -70,6 +80,8 @@ enum Messages
 	ID_PLAYER_ROTATED,
 	ID_SHURIKEN_THROWN,
 	ID_SHURIKEN_REMOVE,
+	ID_PROJECTILE_THROWN,
+	ID_PROJECTILE_REMOVE,
 	ID_RESPAWN_PLAYER,
 	ID_MELEE_ATTACK,
 	ID_PLAYER_INVALID_MOVE,

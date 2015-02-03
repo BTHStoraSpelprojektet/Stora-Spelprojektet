@@ -359,3 +359,8 @@ void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 		}
 	}
 }
+
+ObjectManager* PlayingStateTest::GetObjectManager()
+{
+	return m_objectManager;
+}

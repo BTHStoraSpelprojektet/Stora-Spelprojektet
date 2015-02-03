@@ -30,6 +30,8 @@ enum NETWORKSTATUS
 	NETWORKSTATUS_NONE
 };
 
+class ObjectManager;
+
 class Network
 {
 public:
@@ -39,7 +41,7 @@ public:
 
 	static Network* GetInstance();
 
-	bool Initialize();
+	bool Initialize(ObjectManager* p_objectManager);
 	void Shutdown();
 
 	void Update();
@@ -122,6 +124,7 @@ private:
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken);
+	void ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_projType);
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
 	void AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed);
@@ -161,5 +164,6 @@ private:
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
 
+	ObjectManager* m_objectManager;
 };
 #endif

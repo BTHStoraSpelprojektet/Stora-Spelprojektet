@@ -8,12 +8,14 @@
 #include "Spikes.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "FanBoomerang.h"
+#include "Projectile.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize(Level* p_level)
 {
+	
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
 
@@ -90,7 +92,12 @@ void ObjectManager::Shutdown()
 	{
 		m_fans[i]->Shutdown();
 		delete m_fans[i];
+	}
 
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		m_projectiles[i]->Shutdown();
+		delete m_projectiles[i];
 	}
 }
 
@@ -103,6 +110,12 @@ void ObjectManager::Update()
 	{
 		m_shurikens[i]->Update();
 	}	
+
+	// Update projectiles
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		m_projectiles[i]->Update();
+	}
 
 	// Update all the smokebombs
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
@@ -492,4 +505,22 @@ bool ObjectManager::IsFanInNetworkList(unsigned int p_fanId)
 	}
 
 	return false;
+}
+
+void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_projId, RakNet::RakNetGUID p_guid, float p_speed, int p_ability)
+{
+	// Check if projectile exists
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		if (m_projectiles[i]->GetGUID() == p_guid && m_projectiles[i]->GetID() == p_projId)
+		{
+			break;
+		}
+	}
+
+	Projectile* tempProjectile;
+	tempProjectile = new Projectile();
+	tempProjectile->Initialize(DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(p_dirX, p_dirY, p_dirZ), p_projId, p_ability,p_guid);
+	
+	m_projectiles.push_back(tempProjectile);
 }

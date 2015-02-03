@@ -7,11 +7,13 @@
 #include "Shuriken.h"
 #include "AnimatedObject.h"
 #include "..\CommonLibs\Level.h"
+#include "../CommonLibs/RakNet/RakNetTypes.h"
 
 class Frustum;
 class SmokeBomb;
 class Spikes;
 class FanBoomerang;
+class Projectile;
 
 class ObjectManager
 {
@@ -34,8 +36,10 @@ public:
 
 	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id);
 
-
 	void UpdateFrustum(Frustum* p_frustum);
+
+	void AddProjectile(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_ability);
+
 private:
 	bool CheckIfModelIsInObjectToRenderList(Object *p_object);
 	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);
@@ -43,6 +47,7 @@ private:
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
 	std::vector<Shuriken*> m_shurikens;
+	std::vector<Projectile*> m_projectiles;
 	std::vector<FanBoomerang*> m_fans;
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToRender;

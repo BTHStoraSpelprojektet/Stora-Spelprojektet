@@ -136,7 +136,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsoleSkipLines(1);
 
 	// Initialize network
-	Network::GetInstance()->Initialize();
+	Network::GetInstance()->Initialize(m_playingState->GetObjectManager());
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
 
