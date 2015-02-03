@@ -183,11 +183,8 @@ void Object::TransformShadowPoints()
 			DirectX::XMStoreFloat3(&a, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat4x4(&world)));
 			DirectX::XMStoreFloat3(&b, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&b), DirectX::XMLoadFloat4x4(&world)));
 
-			lines[i].a = Point(a.x, a.z);
-			lines[i].b = Point(b.x, b.z);
+			ShadowShapes::GetInstance().AddStaticLine(Line(Point(a.x, a.z), Point(b.x, b.z)));
 		}
-
-		ShadowShapes::GetInstance().AddStaticShape(lines);
 	}
 }
 

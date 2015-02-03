@@ -68,8 +68,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		m_mouseY = 0;
 		
 		VisibilityComputer::GetInstance().UpdateMapBoundries(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
-
-		ShadowShapes::GetInstance().AddStaticSquare(Point(-0.5f, 0.5f), Point(0.5f, -0.5f));
 	}
 	// ========== DEBUG LINES ==========
 	
