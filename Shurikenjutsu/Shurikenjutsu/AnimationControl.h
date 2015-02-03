@@ -63,6 +63,8 @@ private:
 
 	bool m_surujinChild;
 	AnimationState m_state;
+
+	bool m_isAlive;
 };
 
 #endif;
