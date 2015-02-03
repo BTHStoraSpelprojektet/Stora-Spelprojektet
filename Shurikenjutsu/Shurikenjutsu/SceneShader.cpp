@@ -932,12 +932,10 @@ void SceneShader::TurnOnBackFaceCulling(ID3D11DeviceContext* p_context)
 {
 	p_context->RSSetState(m_rasterizerStateBackCulled);
 }
-
 void SceneShader::TurnOffBackFaceCulling(ID3D11DeviceContext* p_context)
 {
 	p_context->RSSetState(m_rasterizerStateNoneCulled);
 }
-
 void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight)
 {
 	// Lock the "every frame" constant buffer so it can be written to.
@@ -960,12 +958,10 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 	// Set the position of the frame constant buffer in the vertex shader.
 	p_context->PSSetConstantBuffers(0, 1, &m_frameBuffer);
 }
-
 ID3D11ShaderResourceView* SceneShader::GetShadowMap()
 {
 	return m_shadowMap;
 }
-
 void SceneShader::SetShadowMapDimensions(ID3D11Device* p_device, ID3D11DeviceContext* p_context, float p_width, float p_height)
 {
 	ID3D11Buffer* buffer;
@@ -1009,9 +1005,6 @@ void SceneShader::SetShadowMapDimensions(ID3D11Device* p_device, ID3D11DeviceCon
 	buffer->Release();
 	buffer = 0;
 }
-
-
-
 ///Instancing
 void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
@@ -1071,7 +1064,6 @@ void SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberO
 		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
 		m_instances.push_back(temp);
 	}
-	//https://msdn.microsoft.com/en-us/library/windows/desktop/dn508285(v=vs.85).aspx
 	D3D11_BUFFER_DESC instanceBufferDesc;
 	instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
@@ -1092,101 +1084,30 @@ void SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberO
 	}
 	m_instanceBufferList.push_back(instanceBuffer);
 }
-
-void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<Object> p_ObjectList)
+void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<Object*> p_ObjectList)
 {
 	//TODO: Re mappar bufferns information med den inkommande vector med objekt med objektets instance index.
 	//TODO 2: Skapa en vektor med objekt, utav varje typ av objekt, som skickas in i denna funktionen.
-
-
-
-
-	//ID3D11Buffer* instanceBuffer;
-	//// Create the instance buffer description.
-	////Calculate position of all instanced objects
-	//std::vector<InstancePos> m_instances;
-	//m_instances.clear();
-	//for (int i = 0; i < p_numberOfInstances; i++)
-	//{
-	//	InstancePos temp;
-	//	DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
-	//	m_instances.push_back(temp);
-	//}
-
-	//D3D11_BUFFER_DESC instanceBufferDesc;
-	//instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	//instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
-	//instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//instanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//instanceBufferDesc.MiscFlags = 0;
-
-	//D3D11_SUBRESOURCE_DATA instanceData;
-	//instanceData.pSysMem = &m_instances[0];
-	//instanceData.SysMemPitch = 0;
-	//instanceData.SysMemSlicePitch = 0;
-
-	//// Create the Instance buffer.
-	//if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
-	//{
-	//	ConsolePrintErrorAndQuit("Failed to create dynamic instance buffer.");
-	//}
-	//m_dynamicInstanceBuffers.push_back(instanceBuffer);
-}
-/*
-void SceneShader::InitializeDynamicInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
-{
-	ID3D11Buffer* instanceBuffer;
-	// Create the instance buffer description.
-	//Calculate position of all instanced objects
-	std::vector<InstancePos> m_instances;
-	m_instances.clear();
-	for (int i = 0; i < p_numberOfInstances; i++)
-	{
-		InstancePos temp;
-		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
-		m_instances.push_back(temp);
-	}
-
-	D3D11_BUFFER_DESC instanceBufferDesc;
-	instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
-	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	instanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	instanceBufferDesc.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA instanceData;
-	instanceData.pSysMem = &m_instances[0];
-	instanceData.SysMemPitch = 0;
-	instanceData.SysMemSlicePitch = 0;
-
-	// Create the Instance buffer.
-	if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
-	{
-		ConsolePrintErrorAndQuit("Failed to create dynamic instance buffer.");
-	}
-	m_dynamicInstanceBuffers.push_back(instanceBuffer);
-}
-
-void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_matrices, int p_index)
-{
+	//https://msdn.microsoft.com/en-us/library/windows/desktop/dn508285(v=vs.85).aspx
 	
-	// Lock matrix buffer so that it can be written to.
-	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
-	if (FAILED(p_context->Map(m_dynamicInstanceBuffers[p_index], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	if (p_ObjectList.size() != 0)
 	{
-		ConsolePrintErrorAndQuit("Failed to map scene animated matrix buffer.");
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		p_context->Map(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		
+		std::vector<InstancePos> m_instances;
+		for (unsigned int i = 0; i < p_ObjectList.size(); i++)
+		{
+			InstancePos temp;
+			DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_ObjectList[i]->GetWorldMatrix())));
+			m_instances.push_back(temp);
+
+		}
+
+		memcpy(mappedResource.pData, &m_instances[0], sizeof(m_instances));
+
+		p_context->Unmap(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0);
+
+		m_numberOfInstanceList[p_ObjectList[0]->GetInstanceIndex()] = p_ObjectList.size();
 	}
-
-	// Get pointer to the matrix buffer data.
-	InstancePos* dynamicInstanceBuffer;
-	dynamicInstanceBuffer = (InstancePos*)mappedBuffer.pData;
-
-	// Set matrices in buffer.
-	for (unsigned int i = 0; i < p_matrices.size(); i++)
-	{
-		dynamicInstanceBuffer->position = DirectX::XMLoadFloat4x4(&p_matrices[i]);
-	}
-
-	// Unlock the matrix buffer after it has been written to.
-	p_context->Unmap(m_dynamicInstanceBuffers[p_index], 0);
-	}*/
+}

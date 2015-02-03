@@ -33,15 +33,18 @@ public:
 
 	void UpdateFrustum(Frustum* p_frustum);
 private:
-	bool CheckIfModelIsInObjectToRenderList(Object *p_object);
+	bool CheckIfModelIsInObjectToRenderList(Object *p_object, std::vector<Object*> p_list);
 	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);
+	int CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
 
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
 	std::vector<Shuriken*> m_shurikens;
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToRender;
+	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToShadowRender;
+	
 
 	Frustum* m_frustum;
 

@@ -11,6 +11,7 @@
 #include "ConsoleFunctions.h"
 #include "VisibilityComputer.h"
 #include "OutlingShader.h"
+#include "Object.h"
 
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;
@@ -464,4 +465,9 @@ void GraphicsEngine::SetOutliningPassTwo()
 void GraphicsEngine::ClearOutlining()
 {
 	m_directX.ClearOutlining();
+}
+
+void GraphicsEngine::UpdateInstanceBuffers(std::vector<Object*> p_ObjectList)
+{
+	m_sceneShader.UpdateDynamicInstanceBuffer(GetContext(), p_ObjectList);
 }

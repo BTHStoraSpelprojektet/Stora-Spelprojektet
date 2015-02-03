@@ -193,18 +193,92 @@ void ObjectManager::Update()
 
 void ObjectManager::Render()
 {
+	std::vector<Object*> tempList;
+	tempList.clear();
 	m_objectsToRender.clear();
+	m_objectsToInstanceRender.clear();
+
+
+	//for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	//{
+	//	if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+	//	{
+	//		if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i], m_objectsToInstanceRender) == false)//Finns ej i listan
+	//		{
+	//			m_objectsToInstanceRender.push_back(&m_staticObjects[i]);
+	//		}
+	//	}
+	//}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
 		{
-			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
+			tempList.push_back(&m_staticObjects[i]);
+		}
+	}
+
+	for (unsigned int i = 0; i < tempList.size(); i++)
+	{
+		int temp = CheckAmountOfSameModels(tempList[i],tempList);
+		if (temp == 1)
+		{
+			m_objectsToRender.push_back(tempList[i]);
+		}
+		else if (temp > 1)
+		{
+			if (!CheckIfModelIsInObjectToRenderList(tempList[i], m_objectsToInstanceRender))
 			{
-				m_objectsToRender.push_back(&m_staticObjects[i]);
-				m_staticObjects[i].RenderInstanced();
+				m_objectsToInstanceRender.push_back(tempList[i]);
 			}
 		}
 	}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	//{
+	//	if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+	//	{
+	//		if (tempList.size() == 0)
+	//		{
+	//			tempList.push_back(&m_staticObjects[i]);
+	//		}
+	//		else if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i], tempList) == true)//Finns ej i listan
+	//		{
+	//			tempList.push_back(&m_staticObjects[i]);
+	//		}
+	//		else
+	//		{
+	//			if (tempList.size() == 1)
+	//			{
+	//				m_objectsToRender.push_back(tempList[0]);
+	//			}
+	//			else
+	//			{
+	//				m_objectsToInstanceRender.push_back(&m_staticObjects[i]);
+	//				//m_staticObjects[i].UpdateInstanceBuffers(tempList);
+	//			}
+	//			tempList.clear();
+	//			tempList.push_back(&m_staticObjects[i]);
+	//		}
+	//	}
+	//}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	{
+		m_objectsToInstanceRender[i]->RenderInstanced();
+	}
+	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
+	{
+		m_objectsToRender[i]->Render();
+	}
+
+
+
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
@@ -368,16 +442,16 @@ void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 	m_frustum = p_frustum;
 }
 
-bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object)
+bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object, std::vector<Object*> p_list)
 {
-	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
+	if (!p_list.empty())
 	{
-		if (m_objectsToRender[i]->GetModel() == p_object->GetModel())
+		if (p_list[0]->GetModel() == p_object->GetModel())
 		{
-			return false;
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
 bool ObjectManager::CheckIfModelIsInObjectToShadowRenderList(Object *p_object)
@@ -390,4 +464,20 @@ bool ObjectManager::CheckIfModelIsInObjectToShadowRenderList(Object *p_object)
 		}
 	}
 	return true;
+}
+
+int ObjectManager::CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list)
+{
+	int retrunValue = 0;
+	if (!p_list.empty())
+	{
+		for (int i = 0; i < p_list.size(); i++)
+		{
+			if (p_list[i]->GetModel() == p_object->GetModel())
+			{
+				retrunValue++;
+			}
+		}
+	}
+	return retrunValue;
 }
