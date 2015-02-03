@@ -2,6 +2,7 @@
 #include "PlayerManager.h"
 #include "SpikeManager.h"
 #include "ShurikenManager.h"
+#include "FanBoomerangManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
@@ -189,6 +190,214 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			if (collisionFound)
 			{
 				break;
+			}
+		}
+	}
+}
+
+void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManager* p_fanBoomerangManager, PlayerManager* p_playerManager)
+{
+	float radius = 1.0f;
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<FanNet>fanList = p_fanBoomerangManager->GetObjects();
+	for (unsigned int i = 0; i < fanList.size(); i++)
+	{
+		bool collisionFound = false;
+		// Get the fans position
+		float newPosX = p_fanBoomerangManager->GetPosX(i);
+		float newPosY = p_fanBoomerangManager->GetPosY(i);
+		float newPosZ = p_fanBoomerangManager->GetPosZ(i);
+
+		// Get the fan bounding boxes
+		std::vector<Box> fanBoundingBoxes;
+
+		fanBoundingBoxes = p_fanBoomerangManager->GetBoundingBoxes(i);
+		
+		// Go through player list
+		for (unsigned int j = 0; j < playerList.size(); j++)
+		{
+			if (fanList[i].lifeTime <= 0)
+			{
+				if (playerList[j].guid == fanList[i].guid)
+				{
+					// Get the players bounding boxes
+					std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+					// Make collision test
+					for (unsigned int k = 0; k < fanBoundingBoxes.size(); k++)
+					{
+						for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+						{
+							if (BoxBoxTest(playerBoundingBoxes[l], fanBoundingBoxes[k]))
+							{
+								p_fanBoomerangManager->Remove(fanList[i].id);
+								fanList.erase(fanList.begin() + i);
+								i--;
+
+								collisionFound = true;
+								break;
+							}
+						}
+
+						if (collisionFound)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			if (collisionFound)
+			{
+				break;
+			}
+
+			// This is so you don't collide with your own fan if it's alive.
+			if (playerList[j].guid == fanList[i].guid)
+			{
+				continue;
+			}
+
+			// Check so you are not on the same team
+			PlayerNet shootingPlayer = p_playerManager->GetPlayer(fanList[i].guid);
+			if (playerList[j].team == shootingPlayer.team)
+			{
+				continue;
+			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+			// Make collision test
+			for (unsigned int k = 0; k < fanBoundingBoxes.size(); k++)
+			{
+				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+				{
+					if (BoxBoxTest(playerBoundingBoxes[l], fanBoundingBoxes[k]))
+					{
+						float damage = FANBOOMERANG_DAMAGE*(float)p_deltaTime;
+
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
+			}
+
+			if (collisionFound)
+			{
+				break;
+			}
+		}
+
+		if (collisionFound)
+		{
+			continue;
+		}
+
+		if (fanList[i].lifeTime <= -0.5f)
+		{
+			// Go through maps bounding boxes
+			for (unsigned int j = 0; j < fanBoundingBoxes.size(); j++)
+			{
+				// Box list
+				for (unsigned int k = 0; k < m_staticBoxList.size(); k++)
+				{
+					if (OBBOBBTest(m_staticBoxList[k], OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
+					{
+						// Remove
+						p_fanBoomerangManager->Remove(fanList[i].id);
+						fanList.erase(fanList.begin() + i);
+						i--;
+
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
+
+				// Sphere list
+				for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
+				{
+					Sphere sphere = m_staticSphereList[k];
+					if (sphere.m_position.y + sphere.m_radius < fanBoundingBoxes[j].m_center.y - fanBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > fanBoundingBoxes[j].m_center.y + fanBoundingBoxes[j].m_extents.y)
+					{
+						sphere.m_position.y = fanBoundingBoxes[j].m_center.y;
+					}
+					if (OBBSphereTest(OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
+					{
+						// Remove
+						p_fanBoomerangManager->Remove(fanList[i].id);
+						fanList.erase(fanList.begin() + i);
+						i--;
+
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
+			}
+		}
+
+		else
+		{
+			// Go through maps bounding boxes
+			for (unsigned int j = 0; j < fanBoundingBoxes.size(); j++)
+			{
+				// Box list
+				for (unsigned int k = 0; k < m_staticBoxList.size(); k++)
+				{
+					if (OBBOBBTest(m_staticBoxList[k], OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
+					{
+						// END LIFE!
+						p_fanBoomerangManager->SetLifeTime(i, 0.0f);
+
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
+
+				// Sphere list
+				for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
+				{
+					Sphere sphere = m_staticSphereList[k];
+					if (sphere.m_position.y + sphere.m_radius < fanBoundingBoxes[j].m_center.y - fanBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > fanBoundingBoxes[j].m_center.y + fanBoundingBoxes[j].m_extents.y)
+					{
+						sphere.m_position.y = fanBoundingBoxes[j].m_center.y;
+					}
+					if (OBBSphereTest(OBB(fanBoundingBoxes[j].m_center, fanBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
+					{
+						// END LIFE!
+						p_fanBoomerangManager->SetLifeTime(i, 0.0f);
+
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
 			}
 		}
 	}

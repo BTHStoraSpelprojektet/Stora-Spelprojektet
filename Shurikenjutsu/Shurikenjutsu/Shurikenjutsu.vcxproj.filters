@@ -392,6 +392,12 @@
     <ClCompile Include="WhipSecondaryAttackAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="FanBoomerang.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="FanBoomerangAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -638,6 +644,12 @@
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="WhipSecondaryAttackAbility.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="FanBoomerang.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="FanBoomerangAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>

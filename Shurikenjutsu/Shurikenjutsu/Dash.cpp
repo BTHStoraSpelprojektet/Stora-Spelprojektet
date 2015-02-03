@@ -13,7 +13,7 @@ bool Dash::Initialize()
 	SetDamage(DASH_DAMAGE);
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
-	SetCooldown(DASH_COOLDOWN);
+	SetCooldown(0.0f);
 	m_totalCooldown = DASH_COOLDOWN;
 	return true;
 }

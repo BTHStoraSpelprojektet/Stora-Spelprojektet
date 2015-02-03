@@ -15,8 +15,8 @@
 #include "SmokeBombManager.h"
 #include <vector>
 
+class FanBoomerangManager;
 class SpikeManager;
-
 class CollisionManager;
 class PlayerManager
 {
@@ -45,7 +45,7 @@ public:
 
 	void UsedAbility(int p_index, ABILITIES p_ability);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
-	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap);
+	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang);
 
 
 private:	

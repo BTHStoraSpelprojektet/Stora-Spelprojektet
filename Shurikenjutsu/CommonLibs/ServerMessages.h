@@ -38,6 +38,17 @@ struct ShurikenNet
 	float speed;
 	bool megaShuriken;
 };
+
+struct FanNet
+{
+	float x, y, z;
+	float dirX, dirY, dirZ;
+	unsigned int id;
+	RakNet::RakNetGUID guid;
+	float lifeTime;
+	float speed;
+};
+
 struct SmokeBombNet
 {
 	unsigned int smokeBombId;
@@ -76,7 +87,10 @@ enum Messages
 	ID_SPIKETRAP_THROW,
 	ID_SPIKETRAP_REMOVE,
 	ID_DASH_TO_LOCATION,
-	ID_CHOOSE_CHAR
+	ID_CHOOSE_CHAR,
+	ID_FAN_THROWN,
+	ID_FAN_REMOVE,
+	ID_FAN_UPDATE
 };
 
 #endif

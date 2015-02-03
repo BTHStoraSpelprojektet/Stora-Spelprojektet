@@ -53,6 +53,7 @@ void SmokeBombManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float 
 
 	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
+
 unsigned int SmokeBombManager::GetSmokeBombUniqueId()
 {
 	unsigned int ID = 0;
