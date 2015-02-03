@@ -16,6 +16,7 @@
 #include "Globals.h"
 #include "TextureLibrary.h"
 #include "VisibilityComputer.h"
+#include "Cursor.h"
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -148,6 +149,15 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
+	// Cursor
+	m_cursor = new Cursor();
+	result = m_cursor->Initialize();
+	if (!result)
+	{
+		return false;
+	}
+	m_cursor->SetCustomCursor(true);
+
 	return result;
 }
 
@@ -178,6 +188,12 @@ void System::Shutdown()
 	TextureLibrary::GetInstance()->Shutdown();
 
 	m_sound->Shutdown();
+
+	if (!m_cursor != NULL)
+	{
+		m_cursor->Shutdown();
+		delete m_cursor;
+	}
 
 	GUIManager::GetInstance()->Shutdown();
 
@@ -260,6 +276,7 @@ void System::Update()
 	}
 	
 	m_sound->Update();
+	m_cursor->Update();
 
 	// Update network
 	Network::GetInstance()->Update();
@@ -279,6 +296,9 @@ void System::Render()
 
 	// Render Current GameState
 	m_gameState->Render();
+
+	// Render cursor
+	m_cursor->Render();
 
 	//Render GUI
 	GUIManager::GetInstance()->Render();

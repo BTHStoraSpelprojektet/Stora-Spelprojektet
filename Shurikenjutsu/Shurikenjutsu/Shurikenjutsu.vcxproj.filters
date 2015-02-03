@@ -404,6 +404,9 @@
     <ClCompile Include="NaginataNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
+    <ClCompile Include="Cursor.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -663,6 +666,9 @@
     </ClInclude>
     <ClInclude Include="NaginataNinja.h">
       <Filter>Header Files\Ninjas</Filter>
+    </ClInclude>
+    <ClInclude Include="Cursor.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
