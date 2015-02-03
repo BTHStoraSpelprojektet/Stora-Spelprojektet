@@ -7,6 +7,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "KatanaNinja.h"
 #include "TessenNinja.h"
+#include "NaginataNinja.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
@@ -174,7 +175,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 	case 2:
 	{
 		// Todo change to ninja 3
-		KatanaNinja *tempPlayer = new KatanaNinja();
+		NaginataNinja *tempPlayer = new NaginataNinja();
 		tempPlayer->Initialize(p_pos, p_direction);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
@@ -220,6 +221,12 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 	case 2:
 	{
 		// Todo change to ninja 3
+		NaginataNinja *tempPlayer = new NaginataNinja();
+		tempPlayer->Initialize(p_pos, p_direction);
+		tempPlayer->SetGuID(p_guid);
+		tempPlayer->SetMaxHealth(CHARACTER_NAGINATA_HEALTH);
+		
+		AddEnemyToList(tempPlayer);
 		break;
 	}
 	case 3:
