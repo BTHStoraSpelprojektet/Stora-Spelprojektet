@@ -217,6 +217,7 @@ void PlayingStateTest::Render()
 	// Draw to the scene.
 	m_playerManager->Render();
 	m_objectManager->Render();
+	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 
 	// ========== DEBUG LINES ==========
 	if (FLAG_DEBUG == 1)
@@ -227,9 +228,7 @@ void PlayingStateTest::Render()
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-		ShadowShapes::GetInstance().DebugRender();
-
-		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
+		ShadowShapes::GetInstance().DebugRender();	
 	}
 	// ========== DEBUG TEMP LINES ==========
 
