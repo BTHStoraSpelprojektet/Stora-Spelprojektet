@@ -12,8 +12,6 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 
 bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 {
-	perframe = 0;
-
 	m_render = false;
 	m_renderReversed = true;
 
@@ -183,8 +181,6 @@ void VisibilityComputer::Shutdown()
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
-	perframe = 0;
-
 	m_render = false;
 	Point center = p_viewerPosition;
 
@@ -268,8 +264,6 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 
 	// Reverse the polygon.
 	CalculateReversedVisibilityPolygon(p_device);
-
-	std::cout << perframe << std::endl;
 }
 
 void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
@@ -351,8 +345,6 @@ void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11Device* p_devi
 
 Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segment)
 {
-	perframe++;
-
 	// Set point to false initially.
 	Intersection point;
 	point.intersection = false;

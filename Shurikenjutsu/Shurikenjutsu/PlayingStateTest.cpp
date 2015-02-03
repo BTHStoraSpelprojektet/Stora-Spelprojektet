@@ -67,7 +67,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		m_mouseX = 0;
 		m_mouseY = 0;
 		
-		VisibilityComputer::GetInstance().UpdateMapBoundries(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
+		VisibilityComputer::GetInstance().UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
 	}
 	// ========== DEBUG LINES ==========
 	
@@ -145,7 +145,16 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	float x = m_playerManager->GetPlayerPosition().x;
 	float y = m_playerManager->GetPlayerPosition().z;
-	VisibilityComputer::GetInstance().UpdateMapBoundries(Point(x - 25.0f, y + 25.0f), Point(x + 25.0f, y - 25.0f));
+
+	Point topLeft = Point(x - 25.0f, y + 25.0f);
+	Point bottomLeft = Point(x + 25.0f, y - 25.0f);
+
+	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
+	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
+	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
+	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
+
+	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
 	// Handle camera input.
 	m_camera->HandleInput();
