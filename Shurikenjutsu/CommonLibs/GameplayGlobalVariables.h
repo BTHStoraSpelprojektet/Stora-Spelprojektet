@@ -49,6 +49,11 @@ const float KATANA_RANGE = 2.5f;
 const float KATANA_COOLDOWN = 0.5f;
 
 ////////////////////////////////////////////////////////////////Melee Attacks
+// Naginata
+const float NAGINATA_DAMAGE = 30.0f;
+const float NAGINATA_RANGE = 3.5f;
+const float NAGINATA_COOLDOWN = 0.5f;
+
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 //Dash
 const float DASH_MAX_RANGE = 10.0f;
@@ -91,6 +96,9 @@ const float CHARACTER_KATANA_SHURIKEN_SPEED = 10.0f;
 
 const float CHARACTER_TESSEN_HEALTH = 90.0f;
 const float CHARACTER_TESSEN_SPEED = 12.0f;
+
+const float CHARACTER_NAGINATA_HEALTH = 95.0f;
+const float CHARACTER_NAGINATA_SPEED = 11.0f;
 
 ////////////////////////////////////////////////////////////////Character Variables
 

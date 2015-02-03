@@ -14,7 +14,7 @@ bool WhipPrimaryAttackAbility::Initialize()
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	m_totalCooldown = WHIP_COOLDOWN;
-	m_stacks = 0;
+	m_stacks = 1;
 	return true;
 }
 

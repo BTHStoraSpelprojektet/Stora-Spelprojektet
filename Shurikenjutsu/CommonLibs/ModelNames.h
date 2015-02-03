@@ -9,6 +9,7 @@
 // Players
 #define KATANA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 #define TESSEN_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja2Shape.SSP"
+#define NAGINATA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 
 // Shurikens
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
