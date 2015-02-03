@@ -47,6 +47,15 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_directionUpdateTimer = 0.0f;
 
+	m_health = 100.0f;
+	m_maxHealth = 100.0f;
+	m_isAlive = true;
+	m_guid = RakNet::RakNetGUID();
+	m_visible = true;
+	m_dashDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_dashDistanceLeft = 0.0f;
+	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
 	throwDistance = 0.0f;
 
 	m_globalCooldown = 0.0f;
@@ -103,7 +112,7 @@ void Player::Shutdown()
 	if (m_abilityBar != nullptr)
 	{
 		m_abilityBar->Shutdown();
-	}
+}
 }
 
 void Player::UpdateMe()
@@ -211,8 +220,8 @@ void Player::UpdateMe()
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_meleeAttack;
-		}
+		m_ability = m_meleeAttack;
+	}
 	}
 
 
@@ -222,13 +231,13 @@ void Player::UpdateMe()
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
-		{
-			// Play ability animation if we did any
-			DoAnimation();
+	{
+		// Play ability animation if we did any
+		DoAnimation();
 
 			// Set global cooldown
 			m_globalCooldown = m_maxGlobalCooldown;
-		}
+	}
 	}
 
 	UpdateAbilityBar();
@@ -240,23 +249,23 @@ void Player::CheckForSpecialAttack()
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_rangeSpecialAttack;
-		}
+		m_ability = m_rangeSpecialAttack;
+	}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_meleeSpecialAttack;
-		}
+		m_ability = m_meleeSpecialAttack;
+	}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_toolAbility;
-		}
+		m_ability = m_toolAbility;
 	}
+}
 }
 
 bool Player::CalculateDirection()
@@ -267,7 +276,7 @@ bool Player::CalculateDirection()
 	x = 0;
 	y = 0;//Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)))
 	z = 0;
-	m_playerPrevPos = m_position;
+	//m_playerPrevPos = m_position;
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
@@ -323,7 +332,7 @@ void Player::UpdateAbilities()
 	if (m_globalCooldown > 0.0f)
 	{
 		m_globalCooldown -= (float)GLOBAL::GetInstance().GetDeltaTime();
-	}
+}
 
 }
 
@@ -550,7 +559,7 @@ void Player::SetCalculatePlayerPosition()
 		}
 
 
-		// Circel ekvation:
+		// Circle equation:
 		// circleX * X + circleY * Y = Radius * Radius
 		// Bryt ut så att y blir ensam
 		// Y = (Radius * Radius - circleX * X) / circleY		
@@ -562,6 +571,11 @@ void Player::SetCalculatePlayerPosition()
 		dir.x = dir.x / length;
 		dir.z = dir.z / length;
 		SetDirection(dir);
+	}
+
+	if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
+	{
+		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 
 	//float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
@@ -784,27 +798,27 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 void Player::UpdateAbilityBar()
 {
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), 0);
+	m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), 0);
 	else
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 0);
 	
 	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), 1);
+	m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), 1);
 	else
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 1);
 
 	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), 2);
+	m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), 2);
 	else
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 2);
 
 	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), 3);
+	m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), 3);
 	else
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 3);
 
 	if ((float)m_toolAbility->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), 4);
+	m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), 4);
 	else
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 4);
 }
@@ -814,16 +828,14 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		m_healthbar->Render();
-		AnimatedObject::Render(m_team);
 	}
+
+	AnimatedObject::Render(m_team);
 }
 
 void Player::RenderDepth()
 {
-	if (m_isAlive)
-	{
-		AnimatedObject::RenderDepth();
-	}
+	AnimatedObject::RenderDepth();
 }
 
 void Player::RenderOutlining()
@@ -838,7 +850,19 @@ void Player::RenderAbilityBar()
 
 void Player::SetIsAlive(bool p_isAlive)
 {
-	m_isAlive = p_isAlive;
+	if (m_isAlive != p_isAlive)
+	{
+		if (!p_isAlive)
+		{
+			AnimatedObject::ChangeAnimationState(AnimationState::Death);
+		}
+		else
+		{
+			AnimatedObject::ChangeAnimationState(AnimationState::Spawn);
+		}
+	}
+
+	m_isAlive = p_isAlive;	
 }
 
 bool Player::GetIsAlive()

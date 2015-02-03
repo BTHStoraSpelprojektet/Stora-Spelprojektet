@@ -117,7 +117,5 @@ private:
 
 	bool m_renderReversed;
 	bool m_render;
-
-	int perframe;
 };
 #endif

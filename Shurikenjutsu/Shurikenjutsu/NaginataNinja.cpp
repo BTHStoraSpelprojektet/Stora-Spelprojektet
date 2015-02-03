@@ -9,13 +9,17 @@
 #include "KunaiAbility.h"
 
 
-NaginataNinja::NaginataNinja()
+NaginataNinja::NaginataNinja(){}
+NaginataNinja::~NaginataNinja(){}
+
+void* NaginataNinja::operator new(size_t p_i)
 {
+	return _mm_malloc(p_i, 16);
 }
 
-
-NaginataNinja::~NaginataNinja()
+void NaginataNinja::operator delete(void* p_p)
 {
+	_mm_free(p_p);
 }
 
 bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
