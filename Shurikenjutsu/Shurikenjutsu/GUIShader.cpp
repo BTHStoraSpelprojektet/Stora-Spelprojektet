@@ -11,9 +11,9 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile GUI vertex shader from file.");
 			return false;
@@ -78,9 +78,9 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	errorMessage = 0;
 
 	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIPixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIPixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIPixelShader.hlsl", NULL, NULL, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIPixelShader.hlsl", NULL, NULL, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile GUI pixel shader from file.");
 			return false;
@@ -265,9 +265,9 @@ bool GUIShader::InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContex
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIColorVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIColorVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIColorVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIColorVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile GUI color vertex shader from file.");
 			return false;
@@ -324,9 +324,9 @@ bool GUIShader::InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContex
 	errorMessage = 0;
 
 	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIColorPixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIColorPixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"Shaders/GUI/GUIColorPixelShader.hlsl", NULL, NULL, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIColorPixelShader.hlsl", NULL, NULL, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile GUI color pixel shader from file.");
 			return false;

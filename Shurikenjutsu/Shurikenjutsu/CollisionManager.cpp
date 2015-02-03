@@ -38,20 +38,6 @@ void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vec
 			m_staticSphereList.push_back(tempSphereList[j]);
 		}
 	}
-	//Failed because of instancing... -.-'
-	//int index = 8;
-	//int index2 = 9;
-	//float xPos = m_staticBoxList[index].m_center.x;
-	//float zPos = m_staticBoxList[index].m_center.z - m_staticBoxList[index2].m_center.z;
-	//float xExtent = m_staticBoxList[index].m_extents.x * 2;
-	//float yExtent = m_staticBoxList[index].m_extents.y;
-	//float zExtent = m_staticBoxList[index].m_extents.z;
-
-	//OBB temp = OBB(xPos, m_staticBoxList[index].m_center.y, m_staticBoxList[index].m_center.z + zPos, xExtent, yExtent, zExtent, m_staticBoxList[index].m_direction);
-
-	//m_staticBoxList.erase(m_staticBoxList.begin() + index);
-	//m_staticBoxList.erase(m_staticBoxList.begin() + index2);
-	//m_staticBoxList.push_back(temp);
 }
 
 CollisionManager* CollisionManager::GetInstance()
@@ -85,6 +71,24 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(
 		}
 	}
 	return CollisionList;
+}
+
+bool CollisionManager::CheckCollisionWithAllStaticObjects(Sphere p_sphere)
+{
+	if (m_staticBoxList.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+		{
+			if (Collisions::SphereSphereCollision(Sphere(m_staticBoxList[i].m_center, m_staticBoxList[i].m_radius), p_sphere))
+			{
+				if (Collisions::OBBSphereCollision(m_staticBoxList[i], p_sphere))
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 std::vector<Sphere> CollisionManager::CalculateLocalPlayerCollisionWithStaticSpheres(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction)
@@ -144,6 +148,36 @@ float CollisionManager::CalculateDashLength(Ray* p_ray)
 	}
 
 	return dashLength;
+}
+
+bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
+{
+	Ray* ray = p_ray;
+	float rayLength = p_rayDistance;
+	std::vector<float> rayLengths;
+
+	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+	{
+		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
+	{
+		if (rayLengths[i] < rayLength)
+		{
+			rayLength = rayLengths[i];
+		}
+	}
+	if (rayLength < p_rayDistance)
+			return true;
+
+	return false;
+	//return rayLength;
 }
 
 float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos)

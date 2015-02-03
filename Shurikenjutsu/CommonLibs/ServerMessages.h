@@ -10,6 +10,8 @@ struct Cooldowns
 	float meleeSwingCD;
 	float dashCD;
 	float megaShurikenCD;
+	float whipAttack;
+	float whipSpAttack;
 };
 
 struct PlayerNet

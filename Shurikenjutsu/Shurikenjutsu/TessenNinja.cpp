@@ -3,19 +3,13 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "MeleeSwing.h"
 #include "Dash.h"
-#include "ShurikenAbility.h"
-#include "MegaShuriken.h"
+#include "WhipPrimaryAttackAbility.h"
+#include "WhipSecondaryAttackAbility.h"
 #include "SpikeAbility.h"
 #include "FanBoomerangAbility.h"
 
-TessenNinja::TessenNinja()
-{
-}
-
-
-TessenNinja::~TessenNinja()
-{
-}
+TessenNinja::TessenNinja(){}
+TessenNinja::~TessenNinja(){}
 
 bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
@@ -35,10 +29,10 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_meleeSpecialAttack = new FanBoomerangAbility();
 	m_meleeSpecialAttack->Initialize();
 
-	m_rangeAttack = new ShurikenAbility();
+	m_rangeAttack = new WhipPrimaryAttackAbility();
 	m_rangeAttack->Initialize();
 
-	m_rangeSpecialAttack = new MegaShuriken();
+	m_rangeSpecialAttack = new WhipSecondaryAttackAbility();
 	m_rangeSpecialAttack->Initialize();
 
 	m_toolAbility = new SpikeAbility();

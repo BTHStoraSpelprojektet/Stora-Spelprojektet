@@ -112,6 +112,7 @@ void PlayerManager::Update()
 void PlayerManager::Render()
 {
 	m_player->Render();
+	m_player->RenderAbilityBar();
 
 	for (unsigned int i = 0; i < m_enemyList.size(); i++)
 	{
@@ -125,6 +126,11 @@ void PlayerManager::Render()
 	}
 }
 
+void PlayerManager::RenderOutliningPassOne()
+{
+	m_player->Render();
+}
+
 void PlayerManager::RenderDepth()
 {
 	m_player->RenderDepth();
@@ -134,11 +140,11 @@ void PlayerManager::RenderDepth()
 		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i].GetPosition().x, m_enemyList[i].GetPosition().z)))
 		{
 		m_enemyList[i].RenderDepth();
+		}
 	}
 }
-}
 
-void PlayerManager::RenderOutlining()
+void PlayerManager::RenderOutliningPassTwo()
 {
 	m_player->RenderOutlining();
 }
@@ -358,4 +364,14 @@ int PlayerManager::GetEnemyTeam(int p_index)
 		return 0;
 	}
 	return m_enemyList[p_index].GetTeam();
+}
+
+OBB PlayerManager::GetPlayerBoundingBox()
+{
+	return m_player->GetOBB();
+}
+
+Sphere PlayerManager::GetPlayerSphere()
+{
+	return m_player->GetSphere();
 }

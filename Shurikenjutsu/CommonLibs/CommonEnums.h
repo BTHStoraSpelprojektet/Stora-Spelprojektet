@@ -9,8 +9,9 @@ enum ABILITIES
 	ABILITIES_MEGASHURIKEN,
 	ABILITIES_SMOKEBOMB,
 	ABILITIES_SPIKETRAP,
+	ABILITIES_WHIP_PRIMARY,
+	ABILITIES_WHIP_SECONDARY,
 	ABILITIES_FANBOOMERANG
-
 };
 
 enum AnimationState {
@@ -18,7 +19,8 @@ enum AnimationState {
 	Range,
 	Special1,
 	Special2,
-	Tool
+	Tool,
+	None
 };
 
 #endif // !COMMONENUMS_H_

@@ -29,6 +29,7 @@ public:
 	void Render();
 	void RenderDepth();
 	void RenderOutlining();
+	void RenderAbilityBar();
 	//void SetDamage(float p_damage);
 	//float GetDamage() const;	
 	void SetHealth(float p_health);
@@ -61,6 +62,9 @@ public:
 	bool IsVisible();
 	void SetIsVisible(bool p_visiblie);
 
+	Sphere GetSphere();
+	OBB GetOBB();
+
 protected:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
@@ -87,6 +91,10 @@ protected:
 	DirectX::XMFLOAT3 m_dashDirection;
 	float m_dashDistanceLeft;
 	bool m_isDashing;
+	float throwDistance;
+
+	float m_globalCooldown;
+	float m_maxGlobalCooldown;
 
 	Sphere m_playerSphere;
 	Ability* m_ability;

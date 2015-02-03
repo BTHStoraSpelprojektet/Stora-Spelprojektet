@@ -32,7 +32,7 @@ void PlayerManager::Shutdown(){}
 
 void PlayerManager::Update(double p_deltaTime)
 {
-	for (unsigned int i = 0; i < m_players.size(); i++)
+	/*for (unsigned int i = 0; i < m_players.size(); i++)
 	{
 		if (m_players[i].gcd > 0.0f)
 		{
@@ -50,8 +50,8 @@ void PlayerManager::Update(double p_deltaTime)
 		{
 			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
 		}
+	}*/
 	}
-}
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
 {
@@ -60,6 +60,15 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 
 void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
+	if (p_charNr == 0)
+	{
+		m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
+	}
+	else if (p_charNr == 1)
+	{
+		m_playerHealth = CHARACTER_TESSEN_HEALTH;
+	}
+
 	PlayerNet player;
 	player.guid = p_guid;
 	player.team = (m_players.size() % 2) + 1;
@@ -283,7 +292,7 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 
 void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 {
-	if (p_index >= 0 && p_index < (int)m_players.size())
+	/*if (p_index >= 0 && p_index < (int)m_players.size())
 	{
 		m_players[p_index].gcd = m_gcd;
 		switch (p_ability)
@@ -300,25 +309,59 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 		case ABILITIES_MEGASHURIKEN:
 			m_players[p_index].cooldownAbilites.megaShurikenCD = MEGASHURIKEN_COOLDOWN;
 			break;
-
+		case ABILITIES_WHIP_PRIMARY:
+			m_players[p_index].cooldownAbilites.whipAttack = WHIP_COOLDOWN;
+			break;
+		case ABILITIES_WHIP_SECONDARY:
+			m_players[p_index].cooldownAbilites.megaShurikenCD = WHIP_SP_COOLDOWN;
+			break;
 		default:
 			break;
 		}
 
-	}
+	}*/
 }
 
 bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 {
-	bool result = false;
+	bool result = true;
 
-	if (p_index >= 0 && p_index < (int)m_players.size())
+	/*if (p_index >= 0 && p_index < (int)m_players.size())
 	{
 		if (m_players[p_index].gcd <= 0.0f)
 		{
-			return true;
+			switch (p_ability)
+			{
+			case ABILITIES_SHURIKEN:
+				result = true; // controlled locally atm
+				break;
+			case ABILITIES_DASH:
+				result = true; // controlled locally atm
+				break;
+			case ABILITIES_MELEESWING:
+				result = true; // controlled locally atm
+				break;
+			case ABILITIES_MEGASHURIKEN:
+				result = true; // controlled locally atmresult = false;
+				break;
+			case ABILITIES_SMOKEBOMB:
+				result = true;
+				break;
+			case ABILITIES_SPIKETRAP:
+				result = true;
+				break;
+			case ABILITIES_WHIP_PRIMARY:
+				result = true;
+				break;
+			case ABILITIES_WHIP_SECONDARY:
+				result = true;
+				break;
+			default:
+				result = false;
+				break;
+			}
 		}
-	}
+	}*/
 
 	return result;
 }
@@ -377,6 +420,14 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		}
 		p_spikeTrap.AddSpikeTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
 
+		break;
+	case ABILITIES_WHIP_PRIMARY:
+		abilityString = "whipping the shit out of fuck";
+		p_collisionManager.WhipPrimaryAttack(p_guid, this);
+		break;
+	case ABILITIES_WHIP_SECONDARY:
+		abilityString = "not whipping enough!";
+		p_collisionManager.WhipSecondaryAttack(p_guid, this);
 		break;
 	case ABILITIES_FANBOOMERANG:
 		abilityString = "FANCY BOOMERANG";

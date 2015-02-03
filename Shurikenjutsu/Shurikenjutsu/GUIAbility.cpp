@@ -11,13 +11,16 @@ bool GUIAbility::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p
 	m_ability.Initialize(p_position, p_width - 4.0f, p_height - 4.0f, p_texture);
 	m_cooldown.Initialize(p_position, 0, 0, TextureLibrary::GetInstance()->GetTexture(ABILITY_CD_TEXTURE));
 	m_stacks.Initialize("HELP ME!", 36.0f, p_position.x, p_position.y + 20.0f, 0xff000000); // Will be used Later
+	m_currentCooldown = 0.0f;
 	return true;
 }
 
 void GUIAbility::Update(float p_currentCooldown, float p_maxCooldown)
 {
+	//if (p_currentCooldown)
+	m_currentCooldown = p_currentCooldown;
 	// Update Cooldown
-	float percent = p_currentCooldown / p_maxCooldown;
+	float percent = m_currentCooldown / p_maxCooldown;
 
 	float newLength = m_ability.GetSize().x * (1.0f - percent);
 	
