@@ -21,7 +21,9 @@ enum AnimationState {
 	Special1,
 	Special2,
 	Tool,
-	None
+	None,
+	Death,
+	Spawn
 };
 
 #endif // !COMMONENUMS_H_

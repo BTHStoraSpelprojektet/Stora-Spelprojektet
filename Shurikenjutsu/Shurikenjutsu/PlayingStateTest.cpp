@@ -97,8 +97,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 void PlayingStateTest::Shutdown()
 {
-	m_camera->Shutdown();
-	delete m_camera;
+	if (m_camera != NULL)
+	{
+		m_camera->Shutdown();
+		delete m_camera;
+	}
 
 	if (m_playerManager != NULL)
 	{
@@ -119,7 +122,11 @@ void PlayingStateTest::Shutdown()
 	}
 	// ========== DEBUG TEMP LINES ==========
 
-	m_minimap->Shutdown();
+	if (m_minimap != NULL)
+	{
+		m_minimap->Shutdown();
+		delete m_minimap;
+	}
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()

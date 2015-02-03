@@ -10,6 +10,9 @@ public:
 	NaginataNinja();
 	~NaginataNinja();
 
+	void* operator new(size_t p_i);
+	void operator delete(void* p_p);
+
 	bool Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
 	void Shutdown();
 };
