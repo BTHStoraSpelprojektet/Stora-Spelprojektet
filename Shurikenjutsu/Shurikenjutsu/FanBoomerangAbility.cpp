@@ -13,6 +13,7 @@ bool FanBoomerangAbility::Initialize()
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
+	m_stacks = 0;
 	return true;
 }
 
