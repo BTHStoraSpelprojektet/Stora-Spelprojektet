@@ -12,6 +12,8 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 
 bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 {
+	perframe = 0;
+
 	m_render = false;
 	m_renderReversed = true;
 
@@ -181,78 +183,93 @@ void VisibilityComputer::Shutdown()
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
+	perframe = 0;
+
 	m_render = false;
 	Point center = p_viewerPosition;
 
-	if (p_viewerPosition.x > m_boundingBox.m_topLeft.x && p_viewerPosition.x < m_boundingBox.m_bottomRight.x && p_viewerPosition.y < m_boundingBox.m_topLeft.y && p_viewerPosition.y > m_boundingBox.m_bottomRight.y)
+	m_render = true;
+	m_intersections.clear();
+
+	std::vector<PolygonPoint> totalIntersections;
+	std::vector<float> uniqueAngles = GetUniquePointAngles(p_viewerPosition);
+	std::vector<Line> boundries = ShadowShapes::GetInstance().GetBoundryLines();
+	std::vector<Line> segments = ShadowShapes::GetInstance().GetStaticLines(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
+	PolygonPoint polygonPoint = PolygonPoint();
+
+	for (unsigned int i = 0; i < uniqueAngles.size(); i++)
 	{
-		m_render = true;
-		m_intersections.clear();
+		// Get current angle.
+		float angle = uniqueAngles[i];
 
-		std::vector<PolygonPoint> totalIntersections;
-		std::vector<float> uniqueAngles = GetUniquePointAngles(p_viewerPosition);
-		std::vector<Line> segments = ShadowShapes::GetInstance().GetStaticLines();
-		PolygonPoint polygonPoint = PolygonPoint();
+		// Calculate the dx and dy from current angle.
+		float dx = cos(angle);
+		float dy = sin(angle);
 
-		for (unsigned int i = 0; i < uniqueAngles.size(); i++)
+		// Cast a ray in that angle.
+		Line ray = Line(Point(p_viewerPosition.x, p_viewerPosition.y), Point(p_viewerPosition.x + dx, p_viewerPosition.y + dy));
+
+		Intersection closestIntersection = Intersection();
+
+		// Find the closest intersection in boundries.
+		for (unsigned int j = 0; j < boundries.size(); j++)
 		{
-			// Get current angle.
-			float angle = uniqueAngles[i];
+			Intersection intersection = GetIntertersectionPoint(ray, boundries[j]);
 
-			// Calculate the dx and dy from current angle.
-			float dx = cos(angle);
-			float dy = sin(angle);
-
-			// Cast a ray in that angle.
-			Line ray = Line(Point(p_viewerPosition.x, p_viewerPosition.y), Point(p_viewerPosition.x + dx, p_viewerPosition.y + dy));
-
-			// Find the closest intersection.
-			Intersection closestIntersection = Intersection();
-			for (unsigned int j = 0; j < segments.size(); j++)
+			// Ignore if there is no collision.
+			if (intersection.intersection)
 			{
-				Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
-
-				// Ignore if there is no collision.
-				if (!intersection.intersection)
-				{
-					continue;
-				}
-
 				// Sort to closest T1 value.
 				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
 				{
 					closestIntersection = intersection;
 				}
 			}
+		}
 
-			// Check to make sure the closest intersection even hit.
-			if (!closestIntersection.intersection)
+		// Find the closest intersection in segments.
+		for (unsigned int j = 0; j < segments.size(); j++)
+		{
+			Intersection intersection = GetIntertersectionPoint(ray, segments[j]);
+
+			// Ignore if there is no collision.
+			if (intersection.intersection)
 			{
-				continue;
+				// Sort to closest T1 value.
+				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
+				{
+					closestIntersection = intersection;
+				}
 			}
+		}
 
+		// Check to make sure the closest intersection even hit.
+		if (closestIntersection.intersection)
+		{
 			// Point and angle.
 			polygonPoint = PolygonPoint(angle, closestIntersection.point);
 
 			// Add to list of intersects
 			totalIntersections.push_back(polygonPoint);
 		}
-
-		// Sort intersections by angle.
-		QuickSortAngles(totalIntersections);
-
-		// Add sorted intersections to list.
-		for (unsigned int i = 0; i < totalIntersections.size(); i++)
-		{
-			m_intersections.push_back(totalIntersections[i].m_point);
-		}
-
-		// Calculate the polyogn.
-		CalculateVisibilityPolygon(p_viewerPosition, p_device);
-
-		// Reverse the polygon.
-		CalculateReversedVisibilityPolygon(p_device);
 	}
+
+	// Sort intersections by angle.
+	QuickSortAngles(totalIntersections);
+
+	// Add sorted intersections to list.
+	for (unsigned int i = 0; i < totalIntersections.size(); i++)
+	{
+		m_intersections.push_back(totalIntersections[i].m_point);
+	}
+
+	// Calculate the polyogn.
+	CalculateVisibilityPolygon(p_viewerPosition, p_device);
+
+	// Reverse the polygon.
+	CalculateReversedVisibilityPolygon(p_device);
+
+	std::cout << perframe << std::endl;
 }
 
 void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
@@ -334,6 +351,8 @@ void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11Device* p_devi
 
 Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segment)
 {
+	perframe++;
+
 	// Set point to false initially.
 	Intersection point;
 	point.intersection = false;
@@ -384,11 +403,12 @@ Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segm
 inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewerPoint)
 {
 	std::vector<float> angles;
+	std::vector<Point> list = ShadowShapes::GetInstance().GetUniquePoints(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
 
 	// Get the angles to all of the unique points.
-	for (unsigned int i = 0; i < ShadowShapes::GetInstance().GetUniquePoints().size(); i++)
+	for (unsigned int i = 0; i < list.size(); i++)
 	{
-		Point uniquePoint = ShadowShapes::GetInstance().GetUniquePoints()[i];
+		Point uniquePoint = list[i];
 
 		float angle = atan2(uniquePoint.y - p_viewerPoint.y, uniquePoint.x - p_viewerPoint.x);
 
@@ -473,17 +493,22 @@ void VisibilityComputer::UpdateMatrices(ID3D11DeviceContext* p_context)
 
 bool VisibilityComputer::IsPointVisible(Point p_point)
 {
+	return IsPointInPolygon(p_point, m_intersections);
+}
+
+bool VisibilityComputer::IsPointInPolygon(Point p_point, std::vector<Point> p_polygon)
+{
 	int intersections = 0;
 
 	// Generate a ray just going right.
 	Line ray = Line(Point(p_point.x, p_point.y), Point(p_point.x + 1.0f, p_point.y));
 
 	// Get number of total intersections with polygon segments.
-	for (unsigned int i = 0; i < m_intersections.size(); i++)
+	for (unsigned int i = 0; i < p_polygon.size(); i++)
 	{
 		// Line from this point to the next
-		Point startPoint = m_intersections[i];
-		Point endPoint = (i == m_intersections.size() - 1) ? m_intersections[0] : m_intersections[i + 1];
+		Point startPoint = p_polygon[i];
+		Point endPoint = (i == p_polygon.size() - 1) ? p_polygon[0] : p_polygon[i + 1];
 
 		Line segment = Line(Point(startPoint.x, startPoint.y), Point(endPoint.x, endPoint.y)); 
 
@@ -497,9 +522,9 @@ bool VisibilityComputer::IsPointVisible(Point p_point)
 	return (intersections % 2 == 1);
 }
 
-void VisibilityComputer::SetMapBoundries(Point p_topLeft, Point p_bottomRight)
+void VisibilityComputer::UpdateMapBoundries(Point p_topLeft, Point p_bottomRight)
 {
-	ShadowShapes::GetInstance().AddStaticSquare(p_topLeft, p_bottomRight);
+	ShadowShapes::GetInstance().UpdateBoundries(p_topLeft, p_bottomRight);
 
 	m_boundingBox.m_topLeft = p_topLeft;
 	m_boundingBox.m_bottomRight = p_bottomRight;

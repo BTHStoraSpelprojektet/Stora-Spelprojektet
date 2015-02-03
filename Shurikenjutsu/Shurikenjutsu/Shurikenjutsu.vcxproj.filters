@@ -398,6 +398,12 @@
     <ClCompile Include="FanBoomerangAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="NaginataSlash.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="NaginataNinja.cpp">
+      <Filter>Source Files\Ninjas</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -651,6 +657,12 @@
     </ClInclude>
     <ClInclude Include="FanBoomerangAbility.h">
       <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="NaginataSlash.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="NaginataNinja.h">
+      <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

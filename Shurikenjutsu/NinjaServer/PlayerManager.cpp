@@ -68,6 +68,10 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 	{
 		m_playerHealth = CHARACTER_TESSEN_HEALTH;
 	}
+	else if (p_charNr == 2)
+	{
+		m_playerHealth = CHARACTER_NAGINATA_HEALTH;
+	}
 
 	PlayerNet player;
 	player.guid = p_guid;
@@ -398,7 +402,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		break;
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
-		p_collisionManager.NormalMeleeAttack(p_guid, this);
+		p_collisionManager.NormalMeleeAttack(p_guid, this, p_readAbility);
 		break;
 	case ABILITIES_MEGASHURIKEN:
 		abilityString = "MegaShuriken";
@@ -432,6 +436,10 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	case ABILITIES_FANBOOMERANG:
 		abilityString = "FANCY BOOMERANG";
 		p_fanBoomerang.Add(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
+		break;
+	case ABILITIES_NAGINATASLASH:
+		abilityString = "sluush";
+		p_collisionManager.NormalMeleeAttack(p_guid, this, p_readAbility);
 		break;
 	default:
 		break;
