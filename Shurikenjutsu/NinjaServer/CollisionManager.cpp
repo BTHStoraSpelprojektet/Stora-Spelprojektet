@@ -25,8 +25,23 @@ void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sp
 	}
 }
 
-void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager, ABILITIES p_ability)
 {
+	float range;
+	float damage;
+	switch (p_ability)
+	{
+	case ABILITIES_MELEESWING:
+		range = KATANA_RANGE;
+		damage = KATANA_DAMAGE;
+		break;
+	case ABILITIES_NAGINATASLASH:
+		range = NAGINATA_RANGE;
+		damage = NAGINATA_DAMAGE;
+		break;
+	default:
+		break;
+	}
 	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
 	for (unsigned int i = 0; i < playerList.size(); i++)
@@ -54,10 +69,10 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		// Make collision test
-		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, KATANA_RANGE, attackDirection, boxPosition, boxExtent, KATANA_RANGE))
+		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, range, attackDirection, boxPosition, boxExtent, range))
 		{
 			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, KATANA_DAMAGE);
+			p_playerManager->DamagePlayer(playerList[i].guid, damage);
 			break;
 		}
 	}
