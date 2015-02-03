@@ -20,5 +20,7 @@ private:
 	GUIElement m_ability;
 	GUIElement m_cooldown;
 	GUIText m_stacks;
+
+	float m_currentCooldown;
 };
 #endif // !GUIABILITY_H_

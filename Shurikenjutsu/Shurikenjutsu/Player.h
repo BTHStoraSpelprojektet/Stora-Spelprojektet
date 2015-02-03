@@ -49,6 +49,7 @@ public:
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
 	void SetIsAlive(bool p_isAlive);
+	bool GetIsAlive(void);
 	void SetTeam(int p_team);
 	int GetTeam();
 
@@ -91,6 +92,10 @@ protected:
 	DirectX::XMFLOAT3 m_dashDirection;
 	float m_dashDistanceLeft;
 	bool m_isDashing;
+	float throwDistance;
+
+	float m_globalCooldown;
+	float m_maxGlobalCooldown;
 
 	Sphere m_playerSphere;
 	Ability* m_ability;

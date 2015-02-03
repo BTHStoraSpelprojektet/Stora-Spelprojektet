@@ -1,5 +1,6 @@
 #include "PlayerManager.h"
 #include "SpikeManager.h"
+#include "FanBoomerangManager.h"
 
 #include "..\CommonLibs\ModelNames.h"
 
@@ -31,7 +32,7 @@ void PlayerManager::Shutdown(){}
 
 void PlayerManager::Update(double p_deltaTime)
 {
-	for (unsigned int i = 0; i < m_players.size(); i++)
+	/*for (unsigned int i = 0; i < m_players.size(); i++)
 	{
 		if (m_players[i].gcd > 0.0f)
 		{
@@ -49,8 +50,8 @@ void PlayerManager::Update(double p_deltaTime)
 		{
 			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
 		}
+	}*/
 	}
-}
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
 {
@@ -59,6 +60,15 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 
 void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 {
+	if (p_charNr == 0)
+	{
+		m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
+	}
+	else if (p_charNr == 1)
+	{
+		m_playerHealth = CHARACTER_TESSEN_HEALTH;
+	}
+
 	PlayerNet player;
 	player.guid = p_guid;
 	player.team = (m_players.size() % 2) + 1;
@@ -282,7 +292,7 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 
 void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 {
-	if (p_index >= 0 && p_index < (int)m_players.size())
+	/*if (p_index >= 0 && p_index < (int)m_players.size())
 	{
 		m_players[p_index].gcd = m_gcd;
 		switch (p_ability)
@@ -309,14 +319,14 @@ void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
 			break;
 		}
 
-	}
+	}*/
 }
 
 bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 {
-	bool result = false;
+	bool result = true;
 
-	if (p_index >= 0 && p_index < (int)m_players.size())
+	/*if (p_index >= 0 && p_index < (int)m_players.size())
 	{
 		if (m_players[p_index].gcd <= 0.0f)
 		{
@@ -351,12 +361,12 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 				break;
 			}
 		}
-	}
+	}*/
 
 	return result;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, int p_nrOfConnections, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
 	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
@@ -418,6 +428,10 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	case ABILITIES_WHIP_SECONDARY:
 		abilityString = "not whipping enough!";
 		p_collisionManager.WhipSecondaryAttack(p_guid, this);
+		break;
+	case ABILITIES_FANBOOMERANG:
+		abilityString = "FANCY BOOMERANG";
+		p_fanBoomerang.Add(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 		break;
 	default:
 		break;
