@@ -43,7 +43,8 @@ struct ProjectileNet
 {
 	float x, y, z;
 	float dirX, dirY, dirZ;
-	unsigned int projId;
+	unsigned int uniqueId;
+	int projType;
 	RakNet::RakNetGUID guid;
 	float lifeTime;
 	float speed;

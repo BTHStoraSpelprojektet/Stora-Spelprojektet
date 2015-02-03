@@ -10,6 +10,7 @@
 class MapManager;
 class CollisionManager;
 class SpikeManager;
+class ProjectileManager;
 
 class GameState
 {
@@ -43,6 +44,7 @@ protected:
 	MapManager* m_mapManager;
 	CollisionManager* m_collisionManager;
 	FanBoomerangManager* m_fanBoomerangManager;
+	ProjectileManager* m_projectileManager;
 };
 
 #endif

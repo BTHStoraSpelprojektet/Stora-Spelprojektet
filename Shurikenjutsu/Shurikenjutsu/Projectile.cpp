@@ -12,7 +12,7 @@ Projectile::~Projectile()
 {
 }
 
-bool Projectile::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_projID, int p_projType, RakNet::RakNetGUID p_guid)
+bool Projectile::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_unique, int p_projType, RakNet::RakNetGUID p_guid)
 {
 	const char* filepath = "";
 	switch (p_projType)
@@ -48,7 +48,7 @@ bool Projectile::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, un
 		return false;
 	}
 
-	m_projId = p_projID;
+	m_uniqueId = p_unique;
 	m_guid = p_guid;
 
 	return true;
@@ -101,7 +101,7 @@ int Projectile::GetDamage() const
 
 unsigned int Projectile::GetID()
 {
-	return m_projId;
+	return m_uniqueId;
 }
 
 RakNet::RakNetGUID Projectile::GetGUID()

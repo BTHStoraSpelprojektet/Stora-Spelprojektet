@@ -264,7 +264,8 @@ void Network::ReceviePacket()
 			RakNet::RakNetGUID guid;
 			float x, y, z;
 			float dirX, dirY, dirZ;
-			unsigned int projId;
+			unsigned int uniqueId;
+			int projType;
 			float speed;
 
 			bitStream.Read(messageID);
@@ -274,22 +275,23 @@ void Network::ReceviePacket()
 			bitStream.Read(dirX);
 			bitStream.Read(dirY);
 			bitStream.Read(dirZ);
-			bitStream.Read(projId);
+			bitStream.Read(projType);
+			bitStream.Read(uniqueId);
 			bitStream.Read(guid);
 			bitStream.Read(speed);
 
-			ProjectileThrown(x, y, z, dirX, dirY, dirZ, projId, guid, speed, 2);
+			ProjectileThrown(x, y, z, dirX, dirY, dirZ, uniqueId, guid, speed, projType);
 			break;
 		}
 		case ID_PROJECTILE_REMOVE:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-			unsigned int projId;
+			unsigned int uniqueId;
 			bitStream.Read(messageID);
-			bitStream.Read(projId);
+			bitStream.Read(uniqueId);
 
-			RemoveShuriken(projId);
+			RemoveShuriken(uniqueId);
 
 			break;
 		}
@@ -1205,7 +1207,7 @@ std::vector<FanNet> Network::GetFanList()
 	return m_fanList;
 }
 
-void Network::ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_projId, RakNet::RakNetGUID p_guid, float p_speed, int p_projType)
+void Network::ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_uniqueId, RakNet::RakNetGUID p_guid, float p_speed, int p_projType)
 {
-	m_objectManager->AddProjectile(p_x, p_y, p_z, p_dirX, p_dirY, p_dirZ, p_projId, p_guid, p_speed, p_projType);
+	m_objectManager->AddProjectile(p_x, p_y, p_z, p_dirX, p_dirY, p_dirZ, p_uniqueId, p_guid, p_speed, p_projType);
 }

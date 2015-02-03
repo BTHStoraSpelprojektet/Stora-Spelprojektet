@@ -11,7 +11,7 @@ public:
 	Projectile();
 	~Projectile();
 
-	bool Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_projId, int p_projType, RakNet::RakNetGUID p_guid);
+	bool Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, unsigned int p_uniqueId, int p_projType, RakNet::RakNetGUID p_guid);
 	void Shutdown();
 
 	void Update();
@@ -33,7 +33,7 @@ public:
 private:
 	float m_lifetime;
 	int m_damage;
-	unsigned int m_projId;
+	unsigned int m_uniqueId;
 	float m_projSpeed;
 	float m_projDuration;
 	float m_projRotationSpeed;

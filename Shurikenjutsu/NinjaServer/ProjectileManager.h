@@ -24,6 +24,11 @@ public:
 	void RemoveProjectile(unsigned int p_id);
 	void BroadcastDestoyedProjectile(unsigned int p_id);
 	void UpdateProjectiles(double p_deltaTime);
+	std::vector<ProjectileNet> GetProjectiles();
+	std::vector<Box> GetKunaiBoundingBoxes(int p_index);
+	float GetProjectilePosX(int p_index);
+	float GetProjectilePosY(int p_index);
+	float GetProjectilePosZ(int p_index);
 private:
 	unsigned int GetProjectileUniqueId();
 

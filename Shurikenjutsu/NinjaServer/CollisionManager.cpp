@@ -2,6 +2,7 @@
 #include "PlayerManager.h"
 #include "SpikeManager.h"
 #include "ShurikenManager.h"
+#include "ProjectileManager.h"
 #include "FanBoomerangManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
@@ -196,6 +197,138 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 					// Remove shuriken
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
 					shurikenList.erase(shurikenList.begin() + i);
+					i--;
+
+					collisionFound = true;
+					break;
+				}
+			}
+			if (collisionFound)
+			{
+				break;
+			}
+		}
+	}
+}
+
+void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectileManager, PlayerManager* p_playerManager)
+{
+	float radius = 1.0f;
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<ProjectileNet> projectileList = p_projectileManager->GetProjectiles();
+	for (unsigned int i = 0; i < projectileList.size(); i++)
+	{
+		bool collisionFound = false;
+
+		// Get the shuriken bounding boxes
+		std::vector<Box> projectileBoundingBoxes;
+		if (projectileList[i].projType == 0)
+		{
+			//projectileBoundingBoxes = p_projectileManager->GetBoundingBoxes(i);
+		}
+		else if (projectileList[i].projType == 1)
+		{
+			//projectileBoundingBoxes = p_projectileManager->GetMegaBoundingBoxes(i);
+		}
+		else if (projectileList[i].projType == 2)
+		{
+			projectileBoundingBoxes = p_projectileManager->GetKunaiBoundingBoxes(i);
+		}
+
+
+		// Go through player list
+		for (unsigned int j = 0; j < playerList.size(); j++)
+		{
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == projectileList[i].guid)
+			{
+				continue;
+			}
+
+			// Check so you are not on the same team
+			PlayerNet shootingPlayer = p_playerManager->GetPlayer(projectileList[i].guid);
+			if (playerList[j].team == shootingPlayer.team)
+			{
+				continue;
+			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+
+
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+			// Make collision test
+			for (unsigned int k = 0; k < projectileBoundingBoxes.size(); k++)
+			{
+				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+				{
+					if (BoxBoxTest(playerBoundingBoxes[l], projectileBoundingBoxes[k]))
+					{
+						float damage = KUNAI_DAMAGE;//= projectileList[i].megaShuriken ? (float)MEGASHURIKEN_DAMAGE : (float)SHURIKEN_DAMAGE;
+
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+
+						// Remove shuriken
+						p_projectileManager->RemoveProjectile(projectileList[i].uniqueId);
+						projectileList.erase(projectileList.begin() + i);
+						i--;
+
+						collisionFound = true;
+						break;
+					}
+				}
+				if (collisionFound)
+				{
+					break;
+				}
+			}
+
+			if (collisionFound)
+			{
+				break;
+			}
+		}
+
+		// Go through maps bounding boxes
+		for (unsigned int j = 0; j < projectileBoundingBoxes.size(); j++)
+		{
+			// Box list
+			for (unsigned int k = 0; k < m_staticBoxList.size(); k++)
+			{
+				if (OBBOBBTest(m_staticBoxList[k], OBB(projectileBoundingBoxes[j].m_center, projectileBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
+				{
+					// Remove shuriken
+					p_projectileManager->RemoveProjectile(projectileList[i].uniqueId);
+					projectileList.erase(projectileList.begin() + i);
+					i--;
+
+					collisionFound = true;
+					break;
+				}
+			}
+			if (collisionFound)
+			{
+				break;
+			}
+
+			// Sphere list
+			for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
+			{
+				Sphere sphere = m_staticSphereList[k];
+				if (sphere.m_position.y + sphere.m_radius < projectileBoundingBoxes[j].m_center.y - projectileBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > projectileBoundingBoxes[j].m_center.y + projectileBoundingBoxes[j].m_extents.y)
+				{
+					sphere.m_position.y = projectileBoundingBoxes[j].m_center.y;
+				}
+				if (OBBSphereTest(OBB(projectileBoundingBoxes[j].m_center, projectileBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
+				{
+					// Remove shuriken
+					p_projectileManager->RemoveProjectile(projectileList[i].uniqueId);
+					projectileList.erase(projectileList.begin() + i);
 					i--;
 
 					collisionFound = true;

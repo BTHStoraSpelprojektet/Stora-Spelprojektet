@@ -17,6 +17,7 @@ class FanBoomerangManager;
 class ShurikenManager;
 class PlayerManager;
 class SpikeManager;
+class ProjectileManager;
 
 class CollisionManager
 {
@@ -27,6 +28,7 @@ public:
 
 	void NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager, ABILITIES p_ability);
 	void ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager);
+	void ProjectileCollisionChecks(ProjectileManager* p_shurikenManager, PlayerManager* p_playerManager);
 	void FanCollisionChecks(double p_deltaTime, FanBoomerangManager* p_fanBoomerangManager, PlayerManager* p_playerManager);
 
 	void SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager, float p_deltaTime);
