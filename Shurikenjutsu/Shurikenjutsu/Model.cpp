@@ -34,7 +34,7 @@ bool Model::LoadModel(const char* p_filepath)
 
 	// Store bounding box
 	m_boundingBoxes = mData.m_boundingBoxes;
-	m_shadowPoints = mData.m_shadowPoints;
+	m_shadowLines = mData.m_shadowPoints;
 	m_boundingSpheres = mData.m_boundingSpheres;
 	m_frustumSphere = mData.m_frustumSphere;
 
@@ -144,9 +144,9 @@ std::vector<AnimationStack> Model::GetAnimationStacks()const
 	return m_animationStacks;
 }
 
-std::vector<Line> Model::GetShadowPoints()const
+std::vector<Line> Model::GetShadowLines()const
 {
-	return m_shadowPoints;
+	return m_shadowLines;
 }
 
 Sphere Model::GetFrustumSphere()const
