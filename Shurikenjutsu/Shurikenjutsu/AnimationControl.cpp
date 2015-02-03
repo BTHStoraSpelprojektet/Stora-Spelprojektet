@@ -17,6 +17,7 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 
 	m_surujinChild = false;
 	m_isAlive = true;
+	m_stopAnimation = false;
 
 	m_state = AnimationState::None;
 
@@ -25,7 +26,7 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 
 std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 {
-	if (!m_isAlive && (int)m_frameArms == m_animationStacksArray[9].m_root.size() - 1)
+	if (!m_isAlive && m_stopAnimation)
 	{
 		return m_boneTransforms;
 	}
@@ -43,11 +44,24 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 		m_frameArms = 0.0f;
 		m_attackAnimation = false;
 		m_state = AnimationState::None;
+		m_stopAnimation = true;
+
+		if (!m_isAlive)
+		{
+			m_blendWeightArms = 1.0f;
+			m_frameArms = m_currentArms->m_root.size() - 1;
+		}
 	}		
 
 	if (m_frameLegs >= (m_currentLegs->m_endFrame - 1))
 	{
 		m_frameLegs = 0.0f;
+
+		if (!m_isAlive)
+		{
+			m_blendWeightLegs = 1.0f;
+			m_frameLegs = m_currentLegs->m_root.size() - 1;
+		}
 	}		
 
 	DirectX::XMVECTOR startQuaternion = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
@@ -76,16 +90,16 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	quaternionLegs = DirectX::XMQuaternionSlerp(DirectX::XMLoadFloat4(&m_QuaternionLegs[*p_index]), quaternionLegs, m_blendWeightLegs);
 	DirectX::XMStoreFloat4(&m_QuaternionLegs[*p_index], quaternionLegs);
 	
-	if (strcmp(p_jointArms->m_name, "HandR") == 0 ||
-		strcmp(p_jointArms->m_name, "HandL") == 0 ||
-		strcmp(p_jointArms->m_name, "ShoulderR") == 0 ||
-		strcmp(p_jointArms->m_name, "ShoulderL") == 0)
+	if (strcmp(p_jointLegs->m_name, "HandR") == 0 ||
+		strcmp(p_jointLegs->m_name, "HandL") == 0 ||
+		strcmp(p_jointLegs->m_name, "ShoulderR") == 0 ||
+		strcmp(p_jointLegs->m_name, "ShoulderL") == 0)
 	{
 		quaternionLegs = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
-	if (strcmp(p_jointLegs->m_name, "FootR") == 0 || 
-		strcmp(p_jointLegs->m_name, "FootL") == 0 || 
+	if (strcmp(p_jointArms->m_name, "FootR") == 0 ||
+		strcmp(p_jointArms->m_name, "FootL") == 0 ||
 		strcmp(p_jointArms->m_name, "HipR") == 0 || 
 		strcmp(p_jointArms->m_name, "HipL") == 0 ||
 		strcmp(p_jointArms->m_name, "KneeR") == 0 ||
@@ -449,6 +463,7 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 		m_currentLegs = &m_animationStacksArray[8];
 		m_isAlive = false;
 		m_attackAnimation = true;
+		m_stopAnimation = false;
 		m_frameArms = 0.0f;
 		m_frameLegs = 0.0f;
 	}

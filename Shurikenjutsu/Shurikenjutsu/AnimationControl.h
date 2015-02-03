@@ -65,6 +65,7 @@ private:
 	AnimationState m_state;
 
 	bool m_isAlive;
+	bool m_stopAnimation;
 };
 
 #endif;
