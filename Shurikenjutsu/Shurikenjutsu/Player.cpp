@@ -200,7 +200,7 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
-		if ((float)m_rangeAttack->GetCooldown() <= 0.0f)
+		if ((float)m_rangeAttack->GetStacks() > 0)
 		{
 			m_ability = m_rangeAttack;
 		}
@@ -839,6 +839,11 @@ void Player::RenderAbilityBar()
 void Player::SetIsAlive(bool p_isAlive)
 {
 	m_isAlive = p_isAlive;
+}
+
+bool Player::GetIsAlive()
+{
+	return m_isAlive;
 }
 
 void Player::SetTeam(int p_team)

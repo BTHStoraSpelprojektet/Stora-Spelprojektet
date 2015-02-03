@@ -15,7 +15,6 @@ public:
 	bool Execute(float p_distance);
 	void ResetCooldown();
 private:
-	int m_stacks;
 	double m_gcd;
 };
 #endif SHURIKENABILITY_H_

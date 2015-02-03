@@ -15,6 +15,7 @@ bool Dash::Initialize()
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	m_totalCooldown = DASH_COOLDOWN;
+	m_stacks = 0;
 	return true;
 }
 

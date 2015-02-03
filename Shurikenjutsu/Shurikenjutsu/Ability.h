@@ -24,6 +24,7 @@ public:
 	virtual void SetStatusEffect(StatusEffect *p_statusEffect);
 	virtual StatusEffect* GetStatusEffect();
 	virtual void ResetCooldown();
+	virtual int GetStacks();
 
 protected:
 	float m_damage;
@@ -31,6 +32,7 @@ protected:
 	double m_cooldown;
 	float m_totalCooldown;
 	StatusEffect* m_statusEffect;
+	int m_stacks;
 
 
 
