@@ -170,14 +170,6 @@ void Object::TransformShadowPoints()
 
 	if (lines.size() > 0)
 	{
-		if (m_position.x == 0.0f &&m_position.y == 0.0f &&m_position.z == 0.0f)
-		{
-			lines[0] = Line(Point(-0.5f, 0.5f), Point(0.5f, 0.5f));
-			lines[1] = Line(Point(0.5f, 0.5f), Point(0.5f, -0.5f));
-			lines[2] = Line(Point(0.5f, -0.5f), Point(-0.5f, -0.5f));
-			lines[3] = Line(Point(-0.5f, -0.5f), Point(-0.5f, 0.5f));
-		}
-
 		DirectX::XMFLOAT4X4 world = GetWorldMatrix();
 
 		DirectX::XMFLOAT3 a;
