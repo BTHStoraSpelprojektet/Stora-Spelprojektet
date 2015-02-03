@@ -26,6 +26,7 @@ bool Network::Initialize()
 	m_shurikenListUpdated = false;
 	m_smokebombListUpdated = false;
 	m_spikeTrapListUpdated = false;
+	m_fanListUpdated = false;
 	m_respawned = false;
 	m_invalidMove = false;
 	m_roundRestarted = false;
@@ -39,6 +40,7 @@ bool Network::Initialize()
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
+	m_fanList = std::vector<FanNet>();
 
 	m_connectionCount = 0;
 	m_previousCount = 0;
@@ -171,7 +173,7 @@ void Network::ReceviePacket()
 				UpdatePlayerTeam(guid, team);
 				UpdatePlayerChar(guid, charNr);
 
-				playerGuids.push_back(guid);				
+				playerGuids.push_back(guid);
 			}
 
 			// Check for removed players
@@ -466,6 +468,81 @@ void Network::ReceviePacket()
 			m_dashed = true;
 			break;
 		}
+		case ID_FAN_THROWN:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float x, y, z;
+			float dirX, dirY, dirZ;
+			unsigned int id;
+			float speed;
+
+			bitStream.Read(messageID);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+			bitStream.Read(dirX);
+			bitStream.Read(dirY);
+			bitStream.Read(dirZ);
+			bitStream.Read(id);
+			bitStream.Read(guid);
+			bitStream.Read(speed);
+
+			AddFans(x, y, z, dirX, dirY, dirZ, id, guid, speed);
+			break;
+		}
+		case ID_FAN_UPDATE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float x, y, z;
+			float dirX, dirY, dirZ;
+			unsigned int id;
+			float speed;
+			int nrOfFans;
+
+			bitStream.Read(messageID);
+			bitStream.Read(nrOfFans);
+
+			for (int i = 0; i < nrOfFans; i++)
+			{
+				bitStream.Read(id);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+				bitStream.Read(dirX);
+				bitStream.Read(dirY);
+				bitStream.Read(dirZ);
+				bitStream.Read(speed);
+
+				for (unsigned int j = 0; j < m_fanList.size(); j++)
+				{
+					if (id == m_fanList[j].id)
+					{
+						m_fanList[j].dirX = dirX;
+						m_fanList[j].dirY = dirY;
+						m_fanList[j].dirZ = dirZ;
+						m_fanList[j].speed = speed;
+						m_fanList[j].x = x;
+						m_fanList[j].y = y;
+						m_fanList[j].z = z;
+					}
+				}
+			}
+			break;
+		}
+		case ID_FAN_REMOVE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int fanId;
+			bitStream.Read(messageID);
+			bitStream.Read(fanId);
+			RemoveFan(fanId);
+			break;
+		}
 		default:
 		{
 			break;
@@ -746,6 +823,36 @@ void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, flo
 	}
 }
 
+void Network::AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed)
+{
+	bool add = true;
+	FanNet temp;
+	temp = FanNet();
+	temp.x = p_x;
+	temp.y = p_y;
+	temp.z = p_z;
+	temp.dirX = p_dirX;
+	temp.dirY = p_dirY;
+	temp.dirZ = p_dirZ;
+	temp.id = p_id;
+	temp.guid = p_guid;
+	temp.speed = p_speed;
+
+	for (unsigned int i = 0; i < m_fanList.size(); i++)
+	{
+		if (m_fanList[i].guid == temp.guid && m_fanList[i].id == temp.id)
+		{
+			add = false;
+			break;
+		}
+	}
+	if (add)
+	{
+		m_fanList.push_back(temp);
+		m_fanListUpdated = true;
+	}
+}
+
 std::vector<ShurikenNet> Network::GetShurikens()
 {
 	return m_shurikensList;
@@ -803,6 +910,19 @@ void Network::RemoveShuriken(unsigned int p_shurikenID)
 		{
 			m_shurikensList.erase(m_shurikensList.begin() + i);
 			m_shurikenListUpdated = true;
+			break;
+		}
+	}
+}
+
+void Network::RemoveFan(unsigned int p_id)
+{
+	for (unsigned int i = 0; i < m_fanList.size(); i++)
+	{
+		if (m_fanList[i].id == p_id)
+		{
+			m_fanList.erase(m_fanList.begin() + i);
+			m_fanListUpdated = true;
 			break;
 		}
 	}
@@ -1030,4 +1150,19 @@ bool Network::HaveDashed()
 DirectX::XMFLOAT3 Network::GetDashLocation()
 {
 	return m_dashLocation;
+}
+
+bool Network::IsFanListUpdated()
+{
+	return m_fanListUpdated;
+}
+
+void Network::SetHaveUpdateFanList()
+{
+	m_fanListUpdated = false;
+}
+
+std::vector<FanNet> Network::GetFanList()
+{
+	return m_fanList;
 }

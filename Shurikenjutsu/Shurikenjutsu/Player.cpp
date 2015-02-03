@@ -47,6 +47,20 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_directionUpdateTimer = 0.0f;
 
+	m_health = 100.0f;
+	m_maxHealth = 100.0f;
+	m_isAlive = true;
+	m_guid = RakNet::RakNetGUID();
+	m_visible = true;
+	m_dashDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_dashDistanceLeft = 0.0f;
+	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	throwDistance = 0.0f;
+
+	m_globalCooldown = 0.0f;
+	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+
 	return true;
 }
 
@@ -95,10 +109,10 @@ void Player::Shutdown()
 		delete m_healthbar;
 	}
 
-	/*if (m_abilityBar != nullptr)
+	if (m_abilityBar != nullptr)
 	{
 		m_abilityBar->Shutdown();
-	}*/
+}
 }
 
 void Player::UpdateMe()
@@ -110,14 +124,23 @@ void Player::UpdateMe()
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
 		SetTeam(Network::GetInstance()->GetMyPlayer().team);
+		//SetPosition(DirectX::XMFLOAT3(Network::GetInstance()->GetMyPlayer().x, Network::GetInstance()->GetMyPlayer().y, Network::GetInstance()->GetMyPlayer().z));
 	}
 
-	m_playerSphere.m_position = m_position;
 	// Move
-	if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
+
+
+	//////////////////////*********************************************************************************************
+	////	VARFÖR UPPDATERAS MOVE TVÅ GÅNGER?? HÄNDER ÄVEN LÄNGRE NER
+	////    Detta löser även problemet med att man rör sig efter man är död.
+	////	Speeden var dock tvungen att dubblas nu när den bara uppdateras en gång per update.
+	////////////////////**********************************************************************
+	/*if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
 	{
 		SetCalculatePlayerPosition();
-	}
+	}*/
+
+	
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -177,30 +200,44 @@ void Player::UpdateMe()
 		// If we moved, update shadow shapes.
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 	}
+	m_playerSphere.m_position = m_position;
 	
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
 
+	// Range attack
+	if (InputManager::GetInstance()->IsRightMousePressed())
+	{
+		// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
+		if ((float)m_rangeAttack->GetStacks() > 0)
+		{
+			m_ability = m_rangeAttack;
+		}
+	}
 
 	// Melee attack
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
+		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		{
 		m_ability = m_meleeAttack;
 	}
-
-	// Range attack
-	if (InputManager::GetInstance()->IsRightMousePressed())
-	{
-		m_ability = m_rangeAttack;
 	}
+
 
 	// Count down cooldowns
 	UpdateAbilities();
-	float temp = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_playerSphere.m_position);
-	if (m_ability->Execute(temp))
+	throwDistance = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_position);//m_playerSphere.m_position);
+	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
+	{
+		if (m_ability->Execute(throwDistance))
 	{
 		// Play ability animation if we did any
 		DoAnimation();
+
+			// Set global cooldown
+			m_globalCooldown = m_maxGlobalCooldown;
+	}
 	}
 
 	UpdateAbilityBar();
@@ -210,17 +247,27 @@ void Player::CheckForSpecialAttack()
 {
 	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
 	{
+		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		{
 		m_ability = m_rangeSpecialAttack;
+	}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
+		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+		{
 		m_ability = m_meleeSpecialAttack;
+	}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
+		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+		{
 		m_ability = m_toolAbility;
 	}
 }
+}
+
 bool Player::CalculateDirection()
 {
 	float x, y, z;
@@ -229,7 +276,7 @@ bool Player::CalculateDirection()
 	x = 0;
 	y = 0;//Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)))
 	z = 0;
-	m_playerPrevPos = m_position;
+	//m_playerPrevPos = m_position;
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
@@ -281,6 +328,12 @@ void Player::UpdateAbilities()
 	m_rangeAttack->Update();
 	m_rangeSpecialAttack->Update();
 	m_toolAbility->Update();
+
+	if (m_globalCooldown > 0.0f)
+	{
+		m_globalCooldown -= (float)GLOBAL::GetInstance().GetDeltaTime();
+}
+
 }
 
 void Player::ResetCooldowns()
@@ -323,7 +376,7 @@ float Player::GetMaxHealth() const
 
 void Player::SendPosition(DirectX::XMFLOAT3 p_pos)
 {
-	AnimatedObject::SetPosition(p_pos);
+	SetPosition(p_pos);
 	
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -731,6 +784,7 @@ void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
 	}
 	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 }
+
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar->Update(m_position, (int)m_health, (int)m_maxHealth, p_view, p_projection);
@@ -738,11 +792,30 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::UpdateAbilityBar()
 {
+	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
 	m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), 0);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 0);
+	
+	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
 	m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), 1);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 1);
+
+	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
 	m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), 2);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 2);
+
+	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
 	m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), 3);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 3);
+
+	if ((float)m_toolAbility->GetCooldown() > 0.0f)
 	m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), 4);
+	else
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 4);
 }
 
 void Player::Render()
@@ -785,6 +858,11 @@ void Player::SetIsAlive(bool p_isAlive)
 	}
 
 	m_isAlive = p_isAlive;	
+}
+
+bool Player::GetIsAlive()
+{
+	return m_isAlive;
 }
 
 void Player::SetTeam(int p_team)

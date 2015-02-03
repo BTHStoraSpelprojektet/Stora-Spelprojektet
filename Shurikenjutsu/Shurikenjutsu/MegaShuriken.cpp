@@ -12,8 +12,9 @@ bool MegaShuriken::Initialize()
 	SetDamage(MEGASHURIKEN_DAMAGE);
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
-	SetCooldown(MEGASHURIKEN_COOLDOWN);
+	SetCooldown(0.0f);
 	m_totalCooldown = MEGASHURIKEN_COOLDOWN;
+	m_stacks = 0;
 	return true;
 }
 

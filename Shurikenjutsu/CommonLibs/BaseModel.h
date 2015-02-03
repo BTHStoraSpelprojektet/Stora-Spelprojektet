@@ -24,7 +24,7 @@ protected:
 
 	int m_vertexCount;
 
-	std::vector<Line> m_shadowPoints;
+	std::vector<Line> m_shadowLines;
 	std::vector<Box> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
 	Sphere m_frustumSphere;

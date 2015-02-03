@@ -66,14 +66,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		m_mouseX = 0;
 		m_mouseY = 0;
-
-		// TODO, change this to use the loaded maps values.
-		VisibilityComputer::GetInstance().SetMapBoundries(Point(-51.0f, 51.0f), Point(51.0f, -51.0f));
-
-		ShadowShapes::GetInstance().AddStaticSquare(Point(-0.5f, 0.5f), Point(0.5f, -0.5f));
+		
+		VisibilityComputer::GetInstance().UpdateMapBoundries(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 	}
 	// ========== DEBUG LINES ==========
-
+	
 	// Frustum
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
@@ -118,7 +115,7 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-	m_debugDot.Shutdown();
+		m_debugDot.Shutdown();	
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -139,10 +136,16 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update global delta time.
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+	
+	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	BasicPicking();
 
 	m_playerManager->Update();
+
+	float x = m_playerManager->GetPlayerPosition().x;
+	float y = m_playerManager->GetPlayerPosition().z;
+	VisibilityComputer::GetInstance().UpdateMapBoundries(Point(x - 25.0f, y + 25.0f), Point(x + 25.0f, y - 25.0f));
 
 	// Handle camera input.
 	m_camera->HandleInput();
@@ -161,10 +164,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
-	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	// Update frustum
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && FLAG_DEBUG == 1)
 	{
 		m_updateFrustum = false;
 	}
@@ -192,7 +194,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
-
+	
 	OutliningRays();
 	
 	return GAMESTATESWITCH_NONE;
@@ -214,6 +216,7 @@ void PlayingStateTest::Render()
 	// Draw to the scene.
 	m_playerManager->Render();
 	m_objectManager->Render();
+	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 
 	// ========== DEBUG LINES ==========
 	if (FLAG_DEBUG == 1)
@@ -224,9 +227,7 @@ void PlayingStateTest::Render()
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-		ShadowShapes::GetInstance().DebugRender();
-
-		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
+		ShadowShapes::GetInstance().DebugRender();	
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -261,7 +262,7 @@ void PlayingStateTest::BasicPicking()
 		mouseOffsetX = 6;
 		mouseOffsetY = 20;
 	}
-	
+
 	int mousePosX = InputManager::GetInstance()->GetMousePositionX() + mouseOffsetX;
 	int mousePosY = InputManager::GetInstance()->GetMousePositionY() + mouseOffsetY;
 
@@ -298,11 +299,11 @@ void PlayingStateTest::BasicPicking()
 		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
 		DirectX::XMStoreFloat4x4(&world, matrix);
 		m_debugDot.UpdateWorldMatrix(world);
-
-		m_mouseX = shurPos.x;
-		m_mouseY = shurPos.z;
 	}
 	// ========== DEBUG LINES ==========
+	
+	m_mouseX = shurPos.x;
+	m_mouseY = shurPos.z;
 }
 
 void PlayingStateTest::OutliningRays()
@@ -356,5 +357,5 @@ void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 		{
 			m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000,-1000,0));
 		}
-	}	
+	}
 }
