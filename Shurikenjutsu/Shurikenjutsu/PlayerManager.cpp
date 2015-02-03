@@ -79,7 +79,7 @@ void PlayerManager::Update()
 				if (!(IsGuidInNetworkList(guid)))
 				{
 					// Remove player
-					RemoveEnemyFromList(guid);
+					RemoveEnemyFromList(i);
 					i--;
 				}
 			}
@@ -385,22 +385,21 @@ void PlayerManager::AddEnemyToList(Player* p_enemy)
 	m_enemyListSize++;
 }
 
-void PlayerManager::RemoveEnemyFromList(RakNet::RakNetGUID p_guid)
+void PlayerManager::RemoveEnemyFromList(unsigned int p_index)
 {
 	Player** newList = new Player*[m_enemyListSize - 1];
 	int index = 0;
-	for (unsigned int j = 0; j < m_enemyListSize; j++)
+	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
-
-		if (p_guid == m_enemyList[j]->GetGuID())
+		if (i == p_index)
 		{
-			m_enemyList[j]->Shutdown();
-			delete m_enemyList[j];
 			continue;
 		}
+		newList[index] = m_enemyList[i];
 		index++;
-		newList[index] = m_enemyList[j];
 	}
+	m_enemyList[p_index]->Shutdown();
+	delete m_enemyList[p_index];
 	m_enemyList = newList;
 	m_enemyListSize--;
 }

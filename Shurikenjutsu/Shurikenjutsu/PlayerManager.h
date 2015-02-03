@@ -54,7 +54,7 @@ private:
 	void CheckPlayersVisible();
 
 	void AddEnemyToList(Player* p_enemy);
-	void RemoveEnemyFromList(RakNet::RakNetGUID p_guid);
+	void RemoveEnemyFromList(unsigned int p_index);
 	
 
 	Player* m_player;
