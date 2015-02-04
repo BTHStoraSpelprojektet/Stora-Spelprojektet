@@ -174,10 +174,9 @@ void Server::ReceviePacket()
 			{
 				PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
 
-				if (m_gameState->CanUseAbility(index, readAbility) && player.isAlive)
+				if (player.isAlive)
 				{
-					m_gameState->ExecuteAbility(m_packet->guid, readAbility, readAbility == ABILITIES_DASH, distanceFromPlayer);
-					m_gameState->UsedAbility(index, readAbility);
+					m_gameState->ExecuteAbility(m_packet->guid, readAbility, distanceFromPlayer);
 				}
 			}
 			break;

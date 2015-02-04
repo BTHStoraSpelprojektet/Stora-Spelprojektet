@@ -139,7 +139,7 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	{
 		DirectX::XMVECTOR quaternionParent = DirectX::XMQuaternionMultiply(orientQuaternion, p_parentQuaternion);
 
-		m_rotationAxis = DirectX::XMVector3Rotate(m_rotationAxis, DirectX::XMQuaternionInverse(p_parentQuaternion));
+		m_rotationAxis = DirectX::XMVector3Rotate(m_rotationAxis, DirectX::XMQuaternionInverse(quaternionParent));
 
 		quaternion = ApplyIK(quaternion);
 		m_rotationAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
@@ -148,17 +148,12 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 	quaternion = DirectX::XMQuaternionMultiply(quaternion, p_parentQuaternion);
 
-	if (strcmp(p_jointArms->m_name, "Hip") == 0)
-	{
-		
-	}
-
 	jointTranslation = DirectX::XMVector4Transform(jointTranslation, parentMatrix);
 
 	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixRotationQuaternion(quaternion);
 	transformMatrix.r[3].m128_f32[0] = jointTranslation.m128_f32[0];
 	transformMatrix.r[3].m128_f32[1] = jointTranslation.m128_f32[1];
-	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];	
+	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];
 
 	DirectX::XMMATRIX bindPose = DirectX::XMLoadFloat4x4(&m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform);
 	transformMatrix = DirectX::XMMatrixMultiply(bindPose, transformMatrix);
