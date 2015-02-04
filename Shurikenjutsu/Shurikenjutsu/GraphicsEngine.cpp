@@ -359,6 +359,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().FULLSCREEN = true;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+
+		VisibilityComputer::GetInstance().UpdateTextureSize(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	}    
 	
 	else    
@@ -372,6 +374,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().FULLSCREEN = false;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
+
+		VisibilityComputer::GetInstance().UpdateTextureSize(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	}    
 
 	return true;
@@ -379,11 +383,16 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 
 void GraphicsEngine::BeginRenderToShadowMap()
 {
+	// Set pixel shader textures to NULL.
 	ID3D11ShaderResourceView* nullPointer = NULL;
 	m_directX.GetContext()->PSSetShaderResources(0, 1, &nullPointer);
+	m_directX.GetContext()->PSSetShaderResources(2, 1, &nullPointer);
+
+	// Set color to clear the back buffer to.
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	m_shadowMap.SetAsRenderTarget(m_directX.GetContext());
-	m_shadowMap.Clear(m_directX.GetContext());
+	m_shadowMap.Clear(m_directX.GetContext(), color);
 }
 
 void GraphicsEngine::ResetRenderTarget()
