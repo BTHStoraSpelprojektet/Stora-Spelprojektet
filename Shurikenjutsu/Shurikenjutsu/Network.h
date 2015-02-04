@@ -19,6 +19,7 @@
 #include <vector>
 #include <map>
 #include <DirectXMath.h>
+#include "ObjectManager.h"
 
 
 enum NETWORKSTATUS
@@ -29,6 +30,8 @@ enum NETWORKSTATUS
 	NETWORKSTATUS_TIMEOUT,
 	NETWORKSTATUS_NONE
 };
+
+class ObjectManager;
 
 class Network
 {
@@ -76,6 +79,10 @@ public:
 	void SetHaveUpdateSpikeTrapList();
 	std::vector<SpikeNet> GetSpikeTraps();
 
+	bool IsFanListUpdated();
+	void SetHaveUpdateFanList();
+	std::vector<FanNet> GetFanList();
+
 	bool HasRespawned();
 	void SetHaveRespawned();
 
@@ -98,6 +105,8 @@ public:
 	bool HaveDashed();
 	DirectX::XMFLOAT3 GetDashLocation();
 
+	void SetObjectManager(ObjectManager* p_objectManager);
+
 private:
 
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
@@ -118,9 +127,11 @@ private:
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken);
+	void ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_projType);
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
-
+	void AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed);
+	void RemoveFan(unsigned int p_id);
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;
@@ -137,6 +148,7 @@ private:
 	bool m_shurikenListUpdated;
 	bool m_smokebombListUpdated;
 	bool m_spikeTrapListUpdated;	
+	bool m_fanListUpdated;
 	bool m_respawned;
 	bool m_invalidMove;
 	bool m_roundRestarted;
@@ -148,11 +160,13 @@ private:
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
 	std::vector<SpikeNet> m_spikeTrapList;
+	std::vector<FanNet> m_fanList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 	DirectX::XMFLOAT3 m_dashLocation;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
 
+	ObjectManager* m_objectManager;
 };
 #endif

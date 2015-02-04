@@ -91,9 +91,12 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChooseState.cpp" />
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp" />
+    <ClCompile Include="FanBoomerang.cpp" />
+    <ClCompile Include="FanBoomerangAbility.cpp" />
     <ClCompile Include="GUIElementColor.cpp" />
     <ClCompile Include="GUIText.cpp" />
     <ClCompile Include="KatanaNinja.cpp" />
+    <ClCompile Include="KunaiAbility.cpp" />
     <ClCompile Include="MenuCheckbox.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Collisions.cpp" />
@@ -131,6 +134,8 @@
     <ClCompile Include="Minimap.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="MovingObject.cpp" />
+    <ClCompile Include="NaginataNinja.cpp" />
+    <ClCompile Include="NaginataSlash.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
@@ -140,6 +145,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayingStateTest.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
@@ -171,9 +177,12 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChooseState.h" />
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h" />
+    <ClInclude Include="FanBoomerang.h" />
+    <ClInclude Include="FanBoomerangAbility.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="KatanaNinja.h" />
+    <ClInclude Include="KunaiAbility.h" />
     <ClInclude Include="MenuCheckbox.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
@@ -210,6 +219,8 @@
     <ClInclude Include="Minimap.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="MovingObject.h" />
+    <ClInclude Include="NaginataNinja.h" />
+    <ClInclude Include="NaginataSlash.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />
@@ -220,6 +231,7 @@
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayingStateTest.h" />
     <ClInclude Include="DebugRectangle.h" />
+    <ClInclude Include="Projectile.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />

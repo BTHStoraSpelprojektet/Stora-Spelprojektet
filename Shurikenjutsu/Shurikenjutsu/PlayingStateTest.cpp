@@ -66,14 +66,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 		m_mouseX = 0;
 		m_mouseY = 0;
-
-		// TODO, change this to use the loaded maps values.
-		VisibilityComputer::GetInstance().SetMapBoundries(Point(-51.0f, 51.0f), Point(51.0f, -51.0f));
-
-		ShadowShapes::GetInstance().AddStaticSquare(Point(-0.5f, 0.5f), Point(0.5f, -0.5f));
+		
+		VisibilityComputer::GetInstance().UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
 	}
 	// ========== DEBUG LINES ==========
-
+	
 	// Frustum
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
@@ -100,8 +97,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 void PlayingStateTest::Shutdown()
 {
-	m_camera->Shutdown();
-	delete m_camera;
+	if (m_camera != NULL)
+	{
+		m_camera->Shutdown();
+		delete m_camera;
+	}
 
 	if (m_playerManager != NULL)
 	{
@@ -118,11 +118,15 @@ void PlayingStateTest::Shutdown()
 	// ========== DEBUG TEMP LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-	m_debugDot.Shutdown();
+		m_debugDot.Shutdown();	
 	}
 	// ========== DEBUG TEMP LINES ==========
 
-	m_minimap->Shutdown();
+	if (m_minimap != NULL)
+	{
+		m_minimap->Shutdown();
+		delete m_minimap;
+	}
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -139,6 +143,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update global delta time.
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
+	
+	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
 	BasicPicking();
 
@@ -161,10 +167,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
-	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
-
 	// Update frustum
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && FLAG_DEBUG == 1)
 	{
 		m_updateFrustum = false;
 	}
@@ -192,8 +196,24 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
-
+	
 	OutliningRays();
+
+	// Update the visibility polygon.
+	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
+	DirectX::XMFLOAT3 pickedTopRight = Pick(Point((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0.0f));
+	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT));
+
+	Point topLeft = Point(pickedTopLeft.x, pickedTopLeft.z);
+	Point bottomLeft = Point(pickedTopRight.x, pickedBottomRight.z - 0.5f);
+
+	// Keep it in the maps boundries.
+	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
+	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
+	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
+	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
+
+	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 	
 	return GAMESTATESWITCH_NONE;
 }
@@ -214,6 +234,7 @@ void PlayingStateTest::Render()
 	// Draw to the scene.
 	m_playerManager->Render();
 	m_objectManager->Render();
+	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 
 	// ========== DEBUG LINES ==========
 	if (FLAG_DEBUG == 1)
@@ -224,9 +245,7 @@ void PlayingStateTest::Render()
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
-		ShadowShapes::GetInstance().DebugRender();
-
-		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
+		ShadowShapes::GetInstance().DebugRender();	
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -237,7 +256,6 @@ void PlayingStateTest::Render()
 	{
 		GraphicsEngine::ClearOutlining();
 		GraphicsEngine::SetOutliningPassOne();
-		//m_objectManager->Render();
 		m_playerManager->RenderOutliningPassOne();
 		GraphicsEngine::SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
@@ -253,38 +271,19 @@ void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
 
 void PlayingStateTest::BasicPicking()
 {
-	int mouseOffsetX = 0;
-	int mouseOffsetY = 0;
+	float mouseOffsetX = 0.0f;
+	float mouseOffsetY = 0.0f;
 
 	if (!GLOBAL::GetInstance().FULLSCREEN)
 	{
-		mouseOffsetX = 6;
-		mouseOffsetY = 20;
+		mouseOffsetX = 6.0f;
+		mouseOffsetY = 20.0f;
 	}
-	
-	int mousePosX = InputManager::GetInstance()->GetMousePositionX() + mouseOffsetX;
-	int mousePosY = InputManager::GetInstance()->GetMousePositionY() + mouseOffsetY;
 
-	DirectX::XMFLOAT3 rayDir;
-	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	float mousePosX = InputManager::GetInstance()->GetMousePositionX() + mouseOffsetX;
+	float mousePosY = InputManager::GetInstance()->GetMousePositionY() + mouseOffsetY;
 
-	DirectX::XMFLOAT4X4 proj = m_camera->GetProjectionMatrix();
-	float viewSpaceX = (2.0f * (float)mousePosX / (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 1) / proj._11;
-	float viewSpaceY = -((2.0f * (float)mousePosY / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT - 1) / proj._22);
-	float viewSpaceZ = 1.0f;
-
-	rayDir = DirectX::XMFLOAT3(viewSpaceX, viewSpaceY, viewSpaceZ);
-
-	DirectX::XMFLOAT4X4 viewInverse;
-	DirectX::XMVECTOR determinant;
-	DirectX::XMStoreFloat4x4(&viewInverse, DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
-
-	DirectX::XMStoreFloat3(&rayPos,DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&rayPos), DirectX::XMLoadFloat4x4(&viewInverse)));
-	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&rayDir), DirectX::XMLoadFloat4x4(&viewInverse)));
-
-	float t = -rayPos.y / rayDir.y;
-
-	DirectX::XMFLOAT3 shurPos = DirectX::XMFLOAT3(rayPos.x + t*rayDir.x, rayPos.y + t*rayDir.y, rayPos.z + t*rayDir.z);
+	DirectX::XMFLOAT3 shurPos = Pick(Point(mousePosX, mousePosY));
 	DirectX::XMFLOAT3 shurDir = DirectX::XMFLOAT3(-(m_playerManager->GetPlayerPosition().x - shurPos.x), -(m_playerManager->GetPlayerPosition().y - shurPos.y), -(m_playerManager->GetPlayerPosition().z - shurPos.z));
 	
 	m_playerManager->SetAttackDirection(NormalizeFloat3(NormalizeFloat3(shurDir)));
@@ -298,11 +297,35 @@ void PlayingStateTest::BasicPicking()
 		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
 		DirectX::XMStoreFloat4x4(&world, matrix);
 		m_debugDot.UpdateWorldMatrix(world);
-
-		m_mouseX = shurPos.x;
-		m_mouseY = shurPos.z;
 	}
 	// ========== DEBUG LINES ==========
+	
+	m_mouseX = shurPos.x;
+	m_mouseY = shurPos.z;
+}
+
+DirectX::XMFLOAT3 PlayingStateTest::Pick(Point p_point)
+{
+	DirectX::XMFLOAT3 rayDir;
+	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+	DirectX::XMFLOAT4X4 proj = m_camera->GetProjectionMatrix();
+	float viewSpaceX = (2.0f * p_point.x / (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 1) / proj._11;
+	float viewSpaceY = -((2.0f * p_point.y / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT - 1) / proj._22);
+	float viewSpaceZ = 1.0f;
+
+	rayDir = DirectX::XMFLOAT3(viewSpaceX, viewSpaceY, viewSpaceZ);
+
+	DirectX::XMFLOAT4X4 viewInverse;
+	DirectX::XMVECTOR determinant;
+	DirectX::XMStoreFloat4x4(&viewInverse, DirectX::XMMatrixInverse(&determinant, DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
+
+	DirectX::XMStoreFloat3(&rayPos, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&rayPos), DirectX::XMLoadFloat4x4(&viewInverse)));
+	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&rayDir), DirectX::XMLoadFloat4x4(&viewInverse)));
+
+	float t = -rayPos.y / rayDir.y;
+
+	return DirectX::XMFLOAT3(rayPos.x + t*rayDir.x, rayPos.y + t*rayDir.y, rayPos.z + t*rayDir.z);
 }
 
 void PlayingStateTest::OutliningRays()
@@ -356,5 +379,10 @@ void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 		{
 			m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000,-1000,0));
 		}
-	}	
+	}
+}
+
+ObjectManager* PlayingStateTest::GetObjectManager()
+{
+	return m_objectManager;
 }

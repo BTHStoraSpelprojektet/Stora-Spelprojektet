@@ -84,3 +84,8 @@ float Ability::GetTotalCooldown()
 {
 	return m_totalCooldown;
 }
+
+int Ability::GetStacks()
+{
+	return m_stacks;
+}

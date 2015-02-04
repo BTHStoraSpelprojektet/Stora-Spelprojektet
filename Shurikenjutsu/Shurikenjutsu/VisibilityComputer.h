@@ -62,7 +62,7 @@ public:
 	void Shutdown();
 
 	void UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device);
-	void SetMapBoundries(Point p_topLeft, Point p_bottomRight);
+	void UpdateMapBoundries(Point p_topLeft, Point p_bottomRight);
 
 	void RenderVisibilityPolygon(ID3D11DeviceContext* p_context);
 
@@ -79,6 +79,7 @@ private:
 
 	Intersection GetIntertersectionPoint(Line p_ray, Line p_segment);
 	inline std::vector<float> GetUniquePointAngles(Point p_viewerPoint);
+	bool IsPointInPolygon(Point p_point, std::vector<Point> p_polygon);
 
 	void QuickSortAngles(std::vector<PolygonPoint>& p_list);
 	void QuickSortAngles(std::vector<PolygonPoint>& p_list, int p_left, int p_right);

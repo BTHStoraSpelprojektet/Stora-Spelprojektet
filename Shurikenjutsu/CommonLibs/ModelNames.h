@@ -9,14 +9,20 @@
 // Players
 #define KATANA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 #define TESSEN_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja2Shape.SSP"
+#define NAGINATA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 
 // Shurikens
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
 #define MEGA_SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/MegaShurikenShape.SSP"
 
+// Kunai
+#define KUNAI_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
+
 // Smoke Bomb
 #define SMOKE_BOMB "../Shurikenjutsu/Models/SmokeBomb.SSP"
 
+// Fan Boomerang
+#define FANBOOMERANG_MODEL_NAME "../Shurikenjutsu/Models/TessenShape.SSP"
 
 // Minimap
 #define MINIMAP_TEXTURE "../Shurikenjutsu/2DTextures/minimap.png"
@@ -38,6 +44,9 @@
 #define ABILITY_WHIP_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_Ranged.png"
 #define ABILITY_WHIP_SPECIAL_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_E.png"
 #define ABILITY_CALTROP_TEXTURE "../Shurikenjutsu/2DTextures/TB_Caltrops.png"
+
+#define ABILITY_NAGINATA_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Melee.png"
+#define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Ranged.png"
 
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"

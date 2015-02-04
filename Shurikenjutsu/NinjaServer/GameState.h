@@ -5,10 +5,12 @@
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "FanBoomerangManager.h"
 
 class MapManager;
 class CollisionManager;
 class SpikeManager;
+class ProjectileManager;
 
 class GameState
 {
@@ -31,7 +33,7 @@ public:
 	bool RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
 	void UsedAbility(int p_index, ABILITIES p_ability);
-	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, bool p_dash, float p_distanceFromPlayer);
+	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, float p_distanceFromPlayer);
 	void BroadcastPlayers();
 protected:
 	RakNet::RakPeerInterface* m_serverPeer;
@@ -41,6 +43,8 @@ protected:
 	SpikeManager *m_spikeManager;
 	MapManager* m_mapManager;
 	CollisionManager* m_collisionManager;
+	FanBoomerangManager* m_fanBoomerangManager;
+	ProjectileManager* m_projectileManager;
 };
 
 #endif

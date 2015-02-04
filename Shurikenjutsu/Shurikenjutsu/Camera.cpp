@@ -252,7 +252,7 @@ void Camera::HandleInput()
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
 	// Start moving the camera with the C key.
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('c')) && !GLOBAL::GetInstance().CAMERA_FLYING)
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && !GLOBAL::GetInstance().CAMERA_FLYING && FLAG_DEBUG == 1)
 	{
 		ShowCursor(false);
 		GLOBAL::GetInstance().CAMERA_FLYING = true;

@@ -6,9 +6,20 @@
 #include "WhipPrimaryAttackAbility.h"
 #include "WhipSecondaryAttackAbility.h"
 #include "SpikeAbility.h"
+#include "FanBoomerangAbility.h"
 
 TessenNinja::TessenNinja(){}
 TessenNinja::~TessenNinja(){}
+
+void* TessenNinja::operator new(size_t p_i)
+{
+	return _mm_malloc(p_i, 16);
+}
+
+void TessenNinja::operator delete(void* p_p)
+{
+	_mm_free(p_p);
+}
 
 bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
 {
@@ -25,7 +36,7 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_meleeAttack = new MeleeSwing();
 	m_meleeAttack->Initialize();
 
-	m_meleeSpecialAttack = new Dash();
+	m_meleeSpecialAttack = new FanBoomerangAbility();
 	m_meleeSpecialAttack->Initialize();
 
 	m_rangeAttack = new WhipPrimaryAttackAbility();
