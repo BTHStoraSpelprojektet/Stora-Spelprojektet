@@ -3,17 +3,20 @@
 #include "GUIElement.h"
 #include "TextureLibrary.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "Globals.h"
+#include "InputManager.h"
 
 Cursor::Cursor(){}
 Cursor::~Cursor(){}
 
-bool Cursor::Initialize(HWND p_hwnd)
+bool Cursor::Initialize()
 {
-	m_useCustomCursor = false;
-	m_hwnd = p_hwnd;
+	m_useCustomCursor = true;
+	m_renderCursor = true;
+	ShowCursor(!m_useCustomCursor && m_renderCursor);
 
 	m_cursor = new GUIElement();
-	if (!m_cursor->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), 40.0f, 40.0f, TextureLibrary::GetInstance()->GetTexture(MINIMAP_RED_DOT_TEXTURE)))
+	if (!m_cursor->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), 15.0f, 15.0f, TextureLibrary::GetInstance()->GetTexture(CURSOR_TEXTURE)))
 	{
 		return false;
 	}
@@ -34,34 +37,20 @@ void Cursor::Update()
 {
 	if (m_useCustomCursor)
 	{
-		POINT mousePos;
-		GetCursorPos(&mousePos);
-		
-		RECT windowRect;		
-		GetWindowRect(m_hwnd, &windowRect);
+		int mouseX = InputManager::GetInstance()->GetMousePositionX();
+		int mouseY = InputManager::GetInstance()->GetMousePositionY();
 
-		RECT clientRect;
-		GetClientRect(m_hwnd, &clientRect);
-		
-		float borderSize = (float)((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left)) * 0.5f;
-		float titleBorderSize = (float)((windowRect.bottom - windowRect.top) - (clientRect.bottom - clientRect.top)) - 2.0f * borderSize;
+		float halfScreenX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - GLOBAL::GetInstance().BORDER_SIZE;
+		float halfScreenY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - (GLOBAL::GetInstance().BORDER_SIZE + GLOBAL::GetInstance().TITLE_BORDER_SIZE) * 0.5f;
 
-		clientRect.left = windowRect.left + borderSize;
-		clientRect.top = windowRect.top + borderSize + titleBorderSize;
-		clientRect.right += clientRect.left;
-		clientRect.bottom += clientRect.top;
-
-		float halfWidth = (float)(clientRect.right - clientRect.left) * 0.5f;
-		float halfHeight = (float)(clientRect.bottom - clientRect.top) * 0.5f;
-
-		m_cursor->SetPosition(DirectX::XMFLOAT3((float)(mousePos.x - clientRect.left) - halfWidth, -((float)(mousePos.y - clientRect.top) - halfHeight), 1.0f));
+		m_cursor->SetPosition(DirectX::XMFLOAT3((float)mouseX - halfScreenX, -((float)mouseY - halfScreenY), 1.0f));
 
 	}
 }
 
 void Cursor::Render()
 {
-	if (m_useCustomCursor)
+	if (m_useCustomCursor && m_renderCursor)
 	{
 		m_cursor->QueueRender();
 	}
@@ -70,5 +59,11 @@ void Cursor::Render()
 void Cursor::SetCustomCursor(bool p_useCustom)
 {
 	m_useCustomCursor = p_useCustom;
-	ShowCursor(!m_useCustomCursor);
+	ShowCursor(!m_useCustomCursor && m_renderCursor);
+}
+
+void Cursor::SetRenderCursor(bool p_render)
+{
+	m_renderCursor = p_render;
+	ShowCursor(!m_useCustomCursor && m_renderCursor);
 }

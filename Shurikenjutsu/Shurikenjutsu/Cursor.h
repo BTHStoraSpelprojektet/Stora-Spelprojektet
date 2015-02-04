@@ -1,7 +1,5 @@
 #ifndef CURSOR_H_
 #define CURSOS_H_
-#include <Windows.h>
-
 
 class GUIElement;
 class Cursor
@@ -10,20 +8,20 @@ public:
 	Cursor();
 	~Cursor();
 
-	bool Initialize(HWND p_hwnd);
+	bool Initialize();
 	void Shutdown();
 
 	void Update();
 	void Render();
 
 	void SetCustomCursor(bool p_useCustom);
-
+	void SetRenderCursor(bool p_render);
 
 
 private:
 	bool m_useCustomCursor;
+	bool m_renderCursor;
 	GUIElement *m_cursor;
-	HWND m_hwnd;
 	
 };
 

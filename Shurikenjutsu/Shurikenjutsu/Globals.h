@@ -23,6 +23,9 @@ public:
 	void SetDeltaTime(double p_deltaTime);
 	double GetDeltaTime();
 
+	float BORDER_SIZE;
+	float TITLE_BORDER_SIZE;
+
 private:
 	GLOBAL() {};
 	GLOBAL(GLOBAL const&);              

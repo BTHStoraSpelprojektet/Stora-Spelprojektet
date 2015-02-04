@@ -151,12 +151,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Cursor
 	m_cursor = new Cursor();
-	result = m_cursor->Initialize(m_window.GetHandle());
+	result = m_cursor->Initialize();
 	if (!result)
 	{
 		return false;
 	}
-	m_cursor->SetCustomCursor(true);
 
 	return result;
 }
@@ -244,6 +243,14 @@ void System::Update()
 
 	// Get the delta time to use for animation etc.
 	GLOBAL::GetInstance().SetDeltaTime(m_timer->GetDeltaTime());
+
+	// Update border size
+	RECT windowRect;
+	GetWindowRect(m_window.GetHandle(), &windowRect);
+	RECT clientRect;
+	GetClientRect(m_window.GetHandle(), &clientRect);
+	GLOBAL::GetInstance().BORDER_SIZE = (float)((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left)) * 0.5f;
+	GLOBAL::GetInstance().TITLE_BORDER_SIZE = (float)((windowRect.bottom - windowRect.top) - (clientRect.bottom - clientRect.top)) - 2.0f * GLOBAL::GetInstance().BORDER_SIZE;
 
 	if (FLAG_FPS == 1)
 	{

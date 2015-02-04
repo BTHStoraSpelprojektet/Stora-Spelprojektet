@@ -24,17 +24,8 @@ bool MenuButton::IsClicked()
 {
 	InputManager* input = InputManager::GetInstance();
 
-	int mouseOffsetX = 0;
-	int mouseOffsetY = 0;
-
-	if (!GLOBAL::GetInstance().FULLSCREEN)
-	{
-		mouseOffsetX = 9;
-		mouseOffsetY = 18;
-	}
-
-	float halfScreenX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - mouseOffsetX;
-	float halfScreenY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - mouseOffsetY;
+	float halfScreenX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - GLOBAL::GetInstance().BORDER_SIZE;
+	float halfScreenY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - (GLOBAL::GetInstance().BORDER_SIZE + GLOBAL::GetInstance().TITLE_BORDER_SIZE) * 0.5f;
 
 	if (input->IsLeftMouseClicked())
 	{
