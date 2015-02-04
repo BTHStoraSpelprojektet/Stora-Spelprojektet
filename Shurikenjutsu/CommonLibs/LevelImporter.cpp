@@ -115,7 +115,7 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp, fl
 
 }
 
-void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isSpawnPoint, int &currentTeam, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
+void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
 	
 
 	if (currentWordTemp == 0){
@@ -136,7 +136,18 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 				std::cout << "Team: " << cTeam << " | " << "\n";
 			}
 		}
+		else if (objectName.find("ShadowShapes") != std::string::npos)
+		{
+			isShadowShape = true;
 
+			//char * c = new char[objectName.size() + 1];
+			currentShadowShape.resize(tmpStr.size());
+			memcpy(&currentShadowShape[0], tmpStr.c_str(), tmpStr.size());
+			 
+			 //c[objectName.size()] = '\0';
+			 std::cout << "";
+			 //currentShadowShape = c;
+		}
 		else
 		{
 			filePathToModel.append("../Shurikenjutsu/Models/");
@@ -186,6 +197,25 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 				std::cout << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
 			}
 		}
+		else if (isShadowShape){
+			if (m_print){
+				std::cout << ">>" << currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str() << "\n";
+			}
+			if (strcmp(currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str(), "A") == 0){
+				tmpPointA.x = x;
+				tmpPointA.y = z;
+				
+			}
+			else if (strcmp(currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str(), "B") == 0){
+				tmpPointB.x = x;
+				tmpPointB.y = z;
+
+				Line ShadowShapeLine;
+				ShadowShapeLine.a = tmpPointA;
+				ShadowShapeLine.b = tmpPointB;
+				m_shadowShapes.push_back(ShadowShapeLine);
+			}
+		}
 		else{
 			CommonObject object;
 			object.m_filePath = filePathToModel.c_str();
@@ -227,7 +257,9 @@ bool LevelImporter::readData(){
 			continue;
 		}
 		bool isSpawnPoint = false;
+		bool isShadowShape = false;
 		int currentTeam = 0;
+		std::string currentShadowShape = "";
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			std::string tmpStr = temp.at(currentWordTemp);
@@ -254,7 +286,7 @@ bool LevelImporter::readData(){
 
 			else if (currentLineTemp > (unsigned int)(headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (unsigned int)(numberOfObjects + headerSize + numberOfBoundingBoxesToSkip))
 			{
-				readLevelObject(tmpStr, currentWordTemp, isSpawnPoint, currentTeam, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
+				readLevelObject(tmpStr, currentWordTemp, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 			}
 		}
 
@@ -270,6 +302,10 @@ bool LevelImporter::readData(){
 
 std::vector<LevelImporter::SpawnPoint> LevelImporter::GetSpawnPoints(){
 	return m_spawnPoints;
+}
+
+std::vector<Line> LevelImporter::GetShadowsShapes(){
+	return m_shadowShapes;
 }
 
 std::vector<LevelImporter::LevelBoundingBox> LevelImporter::getLevelBoundingBoxes(){
