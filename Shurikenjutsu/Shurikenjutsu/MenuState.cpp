@@ -86,7 +86,6 @@ bool MenuState::Initialize()
 
 	// Frustum
 	m_frustum = new Frustum();
-	m_updateFrustum = true;
 	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	m_objectManager->UpdateFrustum(m_frustum);
 
@@ -240,6 +239,9 @@ GAMESTATESWITCH MenuState::Update()
 
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
+
+	// Update every object.
+	m_objectManager->UpdateRenderLists();
 
 	return GAMESTATESWITCH_NONE;
 }

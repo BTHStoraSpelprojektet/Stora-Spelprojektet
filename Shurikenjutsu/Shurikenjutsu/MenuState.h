@@ -47,8 +47,6 @@ private:
 	Camera* m_camera;
 	Frustum* m_frustum;
 	DirectionalLight m_directionalLight;
-
-	bool m_updateFrustum;
 };
 
 #endif
