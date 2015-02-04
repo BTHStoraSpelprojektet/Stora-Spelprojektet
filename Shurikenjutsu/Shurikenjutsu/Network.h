@@ -19,6 +19,7 @@
 #include <vector>
 #include <map>
 #include <DirectXMath.h>
+#include "ObjectManager.h"
 
 
 enum NETWORKSTATUS
@@ -29,6 +30,8 @@ enum NETWORKSTATUS
 	NETWORKSTATUS_TIMEOUT,
 	NETWORKSTATUS_NONE
 };
+
+class ObjectManager;
 
 class Network
 {
@@ -102,6 +105,8 @@ public:
 	bool HaveDashed();
 	DirectX::XMFLOAT3 GetDashLocation();
 
+	void SetObjectManager(ObjectManager* p_objectManager);
+
 private:
 
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
@@ -122,6 +127,7 @@ private:
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken);
+	void ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_projType);
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
 	void AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed);
@@ -161,5 +167,6 @@ private:
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
 
+	ObjectManager* m_objectManager;
 };
 #endif

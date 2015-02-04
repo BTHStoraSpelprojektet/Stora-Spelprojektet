@@ -71,10 +71,10 @@ protected:
 	bool CalculateDirection();
 	void CalculateFacingAngle();
 	void CalculatePlayerCubeCollision(OBB p_collidingBoxes);
-	void CalculatePlayerBoxCollision(OBB p_collidingBoxes);
+	bool CheckSidesIfMultipleCollisions();
 
 
-	float m_damage = 0; // Sätts nog inviduellt per ability senare.
+	//float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	//int m_spells; // antalet spells om det behövs - skapa lista
 	float m_health; // Player health
 	float m_maxHealth; // Max player health
@@ -87,7 +87,7 @@ protected:
 	bool m_visible;
 
 	void SetCalculatePlayerPosition();
-	DirectX::XMFLOAT3 m_playerPrevPos;
+	//DirectX::XMFLOAT3 m_playerPrevPos;
 	
 	DirectX::XMFLOAT3 m_dashDirection;
 	float m_dashDistanceLeft;

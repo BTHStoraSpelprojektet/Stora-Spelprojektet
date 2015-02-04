@@ -47,6 +47,15 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_directionUpdateTimer = 0.0f;
 
+	m_health = 100.0f;
+	m_maxHealth = 100.0f;
+	m_isAlive = true;
+	m_guid = RakNet::RakNetGUID();
+	m_visible = true;
+	m_dashDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_dashDistanceLeft = 0.0f;
+	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
 	throwDistance = 0.0f;
 
 	m_globalCooldown = 0.0f;
@@ -267,7 +276,7 @@ bool Player::CalculateDirection()
 	x = 0;
 	y = 0;//Box(DirectX::XMFLOAT3(35.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(1.0f, 1.0f, 40.0f)))
 	z = 0;
-	m_playerPrevPos = m_position;
+	//m_playerPrevPos = m_position;
 
 	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
 	{
@@ -459,12 +468,6 @@ void Player::SetCalculatePlayerPosition()
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(Sphere(m_position, m_playerSphere.m_radius), m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{ 
-		float temp2 = collidingBoxes[i].m_extents.x - collidingBoxes[i].m_extents.z;
-		if (temp2 < 0)
-		{
-			temp2 *= -1;
-		}
-		
 		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
 			Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
@@ -498,13 +501,20 @@ void Player::SetCalculatePlayerPosition()
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
 		}
-		//else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
-		//{
-		//	CalculatePlayerCubeCollision(collidingBoxes[i]);
-		//}
+		else if (collidingBoxes.size() > 1)
+		{
+
+			if (CheckSidesIfMultipleCollisions() == true)
+			{
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+			}
 		else
 		{
-			//CalculatePlayerBoxCollision(collidingBoxes[i]);
+			CalculatePlayerCubeCollision(collidingBoxes[i]);
+		}
+	}
+		else
+		{
 			CalculatePlayerCubeCollision(collidingBoxes[i]);
 		}
 	}
@@ -550,7 +560,7 @@ void Player::SetCalculatePlayerPosition()
 		}
 
 
-		// Circel ekvation:
+		// Circle equation:
 		// circleX * X + circleY * Y = Radius * Radius
 		// Bryt ut så att y blir ensam
 		// Y = (Radius * Radius - circleX * X) / circleY		
@@ -564,8 +574,42 @@ void Player::SetCalculatePlayerPosition()
 		SetDirection(dir);
 	}
 
+	if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
+	{
+		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	}
+
 	//float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speedXDeltaTime, m_position.y + m_direction.y * speedXDeltaTime, m_position.z + m_direction.z * speedXDeltaTime));
+}
+
+bool Player::CheckSidesIfMultipleCollisions()
+{
+	float speedXDeltaTime = m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+	Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
+	playerSphere.m_position.x = m_position.x;
+	playerSphere.m_position.z = m_position.z - 1.0f * speedXDeltaTime;
+	bool down = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x;
+	playerSphere.m_position.z = m_position.z + 1.0f * speedXDeltaTime;
+	bool up = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x + 1.0f * speedXDeltaTime;
+	playerSphere.m_position.z = m_position.z;
+	bool right = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x - 1.0f * speedXDeltaTime;
+	playerSphere.m_position.z = m_position.z;
+	bool left = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+
+	if (down && (right || left))
+	{
+		return true;
+	}
+	else if (up && (right || left))
+	{
+		return true;
+	}
+
+	return false;
 }
 void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 {
@@ -677,105 +721,6 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 }
 
-void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
-{
-	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z);
-	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z);
-	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x);
-	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x);
-	float x = m_direction.x;
-	float z = m_direction.z;
-	if (x < 0 && z < 0)//down left
-	{
-		if (rightOfBox == aboveBox)
-		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x + m_playerSphere.m_radius*1.1f, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f));
-			x = -1;
-			z = 0;
-		}
-		else
-		{
-			if (rightOfBox)
-			{
-				x = 0;
-				z = -1;
-			}
-			if (aboveBox)
-			{
-				x = -1;
-				z = 0;
-			}
-		}
-	}
-	else if (x > 0 && z < 0)//down right
-	{
-		if (leftOfBox == aboveBox)
-		{
-			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
-			x = 0;
-			z = -1;
-		}
-		else
-		{
-			if (leftOfBox)
-			{
-				x = 0;
-				z = -1;
-			}
-			if (aboveBox)
-			{
-				x = 1;
-				z = 0;
-			}
-		}
-	}
-	else if (x < 0 && z > 0)//up left // works goood
-	{
-		if (rightOfBox == belowBox)
-		{
-			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
-			x = 0;
-			z = 1;
-		}
-		else
-		{
-			if (rightOfBox)
-			{
-				x = 0;
-				z = 1;
-			}
-			if (belowBox)
-			{
-				x = -1;
-				z = 0;
-			}
-		}
-	}
-	else if (x > 0 && z > 0)//up right // works goood
-	{
-		if (leftOfBox == belowBox)
-		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f));
-			x = 1;
-			z = 0;
-		}
-		else
-		{
-			if (leftOfBox)
-			{
-				x = 0;
-				z = 1;
-			}
-			if (belowBox)
-			{
-				x = 1;
-				z = 0;
-			}
-		}
-	}
-	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
-}
-
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar->Update(m_position, (int)m_health, (int)m_maxHealth, p_view, p_projection);
@@ -830,17 +775,15 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		m_healthbar->Render();
+	}
+
 		AnimatedObject::Render(m_team);
 	}
-}
 
 void Player::RenderDepth()
 {
-	if (m_isAlive)
-	{
 		AnimatedObject::RenderDepth();
 	}
-}
 
 void Player::RenderOutlining()
 {
@@ -854,6 +797,18 @@ void Player::RenderAbilityBar()
 
 void Player::SetIsAlive(bool p_isAlive)
 {
+	if (m_isAlive != p_isAlive)
+	{
+		if (!p_isAlive)
+		{
+			AnimatedObject::ChangeAnimationState(AnimationState::Death);
+		}
+		else
+		{
+			AnimatedObject::ChangeAnimationState(AnimationState::Spawn);
+		}
+	}
+
 	m_isAlive = p_isAlive;
 }
 

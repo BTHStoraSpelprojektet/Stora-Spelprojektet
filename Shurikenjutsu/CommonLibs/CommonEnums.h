@@ -11,7 +11,9 @@ enum ABILITIES
 	ABILITIES_SPIKETRAP,
 	ABILITIES_WHIP_PRIMARY,
 	ABILITIES_WHIP_SECONDARY,
-	ABILITIES_FANBOOMERANG
+	ABILITIES_FANBOOMERANG,
+	ABILITIES_NAGINATASLASH,
+	ABILITIES_KUNAI
 };
 
 enum AnimationState {
@@ -20,7 +22,9 @@ enum AnimationState {
 	Special1,
 	Special2,
 	Tool,
-	None
+	None,
+	Death,
+	Spawn
 };
 
 #endif // !COMMONENUMS_H_

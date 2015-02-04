@@ -15,6 +15,14 @@ const float SHURIKEN_SPEED = 40.0f;
 
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
+// Kunai
+const float KUNAI_DAMAGE = 10.0f;
+const float KUNAI_COOLDOWN = 2.0f;
+const float KUNAI_DURATION = 2.0f;
+const int KUNAI_MAX_STACK = 4;
+const float KUNAI_ROTATION_SPEED = 10.0f;
+const float KUNAI_SPEED = 50.0f;
+
 ////////////////////////////////////////////////////////////////Ranged Attacks
 //Whip
 const float WHIP_DAMAGE = 15.0f;
@@ -49,6 +57,11 @@ const float KATANA_RANGE = 2.5f;
 const float KATANA_COOLDOWN = 0.5f;
 
 ////////////////////////////////////////////////////////////////Melee Attacks
+// Naginata
+const float NAGINATA_DAMAGE = 30.0f;
+const float NAGINATA_RANGE = 3.5f;
+const float NAGINATA_COOLDOWN = 0.5f;
+
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 //Dash
 const float DASH_MAX_RANGE = 10.0f;
@@ -91,6 +104,9 @@ const float CHARACTER_KATANA_SHURIKEN_SPEED = 10.0f;
 
 const float CHARACTER_TESSEN_HEALTH = 90.0f;
 const float CHARACTER_TESSEN_SPEED = 12.0f;
+
+const float CHARACTER_NAGINATA_HEALTH = 95.0f;
+const float CHARACTER_NAGINATA_SPEED = 11.0f;
 
 ////////////////////////////////////////////////////////////////Character Variables
 

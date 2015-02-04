@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <DirectXMath.h>
 #include "..\CommonLibs\ModelLibrary.h"
+#include "..\CommonLibs\CommonStructures.h"
 #include "DebugDraw.h"
 
 class Model;

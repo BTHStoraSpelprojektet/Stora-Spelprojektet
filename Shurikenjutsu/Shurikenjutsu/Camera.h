@@ -39,6 +39,8 @@ public:
 	void ToggleFullscreen(bool p_fullscreen);
 	void FollowCharacter(DirectX::XMFLOAT3 p_playerPos);
 
+	void MenuCameraRotation();
+
 private:
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT3 m_target;
@@ -66,5 +68,6 @@ private:
 	DirectX::XMFLOAT4X4 m_rotationX;
 	DirectX::XMFLOAT4X4 m_rotationY;
 
+	float m_menuRotation;
 };
 #endif;
