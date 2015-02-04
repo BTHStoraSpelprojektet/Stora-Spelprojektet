@@ -151,7 +151,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Cursor
 	m_cursor = new Cursor();
-	result = m_cursor->Initialize();
+	result = m_cursor->Initialize(m_window.GetHandle());
 	if (!result)
 	{
 		return false;
