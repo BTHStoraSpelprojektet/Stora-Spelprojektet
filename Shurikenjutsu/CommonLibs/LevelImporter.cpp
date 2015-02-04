@@ -187,7 +187,7 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			spawnPoint.m_team = currentTeam;
 			spawnPoint.m_translationX = x;
 			spawnPoint.m_translationY = y;
-			spawnPoint.m_translationZ = z;
+			spawnPoint.m_translationZ = -z;
 			spawnPoint.m_rotationX = rotateX;
 			spawnPoint.m_rotationY = -rotateY;
 			spawnPoint.m_rotationZ = rotateZ;
