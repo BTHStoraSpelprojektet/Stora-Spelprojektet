@@ -19,6 +19,8 @@ bool Level::loadLevel(std::string p_level){
 
 	m_spawnPoints = levelImporter.GetSpawnPoints();
 
+	m_shadowShapes = levelImporter.GetShadowsShapes();
+
 	m_levelBoundingBoxes = levelImporter.getLevelBoundingBoxes();
 
 	m_objects = levelImporter.GetObjects();
@@ -28,6 +30,10 @@ bool Level::loadLevel(std::string p_level){
 
 std::vector<LevelImporter::SpawnPoint> Level::GetSpawnPoints(){
 	return m_spawnPoints;
+}
+
+std::vector<Line> Level::GetShadowsShapes(){
+	return m_shadowShapes;
 }
 
 std::vector<LevelImporter::LevelBoundingBox> Level::getLevelBoundingBoxes(){
