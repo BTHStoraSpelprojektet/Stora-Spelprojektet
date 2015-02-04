@@ -1090,21 +1090,21 @@ void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, st
 	//TODO 2: Skapa en vektor med objekt, utav varje typ av objekt, som skickas in i denna funktionen.
 	//https://msdn.microsoft.com/en-us/library/windows/desktop/dn508285(v=vs.85).aspx
 	
-	if (p_ObjectList.size() != 0)
+	if (p_ObjectList.size() != m_numberOfInstanceList[p_ObjectList[0]->GetInstanceIndex()])
 	{
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		p_context->Map(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		
-		std::vector<InstancePos> m_instances;
+		std::vector<InstancePos> instances;
 		for (unsigned int i = 0; i < p_ObjectList.size(); i++)
 		{
 			InstancePos temp;
 			DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_ObjectList[i]->GetWorldMatrix())));
-			m_instances.push_back(temp);
+			instances.push_back(temp);
 
 		}
 
-		memcpy(mappedResource.pData, &m_instances[0], sizeof(m_instances));
+		memcpy(mappedResource.pData, &instances[0], sizeof(InstancePos) *instances.size());
 
 		p_context->Unmap(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0);
 

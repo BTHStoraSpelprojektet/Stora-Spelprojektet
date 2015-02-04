@@ -194,24 +194,8 @@ void ObjectManager::Update()
 void ObjectManager::Render()
 {
 	std::vector<Object*> tempList;
-	tempList.clear();
-	m_objectsToRender.clear();
 	m_objectsToInstanceRender.clear();
 
-
-	//for (unsigned int i = 0; i < m_staticObjects.size(); i++)
-	//{
-	//	if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
-	//	{
-	//		if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i], m_objectsToInstanceRender) == false)//Finns ej i listan
-	//		{
-	//			m_objectsToInstanceRender.push_back(&m_staticObjects[i]);
-	//		}
-	//	}
-	//}
-
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
@@ -225,57 +209,18 @@ void ObjectManager::Render()
 		std::vector<Object*>  temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
 		if (temp.size() == 1)
 		{
-			m_objectsToRender.push_back(tempList[i]);
+			tempList[i]->Render();
 		}
 		else if (temp.size() > 1)
 		{
 			if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
 			{
 				m_objectsToInstanceRender.push_back(tempList[i]);
-				//GraphicsEngine::UpdateInstanceBuffers(temp);
+				GraphicsEngine::UpdateInstanceBuffers(temp);
+				tempList[i]->RenderInstanced();
 			}
-		}
-	}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//for (unsigned int i = 0; i < m_staticObjects.size(); i++)
-	//{
-	//	if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
-	//	{
-	//		if (tempList.size() == 0)
-	//		{
-	//			tempList.push_back(&m_staticObjects[i]);
-	//		}
-	//		else if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i], tempList) == true)//Finns ej i listan
-	//		{
-	//			tempList.push_back(&m_staticObjects[i]);
-	//		}
-	//		else
-	//		{
-	//			if (tempList.size() == 1)
-	//			{
-	//				m_objectsToRender.push_back(tempList[0]);
-	//			}
-	//			else
-	//			{
-	//				m_objectsToInstanceRender.push_back(&m_staticObjects[i]);
-	//				//m_staticObjects[i].UpdateInstanceBuffers(tempList);
-	//			}
-	//			tempList.clear();
-	//			tempList.push_back(&m_staticObjects[i]);
-	//		}
-	//	}
-	//}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
-	{
-		m_objectsToInstanceRender[i]->RenderInstanced();
-	}
-	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
-	{
-		m_objectsToRender[i]->Render();
+		} 
+		temp.clear();
 	}
 
 

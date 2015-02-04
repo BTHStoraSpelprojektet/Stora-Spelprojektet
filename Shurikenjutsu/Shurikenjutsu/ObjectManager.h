@@ -41,7 +41,6 @@ private:
 	std::vector<Spikes*> m_spikeTrapList;
 	std::vector<Shuriken*> m_shurikens;
 	std::vector<Object> m_staticObjects;
-	std::vector<Object*> m_objectsToRender;
 	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToShadowRender;
 	
