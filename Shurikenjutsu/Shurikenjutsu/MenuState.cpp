@@ -114,8 +114,14 @@ GAMESTATESWITCH MenuState::Update()
 	// Ipbox special case
 	if (!m_hideIpBox)
 	{
-		m_ipbox->IsClicked();
-		m_ipbox->GetInput();
+		if (m_ipbox->IsClicked())
+		{
+			m_ipboxText->SetText(m_ipbox->GetIp());
+		}
+		if (m_ipbox->GetInput())
+		{
+			m_ipboxText->SetText(m_ipbox->GetIp());
+		}
 	}
 
 	// Check buttons
@@ -181,12 +187,11 @@ GAMESTATESWITCH MenuState::Update()
 
 	case NETWORKSTATUS_CONNECTED:
 		m_menues.pop();
+		m_hideIpBox = false;
 		return GAMESTATESWITCH_CHOOSENINJA;
 		break;
 
 	}
-
-	m_ipboxText->SetText(m_ipbox->GetIp());
 
 	return GAMESTATESWITCH_NONE;
 }

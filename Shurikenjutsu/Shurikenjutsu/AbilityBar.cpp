@@ -62,9 +62,9 @@ void AbilityBar::Shutdown()
 }
 
 // TODO: Send ability information to update
-void AbilityBar::Update(float p_cooldown, float p_fullCooldown, int p_index)
+void AbilityBar::Update(float p_cooldown, float p_fullCooldown, int p_stacks, int p_index)
 {
-	m_abilities[p_index]->Update(p_cooldown, p_fullCooldown);
+	m_abilities[p_index]->Update(p_cooldown, p_fullCooldown, p_stacks);
 }
 
 void AbilityBar::Render()

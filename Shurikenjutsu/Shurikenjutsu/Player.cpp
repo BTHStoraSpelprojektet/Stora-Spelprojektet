@@ -200,7 +200,7 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
-		if ((float)m_rangeAttack->GetStacks() > 0)
+		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
 		{
 			m_ability = m_rangeAttack;
 		}
@@ -784,29 +784,45 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 void Player::UpdateAbilityBar()
 {
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), 0);
+	{
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(),m_meleeAttack->GetStacks(), 0);
+	}
 	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 0);
-	
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
+	}
 	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), 1);
+	{
+		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
+	}
 	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 1);
-
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
+	}
 	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), 2);
+	{
+		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
+	}
 	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 2);
-
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
+	}
 	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), 3);
+	{
+		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
+	}
 	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 3);
-
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
+	}
 	if ((float)m_toolAbility->GetCooldown() > 0.0f)
-		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), 4);
+	{
+		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
+	}
 	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 4);
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
+	}
 }
 
 void Player::Render()

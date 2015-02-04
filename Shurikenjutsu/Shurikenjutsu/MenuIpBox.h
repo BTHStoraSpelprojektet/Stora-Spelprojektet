@@ -13,7 +13,7 @@ public:
 	bool Initialize(float p_x, float p_y, float p_width, float p_height);
 
 	bool IsClicked();
-	void GetInput();
+	bool GetInput();
 	void ToConsole();
 	std::string GetIp();
 

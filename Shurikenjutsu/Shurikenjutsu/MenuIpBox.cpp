@@ -70,7 +70,7 @@ bool MenuIpBox::IsClicked()
 	return false;
 }
 
-void MenuIpBox::GetInput()
+bool MenuIpBox::GetInput()
 {
 	if (m_active)
 	{
@@ -83,8 +83,10 @@ void MenuIpBox::GetInput()
 			{
 				m_active = false;
 			}
+			return true;
 		}
 	}
+	return false;
 }
 
 void MenuIpBox::ToConsole()
