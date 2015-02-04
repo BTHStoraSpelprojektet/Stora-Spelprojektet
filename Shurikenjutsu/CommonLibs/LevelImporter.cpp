@@ -115,7 +115,7 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp, fl
 
 }
 
-void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
+void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isParticleEmitter, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
 	
 
 	if (currentWordTemp == 0){
@@ -147,6 +147,9 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			 //c[objectName.size()] = '\0';
 			 std::cout << "";
 			 //currentShadowShape = c;
+		}
+		else if (objectName.find("ParticleEmitter") != std::string::npos){
+			isParticleEmitter = true;
 		}
 		else
 		{
@@ -258,6 +261,7 @@ bool LevelImporter::readData(){
 		}
 		bool isSpawnPoint = false;
 		bool isShadowShape = false;
+		bool isParticleEmitter = false;
 		int currentTeam = 0;
 		std::string currentShadowShape = "";
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
@@ -286,7 +290,7 @@ bool LevelImporter::readData(){
 
 			else if (currentLineTemp > (unsigned int)(headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (unsigned int)(numberOfObjects + headerSize + numberOfBoundingBoxesToSkip))
 			{
-				readLevelObject(tmpStr, currentWordTemp, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
+				readLevelObject(tmpStr, currentWordTemp, isParticleEmitter, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 			}
 		}
 

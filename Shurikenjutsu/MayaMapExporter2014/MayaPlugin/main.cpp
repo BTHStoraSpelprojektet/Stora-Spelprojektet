@@ -441,6 +441,22 @@ void MapExporter::GetPositions(){
 						world.wObjects[counter].rotatez = 0;
 						world.wObjects[counter].rotatew = 0;
 					}
+					else if (strcmp(transform.name().substring(0, 14).asChar(), "ParticleEmitter")){
+
+						MVector v = transform.getTranslation(MSpace::kTransform);
+						double dest2[3];
+						v.get(dest2);
+
+						world.wObjects[counter].name = transform.name().asChar();
+						world.wObjects[counter].x = dest2[0];
+						world.wObjects[counter].y = dest2[1];
+						world.wObjects[counter].z = dest2[2];
+
+						world.wObjects[counter].rotatex = 0;
+						world.wObjects[counter].rotatey = 0;
+						world.wObjects[counter].rotatez = 0;
+						world.wObjects[counter].rotatew = 0;
+					}
 				}
 
 			} 

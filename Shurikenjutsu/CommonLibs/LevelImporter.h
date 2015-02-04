@@ -64,7 +64,7 @@ protected:
 
 	std::string getObjectName(std::string &tmpStr);
 	void readBoundingBox(std::string &tmpStr, int currentWordTemp, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ, float &boundingBoxWidth, float &boundingBoxHeight, float &boundingBoxDepth);
-	void readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ);
+	void readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isParticleEmitter, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ);
 
 	Point tmpPointA;
 	Point tmpPointB;
