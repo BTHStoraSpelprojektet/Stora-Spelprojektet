@@ -203,12 +203,12 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			}
 			if (strcmp(currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str(), "A") == 0){
 				tmpPointA.x = x;
-				tmpPointA.y = z;
+				tmpPointA.y = -z;
 				
 			}
 			else if (strcmp(currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str(), "B") == 0){
 				tmpPointB.x = x;
-				tmpPointB.y = z;
+				tmpPointB.y = -z;
 
 				Line ShadowShapeLine;
 				ShadowShapeLine.a = tmpPointA;

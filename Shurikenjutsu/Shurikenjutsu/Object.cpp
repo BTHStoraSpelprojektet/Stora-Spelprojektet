@@ -17,7 +17,6 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	
 	TransformBoundingBoxes();
 	TransformBoundingSpheres();
-	TransformShadowPoints();
 
 	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
 
@@ -34,8 +33,6 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	TransformBoundingBoxes();
 	TransformBoundingSpheres();
-	TransformShadowPoints();
-
 
 	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
 
@@ -161,30 +158,6 @@ void Object::TransformBoundingSpheres()
 		DirectX::XMStoreFloat3(&temp.m_position, transCenter);
 		temp.m_radius = sphereList[i].m_radius;
 		m_boundingSpheres.push_back(temp);
-	}
-}
-
-void Object::TransformShadowPoints()
-{
-	std::vector<Line> lines = m_model->GetShadowLines();
-
-	if (lines.size() > 0)
-	{
-		DirectX::XMFLOAT4X4 world = GetWorldMatrix();
-
-		DirectX::XMFLOAT3 a;
-		DirectX::XMFLOAT3 b;
-
-		for (unsigned int i = 0; i < lines.size(); i++)
-		{
-			a = DirectX::XMFLOAT3(lines[i].a.x, 0.0f, lines[i].a.y);
-			b = DirectX::XMFLOAT3(lines[i].b.x, 0.0f, lines[i].b.y);
-
-			DirectX::XMStoreFloat3(&a, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&a), DirectX::XMLoadFloat4x4(&world)));
-			DirectX::XMStoreFloat3(&b, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&b), DirectX::XMLoadFloat4x4(&world)));
-
-			ShadowShapes::GetInstance().AddStaticLine(Line(Point(a.x, a.z), Point(b.x, b.z)));
-		}
 	}
 }
 

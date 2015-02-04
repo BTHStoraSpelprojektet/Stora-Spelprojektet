@@ -41,6 +41,12 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Load the level.
 	Level level(p_levelName);
 
+	std::vector<Line> lines = level.GetShadowsShapes();
+	for (unsigned int i = 0; i < lines.size(); i++)
+	{
+		ShadowShapes::GetInstance().AddStaticLine(lines[i]);
+	}
+
 	// Initialize the objectmanager.
 	m_objectManager = new ObjectManager();
 	m_objectManager->Initialize(&level);
