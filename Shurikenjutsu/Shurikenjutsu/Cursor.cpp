@@ -16,7 +16,7 @@ bool Cursor::Initialize()
 	ShowCursor(!m_useCustomCursor && m_renderCursor);
 
 	m_cursor = new GUIElement();
-	if (!m_cursor->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(CURSOR_TEXTURE)))
+	if (!m_cursor->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), 100.0f, 100.0f, TextureLibrary::GetInstance()->GetTexture(CURSOR_TEXTURE)))
 	{
 		return false;
 	}
