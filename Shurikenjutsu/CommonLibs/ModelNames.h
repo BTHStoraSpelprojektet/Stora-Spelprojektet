@@ -52,6 +52,6 @@
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"
 
 // Cursor
-#define CURSOR_TEXTURE "../Shurikenjutsu/2DTextures/minimap_redDot.png"
+#define CURSOR_TEXTURE "../Shurikenjutsu/2DTextures/cursor.png"
 
 #endif
