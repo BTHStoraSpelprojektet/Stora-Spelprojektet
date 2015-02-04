@@ -13,6 +13,7 @@ bool Ability::Initialize()
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0);
 	m_totalCooldown = 0.0f;
+	m_stacks = -1;
 	return true;
 }
 
