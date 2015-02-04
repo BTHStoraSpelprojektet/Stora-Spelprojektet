@@ -36,6 +36,7 @@ private:
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
 	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);
 	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
+	void UpdateRenderLists();
 
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
@@ -43,6 +44,7 @@ private:
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToShadowRender;
+	std::vector<Object*> m_objectsToSingleRender;
 	
 
 	Frustum* m_frustum;

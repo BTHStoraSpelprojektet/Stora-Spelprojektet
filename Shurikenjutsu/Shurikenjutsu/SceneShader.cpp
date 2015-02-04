@@ -1090,8 +1090,8 @@ void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, st
 	//TODO 2: Skapa en vektor med objekt, utav varje typ av objekt, som skickas in i denna funktionen.
 	//https://msdn.microsoft.com/en-us/library/windows/desktop/dn508285(v=vs.85).aspx
 	
-	if (p_ObjectList.size() != m_numberOfInstanceList[p_ObjectList[0]->GetInstanceIndex()])
-	{
+	//if (p_ObjectList.size() != m_numberOfInstanceList[p_ObjectList[0]->GetInstanceIndex()])
+	//{
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		p_context->Map(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 		
@@ -1109,5 +1109,5 @@ void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, st
 		p_context->Unmap(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0);
 
 		m_numberOfInstanceList[p_ObjectList[0]->GetInstanceIndex()] = p_ObjectList.size();
-	}
+	//}
 }

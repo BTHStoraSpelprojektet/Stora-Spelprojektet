@@ -189,23 +189,27 @@ void ObjectManager::Update()
 		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
 	}
 	////
+	UpdateRenderLists();
 }
-
-void ObjectManager::Render()
+void ObjectManager::UpdateRenderLists()
 {
 	std::vector<Object*> tempList;
 	m_objectsToInstanceRender.clear();
+	m_objectsToSingleRender.clear();
 	tempList.clear();
 
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 7.5f))
+		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
+		sphere.m_position.x -= 3.0f;
+		sphere.m_position.z -= 3.0f;
+		if (m_frustum->CheckSphere(sphere, 10.0f))
 		{
 			tempList.push_back(&m_staticObjects[i]);
 		}
 	}
 	std::vector<Object*>  temp;
-	Object* prevObject = &m_staticObjects[m_staticObjects.size() -1];
+	Object* prevObject = &m_staticObjects[m_staticObjects.size() - 1];
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
 		temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
@@ -213,7 +217,7 @@ void ObjectManager::Render()
 		{
 			if (temp.size() == 1)
 			{
-				tempList[i]->Render();
+				m_objectsToSingleRender.push_back(tempList[i]);
 			}
 			else
 			{
@@ -221,15 +225,23 @@ void ObjectManager::Render()
 				{
 					m_objectsToInstanceRender.push_back(tempList[i]);
 					GraphicsEngine::UpdateInstanceBuffers(temp);
-					tempList[i]->RenderInstanced();
 				}
 			}
 		}
 		prevObject = temp[0];
 	}
+}
+void ObjectManager::Render()
+{
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	{
+		m_objectsToInstanceRender[i]->RenderInstanced();
+	}
 
-
-
+	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
+	{
+		m_objectsToSingleRender[i]->Render();
+	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
@@ -260,20 +272,14 @@ void ObjectManager::Render()
 
 void ObjectManager::RenderDepth()
 {
-	m_objectsToShadowRender.clear();
-	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
 	{
-		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
-		sphere.m_position.x -= 3.0f;
-		sphere.m_position.z -= 3.0f;
-		if (m_frustum->CheckSphere(sphere, 7.5f))
-		{
-			if (CheckIfModelIsInObjectToShadowRenderList(&m_staticObjects[i]))
-			{
-				m_objectsToShadowRender.push_back(&m_staticObjects[i]);
-				m_staticObjects[i].RenderDepthInstanced();
-			}
-		}
+		m_objectsToInstanceRender[i]->RenderDepthInstanced();
+	}
+
+	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
+	{
+		m_objectsToSingleRender[i]->RenderDepth();
 	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
