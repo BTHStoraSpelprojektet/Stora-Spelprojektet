@@ -90,6 +90,9 @@ std::string AbilityBar::GetAbility1Name()
 		return ABILITY_TESSEN_TEXTURE;
 		break;
 	}
+	case 2:
+		return ABILITY_NAGINATA_TEXTURE;
+		break;
 	}
 
 	return ABILITY_CD_TEXTURE;
