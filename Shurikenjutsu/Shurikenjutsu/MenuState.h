@@ -19,6 +19,9 @@ public:
 	MenuState();
 	~MenuState();
 
+	void* operator new(size_t p_i);
+	void operator delete(void* p_p);
+
 	bool Initialize();
 	void Shutdown();
 

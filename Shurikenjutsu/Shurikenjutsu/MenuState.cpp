@@ -29,6 +29,16 @@ const float FULLSCREENHEIGHT = 58.0f;
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
 
+void* MenuState::operator new(size_t p_i)
+{
+	return _mm_malloc(p_i, 16);
+}
+
+void MenuState::operator delete(void* p_p)
+{
+	_mm_free(p_p);
+}
+
 bool MenuState::Initialize()
 {
 	m_lastvsync = false;
