@@ -173,7 +173,6 @@ void ObjectManager::Update()
 		Network::GetInstance()->SetHaveUpdateSmokeBombList();
 	}
 
-	///
 	if (Network::GetInstance()->IsSpikeTrapListUpdated())
 	{
 		std::vector<SpikeNet> tempSpikeTrapList = Network::GetInstance()->GetSpikeTraps();
@@ -188,7 +187,6 @@ void ObjectManager::Update()
 		}
 		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
 	}
-	////
 	UpdateRenderLists();
 }
 void ObjectManager::UpdateRenderLists()
@@ -411,24 +409,12 @@ bool ObjectManager::CheckIfObjectIsInList(Object *p_object, std::vector<Object*>
 	return false;
 }
 
-bool ObjectManager::CheckIfModelIsInObjectToShadowRenderList(Object *p_object)
-{
-	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
-	{
-		if (m_objectsToShadowRender[i]->GetModel() == p_object->GetModel())
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
 std::vector<Object*> ObjectManager::CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list)
 {
 	std::vector<Object*> returnList;
 	if (!p_list.empty())
 	{
-		for (int i = 0; i < p_list.size(); i++)
+		for (unsigned int i = 0; i < p_list.size(); i++)
 		{
 			if (p_list[i]->GetModel() == p_object->GetModel())
 			{

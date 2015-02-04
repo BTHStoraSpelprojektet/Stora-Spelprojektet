@@ -80,7 +80,7 @@ const float SPIKE_RADIUS = 1.5f;
 ////////////////////////////////////////////////////////////////Character Variables
 
 const float CHARACTER_KATANA_SHURIKEN_HEALTH = 100.0f;
-const float CHARACTER_KATANA_SHURIKEN_SPEED = 5.0f;
+const float CHARACTER_KATANA_SHURIKEN_SPEED = 15.0f;
 
 const float CHARACTER_TESSEN_HEALTH = 90.0f;
 const float CHARACTER_TESSEN_SPEED = 6.0f;
