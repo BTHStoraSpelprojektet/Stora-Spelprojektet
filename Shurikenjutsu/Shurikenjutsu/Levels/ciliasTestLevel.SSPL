@@ -175,10 +175,10 @@ ShadowShapes_9_A 1.18847 1.28743 12.0782 0 0 0
 ShadowShapes_9_B 12.6988 1.28743 12.0782 0 0 0
 Small_house_01__ -7.4 0 40 0 0 0
 Small_house_01__2 7.4 0 -40 0 3.14159 0
-StatueMan_01_ -22 0 5.5 0 1.5708 0
-StatueMan_01_1 -22 0 -5.5 0 1.5708 0
-StatueMan_01_2 22 0 5.5 0 4.71239 0
-StatueMan_01_3 22 0 -5.5 0 4.71239 0
+StatueMan_01__1 -22 0 5.5 0 1.5708 0
+StatueMan_01__2 -22 0 -5.5 0 1.5708 0
+StatueMan_01__3 22 0 5.5 0 4.71239 0
+StatueMan_01__4 22 0 -5.5 0 4.71239 0
 WallGOpen_ 12 0 0 0 0 0
 WallGOpen_1 0 0 -12 0 1.5708 0
 WallGOpen_2 -12 0 0 0 3.14159 0
