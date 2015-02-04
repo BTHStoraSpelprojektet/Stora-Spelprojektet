@@ -28,6 +28,7 @@ public:
 	void operator delete(void* p);
 
 	void OutliningRays();
+	ObjectManager* GetObjectManager();
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);

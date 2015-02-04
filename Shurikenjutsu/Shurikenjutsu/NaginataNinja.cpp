@@ -1,11 +1,12 @@
 #include "NaginataNinja.h"
-#include "..\CommonLibs\ModelNames.h"
+#include "../CommonLibs/ModelNames.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "NaginataSlash.h"
 #include "Dash.h"
 #include "ShurikenAbility.h"
 #include "MegaShuriken.h"
 #include "SmokeBombAbility.h"
+#include "KunaiAbility.h"
 
 
 NaginataNinja::NaginataNinja(){}
@@ -39,7 +40,7 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_meleeSpecialAttack = new Dash();
 	m_meleeSpecialAttack->Initialize();
 
-	m_rangeAttack = new ShurikenAbility();
+	m_rangeAttack = new KunaiAbility();
 	m_rangeAttack->Initialize();
 
 	m_rangeSpecialAttack = new MegaShuriken();

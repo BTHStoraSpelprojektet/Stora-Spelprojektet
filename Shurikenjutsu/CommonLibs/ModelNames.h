@@ -15,6 +15,9 @@
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
 #define MEGA_SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/MegaShurikenShape.SSP"
 
+// Kunai
+#define KUNAI_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
+
 // Smoke Bomb
 #define SMOKE_BOMB "../Shurikenjutsu/Models/SmokeBomb.SSP"
 
@@ -41,6 +44,9 @@
 #define ABILITY_WHIP_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_Ranged.png"
 #define ABILITY_WHIP_SPECIAL_TEXTURE "../Shurikenjutsu/2DTextures/TB_N2_E.png"
 #define ABILITY_CALTROP_TEXTURE "../Shurikenjutsu/2DTextures/TB_Caltrops.png"
+
+#define ABILITY_NAGINATA_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Melee.png"
+#define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Ranged.png"
 
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"

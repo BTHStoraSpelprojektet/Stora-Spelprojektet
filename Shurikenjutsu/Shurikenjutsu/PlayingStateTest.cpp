@@ -256,7 +256,6 @@ void PlayingStateTest::Render()
 	{
 		GraphicsEngine::ClearOutlining();
 		GraphicsEngine::SetOutliningPassOne();
-		//m_objectManager->Render();
 		m_playerManager->RenderOutliningPassOne();
 		GraphicsEngine::SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
@@ -381,4 +380,9 @@ void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 			m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000,-1000,0));
 		}
 	}
+}
+
+ObjectManager* PlayingStateTest::GetObjectManager()
+{
+	return m_objectManager;
 }
