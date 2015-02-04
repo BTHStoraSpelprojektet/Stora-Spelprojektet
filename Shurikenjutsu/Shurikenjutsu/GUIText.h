@@ -4,7 +4,8 @@
 #include <string>
 
 #include <D3D11.h>
-
+struct IDWriteTextLayout;
+struct IDWriteTextFormat;
 class GUIText
 {
 public:
@@ -13,25 +14,25 @@ public:
 
 	bool Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color);
 	void Render();
-	void Render2();
+	void Shutdown();
 
 	void SetText(std::string p_text);
 	void SetPosition(float p_x, float p_y);
 	void SetSize(float p_size);
 	void SetColor(UINT32 p_color);
 
-	std::string GetText();
 	float GetPositionX();
 	float GetPositionY();
-	float GetSize();
 	UINT32 GetColor();
+	IDWriteTextLayout* GetLayout();
 
 private:
-	std::string m_text;
 	float m_posx;
 	float m_posy;
-	float m_size;
+	int m_textLength;
 	UINT32 m_color;
+	IDWriteTextFormat* m_format;
+	IDWriteTextLayout* m_textLayout;
 };
 
 #endif
