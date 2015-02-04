@@ -195,32 +195,37 @@ void ObjectManager::Render()
 {
 	std::vector<Object*> tempList;
 	m_objectsToInstanceRender.clear();
+	tempList.clear();
 
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 7.5f))
 		{
 			tempList.push_back(&m_staticObjects[i]);
 		}
 	}
-
+	std::vector<Object*>  temp;
+	Object* prevObject = &m_staticObjects[m_staticObjects.size() -1];
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
-		std::vector<Object*>  temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
-		if (temp.size() == 1)
+		temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
+		if (prevObject->GetModel() != temp[0]->GetModel())
 		{
-			tempList[i]->Render();
-		}
-		else if (temp.size() > 1)
-		{
-			if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
+			if (temp.size() == 1)
 			{
-				m_objectsToInstanceRender.push_back(tempList[i]);
-				GraphicsEngine::UpdateInstanceBuffers(temp);
-				tempList[i]->RenderInstanced();
+				tempList[i]->Render();
 			}
-		} 
-		temp.clear();
+			else
+			{
+				if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
+				{
+					m_objectsToInstanceRender.push_back(tempList[i]);
+					GraphicsEngine::UpdateInstanceBuffers(temp);
+					tempList[i]->RenderInstanced();
+				}
+			}
+		}
+		prevObject = temp[0];
 	}
 
 
