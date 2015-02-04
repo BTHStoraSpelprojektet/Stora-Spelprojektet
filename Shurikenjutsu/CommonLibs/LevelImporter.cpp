@@ -187,7 +187,7 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			spawnPoint.m_team = currentTeam;
 			spawnPoint.m_translationX = x;
 			spawnPoint.m_translationY = y;
-			spawnPoint.m_translationZ = z;
+			spawnPoint.m_translationZ = -z;
 			spawnPoint.m_rotationX = rotateX;
 			spawnPoint.m_rotationY = -rotateY;
 			spawnPoint.m_rotationZ = rotateZ;
@@ -203,12 +203,12 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			}
 			if (strcmp(currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str(), "A") == 0){
 				tmpPointA.x = x;
-				tmpPointA.y = z;
+				tmpPointA.y = -z;
 				
 			}
 			else if (strcmp(currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str(), "B") == 0){
 				tmpPointB.x = x;
-				tmpPointB.y = z;
+				tmpPointB.y = -z;
 
 				Line ShadowShapeLine;
 				ShadowShapeLine.a = tmpPointA;

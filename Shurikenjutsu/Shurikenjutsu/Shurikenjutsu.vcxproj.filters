@@ -377,9 +377,6 @@
     <ClCompile Include="Spikes.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
-    <ClCompile Include="OutliningShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
     <ClCompile Include="KatanaNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>

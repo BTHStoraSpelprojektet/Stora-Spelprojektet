@@ -11,7 +11,7 @@ public:
 	~GUIAbility();
 
 	bool Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, ID3D11ShaderResourceView* p_texture);
-	void Update(float p_currentCooldown, float p_maxCooldown);
+	void Update(float p_currentCooldown, float p_maxCooldown, int p_stacks);
 	void Render();
 
 private:
@@ -20,7 +20,7 @@ private:
 	GUIElement m_ability;
 	GUIElement m_cooldown;
 	GUIText m_stacks;
-
-	float m_currentCooldown;
+	GUIText m_cooldownText;
+	int m_lastnrofStacks;
 };
 #endif // !GUIABILITY_H_

@@ -3,7 +3,6 @@
 
 #include <d3d11.h>
 
-
 class RenderTarget
 {
 public:
@@ -12,7 +11,7 @@ public:
 	void Shutdown();
 
 	void SetAsRenderTarget(ID3D11DeviceContext* p_deviceContext);
-	void Clear(ID3D11DeviceContext* p_deviceContext);
+	void Clear(ID3D11DeviceContext* p_deviceContext, float p_color[4]);
 
 	ID3D11ShaderResourceView* GetRenderTarget();
 

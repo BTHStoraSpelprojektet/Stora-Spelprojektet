@@ -16,7 +16,7 @@ public:
 
 	bool Initialize(float p_positionX, float p_positionY, int p_numberOfAbilities);
 	void Shutdown();
-	void Update(float p_cooldown, float p_fullCooldown, int p_index);
+	void Update(float p_cooldown, float p_fullCooldown, int p_stacks, int p_index);
 	void Render();
 
 private:

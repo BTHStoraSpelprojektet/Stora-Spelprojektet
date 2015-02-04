@@ -40,10 +40,11 @@ public:
 
 	void AddProjectile(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_ability);
 
+	void UpdateRenderLists();
+
 private:
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
 	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
-	void UpdateRenderLists();
 
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;

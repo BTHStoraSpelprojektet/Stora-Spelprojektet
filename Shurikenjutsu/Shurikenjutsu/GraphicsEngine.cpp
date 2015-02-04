@@ -21,8 +21,8 @@ ParticleShader GraphicsEngine::m_particleShader;
 //OutliningShader GraphicsEngine::m_outliningShader;
 HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
-IFW1Factory *GraphicsEngine::m_FW1Factory;
 IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
+IFW1TextGeometry* GraphicsEngine::m_textGeometry;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -102,8 +102,9 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	*/
 
 	// Create the font wrapper.
-	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &m_FW1Factory);
-	hResult = m_FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Calibri", &m_fontWrapper);
+	IFW1Factory* FW1Factory;
+	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &FW1Factory);
+	hResult = FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Calibri", &m_fontWrapper);
 	if (FAILED(hResult))
 	{
 		ConsolePrintError("Failed to create the font wrapper!");
@@ -113,6 +114,14 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Successfully created the font wrapper.");
 	}
 	ConsoleSkipLines(1);
+
+	// Create text geometry
+	FW1Factory->CreateTextGeometry(&m_textGeometry);
+
+	if (FW1Factory != NULL)
+	{
+		FW1Factory->Release();
+	}
 
 	return result;
 }
@@ -127,13 +136,14 @@ void GraphicsEngine::Shutdown()
 	m_depthShader.Shutdown();
 	//m_outliningShader.Shutdown();
 
-	if (m_FW1Factory != NULL)
-	{
-		m_FW1Factory->Release();
-	}
 	if (m_fontWrapper != NULL)
 	{
 		m_fontWrapper->Release();
+	}
+
+	if (m_fontWrapper != NULL)
+	{
+		m_textGeometry->Release();
 	}
 }
 
@@ -360,6 +370,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().FULLSCREEN = true;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+
+		VisibilityComputer::GetInstance().UpdateTextureSize(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	}    
 	
 	else    
@@ -373,6 +385,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().FULLSCREEN = false;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
+
+		VisibilityComputer::GetInstance().UpdateTextureSize(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	}    
 
 	return true;
@@ -380,11 +394,16 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 
 void GraphicsEngine::BeginRenderToShadowMap()
 {
+	// Set pixel shader textures to NULL.
 	ID3D11ShaderResourceView* nullPointer = NULL;
 	m_directX.GetContext()->PSSetShaderResources(0, 1, &nullPointer);
+	m_directX.GetContext()->PSSetShaderResources(2, 1, &nullPointer);
+
+	// Set color to clear the back buffer to.
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	m_shadowMap.SetAsRenderTarget(m_directX.GetContext());
-	m_shadowMap.Clear(m_directX.GetContext());
+	m_shadowMap.Clear(m_directX.GetContext(), color);
 }
 
 void GraphicsEngine::ResetRenderTarget()
@@ -410,36 +429,6 @@ void GraphicsEngine::TurnOnDepthStencil()
 void GraphicsEngine::TurnOffDepthStencil()
 {
 	m_directX.TurnOffDepthStencil();
-}
-
-void GraphicsEngine::RenderText(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color)
-{
-	std::wstring wstring;
-	for (unsigned int i = 0; i < p_text.length(); ++i)
-		wstring += wchar_t(p_text[i]);
-
-	const wchar_t* your_result = wstring.c_str();
-	if (m_fontWrapper != NULL)
-	{
-		// Convert to "vettiga" coordinates
-		float x = (p_xpos + (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_WIDTH / GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
-		float y = (-p_ypos + (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_HEIGHT / GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
-
-		m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, x, y, p_color, FW1_RESTORESTATE | FW1_VCENTER | FW1_CENTER);
-	}
-}
-
-void GraphicsEngine::RenderText2(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color, UINT p_flags)
-{
-	std::wstring wstring;
-	for (unsigned int i = 0; i < p_text.length(); ++i)
-	{
-		wstring += wchar_t(p_text[i]);
-	}
-
-	const wchar_t* your_result = wstring.c_str();
-
-	m_fontWrapper->DrawString(m_directX.GetContext(), your_result, p_size, p_xpos, p_ypos, p_color, p_flags);
 }
 
 void GraphicsEngine::SetVsync(bool p_state)
@@ -470,4 +459,21 @@ void GraphicsEngine::ClearOutlining()
 void GraphicsEngine::UpdateInstanceBuffers(std::vector<Object*> p_ObjectList)
 {
 	m_sceneShader.UpdateDynamicInstanceBuffer(GetContext(), p_ObjectList);
+}
+
+IFW1FontWrapper* GraphicsEngine::GetFontWrapper()
+{
+	return m_fontWrapper;
+}
+
+void GraphicsEngine::AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags)
+{
+	m_fontWrapper->AnalyzeTextLayout(m_directX.GetContext(), p_layout, p_x, p_y, p_color, p_flags, m_textGeometry);
+}
+
+void GraphicsEngine::RenderTextGeometry(UINT p_flags)
+{
+	m_fontWrapper->Flush(m_directX.GetContext());
+	m_fontWrapper->DrawGeometry(m_directX.GetContext(), m_textGeometry, NULL, NULL, p_flags);
+	m_textGeometry->Clear();
 }
