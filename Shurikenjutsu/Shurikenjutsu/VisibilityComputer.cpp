@@ -166,12 +166,6 @@ void VisibilityComputer::Shutdown()
 		m_mesh = 0;
 	}
 
-	if (m_reversedMesh)
-	{
-		m_reversedMesh->Release();
-		m_reversedMesh = 0;
-	}
-
 	if (m_matrixBuffer)
 	{
 		m_matrixBuffer->Release();
@@ -283,63 +277,51 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 	m_vertices.push_back(DirectX::XMFLOAT3(m_intersections[m_intersections.size() - 1].x, 0.2f, m_intersections[m_intersections.size() - 1].y));
 	m_vertices.push_back(DirectX::XMFLOAT3(m_intersections[0].x, 0.2f, m_intersections[0].y));
 
-	if (!m_renderReversed)
-	{
-		if (m_mesh)
-		{ 
-			m_mesh->Release();
-			m_mesh = 0;
-		}
-		
-		// Setup vertex buffer description.
-		D3D11_BUFFER_DESC vertexBuffer;
-		vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
-		vertexBuffer.ByteWidth = sizeof(DirectX::XMFLOAT3) * m_vertices.size();
-		vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBuffer.CPUAccessFlags = 0;
-		vertexBuffer.MiscFlags = 0;
-		vertexBuffer.StructureByteStride = 0;
-
-		// Setup vertex buffer data.
-		D3D11_SUBRESOURCE_DATA vertexData;
-		vertexData.pSysMem = m_vertices.data();
-		vertexData.SysMemPitch = 0;
-		vertexData.SysMemSlicePitch = 0;
-
-		// Create the vertex buffer.
-		p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_mesh);
+	if (m_mesh)
+	{ 
+		m_mesh->Release();
+		m_mesh = 0;
 	}
+		
+	// Setup vertex buffer description.
+	D3D11_BUFFER_DESC vertexBuffer;
+	vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
+	vertexBuffer.ByteWidth = sizeof(DirectX::XMFLOAT3) * m_vertices.size();
+	vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBuffer.CPUAccessFlags = 0;
+	vertexBuffer.MiscFlags = 0;
+	vertexBuffer.StructureByteStride = 0;
+
+	// Setup vertex buffer data.
+	D3D11_SUBRESOURCE_DATA vertexData;
+	vertexData.pSysMem = m_vertices.data();
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Create the vertex buffer.
+	p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_mesh);
 }
 
 void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11Device* p_device)
 {
-	// TODO, reverse the polygon? how?
-
 	if (m_renderReversed)
 	{
-		if (m_reversedMesh)
-		{
-			m_reversedMesh->Release();
-			m_reversedMesh = 0;
-		}
+		// TODO, render to texture to reverse the polygon.
 
-		// Setup vertex buffer description.
-		D3D11_BUFFER_DESC vertexBuffer;
-		vertexBuffer.Usage = D3D11_USAGE_DYNAMIC;
-		vertexBuffer.ByteWidth = sizeof(DirectX::XMFLOAT3) * m_vertices.size();
-		vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vertexBuffer.CPUAccessFlags = 0;
-		vertexBuffer.MiscFlags = 0;
-		vertexBuffer.StructureByteStride = 0;
+		//// Set parameters and then render the unreversed polygon.
+		//unsigned int stride = sizeof(DirectX::XMFLOAT3);
+		//const unsigned int offset = 0;
 
-		// Setup vertex buffer data.
-		D3D11_SUBRESOURCE_DATA vertexData;
-		vertexData.pSysMem = m_vertices.data();
-		vertexData.SysMemPitch = 0;
-		vertexData.SysMemSlicePitch = 0;
+		//UpdateMatrices(p_context);
 
-		// Create the vertex buffer.
-		p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_reversedMesh);
+		//p_context->VSSetShader(m_vertexShader, NULL, 0);
+		//p_context->PSSetShader(m_pixelShader, NULL, 0);
+
+		//p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
+		//p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//p_context->IASetInputLayout(m_layout);
+
+		//p_context->Draw(m_vertices.size(), 0);
 	}
 }
 
@@ -419,26 +401,23 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	{
 		GraphicsEngine::TurnOnAlphaBlending();
 
-		// Set parameters and then render.
-		unsigned int stride = sizeof(DirectX::XMFLOAT3);
-		const unsigned int offset = 0;
-
-		UpdateMatrices(p_context);
-
-		p_context->VSSetShader(m_vertexShader, NULL, 0);
-		p_context->PSSetShader(m_pixelShader, NULL, 0);
-
 		if (m_renderReversed)
 		{
-			p_context->IASetVertexBuffers(0, 1, &m_reversedMesh, &stride, &offset);
-			p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			p_context->IASetInputLayout(m_layout);
-
-			p_context->Draw(m_vertices.size(), 0);
+			// TODO, Render the reveresed poylgon texture here.
+			//GraphicsEngine::RenderScene();
 		}
 
 		else
 		{
+			// Set parameters and then render the unreversed polygon.
+			unsigned int stride = sizeof(DirectX::XMFLOAT3);
+			const unsigned int offset = 0;
+
+			UpdateMatrices(p_context);
+
+			p_context->VSSetShader(m_vertexShader, NULL, 0);
+			p_context->PSSetShader(m_pixelShader, NULL, 0);
+
 			p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
 			p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			p_context->IASetInputLayout(m_layout);
