@@ -196,7 +196,6 @@ void ObjectManager::Update()
 		Network::GetInstance()->SetHaveUpdateSmokeBombList();
 	}
 
-	///
 	if (Network::GetInstance()->IsSpikeTrapListUpdated())
 	{
 		std::vector<SpikeNet> tempSpikeTrapList = Network::GetInstance()->GetSpikeTraps();
@@ -251,22 +250,59 @@ void ObjectManager::Update()
 		}
 		
 	}
-	
-}
 
-void ObjectManager::Render()
+	UpdateRenderLists();
+}
+void ObjectManager::UpdateRenderLists()
 {
-	m_objectsToRender.clear();
+	std::vector<Object*> tempList;
+	m_objectsToInstanceRender.clear();
+	m_objectsToSingleRender.clear();
+	tempList.clear();
+
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
+		sphere.m_position.x -= 3.0f;
+		sphere.m_position.z -= 3.0f;
+		if (m_frustum->CheckSphere(sphere, 10.0f))
 		{
-			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
+			tempList.push_back(&m_staticObjects[i]);
+		}
+	}
+	std::vector<Object*>  temp;
+	Object* prevObject = &m_staticObjects[m_staticObjects.size() - 1];
+	for (unsigned int i = 0; i < tempList.size(); i++)
+	{
+		temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
+		if (prevObject->GetModel() != temp[0]->GetModel())
+		{
+			if (temp.size() == 1)
 			{
-				m_objectsToRender.push_back(&m_staticObjects[i]);
-				m_staticObjects[i].RenderInstanced();
+				m_objectsToSingleRender.push_back(tempList[i]);
+			}
+			else
+			{
+				if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
+				{
+					m_objectsToInstanceRender.push_back(tempList[i]);
+					GraphicsEngine::UpdateInstanceBuffers(temp);
+				}
 			}
 		}
+		prevObject = temp[0];
+	}
+}
+void ObjectManager::Render()
+{
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	{
+		m_objectsToInstanceRender[i]->RenderInstanced();
+	}
+
+	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
+	{
+		m_objectsToSingleRender[i]->Render();
 	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -314,20 +350,14 @@ void ObjectManager::Render()
 
 void ObjectManager::RenderDepth()
 {
-	m_objectsToShadowRender.clear();
-	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
 	{
-		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
-		sphere.m_position.x -= 3.0f;
-		sphere.m_position.z -= 3.0f;
-		if (m_frustum->CheckSphere(sphere, 7.5f))
-		{
-			if (CheckIfModelIsInObjectToShadowRenderList(&m_staticObjects[i]))
-			{
-				m_objectsToShadowRender.push_back(&m_staticObjects[i]);
-				m_staticObjects[i].RenderDepthInstanced();
-			}
-		}
+		m_objectsToInstanceRender[i]->RenderDepthInstanced();
+	}
+
+	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
+	{
+		m_objectsToSingleRender[i]->RenderDepth();
 	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -469,28 +499,32 @@ void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 	m_frustum = p_frustum;
 }
 
-bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object)
+bool ObjectManager::CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list)
 {
-	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
+	if (!p_list.empty())
 	{
-		if (m_objectsToRender[i]->GetModel() == p_object->GetModel())
+		if (p_list[0]->GetModel() == p_object->GetModel())
 		{
-			return false;
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
-bool ObjectManager::CheckIfModelIsInObjectToShadowRenderList(Object *p_object)
+std::vector<Object*> ObjectManager::CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list)
 {
-	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
+	std::vector<Object*> returnList;
+	if (!p_list.empty())
 	{
-		if (m_objectsToShadowRender[i]->GetModel() == p_object->GetModel())
+		for (unsigned int i = 0; i < p_list.size(); i++)
 		{
-			return false;
+			if (p_list[i]->GetModel() == p_object->GetModel())
+			{
+				returnList.push_back(p_list[i]);
+			}
 		}
 	}
-	return true;
+	return returnList;
 }
 
 bool ObjectManager::IsFanInList(unsigned int p_fanId)

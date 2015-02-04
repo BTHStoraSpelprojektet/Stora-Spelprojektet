@@ -26,6 +26,8 @@ bool Camera::Initialize()
 	DirectX::XMStoreFloat4x4(&m_viewMatrix,DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixIdentity());
 
+	m_menuRotation = 0.0f;
+
 	return true;
 }
 
@@ -358,6 +360,41 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	UpdateTarget(target);
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(false);
+	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+}
+
+void Camera::MenuCameraRotation()
+{
+	// Create rotation matrix
+	m_menuRotation += (float)GLOBAL::GetInstance().GetDeltaTime() / 16.0f;
+	if (m_menuRotation > 6.28f)
+	{
+		m_menuRotation = 0.0f;
+	}
+	DirectX::XMMATRIX rotation = DirectX::XMMatrixRotationY(m_menuRotation);
+
+	// Lock shadows in center.
+	DirectX::XMFLOAT3 shadowPosition = GetPosition();
+	DirectX::XMStoreFloat3(&shadowPosition, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&shadowPosition), rotation));
+	shadowPosition.x *= 0.8f;
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(25.0f + shadowPosition.x, 100.0f, 50.0f);
+
+	UpdatePosition(position);
+	UpdateTarget(DirectX::XMFLOAT3(shadowPosition.x, 5.0f, 0.0f));
+	UpdateViewMatrix();
+	UpdateProjectionMatrix(true);
+	GraphicsEngine::SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+
+	// Lock camera in center and rotate camera.	
+	position = DirectX::XMFLOAT3(0.0f, 40.0f, -24.0f);
+
+	UpdatePosition(position);
+	UpdateTarget(DirectX::XMFLOAT3(0.0f, 7.5f, 0.0f));
+	UpdateViewMatrix();
+	UpdateProjectionMatrix(false);
+
+	DirectX::XMStoreFloat4x4(&m_viewMatrix, DirectX::XMMatrixMultiply(rotation, DirectX::XMLoadFloat4x4(&m_viewMatrix)));
+
 	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }
 
