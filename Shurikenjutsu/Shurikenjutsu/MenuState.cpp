@@ -5,6 +5,9 @@
 #include "Globals.h"
 #include "TextureLibrary.h"
 #include "GraphicsEngine.h"
+#include "Camera.h"
+#include "Frustum.h"
+#include "..\CommonLibs\ModelNames.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -67,6 +70,35 @@ bool MenuState::Initialize()
 	// Push main menu
 	m_menues.push(m_main);
 
+	// Things for background
+
+	// Initialize the camera.
+	m_camera = new Camera();
+	m_camera->Initialize();
+	m_camera->ResetCamera();
+
+	// Load the level.
+	Level level(LEVEL_NAME);
+
+	// Initialize the objectmanager.
+	m_objectManager = new ObjectManager();
+	m_objectManager->Initialize(&level);
+
+	// Frustum
+	m_frustum = new Frustum();
+	m_updateFrustum = true;
+	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
+	m_objectManager->UpdateFrustum(m_frustum);
+
+	// Initialize directional light
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
+	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
+	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
+
+	//
+
 	return true;
 }
 
@@ -105,6 +137,17 @@ void MenuState::Shutdown()
 	{
 		delete m_ipboxText;
 		m_ipboxText = 0;
+	}
+
+	if (m_camera != NULL)
+	{
+		m_camera->Shutdown();
+		delete m_camera;
+	}
+	if (m_objectManager != NULL)
+	{
+		m_objectManager->Shutdown();
+		delete m_objectManager;
 	}
 }
 GAMESTATESWITCH MenuState::Update()
@@ -188,6 +231,16 @@ GAMESTATESWITCH MenuState::Update()
 
 	m_ipboxText->SetText(m_ipbox->GetIp());
 
+	// Update Camera position
+	m_camera->MenuCameraRotation();
+
+	// Update Frustum
+	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
+	m_objectManager->UpdateFrustum(m_frustum);
+
+	// Update Directional Light's camera position
+	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -207,4 +260,16 @@ void MenuState::Render()
 		m_ipbox->Render();
 		m_ipboxText->Render();
 	}
+
+	// Draw to the shadowmap.
+	GraphicsEngine::BeginRenderToShadowMap();
+	m_objectManager->RenderDepth();
+	GraphicsEngine::SetShadowMap();
+	GraphicsEngine::ResetRenderTarget();
+
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
+
+	// Draw to the scene.
+	m_objectManager->Render();
+	GraphicsEngine::ResetRenderTarget();
 }
