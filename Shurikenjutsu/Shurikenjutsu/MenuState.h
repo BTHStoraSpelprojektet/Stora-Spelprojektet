@@ -19,6 +19,9 @@ public:
 	MenuState();
 	~MenuState();
 
+	void* operator new(size_t p_i);
+	void operator delete(void* p_p);
+
 	bool Initialize();
 	void Shutdown();
 
@@ -47,8 +50,6 @@ private:
 	Camera* m_camera;
 	Frustum* m_frustum;
 	DirectionalLight m_directionalLight;
-
-	bool m_updateFrustum;
 };
 
 #endif
