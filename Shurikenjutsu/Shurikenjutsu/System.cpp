@@ -253,6 +253,7 @@ void System::Update()
 	case GAMESTATESWITCH_PLAY:
 		m_gameState = m_playingState;
 		m_gameState->Initialize();
+		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		break;
 	case GAMESTATESWITCH_MENU:
 		m_gameState = m_menuState;
