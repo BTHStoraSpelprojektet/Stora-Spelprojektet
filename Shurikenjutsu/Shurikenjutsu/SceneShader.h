@@ -5,6 +5,8 @@
 #include <vector>
 #include "Structures.h"
 
+class Object;
+
 class SceneShader
 {
 public:
@@ -36,7 +38,7 @@ public:
 	void RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
 	void AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position);
 	int GetNumberOfInstanceBuffer();
-	//void UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_position, int p_index);
+	void UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<Object*> p_ObjectList);
 
 private:
 	void InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices);

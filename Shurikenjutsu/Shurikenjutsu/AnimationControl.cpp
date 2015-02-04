@@ -92,6 +92,8 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	
 	if (strcmp(p_jointLegs->m_name, "HandR") == 0 ||
 		strcmp(p_jointLegs->m_name, "HandL") == 0 ||
+		strcmp(p_jointLegs->m_name, "ElbowR") == 0 ||
+		strcmp(p_jointLegs->m_name, "ElbowL") == 0 ||
 		strcmp(p_jointLegs->m_name, "ShoulderR") == 0 ||
 		strcmp(p_jointLegs->m_name, "ShoulderL") == 0)
 	{

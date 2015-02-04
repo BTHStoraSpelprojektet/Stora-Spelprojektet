@@ -9,6 +9,9 @@
 class GUIText;
 class Menu;
 class MenuIpBox;
+class ObjectManager;
+class Frustum;
+class Camera;
 
 class MenuState : public GameState
 {
@@ -38,6 +41,14 @@ private:
 	bool m_lastfullscreen;
 	int m_vsyncIndex;
 	int m_fullscreenIndex;
+
+	//Background
+	ObjectManager* m_objectManager;
+	Camera* m_camera;
+	Frustum* m_frustum;
+	DirectionalLight m_directionalLight;
+
+	bool m_updateFrustum;
 };
 
 #endif

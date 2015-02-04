@@ -15,9 +15,6 @@
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{bd49b8cf-8bf0-4f38-b691-026f1aac2144}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Utility">
-      <UniqueIdentifier>{50e9b74b-568e-4883-8d0d-54ac882643cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Physics">
       <UniqueIdentifier>{d7a413b4-9647-48c8-ab61-44af04377eff}</UniqueIdentifier>
     </Filter>
@@ -80,9 +77,6 @@
     </Filter>
     <Filter Include="Shaders\Line">
       <UniqueIdentifier>{e854a981-efee-478c-894d-ae58c1e87c5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Utility\DebugDraw">
-      <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Utility\DebugDraw">
       <UniqueIdentifier>{6ca99271-27a1-4224-a30f-02cd00536f35}</UniqueIdentifier>
@@ -155,6 +149,12 @@
     </Filter>
     <Filter Include="Header Files\Ninjas">
       <UniqueIdentifier>{a6867d01-73db-4cd3-a267-4f0ea3cb3317}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ShadowShapes\Utility">
+      <UniqueIdentifier>{50e9b74b-568e-4883-8d0d-54ac882643cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ShadowShapes\Utility\DebugDraw">
+      <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -422,16 +422,16 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Structures.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\ShadowShapes\Utility</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleFunctions.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\ShadowShapes\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Flags.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\ShadowShapes\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Collisions.h">
       <Filter>Header Files\Physics</Filter>
@@ -443,7 +443,7 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Enumerations.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\ShadowShapes\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Graphics</Filter>
@@ -461,7 +461,7 @@
       <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\ShadowShapes\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Object</Filter>
@@ -497,28 +497,28 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="DebugDraw.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
+      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugRectangle.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
+      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugLineList.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
+      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugShape2D.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
+      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugShape3D.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
+      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugBox.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
+      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugCircle.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
+      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugDot.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
+      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedObject.h">
       <Filter>Header Files\Object</Filter>
@@ -614,7 +614,7 @@
       <Filter>Header Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="QuadTree.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Header Files\ShadowShapes\Utility</Filter>
     </ClInclude>
     <ClInclude Include="GUIElementColor.h">
       <Filter>Header Files\GUI\Internal</Filter>
