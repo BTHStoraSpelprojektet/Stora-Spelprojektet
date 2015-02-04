@@ -2,6 +2,7 @@
 #define VISIBILITYCOMPUTER
 
 #include "ShadowShapes.h"
+#include "RenderTarget.h"
 
 struct Intersection
 {
@@ -61,6 +62,7 @@ public:
 	bool Initialize(ID3D11Device* p_device);
 	void Shutdown();
 
+	void UpdateTextureSize(int p_width, int p_height);
 	void UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device);
 	void UpdateMapBoundries(Point p_topLeft, Point p_bottomRight);
 
@@ -85,7 +87,7 @@ private:
 	void QuickSortAngles(std::vector<PolygonPoint>& p_list, int p_left, int p_right);
 
 	void CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device);
-	void CalculateReversedVisibilityPolygon(ID3D11Device* p_device);
+	void CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context);
 
 	void UpdateMatrices(ID3D11DeviceContext* p_context);
 
@@ -101,7 +103,6 @@ private:
 	ID3D11PixelShader* m_pixelShader;
 	ID3D11InputLayout* m_layout;
 	ID3D11Buffer* m_mesh;
-	ID3D11Buffer* m_reversedMesh;
 
 	DirectX::XMFLOAT4X4 m_worldMatrix;
 	DirectX::XMFLOAT4X4 m_viewMatrix;
@@ -117,5 +118,7 @@ private:
 
 	bool m_renderReversed;
 	bool m_render;
+
+	RenderTarget* m_renderTarget;
 };
 #endif

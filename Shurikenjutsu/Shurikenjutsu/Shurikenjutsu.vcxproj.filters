@@ -401,6 +401,9 @@
     <ClCompile Include="NaginataNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
+    <ClCompile Include="Cursor.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
     <ClCompile Include="KunaiAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
@@ -666,6 +669,9 @@
     </ClInclude>
     <ClInclude Include="NaginataNinja.h">
       <Filter>Header Files\Ninjas</Filter>
+    </ClInclude>
+    <ClInclude Include="Cursor.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="KunaiAbility.h">
       <Filter>Header Files\Abilities</Filter>

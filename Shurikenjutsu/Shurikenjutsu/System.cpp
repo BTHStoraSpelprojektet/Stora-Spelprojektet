@@ -16,6 +16,7 @@
 #include "Globals.h"
 #include "TextureLibrary.h"
 #include "VisibilityComputer.h"
+#include "Cursor.h"
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -148,6 +149,14 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
+	// Cursor
+	m_cursor = new Cursor();
+	result = m_cursor->Initialize();
+	if (!result)
+	{
+		return false;
+	}
+
 	return result;
 }
 
@@ -178,6 +187,12 @@ void System::Shutdown()
 	TextureLibrary::GetInstance()->Shutdown();
 
 	m_sound->Shutdown();
+
+	if (!m_cursor != NULL)
+	{
+		m_cursor->Shutdown();
+		delete m_cursor;
+	}
 
 	GUIManager::GetInstance()->Shutdown();
 
@@ -229,6 +244,14 @@ void System::Update()
 	// Get the delta time to use for animation etc.
 	GLOBAL::GetInstance().SetDeltaTime(m_timer->GetDeltaTime());
 
+	// Update border size
+	RECT windowRect;
+	GetWindowRect(m_window.GetHandle(), &windowRect);
+	RECT clientRect;
+	GetClientRect(m_window.GetHandle(), &clientRect);
+	GLOBAL::GetInstance().BORDER_SIZE = (float)((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left)) * 0.5f;
+	GLOBAL::GetInstance().TITLE_BORDER_SIZE = (float)((windowRect.bottom - windowRect.top) - (clientRect.bottom - clientRect.top)) - 2.0f * GLOBAL::GetInstance().BORDER_SIZE;
+
 	if (FLAG_FPS == 1)
 	{
 		int fps = m_timer->GetFPS();
@@ -249,18 +272,22 @@ void System::Update()
 	case GAMESTATESWITCH_CHOOSENINJA:
 		m_gameState = m_chooseNinjaState;
 		m_gameState->Initialize();
+		m_cursor->SetRenderCursor(true);
 		break;
 	case GAMESTATESWITCH_PLAY:
 		m_gameState = m_playingState;
 		m_gameState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
+		m_cursor->SetRenderCursor(true);
 		break;
 	case GAMESTATESWITCH_MENU:
 		m_gameState = m_menuState;
+		m_cursor->SetRenderCursor(true);
 		break;
 	}
 	
 	m_sound->Update();
+	m_cursor->Update();
 
 	// Update network
 	Network::GetInstance()->Update();
@@ -280,6 +307,9 @@ void System::Render()
 
 	// Render Current GameState
 	m_gameState->Render();
+
+	// Render cursor
+	m_cursor->Render();
 
 	//Render GUI
 	GUIManager::GetInstance()->Render();

@@ -13,6 +13,7 @@ class ChooseState;
 class MenuState;
 class PlayingStateTest;
 class GameState;
+class Cursor;
 
 class System
 {
@@ -37,6 +38,7 @@ private:
 	ChooseState* m_chooseNinjaState;
 	GameState* m_gameState;
 	PlayingStateTest* m_playingState;
+	Cursor *m_cursor;
 
 	Sound* m_sound;
 };
