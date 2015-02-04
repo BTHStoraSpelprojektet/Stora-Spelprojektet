@@ -391,38 +391,56 @@ void MapExporter::GetPositions(){
 				}
 				if (transform.child(i).apiType() == MFn::kLocator){
 					print(transform.name());
-					MFnMesh mesh(transform.child(i));
-					MVector v = transform.getTranslation(MSpace::kTransform);
-					double dest2[3];
-					v.get(dest2);
-					//MMatrix matrix = mesh.transformationMatrix();
+					if (strcmp(transform.name().substring(0, 9).asChar(), "spawnPoint")){
+						MFnMesh mesh(transform.child(i));
+						MVector v = transform.getTranslation(MSpace::kTransform);
+						double dest2[3];
+						v.get(dest2);
+						//MMatrix matrix = mesh.transformationMatrix();
 
-					double rotatex, rotatey, rotatez, rotatew;
-					//transform.getRotationQuaternion(rotatex, rotatey, rotatez, rotatew, MSpace::kTransform);
+						double rotatex, rotatey, rotatez, rotatew;
+						//transform.getRotationQuaternion(rotatex, rotatey, rotatez, rotatew, MSpace::kTransform);
 
-					MEulerRotation meuler;
-					transform.getRotation(meuler);
-					MVector eulerRotation = meuler.asVector();
-					rotatex = eulerRotation.x;
-					rotatey = eulerRotation.y;
-					rotatez = eulerRotation.z;
-					rotatew = 0;
+						MEulerRotation meuler;
+						transform.getRotation(meuler);
+						MVector eulerRotation = meuler.asVector();
+						rotatex = eulerRotation.x;
+						rotatey = eulerRotation.y;
+						rotatez = eulerRotation.z;
+						rotatew = 0;
 
-					print(dest2[0]);
-					print(dest2[1]);
-					print(dest2[2]);
+						print(dest2[0]);
+						print(dest2[1]);
+						print(dest2[2]);
 
-					world.wObjects[counter].name = transform.name().asChar();
-					world.wObjects[counter].x = dest2[0];
-					world.wObjects[counter].y = dest2[1];
-					world.wObjects[counter].z = dest2[2];
+						world.wObjects[counter].name = transform.name().asChar();
+						world.wObjects[counter].x = dest2[0];
+						world.wObjects[counter].y = dest2[1];
+						world.wObjects[counter].z = dest2[2];
 
-					world.wObjects[counter].rotatex = rotatex;
-					world.wObjects[counter].rotatey = rotatey;
-					world.wObjects[counter].rotatez = rotatez;
-					world.wObjects[counter].rotatew = rotatew;
+						world.wObjects[counter].rotatex = rotatex;
+						world.wObjects[counter].rotatey = rotatey;
+						world.wObjects[counter].rotatez = rotatez;
+						world.wObjects[counter].rotatew = rotatew;
 
-					counter++;
+						counter++;
+					}
+					else if (strcmp(transform.name().substring(0, 11).asChar(), "ShadowShapes")){
+
+						MVector v = transform.getTranslation(MSpace::kTransform);
+						double dest2[3];
+						v.get(dest2);
+
+						world.wObjects[counter].name = transform.name().asChar();
+						world.wObjects[counter].x = dest2[0];
+						world.wObjects[counter].y = dest2[1];
+						world.wObjects[counter].z = dest2[2];
+
+						world.wObjects[counter].rotatex = 0;
+						world.wObjects[counter].rotatey = 0;
+						world.wObjects[counter].rotatez = 0;
+						world.wObjects[counter].rotatew = 0;
+					}
 				}
 
 			} 
