@@ -600,16 +600,44 @@ bool Player::CheckSidesIfMultipleCollisions()
 	playerSphere.m_position.z = m_position.z;
 	bool left = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
 
-	if (down && (right || left))
+	if (!left && !up && !right)
 	{
-		return true;
+		return false;
 	}
-	else if (up && (right || left))
+	else if (!up && !right && !down)
 	{
-		return true;
+		return false;
+	}
+	else if (!right && !down && !left)
+	{
+		return false;
+	}
+	else if (!down && !left && !up)
+	{
+		return false;
 	}
 
-	return false;
+	bool x = m_direction.x > 0;
+	bool z = m_direction.z > 0;
+
+	if (x && left)
+	{
+		return false;
+	}
+	else if (right && !x)
+	{
+		return false;
+	}
+	else if (!z && up)
+	{
+		return false;
+	}
+	else if (down && z)
+	{
+		return false;
+	}
+
+	return true;
 }
 void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 {
