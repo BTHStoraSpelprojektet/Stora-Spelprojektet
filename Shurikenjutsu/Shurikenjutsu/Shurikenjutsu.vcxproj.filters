@@ -410,6 +410,9 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="TeamStatusBar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -678,6 +681,9 @@
     </ClInclude>
     <ClInclude Include="Projectile.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="TeamStatusBar.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
