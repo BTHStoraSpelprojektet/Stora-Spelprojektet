@@ -1,6 +1,7 @@
 #include "GUIElement.h"
 #include "TextureLibrary.h"
 #include "GUIManager.h"
+#include "GraphicsEngine.h"
 
 GUIElement::GUIElement(){}
 GUIElement::~GUIElement(){}
@@ -54,4 +55,10 @@ ID3D11ShaderResourceView* GUIElement::GetTexture()const
 void GUIElement::SetTexture(ID3D11ShaderResourceView* p_texture)
 {
 	m_texture = p_texture;
+}
+
+// For cursor :)
+void GUIElement::Render()
+{
+	GraphicsEngine::RenderGUI(GetWorldMatrix(), m_texture);
 }
