@@ -107,7 +107,7 @@ void TeamStatusBar::Update()
 			}
 			else
 			{
-				// Add new dot
+				// Add new red dot
 				GUIElement element = GUIElement();
 				element.Initialize(DirectX::XMFLOAT3((float)(redColorDots.size() + 1) * m_dotPosOffset, m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_RED_PLAYER));
 				redColorDots[players[i].guid] = element;
@@ -129,7 +129,7 @@ void TeamStatusBar::Update()
 			}
 			else
 			{
-				// Add new dot
+				// Add new blue dot
 				GUIElement element = GUIElement();
 				element.Initialize(DirectX::XMFLOAT3(-((float)(blueColorDots.size() + 1) * m_dotPosOffset), m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_BLUE_PLAYER));
 				blueColorDots[players[i].guid] = element;
@@ -137,28 +137,44 @@ void TeamStatusBar::Update()
 		}
 	}
 
+	// Johan use this?
+	//if (pm_it->second == delete_this_id)
+	//{
+	//	pm_it = port_map.erase(pm_it);
+	//}
+	//else
+	//{
+	//	++pm_it;
+	//}
+
+	std::vector<RakNet::RakNetGUID> guidsToRemove = std::vector<RakNet::RakNetGUID>();
 	// Check for dead players in red team
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = redColorDots.begin(); it != redColorDots.end(); it++)
 	{
 		if (it->first != player.guid && playersMap.find(it->first) == playersMap.end())
 		{
 			// Found a dead player
-			RemoveRedColorPlayer(it->first);
-			//it = redColorDots.begin();
-			break;
+			guidsToRemove.push_back(it->first);
 		}
 	}
+	for (unsigned int i = 0; i < guidsToRemove.size(); i++)
+	{
+		RemoveRedColorPlayer(guidsToRemove[i]);
+	}
 
+	guidsToRemove.clear();
 	// Check for dead players in blue team
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = blueColorDots.begin(); it != blueColorDots.end(); it++)
 	{
 		if (it->first != player.guid && playersMap.find(it->first) == playersMap.end())
 		{
 			// Found a dead player
-			RemoveBlueColorPlayer(it->first);
-			//it = blueColorDots.begin();
-			break;
+			guidsToRemove.push_back(it->first);
 		}
+	}
+	for (unsigned int i = 0; i < guidsToRemove.size(); i++)
+	{
+		RemoveBlueColorPlayer(guidsToRemove[i]);
 	}
 }
 
