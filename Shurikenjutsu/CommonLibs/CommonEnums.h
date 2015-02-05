@@ -27,4 +27,11 @@ enum AnimationState {
 	Spawn
 };
 
+enum EmitterType{
+	Fire,
+	Smoke,
+	LeafTree,
+	LeafSakura
+};
+
 #endif // !COMMONENUMS_H_
