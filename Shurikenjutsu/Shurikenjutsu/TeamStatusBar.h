@@ -7,9 +7,6 @@
 #include "Network.h"
 #include "GUIElement.h"
 
-
-#include <iostream>
-
 class TeamStatusBar
 {
 public:
