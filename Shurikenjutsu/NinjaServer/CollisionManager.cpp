@@ -836,3 +836,9 @@ float CollisionManager::GetAngle(float p_x, float p_y)
 {
 	return 1;
 }
+
+/*DirectX::XMFLOAT3 orientation = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+DirectX::XMStoreFloat3(&orientation, DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&orientation), DirectX::XMLoadFloat3(&p_direction)));
+float angles;
+DirectX::XMStoreFloat(&angles, DirectX::XMVector3Length(DirectX::XMLoadFloat3(&orientation)));
+DirectX::XMStoreFloat3(&direction, DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&direction), DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&orientation), -angles)));*/
