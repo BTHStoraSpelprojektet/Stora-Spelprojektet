@@ -57,5 +57,11 @@ protected:
 	std::vector<OBB> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
 	int m_InstanceIndex;
+
+private:
+	void findVegetation(const char* p_filepath);
+
+	bool isVegetation;
+	double rotation;
 };
 #endif

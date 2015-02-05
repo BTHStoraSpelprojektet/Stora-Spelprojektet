@@ -31,6 +31,8 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 
+	findVegetation(p_filepath);
+
 	TransformBoundingBoxes();
 	TransformBoundingSpheres();
 
@@ -93,9 +95,17 @@ void Object::SetRotation(DirectX::XMFLOAT3 p_rotation)
 
 DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 {
+	DirectX::XMVECTOR rotationVector = DirectX::XMLoadFloat3(&m_rotation);
+	if (isVegetation)
+	{
+		rotation += 0.002;
+		
+		rotationVector.m128_f32[1] += m_rotation.y * ((float)sin(rotation) / 186.0f);
+	}
+
 	DirectX::XMFLOAT4X4 matrix;
 	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) * 
-		DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) * 
+		DirectX::XMMatrixRotationRollPitchYawFromVector(rotationVector) *
 		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
 	
 	return matrix;
@@ -195,4 +205,22 @@ int Object::GetInstanceIndex() const
 void Object::SetInstanceIndex(int p_instanceIndex)
 {
 	m_InstanceIndex = p_instanceIndex;
+}
+
+void Object::findVegetation(const char* p_filePath)
+{
+	const unsigned int size = 3;
+	std::string type[size] = { "Bush", "Tree", "tree" };
+	std::string path = p_filePath;
+
+	isVegetation = false;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		std::size_t found = path.find(type[i]);
+		if (found != std::string::npos)
+		{
+			rotation = 0.0;
+			isVegetation = true;
+		}
+	}
 }
