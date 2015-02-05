@@ -287,6 +287,7 @@ void ObjectManager::UpdateRenderLists()
 		sphere.m_position.z -= 3.0f;
 		if (m_frustum->CheckSphere(sphere, 10.0f))
 		{
+			m_staticObjects[i].UpdateRotation();
 			tempList.push_back(&m_staticObjects[i]);
 		}
 	}

@@ -40,6 +40,8 @@ public:
 	std::vector<Sphere> GetBoundingSpheres();
 	Sphere GetFrustumSphere();
 
+	void UpdateRotation();
+
 	void CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_positions);
 
 	int GetInstanceIndex() const;
@@ -61,7 +63,7 @@ protected:
 private:
 	void findVegetation(const char* p_filepath);
 
-	bool isVegetation;
-	double rotation;
+	bool m_isVegetation;
+	double m_rotationTimer;
 };
 #endif
