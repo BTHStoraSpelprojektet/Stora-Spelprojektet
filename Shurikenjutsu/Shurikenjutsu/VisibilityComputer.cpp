@@ -178,9 +178,6 @@ void VisibilityComputer::Shutdown()
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
-	m_render = false;
-	Point center = p_viewerPosition;
-
 	m_render = true;
 	m_intersections.clear();
 
