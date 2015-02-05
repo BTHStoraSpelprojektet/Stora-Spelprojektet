@@ -63,7 +63,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	if (FLAG_DEBUG == 1)
 	{
 		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.5f, m_playerManager->GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-		m_debugRect.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), 1.0f, 3.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
+		m_debugRect.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z + 10), 0.2f, 20.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 		m_mouseX = 0;
 		m_mouseY = 0;
 		
