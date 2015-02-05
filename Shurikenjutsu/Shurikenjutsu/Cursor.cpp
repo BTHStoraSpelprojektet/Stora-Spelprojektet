@@ -13,10 +13,12 @@ bool Cursor::Initialize()
 {
 	m_useCustomCursor = true;
 	m_renderCursor = true;
+	m_largeSize = 100.0f;
+	m_smallSize = 50.0f;
 	ShowCursor(!m_useCustomCursor && m_renderCursor);
 
 	m_cursor = new GUIElement();
-	if (!m_cursor->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(CURSOR_TEXTURE)))
+	if (!m_cursor->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), m_largeSize, m_largeSize, TextureLibrary::GetInstance()->GetTexture(CURSOR_TEXTURE)))
 	{
 		return false;
 	}
@@ -52,7 +54,7 @@ void Cursor::Render()
 {
 	if (m_useCustomCursor && m_renderCursor)
 	{
-		m_cursor->QueueRender();
+		m_cursor->Render();
 	}
 }
 
@@ -66,4 +68,14 @@ void Cursor::SetRenderCursor(bool p_render)
 {
 	m_renderCursor = p_render;
 	ShowCursor(!m_useCustomCursor && m_renderCursor);
+}
+
+void Cursor::LargeSize()
+{
+	m_cursor->SetSize(DirectX::XMFLOAT2(m_largeSize, m_largeSize));
+}
+
+void Cursor::SmallSize()
+{
+	m_cursor->SetSize(DirectX::XMFLOAT2(m_smallSize, m_smallSize));
 }
