@@ -70,8 +70,6 @@ public:
 
 	bool IsPointVisible(Point p_point);
 
-	void SetReversedRenderMode(bool p_value);
-
 	void SetMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 
 private:
@@ -116,9 +114,8 @@ private:
 		DirectX::XMMATRIX m_projectionMatrix;
 	};
 
-	bool m_renderReversed;
 	bool m_render;
 
-	RenderTarget* m_renderTarget;
+	RenderTarget m_renderTarget;
 };
 #endif

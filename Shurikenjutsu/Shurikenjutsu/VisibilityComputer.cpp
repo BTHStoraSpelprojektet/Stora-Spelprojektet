@@ -14,7 +14,6 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 {
 	m_render = false;
-	m_renderReversed = true;
 
 	m_intersections.clear();
 	m_vertices.clear();
@@ -257,10 +256,7 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 	CalculateVisibilityPolygon(p_viewerPosition, p_device);
 
 	// Reverse the polygon.
-	if (m_renderReversed)
-	{
-		//CalculateReversedVisibilityPolygon(GraphicsEngine::GetContext());
-	}
+	CalculateReversedVisibilityPolygon(GraphicsEngine::GetContext());
 }
 
 void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
@@ -309,8 +305,8 @@ void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext*
 {
 	float color[4] = { 0.0f, 0.0f, 0.0f, 0.25f };
 
-	m_renderTarget->SetAsRenderTarget(p_context);
-	m_renderTarget->Clear(p_context, color);
+	m_renderTarget.SetAsRenderTarget(p_context);
+	m_renderTarget.Clear(p_context, color);
 
 	// Set parameters and then render the unreversed polygon.
 	unsigned int stride = sizeof(DirectX::XMFLOAT3);
@@ -406,29 +402,23 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	{
 		GraphicsEngine::TurnOnAlphaBlending();
 
-		if (m_renderReversed)
-		{
-			// TODO, Render the reveresed poylgon texture here.
-			//GraphicsEngine::RenderScene();
-		}
+		// TODO, Render the reveresed poylgon texture here.
+		//GraphicsEngine::RenderScene();
 
-		else
-		{
-			// Set parameters and then render the unreversed polygon.
-			unsigned int stride = sizeof(DirectX::XMFLOAT3);
-			const unsigned int offset = 0;
+		//// DEBUG RENDER.
+		//unsigned int stride = sizeof(DirectX::XMFLOAT3);
+		//const unsigned int offset = 0;
 
-			UpdateMatrices(p_context);
+		//UpdateMatrices(p_context);
 
-			p_context->VSSetShader(m_vertexShader, NULL, 0);
-			p_context->PSSetShader(m_pixelShader, NULL, 0);
+		//p_context->VSSetShader(m_vertexShader, NULL, 0);
+		//p_context->PSSetShader(m_pixelShader, NULL, 0);
 
-			p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
-			p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			p_context->IASetInputLayout(m_layout);
+		//p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
+		//p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//p_context->IASetInputLayout(m_layout);
 
-			p_context->Draw(m_vertices.size(), 0);
-		}
+		//p_context->Draw(m_vertices.size(), 0);
 
 		GraphicsEngine::TurnOffAlphaBlending();
 	}
@@ -552,11 +542,6 @@ void VisibilityComputer::QuickSortAngles(std::vector<PolygonPoint>& p_list, int 
 	}
 }
 
-void VisibilityComputer::SetReversedRenderMode(bool p_bool)
-{
-	m_renderReversed = p_bool;
-}
-
 void VisibilityComputer::SetMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_viewMatrix = p_viewMatrix;
@@ -565,14 +550,6 @@ void VisibilityComputer::SetMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::
 
 void VisibilityComputer::UpdateTextureSize(int p_width, int p_height)
 {
-	if (m_renderReversed)
-	{
-		if (m_renderTarget)
-		{
-			m_renderTarget->Shutdown();
-			m_renderTarget = 0;
-		}
-		// TODO, Crashar skiten
-		//m_renderTarget->Initialize(GraphicsEngine::GetDevice(), p_width, p_height);
-	}
+	m_renderTarget.Shutdown();
+	m_renderTarget.Initialize(GraphicsEngine::GetDevice(), p_width, p_height);
 }
