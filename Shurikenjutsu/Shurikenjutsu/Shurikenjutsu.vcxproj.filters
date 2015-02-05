@@ -411,7 +411,7 @@
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="TeamStatusBar.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -683,7 +683,7 @@
       <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="TeamStatusBar.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
