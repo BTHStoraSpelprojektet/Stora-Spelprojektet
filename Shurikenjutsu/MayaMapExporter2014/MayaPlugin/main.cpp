@@ -452,9 +452,20 @@ void MapExporter::GetPositions(){
 						world.wObjects[counter].y = dest2[1];
 						world.wObjects[counter].z = dest2[2];
 
-						world.wObjects[counter].rotatex = 0;
-						world.wObjects[counter].rotatey = 0;
-						world.wObjects[counter].rotatez = 0;
+						double rotatex, rotatey, rotatez, rotatew;
+						//transform.getRotationQuaternion(rotatex, rotatey, rotatez, rotatew, MSpace::kTransform);
+
+						MEulerRotation meuler;
+						transform.getRotation(meuler);
+						MVector eulerRotation = meuler.asVector();
+						rotatex = eulerRotation.x;
+						rotatey = eulerRotation.y;
+						rotatez = eulerRotation.z;
+						rotatew = 0;
+						
+						world.wObjects[counter].rotatex = rotatex;
+						world.wObjects[counter].rotatey = rotatey;
+						world.wObjects[counter].rotatez = rotatez;
 						world.wObjects[counter].rotatew = 0;
 					}
 				}

@@ -115,7 +115,7 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp, fl
 
 }
 
-void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isParticleEmitter, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
+void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isParticleEmitter, std::string &particleEmitterType, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
 	
 
 	if (currentWordTemp == 0){
@@ -150,6 +150,7 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 		}
 		else if (objectName.find("ParticleEmitter") != std::string::npos){
 			isParticleEmitter = true;
+			particleEmitterType = tmpStr.substr(16, tmpStr.size());
 		}
 		else
 		{
@@ -219,6 +220,31 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 				m_shadowShapes.push_back(ShadowShapeLine);
 			}
 		}
+		else if (isParticleEmitter){
+			ParticleEmitter particleEmitter;
+
+			particleEmitter.m_translationX = x;
+			particleEmitter.m_translationY = y;
+			particleEmitter.m_translationZ = -z;
+			particleEmitter.m_rotationX = rotateX;
+			particleEmitter.m_rotationY = -rotateY;
+			particleEmitter.m_rotationZ = rotateZ;
+			
+			if (particleEmitterType.find("Fire") != std::string::npos){
+				particleEmitter.type = EmitterType::Fire;
+			}
+			else if (particleEmitterType.find("Smoke") != std::string::npos){
+				particleEmitter.type = EmitterType::Smoke;
+			}
+			else if (particleEmitterType.find("LeafTree") != std::string::npos){
+				particleEmitter.type = EmitterType::LeafTree;
+			}
+			else if (particleEmitterType.find("LeafSakura") != std::string::npos){
+				particleEmitter.type = EmitterType::LeafSakura;
+			}
+
+			m_particleEmitter.push_back(particleEmitter);
+		}
 		else{
 			CommonObject object;
 			object.m_filePath = filePathToModel.c_str();
@@ -264,6 +290,7 @@ bool LevelImporter::readData(){
 		bool isParticleEmitter = false;
 		int currentTeam = 0;
 		std::string currentShadowShape = "";
+		std::string particleEmitterType = "";
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			std::string tmpStr = temp.at(currentWordTemp);
@@ -290,7 +317,7 @@ bool LevelImporter::readData(){
 
 			else if (currentLineTemp > (unsigned int)(headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (unsigned int)(numberOfObjects + headerSize + numberOfBoundingBoxesToSkip))
 			{
-				readLevelObject(tmpStr, currentWordTemp, isParticleEmitter, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
+				readLevelObject(tmpStr, currentWordTemp, isParticleEmitter, particleEmitterType, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 			}
 		}
 
@@ -310,6 +337,10 @@ std::vector<LevelImporter::SpawnPoint> LevelImporter::GetSpawnPoints(){
 
 std::vector<Line> LevelImporter::GetShadowsShapes(){
 	return m_shadowShapes;
+}
+
+std::vector<LevelImporter::ParticleEmitter> LevelImporter::GetParticleEmitters(){
+	return m_particleEmitter;
 }
 
 std::vector<LevelImporter::LevelBoundingBox> LevelImporter::getLevelBoundingBoxes(){
