@@ -23,6 +23,7 @@ HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
 IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
 IFW1TextGeometry* GraphicsEngine::m_textGeometry;
+InstanceManager* GraphicsEngine::m_instanceManager;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -122,7 +123,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	{
 		FW1Factory->Release();
 	}
-
+	m_instanceManager = new InstanceManager();
 	return result;
 }
 
@@ -145,6 +146,8 @@ void GraphicsEngine::Shutdown()
 	{
 		m_textGeometry->Release();
 	}
+	m_instanceManager->Shutdown();
+	delete m_instanceManager;
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
@@ -180,7 +183,7 @@ void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 
 void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
-	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex);
+	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
 }
 
 void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
@@ -200,7 +203,7 @@ void GraphicsEngine::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 
 void GraphicsEngine::RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 {
-	m_depthShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex);
+	m_depthShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex, m_instanceManager);
 }
 
 void GraphicsEngine::RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
@@ -349,13 +352,12 @@ void GraphicsEngine::TurnOffAlphaBlending()
 }
 
 void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
-{	
-	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
-	m_depthShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
+{
+	m_instanceManager->AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
 }
 int GraphicsEngine::GetNumberOfInstanceBuffer()
 {
-	return m_sceneShader.GetNumberOfInstanceBuffer();
+	return m_instanceManager->GetNumberOfInstanceBuffer();
 }
 bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 {    
@@ -458,7 +460,7 @@ void GraphicsEngine::ClearOutlining()
 
 void GraphicsEngine::UpdateInstanceBuffers(std::vector<Object*> p_ObjectList)
 {
-	m_sceneShader.UpdateDynamicInstanceBuffer(GetContext(), p_ObjectList);
+	m_instanceManager->UpdateDynamicInstanceBuffer(GetContext(), p_ObjectList);
 }
 
 IFW1FontWrapper* GraphicsEngine::GetFontWrapper()

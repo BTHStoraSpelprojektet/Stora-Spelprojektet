@@ -317,5 +317,8 @@ struct Line
 		b = p_b;
 	}
 };
-
+struct InstancePos
+{
+	DirectX::XMFLOAT4X4 position;
+};
 #endif
