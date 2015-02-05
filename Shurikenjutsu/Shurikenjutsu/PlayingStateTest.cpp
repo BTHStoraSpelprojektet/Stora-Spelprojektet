@@ -12,7 +12,7 @@
 #include "Minimap.h"
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
-
+#include "TeamStatusBar.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -87,6 +87,13 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initialize the minimap
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
+
+	// Initialize team status bar
+	m_teamStatusBar = new TeamStatusBar();
+	if (!m_teamStatusBar->Initialize())
+	{
+		return false;
+	}
 	
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
@@ -132,6 +139,12 @@ void PlayingStateTest::Shutdown()
 	{
 		m_minimap->Shutdown();
 		delete m_minimap;
+	}
+
+	if (m_teamStatusBar != NULL)
+	{
+		m_teamStatusBar->Shutdown();
+		delete m_teamStatusBar;
 	}
 }
 
@@ -200,6 +213,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
 	}
 
+	// Update Team status bar
+	m_teamStatusBar->Update();
+
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	
@@ -256,6 +272,7 @@ void PlayingStateTest::Render()
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();
+	m_teamStatusBar->Render();
 
 	// OUTLINING
 	if (m_renderOutlining)
