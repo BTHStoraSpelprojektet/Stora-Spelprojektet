@@ -20,6 +20,7 @@ public:
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 
 	void FindAndReferenceLayers();
+	void AnimatedObjectLayers();
 
 	void Shutdown();
 

@@ -19,6 +19,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
+	std::vector<LevelImporter::AnimatedObject> animatedLevelObjects = p_level->GetAnimatedObjects();
 
 	//Stuff needed for the loop
 	std::vector<DirectX::XMFLOAT4X4> modelPositions;
@@ -60,6 +61,19 @@ bool ObjectManager::Initialize(Level* p_level)
 
 	m_staticObjects[m_staticObjects.size()-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
 
+	m_animatedObjects.clear();
+	for (unsigned int i = 0; i < animatedLevelObjects.size(); i++)
+	{
+		AnimatedObject* animObject = new AnimatedObject();
+
+		animObject->Initialize(animatedLevelObjects[i].m_filePath.c_str(),
+			DirectX::XMFLOAT3(animatedLevelObjects[i].m_translationX, animatedLevelObjects[i].m_translationY, animatedLevelObjects[i].m_translationZ),
+			DirectX::XMFLOAT3(animatedLevelObjects[i].m_rotationX, animatedLevelObjects[i].m_rotationY, animatedLevelObjects[i].m_rotationZ),
+			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+		m_animatedObjects.push_back(animObject);
+	}
+
 	return true;
 }
 
@@ -77,6 +91,12 @@ void ObjectManager::Shutdown()
 		m_staticObjects[i].Shutdown();
 	}
 	m_staticObjects.clear();
+
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		m_animatedObjects[i]->Shutdown();
+	}
+	m_animatedObjects.clear();
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
@@ -345,7 +365,15 @@ void ObjectManager::Render()
 			m_spikeTrapList[i]->Render();
 			GraphicsEngine::TurnOffAlphaBlending();
 		}
-}
+	}
+
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 1.0f))
+		{
+			m_animatedObjects[i]->Render();
+		}
+	}
 }
 
 void ObjectManager::RenderDepth()
@@ -389,9 +417,16 @@ void ObjectManager::RenderDepth()
 		if (temp != NULL)
 		{
 			temp->RenderDepth();
-}
+		}
 	}
 
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 1.0f))
+		{
+			m_animatedObjects[i]->RenderDepth();
+		}		
+	}
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)

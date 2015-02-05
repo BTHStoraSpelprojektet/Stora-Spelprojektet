@@ -446,6 +446,32 @@ void AnimationControl::FindAndReferenceLayers()
 	}
 }
 
+void AnimationControl::AnimatedObjectLayers()
+{
+	m_animationStacksArray = new AnimationStack[m_animationStacks.size()];
+
+	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
+	{
+		m_animationStacksArray[i] = m_animationStacks[i];
+	}
+
+	m_currentArms = &m_animationStacksArray[0];
+	m_currentLegs = &m_animationStacksArray[1];
+
+	m_blendWeightArms = 0.0f;
+	m_blendWeightLegs = 0.0f;
+
+	m_QuaternionArms.resize(m_animationStacksArray[0].m_jointCount);
+	m_QuaternionLegs.resize(m_animationStacksArray[0].m_jointCount);
+	for (int i = 0; i < m_animationStacksArray[0].m_jointCount; i++)
+	{
+		DirectX::XMVECTOR temp = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+
+		DirectX::XMStoreFloat4(&m_QuaternionArms[i], temp);
+		DirectX::XMStoreFloat4(&m_QuaternionLegs[i], temp);
+	}
+}
+
 void AnimationControl::Shutdown()
 {
 	delete[] m_animationStacksArray;

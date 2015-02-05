@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "AnimationControl.h"
 #include "ShadowShapes.h"
+#include "Globals.h"
 
 Object::Object(){}
 Object::~Object(){}
@@ -98,7 +99,7 @@ DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 	DirectX::XMVECTOR rotationVector = DirectX::XMLoadFloat3(&m_rotation);
 	if (isVegetation)
 	{
-		rotation += 0.002;
+		rotation += GLOBAL::GetInstance().GetDeltaTime() / 8;
 		
 		rotationVector.m128_f32[1] += m_rotation.y * ((float)sin(rotation) / 186.0f);
 	}
