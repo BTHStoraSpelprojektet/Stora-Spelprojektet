@@ -54,7 +54,7 @@ void Cursor::Render()
 {
 	if (m_useCustomCursor && m_renderCursor)
 	{
-		m_cursor->QueueRender();
+		m_cursor->Render();
 	}
 }
 
