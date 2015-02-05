@@ -27,24 +27,6 @@ bool TeamStatusBar::Initialize()
 
 	m_originPos = DirectX::XMFLOAT3(0.0f, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - 50.0f, 1.0f);
 
-	// Add yourself as the first dot
-	//if (player.team == 1)
-	//{
-	//	GUIElement* element = new GUIElement();
-	//	element->Initialize(DirectX::XMFLOAT3(m_dotPosOffset, originPos.y, originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_RED_PLAYER));
-	//	redColorDots.push_back(element);
-	//}
-	//else if (player.team == 2)
-	//{
-	//	GUIElement* element = new GUIElement();
-	//	element->Initialize(DirectX::XMFLOAT3(-m_dotPosOffset, originPos.y, originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_BLUE_PLAYER));
-	//	redColorDots.push_back(element);
-	//}
-
-	//GUIElement* element = new GUIElement();
-	//element->Initialize(DirectX::XMFLOAT3(m_dotPosOffset, m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_RED_PLAYER));
-	//redColorDots.push_back(element);
-
 	return true;
 }
 
