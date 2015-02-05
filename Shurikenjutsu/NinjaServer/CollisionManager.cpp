@@ -40,7 +40,13 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		range = NAGINATA_RANGE;
 		damage = NAGINATA_DAMAGE;
 		break;
+	case ABILITIES_NAGAINATASTAB:
+		range = NAGINATASTAB_RANGE;
+		damage = NAGINATASTAB_DAMAGE;
+		break;
 	default:
+		range = 0;
+		damage = 0;
 		break;
 	}
 	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
@@ -230,7 +236,7 @@ void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectile
 		{
 			//projectileBoundingBoxes = p_projectileManager->GetMegaBoundingBoxes(i);
 		}
-		else if (projectileList[i].projType == 2)
+		else //if (projectileList[i].projType == 2)
 		{
 			projectileBoundingBoxes = p_projectileManager->GetKunaiBoundingBoxes(i);
 		}
@@ -749,6 +755,48 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 	}
 }
 
+void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+{
+	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		// So you don't collide with yourself.
+		if (playerList[i].guid == attackingPlayer.guid)
+		{
+			continue;
+		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
+		// Check so the player aren't already dead
+		if (!playerList[i].isAlive)
+		{
+			continue;
+		}
+
+		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+		DirectX::XMVECTOR angle = DirectX::XMVector2AngleBetweenNormals(DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(attackingPlayer.dirX, attackingPlayer.dirZ)), DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(1, 0)));
+		DirectX::XMVECTOR newAngle = DirectX::XMQuaternionRotationRollPitchYaw(0, angle.m128_f32[0], 0);
+		DirectX::XMFLOAT4 newAngleFloat;
+		DirectX::XMStoreFloat4(&newAngleFloat, newAngle);
+		DirectX::XMFLOAT4 attackDirection = DirectX::XMFLOAT4(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ, 1);
+		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 3.0f, 3.0f);
+		// Make collision test
+		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, newAngleFloat, spherePosition, 1.0f))
+		{
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, 1);
+		}
+	}
+}
+
 //Private
 bool CollisionManager::OBBOBBTest(OBB p_OBB1, OBB p_OBB2)
 {
@@ -778,4 +826,9 @@ bool CollisionManager::OBBSphereTest(OBB p_OBB, Sphere p_sphere)
 bool CollisionManager::SphereSphereTest(Sphere p_spikeTrap, Sphere p_player)
 {
 	return IntersectionTests::Intersections::SphereSphereCollision(p_spikeTrap.m_position, p_spikeTrap.m_radius, p_player.m_position, p_player.m_radius);
+}
+
+float CollisionManager::GetAngle(float p_x, float p_y)
+{
+	return 1;
 }

@@ -297,7 +297,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(uniqueId);
 
-			RemoveShuriken(uniqueId);
+			RemoveProjectile(uniqueId);
 
 			break;
 		}
@@ -1216,4 +1216,9 @@ std::vector<FanNet> Network::GetFanList()
 void Network::ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_uniqueId, RakNet::RakNetGUID p_guid, float p_speed, int p_projType)
 {
 	m_objectManager->AddProjectile(p_x, p_y, p_z, p_dirX, p_dirY, p_dirZ, p_uniqueId, p_guid, p_speed, p_projType);
+}
+
+void Network::RemoveProjectile(unsigned int p_projId)
+{
+	m_objectManager->RemoveProjectile(p_projId);
 }

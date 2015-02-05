@@ -405,6 +405,10 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		abilityString = "kunai throooow";
 		p_projectileManager.AddProjectile(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ, 2);
 		break;
+	case ABILITIES_NAGAINATASTAB:
+		abilityString = "stabboooostabby";
+		p_collisionManager.NaginataStabAttack(p_guid, this);
+		break;
 	default:
 		break;
 	}

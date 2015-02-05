@@ -62,8 +62,8 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// ========== DEBUG LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-
+		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.5f, m_playerManager->GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		m_debugRect.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), 1.0f, 3.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 		m_mouseX = 0;
 		m_mouseY = 0;
 		
@@ -119,6 +119,7 @@ void PlayingStateTest::Shutdown()
 	if (FLAG_DEBUG == 1)
 	{
 		m_debugDot.Shutdown();	
+		m_debugRect.Shutdown();
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -214,6 +215,12 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
+
+	// Update rec location.
+	DirectX::XMFLOAT4X4 world;
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&(m_playerManager->GetPlayerPosition())));
+	DirectX::XMStoreFloat4x4(&world, matrix);
+	m_debugRect.UpdateWorldMatrix(world);
 	
 	return GAMESTATESWITCH_NONE;
 }
@@ -241,6 +248,7 @@ void PlayingStateTest::Render()
 	{
 		// Draw a dot at the mouse position.
 		m_debugDot.Render();
+		m_debugRect.Render();
 
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));

@@ -39,7 +39,7 @@ public:
 	void UpdateFrustum(Frustum* p_frustum);
 
 	void AddProjectile(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_ability);
-
+	void RemoveProjectile(unsigned int p_projId);
 private:
 	bool CheckIfModelIsInObjectToRenderList(Object *p_object);
 	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);

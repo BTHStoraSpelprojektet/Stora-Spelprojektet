@@ -35,8 +35,8 @@ public:
 	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 	void WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
-
-
+	void NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
+	float GetAngle(float p_x, float p_y);
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);
 	bool BoxBoxTest(Box p_box1, Box p_box2);

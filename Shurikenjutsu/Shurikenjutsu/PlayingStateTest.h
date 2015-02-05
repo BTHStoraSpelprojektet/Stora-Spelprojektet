@@ -52,6 +52,7 @@ private:
 	float m_mouseY;
 
 	DebugDot m_debugDot;
+	DebugRectangle m_debugRect;
 	// ========== DEBUG LINES ==========
 
 	Frustum *m_frustum;
