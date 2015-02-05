@@ -312,7 +312,7 @@ void MapExporter::GetPositions(){
 						print("LALALA");
 						char cha[128];
 
-						//TODO fixa ordningen på width (lengthX), height (lengthY), depth (lengthZ)
+						//TODO Fixat? //fixa ordningen på width (lengthX), height (lengthY), depth (lengthZ)
 						double lengthX = points[boundingboxcounter].x;
 						double lengthY = points[boundingboxcounter].y;
 						double lengthZ = points[boundingboxcounter].z;
