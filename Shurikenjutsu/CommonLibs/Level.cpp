@@ -27,6 +27,8 @@ bool Level::loadLevel(std::string p_level){
 
 	m_objects = levelImporter.GetObjects();
 
+	m_animatedObjects = levelImporter.GetAnimatedObjects();
+
 	return loaded;
 }
 
@@ -49,5 +51,10 @@ std::vector<LevelImporter::LevelBoundingBox> Level::getLevelBoundingBoxes(){
 std::vector<LevelImporter::CommonObject> Level::GetObjects()
 {
 	return m_objects;
+}
+
+std::vector<LevelImporter::AnimatedObject> Level::GetAnimatedObjects()
+{
+	return m_animatedObjects;
 }
 

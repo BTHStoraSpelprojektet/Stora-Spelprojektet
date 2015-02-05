@@ -115,7 +115,7 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp, fl
 
 }
 
-void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isParticleEmitter, std::string &particleEmitterType, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
+void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isAnimatedObject, bool &isParticleEmitter, std::string &particleEmitterType, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
 	
 
 	if (currentWordTemp == 0){
@@ -154,6 +154,11 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 		}
 		else
 		{
+			if (objectName.find("Animated") != std::string::npos){
+				isAnimatedObject = true;
+				objectName = objectName.substr(0, objectName.size() - 9);
+			}
+
 			filePathToModel.append("../Shurikenjutsu/Models/");
 			filePathToModel.append(objectName);
 			filePathToModel.append("Shape.SSP");
@@ -246,26 +251,43 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			m_particleEmitter.push_back(particleEmitter);
 		}
 		else{
-			CommonObject object;
-			object.m_filePath = filePathToModel.c_str();
-			object.m_translationX = x;
-			object.m_translationY = y;
-			object.m_translationZ = -z;
-			object.m_rotationX = rotateX;
-			object.m_rotationY = -rotateY;
-			object.m_rotationZ = rotateZ;
-			m_objects.push_back(object);
-			if (m_print)
-			{
-				std::cout << object.m_filePath << " " << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
+			if (isAnimatedObject){
+				AnimatedObject animatedObject;
+				animatedObject.m_filePath = filePathToModel.c_str();
+				animatedObject.m_translationX = x;
+				animatedObject.m_translationY = y;
+				animatedObject.m_translationZ = -z;
+				animatedObject.m_rotationX = rotateX;
+				animatedObject.m_rotationY = -rotateY;
+				animatedObject.m_rotationZ = rotateZ;
+				m_animatedObjects.push_back(animatedObject);
+				if (m_print)
+				{
+					std::cout << animatedObject.m_filePath << " " << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
+				}
 			}
-			//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
-			//DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
+			else{
+				CommonObject object;
+				object.m_filePath = filePathToModel.c_str();
+				object.m_translationX = x;
+				object.m_translationY = y;
+				object.m_translationZ = -z;
+				object.m_rotationX = rotateX;
+				object.m_rotationY = -rotateY;
+				object.m_rotationZ = rotateZ;
+				m_objects.push_back(object);
+				if (m_print)
+				{
+					std::cout << object.m_filePath << " " << x << " " << y << " " << z << " " << rotateX << " " << -rotateY << " " << rotateZ << "\n";
+				}
+				//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(rotateX, -rotateY, rotateZ);
+				//DirectX::XMFLOAT3 translation = DirectX::XMFLOAT3(x, y, -z);
 
-			//object.Initialize(filePathToModel.c_str(), translation);
-			//object.SetRotation(rotation);
+				//object.Initialize(filePathToModel.c_str(), translation);
+				//object.SetRotation(rotation);
 
-			//p_objectManager->AddStaticObject(object);
+				//p_objectManager->AddStaticObject(object);
+			}
 		}
 	}
 }
@@ -288,6 +310,7 @@ bool LevelImporter::readData(){
 		bool isSpawnPoint = false;
 		bool isShadowShape = false;
 		bool isParticleEmitter = false;
+		bool isAnimatedObject = false;
 		int currentTeam = 0;
 		std::string currentShadowShape = "";
 		std::string particleEmitterType = "";
@@ -317,7 +340,7 @@ bool LevelImporter::readData(){
 
 			else if (currentLineTemp > (unsigned int)(headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (unsigned int)(numberOfObjects + headerSize + numberOfBoundingBoxesToSkip))
 			{
-				readLevelObject(tmpStr, currentWordTemp, isParticleEmitter, particleEmitterType, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
+				readLevelObject(tmpStr, currentWordTemp, isAnimatedObject, isParticleEmitter, particleEmitterType, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 			}
 		}
 
@@ -351,6 +374,12 @@ std::vector<LevelImporter::CommonObject> LevelImporter::GetObjects()
 {
 	return m_objects;
 }
+
+std::vector<LevelImporter::AnimatedObject> LevelImporter::GetAnimatedObjects()
+{
+	return m_animatedObjects;
+}
+
 
 LevelImporter::~LevelImporter(){
 
