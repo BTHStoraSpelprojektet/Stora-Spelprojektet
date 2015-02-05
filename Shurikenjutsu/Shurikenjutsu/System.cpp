@@ -308,11 +308,16 @@ void System::Render()
 	// Render Current GameState
 	m_gameState->Render();
 
+	//Render GUI
+	GraphicsEngine::TurnOffDepthStencil();
+	GraphicsEngine::TurnOnAlphaBlending();
+
+	GUIManager::GetInstance()->Render();
+
 	// Render cursor
 	m_cursor->Render();
-
-	//Render GUI
-	GUIManager::GetInstance()->Render();
+	GraphicsEngine::TurnOffAlphaBlending();
+	GraphicsEngine::TurnOnDepthStencil();
 
 	// Present the result.
 	GraphicsEngine::Present();
