@@ -2,6 +2,7 @@
 #include "ConsoleFunctions.h"
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>
+#include "InstanceManager.h"
 
 bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
@@ -345,7 +346,7 @@ void DepthShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 }
 
 ///Instancing
-void DepthShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
+void DepthShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex, InstanceManager* p_instanceManager)
 {
 	// Set parameters and then render.
 	unsigned int stride[2];
@@ -359,7 +360,7 @@ void DepthShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	offset[1] = 0;
 
 	bufferPointers[0] = p_mesh;
-	bufferPointers[1] = m_instanceBufferList[p_instanceIndex];
+	bufferPointers[1] = p_instanceManager->GetInstanceBuffer(p_instanceIndex);
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
@@ -373,54 +374,8 @@ void DepthShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	p_context->VSSetShader(m_instanceShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
-	p_context->DrawInstanced(p_numberOfVertices, m_numberOfInstanceList[p_instanceIndex], 0, 0);
+	p_context->DrawInstanced(p_numberOfVertices, p_instanceManager->GetNumberOfInstances(p_instanceIndex), 0, 0);
 }
-void DepthShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
-{
-	if (p_numberOfInstances > 0)
-	{
-		m_numberOfInstanceList.push_back(p_numberOfInstances);
-		InitializeInstanceBuffer(p_device, p_numberOfInstances, p_position);
-	}
-}
-int DepthShader::GetNumberOfInstanceBuffer()
-{
-	return m_instanceBufferList.size();
-}
-void DepthShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
-{
-	ID3D11Buffer* instanceBuffer;
-	// Create the instance buffer description.
-	//Calculate position of all instanced objects
-	std::vector<InstancePos> m_instances;
-	m_instances.clear();
-	for (int i = 0; i < p_numberOfInstances; i++)
-	{
-		InstancePos temp;
-		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
-		m_instances.push_back(temp);
-	}
-
-	D3D11_BUFFER_DESC instanceBufferDesc;
-	instanceBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
-	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	instanceBufferDesc.CPUAccessFlags = 0;
-	instanceBufferDesc.MiscFlags = 0;
-
-	D3D11_SUBRESOURCE_DATA instanceData;
-	instanceData.pSysMem = &m_instances[0];
-	instanceData.SysMemPitch = 0;
-	instanceData.SysMemSlicePitch = 0;
-
-	// Create the Instance buffer.
-	if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
-	{
-		ConsolePrintErrorAndQuit("Failed to create instance buffer.");
-	}
-	m_instanceBufferList.push_back(instanceBuffer);
-}
-
 bool DepthShader::InitializeAnimatedDepth(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
 	ID3D10Blob*	animatedVertexShader = 0;
