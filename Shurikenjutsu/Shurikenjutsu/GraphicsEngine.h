@@ -6,6 +6,7 @@
 #include "Structures.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include <vector>
+#include "InstanceManager.h"
 
 class WICTextureLoader;
 class GUIShader;
@@ -110,5 +111,6 @@ private:
 
 	static IFW1FontWrapper* m_fontWrapper;
 	static IFW1TextGeometry* m_textGeometry;
+	static InstanceManager* m_instanceManager;
 };
 #endif;

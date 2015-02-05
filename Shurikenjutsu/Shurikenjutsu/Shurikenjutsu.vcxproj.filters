@@ -410,6 +410,9 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="InstanceManager.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -678,6 +681,9 @@
     </ClInclude>
     <ClInclude Include="Projectile.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="InstanceManager.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
