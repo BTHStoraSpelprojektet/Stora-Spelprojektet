@@ -72,7 +72,7 @@ const float DASH_SPEED = 8.0f;
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 // Naginata stab
 const float NAGINATASTAB_DAMAGE = 40.0f;
-const float NAGINATASTAB_RANGE = 10.0f;
+const float NAGINATASTAB_RANGE = 8.0f;
 const float NAGINATASTAB_COOLDOWN = 8.0f;
 
 ////////////////////////////////////////////////////////////////Tools
@@ -116,8 +116,8 @@ const float CHARACTER_NAGINATA_SPEED = 11.0f;
 ////////////////////////////////////////////////////////////////Character Variables
 ////////////////////////////////////////////////////////////////World Particles
 
-const float PARTICLE_FIRE_SIZE_X = 0.5f;
-const float PARTICLE_FIRE_SIZE_Y = 0.5f;
+const float PARTICLE_FIRE_SIZE_X = 0.2f;
+const float PARTICLE_FIRE_SIZE_Y = 0.2f;
 
 const float PARTICLE_PINKLEAF_SIZE_X = 0.14f;
 const float PARTICLE_PINKLEAF_SIZE_Y = 0.14f;
