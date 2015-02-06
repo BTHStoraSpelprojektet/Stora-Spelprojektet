@@ -2,7 +2,7 @@
 
 #include <D3Dcompiler.h>
 #include "ConsoleFunctions.h"
-
+#include <fstream>
 
 bool FoliageShader::Initialize(ID3D11Device* p_device)
 {
@@ -195,7 +195,35 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 
+	ReadRawFile();
+
 	return true;
+}
+
+void FoliageShader::ReadRawFile()
+{
+	int x = 200;
+	int z = 200;
+	std::vector<unsigned char> in(x * z);
+	std::ifstream inFile;
+	inFile.open("../Shurikenjutsu/testFile.raw", std::ios_base::binary);
+
+	if (inFile)
+	{
+		inFile.read((char*)&in[0], (std::streamsize)in.size());
+		inFile.close();
+	}
+
+	for (int i = 0; i < x; i++)
+	{
+		for (int j = 0; j < z; j++)
+		{
+			if ((in[i + j] / 255.0f) > 0.5f)
+			{
+				DirectX::XMFLOAT3((float)(i - (x / 2)), 0.0f, (float)(j - (z / 2)));
+			}
+		}
+	}
 }
 
 void FoliageShader::Shutdown()

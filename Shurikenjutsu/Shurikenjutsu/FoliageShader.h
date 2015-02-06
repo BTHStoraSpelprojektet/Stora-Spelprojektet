@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 
 #include <string>
+#include <vector>
 
 class FoliageShader
 {
@@ -18,6 +19,7 @@ public:
 
 private:
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix);
+	void ReadRawFile();
 
 	std::string m_VSVersion;
 	std::string m_GSVersion;
