@@ -137,44 +137,35 @@ void TeamStatusBar::Update()
 		}
 	}
 
-	// Johan use this?
-	//if (pm_it->second == delete_this_id)
-	//{
-	//	pm_it = port_map.erase(pm_it);
-	//}
-	//else
-	//{
-	//	++pm_it;
-	//}
-
-	std::vector<RakNet::RakNetGUID> guidsToRemove = std::vector<RakNet::RakNetGUID>();
 	// Check for dead players in red team
-	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = redColorDots.begin(); it != redColorDots.end(); it++)
+	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = redColorDots.begin(); it != redColorDots.end();)
 	{
 		if (it->first != player.guid && playersMap.find(it->first) == playersMap.end())
 		{
 			// Found a dead player
-			guidsToRemove.push_back(it->first);
+			it = redColorDots.erase(it);
+			ResizeRedColorList();
 		}
-	}
-	for (unsigned int i = 0; i < guidsToRemove.size(); i++)
-	{
-		RemoveRedColorPlayer(guidsToRemove[i]);
+		else
+		{
+			++it;
+		}
 	}
 
-	guidsToRemove.clear();
+
 	// Check for dead players in blue team
-	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = blueColorDots.begin(); it != blueColorDots.end(); it++)
+	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = blueColorDots.begin(); it != blueColorDots.end();)
 	{
 		if (it->first != player.guid && playersMap.find(it->first) == playersMap.end())
 		{
 			// Found a dead player
-			guidsToRemove.push_back(it->first);
+			it = blueColorDots.erase(it);
+			ResizeBlueColorList();
 		}
-	}
-	for (unsigned int i = 0; i < guidsToRemove.size(); i++)
-	{
-		RemoveBlueColorPlayer(guidsToRemove[i]);
+		else
+		{
+			++it;
+		}
 	}
 }
 
@@ -190,9 +181,8 @@ void TeamStatusBar::Render()
 	}
 }
 
-void TeamStatusBar::RemoveRedColorPlayer(RakNet::RakNetGUID p_guid)
+void TeamStatusBar::ResizeRedColorList()
 {
-	redColorDots.erase(p_guid);
 	int index = 0;
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = redColorDots.begin(); it != redColorDots.end(); it++)
 	{
@@ -201,9 +191,8 @@ void TeamStatusBar::RemoveRedColorPlayer(RakNet::RakNetGUID p_guid)
 	}
 }
 
-void TeamStatusBar::RemoveBlueColorPlayer(RakNet::RakNetGUID p_guid)
+void TeamStatusBar::ResizeBlueColorList()
 {
-	blueColorDots.erase(p_guid);
 	int index = 0;
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = blueColorDots.begin(); it != blueColorDots.end(); it++)
 	{

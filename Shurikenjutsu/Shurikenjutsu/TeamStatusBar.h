@@ -22,8 +22,8 @@ private:
 	std::map<RakNet::RakNetGUID, GUIElement> redColorDots;
 	std::map<RakNet::RakNetGUID, GUIElement> blueColorDots;
 
-	void RemoveRedColorPlayer(RakNet::RakNetGUID p_guid);
-	void RemoveBlueColorPlayer(RakNet::RakNetGUID p_guid);
+	void ResizeRedColorList();
+	void ResizeBlueColorList();
 
 	float m_dotSize;
 	float m_dotPosOffset;
