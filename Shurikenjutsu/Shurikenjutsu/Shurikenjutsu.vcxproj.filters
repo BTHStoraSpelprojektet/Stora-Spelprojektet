@@ -156,6 +156,9 @@
     <Filter Include="Header Files\ShadowShapes\Utility\DebugDraw">
       <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Foliage">
+      <UniqueIdentifier>{69a518e2-9142-4210-8a9d-aaae94d9a5cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -414,6 +417,9 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="InstanceManager.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="FoliageShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
   </ItemGroup>
@@ -691,6 +697,9 @@
     <ClInclude Include="InstanceManager.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
+    <ClInclude Include="FoliageShader.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -755,6 +764,15 @@
     </FxCompile>
     <FxCompile Include="Shaders\Scene\VertexShaderOutlining.hlsl">
       <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="FoliageVertexShader.hlsl">
+      <Filter>Shaders\Foliage</Filter>
+    </FxCompile>
+    <FxCompile Include="FoliagePixelShader.hlsl">
+      <Filter>Shaders\Foliage</Filter>
+    </FxCompile>
+    <FxCompile Include="FoliageGeometryShader.hlsl">
+      <Filter>Shaders\Foliage</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
