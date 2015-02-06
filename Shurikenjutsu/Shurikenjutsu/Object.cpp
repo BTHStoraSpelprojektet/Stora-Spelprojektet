@@ -99,7 +99,7 @@ void Object::UpdateRotation()
 	if (m_isVegetation)
 	{
 		m_rotationTimer += GLOBAL::GetInstance().GetDeltaTime();
-		m_rotation.y += (float)sin(m_rotationTimer);
+		m_rotation.y += (float)(sin(m_rotationTimer) * 0.0001);
 	}
 }
 
