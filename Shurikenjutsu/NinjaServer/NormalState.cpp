@@ -78,6 +78,7 @@ void NormalState::Update(double p_deltaTime)
 			SendRestartedRound();
 			RespawnAllPlayers();
 			ResetTime();
+			m_winningTeams.clear();
 		}
 	}
 	// Check if there is only one team remaining
