@@ -43,16 +43,16 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_FIRE) :
 		{
 			m_particlesPerSecond = 10.0f;
-			m_maxParticles = 20;
+			m_maxParticles = 50;
 
 			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f);
+			m_emitionPositionOffset = DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f);
 
 			// Set velocity and its variation.
-			m_velocity = 0.5f;
-			m_velocityVariation = 0.1f;
+			m_velocity = 1.5f;
+			m_velocityVariation = 0.5f;
 
-			m_timeToLive = 1.0f;
+			m_timeToLive = 5.0f;
 
 			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle_texture.png");
 
@@ -367,6 +367,7 @@ void ParticleEmitter::UpdateParticles()
 					// Burn upwards, ignoring direction.
 					//m_particleList[i].m_position.x = ;
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+					
 					//m_particleList[i].m_position.z = ;
 
 					// Add time passed.
@@ -488,8 +489,24 @@ void ParticleEmitter::UpdateBuffers()
 			opacity = ((-1.0f / (m_particleList[i].m_timeToLive * 0.5f)) * (m_particleList[i].m_timePassed - m_particleList[i].m_timeToLive * 0.5f)) + 1.0f;
 		}
 
+		
+
 		m_mesh[i].m_position = m_particleList[i].m_position;
-		m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
+		switch (m_pattern){
+			case PARTICLE_PATTERN_FIRE:{
+				if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive * 0.5f)
+				{
+					m_mesh[i].m_size = DirectX::XMFLOAT2((((-1.0f / (m_particleList[i].m_timeToLive * 0.5f)) * (m_particleList[i].m_timePassed - m_particleList[i].m_timeToLive * 0.5f)) + 1.0f)*m_particleSize.x, ((((1.0f / (m_particleList[i].m_timeToLive * 0.5f)) * (m_particleList[i].m_timePassed - m_particleList[i].m_timeToLive * 0.5f)) + 1.0f))*m_particleSize.y);
+					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, (((m_particleSize.y / (m_particleList[i].m_timeToLive * 0.5f)) * (m_particleList[i].m_timePassed - m_particleList[i].m_timeToLive * 0.5f)) + m_particleSize.y));
+					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
+				}
+			}
+
+			default:{
+				m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
+			}
+
+		}
 		m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, opacity);
 	}
 
