@@ -83,6 +83,7 @@ namespace IntersectionTests
 
 		return obb.Intersects(sphere);
 	}
+
 	bool Intersections::MeleeAttackCollision(DirectX::XMFLOAT3 p_attackerPosition, float p_attackerRadius, DirectX::XMFLOAT3 p_attackDir, DirectX::XMFLOAT3 p_defenderCenter, DirectX::XMFLOAT3 p_defenderExtents, float p_defenderRadius)
 	{
 		if (SphereSphereCollision(p_attackerPosition, p_attackerRadius, p_defenderCenter, p_defenderRadius))

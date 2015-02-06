@@ -648,3 +648,15 @@ void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX,
 	
 	m_projectiles.push_back(tempProjectile);
 }
+
+void ObjectManager::RemoveProjectile(unsigned int p_projId)
+{
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		if (m_projectiles[i]->GetID() == p_projId)
+		{
+			m_projectiles.erase(m_projectiles.begin() + i);
+			break;
+		}
+	}
+}

@@ -49,7 +49,6 @@ bool NormalState::Initialize()
 	m_currentTimer = m_roundTimer;
 	m_sendTime = (int)m_roundTimer;
 	m_roundRestarting = false;
-	m_winningTeams = std::map<int, int>();
 
 	return true;
 }
@@ -78,6 +77,8 @@ void NormalState::Update(double p_deltaTime)
 			m_roundRestarting = false;
 			SendRestartedRound();
 			RespawnAllPlayers();
+			ResetTime();
+			m_winningTeams.clear();
 		}
 	}
 	// Check if there is only one team remaining

@@ -32,9 +32,12 @@ private:
 	DirectX::XMFLOAT3 m_originPos;
 	bool m_addedMyself;
 
+	GUIText m_redScore;
+	GUIText m_blueScore;
+
 	double m_timeSec;
 	double m_timeMin;
-	GUIText m_text;
+	GUIText m_timerText;
 };
 
 #endif

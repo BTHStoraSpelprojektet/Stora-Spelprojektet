@@ -138,6 +138,7 @@
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="NaginataNinja.cpp" />
     <ClCompile Include="NaginataSlash.cpp" />
+    <ClCompile Include="NaginataStab.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="NaginataNinja.h" />
     <ClInclude Include="NaginataSlash.h" />
+    <ClInclude Include="NaginataStab.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />

@@ -73,8 +73,8 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// ========== DEBUG LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-
+		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.5f, m_playerManager->GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		m_debugRect.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z + 10), 0.2f, 20.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 		m_mouseX = 0;
 		m_mouseY = 0;
 		
@@ -92,7 +92,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initialize the minimap
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
-
+	
 	// Initialize team status bar
 	m_teamStatusBar = new TeamStatusBar();
 	if (!m_teamStatusBar->Initialize())
@@ -139,6 +139,7 @@ void PlayingStateTest::Shutdown()
 	if (FLAG_DEBUG == 1)
 	{
 		m_debugDot.Shutdown();	
+		m_debugRect.Shutdown();
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -152,7 +153,7 @@ void PlayingStateTest::Shutdown()
 	{
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
-	}
+}
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -249,7 +250,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
-
+	
 	// Set have updated network stuff last in the update
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
@@ -285,6 +286,7 @@ void PlayingStateTest::Render()
 	{
 		// Draw a dot at the mouse position.
 		m_debugDot.Render();
+		m_debugRect.Render();
 
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));

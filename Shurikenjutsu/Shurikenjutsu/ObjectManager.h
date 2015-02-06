@@ -43,6 +43,7 @@ public:
 
 	void UpdateRenderLists();
 
+	void RemoveProjectile(unsigned int p_projId);
 private:
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
 	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);

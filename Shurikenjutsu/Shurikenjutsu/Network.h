@@ -111,6 +111,10 @@ public:
 
 	void SetObjectManager(ObjectManager* p_objectManager);
 
+	void SyncTeamScore();
+	int GetRedTeamScore();
+	int GetBlueTeamScore();
+
 private:
 
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
@@ -134,6 +138,7 @@ private:
 	void ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_projType);
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
+	void RemoveProjectile(unsigned int p_projId);
 	void AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed);
 	void RemoveFan(unsigned int p_id);
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
@@ -172,6 +177,8 @@ private:
 	std::vector<FanNet> m_fanList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 	DirectX::XMFLOAT3 m_dashLocation;
+	int m_redTeamScore;
+	int m_blueTeamScore;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
