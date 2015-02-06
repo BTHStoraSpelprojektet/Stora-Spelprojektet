@@ -93,6 +93,8 @@ public:
 	void SetHaveUpdatedAfterRestartedRound();
 	bool RoundRestarting();
 	int GetRestartingTimer();
+	void SyncTimer();
+	bool TimerSynced(double &p_min, double &p_sec);
 
 	bool NewLevel();
 	void SetHaveUpdateNewLevel();
@@ -158,6 +160,9 @@ private:
 	int m_timeRestarting;
 	bool m_newLevel;
 	bool m_dashed;
+	bool m_timerSynced;
+	double m_timerMin;
+	double m_timerSec;
 	std::string m_levelName;
 	PlayerNet m_myPlayer;
 	std::vector<PlayerNet> m_enemyPlayers;

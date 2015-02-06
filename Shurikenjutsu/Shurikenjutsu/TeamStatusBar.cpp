@@ -30,6 +30,9 @@ bool TeamStatusBar::Initialize()
 	m_text = GUIText();
 	m_text.Initialize("", 40.0f, m_originPos.x, m_originPos.y, 0xffffffff);
 
+	// Send so we are synced with the server timer
+	Network::GetInstance()->SyncTimer();
+
 	return true;
 }
 
@@ -171,15 +174,18 @@ void TeamStatusBar::Update()
 		}
 	}
 
+	// End of player check
 
+	// Update timer
 
-	// Update timer text
-	// Check for new round and etc
+	// Check for new round (reset times)
 	if (Network::GetInstance()->RoundRestarted())
 	{
 		m_timeSec = 0;
 		m_timeMin = 0;
 	}
+
+	// Add time and change text
 	m_timeSec += GLOBAL::GetInstance().GetDeltaTime();
 	if (m_timeSec >= 60)
 	{
@@ -193,15 +199,23 @@ void TeamStatusBar::Update()
 	}
 	m_text.SetText(std::to_string((int)m_timeMin) + ":" + secString);
 
-
+	// Check if a new round is about to start (then show negative time i.e. -0:05 if new round is starting in 5 sec)
 	if (Network::GetInstance()->RoundRestarting())
 	{
-		secString = Network::GetInstance()->GetRestartingTimer();
+		secString = std::to_string(Network::GetInstance()->GetRestartingTimer());
 		if (Network::GetInstance()->GetRestartingTimer() < 10)
 		{
 			secString = "0" + secString;
 		}
 		m_text.SetText("-0:" + secString);
+	}
+
+	// Check for synced timer
+	double min, sec;
+	if (Network::GetInstance()->TimerSynced(min, sec))
+	{
+		m_timeMin = min;
+		m_timeSec = sec;
 	}
 }
 
