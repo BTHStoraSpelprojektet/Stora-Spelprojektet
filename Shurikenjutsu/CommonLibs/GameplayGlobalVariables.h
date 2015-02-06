@@ -72,7 +72,7 @@ const float DASH_SPEED = 8.0f;
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 // Naginata stab
 const float NAGINATASTAB_DAMAGE = 40.0f;
-const float NAGINATASTAB_RANGE = 10.0f;
+const float NAGINATASTAB_RANGE = 8.0f;
 const float NAGINATASTAB_COOLDOWN = 8.0f;
 
 ////////////////////////////////////////////////////////////////Tools

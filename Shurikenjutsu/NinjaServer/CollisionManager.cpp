@@ -815,7 +815,7 @@ void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManag
 		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, test, spherePosition, 1.0f))
 		{
 			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, 1);
+			p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
 		}
 	}
 }
