@@ -236,6 +236,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
+
+	// Set have updated network stuff last in the update
+	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
 	return GAMESTATESWITCH_NONE;
 }

@@ -6,6 +6,7 @@
 #include <map>
 #include "Network.h"
 #include "GUIElement.h"
+#include "GUIText.h"
 
 class TeamStatusBar
 {
@@ -30,6 +31,10 @@ private:
 	int m_startOffset;
 	DirectX::XMFLOAT3 m_originPos;
 	bool m_addedMyself;
+
+	double m_timeSec;
+	double m_timeMin;
+	GUIText m_text;
 };
 
 #endif

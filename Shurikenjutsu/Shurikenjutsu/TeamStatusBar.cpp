@@ -20,13 +20,15 @@ bool TeamStatusBar::Initialize()
 	blueColorDots = std::map<RakNet::RakNetGUID, GUIElement>();
 	m_dotSize = 30.0f;
 	m_dotPosOffset = 40.0f;
-	m_startOffset = 3;
+	m_startOffset = 2;
 	m_addedMyself = false;
-
-	PlayerNet player = Network::GetInstance()->GetMyPlayer();
-	std::vector<PlayerNet> enemies = Network::GetInstance()->GetOtherPlayers();
+	m_timeSec = 0;
+	m_timeMin = 0;
 
 	m_originPos = DirectX::XMFLOAT3(0.0f, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - 40.0f, 1.0f);
+
+	m_text = GUIText();
+	m_text.Initialize("", 40.0f, m_originPos.x, m_originPos.y, 0xffffffff);
 
 	return true;
 }
@@ -168,6 +170,39 @@ void TeamStatusBar::Update()
 			++it;
 		}
 	}
+
+
+
+	// Update timer text
+	// Check for new round and etc
+	if (Network::GetInstance()->RoundRestarted())
+	{
+		m_timeSec = 0;
+		m_timeMin = 0;
+	}
+	m_timeSec += GLOBAL::GetInstance().GetDeltaTime();
+	if (m_timeSec >= 60)
+	{
+		m_timeSec -= 60;
+		m_timeMin += 1;
+	}
+	std::string secString = std::to_string((int)m_timeSec);
+	if (m_timeSec < 10)
+	{
+		secString = "0" + secString;
+	}
+	m_text.SetText(std::to_string((int)m_timeMin) + ":" + secString);
+
+
+	if (Network::GetInstance()->RoundRestarting())
+	{
+		secString = Network::GetInstance()->GetRestartingTimer();
+		if (Network::GetInstance()->GetRestartingTimer() < 10)
+		{
+			secString = "0" + secString;
+		}
+		m_text.SetText("-0:" + secString);
+	}
 }
 
 void TeamStatusBar::Render()
@@ -180,6 +215,8 @@ void TeamStatusBar::Render()
 	{
 		it->second.QueueRender();
 	}
+
+	m_text.Render();
 }
 
 void TeamStatusBar::ResizeRedColorList()
