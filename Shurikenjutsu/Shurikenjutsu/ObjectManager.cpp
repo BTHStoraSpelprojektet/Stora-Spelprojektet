@@ -20,6 +20,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
 	std::vector<LevelImporter::AnimatedObject> animatedLevelObjects = p_level->GetAnimatedObjects();
+	std::vector<LevelImporter::ParticleEmitter> particleLevelEmitter = p_level->GetParticleEmitters();
 
 	//Stuff needed for the loop
 	std::vector<DirectX::XMFLOAT4X4> modelPositions;
@@ -72,6 +73,34 @@ bool ObjectManager::Initialize(Level* p_level)
 			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 		m_animatedObjects.push_back(animObject);
+	}
+
+	for (unsigned int i = 0; i < particleLevelEmitter.size(); i++)
+	{
+		ParticleEmitter* particleEmitter = new ParticleEmitter();
+
+		if (particleLevelEmitter[i].type == EmitterType::Fire){
+		particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0, 1, 0),
+				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
+		}
+		else if (particleLevelEmitter[i].type == EmitterType::LeafSakura){
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
+				DirectX::XMFLOAT2(PARTICLE_PINKLEAF_SIZE_X, PARTICLE_PINKLEAF_SIZE_Y), PARTICLE_PATTERN_PINKLEAF);
+		}
+		else if (particleLevelEmitter[i].type == EmitterType::LeafTree){
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
+				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_GREENLEAF);
+		}
+		else{
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0, 1, 0),
+				DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
+		}
+		particleEmitter->SetEmitParticleState(true);
+		m_worldParticles.push_back(particleEmitter);
 	}
 
 	return true;
@@ -271,6 +300,11 @@ void ObjectManager::Update()
 		
 	}
 
+	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
+	{
+		m_worldParticles[i]->Update();
+	}
+
 	UpdateRenderLists();
 }
 void ObjectManager::UpdateRenderLists()
@@ -374,6 +408,12 @@ void ObjectManager::Render()
 		{
 			m_animatedObjects[i]->Render();
 		}
+	}
+
+	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
+	{
+		
+		m_worldParticles[i]->Render();
 	}
 }
 
