@@ -13,6 +13,7 @@
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
+#include "ParticleEmitter.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -41,6 +42,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Load the level.
 	Level level(p_levelName);
 
+	
+
+
+	//Shadow Shapes
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)
 	{

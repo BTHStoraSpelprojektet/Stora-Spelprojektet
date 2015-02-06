@@ -6,6 +6,7 @@
 #include "ShurikenManager.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "FanBoomerangManager.h"
+#include <map>
 
 class MapManager;
 class CollisionManager;
@@ -36,6 +37,7 @@ public:
 	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, float p_distanceFromPlayer);
 	void BroadcastPlayers();
 	void SyncTime(RakNet::RakNetGUID p_guid);
+	void SendCurrentTeamScore(RakNet::RakNetGUID p_guid);
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();	
@@ -50,6 +52,7 @@ protected:
 	FanBoomerangManager* m_fanBoomerangManager;
 	ProjectileManager* m_projectileManager;
 
+	std::map<int, int> m_winningTeams;
 	double m_timeMin;
 	double m_timeSec;
 };

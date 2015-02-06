@@ -6,6 +6,7 @@
 #include <vector>
 #include "Shuriken.h"
 #include "AnimatedObject.h"
+#include "ParticleEmitter.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
 
@@ -54,6 +55,7 @@ private:
 	std::vector<FanBoomerang*> m_fans;
 	std::vector<Object> m_staticObjects;
 	std::vector<AnimatedObject*> m_animatedObjects;
+	std::vector<ParticleEmitter*> m_worldParticles;
 	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToSingleRender;
 	

@@ -27,8 +27,15 @@ bool TeamStatusBar::Initialize()
 
 	m_originPos = DirectX::XMFLOAT3(0.0f, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - 40.0f, 1.0f);
 
-	m_text = GUIText();
-	m_text.Initialize("", 40.0f, m_originPos.x, m_originPos.y, 0xffffffff);
+	// Score text
+	m_redScore = GUIText();
+	m_redScore.Initialize("0", 30.0f, m_originPos.x + 20.0f, m_originPos.y - m_dotPosOffset, 0xff0700B6);
+	m_blueScore = GUIText();
+	m_blueScore.Initialize("0", 30.0f, m_originPos.x - 20.0f, m_originPos.y - m_dotPosOffset, 0xffB71300);
+
+	// Timer text
+	m_timerText = GUIText();
+	m_timerText.Initialize("", 30.0f, m_originPos.x, m_originPos.y, 0xffffffff);
 
 	// Send so we are synced with the server timer
 	Network::GetInstance()->SyncTimer();
@@ -176,8 +183,12 @@ void TeamStatusBar::Update()
 
 	// End of player check
 
-	// Update timer
+	// Check for team score
+	m_redScore.SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
+	m_blueScore.SetText(std::to_string(Network::GetInstance()->GetBlueTeamScore()));
 
+
+	// Update timer
 	// Check for new round (reset times)
 	if (Network::GetInstance()->RoundRestarted())
 	{
@@ -197,7 +208,7 @@ void TeamStatusBar::Update()
 	{
 		secString = "0" + secString;
 	}
-	m_text.SetText(std::to_string((int)m_timeMin) + ":" + secString);
+	m_timerText.SetText(std::to_string((int)m_timeMin) + ":" + secString);
 
 	// Check if a new round is about to start (then show negative time i.e. -0:05 if new round is starting in 5 sec)
 	if (Network::GetInstance()->RoundRestarting())
@@ -207,7 +218,7 @@ void TeamStatusBar::Update()
 		{
 			secString = "0" + secString;
 		}
-		m_text.SetText("-0:" + secString);
+		m_timerText.SetText("-0:" + secString);
 	}
 
 	// Check for synced timer
@@ -230,7 +241,10 @@ void TeamStatusBar::Render()
 		it->second.QueueRender();
 	}
 
-	m_text.Render();
+	m_redScore.Render();
+	m_blueScore.Render();
+
+	m_timerText.Render();
 }
 
 void TeamStatusBar::ResizeRedColorList()

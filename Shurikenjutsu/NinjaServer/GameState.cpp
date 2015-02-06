@@ -40,6 +40,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_projectileManager = new ProjectileManager();
 	m_projectileManager->Initialize(m_serverPeer);
 
+
+	m_winningTeams = std::map<int, int>();
+
 	// Time
 	m_timeMin = 0;
 	m_timeSec = 0;
@@ -173,6 +176,22 @@ void GameState::SyncTime(RakNet::RakNetGUID p_guid)
 	bitStream.Write((RakNet::MessageID)ID_TIMER_SYNC);
 	bitStream.Write(m_timeMin);
 	bitStream.Write(m_timeSec);
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+}
+
+void GameState::SendCurrentTeamScore(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_SEND_TEAM_SCORE);
+	bitStream.Write((unsigned int)m_winningTeams.size());
+	
+	for (auto it = m_winningTeams.begin(); it != m_winningTeams.end(); it++)
+	{
+		bitStream.Write(it->first);
+		bitStream.Write(it->second);
+	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }
