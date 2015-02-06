@@ -410,6 +410,9 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="Volley.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -677,6 +680,9 @@
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="Projectile.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Volley.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>

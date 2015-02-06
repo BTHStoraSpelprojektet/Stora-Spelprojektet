@@ -9,6 +9,7 @@
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
 
+class Volley;
 class Frustum;
 class SmokeBomb;
 class Spikes;
@@ -54,6 +55,7 @@ private:
 	std::vector<Object> m_staticObjects;
 	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToSingleRender;
+	std::vector<Volley*> m_volleys;
 	
 
 	Frustum* m_frustum;
@@ -64,5 +66,6 @@ private:
 	bool IsSpikeTrapInList(unsigned int p_spikeTrapId);
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
+
 };
 #endif

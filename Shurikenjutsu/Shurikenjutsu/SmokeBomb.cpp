@@ -23,7 +23,7 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 
 	m_timer = 0;
 
 	m_speed = SMOKEBOMB_SPEED;
-	float x = (p_endPosition.x - p_startPosition.x);
+	float x = (p_endPosition.x - p_startPosition.x); 
 	float z = (p_endPosition.z - p_startPosition.z);
 	float length = sqrtf(x*x + z*z);
 	m_percentX = x / length;

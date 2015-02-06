@@ -9,6 +9,8 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "FanBoomerang.h"
 #include "Projectile.h"
+#include "Volley.h"
+#include "InputManager.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -99,6 +101,12 @@ void ObjectManager::Shutdown()
 	{
 		m_projectiles[i]->Shutdown();
 		delete m_projectiles[i];
+	}
+
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		m_volleys[i]->Shutdown();
+		delete m_volleys[i];
 	}
 }
 
@@ -251,6 +259,18 @@ void ObjectManager::Update()
 		
 	}
 
+	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	{
+		Volley* volley = new Volley;
+		volley->Initialize(DirectX::XMFLOAT3(0, 2.0f, 0), DirectX::XMFLOAT3(10.0f, 2.0f, 10.0f));
+		m_volleys.push_back(volley);
+	}
+
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		m_volleys[i]->Update();
+	}
+
 	UpdateRenderLists();
 }
 void ObjectManager::UpdateRenderLists()
@@ -345,7 +365,12 @@ void ObjectManager::Render()
 			m_spikeTrapList[i]->Render();
 			GraphicsEngine::TurnOffAlphaBlending();
 		}
-}
+	}
+
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		m_volleys[i]->Render();
+	}
 }
 
 void ObjectManager::RenderDepth()
