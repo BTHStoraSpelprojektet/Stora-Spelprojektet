@@ -456,6 +456,9 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
 
+			m_redTeamScore = 0;
+			m_blueTeamScore = 0;
+
 			std::cout << "Team " << winningTeam << " won this match\n";
 			break;
 		}
