@@ -78,7 +78,6 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	// Initialize the visibility computer.
 	ShadowShapes::GetInstance().Initialize();
 	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
-	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
 	ConsoleSkipLines(1);
 
 	// Initialize shadow map.

@@ -52,6 +52,7 @@ private:
 	std::vector<Projectile*> m_projectiles;
 	std::vector<FanBoomerang*> m_fans;
 	std::vector<Object> m_staticObjects;
+	std::vector<AnimatedObject*> m_animatedObjects;
 	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToSingleRender;
 	

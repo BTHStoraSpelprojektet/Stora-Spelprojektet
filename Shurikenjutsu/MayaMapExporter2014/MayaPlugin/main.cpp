@@ -409,6 +409,7 @@ void MapExporter::GetPositions(){
 						rotatez = eulerRotation.z;
 						rotatew = 0;
 
+						print(mesh.name().asChar());
 						print(dest2[0]);
 						print(dest2[1]);
 						print(dest2[2]);
@@ -440,6 +441,8 @@ void MapExporter::GetPositions(){
 						world.wObjects[counter].rotatey = 0;
 						world.wObjects[counter].rotatez = 0;
 						world.wObjects[counter].rotatew = 0;
+
+						counter++;
 					}
 					else if (strcmp(transform.name().substring(0, 14).asChar(), "ParticleEmitter")){
 
@@ -467,6 +470,8 @@ void MapExporter::GetPositions(){
 						world.wObjects[counter].rotatey = rotatey;
 						world.wObjects[counter].rotatez = rotatez;
 						world.wObjects[counter].rotatew = 0;
+
+						counter++;
 					}
 				}
 

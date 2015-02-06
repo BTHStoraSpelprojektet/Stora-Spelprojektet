@@ -6,8 +6,19 @@
 AnimatedObject::AnimatedObject(){}
 AnimatedObject::~AnimatedObject(){}
 
+void* AnimatedObject::operator new(size_t p_i)
+{
+	return _mm_malloc(p_i, 16);
+}
+
+void AnimatedObject::operator delete(void* p_p)
+{
+	_mm_free(p_p);
+}
+
 bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir)
 {
+	// Players
 	if (!Object::Initialize(p_filepath, p_pos))
 	{
 		return false;
@@ -23,6 +34,24 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	}
 	m_animationController.FindAndReferenceLayers();
 	m_animationController.HandleInput(p_dir);
+
+	return true;
+}
+
+bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_rotation, DirectX::XMFLOAT3 p_scale)
+{
+	// Map objects
+	if (!Object::Initialize(p_filepath, p_pos, p_rotation, p_scale))
+	{
+		return false;
+	}
+
+	m_texture = NULL;
+
+	m_animationController.CreateNewStack(m_model->GetAnimationStacks()[0]);
+	m_animationController.CreateNewStack(m_model->GetAnimationStacks()[1]);
+
+	m_animationController.AnimatedObjectLayers();
 
 	return true;
 }
@@ -53,7 +82,7 @@ float AnimatedObject::GetSpeed() const
 	return m_speed;
 }
 
-void AnimatedObject::Render(int p_team)
+void AnimatedObject::RenderPlayer(int p_team)
 {
 	if (p_team == 1)
 	{
@@ -63,6 +92,11 @@ void AnimatedObject::Render(int p_team)
 	{
 		GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_texture, m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 	}	
+}
+
+void AnimatedObject::Render()
+{
+	GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 }
 
 void AnimatedObject::RenderDepth()
