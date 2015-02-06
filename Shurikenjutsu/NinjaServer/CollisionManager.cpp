@@ -749,8 +749,11 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackPosition, WHIP_SP_RANGE, spherePosition, 1.0f))
 		{
-			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
+			if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			{
+				// Damage the player
+				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
+			}
 		}
 	}
 }
