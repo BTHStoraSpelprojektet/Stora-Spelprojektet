@@ -20,6 +20,7 @@ public:
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 
 	void FindAndReferenceLayers();
+	void AnimatedObjectLayers();
 
 	void Shutdown();
 
@@ -43,10 +44,10 @@ private:
 
 	bool m_attackAnimation;
 
-	DirectX::XMVECTOR m_ikDirection;
-	DirectX::XMVECTOR m_ikLegDirection;
-	DirectX::XMVECTOR m_forwardDirection;
-	DirectX::XMVECTOR m_rotationAxis;
+	DirectX::XMFLOAT3 m_ikDirection;
+	DirectX::XMFLOAT3 m_ikLegDirection;
+	DirectX::XMFLOAT3 m_forwardDirection;
+	DirectX::XMFLOAT3 m_rotationAxis;
 	float m_hipRotation;
 
 	AnimationStack* m_currentArms;
