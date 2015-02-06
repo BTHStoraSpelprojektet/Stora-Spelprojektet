@@ -37,29 +37,14 @@ bool MenuIpBox::IsClicked()
 {
 	InputManager* input = InputManager::GetInstance();
 
-	int mouseOffsetX = 0;
-	int mouseOffsetY = 0;
-
-	if (!GLOBAL::GetInstance().FULLSCREEN)
-	{
-		mouseOffsetX = 9;
-		mouseOffsetY = 18;
-	}
-
-	float halfScreenX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - mouseOffsetX;
-	float halfScreenY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - mouseOffsetY;
-
 	if (input->IsLeftMouseClicked())
 	{
-		if ((input->GetMousePositionX() - halfScreenX) > (m_x - m_width*0.5f) && (input->GetMousePositionX() - halfScreenX) < (m_x + m_width*0.5f))
+		if (MenuButton::IsClicked())
 		{
-			if ((input->GetMousePositionY() - halfScreenY)*-1 >= (m_y - m_height*0.5f) && (input->GetMousePositionY() - halfScreenY)*-1 <= (m_y + m_height*0.5f))
-			{
-				m_active = true;
-				m_counter = 0;
-				ResetIp();
-				return true;
-			}
+			m_active = true;
+			m_counter = 0;
+			ResetIp();
+			return true;
 		}
 		else
 		{
@@ -70,7 +55,7 @@ bool MenuIpBox::IsClicked()
 	return false;
 }
 
-void MenuIpBox::GetInput()
+bool MenuIpBox::GetInput()
 {
 	if (m_active)
 	{
@@ -83,8 +68,10 @@ void MenuIpBox::GetInput()
 			{
 				m_active = false;
 			}
+			return true;
 		}
 	}
+	return false;
 }
 
 void MenuIpBox::ToConsole()

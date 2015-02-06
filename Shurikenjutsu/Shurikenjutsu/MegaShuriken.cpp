@@ -14,7 +14,7 @@ bool MegaShuriken::Initialize()
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
 	m_totalCooldown = MEGASHURIKEN_COOLDOWN;
-	m_stacks = 0;
+	m_stacks = -1;
 	return true;
 }
 

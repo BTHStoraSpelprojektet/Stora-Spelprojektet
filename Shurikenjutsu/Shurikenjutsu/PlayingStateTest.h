@@ -10,6 +10,7 @@ class ObjectManager;
 class Frustum;
 class Camera;
 class Minimap;
+class TeamStatusBar;
 
 class PlayingStateTest : public GameState
 {
@@ -32,6 +33,7 @@ public:
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);
+	void PlayingStateTest::OnScreenResize();
 
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
@@ -39,6 +41,7 @@ private:
 	ObjectManager* m_objectManager;
 	Camera* m_camera;
 	Minimap* m_minimap;
+	TeamStatusBar* m_teamStatusBar;
 	DirectionalLight m_directionalLight;
 
 	float twoPi = 6.28318530718f;
@@ -56,5 +59,9 @@ private:
 	// ========== DEBUG LINES ==========
 
 	Frustum *m_frustum;
+
+	float m_quadWidth;
+	float m_quadHeightTop;
+	float m_quadHeightBottom;
 };
 #endif PLAYINGSTATE

@@ -13,7 +13,7 @@ bool BaseModel::LoadModel(const char* p_filepath)
 
 	m_boundingBoxes = mData.m_boundingBoxes;
 	m_boundingSpheres = mData.m_boundingSpheres;
-
+	m_vertexCount = 0;
 	return true;
 }
 

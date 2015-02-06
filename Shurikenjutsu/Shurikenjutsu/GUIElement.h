@@ -25,6 +25,9 @@ public:
 	ID3D11ShaderResourceView* GetTexture()const;
 	void SetTexture(ID3D11ShaderResourceView* p_texture);
 
+	// For cursor
+	void Render();
+
 private:
 	DirectX::XMFLOAT2 m_size;
 	DirectX::XMFLOAT3 m_position;

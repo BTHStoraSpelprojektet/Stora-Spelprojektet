@@ -39,10 +39,13 @@ public:
 	void UpdateFrustum(Frustum* p_frustum);
 
 	void AddProjectile(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_ability);
+
+	void UpdateRenderLists();
+
 	void RemoveProjectile(unsigned int p_projId);
 private:
-	bool CheckIfModelIsInObjectToRenderList(Object *p_object);
-	bool CheckIfModelIsInObjectToShadowRenderList(Object *p_object);
+	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
+	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
 
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
@@ -50,8 +53,10 @@ private:
 	std::vector<Projectile*> m_projectiles;
 	std::vector<FanBoomerang*> m_fans;
 	std::vector<Object> m_staticObjects;
-	std::vector<Object*> m_objectsToRender;
-	std::vector<Object*> m_objectsToShadowRender;
+	std::vector<AnimatedObject*> m_animatedObjects;
+	std::vector<Object*> m_objectsToInstanceRender;
+	std::vector<Object*> m_objectsToSingleRender;
+	
 
 	Frustum* m_frustum;
 

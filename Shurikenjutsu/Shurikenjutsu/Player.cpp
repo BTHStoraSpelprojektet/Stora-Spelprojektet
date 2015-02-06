@@ -9,8 +9,6 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
 #include "VisibilityComputer.h"
-#include "DebugBox.h"
-#include "DebugCircle.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -62,9 +60,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_globalCooldown = 0.0f;
 	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
-
-	debugBox.Initialize(m_position, 1.5f, 8.0f, 3.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)); 
-	debugCircle.Initialize(m_position, 1.0f, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -168,15 +163,15 @@ void Player::UpdateMe()
 
 		m_isDashing = true;
 	}
-	
-	if (m_dashDistanceLeft > 20)
-	{
-		int a = 1;
-	}
 	// Dash movement
 	if (m_isDashing)
 	{
 		float distance = DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+		Sphere playerSphere = m_playerSphere;
+		playerSphere.m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+		playerSphere.m_position.y += m_dashDistanceLeft * m_dashDirection.z;		
+		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
+		{
 		if (distance >= m_dashDistanceLeft)
 		{
 			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
@@ -193,6 +188,11 @@ void Player::UpdateMe()
 
 		// If we dashed, update shadow shapes.
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		}
+		else
+		{
+			m_isDashing = false;
+		}
 
 		SendPosition(m_position);
 	}
@@ -214,7 +214,7 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
 		// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
-		if ((float)m_rangeAttack->GetStacks() > 0)
+		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
 		{
 			m_ability = m_rangeAttack;
 		}
@@ -246,29 +246,6 @@ void Player::UpdateMe()
 	}
 
 	UpdateAbilityBar();
-	
-	DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
-	DirectX::XMFLOAT3 v2 = GetAttackDirection();
-
-	float x = (v1.x * v2.z) - (v2.x * v1.z);
-	float y = (v1.x * v2.x) - (v1.z * v2.z);
-
-	float faceAngle = atan2(y, x);
-
-	DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-
-	// Update rec location.
-	DirectX::XMFLOAT4X4 world;
-	DirectX::XMMATRIX rotation = DirectX::XMMatrixIdentity();
-	rotation = DirectX::XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
-
-	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&(DirectX::XMFLOAT3(m_position.x + y * 4.0f, m_position.y, m_position.z + x * 4.0f))));
-	matrix = DirectX::XMMatrixMultiply(rotation, matrix);
-	DirectX::XMStoreFloat4x4(&world, matrix);
-
-	debugBox.UpdateWorldMatrix(world);
-	debugCircle.UpdateWorldMatrix(GetWorldMatrix());
-	
 }
 
 void Player::CheckForSpecialAttack()
@@ -496,12 +473,6 @@ void Player::SetCalculatePlayerPosition()
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(Sphere(m_position, m_playerSphere.m_radius), m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{ 
-		float temp2 = collidingBoxes[i].m_extents.x - collidingBoxes[i].m_extents.z;
-		if (temp2 < 0)
-		{
-			temp2 *= -1;
-		}
-		
 		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
 			Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
@@ -535,13 +506,20 @@ void Player::SetCalculatePlayerPosition()
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
 		}
-		//else if (collidingBoxes[i].m_direction.w == 1.0f || temp2 < 0.5f)
-		//{
-		//	CalculatePlayerCubeCollision(collidingBoxes[i]);
-		//}
+		else if (collidingBoxes.size() > 1)
+		{
+
+			if (CheckSidesIfMultipleCollisions() == true)
+			{
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+			}
 		else
 		{
-			//CalculatePlayerBoxCollision(collidingBoxes[i]);
+			CalculatePlayerCubeCollision(collidingBoxes[i]);
+		}
+	}
+		else
+		{
 			CalculatePlayerCubeCollision(collidingBoxes[i]);
 		}
 	}
@@ -608,6 +586,63 @@ void Player::SetCalculatePlayerPosition()
 
 	//float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speedXDeltaTime, m_position.y + m_direction.y * speedXDeltaTime, m_position.z + m_direction.z * speedXDeltaTime));
+}
+
+bool Player::CheckSidesIfMultipleCollisions()
+{
+	float speedXDeltaTime = m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
+	Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
+	playerSphere.m_position.x = m_position.x;
+	playerSphere.m_position.z = m_position.z - 1.0f * speedXDeltaTime;
+	bool down = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x;
+	playerSphere.m_position.z = m_position.z + 1.0f * speedXDeltaTime;
+	bool up = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x + 1.0f * speedXDeltaTime;
+	playerSphere.m_position.z = m_position.z;
+	bool right = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+	playerSphere.m_position.x = m_position.x - 1.0f * speedXDeltaTime;
+	playerSphere.m_position.z = m_position.z;
+	bool left = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+
+	if (!left && !up && !right)
+	{
+		return false;
+	}
+	else if (!up && !right && !down)
+	{
+		return false;
+	}
+	else if (!right && !down && !left)
+	{
+		return false;
+	}
+	else if (!down && !left && !up)
+	{
+		return false;
+	}
+
+	bool x = m_direction.x > 0;
+	bool z = m_direction.z > 0;
+
+	if (x && left)
+	{
+		return false;
+	}
+	else if (right && !x)
+	{
+		return false;
+	}
+	else if (!z && up)
+	{
+		return false;
+	}
+	else if (down && z)
+	{
+		return false;
+	}
+
+	return true;
 }
 void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 {
@@ -719,136 +754,53 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
 }
 
-void Player::CalculatePlayerBoxCollision(OBB p_collidingBoxes)
-{
-	bool rightOfBox = m_position.x >(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z);
-	bool leftOfBox = m_position.x < (p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z);
-	bool aboveBox = m_position.z >(p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x);
-	bool belowBox = m_position.z < (p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x);
-	float x = m_direction.x;
-	float z = m_direction.z;
-	if (x < 0 && z < 0)//down left
-	{
-		if (rightOfBox == aboveBox)
-		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x + m_playerSphere.m_radius*1.1f, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f));
-			x = -1;
-			z = 0;
-		}
-		else
-		{
-			if (rightOfBox)
-			{
-				x = 0;
-				z = -1;
-			}
-			if (aboveBox)
-			{
-				x = -1;
-				z = 0;
-			}
-		}
-	}
-	else if (x > 0 && z < 0)//down right
-	{
-		if (leftOfBox == aboveBox)
-		{
-			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
-			x = 0;
-			z = -1;
-		}
-		else
-		{
-			if (leftOfBox)
-			{
-				x = 0;
-				z = -1;
-			}
-			if (aboveBox)
-			{
-				x = 1;
-				z = 0;
-			}
-		}
-	}
-	else if (x < 0 && z > 0)//up left // works goood
-	{
-		if (rightOfBox == belowBox)
-		{
-			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
-			x = 0;
-			z = 1;
-		}
-		else
-		{
-			if (rightOfBox)
-			{
-				x = 0;
-				z = 1;
-			}
-			if (belowBox)
-			{
-				x = -1;
-				z = 0;
-			}
-		}
-	}
-	else if (x > 0 && z > 0)//up right // works goood
-	{
-		if (leftOfBox == belowBox)
-		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f));
-			x = 1;
-			z = 0;
-		}
-		else
-		{
-			if (leftOfBox)
-			{
-				x = 0;
-				z = 1;
-			}
-			if (belowBox)
-			{
-				x = 1;
-				z = 0;
-			}
-		}
-	}
-	SetDirection(DirectX::XMFLOAT3(x, 0.0f, z));
-}
-
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar->Update(m_position, (int)m_health, (int)m_maxHealth, p_view, p_projection);
 }
 
 void Player::UpdateAbilityBar()
-{
+	{
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
-	m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), 0);
-	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 0);
-	
+		{
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(),m_meleeAttack->GetStacks(), 0);
+		}
+		else
+		{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
+	}
 	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
-	m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), 1);
-	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 1);
-
+		{
+		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
+		}
+		else
+		{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
+	}
 	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
-	m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), 2);
-	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 2);
-
+		{
+		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
+		}
+		else
+		{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
+	}
 	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
-	m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), 3);
-	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 3);
-
+		{
+		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
+		}
+		else
+		{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
+			}
 	if ((float)m_toolAbility->GetCooldown() > 0.0f)
-	m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), 4);
+			{
+		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
+}
 	else
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, 4);
+{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
+}
 }
 
 void Player::Render()
@@ -858,9 +810,7 @@ void Player::Render()
 		m_healthbar->Render();
 	}
 
-	AnimatedObject::Render(m_team);
-	debugBox.Render();
-	debugCircle.Render();
+	AnimatedObject::RenderPlayer(m_team);
 }
 
 void Player::RenderDepth()

@@ -9,6 +9,11 @@ class AnimatedObject : public Object
 public:
 	AnimatedObject();
 	~AnimatedObject();
+
+	void* operator new(size_t p_i);
+	void operator delete(void* p_p);
+
+	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_rotation, DirectX::XMFLOAT3 p_scale);
 	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir);
 	virtual void Shutdown();
 	virtual void SetDirection(DirectX::XMFLOAT3 p_direction);
@@ -16,7 +21,8 @@ public:
 	virtual void SetSpeed(float p_speed);
 	virtual float GetSpeed() const;
 
-	void Render(int p_team);
+	void RenderPlayer(int p_team);
+	void Render();
 	void RenderDepth();
 	void RenderOutlining();
 	void ChangeAnimationState(AnimationState p_newState);

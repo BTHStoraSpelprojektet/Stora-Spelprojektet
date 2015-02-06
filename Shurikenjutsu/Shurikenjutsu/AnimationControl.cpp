@@ -6,9 +6,9 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_animationStacks.push_back(p_newStack);
 	m_boneTransforms.resize(p_newStack.m_jointCount);
 
-	m_forwardDirection = DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
-	m_ikDirection = DirectX::XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
-	m_rotationAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	m_forwardDirection = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
+	m_ikDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
+	m_rotationAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 
 	m_bindPoses.clear();
 	m_bindPoses = p_newStack.m_bindPoses;
@@ -92,6 +92,8 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	
 	if (strcmp(p_jointLegs->m_name, "HandR") == 0 ||
 		strcmp(p_jointLegs->m_name, "HandL") == 0 ||
+		strcmp(p_jointLegs->m_name, "ElbowR") == 0 ||
+		strcmp(p_jointLegs->m_name, "ElbowL") == 0 ||
 		strcmp(p_jointLegs->m_name, "ShoulderR") == 0 ||
 		strcmp(p_jointLegs->m_name, "ShoulderL") == 0)
 	{
@@ -139,26 +141,21 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	{
 		DirectX::XMVECTOR quaternionParent = DirectX::XMQuaternionMultiply(orientQuaternion, p_parentQuaternion);
 
-		m_rotationAxis = DirectX::XMVector3Rotate(m_rotationAxis, DirectX::XMQuaternionInverse(p_parentQuaternion));
+		DirectX::XMStoreFloat3(&m_rotationAxis, DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&m_rotationAxis), DirectX::XMQuaternionInverse(quaternionParent)));
 
 		quaternion = ApplyIK(quaternion);
-		m_rotationAxis = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-		m_forwardDirection = DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
+		m_rotationAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+		m_forwardDirection = DirectX::XMFLOAT3(0.0f, 0.0f, -1.0f);
 	}
 
 	quaternion = DirectX::XMQuaternionMultiply(quaternion, p_parentQuaternion);
-
-	if (strcmp(p_jointArms->m_name, "Hip") == 0)
-	{
-		
-	}
 
 	jointTranslation = DirectX::XMVector4Transform(jointTranslation, parentMatrix);
 
 	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixRotationQuaternion(quaternion);
 	transformMatrix.r[3].m128_f32[0] = jointTranslation.m128_f32[0];
 	transformMatrix.r[3].m128_f32[1] = jointTranslation.m128_f32[1];
-	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];	
+	transformMatrix.r[3].m128_f32[2] = jointTranslation.m128_f32[2];
 
 	DirectX::XMMATRIX bindPose = DirectX::XMLoadFloat4x4(&m_animationStacks[0].m_bindPoses[*p_index].m_bindPoseTransform);
 	transformMatrix = DirectX::XMMatrixMultiply(bindPose, transformMatrix);
@@ -197,17 +194,17 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 DirectX::XMVECTOR AnimationControl::ApplyIK(DirectX::XMVECTOR& p_quaternion)
 {
 	DirectX::XMMATRIX forwardRotation = DirectX::XMMatrixRotationY(-m_hipRotation);
-	DirectX::XMVECTOR lIkDirection = DirectX::XMVector3TransformNormal(m_ikDirection, forwardRotation);
+	DirectX::XMVECTOR lIkDirection = DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat3(&m_ikDirection), forwardRotation);
 
-	float cross = DirectX::XMVector3Cross(lIkDirection, m_forwardDirection).m128_f32[1];
-	float angle = acosf(DirectX::XMVector3Dot(lIkDirection, m_forwardDirection).m128_f32[0]);
+	float cross = DirectX::XMVector3Cross(lIkDirection, DirectX::XMLoadFloat3(&m_forwardDirection)).m128_f32[1];
+	float angle = acosf(DirectX::XMVector3Dot(lIkDirection, DirectX::XMLoadFloat3(&m_forwardDirection)).m128_f32[0]);
 
 	if (cross > 0)
 	{
 		angle *= -1.0f;
 	}
 
-	DirectX::XMVECTOR appliedIkQuaternion = DirectX::XMQuaternionRotationAxis(m_rotationAxis, angle);
+	DirectX::XMVECTOR appliedIkQuaternion = DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&m_rotationAxis), angle);
 	appliedIkQuaternion = DirectX::XMQuaternionMultiply(appliedIkQuaternion, p_quaternion);
 
 	return appliedIkQuaternion;
@@ -232,8 +229,8 @@ void AnimationControl::SetIkDirection(DirectX::XMFLOAT3 p_direction)
 
 	if (DirectX::XMVector3Length(direction).m128_f32[0] != 0.0f)
 	{
-		m_ikDirection = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
-		m_ikLegDirection = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
+		m_ikDirection = p_direction;
+		m_ikLegDirection = p_direction;
 	}
 }
 
@@ -246,9 +243,9 @@ void AnimationControl::HandleInput(DirectX::XMFLOAT3 p_dir)
 
 	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
 
-	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikDirection, direction).m128_f32[0];
+	float directionAngle = DirectX::XMVector3AngleBetweenVectors(DirectX::XMLoadFloat3(&m_ikDirection), direction).m128_f32[0];
 
-	float cross = DirectX::XMVector3Cross(m_ikDirection, m_forwardDirection).m128_f32[1];
+	float cross = DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&m_ikDirection), DirectX::XMLoadFloat3(&m_forwardDirection)).m128_f32[1];
 
 	if (DirectX::XMVector3Length(direction).m128_f32[0] == 0.0f)	// Idle
 	{
@@ -283,9 +280,9 @@ void AnimationControl::NetworkInput(DirectX::XMFLOAT3 p_dir)
 
 	DirectX::XMVECTOR direction = DirectX::XMLoadFloat3(&p_dir);
 
-	float directionAngle = DirectX::XMVector3AngleBetweenVectors(m_ikLegDirection, direction).m128_f32[0];
+	float directionAngle = DirectX::XMVector3AngleBetweenVectors(DirectX::XMLoadFloat3(&m_ikLegDirection), direction).m128_f32[0];
 
-	float cross = DirectX::XMVector3Cross(m_ikLegDirection, m_forwardDirection).m128_f32[1];
+	float cross = DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&m_ikLegDirection), DirectX::XMLoadFloat3(&m_forwardDirection)).m128_f32[1];
 
 	if (m_animationStacks.size() > 0)
 	{  
@@ -326,9 +323,9 @@ void AnimationControl::ChangeLayer(int p_armIndex, int p_legIndex)
 
 void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p_directionAngle, float p_cross)
 {
-	float crossD = DirectX::XMVector3Cross(m_ikLegDirection, p_direction).m128_f32[1];
+	float crossD = DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&m_ikLegDirection), p_direction).m128_f32[1];
 
-	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(m_forwardDirection, m_ikLegDirection).m128_f32[0];
+	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(DirectX::XMLoadFloat3(&m_forwardDirection), DirectX::XMLoadFloat3(&m_ikLegDirection)).m128_f32[0];
 
 	float low = 3.14f * 0.125f;
 	float lowMid = 3.14f * 0.375f;
@@ -434,6 +431,32 @@ void AnimationControl::FindAndReferenceLayers()
 
 	m_currentLegs = &m_animationStacksArray[6];
 	m_currentArms = &m_animationStacksArray[7];
+
+	m_blendWeightArms = 0.0f;
+	m_blendWeightLegs = 0.0f;
+
+	m_QuaternionArms.resize(m_animationStacksArray[0].m_jointCount);
+	m_QuaternionLegs.resize(m_animationStacksArray[0].m_jointCount);
+	for (int i = 0; i < m_animationStacksArray[0].m_jointCount; i++)
+	{
+		DirectX::XMVECTOR temp = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+
+		DirectX::XMStoreFloat4(&m_QuaternionArms[i], temp);
+		DirectX::XMStoreFloat4(&m_QuaternionLegs[i], temp);
+	}
+}
+
+void AnimationControl::AnimatedObjectLayers()
+{
+	m_animationStacksArray = new AnimationStack[m_animationStacks.size()];
+
+	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
+	{
+		m_animationStacksArray[i] = m_animationStacks[i];
+	}
+
+	m_currentArms = &m_animationStacksArray[0];
+	m_currentLegs = &m_animationStacksArray[1];
 
 	m_blendWeightArms = 0.0f;
 	m_blendWeightLegs = 0.0f;

@@ -78,11 +78,14 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		// Make collision test
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, range, attackDirection, boxPosition, boxExtent, range))
 		{
+			if (IntersectingObjectWhenAttacking(spherePos, boxPosition))
+			{
 			// Damage the player
 			p_playerManager->DamagePlayer(playerList[i].guid, damage);
 			break;
 		}
 	}
+}
 }
 
 void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager)
@@ -711,12 +714,15 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			if (*distance <= WHIP_RANGE)
 			{
+				if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+				{
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
 				break;
 			}
 		}
 	}
+}
 }
 
 void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
@@ -749,10 +755,13 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackPosition, WHIP_SP_RANGE, spherePosition, 1.0f))
 		{
+			if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			{
 			// Damage the player
 			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
 		}
 	}
+}
 }
 
 void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
@@ -828,7 +837,6 @@ bool CollisionManager::BoxBoxTest(Box p_box1, Box p_box2)
 	}
 	return false;
 }
-
 bool CollisionManager::OBBSphereTest(OBB p_OBB, Sphere p_sphere)
 {
 	if (IntersectionTests::Intersections::SphereSphereCollision(p_OBB.m_center, p_OBB.m_radius, p_sphere.m_position, p_sphere.m_radius))
@@ -840,6 +848,63 @@ bool CollisionManager::OBBSphereTest(OBB p_OBB, Sphere p_sphere)
 bool CollisionManager::SphereSphereTest(Sphere p_spikeTrap, Sphere p_player)
 {
 	return IntersectionTests::Intersections::SphereSphereCollision(p_spikeTrap.m_position, p_spikeTrap.m_radius, p_player.m_position, p_player.m_radius);
+}
+bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos)
+{
+	DirectX::XMFLOAT3 vectorFromA2B = DirectX::XMFLOAT3(p_defendingPlayerPos.x - p_attackingPlayerPos.x, 0.0f, p_defendingPlayerPos.z - p_attackingPlayerPos.z);
+	float distance = sqrt(vectorFromA2B.x * vectorFromA2B.x + vectorFromA2B.z * vectorFromA2B.z);
+
+	Ray* ray = new Ray(p_attackingPlayerPos, vectorFromA2B);
+	std::vector<float> listOfDistances;
+
+	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+	{
+		if (RayOBBTest(ray, m_staticBoxList[i]))
+		{
+			listOfDistances.push_back(ray->m_distance);
+		}
+	}
+	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	{
+		if (RaySphereTest(ray, m_staticSphereList[i]))
+		{
+			listOfDistances.push_back(ray->m_distance);
+		}
+	}	
+	for (unsigned int i = 0; i < listOfDistances.size(); i++)
+	{
+		if (distance > listOfDistances[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+bool CollisionManager::RayOBBTest(Ray *p_ray, OBB p_Obb)
+{
+	float *temp = new float(0);
+	if (IntersectionTests::Intersections::RayOBBCollision(p_ray->m_position, DirectX::XMFLOAT3(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z), p_Obb.m_center, p_Obb.m_extents, p_Obb.m_direction, temp))
+	{
+		p_ray->m_distance = *temp;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+bool CollisionManager::RaySphereTest(Ray *p_ray, Sphere p_sphere)
+{
+	float *temp = new float(0);
+	if (IntersectionTests::Intersections::RaySphereCollision(p_ray->m_position, p_ray->m_direction, p_sphere.m_position, p_sphere.m_radius, temp))
+	{
+		p_ray->m_distance = *temp;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 float CollisionManager::GetAngle(float p_x, float p_y)

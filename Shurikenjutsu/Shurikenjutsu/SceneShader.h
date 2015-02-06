@@ -5,6 +5,9 @@
 #include <vector>
 #include "Structures.h"
 
+class InstanceManager;
+class Object;
+
 class SceneShader
 {
 public:
@@ -31,17 +34,10 @@ public:
 
 	ID3D11ShaderResourceView* GetShadowMap();
 
-
 	/// Instancing
-	void RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
-	void AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position);
-	int GetNumberOfInstanceBuffer();
-	//void UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_position, int p_index);
+	void RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex, InstanceManager* p_instanceManager);
 
 private:
-	void InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices);
-	//void InitializeDynamicInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices);
-
 	void UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix);
 	void UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
 	void UpdateColorBuffer(ID3D11DeviceContext* p_context, float R, float G, float B);
@@ -136,12 +132,9 @@ private:
 		DirectX::XMFLOAT4 m_color;
 	};
 
-	//Instancing
-	std::vector<ID3D11Buffer*> m_instanceBufferList;
-	std::vector<int> m_numberOfInstanceList;
-	struct InstancePos
-	{
-		DirectX::XMFLOAT4X4 position;
-	};
+	////Instancing
+	//std::vector<ID3D11Buffer*> m_instanceBufferList;
+	//std::vector<int> m_numberOfInstanceList;
+
 };
 #endif

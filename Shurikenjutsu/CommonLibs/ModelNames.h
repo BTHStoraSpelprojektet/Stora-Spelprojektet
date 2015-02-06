@@ -51,4 +51,12 @@
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"
 
+// Cursor
+#define CURSOR_TEXTURE "../Shurikenjutsu/2DTextures/cursor.png"
+
+// Team Status Bar
+#define TEAM_STATUS_RED_PLAYER "../Shurikenjutsu/2DTextures/minimap_redDot.png"
+#define TEAM_STATUS_BLUE_PLAYER "../Shurikenjutsu/2DTextures/minimap_blueDot.png"
+#define TEAM_STATUS_DEAD_PLAYER "../Shurikenjutsu/2DTextures/TB_cd.png"
+
 #endif

@@ -6,6 +6,7 @@
 #include "Structures.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include <vector>
+#include "InstanceManager.h"
 
 class WICTextureLoader;
 class GUIShader;
@@ -13,6 +14,7 @@ class DepthShader;
 class RenderTarget;
 class ParticleShader;
 class SceneShader;
+class Object;
 //class OutliningShader;
 
 class GraphicsEngine
@@ -47,12 +49,13 @@ public:
 	static void RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
 	static void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 	static void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-	static void RenderText(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color);
-	static void RenderText2(std::string p_text, float p_size, float p_xpos, float p_ypos, UINT32 p_color, UINT p_flags);
 	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
 	static void SetSceneDirectionalLight(DirectionalLight& p_dLight);
+
+
+	static void UpdateInstanceBuffers(std::vector<Object*> p_ObjectList);
 
 	static void SetShadowMap();
 
@@ -86,6 +89,13 @@ public:
 	static bool InitializeOutling();
 	static void ClearOutlining();
 
+	static IFW1FontWrapper* GetFontWrapper();
+	static void AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags);
+	static void RenderTextGeometry(UINT p_flags);
+
+	static bool HasScreenChanged();
+	static void ScreenChangeHandled();
+
 private:
 	GraphicsEngine(){};
 
@@ -97,13 +107,15 @@ private:
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 	static ParticleShader m_particleShader;
-	//static OutliningShader m_outliningShader;
 
 	static HWND m_windowHandle;
 
 	static RenderTarget m_shadowMap;
 
-	static IFW1Factory *m_FW1Factory;
-	static IFW1FontWrapper *m_fontWrapper;
+	static IFW1FontWrapper* m_fontWrapper;
+	static IFW1TextGeometry* m_textGeometry;
+	static InstanceManager* m_instanceManager;
+
+	static bool m_screenChanged;
 };
 #endif;

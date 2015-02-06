@@ -19,6 +19,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
+	std::vector<LevelImporter::AnimatedObject> animatedLevelObjects = p_level->GetAnimatedObjects();
 
 	//Stuff needed for the loop
 	std::vector<DirectX::XMFLOAT4X4> modelPositions;
@@ -60,6 +61,19 @@ bool ObjectManager::Initialize(Level* p_level)
 
 	m_staticObjects[m_staticObjects.size()-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
 
+	m_animatedObjects.clear();
+	for (unsigned int i = 0; i < animatedLevelObjects.size(); i++)
+	{
+		AnimatedObject* animObject = new AnimatedObject();
+
+		animObject->Initialize(animatedLevelObjects[i].m_filePath.c_str(),
+			DirectX::XMFLOAT3(animatedLevelObjects[i].m_translationX, animatedLevelObjects[i].m_translationY, animatedLevelObjects[i].m_translationZ),
+			DirectX::XMFLOAT3(animatedLevelObjects[i].m_rotationX, animatedLevelObjects[i].m_rotationY, animatedLevelObjects[i].m_rotationZ),
+			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+		m_animatedObjects.push_back(animObject);
+	}
+
 	return true;
 }
 
@@ -77,6 +91,12 @@ void ObjectManager::Shutdown()
 		m_staticObjects[i].Shutdown();
 	}
 	m_staticObjects.clear();
+
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		m_animatedObjects[i]->Shutdown();
+	}
+	m_animatedObjects.clear();
 
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
@@ -196,7 +216,6 @@ void ObjectManager::Update()
 		Network::GetInstance()->SetHaveUpdateSmokeBombList();
 	}
 
-	///
 	if (Network::GetInstance()->IsSpikeTrapListUpdated())
 	{
 		std::vector<SpikeNet> tempSpikeTrapList = Network::GetInstance()->GetSpikeTraps();
@@ -251,22 +270,60 @@ void ObjectManager::Update()
 		}
 		
 	}
-	
-}
 
-void ObjectManager::Render()
+	UpdateRenderLists();
+}
+void ObjectManager::UpdateRenderLists()
 {
-	m_objectsToRender.clear();
+	std::vector<Object*> tempList;
+	m_objectsToInstanceRender.clear();
+	m_objectsToSingleRender.clear();
+	tempList.clear();
+
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		if (m_frustum->CheckSphere(m_staticObjects[i].GetFrustumSphere(), 5.5f))
+		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
+		sphere.m_position.x -= 3.0f;
+		sphere.m_position.z -= 3.0f;
+		if (m_frustum->CheckSphere(sphere, 10.0f))
 		{
-			if (CheckIfModelIsInObjectToRenderList(&m_staticObjects[i]))
+			m_staticObjects[i].UpdateRotation();
+			tempList.push_back(&m_staticObjects[i]);
+		}
+	}
+	std::vector<Object*>  temp;
+	Object* prevObject = &m_staticObjects[m_staticObjects.size() - 1];
+	for (unsigned int i = 0; i < tempList.size(); i++)
+	{
+		temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
+		if (prevObject->GetModel() != temp[0]->GetModel())
+		{
+			if (temp.size() == 1)
 			{
-				m_objectsToRender.push_back(&m_staticObjects[i]);
-				m_staticObjects[i].RenderInstanced();
+				m_objectsToSingleRender.push_back(tempList[i]);
+			}
+			else
+			{
+				if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
+				{
+					m_objectsToInstanceRender.push_back(tempList[i]);
+					GraphicsEngine::UpdateInstanceBuffers(temp);
+				}
 			}
 		}
+		prevObject = temp[0];
+	}
+}
+void ObjectManager::Render()
+{
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	{
+		m_objectsToInstanceRender[i]->RenderInstanced();
+	}
+
+	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
+	{
+		m_objectsToSingleRender[i]->Render();
 	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -309,25 +366,27 @@ void ObjectManager::Render()
 			m_spikeTrapList[i]->Render();
 			GraphicsEngine::TurnOffAlphaBlending();
 		}
-}
+	}
+
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 1.0f))
+		{
+			m_animatedObjects[i]->Render();
+		}
+	}
 }
 
 void ObjectManager::RenderDepth()
 {
-	m_objectsToShadowRender.clear();
-	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
 	{
-		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
-		sphere.m_position.x -= 3.0f;
-		sphere.m_position.z -= 3.0f;
-		if (m_frustum->CheckSphere(sphere, 7.5f))
-		{
-			if (CheckIfModelIsInObjectToShadowRenderList(&m_staticObjects[i]))
-			{
-				m_objectsToShadowRender.push_back(&m_staticObjects[i]);
-				m_staticObjects[i].RenderDepthInstanced();
-			}
-		}
+		m_objectsToInstanceRender[i]->RenderDepthInstanced();
+	}
+
+	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
+	{
+		m_objectsToSingleRender[i]->RenderDepth();
 	}
 
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -359,9 +418,16 @@ void ObjectManager::RenderDepth()
 		if (temp != NULL)
 		{
 			temp->RenderDepth();
-}
+		}
 	}
 
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 1.0f))
+		{
+			m_animatedObjects[i]->RenderDepth();
+		}		
+	}
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
@@ -469,28 +535,32 @@ void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 	m_frustum = p_frustum;
 }
 
-bool ObjectManager::CheckIfModelIsInObjectToRenderList(Object *p_object)
+bool ObjectManager::CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list)
 {
-	for (unsigned int i = 0; i < m_objectsToRender.size(); i++)
+	if (!p_list.empty())
 	{
-		if (m_objectsToRender[i]->GetModel() == p_object->GetModel())
+		if (p_list[0]->GetModel() == p_object->GetModel())
 		{
-			return false;
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
-bool ObjectManager::CheckIfModelIsInObjectToShadowRenderList(Object *p_object)
+std::vector<Object*> ObjectManager::CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list)
 {
-	for (unsigned int i = 0; i < m_objectsToShadowRender.size(); i++)
+	std::vector<Object*> returnList;
+	if (!p_list.empty())
 	{
-		if (m_objectsToShadowRender[i]->GetModel() == p_object->GetModel())
+		for (unsigned int i = 0; i < p_list.size(); i++)
 		{
-			return false;
+			if (p_list[i]->GetModel() == p_object->GetModel())
+			{
+				returnList.push_back(p_list[i]);
+			}
 		}
 	}
-	return true;
+	return returnList;
 }
 
 bool ObjectManager::IsFanInList(unsigned int p_fanId)
