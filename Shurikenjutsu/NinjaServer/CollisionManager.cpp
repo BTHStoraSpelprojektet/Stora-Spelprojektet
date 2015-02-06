@@ -780,20 +780,30 @@ void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManag
 			continue;
 		}
 
-		DirectX::XMVECTOR angle = DirectX::XMVector2AngleBetweenVectors(DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(attackingPlayer.dirX, attackingPlayer.dirZ)), DirectX::XMLoadFloat2(&DirectX::XMFLOAT2(0, -1)));
-		if (attackingPlayer.dirX > 0)
-		{
-			angle.m128_f32[0] *= -1;
-		}
-		DirectX::XMVECTOR newAngle = DirectX::XMQuaternionRotationRollPitchYaw(0, angle.m128_f32[0], 0);
-		DirectX::XMFLOAT4 newAngleFloat;
-		DirectX::XMStoreFloat4(&newAngleFloat, newAngle);
-		DirectX::XMFLOAT4 attackDirection = DirectX::XMFLOAT4(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ, 1);
-		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(0.1f, 3.0f, 5.0f);
-		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
-		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x - (attackingPlayer.dirX * boxExtent.x), playerList[i].y, playerList[i].z - (attackingPlayer.dirZ * boxExtent.z));
+		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(0.75f, 3.0f, 4.0f);
+		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
+		DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		DirectX::XMFLOAT3 v2 = attackDirection;
+
+		float x = (v1.x * v2.z) - (v2.x * v1.z);
+		float y = (v1.x * v2.x) - (v1.z * v2.z);
+
+		float faceAngle = atan2(y, x);
+
+		DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+		// Update rec location.
+		DirectX::XMFLOAT4X4 world;
+		DirectX::XMFLOAT4 test;
+		DirectX::XMMATRIX rotation = DirectX::XMMatrixIdentity();
+		rotation = DirectX::XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
+		DirectX::XMStoreFloat4(&test, DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
+		
+		attackPosition = DirectX::XMFLOAT3(attackPosition.x + y * boxExtent.z, attackPosition.y, attackPosition.z + x * boxExtent.z);
+
 		// Make collision test
-		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, newAngleFloat, spherePosition, 1.0f))
+		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, test, spherePosition, 1.0f))
 		{
 			// Damage the player
 			p_playerManager->DamagePlayer(playerList[i].guid, 1);
@@ -836,9 +846,3 @@ float CollisionManager::GetAngle(float p_x, float p_y)
 {
 	return 1;
 }
-
-/*DirectX::XMFLOAT3 orientation = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
-DirectX::XMStoreFloat3(&orientation, DirectX::XMVector3Cross(DirectX::XMLoadFloat3(&orientation), DirectX::XMLoadFloat3(&p_direction)));
-float angles;
-DirectX::XMStoreFloat(&angles, DirectX::XMVector3Length(DirectX::XMLoadFloat3(&orientation)));
-DirectX::XMStoreFloat3(&direction, DirectX::XMVector3Rotate(DirectX::XMLoadFloat3(&direction), DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&orientation), -angles)));*/

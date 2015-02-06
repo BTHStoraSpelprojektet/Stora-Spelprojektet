@@ -10,6 +10,8 @@ class Ability;
 class InputManager;
 class HealthBar;
 class AbilityBar;
+class DebugBox;
+class DebugCircle;
 
 class Player :
 	public AnimatedObject
@@ -65,6 +67,8 @@ public:
 
 	Sphere GetSphere();
 	OBB GetOBB();
+	DebugBox debugBox;
+	DebugCircle debugCircle;
 
 protected:
 	void CheckForSpecialAttack();

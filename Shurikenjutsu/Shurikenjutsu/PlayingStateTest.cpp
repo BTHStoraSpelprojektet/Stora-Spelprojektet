@@ -217,10 +217,10 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
 	// Update rec location.
-	DirectX::XMFLOAT4X4 world;
+	/*DirectX::XMFLOAT4X4 world;
 	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&(m_playerManager->GetPlayerPosition())));
 	DirectX::XMStoreFloat4x4(&world, matrix);
-	m_debugRect.UpdateWorldMatrix(world);
+	m_debugRect.UpdateWorldMatrix(world);*/
 	
 	return GAMESTATESWITCH_NONE;
 }

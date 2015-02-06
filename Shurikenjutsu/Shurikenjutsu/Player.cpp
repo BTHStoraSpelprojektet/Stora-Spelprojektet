@@ -9,6 +9,8 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
 #include "VisibilityComputer.h"
+#include "DebugBox.h"
+#include "DebugCircle.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -60,6 +62,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_globalCooldown = 0.0f;
 	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+
+	debugBox.Initialize(m_position, 1.5f, 8.0f, 3.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f)); 
+	debugCircle.Initialize(m_position, 1.0f, 20, DirectX::XMFLOAT3(1.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -241,6 +246,29 @@ void Player::UpdateMe()
 	}
 
 	UpdateAbilityBar();
+	
+	DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+	DirectX::XMFLOAT3 v2 = GetAttackDirection();
+
+	float x = (v1.x * v2.z) - (v2.x * v1.z);
+	float y = (v1.x * v2.x) - (v1.z * v2.z);
+
+	float faceAngle = atan2(y, x);
+
+	DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+	// Update rec location.
+	DirectX::XMFLOAT4X4 world;
+	DirectX::XMMATRIX rotation = DirectX::XMMatrixIdentity();
+	rotation = DirectX::XMMatrixRotationQuaternion(DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
+
+	DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&(DirectX::XMFLOAT3(m_position.x + y * 4.0f, m_position.y, m_position.z + x * 4.0f))));
+	matrix = DirectX::XMMatrixMultiply(rotation, matrix);
+	DirectX::XMStoreFloat4x4(&world, matrix);
+
+	debugBox.UpdateWorldMatrix(world);
+	debugCircle.UpdateWorldMatrix(GetWorldMatrix());
+	
 }
 
 void Player::CheckForSpecialAttack()
@@ -831,6 +859,8 @@ void Player::Render()
 	}
 
 	AnimatedObject::Render(m_team);
+	debugBox.Render();
+	debugCircle.Render();
 }
 
 void Player::RenderDepth()
