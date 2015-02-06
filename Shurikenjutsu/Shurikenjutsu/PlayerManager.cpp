@@ -48,7 +48,6 @@ void PlayerManager::Update()
 		if (Network::GetInstance()->RoundRestarted())
 		{
 			ResetCooldowns();
-			Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 		}
 
 		// Check if the player need to respawn

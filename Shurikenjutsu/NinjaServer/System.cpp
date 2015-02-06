@@ -15,6 +15,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	// Run tests
 	m_debug.RunTests(p_argc, p_argv);
 
+	m_firstUpdate = true;
 	return true;
 }
 
@@ -56,5 +57,9 @@ void System::Update()
 
 	double deltaTime = m_timer.GetDeltaTime();
 
-	m_server.Update(deltaTime);
+	if (!m_firstUpdate)
+	{
+		m_server.Update(deltaTime);
+	}
+	m_firstUpdate = false;
 }

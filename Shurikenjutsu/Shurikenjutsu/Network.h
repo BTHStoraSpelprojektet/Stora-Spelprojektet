@@ -91,6 +91,10 @@ public:
 
 	bool RoundRestarted();
 	void SetHaveUpdatedAfterRestartedRound();
+	bool RoundRestarting();
+	int GetRestartingTimer();
+	void SyncTimer();
+	bool TimerSynced(double &p_min, double &p_sec);
 
 	bool NewLevel();
 	void SetHaveUpdateNewLevel();
@@ -106,6 +110,10 @@ public:
 	DirectX::XMFLOAT3 GetDashLocation();
 
 	void SetObjectManager(ObjectManager* p_objectManager);
+
+	void SyncTeamScore();
+	int GetRedTeamScore();
+	int GetBlueTeamScore();
 
 private:
 
@@ -130,6 +138,7 @@ private:
 	void ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_projType);
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
+	void RemoveProjectile(unsigned int p_projId);
 	void AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed);
 	void RemoveFan(unsigned int p_id);
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
@@ -152,8 +161,13 @@ private:
 	bool m_respawned;
 	bool m_invalidMove;
 	bool m_roundRestarted;
+	bool m_restartingRound;
+	int m_timeRestarting;
 	bool m_newLevel;
 	bool m_dashed;
+	bool m_timerSynced;
+	double m_timerMin;
+	double m_timerSec;
 	std::string m_levelName;
 	PlayerNet m_myPlayer;
 	std::vector<PlayerNet> m_enemyPlayers;
@@ -163,6 +177,8 @@ private:
 	std::vector<FanNet> m_fanList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 	DirectX::XMFLOAT3 m_dashLocation;
+	int m_redTeamScore;
+	int m_blueTeamScore;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
