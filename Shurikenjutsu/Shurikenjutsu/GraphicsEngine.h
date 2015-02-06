@@ -93,6 +93,9 @@ public:
 	static void AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags);
 	static void RenderTextGeometry(UINT p_flags);
 
+	static bool HasScreenChanged();
+	static void ScreenChangeHandled();
+
 private:
 	GraphicsEngine(){};
 
@@ -112,5 +115,7 @@ private:
 	static IFW1FontWrapper* m_fontWrapper;
 	static IFW1TextGeometry* m_textGeometry;
 	static InstanceManager* m_instanceManager;
+
+	static bool m_screenChanged;
 };
 #endif;

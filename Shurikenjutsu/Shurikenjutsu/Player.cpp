@@ -163,31 +163,36 @@ void Player::UpdateMe()
 
 		m_isDashing = true;
 	}
-	
-	if (m_dashDistanceLeft > 20)
-	{
-		int a = 1;
-	}
 	// Dash movement
 	if (m_isDashing)
 	{
 		float distance = DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
-		if (distance >= m_dashDistanceLeft)
+		Sphere playerSphere = m_playerSphere;
+		playerSphere.m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+		playerSphere.m_position.y += m_dashDistanceLeft * m_dashDirection.z;		
+		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
-			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
-			m_dashDistanceLeft = 0.0f;
-			m_isDashing = false;
+			if (distance >= m_dashDistanceLeft)
+			{
+				m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+				m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+				m_dashDistanceLeft = 0.0f;
+				m_isDashing = false;
+			}
+			else
+			{
+				m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+				m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+				m_dashDistanceLeft -= distance;
+			}
+
+			// If we dashed, update shadow shapes.
+			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 		}
 		else
 		{
-			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-			m_dashDistanceLeft -= distance;
+			m_isDashing = false;
 		}
-
-		// If we dashed, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 
 		SendPosition(m_position);
 	}

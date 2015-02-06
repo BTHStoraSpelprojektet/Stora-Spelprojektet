@@ -105,6 +105,8 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	m_renderOutlining = false;
 
+	OnScreenResize();
+
 	return true;
 }
 
@@ -221,25 +223,37 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	
 	OutliningRays();
 
-	// Update the visibility polygon.
-	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
-	DirectX::XMFLOAT3 pickedTopRight = Pick(Point((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0.0f));
-	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT));
+	// Check if the screen changed.
+	bool resized = false;
+	if (GraphicsEngine::HasScreenChanged())
+	{
+		OnScreenResize();
+		resized = true;
+	} 
 
-	Point topLeft = Point(pickedTopLeft.x, pickedTopLeft.z);
-	Point bottomLeft = Point(pickedTopRight.x, pickedBottomRight.z - 0.5f);
+	// Calculate new visibility polygon boundries.
+	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
+	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
+	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 0.5f);
 
-	// Keep it in the maps boundries.
+	// Keep the the visibility polygon boundries within the maps boundries.
 	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
 	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
 	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
 	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
+	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
 	// Set have updated network stuff last in the update
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
+	if (resized)
+	{
+		// Reupdate the polygon.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
+	}
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -411,4 +425,19 @@ void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 ObjectManager* PlayingStateTest::GetObjectManager()
 {
 	return m_objectManager;
+}
+
+void PlayingStateTest::OnScreenResize()
+{
+	// Get the new edges.
+	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
+	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT));
+	DirectX::XMFLOAT3 pickedPlayer = Pick(Point(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f));
+
+	m_quadWidth = pickedPlayer.x - pickedTopLeft.x;
+	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
+	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
+
+	// Tell the graphics engine that changes have been handled.
+	GraphicsEngine::ScreenChangeHandled();
 }
