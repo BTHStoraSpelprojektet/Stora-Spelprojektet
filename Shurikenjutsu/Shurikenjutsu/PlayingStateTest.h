@@ -33,6 +33,7 @@ public:
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);
+	void PlayingStateTest::OnScreenResize();
 
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
@@ -57,5 +58,9 @@ private:
 	// ========== DEBUG LINES ==========
 
 	Frustum *m_frustum;
+
+	float m_quadWidth;
+	float m_quadHeightTop;
+	float m_quadHeightBottom;
 };
 #endif PLAYINGSTATE

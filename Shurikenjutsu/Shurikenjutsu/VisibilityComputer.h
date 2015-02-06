@@ -70,7 +70,7 @@ public:
 
 	bool IsPointVisible(Point p_point);
 
-	void SetMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
+	void SetPolygonMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 
 private:
 	VisibilityComputer() {};
@@ -87,7 +87,8 @@ private:
 	void CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device);
 	void CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context);
 
-	void UpdateMatrices(ID3D11DeviceContext* p_context);
+	void UpdatePolygonMatrices(ID3D11DeviceContext* p_context);
+	void RebuildQuad(Point p_topLeft, Point p_bottomRight);
 
 	std::vector<Point> m_intersections;
 	std::vector<DirectX::XMFLOAT3> m_vertices;
@@ -101,10 +102,12 @@ private:
 	ID3D11PixelShader* m_pixelShader;
 	ID3D11InputLayout* m_layout;
 	ID3D11Buffer* m_mesh;
+	ID3D11Buffer* m_quadMesh;
 
-	DirectX::XMFLOAT4X4 m_worldMatrix;
-	DirectX::XMFLOAT4X4 m_viewMatrix;
-	DirectX::XMFLOAT4X4 m_projectionMatrix;
+	DirectX::XMFLOAT4X4 m_quadWorldMatrix;
+	DirectX::XMFLOAT4X4 m_polygonWorldMatrix;
+	DirectX::XMFLOAT4X4 m_polygonViewMatrix;
+	DirectX::XMFLOAT4X4 m_polygonProjectionMatrix;
 
 	ID3D11Buffer* m_matrixBuffer;
 	struct MatrixBuffer
