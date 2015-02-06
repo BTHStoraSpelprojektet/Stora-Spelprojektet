@@ -24,9 +24,12 @@ RenderTarget GraphicsEngine::m_shadowMap;
 IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
 IFW1TextGeometry* GraphicsEngine::m_textGeometry;
 InstanceManager* GraphicsEngine::m_instanceManager;
+bool GraphicsEngine::m_screenChanged;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
+	m_screenChanged = false;
+
 	bool result = true;
 	m_windowHandle = p_handle;
 
@@ -238,7 +241,7 @@ void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, Dire
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	VisibilityComputer::GetInstance().SetMatrices(p_viewMatrix, p_projectionMatrix);
+	VisibilityComputer::GetInstance().SetPolygonMatrices(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
@@ -368,6 +371,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 			return false;
 		}        
 
+		m_screenChanged = true;
+
 		GLOBAL::GetInstance().FULLSCREEN = true;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
@@ -382,6 +387,8 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 			ConsolePrintErrorAndQuit("Setting windowed mode failed.");
 			return false;
 		}    
+
+		m_screenChanged = true;
 		
 		GLOBAL::GetInstance().FULLSCREEN = false;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
@@ -477,4 +484,14 @@ void GraphicsEngine::RenderTextGeometry(UINT p_flags)
 	m_fontWrapper->Flush(m_directX.GetContext());
 	m_fontWrapper->DrawGeometry(m_directX.GetContext(), m_textGeometry, NULL, NULL, p_flags);
 	m_textGeometry->Clear();
+}
+
+bool GraphicsEngine::HasScreenChanged()
+{
+	return m_screenChanged;
+}
+
+void GraphicsEngine::ScreenChangeHandled()
+{
+	m_screenChanged = false;
 }
