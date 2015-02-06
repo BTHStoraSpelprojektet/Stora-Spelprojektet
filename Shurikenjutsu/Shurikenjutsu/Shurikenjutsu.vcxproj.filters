@@ -416,6 +416,12 @@
     <ClCompile Include="InstanceManager.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
+    <ClCompile Include="StickyTrapAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="StickyTrap.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -690,6 +696,12 @@
     </ClInclude>
     <ClInclude Include="InstanceManager.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="StickyTrap.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="StickyTrapAbility.h">
+      <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

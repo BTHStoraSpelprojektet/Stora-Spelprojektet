@@ -87,7 +87,7 @@ const float SMOKEBOMB_SIZE_Y = 3.0f;
 
 ////////////////////////////////////////////////////////////////Tools
 ////////////////////////////////////////////////////////////////Special Abilities
-
+//Spike Trap
 const float SPIKE_DAMAGE = 3.0f;
 const float SPIKE_COOLDOWN = 6.0f;
 const float SPIKE_RANGE = 30.0f;
@@ -95,6 +95,17 @@ const float SPIKE_DURATION = 20.0f;
 const float SPIKE_SPEED = 30.0f;
 const float SPIKE_SIZE_X = 3.0f;
 const float SPIKE_RADIUS = 1.5f;
+
+//Spike Trap
+const float STICKY_TRAP_DAMAGE = 0.0f;
+const float STICKY_TRAP_COOLDOWN = 0.5f;/////////////////////////////////////////////////////
+//const float STICKY_TRAP_COOLDOWN = 6.0f;
+const float STICKY_TRAP_RANGE = 30.0f;
+const float STICKY_TRAP_DURATION = 20.0f;
+const float STICKY_TRAP_SPEED = 30.0f;
+const float STICKY_TRAP_SIZE_X = 3.0f;
+const float STICKY_TRAP_RADIUS = 1.5f;
+const float STICKY_TRAP_SLOW_PRECENTAGE = 0.5f;
 
 ////////////////////////////////////////////////////////////////Special Abilities
 ////////////////////////////////////////////////////////////////Character Variables
