@@ -14,6 +14,7 @@ class SmokeBomb;
 class Spikes;
 class FanBoomerang;
 class Projectile;
+class StickyTrap;
 
 class ObjectManager
 {
@@ -31,6 +32,7 @@ public:
 	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);
 	void AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID);
 	void AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeTrapID);
+	void AddStickyTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeTrapID);
 	void AddStaticObject(Object p_object);
 	std::vector<Object> GetStaticObjectList()const;
 
@@ -48,6 +50,7 @@ private:
 
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
+	std::vector<StickyTrap*> m_stickyTrapList;
 	std::vector<Shuriken*> m_shurikens;
 	std::vector<Projectile*> m_projectiles;
 	std::vector<FanBoomerang*> m_fans;
@@ -63,6 +66,7 @@ private:
 	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
 	bool IsSmokeBombInList(unsigned int p_smokeBombId);
 	bool IsSpikeTrapInList(unsigned int p_spikeTrapId);
+	bool IsStickyTrapInList(unsigned int p_stickyeTrapId);
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
 };

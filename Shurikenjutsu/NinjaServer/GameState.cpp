@@ -4,6 +4,7 @@
 #include "CollisionManager.h"
 #include "SpikeManager.h"
 #include "ProjectileManager.h"
+#include "StickyTrapManager.h"
 
 GameState::GameState(){}
 GameState::~GameState(){}
@@ -33,6 +34,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 
 	m_spikeManager = new SpikeManager();
 	m_spikeManager->Initialize(m_serverPeer);
+
+	m_stickyTrapManager = new StickyTrapManager();
+	m_stickyTrapManager->Initialize(m_serverPeer);
 
 	m_fanBoomerangManager = new FanBoomerangManager();
 	m_fanBoomerangManager->Initialize(m_serverPeer);
@@ -68,6 +72,7 @@ void GameState::Shutdown()
 	m_shurikenManager->Shutdown();
 	m_smokeBombManager->Shutdown();
 	m_spikeManager->Shutdown();
+	m_stickyTrapManager->Shutdown();
 	m_mapManager->Shutdown();
 	m_fanBoomerangManager->Shutdown();
 	m_projectileManager->Shutdown();
@@ -87,6 +92,7 @@ void GameState::Update(double p_deltaTime)
 	m_shurikenManager->Update(p_deltaTime);
 	m_smokeBombManager->Update(p_deltaTime);
 	m_spikeManager->Update(p_deltaTime);
+	m_stickyTrapManager->Update(p_deltaTime);
 	m_fanBoomerangManager->Update(p_deltaTime, m_playerManager);
 	m_projectileManager->Update(p_deltaTime);
 
@@ -142,7 +148,8 @@ void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, f
 {
 	m_smokeBombManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_spikeManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
-	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager);
+	m_stickyTrapManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
+	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager, *m_stickyTrapManager);
 }
 
 void GameState::BroadcastPlayers()

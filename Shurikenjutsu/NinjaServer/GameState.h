@@ -11,6 +11,7 @@ class MapManager;
 class CollisionManager;
 class SpikeManager;
 class ProjectileManager;
+class StickyTrapManager;
 
 class GameState
 {
@@ -49,6 +50,7 @@ protected:
 	CollisionManager* m_collisionManager;
 	FanBoomerangManager* m_fanBoomerangManager;
 	ProjectileManager* m_projectileManager;
+	StickyTrapManager* m_stickyTrapManager;
 
 	double m_timeMin;
 	double m_timeSec;

@@ -2,6 +2,7 @@
 #include "SpikeManager.h"
 #include "FanBoomerangManager.h"
 #include "ProjectileManager.h"
+#include "StickyTrapManager.h"
 
 #include "..\CommonLibs\ModelNames.h"
 
@@ -333,10 +334,11 @@ bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
 	return result;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
 	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
+	float stickyTrapDistance = p_stickyTrapManager.GetCurrentDistanceFromPlayer();
 	float dashDistance = 10.0f;
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
@@ -404,6 +406,15 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	case ABILITIES_KUNAI:
 		abilityString = "kunai throooow";
 		p_projectileManager.AddProjectile(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ, 2);
+		break;
+	case ABILITIES_STICKY_TRAP:
+		abilityString = "sticky icky dohickey";
+		if (stickyTrapDistance > STICKY_TRAP_RANGE)
+		{
+			stickyTrapDistance = STICKY_TRAP_RANGE;
+		}
+		p_stickyTrapManager.AddStickyTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* stickyTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
+
 		break;
 	default:
 		break;

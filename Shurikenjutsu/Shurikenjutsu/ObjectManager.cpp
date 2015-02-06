@@ -9,6 +9,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "FanBoomerang.h"
 #include "Projectile.h"
+#include "StickyTrap.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -230,6 +231,22 @@ void ObjectManager::Update()
 		}
 		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
 	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	if (Network::GetInstance()->IsSpikeTrapListUpdated())
+	{
+		std::vector<StickyTrapNet> tempStickyTrapList = Network::GetInstance()->GetStickyTrapList();
+		std::vector<StickyTrap> stickyTrapList;
+		for (unsigned int i = 0; i < tempStickyTrapList.size(); i++)
+		{
+			if (!IsStickyTrapInList(tempStickyTrapList[i].stickyTrapId))
+			{
+				// Add Smoke bomb
+				AddStickyTrap(tempStickyTrapList[i].startX, tempStickyTrapList[i].startZ, tempStickyTrapList[i].endX, tempStickyTrapList[i].endZ, tempStickyTrapList[i].stickyTrapId);
+			}
+		}
+		Network::GetInstance()->SetHaveUpdateStickyTrapList();
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// Get fans from server
 	std::vector<FanNet> tempNetFans = Network::GetInstance()->GetFanList();
@@ -367,6 +384,15 @@ void ObjectManager::Render()
 			GraphicsEngine::TurnOffAlphaBlending();
 		}
 	}
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_stickyTrapList[i]->GetStickyTrapSphere(), 2.0f))
+		{
+			GraphicsEngine::TurnOnAlphaBlending();
+			m_stickyTrapList[i]->Render();
+			GraphicsEngine::TurnOffAlphaBlending();
+		}
+	}
 
 	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
 	{
@@ -421,6 +447,15 @@ void ObjectManager::RenderDepth()
 		}
 	}
 
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		Object* temp = m_stickyTrapList[i]->GetStickyBag();
+		if (temp != NULL)
+		{
+			temp->RenderDepth();
+		}
+	}
+
 	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 1.0f))
@@ -455,6 +490,15 @@ void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_e
 	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_smokeBombID);
 	tempSpikeTrap->ResetTimer();
 	m_spikeTrapList.push_back(tempSpikeTrap);
+}
+
+void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID)
+{
+	StickyTrap *tempStickyTrap;
+	tempStickyTrap = new StickyTrap();
+	tempStickyTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_smokeBombID);
+	tempStickyTrap->ResetTimer();
+	m_stickyTrapList.push_back(tempStickyTrap);
 }
 
 void ObjectManager::AddStaticObject(Object p_object)
@@ -502,6 +546,20 @@ bool ObjectManager::IsSpikeTrapInList(unsigned int p_spikeTrapId)
 	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
 	{
 		if (p_spikeTrapId == m_spikeTrapList[i]->GetID())
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
+bool ObjectManager::IsStickyTrapInList(unsigned int p_stickyTrapId)
+{
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		if (p_stickyTrapId == m_stickyTrapList[i]->GetID())
 		{
 			return true;
 		}

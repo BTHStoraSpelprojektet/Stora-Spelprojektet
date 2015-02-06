@@ -5,7 +5,8 @@
 #include "Dash.h"
 #include "ShurikenAbility.h"
 #include "MegaShuriken.h"
-#include "SmokeBombAbility.h"
+//#include "SmokeBombAbility.h"
+#include "StickyTrapAbility.h"
 
 KatanaNinja::KatanaNinja(){}
 KatanaNinja::~KatanaNinja(){}
@@ -44,7 +45,7 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_rangeSpecialAttack = new MegaShuriken();
 	m_rangeSpecialAttack->Initialize();
 
-	m_toolAbility = new SmokeBombAbility();
+	m_toolAbility = new StickyTrapAbility();
 	m_toolAbility->Initialize();
 
 	return true;
