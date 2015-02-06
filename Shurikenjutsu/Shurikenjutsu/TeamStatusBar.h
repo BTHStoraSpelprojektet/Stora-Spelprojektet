@@ -27,6 +27,7 @@ private:
 
 	float m_dotSize;
 	float m_dotPosOffset;
+	int m_startOffset;
 	DirectX::XMFLOAT3 m_originPos;
 	bool m_addedMyself;
 };
