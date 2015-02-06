@@ -10,6 +10,7 @@ class ObjectManager;
 class Frustum;
 class Camera;
 class Minimap;
+class TeamStatusBar;
 
 class PlayingStateTest : public GameState
 {
@@ -39,6 +40,7 @@ private:
 	ObjectManager* m_objectManager;
 	Camera* m_camera;
 	Minimap* m_minimap;
+	TeamStatusBar* m_teamStatusBar;
 	DirectionalLight m_directionalLight;
 
 	float twoPi = 6.28318530718f;
