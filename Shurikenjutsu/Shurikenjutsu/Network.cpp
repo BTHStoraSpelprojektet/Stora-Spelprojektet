@@ -34,6 +34,11 @@ bool Network::Initialize()
 	m_newLevel = false;
 	m_levelName = "";
 	m_dashed = false;
+	m_restartingRound = false;
+	m_timeRestarting = 0;
+	m_timerSynced = false;
+	m_timerMin = 0;
+	m_timerSec = 0;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -370,6 +375,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 
 			m_roundRestarted = true;
+			m_restartingRound = false;
+			m_timeRestarting = 0;
 			std::cout << "New round has started\n";
 			break;
 		}
@@ -378,6 +385,7 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			bitStream.Read(messageID);
+			m_restartingRound = true;
 
 			std::cout << "Restarting round in:\n";
 			break;
@@ -390,6 +398,8 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			bitStream.Read(time);
+
+			m_timeRestarting = time;
 
 			std::cout << time << std::endl;
 			break;
@@ -588,6 +598,20 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(fanId);
 			RemoveFan(fanId);
+			break;
+		}
+		case ID_TIMER_SYNC:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			double sec, min;
+			bitStream.Read(messageID);
+			bitStream.Read(min);
+			bitStream.Read(sec);
+
+			m_timerSynced = true;
+			m_timerMin = min;
+			m_timerSec = sec;
 			break;
 		}
 		default:
@@ -1216,4 +1240,40 @@ std::vector<FanNet> Network::GetFanList()
 void Network::ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_uniqueId, RakNet::RakNetGUID p_guid, float p_speed, int p_projType)
 {
 	m_objectManager->AddProjectile(p_x, p_y, p_z, p_dirX, p_dirY, p_dirZ, p_uniqueId, p_guid, p_speed, p_projType);
+}
+
+bool Network::RoundRestarting()
+{
+	return m_restartingRound;
+}
+
+int Network::GetRestartingTimer()
+{
+	return m_timeRestarting;
+}
+
+void Network::SyncTimer()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_TIMER_SYNC);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+bool Network::TimerSynced(double &p_min, double &p_sec)
+{
+	if (m_timerSynced)
+	{
+		m_timerSynced = false;
+		p_min = m_timerMin;
+		p_sec = m_timerSec;
+		return true;
+	}
+	else
+	{
+		p_min = 0;
+		p_sec = 0;
+		return false;
+	}
 }

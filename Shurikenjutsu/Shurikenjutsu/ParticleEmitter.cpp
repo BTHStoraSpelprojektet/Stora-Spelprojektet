@@ -59,7 +59,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			break;
 		}
 
-		case(PARTICLE_PATTERN_PINKLEAF) :
+		case(PARTICLE_PATTERN_PINK_LEAVES) :
 		{
 			m_particlesPerSecond = 40.0f;
 			m_maxParticles = 1000;
@@ -78,7 +78,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			break;
 		}
 
-		case(PARTICLE_PATTERN_GREENLEAF) :
+		case(PARTICLE_PATTERN_GREEN_LEAVES) :
 		{
 			m_particlesPerSecond = 5.0f;
 			m_maxParticles = 1000;
@@ -290,7 +290,7 @@ void ParticleEmitter::EmitParticles()
 					break;
 				}
 
-				case(PARTICLE_PATTERN_PINKLEAF) :
+				case(PARTICLE_PATTERN_PINK_LEAVES) :
 				{
 					m_particleList[index].m_position = position;
 					m_particleList[index].m_direction = m_emitterDirection;
@@ -304,7 +304,7 @@ void ParticleEmitter::EmitParticles()
 					break;
 				}
 
-				case(PARTICLE_PATTERN_GREENLEAF) :
+				case(PARTICLE_PATTERN_GREEN_LEAVES) :
 				{
 					m_particleList[index].m_position = position;
 					m_particleList[index].m_direction = m_emitterDirection;
@@ -377,7 +377,7 @@ void ParticleEmitter::UpdateParticles()
 			break;
 		}
 
-		case(PARTICLE_PATTERN_PINKLEAF) :
+		case(PARTICLE_PATTERN_PINK_LEAVES) :
 		{
 			if (m_particleList != NULL){
 				for (unsigned int i = 0; i < m_currentParticles; i++)
@@ -398,7 +398,7 @@ void ParticleEmitter::UpdateParticles()
 			break;
 		}
 
-		case(PARTICLE_PATTERN_GREENLEAF) :
+		case(PARTICLE_PATTERN_GREEN_LEAVES) :
 		{
 			if (m_particleList != NULL){
 				for (unsigned int i = 0; i < m_currentParticles; i++)

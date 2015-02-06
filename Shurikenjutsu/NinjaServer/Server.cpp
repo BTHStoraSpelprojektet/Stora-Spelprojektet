@@ -220,6 +220,11 @@ void Server::ReceviePacket()
 			}
 			break;
 		}
+		case ID_TIMER_SYNC:
+		{
+			m_gameState->SyncTime(m_packet->guid);
+			break;
+		}
 		default:
 			break;
 		}
