@@ -72,6 +72,8 @@ public:
 
 	void SetPolygonMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 
+	void RebuildQuad(Point p_topLeft, Point p_bottomRight);
+
 private:
 	VisibilityComputer() {};
 	VisibilityComputer(VisibilityComputer const&);
@@ -88,7 +90,6 @@ private:
 	void CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context);
 
 	void UpdatePolygonMatrices(ID3D11DeviceContext* p_context);
-	void RebuildQuad(Point p_topLeft, Point p_bottomRight);
 
 	std::vector<Point> m_intersections;
 	std::vector<DirectX::XMFLOAT3> m_vertices;

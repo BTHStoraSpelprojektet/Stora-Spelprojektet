@@ -435,6 +435,11 @@ void PlayingStateTest::OnScreenResize()
 	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
 	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
 
+	// Update quad measurements.
+	Point topLeft = Point(-m_quadWidth, m_quadHeightTop);
+	Point bottomLeft = Point(m_quadWidth, -m_quadHeightBottom);
+	VisibilityComputer::GetInstance().RebuildQuad(topLeft, bottomLeft);
+
 	// Tell the graphics engine that changes have been handled.
 	GraphicsEngine::ScreenChangeHandled();
 }

@@ -312,7 +312,7 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 
 void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
-	float color[4] = { 0.0f, 0.0f, 0.0f, 0.95f };
+	float color[4] = { 0.0f, 0.0f, 0.0f, 0.5f };
 
 	m_renderTarget.SetAsRenderTarget(p_context);
 	m_renderTarget.Clear(p_context, color);
@@ -412,24 +412,24 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 		GraphicsEngine::TurnOnAlphaBlending();
 
 		// TODO, Render the reveresed poylgon texture here.
-		//GraphicsEngine::RenderScene(m_quadMesh, 6, m_worldMatrix, m_renderTarget.GetRenderTarget(), nullptr);
+		GraphicsEngine::RenderScene(m_quadMesh, 6, m_quadWorldMatrix, m_renderTarget.GetRenderTarget(), nullptr);
 
-		// DEBUG RENDER.
-		unsigned int stride = sizeof(DirectX::XMFLOAT3);
-		const unsigned int offset = 0;
+		//// DEBUG RENDER.
+		//unsigned int stride = sizeof(DirectX::XMFLOAT3);
+		//const unsigned int offset = 0;
 
-		UpdatePolygonMatrices(p_context);
+		//UpdatePolygonMatrices(p_context);
 
-		p_context->VSSetShader(m_vertexShader, NULL, 0);
-		p_context->PSSetShader(m_pixelShader, NULL, 0);
+		//p_context->VSSetShader(m_vertexShader, NULL, 0);
+		//p_context->PSSetShader(m_pixelShader, NULL, 0);
 
-		p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
-		p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		p_context->IASetInputLayout(m_layout);
+		//p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
+		//p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//p_context->IASetInputLayout(m_layout);
 
-		p_context->Draw(m_vertices.size(), 0);
+		//p_context->Draw(m_vertices.size(), 0);
 
-		GraphicsEngine::TurnOffAlphaBlending();
+		//GraphicsEngine::TurnOffAlphaBlending();
 	}
 }
 
