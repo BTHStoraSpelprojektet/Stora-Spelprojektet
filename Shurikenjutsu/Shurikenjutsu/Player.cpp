@@ -805,7 +805,7 @@ void Player::Render()
 		m_healthbar->Render();
 	}
 
-		AnimatedObject::Render(m_team);
+		AnimatedObject::RenderPlayer(m_team);
 	}
 
 void Player::RenderDepth()
