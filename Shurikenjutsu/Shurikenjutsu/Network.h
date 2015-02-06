@@ -111,6 +111,10 @@ public:
 
 	void SetObjectManager(ObjectManager* p_objectManager);
 
+	void SyncTeamScore();
+	int GetRedTeamScore();
+	int GetBlueTeamScore();
+
 private:
 
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
@@ -172,6 +176,8 @@ private:
 	std::vector<FanNet> m_fanList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 	DirectX::XMFLOAT3 m_dashLocation;
+	int m_redTeamScore;
+	int m_blueTeamScore;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
