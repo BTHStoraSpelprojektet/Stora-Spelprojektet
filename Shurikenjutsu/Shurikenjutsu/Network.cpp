@@ -1277,3 +1277,8 @@ bool Network::TimerSynced(double &p_min, double &p_sec)
 		return false;
 	}
 }
+
+void Network::RemoveProjectile(unsigned int p_projId)
+{
+	m_objectManager->RemoveProjectile(p_projId);
+}
