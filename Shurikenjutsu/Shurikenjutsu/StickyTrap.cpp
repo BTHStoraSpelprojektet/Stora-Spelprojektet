@@ -68,7 +68,7 @@ void StickyTrap::Render()
 }
 void StickyTrap::SetPosition(DirectX::XMFLOAT3 p_position)
 {
-	m_sStickyTrapSphere.m_position = p_position;
+	m_stickyTrapSphere.m_position = p_position;
 }
 
 void StickyTrap::ResetTimer()
@@ -84,7 +84,7 @@ Sphere StickyTrap::GetStickyTrapSphere()
 	}
 	else
 	{
-		return m_sStickyTrapSphere;
+		return m_stickyTrapSphere;
 	}
 }
 
