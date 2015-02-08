@@ -590,6 +590,13 @@ void Network::ReceviePacket()
 			RemoveFan(fanId);
 			break;
 		}
+		case ID_VOLLEY_THROWN:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+
+		}
+
 		default:
 		{
 			break;

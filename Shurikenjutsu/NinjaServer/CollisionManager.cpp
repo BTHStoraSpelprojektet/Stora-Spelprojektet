@@ -4,6 +4,7 @@
 #include "ShurikenManager.h"
 #include "ProjectileManager.h"
 #include "FanBoomerangManager.h"
+#include "VolleyManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
@@ -778,4 +779,58 @@ bool CollisionManager::OBBSphereTest(OBB p_OBB, Sphere p_sphere)
 bool CollisionManager::SphereSphereTest(Sphere p_spikeTrap, Sphere p_player)
 {
 	return IntersectionTests::Intersections::SphereSphereCollision(p_spikeTrap.m_position, p_spikeTrap.m_radius, p_player.m_position, p_player.m_radius);
+}
+
+void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, PlayerManager* p_playerManager)
+{
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<VolleyNet> volleyList = p_volleyManager->GetObjects();
+	for (unsigned int i = 0; i < volleyList.size(); i++)
+	{
+		// Go through player list
+		for (unsigned int j = 0; j < playerList.size(); j++)
+		{
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == volleyList[i].guid)
+			{
+				continue;
+			}
+
+			// Check so you are not on the same team
+			PlayerNet owner = p_playerManager->GetPlayer(volleyList[i].guid);
+			if (playerList[j].team == owner.team)
+			{
+				continue;
+			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+
+
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+			// Make collision test
+			if (volleyList[i].timeToLand <= 0.0f)
+			{
+				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+				{
+					DirectX::XMFLOAT3 volleyPos = DirectX::XMFLOAT3(volleyList[i].endX, playerBoundingBoxes[l].m_center.y, volleyList[i].endZ);
+					if (SphereSphereTest(Sphere(volleyPos, VOLLEY_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+					{
+						float damage = VOLLEY_DAMAGE;
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+					}
+				}
+
+				// Remove dead volley
+				p_volleyManager->Remove(i); // MAY WORK, BE CAUTIOUS!
+				volleyList.erase(volleyList.begin() + i);
+				i--;
+			}
+		}
+	}
 }

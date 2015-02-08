@@ -166,6 +166,7 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VisibilityComputer.cpp" />
     <ClCompile Include="Volley.cpp" />
+    <ClCompile Include="VolleyObject.cpp" />
     <ClCompile Include="WhipPrimaryAttackAbility.cpp" />
     <ClCompile Include="WhipSecondaryAttackAbility.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VisibilityComputer.h" />
     <ClInclude Include="Volley.h" />
+    <ClInclude Include="VolleyObject.h" />
     <ClInclude Include="WhipPrimaryAttackAbility.h" />
     <ClInclude Include="WhipSecondaryAttackAbility.h" />
     <ClInclude Include="Window.h" />

@@ -4,6 +4,7 @@
 #include "CollisionManager.h"
 #include "SpikeManager.h"
 #include "ProjectileManager.h"
+#include "VolleyManager.h"
 
 GameState::GameState(){}
 GameState::~GameState(){}
@@ -40,6 +41,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_projectileManager = new ProjectileManager();
 	m_projectileManager->Initialize(m_serverPeer);
 
+	m_volleyManager = new VolleyManager();
+	m_volleyManager->Initialize(m_serverPeer);
+
 	return true;
 }
 
@@ -67,6 +71,7 @@ void GameState::Shutdown()
 	m_mapManager->Shutdown();
 	m_fanBoomerangManager->Shutdown();
 	m_projectileManager->Shutdown();
+	m_volleyManager->Shutdown();
 
 	delete m_playerManager;
 	delete m_shurikenManager;
@@ -75,6 +80,7 @@ void GameState::Shutdown()
 	delete m_fanBoomerangManager;
 	delete m_collisionManager;
 	delete m_projectileManager;
+	delete m_volleyManager;
 }
 
 void GameState::Update(double p_deltaTime)
@@ -85,11 +91,13 @@ void GameState::Update(double p_deltaTime)
 	m_spikeManager->Update(p_deltaTime);
 	m_fanBoomerangManager->Update(p_deltaTime, m_playerManager);
 	m_projectileManager->Update(p_deltaTime);
+	m_volleyManager->Update(p_deltaTime);
 
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
 	m_collisionManager->ProjectileCollisionChecks(m_projectileManager, m_playerManager);
 	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager, (float)p_deltaTime);
 	m_collisionManager->FanCollisionChecks(p_deltaTime, m_fanBoomerangManager, m_playerManager);
+	m_collisionManager->VolleyCollisionChecks(m_volleyManager, m_playerManager);
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
@@ -136,7 +144,7 @@ void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, f
 {
 	m_smokeBombManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_spikeManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
-	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager);
+	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager, *m_volleyManager);
 }
 
 void GameState::BroadcastPlayers()

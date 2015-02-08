@@ -18,6 +18,7 @@ class ShurikenManager;
 class PlayerManager;
 class SpikeManager;
 class ProjectileManager;
+class VolleyManager;
 
 class CollisionManager
 {
@@ -35,7 +36,7 @@ public:
 	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 	void WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
-
+	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
 
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);

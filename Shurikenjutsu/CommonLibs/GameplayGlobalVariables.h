@@ -49,6 +49,13 @@ const float FANBOOMERANG_COOLDOWN = 2.0f;
 const float FANBOOMERANG_DURATION = 3.0f;
 const float FANBOOMERANG_SPEED = 20.0f;
 
+// Volley
+const float VOLLEY_DAMAGE = 10.0f;
+const float VOLLEY_COOLDOWN = 5.0f;
+const float VOLLEY_RANGE = 30.0f;
+const float VOLLEY_RADIUS = 1.0f;
+const float VOLLEY_SPEED = 30.0f;
+
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
 //Katana

@@ -262,7 +262,7 @@ void ObjectManager::Update()
 	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		Volley* volley = new Volley;
-		volley->Initialize(DirectX::XMFLOAT3(0, 2.0f, 0), DirectX::XMFLOAT3(10.0f, 2.0f, 10.0f));
+		volley->Initialize(DirectX::XMFLOAT3(0, 0.0f, 0), DirectX::XMFLOAT3(0.0f, 0.0f, 20.0f));
 		m_volleys.push_back(volley);
 	}
 
@@ -414,7 +414,12 @@ void ObjectManager::RenderDepth()
 		if (temp != NULL)
 		{
 			temp->RenderDepth();
-}
+		}
+	}
+
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		m_volleys[i]->RenderDepth();
 	}
 
 }

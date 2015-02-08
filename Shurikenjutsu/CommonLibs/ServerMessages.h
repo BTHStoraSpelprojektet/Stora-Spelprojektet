@@ -65,9 +65,9 @@ struct SpikeNet
 struct VolleyNet
 {
 	unsigned int id;
-	float startX, startY, endX, endZ;
-	float lifeTime;
-	float maxZ;
+	float startX, startZ, endX, endZ;
+	float timeToLand;
+	float speed;
 	RakNet::RakNetGUID guid;
 };
 enum Messages
