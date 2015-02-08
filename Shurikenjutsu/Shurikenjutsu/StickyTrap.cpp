@@ -5,7 +5,7 @@
 #include "GraphicsEngine.h"
 #include "PlayerManager.h"
 
-bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
+bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_stickyTrapID)
 {
 	m_stickyTrapBag = new Object();
 	m_stickyTrapBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
@@ -15,8 +15,8 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 
 	m_startPosition = p_startPosition;
 	m_isThrowing = true;
-	m_sStickyTrapSphere = Sphere(p_endPosition, SPIKE_SIZE_X);
-	m_StickyTrapID = p_smokeBombID;
+	m_stickyTrapSphere = Sphere(p_endPosition, STICKY_TRAP_RADIUS);
+	m_StickyTrapID = p_stickyTrapID;
 
 	m_speed = SPIKE_SPEED;
 	float x = (p_endPosition.x - p_startPosition.x);
