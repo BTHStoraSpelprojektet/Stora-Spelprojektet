@@ -28,7 +28,7 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 
 	return true;
 }
-void StickyTrap::Update(PlayerManager *p_playerManager)
+void StickyTrap::Update()
 {
 	m_timer += (float)GLOBAL::GetInstance().GetDeltaTime();
 

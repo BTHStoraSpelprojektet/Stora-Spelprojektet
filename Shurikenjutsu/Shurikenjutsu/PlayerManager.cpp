@@ -35,10 +35,10 @@ void PlayerManager::Shutdown()
 	delete[] m_enemyList;
 }
 
-void PlayerManager::Update()
+void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	m_player->UpdateMe();
+	m_player->UpdateMe(p_stickyTrapList);
 
 	if (Network::GetInstance()->IsConnected())
 	{

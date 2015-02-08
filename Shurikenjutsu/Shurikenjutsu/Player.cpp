@@ -9,6 +9,7 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
 #include "VisibilityComputer.h"
+#include "StickyTrap.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -115,7 +116,8 @@ void Player::Shutdown()
 	}
 }
 
-void Player::UpdateMe()
+
+void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	// Check values from server
 	if (Network::GetInstance()->IsConnected())
@@ -140,7 +142,17 @@ void Player::UpdateMe()
 		SetCalculatePlayerPosition();
 	}*/
 
-	
+	for (int i = 0; i < p_stickyTrapList.size(); i++)
+	{
+		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+		{
+			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
+		}
+		else
+		{
+			SetSpeed(m_originalSpeed);
+		}
+	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -917,4 +929,9 @@ OBB Player::GetOBB()
 	}*/
 	TransformBoundingBoxes();
 	return m_boundingBoxes[0];
+}
+
+void Player::SetOriginalSpeed(float p_speed)
+{
+	m_originalSpeed = p_speed;
 }

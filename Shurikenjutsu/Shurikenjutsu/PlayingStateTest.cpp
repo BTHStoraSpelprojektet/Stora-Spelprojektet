@@ -169,7 +169,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	BasicPicking();
 
-	m_playerManager->Update();
+	m_playerManager->Update(m_objectManager->GetStickyTrapList());
 
 	// Handle camera input.
 	m_camera->HandleInput();

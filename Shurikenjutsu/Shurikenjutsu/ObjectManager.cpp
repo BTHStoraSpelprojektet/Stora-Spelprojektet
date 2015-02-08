@@ -554,7 +554,6 @@ bool ObjectManager::IsSpikeTrapInList(unsigned int p_spikeTrapId)
 	return false;
 }
 
-
 bool ObjectManager::IsStickyTrapInList(unsigned int p_stickyTrapId)
 {
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
@@ -665,4 +664,9 @@ void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX,
 	tempProjectile->Initialize(DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(p_dirX, p_dirY, p_dirZ), p_uniqueId, p_ability, p_guid);
 	
 	m_projectiles.push_back(tempProjectile);
+}
+
+std::vector<StickyTrap*> ObjectManager::GetStickyTrapList()
+{
+	return m_stickyTrapList;
 }

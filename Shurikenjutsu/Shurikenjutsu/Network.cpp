@@ -897,8 +897,8 @@ void Network::UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyT
 {
 
 	bool addStickyTrap = true;
-	SpikeNet temp;
-	temp.spikeId = p_stickyTrapId;
+	StickyTrapNet temp;
+	temp.stickyTrapId = p_stickyTrapId;
 	temp.startX = p_startPosX;
 	temp.startZ = p_startPosZ;
 	temp.endX = p_endPosX;
@@ -906,9 +906,9 @@ void Network::UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyT
 	temp.lifeTime = p_lifetime;
 	temp.guid = p_guid;
 
-	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
-		if (m_spikeTrapList[i].spikeId == temp.spikeId)
+		if (m_stickyTrapList[i].stickyTrapId == temp.stickyTrapId)
 		{
 			addStickyTrap = false;
 			break;
@@ -916,7 +916,7 @@ void Network::UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyT
 	}
 	if (addStickyTrap)
 	{
-		m_spikeTrapList.push_back(temp);
+		m_stickyTrapList.push_back(temp);
 		m_stickyTrapListUpdated = true;
 	}
 }
@@ -1103,7 +1103,7 @@ bool Network::IsSmokeBombListUpdated()
 
 bool Network::IsSpikeTrapListUpdated()
 {
-	return m_spikeTrapListUpdated;
+	return m_stickyTrapListUpdated;
 }
 
 void Network::SetHaveUpdateSpikeTrapList()

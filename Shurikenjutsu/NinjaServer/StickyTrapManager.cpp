@@ -44,7 +44,7 @@ void StickyTrapManager::AddStickyTrap(RakNet::RakNetGUID p_guid, float p_startPo
 	temp.timeToLand = timeToLand;
 	m_stickyTrapList.push_back(temp);
 	RakNet::BitStream wBitStream;
-	wBitStream.Write((RakNet::MessageID)ID_SPIKETRAP_THROW);
+	wBitStream.Write((RakNet::MessageID)ID_STICKYTRAP_THROW);
 	wBitStream.Write(temp.stickyTrapId);
 	wBitStream.Write(temp.startX);
 	wBitStream.Write(temp.startZ);

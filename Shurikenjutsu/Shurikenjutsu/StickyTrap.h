@@ -31,7 +31,7 @@ private:
 	float m_percentZ;
 	float m_timer;
 
-	Sphere m_sStickyTrapSphere;
+	Sphere m_stickyTrapSphere;
 	unsigned int m_StickyTrapID;
 	float m_decreasePercentage;
 };
