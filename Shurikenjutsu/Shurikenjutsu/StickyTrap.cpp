@@ -11,7 +11,7 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_stickyTrapBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
 
 	m_stickyTrap = new Object();
-	m_stickyTrap->Initialize("../Shurikenjutsu/Models/CaltropFieldTCShape.SSP", p_endPosition);
+	m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", p_endPosition);
 
 	m_startPosition = p_startPosition;
 	m_isThrowing = true;
