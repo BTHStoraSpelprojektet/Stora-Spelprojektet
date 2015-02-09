@@ -50,6 +50,8 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_toolAbility = new SmokeBombAbility();
 	m_toolAbility->Initialize();
 
+	SetOriginalSpeed(GetSpeed());
+
 	return true;
 }
 
