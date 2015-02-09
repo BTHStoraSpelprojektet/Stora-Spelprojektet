@@ -238,7 +238,7 @@ void ModelImporter::Shutdown()
 
 void ModelImporter::ShutDownHierarchy(BoneFrame* bone)
 {
-	for (unsigned int i = 0; i < bone->m_childrenCount; i++)
+	for (int i = 0; i < bone->m_childrenCount; i++)
 	{
 		ShutDownHierarchy(bone->m_children[i]);
 	}
