@@ -42,17 +42,17 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 		case(PARTICLE_PATTERN_WORLD_MIST) :
 		{
-			m_particlesPerSecond = 25.0f;
-			m_maxParticles = 25;
+			m_particlesPerSecond = 125.0f;
+			m_maxParticles = 125;
 
 			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(70.0f, 0.2f, 70.0f);
+			m_emitionPositionOffset = DirectX::XMFLOAT3(35.0f, 5.2f, 45.0f);
 			
 			// Set velocity and its variation.
 			m_velocity = 3.0f;
 			m_velocityVariation = 0.1f;
 
-			m_timeToLive = 180.0f;
+			m_timeToLive = 90.0f;
 
 			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldMistParticle.png");
 
@@ -295,6 +295,16 @@ void ParticleEmitter::EmitParticles()
 					break;
 				}
 				case(PARTICLE_PATTERN_WORLD_MIST) : {
+					/*DirectX::XMFLOAT3 position2 = m_emitterPosition;
+					int posX2 = ((((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.x);
+					position2.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
+					int posZ2 = ((((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z);
+					position2.x = posX2;
+
+					//position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
+					position2.z = posZ2;*/
+
+
 					// Set a random direction in xz.
 					float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
 					DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
@@ -307,7 +317,7 @@ void ParticleEmitter::EmitParticles()
 
 					m_particleList[index].m_position = position;
 					m_particleList[index].m_direction = direction;
-					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
+					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 0.0f);
 					m_particleList[index].m_velocity = velocity;
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
@@ -478,6 +488,12 @@ void ParticleEmitter::UpdateParticles()
 						m_particleList[i].m_position.x = m_particleList[i].m_position.x + velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
 						m_particleList[i].m_position.y = m_particleList[i].m_position.y + velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.y;
 						m_particleList[i].m_position.z = m_particleList[i].m_position.z + velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
+
+						float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+						float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
+						m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
+
 					}
 
 					// Add time passed.
@@ -514,6 +530,11 @@ void ParticleEmitter::UpdateParticles()
 						m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocityXZ * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
 						m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.y;
 						m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocityXZ * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
+
+						float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+						float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
+						m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
 					}
 
 					// Add time passed.
@@ -587,6 +608,7 @@ void ParticleEmitter::UpdateBuffers()
 		{
 			opacity = ((-1.0f / (m_particleList[i].m_timeToLive * 0.5f)) * (m_particleList[i].m_timePassed - m_particleList[i].m_timeToLive * 0.5f)) + 1.0f;
 		}
+		m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, opacity);
 
 		
 
@@ -600,13 +622,28 @@ void ParticleEmitter::UpdateBuffers()
 					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
 				}
 			}
+			case PARTICLE_PATTERN_WORLD_MIST:{
+				
+				if (m_particleList[i].m_timeSpecial>0.01f)
+				{
+					if (m_particleList[i].m_color.w < 1.0f){
+						m_particleList[i].m_color.w += 0.001f;
+						//m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime()
+						m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, m_particleList[i].m_color.w);
+
+						m_particleList[i].m_timeSpecial = 0;
+					}
+					//float opacity2 = (1.0f / (m_particleList[i].m_timePassed*0.1));
+					//m_particleList[i].m_color.w = opacity2;
+				}
+				m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();
+			}
 
 			default:{
 				m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
 			}
 
 		}
-		m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, opacity);
 	}
 
 	// Lock the dynamic vertex buffer.
