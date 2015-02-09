@@ -15,6 +15,7 @@ public:
 
 private:
 	DirectX::XMFLOAT3 m_startPosition;
+	DirectX::XMFLOAT3 m_lastPosition;
 	DirectX::XMFLOAT3 m_endPosition;
 	float m_angle;
 	float m_speedY;

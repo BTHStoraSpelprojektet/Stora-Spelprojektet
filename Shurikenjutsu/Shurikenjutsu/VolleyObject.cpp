@@ -21,6 +21,7 @@ bool VolleyObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_startP
 	m_speed = length / m_timeToLand;
 	m_angle = 3.14f / m_timeToLand;
 	m_lifeTime = m_timeToLand + 0.5f;
+	m_lastPosition = m_startPosition;
 	return true;
 }
 
@@ -39,6 +40,12 @@ bool VolleyObject::Update(float p_timer)
 		float z = m_speed * p_timer * m_percentZ;
 
 		m_position = DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + y, m_startPosition.z + z);
+
+		// Rotate
+		DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(m_lastPosition.x - m_position.x, m_lastPosition.y - m_position.y, m_lastPosition.z - m_position.z);
+		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(atan2f(direction.y, -direction.x), atan2f(-direction.z, direction.x) - 3.14f *0.5f, 0);
+		SetRotation(rotation);
+		m_lastPosition = m_position;
 	}
 
 	// Remove;
@@ -46,7 +53,7 @@ bool VolleyObject::Update(float p_timer)
 	{
 		return true;
 	}
-
+	
 	return false;
 }
 

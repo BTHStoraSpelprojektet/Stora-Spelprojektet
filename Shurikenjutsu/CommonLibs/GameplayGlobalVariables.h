@@ -54,8 +54,8 @@ const float VOLLEY_DAMAGE = 15.0f;
 const float VOLLEY_COOLDOWN = 4.0f;
 const float VOLLEY_RANGE = 20.0f;
 const float VOLLEY_RADIUS = 0.5f;
-const float VOLLEY_GRAVITY = 4.41f;
-const float VOLLEY_HEIGHT = 20.0f;
+const float VOLLEY_GRAVITY = 3.5f;
+const float VOLLEY_HEIGHT = 15.0f;
 
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks

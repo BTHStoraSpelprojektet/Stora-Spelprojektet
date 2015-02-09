@@ -66,14 +66,14 @@ void Volley::AddRandomProjectiles(int p_amount, DirectX::XMFLOAT3 p_startPositio
 
 	DirectX::XMFLOAT3 endPosition = p_endPosition;
 	VolleyObject* projectile = new VolleyObject;
-	projectile->Initialize(SHURIKEN_MODEL_NAME, p_startPosition, endPosition);
+	projectile->Initialize(KUNAI_MODEL_NAME, p_startPosition, endPosition);
 	m_projectiles.push_back(projectile);
 
 	for (int i = 0; i < p_amount; i++)
 	{
 		endPosition = DirectX::XMFLOAT3(p_endPosition.x + cosf(angle*i)*VOLLEY_RADIUS*3.0f, p_endPosition.y, p_endPosition.z + sinf(angle*i)*VOLLEY_RADIUS*3.0f);
 		projectile = new VolleyObject;
-		projectile->Initialize(SHURIKEN_MODEL_NAME, p_startPosition, endPosition);
+		projectile->Initialize(KUNAI_MODEL_NAME, p_startPosition, endPosition);
 		m_projectiles.push_back(projectile);
 	}
 }
