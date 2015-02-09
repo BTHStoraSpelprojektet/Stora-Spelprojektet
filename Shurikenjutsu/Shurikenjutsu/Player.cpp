@@ -142,15 +142,15 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		SetCalculatePlayerPosition();
 	}*/
 
-	for (int i = 0; i < p_stickyTrapList.size(); i++)
+	SetSpeed(m_originalSpeed);
+	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
 	{
-		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+		if (p_stickyTrapList[i]->GetGUID() != Network::GetInstance()->GetMyGUID())
 		{
-			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
-		}
-		else
-		{
-			SetSpeed(m_originalSpeed);
+			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+			{
+				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
+			}
 		}
 	}
 

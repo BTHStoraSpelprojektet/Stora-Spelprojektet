@@ -5,7 +5,7 @@
 #include "GraphicsEngine.h"
 #include "PlayerManager.h"
 
-bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_stickyTrapID)
+bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_stickyTrapID, RakNet::RakNetGUID p_guid)
 {
 	m_stickyTrapBag = new Object();
 	m_stickyTrapBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
@@ -18,13 +18,15 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_stickyTrapSphere = Sphere(p_endPosition, STICKY_TRAP_RADIUS);
 	m_StickyTrapID = p_stickyTrapID;
 
-	m_speed = SPIKE_SPEED;
+	m_speed = STICKY_TRAP_SPEED;
 	float x = (p_endPosition.x - p_startPosition.x);
 	float z = (p_endPosition.z - p_startPosition.z);
 	float length = sqrtf(x*x + z*z);
 	m_percentX = x / length;
 	m_percentZ = z / length;
 	m_angle = asinf((9.82f * length) / (m_speed * m_speed)) * 0.5f;
+
+	m_guid = p_guid;
 
 	return true;
 }
@@ -116,4 +118,9 @@ bool StickyTrap::GetIsAlive()
 	{
 		return false;
 	}
+}
+
+RakNet::RakNetGUID StickyTrap::GetGUID()
+{
+	return m_guid;
 }

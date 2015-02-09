@@ -39,7 +39,7 @@ void StickyTrapManager::AddStickyTrap(RakNet::RakNetGUID p_guid, float p_startPo
 	temp.endX = p_endPosX;
 	temp.endZ = p_endPosZ;
 	temp.stickyTrapId = GetSpikeTrapUniqueId();
-	temp.lifeTime = SPIKE_DURATION + timeToLand;
+	temp.lifeTime = STICKY_TRAP_DURATION + timeToLand;
 	temp.guid = p_guid;
 	temp.timeToLand = timeToLand;
 	m_stickyTrapList.push_back(temp);
@@ -82,7 +82,7 @@ void StickyTrapManager::BroadcastEmptyStickyTraps(unsigned int p_id)
 {
 	RakNet::BitStream bitStream;
 
-	bitStream.Write((RakNet::MessageID)ID_SPIKETRAP_REMOVE);
+	bitStream.Write((RakNet::MessageID)ID_STICKYTRAP_REMOVE);
 	bitStream.Write(p_id);
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);

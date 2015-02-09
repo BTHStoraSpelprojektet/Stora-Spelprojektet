@@ -121,6 +121,11 @@ void ObjectManager::Shutdown()
 		m_projectiles[i]->Shutdown();
 		delete m_projectiles[i];
 	}
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		m_stickyTrapList[i]->Shutdown();
+		delete m_stickyTrapList[i];
+	}
 }
 
 void ObjectManager::Update()
@@ -165,6 +170,21 @@ void ObjectManager::Update()
 			m_spikeTrapList[i]->Shutdown();
 			delete m_spikeTrapList[i];
 			m_spikeTrapList.erase(m_spikeTrapList.begin() + i);
+			i--;
+		}
+	}
+
+	// Update all the spikes
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		m_stickyTrapList[i]->Update();
+
+		if (!m_stickyTrapList[i]->GetIsAlive())
+		{
+			// Remove Spike Trap
+			m_stickyTrapList[i]->Shutdown();
+			delete m_stickyTrapList[i];
+			m_stickyTrapList.erase(m_stickyTrapList.begin() + i);
 			i--;
 		}
 	}
@@ -232,7 +252,7 @@ void ObjectManager::Update()
 		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (Network::GetInstance()->IsSpikeTrapListUpdated())
+	if (Network::GetInstance()->IsStickyTrapListUpdated())
 	{
 		std::vector<StickyTrapNet> tempStickyTrapList = Network::GetInstance()->GetStickyTrapList();
 		std::vector<StickyTrap> stickyTrapList;
@@ -241,7 +261,7 @@ void ObjectManager::Update()
 			if (!IsStickyTrapInList(tempStickyTrapList[i].stickyTrapId))
 			{
 				// Add Smoke bomb
-				AddStickyTrap(tempStickyTrapList[i].startX, tempStickyTrapList[i].startZ, tempStickyTrapList[i].endX, tempStickyTrapList[i].endZ, tempStickyTrapList[i].stickyTrapId);
+				AddStickyTrap(tempStickyTrapList[i].startX, tempStickyTrapList[i].startZ, tempStickyTrapList[i].endX, tempStickyTrapList[i].endZ, tempStickyTrapList[i].stickyTrapId, tempStickyTrapList[i].guid);
 			}
 		}
 		Network::GetInstance()->SetHaveUpdateStickyTrapList();
@@ -492,11 +512,11 @@ void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_e
 	m_spikeTrapList.push_back(tempSpikeTrap);
 }
 
-void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID)
+void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_stickyTrapID, RakNet::RakNetGUID p_guid)
 {
 	StickyTrap *tempStickyTrap;
 	tempStickyTrap = new StickyTrap();
-	tempStickyTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_smokeBombID);
+	tempStickyTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_stickyTrapID, p_guid);
 	tempStickyTrap->ResetTimer();
 	m_stickyTrapList.push_back(tempStickyTrap);
 }

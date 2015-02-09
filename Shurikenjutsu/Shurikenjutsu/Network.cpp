@@ -895,7 +895,6 @@ void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTra
 }
 void Network::UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
 {
-
 	bool addStickyTrap = true;
 	StickyTrapNet temp;
 	temp.stickyTrapId = p_stickyTrapId;
