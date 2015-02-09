@@ -453,11 +453,6 @@ void PlayingStateTest::OnScreenResize()
 	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
 	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
 
-	// Update quad measurements.
-	Point topLeft = Point(-m_quadWidth, m_quadHeightTop);
-	Point bottomLeft = Point(m_quadWidth, -m_quadHeightBottom);
-	VisibilityComputer::GetInstance().RebuildQuad(topLeft, bottomLeft);
-
 	// Update projection matrix.
 	DirectX::XMFLOAT4X4 projection;
 	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 100.0f));

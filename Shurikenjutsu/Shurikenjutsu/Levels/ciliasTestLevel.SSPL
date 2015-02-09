@@ -5,7 +5,6 @@ LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_12 58.349 0 0 0 0 0 60 8.5 15
 LevelBoundingBox_13 -58.2989 0 0 0 0 0 60 8.5 15
 LevelBoundingBox_14 0 0 -65.137 0 0 0 15 8.5 60
-BoundingBox_1 0 0 0 0 0 0
 Brazier_1 -2 0 17 0 0 0
 Brazier_2 2 0 17 0 0 0
 Brazier_3 2 0 -17 0 0 0
@@ -261,6 +260,7 @@ WallW_6 -9.263 0 12 0 1.5708 0
 WallW_7 -4.314 0 12 0 1.5708 0
 WallW_8 12 0 -4.314 0 0 0
 WallW_9 12 0 -9.263 0 0 0
+bg_mountains_1 0 0 0 0 0 0
 bigBush_01__ -37.3 0 30.4 0 0 0
 bigBush_01__1 -31.5 0 36.5 0 0.698132 0
 bigBush_01__2 -23.3 0 39 0 2.61799 0

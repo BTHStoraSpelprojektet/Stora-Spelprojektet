@@ -64,9 +64,12 @@ private:
 
 	struct Particle
 	{
+		DirectX::XMFLOAT3 m_initPosition;
+
 		DirectX::XMFLOAT3 m_position;
 		DirectX::XMFLOAT3 m_direction;
 		DirectX::XMFLOAT4 m_color;
+
 
 		float m_velocity;
 		float m_rotation;

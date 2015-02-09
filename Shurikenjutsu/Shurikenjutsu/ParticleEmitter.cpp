@@ -52,7 +52,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			m_velocity = 3.0f;
 			m_velocityVariation = 0.1f;
 
-			m_timeToLive = 90.0f;
+			m_timeToLive = 300.0f;
 
 			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldMistParticle.png");
 
@@ -322,6 +322,7 @@ void ParticleEmitter::EmitParticles()
 					float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.05f;
 
 					m_particleList[index].m_position = position;
+					m_particleList[index].m_initPosition = position;
 					m_particleList[index].m_direction = direction;
 					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 0.0f);
 					m_particleList[index].m_velocity = velocity;
@@ -632,12 +633,19 @@ void ParticleEmitter::UpdateBuffers()
 				
 				if (m_particleList[i].m_timeSpecial>0.01f)
 				{
-					if (m_particleList[i].m_color.w < 1.0f){
+					if (m_particleList[i].m_color.w < 1.0f)
+					{
 						m_particleList[i].m_color.w += 0.001f;
 						//m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime()
 						m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, m_particleList[i].m_color.w);
 
 						m_particleList[i].m_timeSpecial = 0;
+					}
+
+					//if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive){
+					if (m_particleList[i].m_position.x>30.0f && m_particleList[i].m_position.z>20.0f)
+					{
+						m_particleList[i].m_position = m_particleList[i].m_initPosition;
 					}
 					//float opacity2 = (1.0f / (m_particleList[i].m_timePassed*0.1));
 					//m_particleList[i].m_color.w = opacity2;
