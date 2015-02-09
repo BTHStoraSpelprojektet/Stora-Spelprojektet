@@ -268,7 +268,7 @@ void FoliageShader::ReadRawFile()
 		{
 			if ((in[(row * i) + j] / 255.0f) > 0.5f)
 			{		
-				for (unsigned int k = 0; k < 2; k++)
+				for (unsigned int k = 0; k < 3; k++)
 				{
 					newVert.m_position = DirectX::XMFLOAT3((j - (row * 0.5f)) * 0.5f, 0.0f, -(i - (row * 0.5f)) * 0.5f);
 
