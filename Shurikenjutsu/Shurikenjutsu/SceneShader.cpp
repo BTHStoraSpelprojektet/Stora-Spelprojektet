@@ -6,7 +6,7 @@
 #include <D3Dcompiler.h>
 #include "Object.h"
 #include "InstanceManager.h"
-
+#include "VisibilityComputer.h"
 
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
@@ -671,11 +671,11 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	unsigned int stride = sizeof(Vertex);
 	const unsigned int offset = 0;
 
-	UpdateWorldMatrix(p_context, p_worldMatrix);
-
 	// The visibility polygon will send an optional shadowmap here.
 	if (p_possibleShadowMap)
 	{
+		UpdateWorldMatrix(p_context, p_worldMatrix, true);
+
 		p_context->PSSetShaderResources(0, 1, &p_texture);
 		p_context->PSSetShaderResources(1, 1, &p_normalMap);
 		p_context->PSSetShaderResources(2, 1, &p_possibleShadowMap);
@@ -684,6 +684,8 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	// Else, use the regular one.
 	else
 	{
+		UpdateWorldMatrix(p_context, p_worldMatrix, false);
+
 		p_context->PSSetShaderResources(0, 1, &p_texture);
 		p_context->PSSetShaderResources(1, 1, &p_normalMap);
 		p_context->PSSetShaderResources(2, 1, &m_shadowMap);
@@ -708,7 +710,7 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	unsigned int stride = sizeof(VertexAnimated);
 	const unsigned int offset = 0;
 
-	UpdateWorldMatrix(p_context, p_worldMatrix);
+	UpdateWorldMatrix(p_context, p_worldMatrix, false);
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
@@ -757,7 +759,7 @@ void SceneShader::RenderLine(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mes
 	unsigned int stride = sizeof(DirectX::XMFLOAT3);
 	const unsigned int offset = 0;
 
-	UpdateWorldMatrix(p_context, p_worldMatrix);
+	UpdateWorldMatrix(p_context, p_worldMatrix, false);
 	UpdateColorBuffer(p_context, p_color.x, p_color.y, p_color.z);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
@@ -787,11 +789,17 @@ void SceneShader::UpdateShadowMap(ID3D11ShaderResourceView* p_shadowMap)
 	m_shadowMap = p_shadowMap;
 }
 
-void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix)
+void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, bool p_forShadowShapes)
 {
 	DirectX::XMFLOAT4X4 worldMatrix = p_worldMatrix;
 	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
 	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
+
+	if (p_forShadowShapes)
+	{
+		DirectX::XMFLOAT4X4 lightViewMatrix = VisibilityComputer::GetInstance().GetViewPolygonMatrix();
+		DirectX::XMFLOAT4X4 lightProjectionMatrix = VisibilityComputer::GetInstance().GetProjectionPolygonMatrix();
+	}
 
 	DirectX::XMFLOAT4X4 lightViewMatrix = m_lightViewMatrix;
 	DirectX::XMFLOAT4X4 lightProjectionMatrix = m_lightProjectionMatrix;
@@ -1031,7 +1039,7 @@ void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	bufferPointers[0] = p_mesh;
 	bufferPointers[1] =	p_instanceManager->GetInstanceBuffer(p_instanceIndex);
 
-	UpdateWorldMatrix(p_context, p_worldMatrix);
+	UpdateWorldMatrix(p_context, p_worldMatrix, false);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
 	p_context->PSSetShaderResources(1, 1, &p_normalMap);

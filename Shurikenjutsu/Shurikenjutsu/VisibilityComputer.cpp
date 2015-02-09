@@ -182,7 +182,7 @@ void VisibilityComputer::Shutdown()
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
 	// Move the quad after the player.
-	DirectX::XMStoreFloat4x4(&m_quadWorldMatrix, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(p_viewerPosition.x, 0.0f, p_viewerPosition.y))));
+	//DirectX::XMStoreFloat4x4(&m_quadWorldMatrix, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(p_viewerPosition.x, 0.0f, p_viewerPosition.y))));
 
 	m_intersections.clear();
 
@@ -407,7 +407,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	GraphicsEngine::TurnOnAlphaBlending();
 
 	// TODO, Render the reveresed poylgon texture here.
-	GraphicsEngine::RenderScene(m_quadMesh, 6, m_quadWorldMatrix, m_renderTarget.GetRenderTarget(), nullptr, nullptr);
+	GraphicsEngine::RenderScene(m_quadMesh, 6, m_quadWorldMatrix, m_renderTarget.GetRenderTarget(), nullptr, m_renderTarget.GetRenderTarget());
 
 	//// DEBUG RENDER.
 	//unsigned int stride = sizeof(DirectX::XMFLOAT3);
