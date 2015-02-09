@@ -156,6 +156,12 @@
     <Filter Include="Header Files\Utility\DebugDraw">
       <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Object\Tools">
+      <UniqueIdentifier>{28a61adb-30fb-4a35-b435-d67b7127f896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Object\Tools">
+      <UniqueIdentifier>{d6f8df41-a2e5-446e-b07c-e719b8e05b34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -323,9 +329,6 @@
     <ClCompile Include="SmokeBombAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="SmokeBomb.cpp">
-      <Filter>Source Files\Object</Filter>
-    </ClCompile>
     <ClCompile Include="MenuCheckbox.cpp">
       <Filter>Source Files\GUI\Menu\Menu Items</Filter>
     </ClCompile>
@@ -374,9 +377,6 @@
     <ClCompile Include="SpikeAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="Spikes.cpp">
-      <Filter>Source Files\Object</Filter>
-    </ClCompile>
     <ClCompile Include="KatanaNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
@@ -419,11 +419,17 @@
     <ClCompile Include="StickyTrapAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="StickyTrap.cpp">
-      <Filter>Source Files\Object</Filter>
-    </ClCompile>
     <ClCompile Include="NaginataStab.cpp">
       <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="StickyTrap.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeBomb.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Spikes.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -604,9 +610,6 @@
     <ClInclude Include="SmokeBombAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="SmokeBomb.h">
-      <Filter>Header Files\Object</Filter>
-    </ClInclude>
     <ClInclude Include="MenuCheckbox.h">
       <Filter>Header Files\GUI\Menu\Menu Items</Filter>
     </ClInclude>
@@ -655,9 +658,6 @@
     <ClInclude Include="SpikeAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="Spikes.h">
-      <Filter>Header Files\Object</Filter>
-    </ClInclude>
     <ClInclude Include="OutlingShader.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
@@ -700,14 +700,20 @@
     <ClInclude Include="InstanceManager.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
-    <ClInclude Include="StickyTrap.h">
-      <Filter>Header Files\Object</Filter>
-    </ClInclude>
     <ClInclude Include="StickyTrapAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
     <ClInclude Include="NaginataStab.h">
       <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeBomb.h">
+      <Filter>Header Files\Object\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Spikes.h">
+      <Filter>Header Files\Object\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="StickyTrap.h">
+      <Filter>Header Files\Object\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -773,6 +779,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\Scene\VertexShaderOutlining.hlsl">
       <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

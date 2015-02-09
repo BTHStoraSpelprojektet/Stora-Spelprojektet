@@ -20,7 +20,7 @@ const float KUNAI_DAMAGE = 10.0f;
 const float KUNAI_COOLDOWN = 2.0f;
 const float KUNAI_DURATION = 2.0f;
 const int KUNAI_MAX_STACK = 4;
-const float KUNAI_ROTATION_SPEED = 10.0f;
+const float KUNAI_ROTATION_SPEED = 0.0f;
 const float KUNAI_SPEED = 50.0f;
 
 ////////////////////////////////////////////////////////////////Ranged Attacks

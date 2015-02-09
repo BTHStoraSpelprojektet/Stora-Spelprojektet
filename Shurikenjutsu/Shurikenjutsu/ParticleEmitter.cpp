@@ -183,6 +183,12 @@ void ParticleEmitter::Shutdown()
 		m_vertexBuffer->Release();
 		m_vertexBuffer = 0;
 	}
+
+	if (m_mesh)
+	{
+		delete m_mesh;
+		m_mesh = 0;
+	}
 }
 
 void ParticleEmitter::Update()
