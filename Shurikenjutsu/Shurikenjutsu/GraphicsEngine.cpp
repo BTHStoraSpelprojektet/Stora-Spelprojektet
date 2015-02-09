@@ -12,6 +12,7 @@
 #include "VisibilityComputer.h"
 #include "OutlingShader.h"
 #include "Object.h"
+#include "FoliageShader.h"
 
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;
@@ -25,6 +26,7 @@ IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
 IFW1TextGeometry* GraphicsEngine::m_textGeometry;
 InstanceManager* GraphicsEngine::m_instanceManager;
 bool GraphicsEngine::m_screenChanged;
+FoliageShader GraphicsEngine::m_foliageShader;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -75,6 +77,13 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	if (m_depthShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("Depth shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+
+	// Initialize the foliage buffer.
+	if (m_foliageShader.Initialize(m_directX.GetDevice()))
+	{
+		ConsolePrintSuccess("Foliage shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
 
@@ -237,10 +246,20 @@ void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, Di
 	TurnOffAlphaBlending();
 }
 
+void GraphicsEngine::RenderFoliage()
+{
+	TurnOnAlphaBlending();
+
+	m_foliageShader.Render(m_directX.GetContext(), m_shadowMap.GetRenderTarget());
+
+	TurnOffAlphaBlending();
+}
+
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_foliageShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	VisibilityComputer::GetInstance().SetPolygonMatrices(p_viewMatrix, p_projectionMatrix);
 }
 
@@ -248,6 +267,7 @@ void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix,
 {
 	m_sceneShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_foliageShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetShadowMap()

@@ -149,7 +149,7 @@
     </Filter>
     <Filter Include="Source Files\GameState\Graphics\Particles">
       <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
-	</Filter>
+    </Filter>
     <Filter Include="Header Files\ShadowShapes\Utility">
       <UniqueIdentifier>{50e9b74b-568e-4883-8d0d-54ac882643cc}</UniqueIdentifier>
     </Filter>
@@ -380,9 +380,6 @@
     <ClCompile Include="Spikes.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
-    <ClCompile Include="OutliningShader.cpp">
-      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
-    </ClCompile>
     <ClCompile Include="KatanaNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
@@ -418,15 +415,15 @@
     </ClCompile>
     <ClCompile Include="NaginataStab.cpp">
       <Filter>Source Files\Abilities</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="TeamStatusBar.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="InstanceManager.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FoliageShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -699,7 +696,7 @@
     </ClInclude>
     <ClInclude Include="NaginataStab.h">
       <Filter>Header Files\Abilities</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="TeamStatusBar.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -774,13 +771,13 @@
     <FxCompile Include="Shaders\Scene\VertexShaderOutlining.hlsl">
       <Filter>Shaders\Scene</Filter>
     </FxCompile>
-    <FxCompile Include="FoliageVertexShader.hlsl">
+    <FxCompile Include="Shaders\Foliage\FoliageGeometryShader.hlsl">
       <Filter>Shaders\Foliage</Filter>
     </FxCompile>
-    <FxCompile Include="FoliagePixelShader.hlsl">
+    <FxCompile Include="Shaders\Foliage\FoliagePixelShader.hlsl">
       <Filter>Shaders\Foliage</Filter>
     </FxCompile>
-    <FxCompile Include="FoliageGeometryShader.hlsl">
+    <FxCompile Include="Shaders\Foliage\FoliageVertexShader.hlsl">
       <Filter>Shaders\Foliage</Filter>
     </FxCompile>
   </ItemGroup>

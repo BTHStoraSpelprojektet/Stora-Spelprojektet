@@ -3,6 +3,8 @@
 #include <D3Dcompiler.h>
 #include "ConsoleFunctions.h"
 #include <fstream>
+#include "TextureLibrary.h"
+#include "GraphicsEngine.h"
 
 bool FoliageShader::Initialize(ID3D11Device* p_device)
 {
@@ -44,7 +46,7 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 	}
 
 	// Create the vertex input layout description.
-	D3D11_INPUT_ELEMENT_DESC layout[3];
+	D3D11_INPUT_ELEMENT_DESC layout[2];
 	layout[0].SemanticName = "POSITION";
 	layout[0].SemanticIndex = 0;
 	layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -53,21 +55,13 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 	layout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	layout[0].InstanceDataStepRate = 0;
 
-	layout[1].SemanticName = "TEXCOORD0";
+	layout[1].SemanticName = "OFFSET";
 	layout[1].SemanticIndex = 0;
 	layout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	layout[1].InputSlot = 0;
-	layout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[1].AlignedByteOffset = 12;
 	layout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	layout[1].InstanceDataStepRate = 0;
-
-	layout[2].SemanticName = "TEXCOORD1";
-	layout[2].SemanticIndex = 0;
-	layout[2].Format = DXGI_FORMAT_R32G32_FLOAT;
-	layout[2].InputSlot = 0;
-	layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
-	layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-	layout[2].InstanceDataStepRate = 0;
 
 	// Get number of elements in the layout.
 	unsigned int numberOfElements = sizeof(layout) / sizeof(layout[0]);
@@ -172,6 +166,22 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 
+	// Setup description of the Geometry shader constant buffer.
+	/*D3D11_BUFFER_DESC*/ matrixBufferDescription;
+	matrixBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+	matrixBufferDescription.ByteWidth = sizeof(AngleBuffer);
+	matrixBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	matrixBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	matrixBufferDescription.MiscFlags = 0;
+	matrixBufferDescription.StructureByteStride = 0;
+
+	// Create buffer.
+	if (FAILED(p_device->CreateBuffer(&matrixBufferDescription, NULL, &m_angleBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create foliage matrix buffer.");
+		return false;
+	}
+
 	// Create a texture sampler description.
 	D3D11_SAMPLER_DESC samplerDescription;
 	samplerDescription.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -194,19 +204,51 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 		ConsolePrintErrorAndQuit("Failed to create foliage sampler state.");
 		return false;
 	}
+	
+	m_texture = GraphicsEngine::Create2DTexture("../Shurikenjutsu/2DTextures/grassFoil2.png");
 
 	ReadRawFile();
+
+	// Setup vertex buffer description.
+	D3D11_BUFFER_DESC vertexBuffer;
+	vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
+	vertexBuffer.ByteWidth = sizeof(FoliageVertex) * m_vertices.size();
+	vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBuffer.CPUAccessFlags = 0;
+	vertexBuffer.MiscFlags = 0;
+	vertexBuffer.StructureByteStride = 0;
+
+	// Setup vertex buffer data.
+	D3D11_SUBRESOURCE_DATA vertexData;
+	vertexData.pSysMem = m_vertices.data();
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Create the vertex buffer.
+	p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_vertexBuffer);
+
+	// Create world matrix and transpose
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixTranspose(worldMatrix));
+
+	// Initilize angle
+	m_angle = 0.0f;
 
 	return true;
 }
 
 void FoliageShader::ReadRawFile()
-{
-	int x = 200;
-	int z = 200;
-	std::vector<unsigned char> in(x * z);
+{	
 	std::ifstream inFile;
-	inFile.open("../Shurikenjutsu/testFile.raw", std::ios_base::binary);
+	inFile.open("../Shurikenjutsu/2DTextures/grassMask.raw", std::ios::binary);
+
+	inFile.seekg(0, std::ios::end);
+	long fileSize = (long)inFile.tellg();
+	inFile.seekg(0);
+
+	int row = (int)sqrt((fileSize));
+
+	std::vector<unsigned char> in(fileSize);
 
 	if (inFile)
 	{
@@ -214,16 +256,37 @@ void FoliageShader::ReadRawFile()
 		inFile.close();
 	}
 
-	for (int i = 0; i < x; i++)
+	int grass = 0;
+	FoliageVertex newVert;
+
+	float r1;
+	float r2;
+
+	for (int i = 0; i < row; i++)
 	{
-		for (int j = 0; j < z; j++)
+		for (int j = 0; j < row; j++)
 		{
-			if ((in[i + j] / 255.0f) > 0.5f)
-			{
-				DirectX::XMFLOAT3((float)(i - (x / 2)), 0.0f, (float)(j - (z / 2)));
+			if ((in[(row * i) + j] / 255.0f) > 0.5f)
+			{		
+				for (unsigned int k = 0; k < 2; k++)
+				{
+					newVert.m_position = DirectX::XMFLOAT3((j - (row * 0.5f)) * 0.5f, 0.0f, -(i - (row * 0.5f)) * 0.5f);
+
+					r1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+					r2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+
+					newVert.m_position.x += r1;
+					newVert.m_position.z += r2;
+
+					newVert.m_offset = DirectX::XMFLOAT2(r1, r2);
+					m_vertices.push_back(newVert);
+					grass++;
+				}
 			}
 		}
 	}
+
+	std::cout << grass << std::endl;
 }
 
 void FoliageShader::Shutdown()
@@ -269,20 +332,40 @@ void FoliageShader::Shutdown()
 		m_layout->Release();
 		m_layout = 0;
 	}
+
+	if (m_angleBuffer)
+	{
+		m_angleBuffer->Release();
+		m_angleBuffer = 0;
+	}
+
+	if (m_vertexBuffer)
+	{
+		m_vertexBuffer->Release();
+		m_vertexBuffer = 0;
+	}
+
+	if (m_texture)
+	{
+		m_texture->Release();
+		m_texture = 0;
+	}
 }
 
-void FoliageShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void FoliageShader::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* m_shadowMap)
 {
 	// Set vertex buffer stride and offset.
 	unsigned int stride = sizeof(FoliageVertex);
 	unsigned int offset = 0;
 
-	UpdateWorldMatrix(p_context, p_worldMatrix);
+	UpdateConstantBuffer(p_context);
+	UpdateAngleBuffer(p_context);
 
-	p_context->PSSetShaderResources(0, 1, &p_texture);
+	p_context->PSSetShaderResources(0, 1, &m_texture);
+	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 
-	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
+	p_context->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	p_context->IASetInputLayout(m_layout);
 
@@ -292,7 +375,7 @@ void FoliageShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh,
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
 	// Render the polygon.
-	p_context->Draw(p_vertexCount, 0);
+	p_context->Draw(m_vertices.size(), 0);
 
 	p_context->GSSetShader(NULL, NULL, 0);
 }
@@ -303,16 +386,26 @@ void FoliageShader::UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, Di
 	m_projectionMatrix = p_projectionMatrix;
 }
 
-void FoliageShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix)
+void FoliageShader::UpdateLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
-	DirectX::XMFLOAT4X4 worldMatrix = p_worldMatrix;
+	m_lightViewMatrix = p_viewMatrix;
+	m_lightProjectionMatrix = p_projectionMatrix;
+}
+
+void FoliageShader::UpdateConstantBuffer(ID3D11DeviceContext* p_context)
+{
 	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
 	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
 
+	DirectX::XMFLOAT4X4 lightViewMatrix = m_lightViewMatrix;
+	DirectX::XMFLOAT4X4 lightProjectionMatrix = m_lightProjectionMatrix;
+
 	// Transpose the matrices.
-	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
 	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
 	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
+
+	DirectX::XMStoreFloat4x4(&lightViewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightViewMatrix)));
+	DirectX::XMStoreFloat4x4(&lightProjectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightProjectionMatrix)));
 
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
@@ -325,13 +418,40 @@ void FoliageShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::X
 	MatrixBuffer* matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
 
 	// Copy matrices into the buffer.
-	matrixBuffer->m_worldMatrix = p_worldMatrix;
+	matrixBuffer->m_worldMatrix = m_worldMatrix;
 	matrixBuffer->m_viewMatrix = viewMatrix;
 	matrixBuffer->m_projectionMatrix = projectionMatrix;
+
+	matrixBuffer->m_lightViewMatrix = lightViewMatrix;
+	matrixBuffer->m_lightProjectionMatrix = lightProjectionMatrix;
 
 	// Unlock the buffer.
 	p_context->Unmap(m_matrixBuffer, 0);
 
 	// Now set the constant buffer in the vertex shader with the updated values.
 	p_context->GSSetConstantBuffers(0, 1, &m_matrixBuffer);
+}
+
+void FoliageShader::UpdateAngleBuffer(ID3D11DeviceContext* p_context)
+{
+	m_angle += 0.005f;
+
+	// Lock matrix buffer so that it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_angleBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to map foliage angle buffer.");
+	}
+
+	// Get pointer to buffer data.
+	AngleBuffer* angleBuffer = (AngleBuffer*)mappedBuffer.pData;
+
+	// Copy matrices into the buffer.
+	angleBuffer->m_rotation.x = sin(m_angle) * 0.5f;
+
+	// Unlock the buffer.
+	p_context->Unmap(m_angleBuffer, 0);
+
+	// Now set the constant buffer in the vertex shader with the updated values.
+	p_context->GSSetConstantBuffers(1, 1, &m_angleBuffer);
 }

@@ -6,10 +6,10 @@
 bool Model::LoadModel(const char* p_filepath)
 {
 	// Load Mesh.
-	ModelImporter importer;
-	importer.ImportModel(p_filepath);
+	importer = new ModelImporter();
+	importer->ImportModel(p_filepath);
 	
-	MeshData mData = importer.GetMesh();
+	MeshData mData = importer->GetMesh();
 
 	// Save mesh to buffer.
 	if (!mData.m_animated)
@@ -101,7 +101,13 @@ void Model::Shutdown()
 	{
 		m_normalMap->Release();
 		m_normalMap = 0;
-	}	
+	}
+
+	if (importer != NULL)
+	{
+		importer->Shutdown();
+		delete importer;
+	}
 }
 
 void Model::Update()

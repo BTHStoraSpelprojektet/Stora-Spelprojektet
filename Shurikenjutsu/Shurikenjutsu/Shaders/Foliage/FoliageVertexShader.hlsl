@@ -1,8 +1,7 @@
 struct Vertex
 {
 	float3 m_position : POSITION;
-	float2 m_uv : TEXCOORD0;
-	float2 m_foliageUv : TEXCOORD1;
+	float2 m_offset : OFFSET;
 };
 
 Vertex main(Vertex p_input)

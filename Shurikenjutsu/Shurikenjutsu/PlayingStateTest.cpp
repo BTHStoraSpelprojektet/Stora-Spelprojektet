@@ -293,6 +293,9 @@ void PlayingStateTest::Render()
 
 		ShadowShapes::GetInstance().DebugRender();	
 	}
+
+	GraphicsEngine::RenderFoliage();
+
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();
