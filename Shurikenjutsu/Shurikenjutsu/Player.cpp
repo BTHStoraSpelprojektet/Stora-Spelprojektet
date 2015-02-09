@@ -237,7 +237,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
 		m_ability = m_meleeAttack;
-	}
+		}
 	}
 
 
@@ -247,13 +247,13 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
-	{
-		// Play ability animation if we did any
-		DoAnimation();
+		{
+			// Play ability animation if we did any
+			DoAnimation();
 
-			// Set global cooldown
-			m_globalCooldown = m_maxGlobalCooldown;
-	}
+				// Set global cooldown
+				m_globalCooldown = m_maxGlobalCooldown;
+		}
 	}
 
 	UpdateAbilityBar();
