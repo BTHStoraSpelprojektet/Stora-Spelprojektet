@@ -131,16 +131,6 @@ bool GameState::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_di
 	return m_playerManager->RotatePlayer(p_guid, p_dirX, p_dirY, p_dirZ);
 }
 
-bool GameState::CanUseAbility(int p_index, ABILITIES p_ability)
-{
-	return m_playerManager->CanUseAbility(p_index, p_ability);
-}
-
-void GameState::UsedAbility(int p_index, ABILITIES p_ability)
-{
-	m_playerManager->UsedAbility(p_index, p_ability);
-}
-
 void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, float p_distanceFromPlayer)
 {
 	m_smokeBombManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);

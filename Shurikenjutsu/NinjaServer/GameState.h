@@ -32,8 +32,6 @@ public:
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 	bool RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);
-	bool CanUseAbility(int p_index, ABILITIES p_ability);
-	void UsedAbility(int p_index, ABILITIES p_ability);
 	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, float p_distanceFromPlayer);
 	void BroadcastPlayers();
 	void SyncTime(RakNet::RakNetGUID p_guid);
