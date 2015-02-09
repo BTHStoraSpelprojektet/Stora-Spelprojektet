@@ -9,6 +9,7 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
 #include "VisibilityComputer.h"
+#include "StickyTrap.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -112,10 +113,11 @@ void Player::Shutdown()
 	if (m_abilityBar != nullptr)
 	{
 		m_abilityBar->Shutdown();
-	}
+}
 }
 
-void Player::UpdateMe()
+
+void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	// Check values from server
 	if (Network::GetInstance()->IsConnected())
@@ -140,7 +142,17 @@ void Player::UpdateMe()
 		SetCalculatePlayerPosition();
 	}*/
 
-	
+	SetSpeed(m_originalSpeed);
+	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
+	{
+		if (p_stickyTrapList[i]->GetGUID() != Network::GetInstance()->GetMyGUID())
+		{
+			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+			{
+				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
+			}
+		}
+	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -172,22 +184,22 @@ void Player::UpdateMe()
 		playerSphere.m_position.y += m_dashDistanceLeft * m_dashDirection.z;		
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
-			if (distance >= m_dashDistanceLeft)
-			{
-				m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-				m_position.z += m_dashDistanceLeft * m_dashDirection.z;
-				m_dashDistanceLeft = 0.0f;
-				m_isDashing = false;
-			}
-			else
-			{
-				m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-				m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-				m_dashDistanceLeft -= distance;
-			}
+		if (distance >= m_dashDistanceLeft)
+		{
+			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+			m_dashDistanceLeft = 0.0f;
+			m_isDashing = false;
+		}
+		else
+		{
+			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+			m_dashDistanceLeft -= distance;
+		}
 
-			// If we dashed, update shadow shapes.
-			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		// If we dashed, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 		}
 		else
 		{
@@ -225,8 +237,8 @@ void Player::UpdateMe()
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_meleeAttack;
-		}
+		m_ability = m_meleeAttack;
+	}
 	}
 
 
@@ -236,13 +248,13 @@ void Player::UpdateMe()
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
-		{
-			// Play ability animation if we did any
-			DoAnimation();
+	{
+		// Play ability animation if we did any
+		DoAnimation();
 
 			// Set global cooldown
 			m_globalCooldown = m_maxGlobalCooldown;
-		}
+	}
 	}
 
 	UpdateAbilityBar();
@@ -254,23 +266,23 @@ void Player::CheckForSpecialAttack()
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_rangeSpecialAttack;
-		}
+		m_ability = m_rangeSpecialAttack;
+	}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_meleeSpecialAttack;
-		}
+		m_ability = m_meleeSpecialAttack;
+	}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_toolAbility;
-		}
+		m_ability = m_toolAbility;
 	}
+}
 }
 
 bool Player::CalculateDirection()
@@ -337,7 +349,7 @@ void Player::UpdateAbilities()
 	if (m_globalCooldown > 0.0f)
 	{
 		m_globalCooldown -= (float)GLOBAL::GetInstance().GetDeltaTime();
-	}
+}
 
 }
 
@@ -760,47 +772,47 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 }
 
 void Player::UpdateAbilityBar()
-{
+	{
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
-	{
+		{
 		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(),m_meleeAttack->GetStacks(), 0);
-	}
-	else
-	{
+		}
+		else
+		{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
 	}
 	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
-	{
+		{
 		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
-	}
-	else
-	{
+		}
+		else
+		{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
 	}
 	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
-	{
+		{
 		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
-	}
-	else
-	{
+		}
+		else
+		{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
 	}
 	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
-	{
+		{
 		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
-	}
-	else
-	{
+		}
+		else
+		{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
-	}
+			}
 	if ((float)m_toolAbility->GetCooldown() > 0.0f)
-	{
+			{
 		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
-	}
+}
 	else
-	{
+{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
-	}
+}
 }
 
 void Player::Render()
@@ -810,13 +822,13 @@ void Player::Render()
 		m_healthbar->Render();
 	}
 
-		AnimatedObject::RenderPlayer(m_team);
-	}
+	AnimatedObject::RenderPlayer(m_team);
+}
 
 void Player::RenderDepth()
 {
-		AnimatedObject::RenderDepth();
-	}
+	AnimatedObject::RenderDepth();
+}
 
 void Player::RenderOutlining()
 {
@@ -842,7 +854,7 @@ void Player::SetIsAlive(bool p_isAlive)
 		}
 	}
 
-	m_isAlive = p_isAlive;
+	m_isAlive = p_isAlive;	
 }
 
 bool Player::GetIsAlive()
@@ -917,4 +929,9 @@ OBB Player::GetOBB()
 	}*/
 	TransformBoundingBoxes();
 	return m_boundingBoxes[0];
+}
+
+void Player::SetOriginalSpeed(float p_speed)
+{
+	m_originalSpeed = p_speed;
 }
