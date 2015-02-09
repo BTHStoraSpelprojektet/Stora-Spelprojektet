@@ -125,6 +125,7 @@ void ObjectManager::Shutdown()
 	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
 	{
 		m_animatedObjects[i]->Shutdown();
+		delete m_animatedObjects[i];
 	}
 	m_animatedObjects.clear();
 
@@ -154,6 +155,12 @@ void ObjectManager::Shutdown()
 	{
 		m_stickyTrapList[i]->Shutdown();
 		delete m_stickyTrapList[i];
+	}
+	
+	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
+	{
+		m_worldParticles[i]->Shutdown();
+		delete m_worldParticles[i];
 	}
 }
 

@@ -16,7 +16,7 @@
 #define MEGA_SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/MegaShurikenShape.SSP"
 
 // Kunai
-#define KUNAI_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
+#define KUNAI_MODEL_NAME "../Shurikenjutsu/Models/KunaiShape.SSP"
 
 // Smoke Bomb
 #define SMOKE_BOMB "../Shurikenjutsu/Models/SmokeBomb.SSP"
