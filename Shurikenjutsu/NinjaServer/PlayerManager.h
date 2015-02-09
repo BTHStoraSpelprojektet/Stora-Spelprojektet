@@ -51,6 +51,7 @@ public:
 	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager);
 
 
+
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);

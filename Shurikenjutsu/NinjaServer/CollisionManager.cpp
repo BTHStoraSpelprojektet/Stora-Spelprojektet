@@ -41,6 +41,8 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		damage = NAGINATA_DAMAGE;
 		break;
 	default:
+		range = 0;
+		damage = 0;
 		break;
 	}
 	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
@@ -74,12 +76,12 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			if (IntersectingObjectWhenAttacking(spherePos, boxPosition))
 			{
-				// Damage the player
-				p_playerManager->DamagePlayer(playerList[i].guid, damage);
-				break;
-			}
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, damage);
+			break;
 		}
 	}
+}
 }
 
 void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager)
@@ -233,7 +235,7 @@ void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectile
 		{
 			//projectileBoundingBoxes = p_projectileManager->GetMegaBoundingBoxes(i);
 		}
-		else if (projectileList[i].projType == 2)
+		else //if (projectileList[i].projType == 2)
 		{
 			projectileBoundingBoxes = p_projectileManager->GetKunaiBoundingBoxes(i);
 		}
@@ -710,13 +712,13 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 			{
 				if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 				{
-					// Damage the player
-					p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
-					break;
-				}
+				// Damage the player
+				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
+				break;
 			}
 		}
 	}
+}
 }
 
 void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
@@ -751,9 +753,62 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 		{
 			if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
-				// Damage the player
-				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
-			}
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
+		}
+	}
+}
+}
+
+void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+{
+	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		// So you don't collide with yourself.
+		if (playerList[i].guid == attackingPlayer.guid)
+		{
+			continue;
+		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
+		// Check so the player aren't already dead
+		if (!playerList[i].isAlive)
+		{
+			continue;
+		}
+
+		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(0.75f, 3.0f, 4.0f);
+		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
+		DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
+		DirectX::XMFLOAT3 v2 = attackDirection;
+
+		float x = (v1.x * v2.z) - (v2.x * v1.z); // DirY
+		float y = (v1.x * v2.x) - (v1.z * v2.z); // DirX
+
+		float faceAngle = atan2(y, x);
+
+		DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+		// Update rec location.
+		DirectX::XMFLOAT4 rotationQuaternion;
+		DirectX::XMStoreFloat4(&rotationQuaternion, DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
+		
+		attackPosition = DirectX::XMFLOAT3(attackPosition.x + y * boxExtent.z, attackPosition.y, attackPosition.z + x * boxExtent.z);
+
+		// Make collision test
+		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, 1.0f))
+		{
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
 		}
 	}
 }
@@ -843,4 +898,9 @@ bool CollisionManager::RaySphereTest(Ray *p_ray, Sphere p_sphere)
 	{
 		return false;
 	}
+}
+
+float CollisionManager::GetAngle(float p_x, float p_y)
+{
+	return 1;
 }

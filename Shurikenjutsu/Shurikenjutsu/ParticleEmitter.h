@@ -58,6 +58,7 @@ private:
 	unsigned int m_maxParticles;
 	unsigned int m_currentParticles;
 
+
 	struct Particle
 	{
 		DirectX::XMFLOAT3 m_position;
@@ -66,6 +67,7 @@ private:
 
 		float m_velocity;
 		float m_rotation;
+		float m_velocityXZ = 1.0f;
 
 		bool m_alive;
 

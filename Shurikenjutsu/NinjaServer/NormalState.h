@@ -2,7 +2,6 @@
 #define NORMALSTATE_H_
 
 #include "GameState.h"
-#include <map>
 
 class NormalState : public GameState
 {
@@ -39,7 +38,6 @@ private:
 	int m_roundLimit;
 	int m_currentRound;
 	bool m_roundRestarting;
-	std::map<int, int> m_winningTeams;
 };
 
 #endif

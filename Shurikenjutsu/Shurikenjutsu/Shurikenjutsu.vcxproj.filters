@@ -150,10 +150,10 @@
     <Filter Include="Header Files\Ninjas">
       <UniqueIdentifier>{a6867d01-73db-4cd3-a267-4f0ea3cb3317}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ShadowShapes\Utility">
+    <Filter Include="Header Files\Utility">
       <UniqueIdentifier>{50e9b74b-568e-4883-8d0d-54ac882643cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ShadowShapes\Utility\DebugDraw">
+    <Filter Include="Header Files\Utility\DebugDraw">
       <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -422,6 +422,9 @@
     <ClCompile Include="StickyTrap.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="NaginataStab.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -431,16 +434,16 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Structures.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleFunctions.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Flags.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Collisions.h">
       <Filter>Header Files\Physics</Filter>
@@ -452,7 +455,7 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Enumerations.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Graphics</Filter>
@@ -470,7 +473,7 @@
       <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Object</Filter>
@@ -506,28 +509,28 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="DebugDraw.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugRectangle.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugLineList.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugShape2D.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugShape3D.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugBox.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugCircle.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugDot.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedObject.h">
       <Filter>Header Files\Object</Filter>
@@ -623,7 +626,7 @@
       <Filter>Header Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="QuadTree.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="GUIElementColor.h">
       <Filter>Header Files\GUI\Internal</Filter>
@@ -701,6 +704,9 @@
       <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="StickyTrapAbility.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="NaginataStab.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>

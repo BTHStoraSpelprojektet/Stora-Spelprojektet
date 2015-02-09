@@ -6,6 +6,7 @@
 #include <vector>
 #include "Shuriken.h"
 #include "AnimatedObject.h"
+#include "ParticleEmitter.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
 
@@ -45,6 +46,7 @@ public:
 	void UpdateRenderLists();
 	std::vector<StickyTrap*> GetStickyTrapList();
 
+	void RemoveProjectile(unsigned int p_projId);
 private:
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
 	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
@@ -57,6 +59,7 @@ private:
 	std::vector<FanBoomerang*> m_fans;
 	std::vector<Object> m_staticObjects;
 	std::vector<AnimatedObject*> m_animatedObjects;
+	std::vector<ParticleEmitter*> m_worldParticles;
 	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToSingleRender;
 	

@@ -39,6 +39,8 @@ bool Network::Initialize()
 	m_timerSynced = false;
 	m_timerMin = 0;
 	m_timerSec = 0;
+	m_redTeamScore = 0;
+	m_blueTeamScore = 0;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -95,6 +97,8 @@ void Network::ReceviePacket()
 
 			m_connected = true;
 			m_networkStatus = NETWORKSTATUS_CONNECTED;
+
+			SyncTeamScore();
 
 			RakNet::BitStream bitStream;
 
@@ -302,7 +306,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(uniqueId);
 
-			RemoveShuriken(uniqueId);
+			RemoveProjectile(uniqueId);
 
 			break;
 		}
@@ -364,6 +368,17 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
+
+			// Team 1 = red
+			// Team 2 = blue
+			if (winningTeam == 1)
+			{
+				m_redTeamScore++;
+			}
+			else if (winningTeam == 2)
+			{
+				m_blueTeamScore++;
+			}
 
 			std::cout << "Team " << winningTeam << " won this round\n";
 			break;
@@ -440,6 +455,9 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
+
+			m_redTeamScore = 0;
+			m_blueTeamScore = 0;
 
 			std::cout << "Team " << winningTeam << " won this match\n";
 			break;
@@ -643,6 +661,37 @@ void Network::ReceviePacket()
 			bitStream.Read(stickyTrapID);
 
 			RemoveStickyTrap(stickyTrapID);
+			break;
+		}
+		case ID_SEND_TEAM_SCORE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			m_redTeamScore = 0;
+			m_blueTeamScore = 0;
+
+			unsigned int size;
+			int team, score;
+
+			bitStream.Read(messageID);
+			bitStream.Read(size);
+
+			for (unsigned int i = 0; i < size; i++)
+			{
+				bitStream.Read(team);
+				bitStream.Read(score);
+
+				// Team 1 = red
+				// Team 2 = blue
+				if (team == 1)
+				{
+					m_redTeamScore = score;
+				}
+				else if (team == 2)
+				{
+					m_blueTeamScore = score;
+				}
+			}
 			break;
 		}
 		default:
@@ -1361,4 +1410,28 @@ bool Network::TimerSynced(double &p_min, double &p_sec)
 		p_sec = 0;
 		return false;
 	}
+}
+
+void Network::SyncTeamScore()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_SEND_TEAM_SCORE);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+int Network::GetRedTeamScore()
+{
+	return m_redTeamScore;
+}
+
+int Network::GetBlueTeamScore()
+{
+	return m_blueTeamScore;
+}
+
+void Network::RemoveProjectile(unsigned int p_projId)
+{
+	m_objectManager->RemoveProjectile(p_projId);
 }

@@ -296,43 +296,6 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	return boundingBoxes;
 }
 
-void PlayerManager::UsedAbility(int p_index, ABILITIES p_ability)
-{
-	/*if (p_index >= 0 && p_index < (int)m_players.size())
-	{
-		m_players[p_index].gcd = m_gcd;
-		switch (p_ability)
-		{
-		case ABILITIES_SHURIKEN:
-			m_players[p_index].cooldownAbilites.shurikenCD = ALL_AROUND_GLOBAL_COOLDOWN;
-			break;
-		case ABILITIES_DASH:
-			m_players[p_index].cooldownAbilites.dashCD = DASH_COOLDOWN;
-			break;
-		case ABILITIES_MELEESWING:
-			m_players[p_index].cooldownAbilites.meleeSwingCD = ALL_AROUND_GLOBAL_COOLDOWN;
-			break;
-		case ABILITIES_MEGASHURIKEN:
-			m_players[p_index].cooldownAbilites.megaShurikenCD = MEGASHURIKEN_COOLDOWN;
-			break;
-		case ABILITIES_WHIP_PRIMARY:
-			m_players[p_index].cooldownAbilites.whipAttack = WHIP_COOLDOWN;
-			break;
-		case ABILITIES_WHIP_SECONDARY:
-			m_players[p_index].cooldownAbilites.megaShurikenCD = WHIP_SP_COOLDOWN;
-			break;
-		default:
-			break;
-		}
-
-	}*/
-}
-
-bool PlayerManager::CanUseAbility(int p_index, ABILITIES p_ability)
-{
-	bool result = true;
-	return result;
-}
 
 void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager)
 {
@@ -414,7 +377,10 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 			stickyTrapDistance = STICKY_TRAP_RANGE;
 		}
 		p_stickyTrapManager.AddStickyTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* stickyTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
-
+		break;
+	case ABILITIES_NAGAINATASTAB:
+		abilityString = "stabboooostabby";
+		p_collisionManager.NaginataStabAttack(p_guid, this);
 		break;
 	default:
 		break;

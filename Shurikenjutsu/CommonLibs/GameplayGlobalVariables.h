@@ -37,7 +37,7 @@ const float WHIP_SP_RANGE = 7.0f;
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
-//Megashuriken
+// Megashuriken
 const float MEGASHURIKEN_COOLDOWN = 5.0f;
 const float MEGASHURIKEN_DAMAGE = 40.0f;
 const float MEGASHURIKEN_DURATION = 4.0f;
@@ -51,7 +51,7 @@ const float FANBOOMERANG_SPEED = 20.0f;
 
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
-//Katana
+// Katana
 const float KATANA_DAMAGE = 40.0f;
 const float KATANA_RANGE = 2.5f;
 const float KATANA_COOLDOWN = 0.5f;
@@ -70,6 +70,11 @@ const float DASH_DAMAGE = 10.0f;
 const float DASH_SPEED = 8.0f;
 
 ////////////////////////////////////////////////////////////////Special Melee Attacks
+// Naginata stab
+const float NAGINATASTAB_DAMAGE = 40.0f;
+const float NAGINATASTAB_RANGE = 8.0f;
+const float NAGINATASTAB_COOLDOWN = 8.0f;
+
 ////////////////////////////////////////////////////////////////Tools
 //Smoke bomb
 const float SMOKEBOMB_DURATION = 3.0f;
@@ -120,6 +125,18 @@ const float CHARACTER_NAGINATA_HEALTH = 95.0f;
 const float CHARACTER_NAGINATA_SPEED = 11.0f;
 
 ////////////////////////////////////////////////////////////////Character Variables
+////////////////////////////////////////////////////////////////World Particles
+
+const float PARTICLE_FIRE_SIZE_X = 0.2f;
+const float PARTICLE_FIRE_SIZE_Y = 0.2f;
+
+const float PARTICLE_PINKLEAF_SIZE_X = 0.14f;
+const float PARTICLE_PINKLEAF_SIZE_Y = 0.14f;
+
+const float PARTICLE_GREENLEAF_SIZE_X = 0.15f;
+const float PARTICLE_GREENLEAF_SIZE_Y = 0.15f;
+
+////////////////////////////////////////////////////////////////World Particles
 
 
 #endif
