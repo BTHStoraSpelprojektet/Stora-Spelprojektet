@@ -26,6 +26,8 @@ private:
 	void ResizeRedColorList();
 	void ResizeBlueColorList();
 
+	std::string GetTextureName(int p_charNr);
+
 	float m_dotSize;
 	float m_dotPosOffset;
 	int m_startOffset;
