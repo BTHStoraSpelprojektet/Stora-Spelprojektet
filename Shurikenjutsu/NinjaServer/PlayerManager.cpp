@@ -12,7 +12,7 @@ PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
-	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
+//	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
 
 	m_serverPeer = p_serverPeer;
 
@@ -53,7 +53,7 @@ void PlayerManager::Update(double p_deltaTime)
 			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
 		}
 	}*/
-	}
+}
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
 {

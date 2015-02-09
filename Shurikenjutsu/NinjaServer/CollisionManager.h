@@ -32,6 +32,7 @@ public:
 	void FanCollisionChecks(double p_deltaTime, FanBoomerangManager* p_fanBoomerangManager, PlayerManager* p_playerManager);
 
 	void SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager);
+	void NaginataStbDot(PlayerManager* p_playerManager);
 	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 	void WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
@@ -52,8 +53,15 @@ private:
 	void SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList);
 	std::vector<OBB> m_staticBoxList;
 	std::vector<Sphere> m_staticSphereList;
-
 	float m_deltaTime;
+
+	struct NaginataStabAttacks
+	{
+		RakNet::RakNetGUID m_guid;
+		float m_timer;
+		bool m_performNaginataStabAttack;
+	};
+	std::vector<NaginataStabAttacks> m_performingStabAttackList;
 };
 #endif
 
