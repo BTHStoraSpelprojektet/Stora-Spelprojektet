@@ -52,7 +52,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			m_velocity = 3.0f;
 			m_velocityVariation = 0.1f;
 
-			m_timeToLive = 300.0f;
+			m_timeToLive = 180.0f;
 
 			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldMistParticle.png");
 
@@ -414,8 +414,8 @@ void ParticleEmitter::UpdateParticles()
 					//m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y;
 
-					float xWindOffset = 3.0*getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-					float zWindOffset = 3.0*getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 
 					m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
 					m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
