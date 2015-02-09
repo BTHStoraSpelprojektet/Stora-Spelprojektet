@@ -1,5 +1,6 @@
 #ifndef COUNTDOWN_H_
 #define COUNTDOWN_H_
+#define WIN32_LEAN_AND_MEAN
 
 #include "GUIText.h"
 
@@ -16,6 +17,7 @@ public:
 	void Render();
 private:
 	GUIText m_cdText;
+	bool m_render;
 };
 
 #endif
