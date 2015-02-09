@@ -678,6 +678,8 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 
 		p_context->PSSetShaderResources(0, 1, &p_texture);
 		p_context->PSSetShaderResources(1, 1, &p_normalMap);
+
+		p_context->PSSetShaderResources(2, 1, nullptr);
 		p_context->PSSetShaderResources(2, 1, &p_possibleShadowMap);
 	}
 

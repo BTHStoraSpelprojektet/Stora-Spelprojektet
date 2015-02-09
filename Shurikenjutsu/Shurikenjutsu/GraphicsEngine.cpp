@@ -249,14 +249,27 @@ void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix,
 	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
-void GraphicsEngine::SetShadowMap()
+void GraphicsEngine::SetShadowMap(bool p_shadowShapes)
 {
-	if (m_shadowMap.GetRenderTarget() == nullptr)
+	/*if (!p_shadowShapes)
 	{
-		ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
-	}
+		if (m_shadowMap.GetRenderTarget() == nullptr)
+		{
+			ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
+		}
 
-	m_sceneShader.UpdateShadowMap(m_shadowMap.GetRenderTarget());
+		m_sceneShader.UpdateShadowMap(m_shadowMap.GetRenderTarget());
+	}
+	
+	else
+	{*/
+		if (VisibilityComputer::GetInstance().GetRenderTarget() == nullptr)
+		{
+			ConsolePrintErrorAndQuit("Shadow shape map is a null pointer.");
+		}
+
+		m_sceneShader.UpdateShadowMap(VisibilityComputer::GetInstance().GetRenderTarget());
+	//}
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)

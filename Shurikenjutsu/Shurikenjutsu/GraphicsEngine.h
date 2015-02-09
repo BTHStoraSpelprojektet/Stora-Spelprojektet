@@ -52,7 +52,7 @@ public:
 
 	static void UpdateInstanceBuffers(std::vector<Object*> p_ObjectList);
 
-	static void SetShadowMap();
+	static void SetShadowMap(bool p_shadowShapes);
 
 	static void TurnOnAlphaBlending();
 	static void TurnOffAlphaBlending();
