@@ -716,10 +716,10 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
 				break;
+				}
 			}
 		}
 	}
-}
 }
 
 void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)

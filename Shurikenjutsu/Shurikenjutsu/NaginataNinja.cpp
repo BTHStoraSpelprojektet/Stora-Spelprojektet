@@ -3,11 +3,10 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "NaginataSlash.h"
 #include "NaginataStab.h"
-#include "Dash.h"
-#include "ShurikenAbility.h"
-#include "MegaShuriken.h"
-#include "SmokeBombAbility.h"
+
+
 #include "KunaiAbility.h"
+#include "StickyTrapAbility.h"
 #include "VolleyAbility.h"
 
 
@@ -48,7 +47,7 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_rangeSpecialAttack = new VolleyAbility();
 	m_rangeSpecialAttack->Initialize();
 
-	m_toolAbility = new SmokeBombAbility();
+	m_toolAbility = new StickyTrapAbility();
 	m_toolAbility->Initialize();
 
 	SetOriginalSpeed(GetSpeed());

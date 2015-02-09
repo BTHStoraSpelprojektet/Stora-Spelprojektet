@@ -694,7 +694,6 @@ void Network::ReceviePacket()
 		}
 		case ID_VOLLEY_THROWN:
 		{
-			std::cout << "VOLLEY client!" << std::endl;
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			unsigned int id;
 			float startX, startZ, endX, endZ;
