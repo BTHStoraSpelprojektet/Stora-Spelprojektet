@@ -246,7 +246,7 @@ void TeamStatusBar::Update()
 
 void TeamStatusBar::Render()
 {
-	int index = 0;
+	unsigned int index = 0;
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
 	{
 		if (index < m_redSquares.size())
