@@ -19,6 +19,8 @@ private:
 	Server m_server;
 	Timer m_timer;
 	Debug m_debug;
+
+	bool m_firstUpdate;
 };
 
 #endif SYSTEM

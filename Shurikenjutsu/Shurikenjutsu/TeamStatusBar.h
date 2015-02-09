@@ -6,6 +6,7 @@
 #include <map>
 #include "Network.h"
 #include "GUIElement.h"
+#include "GUIText.h"
 
 class TeamStatusBar
 {
@@ -22,13 +23,21 @@ private:
 	std::map<RakNet::RakNetGUID, GUIElement> redColorDots;
 	std::map<RakNet::RakNetGUID, GUIElement> blueColorDots;
 
-	void RemoveRedColorPlayer(RakNet::RakNetGUID p_guid);
-	void RemoveBlueColorPlayer(RakNet::RakNetGUID p_guid);
+	void ResizeRedColorList();
+	void ResizeBlueColorList();
 
 	float m_dotSize;
 	float m_dotPosOffset;
+	int m_startOffset;
 	DirectX::XMFLOAT3 m_originPos;
 	bool m_addedMyself;
+
+	GUIText m_redScore;
+	GUIText m_blueScore;
+
+	double m_timeSec;
+	double m_timeMin;
+	GUIText m_timerText;
 };
 
 #endif

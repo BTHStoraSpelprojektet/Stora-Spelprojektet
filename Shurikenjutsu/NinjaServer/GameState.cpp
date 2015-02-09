@@ -40,6 +40,13 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_projectileManager = new ProjectileManager();
 	m_projectileManager->Initialize(m_serverPeer);
 
+
+	m_winningTeams = std::map<int, int>();
+
+	// Time
+	m_timeMin = 0;
+	m_timeSec = 0;
+
 	return true;
 }
 
@@ -90,6 +97,8 @@ void GameState::Update(double p_deltaTime)
 	m_collisionManager->ProjectileCollisionChecks(m_projectileManager, m_playerManager);
 	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager, (float)p_deltaTime);
 	m_collisionManager->FanCollisionChecks(p_deltaTime, m_fanBoomerangManager, m_playerManager);
+
+	UpdateTime(p_deltaTime);
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
@@ -122,16 +131,6 @@ bool GameState::RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_di
 	return m_playerManager->RotatePlayer(p_guid, p_dirX, p_dirY, p_dirZ);
 }
 
-bool GameState::CanUseAbility(int p_index, ABILITIES p_ability)
-{
-	return m_playerManager->CanUseAbility(p_index, p_ability);
-}
-
-void GameState::UsedAbility(int p_index, ABILITIES p_ability)
-{
-	m_playerManager->UsedAbility(p_index, p_ability);
-}
-
 void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, float p_distanceFromPlayer)
 {
 	m_smokeBombManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
@@ -142,4 +141,47 @@ void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, f
 void GameState::BroadcastPlayers()
 {
 	m_playerManager->BroadcastPlayers();
+}
+
+void GameState::UpdateTime(double p_deltaTime)
+{
+	m_timeSec += p_deltaTime;
+	if (m_timeSec >= 60)
+	{
+		m_timeSec -= 60;
+		m_timeMin++;
+	}
+}
+
+void GameState::ResetTime()
+{
+	m_timeSec = 0;
+	m_timeMin = 0;
+}
+
+void GameState::SyncTime(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_TIMER_SYNC);
+	bitStream.Write(m_timeMin);
+	bitStream.Write(m_timeSec);
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+}
+
+void GameState::SendCurrentTeamScore(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_SEND_TEAM_SCORE);
+	bitStream.Write((unsigned int)m_winningTeams.size());
+	
+	for (auto it = m_winningTeams.begin(); it != m_winningTeams.end(); it++)
+	{
+		bitStream.Write(it->first);
+		bitStream.Write(it->second);
+	}
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }

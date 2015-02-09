@@ -220,6 +220,16 @@ void Server::ReceviePacket()
 			}
 			break;
 		}
+		case ID_TIMER_SYNC:
+		{
+			m_gameState->SyncTime(m_packet->guid);
+			break;
+		}
+		case ID_SEND_TEAM_SCORE:
+		{
+			m_gameState->SendCurrentTeamScore(m_packet->guid);
+			break;
+		}
 		default:
 			break;
 		}
