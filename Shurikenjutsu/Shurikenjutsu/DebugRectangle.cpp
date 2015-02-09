@@ -1,6 +1,9 @@
 #include "DebugRectangle.h"
 
-DebugRectangle::DebugRectangle(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, DirectX::XMFLOAT3 p_color)
+DebugRectangle::DebugRectangle()
+{}
+
+bool DebugRectangle::Initialize(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, DirectX::XMFLOAT3 p_color)
 {
 	std::vector<DirectX::XMFLOAT3> lines;
 
@@ -20,6 +23,8 @@ DebugRectangle::DebugRectangle(DirectX::XMFLOAT3 p_centrum, float p_width, float
 	m_vertices = lines.size();
 	m_color = p_color;
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
+
+	return true;
 }
 
 void DebugRectangle::Shutdown()

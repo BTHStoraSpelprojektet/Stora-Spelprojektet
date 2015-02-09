@@ -6,7 +6,7 @@
 #include "Globals.h"
 #include "InputManager.h"
 #include "GraphicsEngine.h"
-
+#include "VisibilityComputer.h"
 
 bool Camera::Initialize()
 {
@@ -95,12 +95,11 @@ void Camera::UpdateProjectionMatrix(bool p_orthographic)
 	if (!p_orthographic)
 	{
 		DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixPerspectiveFovLH(m_fieldOfView, m_aspectRatio, m_nearPlane, m_farPlane));
-		
 	}
 
 	else
 	{
-		DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixOrthographicLH(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 13.0f, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 13.0f, m_nearPlane, m_farPlane));
+		DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixOrthographicLH(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 13.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 13.0f, m_nearPlane, m_farPlane));
 	}
 }
 	
@@ -350,6 +349,16 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(true);
 	GraphicsEngine::SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+
+	// Visibility view projection..
+	playerPosition = p_playerPos;
+	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 40.0f, playerPosition.z);
+	target = playerPosition;
+
+	UpdatePosition(position);
+	UpdateTarget(target);
+	UpdateViewMatrix();
+	VisibilityComputer::GetInstance().SetViewPolygonMatrix(GetViewMatrix());
 
 	// Lock camera on the player.
 	playerPosition = p_playerPos;

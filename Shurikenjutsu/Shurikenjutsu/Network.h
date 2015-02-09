@@ -83,6 +83,10 @@ public:
 	void SetHaveUpdateFanList();
 	std::vector<FanNet> GetFanList();
 
+	bool IsStickyTrapListUpdated();
+	void SetHaveUpdateStickyTrapList();
+	std::vector<StickyTrapNet> GetStickyTrapList();
+
 	bool HasRespawned();
 	void SetHaveRespawned();
 
@@ -111,10 +115,16 @@ public:
 
 	void SetObjectManager(ObjectManager* p_objectManager);
 
+	void SyncTeamScore();
+	int GetRedTeamScore();
+	int GetBlueTeamScore();
+
 private:
 
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
+	void UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
 	void RemoveSpikeTrap(unsigned int p_spikeTrapId);
+	void RemoveStickyTrap(unsigned int p_stickyTrapId);
 	Network();
 	~Network();
 	
@@ -134,6 +144,7 @@ private:
 	void ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_projType);
 	void RespawnPlayer(float p_x, float p_y, float p_z);
 	void RemoveShuriken(unsigned int p_shurikenID);
+	void RemoveProjectile(unsigned int p_projId);
 	void AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_id, RakNet::RakNetGUID p_guid, float p_speed);
 	void RemoveFan(unsigned int p_id);
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
@@ -151,7 +162,8 @@ private:
 	bool m_newOrRemovedPlayers;
 	bool m_shurikenListUpdated;
 	bool m_smokebombListUpdated;
-	bool m_spikeTrapListUpdated;	
+	bool m_spikeTrapListUpdated;
+	bool m_stickyTrapListUpdated;
 	bool m_fanListUpdated;
 	bool m_respawned;
 	bool m_invalidMove;
@@ -169,9 +181,12 @@ private:
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
 	std::vector<SpikeNet> m_spikeTrapList;
+	std::vector<StickyTrapNet> m_stickyTrapList;
 	std::vector<FanNet> m_fanList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 	DirectX::XMFLOAT3 m_dashLocation;
+	int m_redTeamScore;
+	int m_blueTeamScore;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;

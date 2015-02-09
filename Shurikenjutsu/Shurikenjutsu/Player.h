@@ -10,6 +10,7 @@ class Ability;
 class InputManager;
 class HealthBar;
 class AbilityBar;
+class StickyTrap;
 
 class Player :
 	public AnimatedObject
@@ -23,7 +24,7 @@ public:
 
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
 	void Shutdown();
-	void UpdateMe();
+	void UpdateMe(std::vector<StickyTrap*> p_stickyTrapList);
 	void Update();
 	void UpdateAbilities();
 	void Render();
@@ -72,6 +73,7 @@ protected:
 	void CalculateFacingAngle();
 	void CalculatePlayerCubeCollision(OBB p_collidingBoxes);
 	bool CheckSidesIfMultipleCollisions();
+	void SetOriginalSpeed(float p_speed);
 
 
 	//float m_damage = 0; // Sätts nog inviduellt per ability senare.
@@ -111,5 +113,7 @@ protected:
 
 	float m_directionUpdateTimer;
 	DirectX::XMFLOAT3 m_oldPosition;
+
+	float m_originalSpeed;
 };
 #endif PLAYER

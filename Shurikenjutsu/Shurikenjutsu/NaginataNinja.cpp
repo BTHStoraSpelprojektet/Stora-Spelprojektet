@@ -2,6 +2,7 @@
 #include "../CommonLibs/ModelNames.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "NaginataSlash.h"
+#include "NaginataStab.h"
 #include "Dash.h"
 #include "ShurikenAbility.h"
 #include "MegaShuriken.h"
@@ -37,7 +38,7 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_meleeAttack = new NaginataSlash();
 	m_meleeAttack->Initialize();
 
-	m_meleeSpecialAttack = new Dash();
+	m_meleeSpecialAttack = new NaginataStab();
 	m_meleeSpecialAttack->Initialize();
 
 	m_rangeAttack = new KunaiAbility();
@@ -48,6 +49,8 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 
 	m_toolAbility = new SmokeBombAbility();
 	m_toolAbility->Initialize();
+
+	SetOriginalSpeed(GetSpeed());
 
 	return true;
 }

@@ -39,6 +39,8 @@ bool Network::Initialize()
 	m_timerSynced = false;
 	m_timerMin = 0;
 	m_timerSec = 0;
+	m_redTeamScore = 0;
+	m_blueTeamScore = 0;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -95,6 +97,8 @@ void Network::ReceviePacket()
 
 			m_connected = true;
 			m_networkStatus = NETWORKSTATUS_CONNECTED;
+
+			SyncTeamScore();
 
 			RakNet::BitStream bitStream;
 
@@ -302,7 +306,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(uniqueId);
 
-			RemoveShuriken(uniqueId);
+			RemoveProjectile(uniqueId);
 
 			break;
 		}
@@ -364,6 +368,17 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
+
+			// Team 1 = red
+			// Team 2 = blue
+			if (winningTeam == 1)
+			{
+				m_redTeamScore++;
+			}
+			else if (winningTeam == 2)
+			{
+				m_blueTeamScore++;
+			}
 
 			std::cout << "Team " << winningTeam << " won this round\n";
 			break;
@@ -440,6 +455,9 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
+
+			m_redTeamScore = 0;
+			m_blueTeamScore = 0;
 
 			std::cout << "Team " << winningTeam << " won this match\n";
 			break;
@@ -612,6 +630,68 @@ void Network::ReceviePacket()
 			m_timerSynced = true;
 			m_timerMin = min;
 			m_timerSec = sec;
+			break;
+		}
+		case ID_STICKYTRAP_THROW:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			unsigned int stickyTrapID;
+			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
+			bitStream.Read(messageID);
+			bitStream.Read(stickyTrapID);
+			bitStream.Read(startPosX);
+			bitStream.Read(startPosZ);
+			bitStream.Read(endPosX);
+			bitStream.Read(endPosZ);
+			bitStream.Read(lifetime);
+			bitStream.Read(guid);
+
+
+			UpdateStickyTrap(guid, stickyTrapID, startPosX, startPosZ, endPosX, endPosZ, lifetime);
+			break;
+		}
+		case ID_STICKYTRAP_REMOVE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned int stickyTrapID;
+			bitStream.Read(messageID);
+			bitStream.Read(stickyTrapID);
+
+			RemoveStickyTrap(stickyTrapID);
+			break;
+		}
+		case ID_SEND_TEAM_SCORE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			m_redTeamScore = 0;
+			m_blueTeamScore = 0;
+
+			unsigned int size;
+			int team, score;
+
+			bitStream.Read(messageID);
+			bitStream.Read(size);
+
+			for (unsigned int i = 0; i < size; i++)
+			{
+				bitStream.Read(team);
+				bitStream.Read(score);
+
+				// Team 1 = red
+				// Team 2 = blue
+				if (team == 1)
+				{
+					m_redTeamScore = score;
+				}
+				else if (team == 2)
+				{
+					m_blueTeamScore = score;
+				}
+			}
 			break;
 		}
 		default:
@@ -862,6 +942,32 @@ void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTra
 		m_spikeTrapListUpdated = true;
 	}
 }
+void Network::UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
+{
+	bool addStickyTrap = true;
+	StickyTrapNet temp;
+	temp.stickyTrapId = p_stickyTrapId;
+	temp.startX = p_startPosX;
+	temp.startZ = p_startPosZ;
+	temp.endX = p_endPosX;
+	temp.endZ = p_endPosZ;
+	temp.lifeTime = p_lifetime;
+	temp.guid = p_guid;
+
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		if (m_stickyTrapList[i].stickyTrapId == temp.stickyTrapId)
+		{
+			addStickyTrap = false;
+			break;
+		}
+	}
+	if (addStickyTrap)
+	{
+		m_stickyTrapList.push_back(temp);
+		m_stickyTrapListUpdated = true;
+	}
+}
 
 void Network::UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken)
 {
@@ -1025,6 +1131,19 @@ void Network::RemoveSpikeTrap(unsigned int p_spikeId)
 	}
 }
 
+void Network::RemoveStickyTrap(unsigned int p_stickyTrapID)
+{
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		if (m_stickyTrapList[i].stickyTrapId == p_stickyTrapID)
+		{
+			m_stickyTrapList.erase(m_stickyTrapList.begin() + i);
+			m_stickyTrapListUpdated = true;
+			break;
+		}
+	}
+}
+
 bool Network::IsSmokeBombListUpdated()
 {
 	return m_smokebombListUpdated;
@@ -1032,7 +1151,7 @@ bool Network::IsSmokeBombListUpdated()
 
 bool Network::IsSpikeTrapListUpdated()
 {
-	return m_spikeTrapListUpdated;
+	return m_stickyTrapListUpdated;
 }
 
 void Network::SetHaveUpdateSpikeTrapList()
@@ -1043,6 +1162,21 @@ void Network::SetHaveUpdateSpikeTrapList()
 std::vector<SpikeNet> Network::GetSpikeTraps()
 {
 	return m_spikeTrapList;
+}
+
+bool Network::IsStickyTrapListUpdated()
+{
+	return m_stickyTrapListUpdated;
+}
+
+void Network::SetHaveUpdateStickyTrapList()
+{
+	m_stickyTrapListUpdated = false;
+}
+
+std::vector<StickyTrapNet> Network::GetStickyTrapList()
+{
+	return m_stickyTrapList;
 }
 
 void Network::SetHaveUpdateSmokeBombList()
@@ -1276,4 +1410,28 @@ bool Network::TimerSynced(double &p_min, double &p_sec)
 		p_sec = 0;
 		return false;
 	}
+}
+
+void Network::SyncTeamScore()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_SEND_TEAM_SCORE);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+int Network::GetRedTeamScore()
+{
+	return m_redTeamScore;
+}
+
+int Network::GetBlueTeamScore()
+{
+	return m_blueTeamScore;
+}
+
+void Network::RemoveProjectile(unsigned int p_projId)
+{
+	m_objectManager->RemoveProjectile(p_projId);
 }
