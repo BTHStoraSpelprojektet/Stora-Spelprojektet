@@ -11,6 +11,7 @@ class Frustum;
 class Camera;
 class Minimap;
 class TeamStatusBar;
+class Countdown;
 
 class PlayingStateTest : public GameState
 {
@@ -43,6 +44,7 @@ private:
 	Minimap* m_minimap;
 	TeamStatusBar* m_teamStatusBar;
 	DirectionalLight m_directionalLight;
+	Countdown* m_countdown;
 
 	float twoPi = 6.28318530718f;
 

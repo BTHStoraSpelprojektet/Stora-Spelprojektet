@@ -1,5 +1,6 @@
 #include "Countdown.h"
 #include "Network.h"
+#include "Globals.h"
 
 Countdown::Countdown(){}
 Countdown::~Countdown(){}
@@ -7,7 +8,7 @@ Countdown::~Countdown(){}
 bool Countdown::Initialize()
 {
 	m_cdText = GUIText();
-	m_cdText.Initialize("5", 100.0f, 0.0f, 0.0f, 0xffffffff);
+	m_cdText.Initialize("", 200.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0xff0000ff);
 
 	m_render = false;
 	return true;
