@@ -431,6 +431,9 @@
     <ClCompile Include="Spikes.cpp">
       <Filter>Source Files\Object\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="Countdown.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -714,6 +717,9 @@
     </ClInclude>
     <ClInclude Include="StickyTrap.h">
       <Filter>Header Files\Object\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Countdown.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
