@@ -44,7 +44,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_isDashing = false;
 
 	m_abilityBar = new AbilityBar();
-	m_abilityBar->Initialize(0.0f, -420.0f, 5);
+	m_abilityBar->Initialize(0.0f, -GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.5f + 40.5f, 5);
 
 	m_directionUpdateTimer = 0.0f;
 
@@ -834,8 +834,8 @@ void Player::RenderOutlining()
 {
 	if (m_isAlive)
 	{
-	AnimatedObject::RenderOutlining();
-}
+		AnimatedObject::RenderOutlining();
+	}
 }
 
 void Player::RenderAbilityBar()

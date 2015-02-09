@@ -443,6 +443,15 @@
     <ClCompile Include="FoliageShader.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
+    <ClCompile Include="Volley.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="VolleyObject.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="VolleyAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -732,6 +741,15 @@
     </ClInclude>
     <ClInclude Include="StickyTrap.h">
       <Filter>Header Files\Object\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Volley.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="VolleyObject.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="VolleyAbility.h">
+      <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

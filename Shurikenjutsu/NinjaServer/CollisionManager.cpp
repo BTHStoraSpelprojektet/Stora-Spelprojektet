@@ -4,6 +4,7 @@
 #include "ShurikenManager.h"
 #include "ProjectileManager.h"
 #include "FanBoomerangManager.h"
+#include "VolleyManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
@@ -715,10 +716,10 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
 				break;
+				}
 			}
 		}
 	}
-}
 }
 
 void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
@@ -805,11 +806,11 @@ void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManag
 		{
 			if (IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
-			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
+				// Damage the player
+				p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
+			}
 		}
 	}
-}
 }
 
 //Private
@@ -902,4 +903,64 @@ bool CollisionManager::RaySphereTest(Ray *p_ray, Sphere p_sphere)
 float CollisionManager::GetAngle(float p_x, float p_y)
 {
 	return 1;
+}
+
+void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, PlayerManager* p_playerManager)
+{
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<VolleyNet> volleyList = p_volleyManager->GetObjects();
+	for (unsigned int i = 0; i < volleyList.size(); i++)
+	{
+		bool remove = false;
+		// Go through player list
+		for (unsigned int j = 0; j < playerList.size(); j++)
+		{
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == volleyList[i].guid)
+			{
+				continue;
+			}
+
+			// Check so you are not on the same team
+			PlayerNet owner = p_playerManager->GetPlayer(volleyList[i].guid);
+			if (playerList[j].team == owner.team)
+			{
+				continue;
+			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+
+
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+			// Make collision test
+			if (volleyList[i].timeToLand <= 0.0f)
+			{
+				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+				{
+					DirectX::XMFLOAT3 volleyPos = DirectX::XMFLOAT3(volleyList[i].endX, playerBoundingBoxes[l].m_center.y, volleyList[i].endZ);
+					if (SphereSphereTest(Sphere(volleyPos, VOLLEY_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+					{
+						float damage = VOLLEY_DAMAGE;
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+						break;
+					}
+				}
+				remove = true;
+			}
+		}
+
+		// Remove dead volley
+		if (remove)
+		{
+			p_volleyManager->Remove(i); // MAY WORK, BE CAUTIOUS!
+			volleyList.erase(volleyList.begin() + i);
+			i--;
+		}
+	}
 }

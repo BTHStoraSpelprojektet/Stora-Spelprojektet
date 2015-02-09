@@ -171,6 +171,9 @@
     <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VisibilityComputer.cpp" />
+    <ClCompile Include="Volley.cpp" />
+    <ClCompile Include="VolleyAbility.cpp" />
+    <ClCompile Include="VolleyObject.cpp" />
     <ClCompile Include="WhipPrimaryAttackAbility.cpp" />
     <ClCompile Include="WhipSecondaryAttackAbility.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -267,6 +270,9 @@
     <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VisibilityComputer.h" />
+    <ClInclude Include="Volley.h" />
+    <ClInclude Include="VolleyAbility.h" />
+    <ClInclude Include="VolleyObject.h" />
     <ClInclude Include="WhipPrimaryAttackAbility.h" />
     <ClInclude Include="WhipSecondaryAttackAbility.h" />
     <ClInclude Include="Window.h" />

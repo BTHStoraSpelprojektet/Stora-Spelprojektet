@@ -10,6 +10,7 @@
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
 
+class Volley;
 class Frustum;
 class SmokeBomb;
 class Spikes;
@@ -34,6 +35,7 @@ public:
 	void AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID);
 	void AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeTrapID);
 	void AddStickyTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeTrapID, RakNet::RakNetGUID p_guid);
+	void AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid);
 	void AddStaticObject(Object p_object);
 	std::vector<Object> GetStaticObjectList()const;
 
@@ -62,6 +64,7 @@ private:
 	std::vector<ParticleEmitter*> m_worldParticles;
 	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToSingleRender;
+	std::vector<Volley*> m_volleys;
 	
 
 	Frustum* m_frustum;
@@ -73,5 +76,6 @@ private:
 	bool IsStickyTrapInList(unsigned int p_stickyeTrapId);
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
+
 };
 #endif
