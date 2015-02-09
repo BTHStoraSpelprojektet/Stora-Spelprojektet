@@ -74,6 +74,11 @@ const float DASH_SPEED = 8.0f;
 const float NAGINATASTAB_DAMAGE = 40.0f;
 const float NAGINATASTAB_RANGE = 8.0f;
 const float NAGINATASTAB_COOLDOWN = 8.0f;
+	// Bounding Box
+const float NAGINATASTAB_BOXEXTENTX = 0.75f;
+const float NAGINATASTAB_BOXEXTENTY = 3.0f;
+const float NAGINATASTAB_BOXEXTENTZ = 4.0f;
+
 
 ////////////////////////////////////////////////////////////////Tools
 //Smoke bomb
@@ -138,5 +143,9 @@ const float PARTICLE_GREENLEAF_SIZE_Y = 0.15f;
 
 ////////////////////////////////////////////////////////////////World Particles
 
+
+/////////////////////////////////////////////////////////////// Bounding Boxes
+// Sphere for character
+const float CHARACTER_ENEMY_BOUNDINGSPHERE = 1.0f;
 
 #endif
