@@ -98,8 +98,6 @@ void Network::ReceviePacket()
 			m_connected = true;
 			m_networkStatus = NETWORKSTATUS_CONNECTED;
 
-			SyncTeamScore();
-
 			RakNet::BitStream bitStream;
 
 			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
