@@ -245,7 +245,7 @@ void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, Dire
 
 void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
-	m_sceneShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_sceneShader.UpdateLightViewAndProjection(VisibilityComputer::GetInstance().GetViewPolygonMatrix(), VisibilityComputer::GetInstance().GetProjectionPolygonMatrix());
 	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
