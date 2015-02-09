@@ -139,11 +139,13 @@ void MenuState::Shutdown()
 	}
 	if (m_ipbox != NULL)
 	{
+		m_ipbox->Shutdown();
 		delete m_ipbox;
 		m_ipbox = 0;
 	}
 	if (m_ipboxText != NULL)
 	{
+		m_ipboxText->Shutdown();
 		delete m_ipboxText;
 		m_ipboxText = 0;
 	}
@@ -157,7 +159,13 @@ void MenuState::Shutdown()
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
-}
+	}
+	
+	if (m_frustum != NULL)
+	{
+		m_frustum->Shutdown();
+		delete m_frustum;
+	}
 }
 GAMESTATESWITCH MenuState::Update()
 {

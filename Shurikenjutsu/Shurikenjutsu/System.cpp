@@ -166,15 +166,6 @@ void System::Shutdown()
 	// Shutdown input.
 	InputManager::GetInstance()->Shutdown();
 
-	//Shutdown current state
-	if (m_playingState != NULL)
-	{
-		m_playingState->Shutdown();
-		delete m_playingState;
-	}
-	m_menuState->Shutdown();
-
-
 	// Shutdown graphics engine.
 	GraphicsEngine::Shutdown();
 
@@ -187,7 +178,12 @@ void System::Shutdown()
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
 
-	m_sound->Shutdown();
+	if (m_sound)
+	{
+		m_sound->Shutdown();
+		delete m_sound;
+		m_sound = 0;
+	}
 
 	if (m_cursor != NULL)
 	{
@@ -199,6 +195,30 @@ void System::Shutdown()
 
 	ShadowShapes::GetInstance().Shutdown();
 	VisibilityComputer::GetInstance().Shutdown();
+
+	//Shutdown current state
+	if (m_playingState != NULL)
+	{
+		m_playingState->Shutdown();
+		delete m_playingState;
+	}
+	if (m_chooseNinjaState != NULL)
+	{
+		m_chooseNinjaState->Shutdown();
+		delete m_chooseNinjaState;
+	}
+	if (m_menuState != NULL)
+	{
+		m_menuState->Shutdown();
+		delete m_menuState;
+	}
+
+	if (m_timer)
+	{
+		m_timer->Shutdown();
+		delete m_timer;
+		m_timer = 0;
+	}
 }
 
 void System::Run()
