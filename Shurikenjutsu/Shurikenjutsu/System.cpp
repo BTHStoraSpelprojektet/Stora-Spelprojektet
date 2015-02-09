@@ -17,6 +17,7 @@
 #include "TextureLibrary.h"
 #include "VisibilityComputer.h"
 #include "Cursor.h"
+//#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -188,7 +189,7 @@ void System::Shutdown()
 
 	m_sound->Shutdown();
 
-	if (!m_cursor != NULL)
+	if (m_cursor != NULL)
 	{
 		m_cursor->Shutdown();
 		delete m_cursor;
