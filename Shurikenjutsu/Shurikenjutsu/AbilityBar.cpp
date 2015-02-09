@@ -134,6 +134,11 @@ std::string AbilityBar::GetAbility3Name()
 		return ABILITY_TESSEN_THROWING_TEXTURE;
 		break;
 	}
+	case 2:
+	{
+		return ABILITY_NAGINATA_STAB_TEXTURE;
+		break;
+	}
 	}
 
 	return ABILITY_CD_TEXTURE;
@@ -151,6 +156,11 @@ std::string AbilityBar::GetAbility4Name()
 	case 1:
 	{
 		return ABILITY_WHIP_SPECIAL_TEXTURE;
+		break;
+	}
+	case 2:
+	{
+		return ABILITY_KUNAI_VOLLEY_TEXTURE;
 		break;
 	}
 	}

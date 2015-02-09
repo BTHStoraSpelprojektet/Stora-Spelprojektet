@@ -48,6 +48,8 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_toolAbility = new SpikeAbility();
 	m_toolAbility->Initialize();
 
+	SetOriginalSpeed(GetSpeed());
+
 	return true;
 }
 

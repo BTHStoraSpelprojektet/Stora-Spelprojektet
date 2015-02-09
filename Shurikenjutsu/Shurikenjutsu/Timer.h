@@ -6,6 +6,8 @@ class Timer
 {
 public:
 	bool Initialize();
+	void Shutdown();
+
 	void StartTimer();
 	void Update();
 

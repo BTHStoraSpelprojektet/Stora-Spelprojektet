@@ -16,7 +16,7 @@
 #define MEGA_SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/MegaShurikenShape.SSP"
 
 // Kunai
-#define KUNAI_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
+#define KUNAI_MODEL_NAME "../Shurikenjutsu/Models/KunaiShape.SSP"
 
 // Smoke Bomb
 #define SMOKE_BOMB "../Shurikenjutsu/Models/SmokeBomb.SSP"
@@ -46,7 +46,9 @@
 #define ABILITY_CALTROP_TEXTURE "../Shurikenjutsu/2DTextures/TB_Caltrops.png"
 
 #define ABILITY_NAGINATA_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Melee.png"
+#define ABILITY_NAGINATA_STAB_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_E.png"
 #define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Ranged.png"
+#define ABILITY_KUNAI_VOLLEY_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Q.png"
 
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"
@@ -55,8 +57,9 @@
 #define CURSOR_TEXTURE "../Shurikenjutsu/2DTextures/cursor.png"
 
 // Team Status Bar
-#define TEAM_STATUS_RED_PLAYER "../Shurikenjutsu/2DTextures/minimap_redDot.png"
-#define TEAM_STATUS_BLUE_PLAYER "../Shurikenjutsu/2DTextures/minimap_blueDot.png"
-#define TEAM_STATUS_DEAD_PLAYER "../Shurikenjutsu/2DTextures/TB_cd.png"
+#define TEAM_STATUS_BACKGROUND "../Shurikenjutsu/2DTextures/statusBar_bg.png"
+#define TEAM_STATUS_RED_PLAYER "../Shurikenjutsu/2DTextures/statusBar_redSquare.png"
+#define TEAM_STATUS_BLUE_PLAYER "../Shurikenjutsu/2DTextures/statusBar_blueSquare.png"
+#define TEAM_STATUS_DEAD_PLAYER "../Shurikenjutsu/2DTextures/statusBar_dead.png"
 
 #endif

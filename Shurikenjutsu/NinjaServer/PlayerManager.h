@@ -19,6 +19,7 @@ class FanBoomerangManager;
 class SpikeManager;
 class CollisionManager;
 class ProjectileManager;
+class StickyTrapManager;
 
 class PlayerManager
 {
@@ -45,7 +46,10 @@ public:
 	float GetPlayerHealth(RakNet::RakNetGUID p_guid);
 	void ResetHealth(RakNet::RakNetGUID p_guid);
 
-	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager);
+	void UsedAbility(int p_index, ABILITIES p_ability);
+	bool CanUseAbility(int p_index, ABILITIES p_ability);
+	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager);
+
 
 
 private:	

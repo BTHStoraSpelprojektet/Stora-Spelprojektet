@@ -715,10 +715,10 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
 				break;
+				}
 			}
 		}
 	}
-}
 }
 
 void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
@@ -785,30 +785,29 @@ void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManag
 			continue;
 		}
 
-		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(0.75f, 3.0f, 4.0f);
+		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(NAGINATASTAB_BOXEXTENTX, NAGINATASTAB_BOXEXTENTY, NAGINATASTAB_BOXEXTENTZ);
 		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
-		DirectX::XMFLOAT3 v1 = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
-		DirectX::XMFLOAT3 v2 = attackDirection;
 
-		float x = (v1.x * v2.z) - (v2.x * v1.z); // DirY
-		float y = (v1.x * v2.x) - (v1.z * v2.z); // DirX
+		float faceAngle = atan2(attackDirection.x, attackDirection.z);
 
-		float faceAngle = atan2(y, x);
-
+		// Rotate around y axis
 		DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 
 		// Update rec location.
 		DirectX::XMFLOAT4 rotationQuaternion;
 		DirectX::XMStoreFloat4(&rotationQuaternion, DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
 		
-		attackPosition = DirectX::XMFLOAT3(attackPosition.x + y * boxExtent.z, attackPosition.y, attackPosition.z + x * boxExtent.z);
+		attackPosition = DirectX::XMFLOAT3(attackPosition.x + attackDirection.x * boxExtent.z, attackPosition.y, attackPosition.z + attackDirection.z * boxExtent.z);
 
 		// Make collision test
-		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, 1.0f))
+		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
 		{
-			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
+			if (IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			{
+				// Damage the player
+				p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
+			}
 		}
 	}
 }
