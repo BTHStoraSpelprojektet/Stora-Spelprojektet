@@ -83,6 +83,10 @@ public:
 	void SetHaveUpdateFanList();
 	std::vector<FanNet> GetFanList();
 
+	bool IsStickyTrapListUpdated();
+	void SetHaveUpdateStickyTrapList();
+	std::vector<StickyTrapNet> GetStickyTrapList();
+
 	bool HasRespawned();
 	void SetHaveRespawned();
 
@@ -118,7 +122,9 @@ public:
 private:
 
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
+	void UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
 	void RemoveSpikeTrap(unsigned int p_spikeTrapId);
+	void RemoveStickyTrap(unsigned int p_stickyTrapId);
 	Network();
 	~Network();
 	
@@ -156,7 +162,8 @@ private:
 	bool m_newOrRemovedPlayers;
 	bool m_shurikenListUpdated;
 	bool m_smokebombListUpdated;
-	bool m_spikeTrapListUpdated;	
+	bool m_spikeTrapListUpdated;
+	bool m_stickyTrapListUpdated;
 	bool m_fanListUpdated;
 	bool m_respawned;
 	bool m_invalidMove;
@@ -174,6 +181,7 @@ private:
 	std::vector<ShurikenNet> m_shurikensList;
 	std::vector<SmokeBombNet> m_smokeBombList;
 	std::vector<SpikeNet> m_spikeTrapList;
+	std::vector<StickyTrapNet> m_stickyTrapList;
 	std::vector<FanNet> m_fanList;
 	std::map<RakNet::RakNetGUID, AnimationState> m_playerAnimations;
 	DirectX::XMFLOAT3 m_dashLocation;

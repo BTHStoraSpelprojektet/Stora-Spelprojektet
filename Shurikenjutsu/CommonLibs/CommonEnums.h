@@ -14,6 +14,7 @@ enum ABILITIES
 	ABILITIES_FANBOOMERANG,
 	ABILITIES_NAGINATASLASH,
 	ABILITIES_KUNAI,
+	ABILITIES_STICKY_TRAP,
 	ABILITIES_NAGAINATASTAB
 };
 
@@ -32,7 +33,8 @@ enum EmitterType{
 	Fire,
 	Smoke,
 	LeafTree,
-	LeafSakura
+	LeafSakura,
+	WorldMist
 };
 
 #endif // !COMMONENUMS_H_

@@ -17,7 +17,7 @@ public:
 	~PlayerManager();
 	bool Initialize();
 	void Shutdown();
-	void Update();
+	void Update(std::vector<StickyTrap*> p_stickyTrapList);
 	void Render();
 	void RenderDepth();
 	void RenderOutliningPassOne();

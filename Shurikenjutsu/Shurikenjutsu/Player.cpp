@@ -9,6 +9,7 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
 #include "VisibilityComputer.h"
+#include "StickyTrap.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -115,7 +116,8 @@ void Player::Shutdown()
 }
 }
 
-void Player::UpdateMe()
+
+void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	// Check values from server
 	if (Network::GetInstance()->IsConnected())
@@ -140,7 +142,17 @@ void Player::UpdateMe()
 		SetCalculatePlayerPosition();
 	}*/
 
-	
+	SetSpeed(m_originalSpeed);
+	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
+	{
+		if (p_stickyTrapList[i]->GetGUID() != Network::GetInstance()->GetMyGUID())
+		{
+			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+			{
+				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
+			}
+		}
+	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -820,7 +832,10 @@ void Player::RenderDepth()
 
 void Player::RenderOutlining()
 {
+	if (m_isAlive)
+	{
 	AnimatedObject::RenderOutlining();
+}
 }
 
 void Player::RenderAbilityBar()
@@ -917,4 +932,9 @@ OBB Player::GetOBB()
 	}*/
 	TransformBoundingBoxes();
 	return m_boundingBoxes[0];
+}
+
+void Player::SetOriginalSpeed(float p_speed)
+{
+	m_originalSpeed = p_speed;
 }

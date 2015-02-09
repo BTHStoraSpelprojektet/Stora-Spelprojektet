@@ -104,15 +104,6 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
-	/*
-	// Initialize OutliningShader
-	if (m_outliningShader.Initialize())
-	{
-		ConsolePrintSuccess("Outlining shader initialized successfully.");
-		ConsoleSkipLines(1);
-	}
-	*/
-
 	// Create the font wrapper.
 	IFW1Factory* FW1Factory;
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &FW1Factory);
@@ -192,6 +183,11 @@ void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 	m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
 }
 
+void GraphicsEngine::RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap)
+{
+	m_sceneShader.RenderReversedShadows(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_visibilityMap);
+}
+
 void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
 	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
@@ -260,7 +256,6 @@ void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, Dire
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_foliageShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	VisibilityComputer::GetInstance().SetPolygonMatrices(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
@@ -396,8 +391,6 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().FULLSCREEN = true;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-
-		VisibilityComputer::GetInstance().UpdateTextureSize(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	}    
 	
 	else    
@@ -413,8 +406,6 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().FULLSCREEN = false;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
-
-		VisibilityComputer::GetInstance().UpdateTextureSize(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	}    
 
 	return true;

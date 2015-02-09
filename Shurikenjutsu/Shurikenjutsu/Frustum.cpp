@@ -6,6 +6,11 @@ Frustum::Frustum(){}
 Frustum::Frustum(const Frustum&){}
 Frustum::~Frustum(){}
 
+void Frustum::Shutdown()
+{
+	//delete[] m_planes;
+}
+
 void Frustum::ConstructFrustum(float screenDepth, DirectX::XMFLOAT4X4 p_projectionMatrix, DirectX::XMFLOAT4X4 p_viewMatrix)
 {
 	float zMinimum, r;

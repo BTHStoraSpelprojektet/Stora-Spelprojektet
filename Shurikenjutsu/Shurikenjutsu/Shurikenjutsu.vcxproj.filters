@@ -126,6 +126,15 @@
     <Filter Include="Header Files\GUI\Menu\Menu Items">
       <UniqueIdentifier>{4cd81acc-f6cd-467c-80cb-edf01ec328bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{203b4b95-7f00-4e34-8b05-e5a4d9f26b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Shader Bridges">
+      <UniqueIdentifier>{e86672ab-06e6-4a96-bb09-b0d6d418edff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Particles">
+      <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\ShadowShapes">
       <UniqueIdentifier>{c449bf99-5482-450e-ac14-ce80ce1dda45}</UniqueIdentifier>
     </Filter>
@@ -141,23 +150,20 @@
     <Filter Include="Header Files\Ninjas">
       <UniqueIdentifier>{a6867d01-73db-4cd3-a267-4f0ea3cb3317}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\GameState\Graphics">
-      <UniqueIdentifier>{203b4b95-7f00-4e34-8b05-e5a4d9f26b8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameState\Graphics\Shader Bridges">
-      <UniqueIdentifier>{e86672ab-06e6-4a96-bb09-b0d6d418edff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameState\Graphics\Particles">
-      <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ShadowShapes\Utility">
+    <Filter Include="Header Files\Utility">
       <UniqueIdentifier>{50e9b74b-568e-4883-8d0d-54ac882643cc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ShadowShapes\Utility\DebugDraw">
+    <Filter Include="Header Files\Utility\DebugDraw">
       <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders\Foliage">
       <UniqueIdentifier>{69a518e2-9142-4210-8a9d-aaae94d9a5cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Object\Tools">
+      <UniqueIdentifier>{28a61adb-30fb-4a35-b435-d67b7127f896}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Object\Tools">
+      <UniqueIdentifier>{d6f8df41-a2e5-446e-b07c-e719b8e05b34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -177,13 +183,13 @@
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
     <ClCompile Include="DirectX.cpp">
-      <Filter>Source Files\GameState\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="GraphicsEngine.cpp">
-      <Filter>Source Files\GameState\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
-      <Filter>Source Files\GameState\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Debug.cpp">
       <Filter>Source Files\Debug</Filter>
@@ -228,7 +234,7 @@
       <Filter>Source Files\Network</Filter>
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
-      <Filter>Source Files\GameState\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="DebugDraw.cpp">
       <Filter>Source Files\Utility\DebugDraw</Filter>
@@ -264,19 +270,19 @@
       <Filter>Source Files\Models</Filter>
     </ClCompile>
     <ClCompile Include="DepthShader.cpp">
-      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="GUIShader.cpp">
-      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="SceneShader.cpp">
-      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="ParticleEmitter.cpp">
-      <Filter>Source Files\GameState\Graphics\Particles</Filter>
+      <Filter>Source Files\Graphics\Particles</Filter>
     </ClCompile>
     <ClCompile Include="ParticleShader.cpp">
-      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Source Files\Physics</Filter>
@@ -326,9 +332,6 @@
     <ClCompile Include="SmokeBombAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
-    <ClCompile Include="SmokeBomb.cpp">
-      <Filter>Source Files\Object</Filter>
-    </ClCompile>
     <ClCompile Include="MenuCheckbox.cpp">
       <Filter>Source Files\GUI\Menu\Menu Items</Filter>
     </ClCompile>
@@ -354,10 +357,10 @@
       <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
     <ClCompile Include="TextureLibrary.cpp">
-      <Filter>Source Files\GameState\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp">
-      <Filter>Source Files\GameState\Graphics</Filter>
+      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="MenuIpBox.cpp">
       <Filter>Source Files\GUI\Menu\Menu Items</Filter>
@@ -376,9 +379,6 @@
     </ClCompile>
     <ClCompile Include="SpikeAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
-    </ClCompile>
-    <ClCompile Include="Spikes.cpp">
-      <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="KatanaNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
@@ -419,11 +419,29 @@
     <ClCompile Include="TeamStatusBar.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="StickyTrapAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="NaginataStab.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
+    <ClCompile Include="StickyTrap.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeBomb.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Spikes.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Spikes.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
     <ClCompile Include="InstanceManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="FoliageShader.cpp">
-      <Filter>Source Files\GameState\Graphics\Shader Bridges</Filter>
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -434,16 +452,16 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Structures.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="ConsoleFunctions.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Flags.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Collisions.h">
       <Filter>Header Files\Physics</Filter>
@@ -455,7 +473,7 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Enumerations.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Graphics</Filter>
@@ -473,7 +491,7 @@
       <Filter>Header Files\Core\Input</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Header Files\Object</Filter>
@@ -509,28 +527,28 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="DebugDraw.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugRectangle.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugLineList.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugShape2D.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugShape3D.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugBox.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugCircle.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="DebugDot.h">
-      <Filter>Header Files\ShadowShapes\Utility\DebugDraw</Filter>
+      <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="AnimatedObject.h">
       <Filter>Header Files\Object</Filter>
@@ -604,9 +622,6 @@
     <ClInclude Include="SmokeBombAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
-    <ClInclude Include="SmokeBomb.h">
-      <Filter>Header Files\Object</Filter>
-    </ClInclude>
     <ClInclude Include="MenuCheckbox.h">
       <Filter>Header Files\GUI\Menu\Menu Items</Filter>
     </ClInclude>
@@ -626,7 +641,7 @@
       <Filter>Header Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="QuadTree.h">
-      <Filter>Header Files\ShadowShapes\Utility</Filter>
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="GUIElementColor.h">
       <Filter>Header Files\GUI\Internal</Filter>
@@ -654,9 +669,6 @@
     </ClInclude>
     <ClInclude Include="SpikeAbility.h">
       <Filter>Header Files\Abilities</Filter>
-    </ClInclude>
-    <ClInclude Include="Spikes.h">
-      <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="OutlingShader.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
@@ -705,6 +717,21 @@
     </ClInclude>
     <ClInclude Include="FoliageShader.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="StickyTrapAbility.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="NaginataStab.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeBomb.h">
+      <Filter>Header Files\Object\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Spikes.h">
+      <Filter>Header Files\Object\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="StickyTrap.h">
+      <Filter>Header Files\Object\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -779,6 +806,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\Foliage\FoliageVertexShader.hlsl">
       <Filter>Shaders\Foliage</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

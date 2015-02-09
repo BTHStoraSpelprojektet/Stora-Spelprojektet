@@ -70,7 +70,17 @@ public:
 
 	bool IsPointVisible(Point p_point);
 
-	void SetPolygonMatrices(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
+	void SetWorldPolygonMatrix(DirectX::XMFLOAT4X4 p_worldMatrix);
+	void SetViewPolygonMatrix(DirectX::XMFLOAT4X4 p_viewMatrix);
+	void SetProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_projectionMatrix);
+
+	DirectX::XMFLOAT4X4 GetWorldPolygonMatrix();
+	DirectX::XMFLOAT4X4 GetViewPolygonMatrix();
+	DirectX::XMFLOAT4X4 GetProjectionPolygonMatrix();
+
+	ID3D11ShaderResourceView* GetRenderTarget();
+
+	void RebuildQuad(Point p_topLeft, Point p_bottomRight);
 
 private:
 	VisibilityComputer() {};
@@ -88,7 +98,6 @@ private:
 	void CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context);
 
 	void UpdatePolygonMatrices(ID3D11DeviceContext* p_context);
-	void RebuildQuad(Point p_topLeft, Point p_bottomRight);
 
 	std::vector<Point> m_intersections;
 	std::vector<DirectX::XMFLOAT3> m_vertices;
@@ -116,8 +125,6 @@ private:
 		DirectX::XMMATRIX m_viewMatrix;
 		DirectX::XMMATRIX m_projectionMatrix;
 	};
-
-	bool m_render;
 
 	RenderTarget m_renderTarget;
 };

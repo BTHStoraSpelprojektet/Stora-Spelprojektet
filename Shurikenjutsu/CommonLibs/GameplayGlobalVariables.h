@@ -20,7 +20,7 @@ const float KUNAI_DAMAGE = 10.0f;
 const float KUNAI_COOLDOWN = 2.0f;
 const float KUNAI_DURATION = 2.0f;
 const int KUNAI_MAX_STACK = 4;
-const float KUNAI_ROTATION_SPEED = 10.0f;
+const float KUNAI_ROTATION_SPEED = 0.0f;
 const float KUNAI_SPEED = 50.0f;
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
@@ -74,6 +74,11 @@ const float DASH_SPEED = 8.0f;
 const float NAGINATASTAB_DAMAGE = 40.0f;
 const float NAGINATASTAB_RANGE = 8.0f;
 const float NAGINATASTAB_COOLDOWN = 8.0f;
+	// Bounding Box
+const float NAGINATASTAB_BOXEXTENTX = 0.75f;
+const float NAGINATASTAB_BOXEXTENTY = 3.0f;
+const float NAGINATASTAB_BOXEXTENTZ = 4.0f;
+
 
 ////////////////////////////////////////////////////////////////Tools
 //Smoke bomb
@@ -92,7 +97,7 @@ const float SMOKEBOMB_SIZE_Y = 3.0f;
 
 ////////////////////////////////////////////////////////////////Tools
 ////////////////////////////////////////////////////////////////Special Abilities
-
+//Spike Trap
 const float SPIKE_DAMAGE = 3.0f;
 const float SPIKE_COOLDOWN = 6.0f;
 const float SPIKE_RANGE = 30.0f;
@@ -100,6 +105,17 @@ const float SPIKE_DURATION = 20.0f;
 const float SPIKE_SPEED = 30.0f;
 const float SPIKE_SIZE_X = 3.0f;
 const float SPIKE_RADIUS = 1.5f;
+
+//Spike Trap
+const float STICKY_TRAP_DAMAGE = 0.0f;
+const float STICKY_TRAP_COOLDOWN = 0.5f;/////////////////////////////////////////////////////
+//const float STICKY_TRAP_COOLDOWN = 6.0f;
+const float STICKY_TRAP_RANGE = 30.0f;
+const float STICKY_TRAP_DURATION = 20.0f;
+const float STICKY_TRAP_SPEED = 30.0f;
+const float STICKY_TRAP_SIZE_X = 3.0f;
+const float STICKY_TRAP_RADIUS = 1.5f;
+const float STICKY_TRAP_SLOW_PRECENTAGE = 0.5f;
 
 ////////////////////////////////////////////////////////////////Special Abilities
 ////////////////////////////////////////////////////////////////Character Variables
@@ -116,8 +132,8 @@ const float CHARACTER_NAGINATA_SPEED = 11.0f;
 ////////////////////////////////////////////////////////////////Character Variables
 ////////////////////////////////////////////////////////////////World Particles
 
-const float PARTICLE_FIRE_SIZE_X = 0.2f;
-const float PARTICLE_FIRE_SIZE_Y = 0.2f;
+const float PARTICLE_FIRE_SIZE_X = 0.3f;
+const float PARTICLE_FIRE_SIZE_Y = 0.3f;
 
 const float PARTICLE_PINKLEAF_SIZE_X = 0.14f;
 const float PARTICLE_PINKLEAF_SIZE_Y = 0.14f;
@@ -125,7 +141,14 @@ const float PARTICLE_PINKLEAF_SIZE_Y = 0.14f;
 const float PARTICLE_GREENLEAF_SIZE_X = 0.15f;
 const float PARTICLE_GREENLEAF_SIZE_Y = 0.15f;
 
+const float PARTICLE_WORLDMIST_SIZE_X = 14.15f;
+const float PARTICLE_WORLDMIST_SIZE_Y = 14.15f;
+
 ////////////////////////////////////////////////////////////////World Particles
 
+
+/////////////////////////////////////////////////////////////// Bounding Boxes
+// Sphere for character
+const float CHARACTER_ENEMY_BOUNDINGSPHERE = 1.0f;
 
 #endif
