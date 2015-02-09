@@ -715,10 +715,10 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
 				break;
-				}
 			}
 		}
 	}
+}
 }
 
 void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
@@ -805,11 +805,11 @@ void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManag
 		{
 			if (IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
-				// Damage the player
-				p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
-			}
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
 		}
 	}
+}
 }
 
 //Private
