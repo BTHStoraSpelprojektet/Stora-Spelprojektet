@@ -58,6 +58,9 @@ private:
 	unsigned int m_maxParticles;
 	unsigned int m_currentParticles;
 
+	float m_globalWindAngleDegree = 315;
+	float getWindOffsetX(float timePassed, float timeToLive);
+	float getWindOffsetZ(float timePassed, float timeToLive);
 
 	struct Particle
 	{
