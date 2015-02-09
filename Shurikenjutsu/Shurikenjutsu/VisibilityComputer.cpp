@@ -407,7 +407,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	GraphicsEngine::TurnOnAlphaBlending();
 
 	// TODO, Render the reveresed poylgon texture here.
-	GraphicsEngine::RenderScene(m_quadMesh, 6, m_quadWorldMatrix, m_renderTarget.GetRenderTarget(), nullptr);
+	GraphicsEngine::RenderScene(m_quadMesh, 6, m_quadWorldMatrix, m_renderTarget.GetRenderTarget(), nullptr, nullptr);
 
 	//// DEBUG RENDER.
 	//unsigned int stride = sizeof(DirectX::XMFLOAT3);
@@ -618,4 +618,9 @@ DirectX::XMFLOAT4X4 VisibilityComputer::GetViewPolygonMatrix()
 DirectX::XMFLOAT4X4 VisibilityComputer::GetProjectionPolygonMatrix()
 {
 	return m_polygonProjectionMatrix;
+}
+
+ID3D11ShaderResourceView* VisibilityComputer::GetRenderTarget()
+{
+	return m_renderTarget.GetRenderTarget();
 }

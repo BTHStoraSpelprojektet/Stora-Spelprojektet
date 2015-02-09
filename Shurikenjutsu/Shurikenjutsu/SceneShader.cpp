@@ -665,7 +665,7 @@ void SceneShader::Shutdown()
 	m_colorBuffer->Release();
 }
 
-void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
+void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, ID3D11ShaderResourceView* p_possibleShadowMap)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(Vertex);
@@ -673,9 +673,22 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
-	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetShaderResources(1, 1, &p_normalMap);
-	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
+	// The visibility polygon will send an optional shadowmap here.
+	if (p_possibleShadowMap)
+	{
+		p_context->PSSetShaderResources(0, 1, &p_texture);
+		p_context->PSSetShaderResources(1, 1, &p_normalMap);
+		p_context->PSSetShaderResources(2, 1, &p_possibleShadowMap);
+	}
+
+	// Else, use the regular one.
+	else
+	{
+		p_context->PSSetShaderResources(0, 1, &p_texture);
+		p_context->PSSetShaderResources(1, 1, &p_normalMap);
+		p_context->PSSetShaderResources(2, 1, &m_shadowMap);
+	}
+
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 

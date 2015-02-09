@@ -46,7 +46,7 @@ void Object::Shutdown(){}
 
 void Object::Render()
 {
-	GraphicsEngine::RenderScene(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+	GraphicsEngine::RenderScene(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), nullptr);
 }
 
 void Object::RenderDepth()
