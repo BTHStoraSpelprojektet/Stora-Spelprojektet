@@ -53,7 +53,6 @@ float4 main(Input p_input) : SV_Target
 	Material material;
 	material.m_ambient = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	
 
 	float4 A = m_directionalLight.m_ambient;
 	float4 D = 0.0f;
@@ -89,14 +88,14 @@ float4 main(Input p_input) : SV_Target
 		// Sample the shadow map using PCF.
 		float depth[9];
 		depth[0] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates).r;
-		depth[1] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(0.0f, 1.0f / 1080.0f)).r;
-		depth[2] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 1920.0f, 1.0f / 1080.0f)).r;
-		depth[3] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 1920.0f, 0.0f)).r;
-		depth[4] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 1920.0f, -1.0f / 1080.0f)).r;
-		depth[5] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(0.0f, -1.0f / 1080.0f)).r;
-		depth[6] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 1920.0f, -1.0f / 1080.0f)).r;
-		depth[7] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 1920.0f, 0.0f)).r;
-		depth[8] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 1920.0f, 1.0f / 1080.0f)).r;
+		depth[1] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(0.0f, 1.0f / 1152.0f)).r;
+		depth[2] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 2048.0f, 1.0f / 1152.0f)).r;
+		depth[3] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 2048.0f, 0.0f)).r;
+		depth[4] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 2048.0f, -1.0f / 1152.0f)).r;
+		depth[5] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(0.0f, -1.0f / 1152.0f)).r;
+		depth[6] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 2048.0f, -1.0f / 1152.0f)).r;
+		depth[7] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 2048.0f, 0.0f)).r;
+		depth[8] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 2048.0f, 1.0f / 1152.0f)).r;
 
 		// Calculate the depth of the light.
 		float lightDepth = p_input.m_lightPositionHomogenous.z - 0.0001f;

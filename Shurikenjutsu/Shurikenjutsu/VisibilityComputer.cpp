@@ -141,7 +141,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 	}
 
 	m_renderTarget.Initialize(GraphicsEngine::GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-	RebuildQuad(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
+	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
 	return true;
 }
@@ -181,9 +181,6 @@ void VisibilityComputer::Shutdown()
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
-	// Move the quad after the player.
-	DirectX::XMStoreFloat4x4(&m_quadWorldMatrix, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(p_viewerPosition.x, 0.0f, p_viewerPosition.y))));
-
 	m_intersections.clear();
 
 	std::vector<PolygonPoint> totalIntersections;
@@ -407,24 +404,9 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	GraphicsEngine::TurnOnAlphaBlending();
 
 	// TODO, Render the reveresed poylgon texture here.
-	GraphicsEngine::RenderScene(m_quadMesh, 6, m_quadWorldMatrix, m_renderTarget.GetRenderTarget(), nullptr);
+	GraphicsEngine::RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget());
 
-	//// DEBUG RENDER.
-	//unsigned int stride = sizeof(DirectX::XMFLOAT3);
-	//const unsigned int offset = 0;
-
-	//UpdatePolygonMatrices(p_context);
-
-	//p_context->VSSetShader(m_vertexShader, NULL, 0);
-	//p_context->PSSetShader(m_pixelShader, NULL, 0);
-
-	//p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
-	//p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//p_context->IASetInputLayout(m_layout);
-
-	//p_context->Draw(m_vertices.size(), 0);
-
-	//GraphicsEngine::TurnOffAlphaBlending();
+	GraphicsEngine::TurnOffAlphaBlending();
 }
 
 void VisibilityComputer::UpdatePolygonMatrices(ID3D11DeviceContext* p_context)
@@ -618,4 +600,9 @@ DirectX::XMFLOAT4X4 VisibilityComputer::GetViewPolygonMatrix()
 DirectX::XMFLOAT4X4 VisibilityComputer::GetProjectionPolygonMatrix()
 {
 	return m_polygonProjectionMatrix;
+}
+
+ID3D11ShaderResourceView* VisibilityComputer::GetRenderTarget()
+{
+	return m_renderTarget.GetRenderTarget();
 }
