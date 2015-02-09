@@ -405,6 +405,7 @@ void PlayingStateTest::OutliningRays()
 		m_renderOutlining = false;
 	}
 	
+	delete rayTest;
 	//m_renderOutlining = true;
 }
 

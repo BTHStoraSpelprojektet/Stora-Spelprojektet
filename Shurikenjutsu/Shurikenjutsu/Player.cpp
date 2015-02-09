@@ -832,7 +832,10 @@ void Player::RenderDepth()
 
 void Player::RenderOutlining()
 {
-	AnimatedObject::RenderOutlining();
+	if (m_isAlive)
+	{
+		AnimatedObject::RenderOutlining();
+	}
 }
 
 void Player::RenderAbilityBar()
