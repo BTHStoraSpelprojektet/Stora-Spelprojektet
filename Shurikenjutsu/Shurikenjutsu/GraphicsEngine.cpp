@@ -23,9 +23,13 @@ HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
 IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
 IFW1TextGeometry* GraphicsEngine::m_textGeometry;
+InstanceManager* GraphicsEngine::m_instanceManager;
+bool GraphicsEngine::m_screenChanged;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
+	m_screenChanged = false;
+
 	bool result = true;
 	m_windowHandle = p_handle;
 
@@ -77,7 +81,6 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	// Initialize the visibility computer.
 	ShadowShapes::GetInstance().Initialize();
 	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
-	VisibilityComputer::GetInstance().SetReversedRenderMode(false);
 	ConsoleSkipLines(1);
 
 	// Initialize shadow map.
@@ -91,15 +94,6 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 
 		ConsoleSkipLines(1);
 	}
-
-	/*
-	// Initialize OutliningShader
-	if (m_outliningShader.Initialize())
-	{
-		ConsolePrintSuccess("Outlining shader initialized successfully.");
-		ConsoleSkipLines(1);
-	}
-	*/
 
 	// Create the font wrapper.
 	IFW1Factory* FW1Factory;
@@ -122,7 +116,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	{
 		FW1Factory->Release();
 	}
-
+	m_instanceManager = new InstanceManager();
 	return result;
 }
 
@@ -145,6 +139,8 @@ void GraphicsEngine::Shutdown()
 	{
 		m_textGeometry->Release();
 	}
+	m_instanceManager->Shutdown();
+	delete m_instanceManager;
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
@@ -178,9 +174,14 @@ void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 	m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
 }
 
+void GraphicsEngine::RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap)
+{
+	m_sceneShader.RenderReversedShadows(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_visibilityMap);
+}
+
 void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
-	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex);
+	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
 }
 
 void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
@@ -200,7 +201,7 @@ void GraphicsEngine::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 
 void GraphicsEngine::RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 {
-	m_depthShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex);
+	m_depthShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex, m_instanceManager);
 }
 
 void GraphicsEngine::RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
@@ -236,7 +237,6 @@ void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, Dire
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	VisibilityComputer::GetInstance().SetMatrices(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
@@ -349,13 +349,12 @@ void GraphicsEngine::TurnOffAlphaBlending()
 }
 
 void GraphicsEngine::AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
-{	
-	m_sceneShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
-	m_depthShader.AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
+{
+	m_instanceManager->AddInstanceBuffer(m_directX.GetDevice(), p_numberOfInstances, p_matrices);
 }
 int GraphicsEngine::GetNumberOfInstanceBuffer()
 {
-	return m_sceneShader.GetNumberOfInstanceBuffer();
+	return m_instanceManager->GetNumberOfInstanceBuffer();
 }
 bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 {    
@@ -367,11 +366,11 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 			return false;
 		}        
 
+		m_screenChanged = true;
+
 		GLOBAL::GetInstance().FULLSCREEN = true;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-
-		VisibilityComputer::GetInstance().UpdateTextureSize(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	}    
 	
 	else    
@@ -381,12 +380,12 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 			ConsolePrintErrorAndQuit("Setting windowed mode failed.");
 			return false;
 		}    
+
+		m_screenChanged = true;
 		
 		GLOBAL::GetInstance().FULLSCREEN = false;
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
-
-		VisibilityComputer::GetInstance().UpdateTextureSize(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	}    
 
 	return true;
@@ -458,7 +457,7 @@ void GraphicsEngine::ClearOutlining()
 
 void GraphicsEngine::UpdateInstanceBuffers(std::vector<Object*> p_ObjectList)
 {
-	m_sceneShader.UpdateDynamicInstanceBuffer(GetContext(), p_ObjectList);
+	m_instanceManager->UpdateDynamicInstanceBuffer(GetContext(), p_ObjectList);
 }
 
 IFW1FontWrapper* GraphicsEngine::GetFontWrapper()
@@ -476,4 +475,14 @@ void GraphicsEngine::RenderTextGeometry(UINT p_flags)
 	m_fontWrapper->Flush(m_directX.GetContext());
 	m_fontWrapper->DrawGeometry(m_directX.GetContext(), m_textGeometry, NULL, NULL, p_flags);
 	m_textGeometry->Clear();
+}
+
+bool GraphicsEngine::HasScreenChanged()
+{
+	return m_screenChanged;
+}
+
+void GraphicsEngine::ScreenChangeHandled()
+{
+	m_screenChanged = false;
 }

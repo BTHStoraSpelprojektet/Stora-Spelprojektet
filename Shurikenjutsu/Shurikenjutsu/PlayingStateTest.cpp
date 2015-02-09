@@ -12,7 +12,8 @@
 #include "Minimap.h"
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
-
+#include "TeamStatusBar.h"
+#include "ParticleEmitter.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -41,6 +42,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Load the level.
 	Level level(p_levelName);
 
+	
+
+
+	//Shadow Shapes
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)
 	{
@@ -68,8 +73,8 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// ========== DEBUG LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-
+		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.5f, m_playerManager->GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+		m_debugRect.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z + 10), 0.2f, 20.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
 		m_mouseX = 0;
 		m_mouseY = 0;
 		
@@ -88,6 +93,13 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
+	// Initialize team status bar
+	m_teamStatusBar = new TeamStatusBar();
+	if (!m_teamStatusBar->Initialize())
+	{
+		return false;
+	}
+	
 	// Initialize directional light
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
@@ -97,6 +109,8 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	GraphicsEngine::InitializeOutling();
 
 	m_renderOutlining = false;
+
+	OnScreenResize();
 
 	return true;
 }
@@ -125,6 +139,7 @@ void PlayingStateTest::Shutdown()
 	if (FLAG_DEBUG == 1)
 	{
 		m_debugDot.Shutdown();	
+		m_debugRect.Shutdown();
 	}
 	// ========== DEBUG TEMP LINES ==========
 
@@ -133,6 +148,12 @@ void PlayingStateTest::Shutdown()
 		m_minimap->Shutdown();
 		delete m_minimap;
 	}
+
+	if (m_teamStatusBar != NULL)
+	{
+		m_teamStatusBar->Shutdown();
+		delete m_teamStatusBar;
+}
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -154,7 +175,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	BasicPicking();
 
-	m_playerManager->Update();
+	m_playerManager->Update(m_objectManager->GetStickyTrapList());
 
 	// Handle camera input.
 	m_camera->HandleInput();
@@ -200,27 +221,45 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
 	}
 
+	// Update Team status bar
+	m_teamStatusBar->Update();
+
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	
 	OutliningRays();
 
-	// Update the visibility polygon.
-	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
-	DirectX::XMFLOAT3 pickedTopRight = Pick(Point((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0.0f));
-	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT));
+	// Check if the screen changed.
+	bool resized = false;
+	if (GraphicsEngine::HasScreenChanged())
+	{
+		OnScreenResize();
+		resized = true;
+	} 
 
-	Point topLeft = Point(pickedTopLeft.x, pickedTopLeft.z);
-	Point bottomLeft = Point(pickedTopRight.x, pickedBottomRight.z - 0.5f);
+	// Calculate new visibility polygon boundries.
+	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
+	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
+	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 0.5f);
 
-	// Keep it in the maps boundries.
+	// Keep the the visibility polygon boundries within the maps boundries.
 	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
 	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
 	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
 	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
+	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 	
+	// Set have updated network stuff last in the update
+	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
+	
+	if (resized)
+	{
+		// Reupdate the polygon.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
+	}
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -247,6 +286,7 @@ void PlayingStateTest::Render()
 	{
 		// Draw a dot at the mouse position.
 		m_debugDot.Render();
+		m_debugRect.Render();
 
 		// Draw a line from the player to the dot.
 		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
@@ -256,6 +296,7 @@ void PlayingStateTest::Render()
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();
+	m_teamStatusBar->Render();
 
 	// OUTLINING
 	if (m_renderOutlining)
@@ -364,6 +405,7 @@ void PlayingStateTest::OutliningRays()
 		m_renderOutlining = false;
 	}
 	
+	delete rayTest;
 	//m_renderOutlining = true;
 }
 
@@ -391,4 +433,31 @@ void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 ObjectManager* PlayingStateTest::GetObjectManager()
 {
 	return m_objectManager;
+}
+
+void PlayingStateTest::OnScreenResize()
+{
+	float width = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
+	float height = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
+
+	// Update texture size.
+	VisibilityComputer::GetInstance().UpdateTextureSize((int)width, (int)height);
+
+	// Get the new edges.
+	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
+	DirectX::XMFLOAT3 pickedTopRight = Pick(Point(width, 0.0f));
+	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point(width, height));
+	DirectX::XMFLOAT3 pickedPlayer = Pick(Point(width * 0.5f, height * 0.5f));
+
+	m_quadWidth = pickedPlayer.x - pickedTopLeft.x;
+	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
+	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
+
+	// Update projection matrix.
+	DirectX::XMFLOAT4X4 projection;
+	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 100.0f));
+	VisibilityComputer::GetInstance().SetProjectionPolygonMatrix(projection);
+
+	// Tell the graphics engine that changes have been handled.
+	GraphicsEngine::ScreenChangeHandled();
 }

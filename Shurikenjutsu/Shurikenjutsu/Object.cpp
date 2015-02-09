@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "AnimationControl.h"
 #include "ShadowShapes.h"
+#include "Globals.h"
 
 Object::Object(){}
 Object::~Object(){}
@@ -11,7 +12,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 {
 	SetPosition(p_pos);
 	SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	SetRotation(DirectX::XMFLOAT3(0.0f,0.0f, 0.0f));
+	SetRotation(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
 	
@@ -26,10 +27,12 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_rotation, DirectX::XMFLOAT3 p_scale)
 {
 	SetPosition(p_pos);
-	SetScale(p_scale);
-	SetRotation(p_rotation);
+	SetScale(p_scale);	
 
 	m_model = (Model*)ModelLibrary::GetInstance()->GetModel(p_filepath);
+
+	findVegetation(p_filepath);
+	SetRotation(p_rotation);
 
 	TransformBoundingBoxes();
 	TransformBoundingSpheres();
@@ -91,11 +94,20 @@ void Object::SetRotation(DirectX::XMFLOAT3 p_rotation)
 	m_rotation = p_rotation;
 }
 
+void Object::UpdateRotation()
+{
+	if (m_isVegetation)
+	{
+		m_rotationTimer += GLOBAL::GetInstance().GetDeltaTime();
+		m_rotation.y += (float)(sin(m_rotationTimer) * 0.0001);
+	}
+}
+
 DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 {
 	DirectX::XMFLOAT4X4 matrix;
 	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&m_scale)) * 
-		DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) * 
+		DirectX::XMMatrixRotationRollPitchYawFromVector(DirectX::XMLoadFloat3(&m_rotation)) *
 		DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&m_position)));
 	
 	return matrix;
@@ -103,7 +115,6 @@ DirectX::XMFLOAT4X4 Object::GetWorldMatrix()
 
 DirectX::XMFLOAT4X4 Object::GetWorldMatrixScaled(float p_scale)
 {
-
 	DirectX::XMFLOAT4X4 matrix;
 	DirectX::XMStoreFloat4x4(&matrix, DirectX::XMMatrixTranslation(0.0f,-0.1f, 0.0f) *
 		DirectX::XMMatrixScalingFromVector(DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(p_scale, p_scale, p_scale))) *
@@ -195,4 +206,22 @@ int Object::GetInstanceIndex() const
 void Object::SetInstanceIndex(int p_instanceIndex)
 {
 	m_InstanceIndex = p_instanceIndex;
+}
+
+void Object::findVegetation(const char* p_filePath)
+{
+	const unsigned int size = 3;
+	std::string type[size] = { "Bush", "Tree", "tree" };
+	std::string path = p_filePath;
+
+	m_rotationTimer = 0.0;
+	m_isVegetation = false;
+	for (unsigned int i = 0; i < size; i++)
+	{
+		std::size_t found = path.find(type[i]);
+		if (found != std::string::npos)
+		{			
+			m_isVegetation = true;
+		}
+	}
 }

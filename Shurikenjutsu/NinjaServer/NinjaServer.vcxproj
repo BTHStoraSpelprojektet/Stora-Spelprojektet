@@ -97,6 +97,7 @@
     <ClCompile Include="ShurikenManager.cpp" />
     <ClCompile Include="SmokeBombManager.cpp" />
     <ClCompile Include="SpikeManager.cpp" />
+    <ClCompile Include="StickyTrapManager.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="VolleyManager.cpp" />
   </ItemGroup>
@@ -116,6 +117,7 @@
     <ClInclude Include="ShurikenManager.h" />
     <ClInclude Include="SmokeBombManager.h" />
     <ClInclude Include="SpikeManager.h" />
+    <ClInclude Include="StickyTrapManager.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="VolleyManager.h" />
   </ItemGroup>

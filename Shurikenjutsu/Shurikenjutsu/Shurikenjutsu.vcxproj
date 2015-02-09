@@ -96,6 +96,7 @@
     <ClCompile Include="FanBoomerangAbility.cpp" />
     <ClCompile Include="GUIElementColor.cpp" />
     <ClCompile Include="GUIText.cpp" />
+    <ClCompile Include="InstanceManager.cpp" />
     <ClCompile Include="KatanaNinja.cpp" />
     <ClCompile Include="KunaiAbility.cpp" />
     <ClCompile Include="MenuCheckbox.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="MovingObject.cpp" />
     <ClCompile Include="NaginataNinja.cpp" />
     <ClCompile Include="NaginataSlash.cpp" />
+    <ClCompile Include="NaginataStab.cpp" />
     <ClCompile Include="Network.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
@@ -160,7 +162,10 @@
     <ClCompile Include="SpikeAbility.cpp" />
     <ClCompile Include="Spikes.cpp" />
     <ClCompile Include="StatusEffect.cpp" />
+    <ClCompile Include="StickyTrap.cpp" />
+    <ClCompile Include="StickyTrapAbility.cpp" />
     <ClCompile Include="System.cpp" />
+    <ClCompile Include="TeamStatusBar.cpp" />
     <ClCompile Include="TessenNinja.cpp" />
     <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -185,6 +190,7 @@
     <ClInclude Include="FanBoomerangAbility.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
+    <ClInclude Include="InstanceManager.h" />
     <ClInclude Include="KatanaNinja.h" />
     <ClInclude Include="KunaiAbility.h" />
     <ClInclude Include="MenuCheckbox.h" />
@@ -225,6 +231,7 @@
     <ClInclude Include="MovingObject.h" />
     <ClInclude Include="NaginataNinja.h" />
     <ClInclude Include="NaginataSlash.h" />
+    <ClInclude Include="NaginataStab.h" />
     <ClInclude Include="Network.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />
@@ -252,8 +259,11 @@
     <ClInclude Include="SpikeAbility.h" />
     <ClInclude Include="Spikes.h" />
     <ClInclude Include="StatusEffect.h" />
+    <ClInclude Include="StickyTrap.h" />
+    <ClInclude Include="StickyTrapAbility.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="TeamStatusBar.h" />
     <ClInclude Include="TessenNinja.h" />
     <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="Timer.h" />
@@ -375,6 +385,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\ShadowShapes\SSPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>

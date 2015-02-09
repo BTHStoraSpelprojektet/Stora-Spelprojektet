@@ -1,10 +1,14 @@
 Map size: 100 100
-Number of objects: 345
+Number of objects: 365
 Number of bounding boxes: 4
 LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_12 58.349 0 0 0 0 0 60 8.5 15
 LevelBoundingBox_13 -58.2989 0 0 0 0 0 60 8.5 15
 LevelBoundingBox_14 0 0 -65.137 0 0 0 15 8.5 60
+Brazier_1 -2 0 17 0 0 0
+Brazier_2 2 0 17 0 0 0
+Brazier_3 2 0 -17 0 0 0
+Brazier_4 -2 0 -17 0 0 0
 Deco_smallBush_01_ 8 0 8 0 0 0
 Deco_smallBush_01_1 -8 0 8 0 3.31613 0
 Deco_smallBush_01_2 -8 0 -8 0 4.66003 0
@@ -21,6 +25,21 @@ Hedge_01__6 34.4865 0 24.5769 0 1.5708 0
 Hedge_01__7 -32.247 0 -21.692 0 0 0
 Hedge_01__8 -30.175 0 -24.533 0 1.5708 0
 Hedge_01__9 -34.486 0 -24.577 0 1.5708 0
+BigBird_Animated_01 0 6.2 0 0 0.734 0
+ParticleEmitter_Fire_1 -2 1.79524 17 0 0 0
+ParticleEmitter_Fire_2 2 1.79524 17 0 0 0
+ParticleEmitter_Fire_3 2 1.79524 -17 0 0 0
+ParticleEmitter_Fire_4 -2 1.79524 -17 0 0 0
+ParticleEmitter_LeafSakura_1 -13.1396 5.24337 -28.081 0 1.5708 0
+ParticleEmitter_LeafSakura_2 13.3515 5.88991 28.9578 0 1.5708 0
+ParticleEmitter_LeafTree_1 -20.6992 8.14514 21.7818 0 0 0
+ParticleEmitter_LeafTree_2 -36.1093 8.14514 27.9963 0 0 0
+ParticleEmitter_LeafTree_3 -24.6619 8.14514 37.6596 0 0 0
+ParticleEmitter_LeafTree_4 34.3006 8.14514 24.9255 0 0 0
+ParticleEmitter_LeafTree_5 35.7264 8.14514 -26.9097 0 0 0
+ParticleEmitter_LeafTree_6 26.1205 8.14514 -36.2251 0 0 0
+ParticleEmitter_LeafTree_7 20.8051 8.14514 -20.7672 0 0 0
+ParticleEmitter_LeafTree_8 -34.4048 8.14514 -25.3612 0 0 0
 ShadowShapes_10_A 12.0833 1.28743 12.6872 0 0 0
 ShadowShapes_10_B 12.0833 1.28743 1.18847 0 0 0
 ShadowShapes_11_A -13.0712 1.28743 -18.827 0 0 0
@@ -268,6 +287,7 @@ pillar_1 0 0 0 0 0 0
 sakuraTree_ 13.5 0 28 0 0.349066 0
 sakuraTree_1 -13.5 0 -28 0 5.93412 0
 spawnPoint_1_team_1 -35 0 35 0 0 0
+spawnPoint_1_team_2 27.8913 4.02777e-008 -40.2458 0 0 0
 tile_torg_ 0 0.01 0 0 0 0
 tree_02__ 21.7 0 -19.5 0 4.18879 0
 tree_02__1 -21.7 0 19.5 0 1.0472 0

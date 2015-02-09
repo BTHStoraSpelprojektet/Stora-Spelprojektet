@@ -36,6 +36,8 @@ public:
 	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 	void WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
+	void NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
+	float GetAngle(float p_x, float p_y);
 	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
 
 private:
@@ -43,6 +45,9 @@ private:
 	bool BoxBoxTest(Box p_box1, Box p_box2);
 	bool SphereSphereTest(Sphere p_spikeTrap, Sphere p_player);
 	bool OBBSphereTest(OBB p_OBB, Sphere p_sphere);
+	bool IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos);
+	bool RayOBBTest(Ray *p_ray, OBB p_Obb);
+	bool RaySphereTest(Ray *p_ray, Sphere p_sphere);
 
 	static CollisionManager* m_instance;
 	void SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList);

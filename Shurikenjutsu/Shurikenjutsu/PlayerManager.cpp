@@ -35,10 +35,10 @@ void PlayerManager::Shutdown()
 	delete[] m_enemyList;
 }
 
-void PlayerManager::Update()
+void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	m_player->UpdateMe();
+	m_player->UpdateMe(p_stickyTrapList);
 
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -48,7 +48,6 @@ void PlayerManager::Update()
 		if (Network::GetInstance()->RoundRestarted())
 		{
 			ResetCooldowns();
-			Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 		}
 
 		// Check if the player need to respawn

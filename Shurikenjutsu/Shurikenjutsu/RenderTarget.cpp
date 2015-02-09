@@ -12,7 +12,7 @@ bool RenderTarget::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	textureDescription.Height = p_height;
 	textureDescription.MipLevels = 1;
 	textureDescription.ArraySize = 1;
-	textureDescription.Format = DXGI_FORMAT_R32_FLOAT;
+	textureDescription.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	textureDescription.SampleDesc.Count = 1;
 	textureDescription.Usage = D3D11_USAGE_DEFAULT;
 	textureDescription.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
@@ -33,7 +33,7 @@ bool RenderTarget::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	targetViewDescription.Texture2D.MipSlice = 0;
 
 	// Create the shadow map target view, if this fails an error message is displayed.
-	if (FAILED(p_device->CreateRenderTargetView(m_renderTarget, &targetViewDescription, &m_renderTargetView)))
+ 	if (FAILED(p_device->CreateRenderTargetView(m_renderTarget, &targetViewDescription, &m_renderTargetView)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create render target.");
 		return false;

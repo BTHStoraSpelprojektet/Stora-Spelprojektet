@@ -5,7 +5,8 @@
 #include <Windows.h>
 #include <D3Dcompiler.h>
 #include "Object.h"
-
+#include "InstanceManager.h"
+#include "VisibilityComputer.h"
 
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
@@ -399,6 +400,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	// Set variables to initial values.
 	ID3D10Blob*	pixelShader = 0;
+	ID3D10Blob*	reversePixelShader = 0;
 	ID3D10Blob*	linePixelShader = 0;
 	ID3D10Blob* pixelShaderOutlining = 0;
 	errorMessage = 0;
@@ -429,6 +431,36 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		ConsolePrintErrorAndQuit("Failed to create scene pixel shader");
 		return false;
 	}
+
+	// Compile the reversed shadow pixel shader.
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReveresePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReveresePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile reversed shadow pixel shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_PSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_PSVersion = "5.0";
+	}
+
+	// Create the pixel shader.
+	if (FAILED(p_device->CreatePixelShader(reversePixelShader->GetBufferPointer(), reversePixelShader->GetBufferSize(), NULL, &m_reversedShadowPixelShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create reversed shadow pixel shader");
+		return false;
+	}
+
+	ConsolePrintSuccess("Reversed shadow pixel shader compiled successfully.");
+	ConsolePrintText("Shader version: PS " + m_PSVersion);
 
 	// Compile the line pixel shader.
 	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
@@ -469,6 +501,8 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	pixelShader->Release();
 	pixelShader = 0;
+	reversePixelShader->Release();
+	reversePixelShader = 0;
 	linePixelShader->Release();
 	linePixelShader = 0;
 	pixelShaderOutlining->Release();
@@ -644,6 +678,7 @@ void SceneShader::Shutdown()
 	m_instanceShader->Release();
 	m_animatedVertexShader->Release();
 	m_pixelShader->Release();
+	m_reversedShadowPixelShader->Release();
 	m_lineVertexShader->Release();
 	m_linePixelShader->Release();
 	m_layout->Release();
@@ -662,11 +697,6 @@ void SceneShader::Shutdown()
 	m_animationMatrixBuffer->Release();
 	m_frameBuffer->Release();
 	m_colorBuffer->Release();
-
-	for (unsigned int i = 0; i < m_instanceBufferList.size(); i++)
-	{
-		m_instanceBufferList[i]->Release();
-	}
 }
 
 void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
@@ -680,6 +710,7 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->PSSetShaderResources(0, 1, &p_texture);
 	p_context->PSSetShaderResources(1, 1, &p_normalMap);
 	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
+
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 
@@ -690,6 +721,26 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
 	
+	p_context->Draw(p_numberOfVertices, 0);
+}
+
+void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap)
+{
+	// Set parameters and then render.
+	unsigned int stride = sizeof(Vertex);
+	const unsigned int offset = 0;
+
+	p_context->VSSetShader(m_vertexShader, NULL, 0);
+	p_context->PSSetShader(m_reversedShadowPixelShader, NULL, 0);
+
+	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetInputLayout(m_layout);
+
+	UpdateReversedShadowMatrices(p_context);
+	p_context->PSSetShaderResources(0, 1, &p_visibilityMap);
+	p_context->PSSetSamplers(0, 1, &m_samplerShadowMapState);
+
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
@@ -725,12 +776,6 @@ void SceneShader::RenderAnimatedOutlining(ID3D11DeviceContext* p_context, ID3D11
 
 	UpdateWorldMatrixOutlining(p_context, p_worldMatrix);
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
-
-	//p_context->PSSetShaderResources(0, 1, &p_texture);
-	//p_context->PSSetShaderResources(1, 1, &p_normalMap);
-	//p_context->PSSetShaderResources(2, 1, &m_shadowMap);
-	//p_context->PSSetSamplers(0, 1, &m_samplerState);
-	//p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -786,6 +831,50 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 
 	DirectX::XMFLOAT4X4 lightViewMatrix = m_lightViewMatrix;
 	DirectX::XMFLOAT4X4 lightProjectionMatrix = m_lightProjectionMatrix;
+
+	// Transpose the matrices.
+	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
+	DirectX::XMStoreFloat4x4(&viewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&viewMatrix)));
+	DirectX::XMStoreFloat4x4(&projectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&projectionMatrix)));
+
+	DirectX::XMStoreFloat4x4(&lightViewMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightViewMatrix)));
+	DirectX::XMStoreFloat4x4(&lightProjectionMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&lightProjectionMatrix)));
+
+	// Lock matrix buffer so that it can be written to.
+	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
+	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to map scene matrix buffer.");
+	}
+
+	// Get pointer to the matrix buffer data.
+	MatrixBuffer* matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
+
+	// Set matrices in buffer.
+	matrixBuffer->m_worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix);
+	matrixBuffer->m_viewMatrix = DirectX::XMLoadFloat4x4(&viewMatrix);
+	matrixBuffer->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projectionMatrix);
+
+	matrixBuffer->m_lightViewMatrix = DirectX::XMLoadFloat4x4(&lightViewMatrix);
+	matrixBuffer->m_lightProjectionMatrix = DirectX::XMLoadFloat4x4(&lightProjectionMatrix);
+
+	// Unlock the matrix buffer after it has been written to.
+	p_context->Unmap(m_matrixBuffer, 0);
+
+	// Set the matrix buffer.
+	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
+}
+
+void SceneShader::UpdateReversedShadowMatrices(ID3D11DeviceContext* p_context)
+{
+	DirectX::XMFLOAT4X4 identity;
+	DirectX::XMStoreFloat4x4(&identity, DirectX::XMMatrixIdentity());
+	DirectX::XMFLOAT4X4 worldMatrix = identity;
+	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
+	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
+
+	DirectX::XMFLOAT4X4 lightViewMatrix = VisibilityComputer::GetInstance().GetViewPolygonMatrix();
+	DirectX::XMFLOAT4X4 lightProjectionMatrix = VisibilityComputer::GetInstance().GetProjectionPolygonMatrix();
 
 	// Transpose the matrices.
 	DirectX::XMStoreFloat4x4(&worldMatrix, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&worldMatrix)));
@@ -1006,7 +1095,7 @@ void SceneShader::SetShadowMapDimensions(ID3D11Device* p_device, ID3D11DeviceCon
 	buffer = 0;
 }
 ///Instancing
-void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
+void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex, InstanceManager* p_instanceManager)
 {
 	// Set parameters and then render.
 	unsigned int stride[2];
@@ -1020,7 +1109,7 @@ void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	offset[1] = 0;
 
 	bufferPointers[0] = p_mesh;
-	bufferPointers[1] = m_instanceBufferList[p_instanceIndex];
+	bufferPointers[1] =	p_instanceManager->GetInstanceBuffer(p_instanceIndex);
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
@@ -1037,77 +1126,5 @@ void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	p_context->VSSetShader(m_instanceShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
-	p_context->DrawInstanced(p_numberOfVertices, m_numberOfInstanceList[p_instanceIndex], 0, 0);
-}
-void SceneShader::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)
-{
-	if (p_numberOfInstances > 0)
-	{
-		m_numberOfInstanceList.push_back(p_numberOfInstances);
-		InitializeInstanceBuffer(p_device, p_numberOfInstances, p_position);
-	}
-}
-int SceneShader::GetNumberOfInstanceBuffer()
-{
-	return m_instanceBufferList.size();
-}
-void SceneShader::InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices)
-{
-	ID3D11Buffer* instanceBuffer;
-	// Create the instance buffer description.
-	//Calculate position of all instanced objects
-	std::vector<InstancePos> m_instances;
-	m_instances.clear();
-	for (int i = 0; i < p_numberOfInstances; i++)
-	{
-		InstancePos temp;
-		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
-		m_instances.push_back(temp);
-	}
-	D3D11_BUFFER_DESC instanceBufferDesc;
-	instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
-	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	instanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	instanceBufferDesc.MiscFlags = 0;
-	instanceBufferDesc.StructureByteStride = 0;
-
-	D3D11_SUBRESOURCE_DATA instanceData;
-	instanceData.pSysMem = &m_instances[0];
-	instanceData.SysMemPitch = 0;
-	instanceData.SysMemSlicePitch = 0;
-
-	// Create the Instance buffer.
-	if (FAILED(p_device->CreateBuffer(&instanceBufferDesc, &instanceData, &instanceBuffer)))
-	{
-		ConsolePrintErrorAndQuit("Failed to create instance buffer.");
-	}
-	m_instanceBufferList.push_back(instanceBuffer);
-}
-void SceneShader::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<Object*> p_ObjectList)
-{
-	//TODO: Re mappar bufferns information med den inkommande vector med objekt med objektets instance index.
-	//TODO 2: Skapa en vektor med objekt, utav varje typ av objekt, som skickas in i denna funktionen.
-	//https://msdn.microsoft.com/en-us/library/windows/desktop/dn508285(v=vs.85).aspx
-	
-	//if (p_ObjectList.size() != m_numberOfInstanceList[p_ObjectList[0]->GetInstanceIndex()])
-	//{
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		p_context->Map(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-		
-		std::vector<InstancePos> instances;
-		for (unsigned int i = 0; i < p_ObjectList.size(); i++)
-		{
-			InstancePos temp;
-			DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_ObjectList[i]->GetWorldMatrix())));
-			instances.push_back(temp);
-
-		}
-
-		memcpy(mappedResource.pData, &instances[0], sizeof(InstancePos) *instances.size());
-
-		p_context->Unmap(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0);
-
-		m_numberOfInstanceList[p_ObjectList[0]->GetInstanceIndex()] = p_ObjectList.size();
-	//}
+	p_context->DrawInstanced(p_numberOfVertices, p_instanceManager->GetNumberOfInstances(p_instanceIndex), 0, 0);
 }

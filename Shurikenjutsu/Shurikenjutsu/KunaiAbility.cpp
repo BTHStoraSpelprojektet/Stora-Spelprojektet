@@ -9,7 +9,7 @@ KunaiAbility::~KunaiAbility(){}
 
 bool KunaiAbility::Initialize()
 {
-	SetDamage(SHURIKEN_DAMAGE);
+	SetDamage(KUNAI_DAMAGE);
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);
