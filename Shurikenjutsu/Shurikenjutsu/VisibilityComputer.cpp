@@ -141,7 +141,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 	}
 
 	m_renderTarget.Initialize(GraphicsEngine::GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-	RebuildQuad(Point(-50.0f, 50.0f), Point(50.0f, -50.0f));
+	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
 	return true;
 }
