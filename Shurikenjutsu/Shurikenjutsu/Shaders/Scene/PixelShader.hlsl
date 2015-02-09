@@ -53,7 +53,6 @@ float4 main(Input p_input) : SV_Target
 	Material material;
 	material.m_ambient = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	
 
 	float4 A = m_directionalLight.m_ambient;
 	float4 D = 0.0f;

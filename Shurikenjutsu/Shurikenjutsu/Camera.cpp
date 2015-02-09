@@ -22,7 +22,6 @@ bool Camera::Initialize()
 	m_look = DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f);
 	m_right = DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f);
 
-
 	DirectX::XMStoreFloat4x4(&m_viewMatrix,DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixIdentity());
 
@@ -352,7 +351,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 
 	// Visibility view projection..
 	playerPosition = p_playerPos;
-	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 40.0f, playerPosition.z);
+	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 40.0f, playerPosition.z - 40.0f);
 	target = playerPosition;
 
 	UpdatePosition(position);

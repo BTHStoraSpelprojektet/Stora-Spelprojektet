@@ -281,7 +281,7 @@ void MenuState::Render()
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
-	GraphicsEngine::SetShadowMap(false);
+	GraphicsEngine::SetShadowMap();
 	GraphicsEngine::ResetRenderTarget();
 
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);

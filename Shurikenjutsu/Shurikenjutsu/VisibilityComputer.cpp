@@ -141,7 +141,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 	}
 
 	m_renderTarget.Initialize(GraphicsEngine::GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-	RebuildQuad(Point(-10.0f, 10.0f), Point(10.0f, -10.0f));
+	RebuildQuad(Point(-50.0f, 50.0f), Point(50.0f, -50.0f));
 
 	return true;
 }
@@ -181,9 +181,6 @@ void VisibilityComputer::Shutdown()
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
-	// Move the quad after the player.
-	//DirectX::XMStoreFloat4x4(&m_quadWorldMatrix, DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(p_viewerPosition.x, 0.0f, p_viewerPosition.y))));
-
 	m_intersections.clear();
 
 	std::vector<PolygonPoint> totalIntersections;
@@ -407,9 +404,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	GraphicsEngine::TurnOnAlphaBlending();
 
 	// TODO, Render the reveresed poylgon texture here.
-	//GraphicsEngine::SetShadowMap(true);
-	//GraphicsEngine::RenderScene(m_quadMesh, 6, m_quadWorldMatrix, m_renderTarget.GetRenderTarget(), nullptr, nullptr);
-	//GraphicsEngine::SetShadowMap(false);
+	GraphicsEngine::RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget());
 
 	//// DEBUG RENDER.
 	//unsigned int stride = sizeof(DirectX::XMFLOAT3);
