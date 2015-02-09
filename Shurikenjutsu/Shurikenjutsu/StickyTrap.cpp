@@ -61,9 +61,7 @@ void StickyTrap::Render()
 {
 	if (m_isThrowing)
 	{
-		GraphicsEngine::TurnOnAlphaBlending();
 		m_stickyTrapBag->Render();
-		GraphicsEngine::TurnOffAlphaBlending();
 	}
 	else
 	{
