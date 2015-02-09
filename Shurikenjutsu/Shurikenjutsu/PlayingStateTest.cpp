@@ -426,11 +426,11 @@ ObjectManager* PlayingStateTest::GetObjectManager()
 
 void PlayingStateTest::OnScreenResize()
 {
-	float width = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
-	float height = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
+	float width = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
+	float height = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 
 	// Update texture size.
-	VisibilityComputer::GetInstance().UpdateTextureSize(width, height);
+	VisibilityComputer::GetInstance().UpdateTextureSize((int)width, (int)height);
 
 	// Get the new edges.
 	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
@@ -446,6 +446,11 @@ void PlayingStateTest::OnScreenResize()
 	Point topLeft = Point(-m_quadWidth, m_quadHeightTop);
 	Point bottomLeft = Point(m_quadWidth, -m_quadHeightBottom);
 	VisibilityComputer::GetInstance().RebuildQuad(topLeft, bottomLeft);
+
+	// Update projection matrix.
+	DirectX::XMFLOAT4X4 projection;
+	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 100.0f));
+	VisibilityComputer::GetInstance().SetProjectionPolygonMatrix(projection);
 
 	// Tell the graphics engine that changes have been handled.
 	GraphicsEngine::ScreenChangeHandled();
