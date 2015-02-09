@@ -57,8 +57,9 @@
 #define CURSOR_TEXTURE "../Shurikenjutsu/2DTextures/cursor.png"
 
 // Team Status Bar
-#define TEAM_STATUS_RED_PLAYER "../Shurikenjutsu/2DTextures/redSquare.png"
-#define TEAM_STATUS_BLUE_PLAYER "../Shurikenjutsu/2DTextures/blueSquare.png"
-#define TEAM_STATUS_DEAD_PLAYER "../Shurikenjutsu/2DTextures/TB_cd.png"
+#define TEAM_STATUS_BACKGROUND "../Shurikenjutsu/2DTextures/statusBar_bg.png"
+#define TEAM_STATUS_RED_PLAYER "../Shurikenjutsu/2DTextures/statusBar_redSquare.png"
+#define TEAM_STATUS_BLUE_PLAYER "../Shurikenjutsu/2DTextures/statusBar_blueSquare.png"
+#define TEAM_STATUS_DEAD_PLAYER "../Shurikenjutsu/2DTextures/statusBar_dead.png"
 
 #endif
