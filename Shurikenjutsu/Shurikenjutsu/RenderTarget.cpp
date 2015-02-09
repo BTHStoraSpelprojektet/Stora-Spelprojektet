@@ -33,7 +33,7 @@ bool RenderTarget::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	targetViewDescription.Texture2D.MipSlice = 0;
 
 	// Create the shadow map target view, if this fails an error message is displayed.
-	if (FAILED(p_device->CreateRenderTargetView(m_renderTarget, &targetViewDescription, &m_renderTargetView)))
+ 	if (FAILED(p_device->CreateRenderTargetView(m_renderTarget, &targetViewDescription, &m_renderTargetView)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create render target.");
 		return false;

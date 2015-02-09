@@ -426,10 +426,17 @@ ObjectManager* PlayingStateTest::GetObjectManager()
 
 void PlayingStateTest::OnScreenResize()
 {
+	float width = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
+	float height = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
+
+	// Update texture size.
+	VisibilityComputer::GetInstance().UpdateTextureSize(width, height);
+
 	// Get the new edges.
 	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
-	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT));
-	DirectX::XMFLOAT3 pickedPlayer = Pick(Point(GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f));
+	DirectX::XMFLOAT3 pickedTopRight = Pick(Point(width, 0.0f));
+	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point(width, height));
+	DirectX::XMFLOAT3 pickedPlayer = Pick(Point(width * 0.5f, height * 0.5f));
 
 	m_quadWidth = pickedPlayer.x - pickedTopLeft.x;
 	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
