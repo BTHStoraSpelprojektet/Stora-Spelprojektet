@@ -592,9 +592,20 @@ void Network::ReceviePacket()
 		}
 		case ID_VOLLEY_THROWN:
 		{
+			std::cout << "VOLLEY client!" << std::endl;
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			unsigned int id;
+			float startX, startZ, endX, endZ;
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(id);
+			bitStream.Read(startX);
+			bitStream.Read(startZ);
+			bitStream.Read(endX);
+			bitStream.Read(endZ);
+			bitStream.Read(guid);
 
-
+			AddVolley(id, startX, startZ, endX, endZ, guid);
 		}
 
 		default:
@@ -1223,4 +1234,9 @@ std::vector<FanNet> Network::GetFanList()
 void Network::ProjectileThrown(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_uniqueId, RakNet::RakNetGUID p_guid, float p_speed, int p_projType)
 {
 	m_objectManager->AddProjectile(p_x, p_y, p_z, p_dirX, p_dirY, p_dirZ, p_uniqueId, p_guid, p_speed, p_projType);
+}
+
+void Network::AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid)
+{
+	m_objectManager->AddVolley(p_id, p_startX, p_startZ, p_endX, p_endZ, p_guid);
 }

@@ -414,7 +414,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		{
 			volleyDistance = VOLLEY_RANGE;
 		}
-		p_volleyManager.Add(p_guid, m_players[index].x, m_players[index].y, m_players[index].x + m_players[index].dirX * volleyDistance, m_players[index].z + m_players[index].dirZ * volleyDistance);
+		p_volleyManager.Add(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX * volleyDistance, m_players[index].z + m_players[index].dirZ * volleyDistance);
 		break;
 	default:
 		break;

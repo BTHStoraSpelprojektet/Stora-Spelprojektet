@@ -7,6 +7,7 @@
 #include "MegaShuriken.h"
 #include "SmokeBombAbility.h"
 #include "KunaiAbility.h"
+#include "VolleyAbility.h"
 
 
 NaginataNinja::NaginataNinja(){}
@@ -43,7 +44,7 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_rangeAttack = new KunaiAbility();
 	m_rangeAttack->Initialize();
 
-	m_rangeSpecialAttack = new MegaShuriken();
+	m_rangeSpecialAttack = new VolleyAbility();
 	m_rangeSpecialAttack->Initialize();
 
 	m_toolAbility = new SmokeBombAbility();

@@ -14,7 +14,7 @@ public:
 
 	bool Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition);
 	void Shutdown();
-	void Update();
+	bool Update();
 	void Render();
 	void RenderDepth();
 

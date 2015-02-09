@@ -6,7 +6,6 @@ VolleyManager::~VolleyManager(){}
 bool VolleyManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	m_serverPeer = p_serverPeer;
-
 	return true;
 }
 
@@ -24,10 +23,8 @@ void VolleyManager::Add(RakNet::RakNetGUID p_guid, float p_startPosX, float p_st
 {
 	float x = p_endPosX - p_startPosX;
 	float z = p_endPosZ - p_startPosZ;
-	float length = sqrtf(x*x + z*z);
-	float angle = angle = asinf((9.82f * length) / (SPIKE_SPEED * SPIKE_SPEED)) * 0.5f;
-	float speed = sqrtf((length * 9.82f) / (sinf(2 * angle)));
-	float timeToLand = length / (speed * cosf(angle));
+	float speedY = sqrtf(VOLLEY_HEIGHT / (2.0f*VOLLEY_GRAVITY));
+	float timeToLand = 2.0f*speedY / VOLLEY_GRAVITY;
 
 	VolleyNet temp;
 	temp.startX = p_startPosX;

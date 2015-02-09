@@ -787,6 +787,7 @@ void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, Pla
 	std::vector<VolleyNet> volleyList = p_volleyManager->GetObjects();
 	for (unsigned int i = 0; i < volleyList.size(); i++)
 	{
+		bool remove = false;
 		// Go through player list
 		for (unsigned int j = 0; j < playerList.size(); j++)
 		{
@@ -823,14 +824,19 @@ void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, Pla
 					{
 						float damage = VOLLEY_DAMAGE;
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+						break;
 					}
 				}
-
-				// Remove dead volley
-				p_volleyManager->Remove(i); // MAY WORK, BE CAUTIOUS!
-				volleyList.erase(volleyList.begin() + i);
-				i--;
+				remove = true;
 			}
+		}
+
+		// Remove dead volley
+		if (remove)
+		{
+			p_volleyManager->Remove(i); // MAY WORK, BE CAUTIOUS!
+			volleyList.erase(volleyList.begin() + i);
+			i--;
 		}
 	}
 }

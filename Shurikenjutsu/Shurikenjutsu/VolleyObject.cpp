@@ -16,10 +16,11 @@ bool VolleyObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_startP
 	float length = sqrtf(x*x + z*z);
 	m_percentX = x / length;
 	m_percentZ = z / length;
-	m_angle = asinf((9.82f * length) / (VOLLEY_SPEED * VOLLEY_SPEED)) * 0.5f;
-	m_speed = sqrtf((length * 9.82f) / (sinf(2 * m_angle)));
-	m_timeToLand = length / (m_speed * cosf(m_angle));
-
+	m_speedY = sqrtf(VOLLEY_HEIGHT / (2.0f*VOLLEY_GRAVITY));
+	m_timeToLand = 2.0f*m_speedY / VOLLEY_GRAVITY;
+	m_speed = length / m_timeToLand;
+	m_angle = 3.14f / m_timeToLand;
+	m_lifeTime = m_timeToLand + 0.5f;
 	return true;
 }
 
@@ -28,15 +29,24 @@ void VolleyObject::Shutdown()
 	MovingObject::Shutdown();
 }
 
-void VolleyObject::Update(float p_timer)
+bool VolleyObject::Update(float p_timer)
 {
+	// Update
 	if (p_timer < m_timeToLand)
 	{
-		float x = m_speed * p_timer * cosf(m_angle) * m_percentX;
-		float y = m_speed * p_timer * sinf(m_angle) - 0.5f * 9.82f * p_timer * p_timer;
-		float z = m_speed * p_timer * cosf(m_angle) * m_percentZ;
+		float x = m_speed * p_timer * m_percentX;
+		float y = VOLLEY_HEIGHT*m_speedY*sinf(p_timer*m_angle);
+		float z = m_speed * p_timer * m_percentZ;
 
-		m_position = DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 20.0f*y, m_startPosition.z + z);
+		m_position = DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + y, m_startPosition.z + z);
 	}
+
+	// Remove;
+	else if (p_timer > m_lifeTime)
+	{
+		return true;
+	}
+
+	return false;
 }
 

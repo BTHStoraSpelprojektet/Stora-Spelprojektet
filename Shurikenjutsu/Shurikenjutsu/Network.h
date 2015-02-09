@@ -3,7 +3,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\RakNetTypes.h"
@@ -106,6 +105,7 @@ public:
 	DirectX::XMFLOAT3 GetDashLocation();
 
 	void SetObjectManager(ObjectManager* p_objectManager);
+	void AddVolley(unsigned int p_id, float p_startX, float p_startY, float p_endX, float p_endY, RakNet::RakNetGUID p_guid);
 
 private:
 

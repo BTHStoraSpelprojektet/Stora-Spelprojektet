@@ -259,16 +259,15 @@ void ObjectManager::Update()
 		
 	}
 
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
-	{
-		Volley* volley = new Volley;
-		volley->Initialize(DirectX::XMFLOAT3(0, 0.0f, 0), DirectX::XMFLOAT3(0.0f, 0.0f, 20.0f));
-		m_volleys.push_back(volley);
-	}
-
+	// Update Volleys
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
-		m_volleys[i]->Update();
+		bool remove = m_volleys[i]->Update();
+		if (remove)
+		{
+			m_volleys.erase(m_volleys.begin() + i);
+			i--;
+		}
 	}
 
 	UpdateRenderLists();
@@ -601,4 +600,12 @@ void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX,
 	tempProjectile->Initialize(DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(p_dirX, p_dirY, p_dirZ), p_uniqueId, p_ability, p_guid);
 	
 	m_projectiles.push_back(tempProjectile);
+}
+void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid)
+{
+	Volley* temp = new Volley;
+	DirectX::XMFLOAT3 start = DirectX::XMFLOAT3(p_startX, 0.0f, p_startZ);
+	DirectX::XMFLOAT3 end = DirectX::XMFLOAT3(p_endX, 0.0f, p_endZ);
+	temp->Initialize(start, end);
+	m_volleys.push_back(temp);
 }

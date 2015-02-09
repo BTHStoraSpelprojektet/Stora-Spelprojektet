@@ -50,11 +50,12 @@ const float FANBOOMERANG_DURATION = 3.0f;
 const float FANBOOMERANG_SPEED = 20.0f;
 
 // Volley
-const float VOLLEY_DAMAGE = 10.0f;
-const float VOLLEY_COOLDOWN = 5.0f;
-const float VOLLEY_RANGE = 30.0f;
-const float VOLLEY_RADIUS = 1.0f;
-const float VOLLEY_SPEED = 30.0f;
+const float VOLLEY_DAMAGE = 15.0f;
+const float VOLLEY_COOLDOWN = 4.0f;
+const float VOLLEY_RANGE = 20.0f;
+const float VOLLEY_RADIUS = 0.5f;
+const float VOLLEY_GRAVITY = 4.41f;
+const float VOLLEY_HEIGHT = 20.0f;
 
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
