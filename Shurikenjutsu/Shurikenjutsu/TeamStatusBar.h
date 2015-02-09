@@ -20,11 +20,18 @@ public:
 	void Update();
 	void Render();
 private:
-	std::map<RakNet::RakNetGUID, GUIElement> redColorDots;
-	std::map<RakNet::RakNetGUID, GUIElement> blueColorDots;
+	std::map<RakNet::RakNetGUID, GUIElement> m_redColorPlayers;
+	std::map<RakNet::RakNetGUID, GUIElement> m_blueColorPlayers;
+	std::vector<GUIElement> m_redSquares;
+	std::vector<GUIElement> m_blueSquares;
+
 
 	void ResizeRedColorList();
 	void ResizeBlueColorList();
+	void AddRedSquare();
+	void AddBlueSquare();
+
+	std::string GetTextureName(int p_charNr);
 
 	float m_dotSize;
 	float m_dotPosOffset;
