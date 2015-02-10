@@ -118,8 +118,7 @@ const float SPIKE_RADIUS = 1.5f;
 
 //Spike Trap
 const float STICKY_TRAP_DAMAGE = 0.0f;
-const float STICKY_TRAP_COOLDOWN = 0.5f;/////////////////////////////////////////////////////
-//const float STICKY_TRAP_COOLDOWN = 6.0f;
+const float STICKY_TRAP_COOLDOWN = 6.0f;
 const float STICKY_TRAP_RANGE = 30.0f;
 const float STICKY_TRAP_DURATION = 20.0f;
 const float STICKY_TRAP_SPEED = 30.0f;
