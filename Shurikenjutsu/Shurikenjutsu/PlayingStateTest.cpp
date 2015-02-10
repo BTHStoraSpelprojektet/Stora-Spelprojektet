@@ -107,6 +107,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_mouseY = 0;
 
 	OnScreenResize();
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
 
 	return true;
 }
@@ -189,14 +190,17 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
 	// Update frustum
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && FLAG_DEBUG == 1)
+	if (FLAG_DEBUG == 1)
 	{
-		m_updateFrustum = false;
-	}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')))
+		{
+			m_updateFrustum = false;
+		}
 
-	if (GetAsyncKeyState(VK_BACK))
-	{
-		m_updateFrustum = true;
+		if (GetAsyncKeyState(VK_BACK))
+		{
+			m_updateFrustum = true;
+		}
 	}
 
 	if (m_updateFrustum)

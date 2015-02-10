@@ -55,6 +55,8 @@ void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
 		{
 			m_player->SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 			Network::GetInstance()->SetHaveRespawned();
+
+			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(myPlayer.x, myPlayer.z), GraphicsEngine::GetDevice());
 		}
 
 		// Check if the player have made an invalid move
@@ -62,6 +64,8 @@ void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
 		{
 			m_player->SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 			Network::GetInstance()->UpdatedMoveFromInvalidMove();
+
+			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(myPlayer.x, myPlayer.z), GraphicsEngine::GetDevice());
 		}
 
 		std::vector<PlayerNet> enemyPlayers = Network::GetInstance()->GetOtherPlayers();
