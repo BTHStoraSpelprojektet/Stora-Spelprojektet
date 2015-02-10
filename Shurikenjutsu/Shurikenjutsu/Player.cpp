@@ -180,22 +180,22 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		playerSphere.m_position.y += m_dashDistanceLeft * m_dashDirection.z;		
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
-		if (distance >= m_dashDistanceLeft)
-		{
-			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
-			m_dashDistanceLeft = 0.0f;
-			m_isDashing = false;
-		}
-		else
-		{
-			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-			m_dashDistanceLeft -= distance;
-		}
+			if (distance >= m_dashDistanceLeft)
+			{
+				m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+				m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+				m_dashDistanceLeft = 0.0f;
+				m_isDashing = false;
+			}
+			else
+			{
+				m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+				m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+				m_dashDistanceLeft -= distance;
+			}
 
-		// If we dashed, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+			// If we dashed, update shadow shapes.
+			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 		}
 		else
 		{
@@ -215,6 +215,26 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 	m_playerSphere.m_position = m_position;
 	
+	// Check if the player have made an invalid move
+	if (Network::GetInstance()->MadeInvalidMove())
+	{
+		PlayerNet myPlayer = Network::GetInstance()->GetMyPlayer();
+		SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
+		Network::GetInstance()->UpdatedMoveFromInvalidMove();
+
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(myPlayer.x, myPlayer.z), GraphicsEngine::GetDevice());
+	}
+
+	// Check if the player need to respawn
+	if (Network::GetInstance()->HasRespawned())
+	{
+		PlayerNet myPlayer = Network::GetInstance()->GetMyPlayer();
+		SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
+		Network::GetInstance()->SetHaveRespawned();
+
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(myPlayer.x, myPlayer.z), GraphicsEngine::GetDevice());
+	}
+
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
 
@@ -244,14 +264,17 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
-	{
-		// Play ability animation if we did any
-		DoAnimation();
+		{
+			// Play ability animation if we did any
+			DoAnimation();
 
-			// Set global cooldown
-			m_globalCooldown = m_maxGlobalCooldown;
+				// Set global cooldown
+				m_globalCooldown = m_maxGlobalCooldown;
+		}
 	}
-	}
+
+
+
 	UpdateAbilityBar();
 }
 
