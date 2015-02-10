@@ -21,6 +21,10 @@ void GUIAbility::Update(float p_currentCooldown, float p_maxCooldown, int p_stac
 	
 	// Update Cooldown
 	float percent = p_currentCooldown / p_maxCooldown;
+	if (percent > 1.0f)
+	{
+		percent = 1.0f;
+	}
 
 	float newLength = m_ability.GetSize().x * (1.0f - percent);
 	

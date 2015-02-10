@@ -97,6 +97,8 @@ void GameState::Shutdown()
 
 void GameState::Update(double p_deltaTime)
 {
+	m_collisionManager->SetDeltaTime((float)p_deltaTime);
+
 	m_playerManager->Update(p_deltaTime);
 	m_shurikenManager->Update(p_deltaTime);
 	m_smokeBombManager->Update(p_deltaTime);
@@ -108,10 +110,11 @@ void GameState::Update(double p_deltaTime)
 
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
 	m_collisionManager->ProjectileCollisionChecks(m_projectileManager, m_playerManager);
-	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager, (float)p_deltaTime);
+	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager);
 	m_collisionManager->FanCollisionChecks(p_deltaTime, m_fanBoomerangManager, m_playerManager);
 	m_collisionManager->VolleyCollisionChecks(m_volleyManager, m_playerManager);
 
+	m_collisionManager->NaginataStbDot(m_playerManager);
 	UpdateTime(p_deltaTime);
 	
 }
@@ -195,7 +198,7 @@ void GameState::SendCurrentTeamScore(RakNet::RakNetGUID p_guid)
 	bitStream.Write((unsigned int)m_winningTeams.size());
 	
 	for (auto it = m_winningTeams.begin(); it != m_winningTeams.end(); it++)
-{
+	{
 		bitStream.Write(it->first);
 		bitStream.Write(it->second);
 	}

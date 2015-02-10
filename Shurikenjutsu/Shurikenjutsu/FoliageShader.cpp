@@ -240,7 +240,7 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 void FoliageShader::ReadRawFile()
 {	
 	std::ifstream inFile;
-	inFile.open("../Shurikenjutsu/2DTextures/grassMask.raw", std::ios::binary);
+	inFile.open("../Shurikenjutsu/GrassMap/grassMask.raw", std::ios::binary);
 
 	inFile.seekg(0, std::ios::end);
 	long fileSize = (long)inFile.tellg();

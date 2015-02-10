@@ -19,7 +19,6 @@ SceneShader GraphicsEngine::m_sceneShader;
 GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
 ParticleShader GraphicsEngine::m_particleShader;
-//OutliningShader GraphicsEngine::m_outliningShader;
 HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
 IFW1FontWrapper *GraphicsEngine::m_fontWrapper;

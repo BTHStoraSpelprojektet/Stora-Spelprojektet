@@ -119,6 +119,9 @@ public:
 	int GetRedTeamScore();
 	int GetBlueTeamScore();
 
+	bool CheckIfNaginataStabAttackIsPerformed();
+	void ResetNaginataStabBoolean();
+
 private:
 
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
@@ -159,6 +162,7 @@ private:
 	int m_connectionCount;
 	int m_previousCount;
 
+	bool m_NaginataStabPerformed;
 	bool m_newOrRemovedPlayers;
 	bool m_shurikenListUpdated;
 	bool m_smokebombListUpdated;
