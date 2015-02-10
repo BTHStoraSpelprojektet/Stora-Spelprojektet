@@ -144,6 +144,9 @@ const float CHARACTER_NAGINATA_SPEED = 11.0f;
 const float PARTICLE_FIRE_SIZE_X = 0.3f;
 const float PARTICLE_FIRE_SIZE_Y = 0.3f;
 
+const float PARTICLE_FIREFLIES_SIZE_X = 0.1f;
+const float PARTICLE_FIREFLIES_SIZE_Y = 0.1f;
+
 const float PARTICLE_PINKLEAF_SIZE_X = 0.14f;
 const float PARTICLE_PINKLEAF_SIZE_Y = 0.14f;
 

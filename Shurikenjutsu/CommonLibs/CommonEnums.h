@@ -31,7 +31,8 @@ enum AnimationState {
 };
 
 enum EmitterType{
-	Fire,
+	BrazierFire,
+	Fireflies,
 	Smoke,
 	LeafTree,
 	LeafSakura,

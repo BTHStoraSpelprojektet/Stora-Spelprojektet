@@ -81,7 +81,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	{
 		ParticleEmitter* particleEmitter = new ParticleEmitter();
 
-		if (particleLevelEmitter[i].type == EmitterType::Fire){
+		if (particleLevelEmitter[i].type == EmitterType::BrazierFire){
 		particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
@@ -105,6 +105,11 @@ bool ObjectManager::Initialize(Level* p_level)
 			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDDUST_SIZE_X, PARTICLE_WORLDDUST_SIZE_Y), PARTICLE_PATTERN_WORLD_DUST);
+		}
+		else if (particleLevelEmitter[i].type == EmitterType::Fireflies){
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
+				DirectX::XMFLOAT2(PARTICLE_FIREFLIES_SIZE_X, PARTICLE_FIREFLIES_SIZE_Y), PARTICLE_PATTERN_FIREFLIES);
 		}
 		else{
 			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
