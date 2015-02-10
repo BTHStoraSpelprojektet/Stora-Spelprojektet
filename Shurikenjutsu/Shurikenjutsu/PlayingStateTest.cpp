@@ -43,14 +43,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Load the level.
 	Level level(p_levelName);
 
-	//Shadow Shapes
+	// Initialize the shadow shapes. 
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)
 	{
 		ShadowShapes::GetInstance().AddStaticLine(lines[i]);
 	}
 
-	// Initialize the objectmanager.
+	// Initialize the object manager.
 	m_objectManager = new ObjectManager();
 	m_objectManager->Initialize(&level);
 
@@ -63,42 +63,30 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		wallList.push_back(Box(box.m_translationX, box.m_translationY, box.m_translationZ, box.m_halfDepth, box.m_halfHeight, box.m_halfWidth));
 	}
 
-	// Initiate player
+	// Initiate the player.
 	m_playerManager = new PlayerManager();
 	m_playerManager->Initialize();
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), wallList);
 
-	// ========== DEBUG LINES ==========
-	if (FLAG_DEBUG == 1)
-	{
-		m_debugDot.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.5f, m_playerManager->GetPlayerPosition().z), 100, DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
-		m_debugRect.Initialize(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z + 10), 0.2f, 20.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.0f));
-		m_mouseX = 0;
-		m_mouseY = 0;
-		
-		VisibilityComputer::GetInstance().UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
-	}
-	// ========== DEBUG LINES ==========
-	
-	// Frustum
+	// Initlialize the frustum.
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
 	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	m_objectManager->UpdateFrustum(m_frustum);
 	m_playerManager->UpdateFrustum(m_frustum);
 
-	// Initialize the minimap
+	// Initialize the minimap.
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
-	// Initialize team status bar
+	// Initialize the team status bar.
 	m_teamStatusBar = new TeamStatusBar();
 	if (!m_teamStatusBar->Initialize())
 	{
 		return false;
 	}
 	
-	// Initialize directional light
+	// Initialize the directional light.
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
@@ -106,8 +94,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 	GraphicsEngine::InitializeOutling();
 
-
-	// Countdown
+	// Initialize the Countdown.
 	m_countdown = new Countdown();
 	if(!m_countdown->Initialize())
 	{
@@ -116,8 +103,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	m_renderOutlining = false;
 
+	m_mouseX = 0;
+	m_mouseY = 0;
 
 	OnScreenResize();
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
 
 	return true;
 }
@@ -142,14 +132,6 @@ void PlayingStateTest::Shutdown()
 		delete m_objectManager;
 	}
 
-	// ========== DEBUG TEMP LINES ==========
-	if (FLAG_DEBUG == 1)
-	{
-		m_debugDot.Shutdown();	
-		m_debugRect.Shutdown();
-	}
-	// ========== DEBUG TEMP LINES ==========
-
 	if (m_minimap != NULL)
 	{
 		m_minimap->Shutdown();
@@ -166,7 +148,7 @@ void PlayingStateTest::Shutdown()
 	{
 		m_countdown->Shutdown();
 		delete m_countdown;
-}
+	}
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -208,14 +190,17 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
 	// Update frustum
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && FLAG_DEBUG == 1)
+	if (FLAG_DEBUG == 1)
 	{
-		m_updateFrustum = false;
-	}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')))
+		{
+			m_updateFrustum = false;
+		}
 
-	if (GetAsyncKeyState(VK_BACK))
-	{
-		m_updateFrustum = true;
+		if (GetAsyncKeyState(VK_BACK))
+		{
+			m_updateFrustum = true;
+		}
 	}
 
 	if (m_updateFrustum)
@@ -300,28 +285,18 @@ void PlayingStateTest::Render()
 	m_objectManager->Render();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 
-	// ========== DEBUG LINES ==========
 	if (FLAG_DEBUG == 1)
 	{
-		// Draw a dot at the mouse position.
-		m_debugDot.Render();
-		m_debugRect.Render();
-
-		// Draw a line from the player to the dot.
-		DebugDraw::GetInstance().RenderSingleLine(DirectX::XMFLOAT3(m_playerManager->GetPlayerPosition().x, 0.2f, m_playerManager->GetPlayerPosition().z), DirectX::XMFLOAT3(m_mouseX, 0.2f, m_mouseY), DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-
 		ShadowShapes::GetInstance().DebugRender();	
 	}
 
 	GraphicsEngine::RenderFoliage();
 
-	// ========== DEBUG TEMP LINES ==========
-
 	m_minimap->Render();
 	m_teamStatusBar->Render();
 	m_countdown->Render();
 
-	// OUTLINING
+	// Render outlining.
 	if (m_renderOutlining)
 	{
 		GraphicsEngine::ClearOutlining();
@@ -358,18 +333,6 @@ void PlayingStateTest::BasicPicking()
 	
 	m_playerManager->SetAttackDirection(NormalizeFloat3(NormalizeFloat3(shurDir)));
 
-	// ========== DEBUG LINES ==========
-	if (FLAG_DEBUG == 1)
-	{
-		// Update dot location.
-		DirectX::XMFLOAT4X4 world;
-		DirectX::XMFLOAT3 translate = DirectX::XMFLOAT3(shurPos.x, 0.0f, shurPos.z);
-		DirectX::XMMATRIX matrix = DirectX::XMMatrixTranslationFromVector(DirectX::XMLoadFloat3(&translate));
-		DirectX::XMStoreFloat4x4(&world, matrix);
-		m_debugDot.UpdateWorldMatrix(world);
-	}
-	// ========== DEBUG LINES ==========
-	
 	m_mouseX = shurPos.x;
 	m_mouseY = shurPos.z;
 }
