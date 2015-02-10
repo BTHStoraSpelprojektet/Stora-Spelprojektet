@@ -454,3 +454,11 @@ void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
 		}
 	}
 }
+void PlayerManager::NaginataStabAttackPerformed(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_NAGINATA_STAB_HAS_OCCURED);
+	bitStream.Write(p_guid);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+}

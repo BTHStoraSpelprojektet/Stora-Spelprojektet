@@ -692,6 +692,22 @@ void Network::ReceviePacket()
 			}
 			break;
 		}
+		case ID_NAGINATA_STAB_HAS_OCCURED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			//TODO: Implement set cooldown for player;
+
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+
+			if (m_myPlayer.guid == guid)
+			{
+				m_NaginataStabPerformed = true;
+			}
+
+			break;
+		}
 		default:
 		{
 			break;
@@ -1432,4 +1448,13 @@ int Network::GetBlueTeamScore()
 void Network::RemoveProjectile(unsigned int p_projId)
 {
 	m_objectManager->RemoveProjectile(p_projId);
+}
+
+bool Network::CheckIfNaginataStabAttackIsPerformed()
+{
+	return m_NaginataStabPerformed;
+}
+void Network::ResetNaginataStabBoolean()
+{
+	m_NaginataStabPerformed = false;
 }

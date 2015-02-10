@@ -144,12 +144,9 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	SetSpeed(m_originalSpeed);
 	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
 	{
-		if (p_stickyTrapList[i]->GetGUID() != Network::GetInstance()->GetMyGUID())
+		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
-			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
-			{
-				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
-			}
+			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
 		}
 	}
 
@@ -254,6 +251,12 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			// Set global cooldown
 			m_globalCooldown = m_maxGlobalCooldown;
 		}
+	}
+
+	if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
+	{
+		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		Network::GetInstance()->ResetNaginataStabBoolean();
 	}
 
 	UpdateAbilityBar();

@@ -768,6 +768,8 @@ void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManag
 	temp.m_guid = p_guid;
 	temp.m_performNaginataStabAttack = true;
 	m_performingStabAttackList.push_back(temp);
+	
+	p_playerManager->NaginataStabAttackPerformed(p_guid);
 }
 
 void CollisionManager::NaginataStbDot( PlayerManager* p_playerManager)
