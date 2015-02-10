@@ -41,6 +41,7 @@ bool Network::Initialize()
 	m_timerSec = 0;
 	m_redTeamScore = 0;
 	m_blueTeamScore = 0;
+	m_lastTeamWon = 0;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -377,7 +378,7 @@ void Network::ReceviePacket()
 			{
 				m_blueTeamScore++;
 			}
-
+			m_lastTeamWon = winningTeam;
 			std::cout << "Team " << winningTeam << " won this round\n";
 			break;
 		}
@@ -1461,6 +1462,11 @@ int Network::GetRedTeamScore()
 int Network::GetBlueTeamScore()
 {
 	return m_blueTeamScore;
+}
+
+int Network::GetLastWinningTeam()
+{
+	return m_lastTeamWon;
 }
 
 void Network::RemoveProjectile(unsigned int p_projId)

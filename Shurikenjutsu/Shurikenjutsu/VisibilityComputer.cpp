@@ -142,6 +142,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 
+	UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
 	m_renderTarget.Initialize(GraphicsEngine::GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
@@ -391,7 +392,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
 	GraphicsEngine::TurnOnAlphaBlending();
 
-	// TODO, Render the reveresed poylgon texture here.
+	// Render the quad to reverse project the polygon onto.
 	GraphicsEngine::RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget());
 
 	GraphicsEngine::TurnOffAlphaBlending();
