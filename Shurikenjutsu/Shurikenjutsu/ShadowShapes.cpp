@@ -175,7 +175,7 @@ void ShadowShapes::UpdateBoundries(Point p_topLeft, Point p_bottomRight)
 
 void ShadowShapes::Update()
 {
-	double dt = GLOBAL::GetInstance().GetDeltaTime();
+	float dt = (float)GLOBAL::GetInstance().GetDeltaTime();
 
 	// Add delta time to all smokebombs.
 	for (unsigned int i = 0; i < m_smokeBombs.size(); i++)
