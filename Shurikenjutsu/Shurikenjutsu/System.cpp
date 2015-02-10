@@ -279,11 +279,7 @@ void System::Update()
 
 		if (fps != m_previousFPS)
 		{
-			std::string title = m_title + " (FPS: ";
-			title.append(std::to_string(m_timer->GetFPS()) + ") ");
-
-			m_window.SetTitle(title);
-
+			GLOBAL::GetInstance().FPS = std::to_string(m_timer->GetFPS());
 			m_previousFPS = fps;
 		}
 	}

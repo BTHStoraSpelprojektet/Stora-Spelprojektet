@@ -50,6 +50,8 @@ bool TeamStatusBar::Initialize()
 	Network::GetInstance()->SyncTimer();
 	Network::GetInstance()->SyncTeamScore();
 
+	m_fpsTimer.Initialize(GLOBAL::GetInstance().FPS, 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f)*0.5f, m_originPos.y + 18.0f, 0xffffffffff);
+
 	return true;
 }
 
@@ -216,6 +218,7 @@ void TeamStatusBar::Update()
 
 	// Add time and change text
 	m_timeSec += GLOBAL::GetInstance().GetDeltaTime();
+
 	if (m_timeSec >= 60)
 	{
 		m_timeSec -= 60;
@@ -246,6 +249,8 @@ void TeamStatusBar::Update()
 		m_timeMin = min;
 		m_timeSec = sec;
 	}
+
+	m_fpsTimer.SetText(GLOBAL::GetInstance().FPS);
 }
 
 void TeamStatusBar::Render()
@@ -283,6 +288,7 @@ void TeamStatusBar::Render()
 
 	// Timer
 	m_timerText.Render();
+	m_fpsTimer.Render();
 }
 
 void TeamStatusBar::ResizeRedColorList()

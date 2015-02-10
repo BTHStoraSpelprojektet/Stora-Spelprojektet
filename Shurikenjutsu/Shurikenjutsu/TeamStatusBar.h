@@ -46,6 +46,8 @@ private:
 	double m_timeSec;
 	double m_timeMin;
 	GUIText m_timerText;
+
+	GUIText m_fpsTimer;
 };
 
 #endif
