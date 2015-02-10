@@ -29,6 +29,7 @@ public:
 	float GetProjectilePosX(int p_index);
 	float GetProjectilePosY(int p_index);
 	float GetProjectilePosZ(int p_index);
+	void ResetLists();
 private:
 	unsigned int GetProjectileUniqueId();
 
