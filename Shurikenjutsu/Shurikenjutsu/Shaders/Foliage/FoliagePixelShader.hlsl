@@ -33,5 +33,5 @@ float4 main(PixelInput p_input) : SV_TARGET
 		shadowSum += lightDepth < depth;
 	}
 
-	return pixel * (0.4f + 0.6f * shadowSum);
+	return float4(pixel.xyz * (0.4f + 0.6f * shadowSum), 1.0f);
 }

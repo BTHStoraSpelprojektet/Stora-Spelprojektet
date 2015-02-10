@@ -13,7 +13,7 @@ PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
-	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
+//	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
 
 	m_serverPeer = p_serverPeer;
 
@@ -54,7 +54,7 @@ void PlayerManager::Update(double p_deltaTime)
 			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
 		}
 	}*/
-	}
+}
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
 {
@@ -463,4 +463,12 @@ void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
 			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
 		}
 	}
+}
+void PlayerManager::NaginataStabAttackPerformed(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_NAGINATA_STAB_HAS_OCCURED);
+	bitStream.Write(p_guid);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }
