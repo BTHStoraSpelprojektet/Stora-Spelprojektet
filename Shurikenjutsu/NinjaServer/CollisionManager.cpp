@@ -4,12 +4,14 @@
 #include "ShurikenManager.h"
 #include "ProjectileManager.h"
 #include "FanBoomerangManager.h"
+#include "VolleyManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
 	m_staticBoxList = std::vector<OBB>();
 	m_staticSphereList = std::vector<Sphere>();
 	SetLists(p_staticBoxList, p_staticSphereList);
+	m_deltaTime = 0;
 }
 
 void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
@@ -625,7 +627,7 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	return dashLength;
 }
 
-void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager, float p_deltaTime)
+void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager)
 {
 	float radius = 1.0f;
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
@@ -666,7 +668,7 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
 					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 					{
-						float damage = SPIKE_DAMAGE * p_deltaTime;
+						float damage = SPIKE_DAMAGE * m_deltaTime;
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 						break;
 					}
@@ -715,10 +717,10 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
 				break;
+				}
 			}
 		}
 	}
-}
 }
 
 void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
@@ -762,7 +764,23 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 
 void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
 {
-	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
+	NaginataStabAttacks temp;
+	temp.m_timer = 0;
+	temp.m_guid = p_guid;
+	temp.m_performNaginataStabAttack = true;
+	m_performingStabAttackList.push_back(temp);
+	
+	p_playerManager->NaginataStabAttackPerformed(p_guid);
+}
+
+void CollisionManager::NaginataStbDot( PlayerManager* p_playerManager)
+{
+	for (unsigned int j = 0; j < m_performingStabAttackList.size(); j++)
+	{
+		m_performingStabAttackList[j].m_timer += m_deltaTime;
+		if (m_performingStabAttackList[j].m_performNaginataStabAttack)
+		{
+			PlayerNet attackingPlayer = p_playerManager->GetPlayer(m_performingStabAttackList[j].m_guid);
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
 	DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 	for (unsigned int i = 0; i < playerList.size(); i++)
@@ -805,11 +823,23 @@ void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManag
 		{
 			if (IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
-			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
+				// Damage the player
+						p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE * m_deltaTime);
+					}
+				}
+			}
+			if (m_performingStabAttackList[j].m_timer > NAGINATASTAB_DURATION)
+			{
+				m_performingStabAttackList[j].m_timer = 0;
+				m_performingStabAttackList[j].m_performNaginataStabAttack = false;
+				m_performingStabAttackList.erase(m_performingStabAttackList.begin() + j);
+			}
+			}
 		}
 	}
-}
+void CollisionManager::SetDeltaTime(float p_deltaTime)
+{
+	m_deltaTime = p_deltaTime;
 }
 
 //Private
@@ -902,4 +932,64 @@ bool CollisionManager::RaySphereTest(Ray *p_ray, Sphere p_sphere)
 float CollisionManager::GetAngle(float p_x, float p_y)
 {
 	return 1;
+}
+
+void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, PlayerManager* p_playerManager)
+{
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<VolleyNet> volleyList = p_volleyManager->GetObjects();
+	for (unsigned int i = 0; i < volleyList.size(); i++)
+	{
+		bool remove = false;
+		// Go through player list
+		for (unsigned int j = 0; j < playerList.size(); j++)
+		{
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == volleyList[i].guid)
+			{
+				continue;
+			}
+
+			// Check so you are not on the same team
+			PlayerNet owner = p_playerManager->GetPlayer(volleyList[i].guid);
+			if (playerList[j].team == owner.team)
+			{
+				continue;
+			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+
+
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+			// Make collision test
+			if (volleyList[i].timeToLand <= 0.0f)
+			{
+				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+				{
+					DirectX::XMFLOAT3 volleyPos = DirectX::XMFLOAT3(volleyList[i].endX, playerBoundingBoxes[l].m_center.y, volleyList[i].endZ);
+					if (SphereSphereTest(Sphere(volleyPos, VOLLEY_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+					{
+						float damage = VOLLEY_DAMAGE;
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+						break;
+					}
+				}
+				remove = true;
+			}
+		}
+
+		// Remove dead volley
+		if (remove)
+		{
+			p_volleyManager->Remove(i); // MAY WORK, BE CAUTIOUS!
+			volleyList.erase(volleyList.begin() + i);
+			i--;
+		}
+	}
 }

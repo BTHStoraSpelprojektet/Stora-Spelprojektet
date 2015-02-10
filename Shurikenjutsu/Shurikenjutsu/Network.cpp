@@ -693,6 +693,40 @@ void Network::ReceviePacket()
 			}
 			break;
 		}
+		case ID_NAGINATA_STAB_HAS_OCCURED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			//TODO: Implement set cooldown for player;
+
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+
+			if (m_myPlayer.guid == guid)
+			{
+				m_NaginataStabPerformed = true;
+			}
+
+			break;
+		}
+		case ID_VOLLEY_THROWN:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			unsigned int id;
+			float startX, startZ, endX, endZ;
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(id);
+			bitStream.Read(startX);
+			bitStream.Read(startZ);
+			bitStream.Read(endX);
+			bitStream.Read(endZ);
+			bitStream.Read(guid);
+
+			AddVolley(id, startX, startZ, endX, endZ, guid);
+			break;
+		}
+
 		default:
 		{
 			break;
@@ -1438,4 +1472,18 @@ int Network::GetLastWinningTeam()
 void Network::RemoveProjectile(unsigned int p_projId)
 {
 	m_objectManager->RemoveProjectile(p_projId);
+}
+
+bool Network::CheckIfNaginataStabAttackIsPerformed()
+{
+	return m_NaginataStabPerformed;
+}
+void Network::ResetNaginataStabBoolean()
+{
+	m_NaginataStabPerformed = false;
+}
+
+void Network::AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid)
+{
+	m_objectManager->AddVolley(p_id, p_startX, p_startZ, p_endX, p_endZ, p_guid);
 }

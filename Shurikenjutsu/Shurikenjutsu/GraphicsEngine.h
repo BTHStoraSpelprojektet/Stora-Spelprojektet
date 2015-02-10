@@ -15,6 +15,7 @@ class RenderTarget;
 class ParticleShader;
 class SceneShader;
 class Object;
+class FoliageShader;
 //class OutliningShader;
 
 class GraphicsEngine
@@ -45,6 +46,7 @@ public:
 	static void RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
 	static void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 	static void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	static void RenderFoliage();
 
 	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
@@ -103,6 +105,7 @@ private:
 	static GUIShader m_GUIShader;
 	static DepthShader m_depthShader;
 	static ParticleShader m_particleShader;
+	static FoliageShader m_foliageShader;
 
 	static HWND m_windowHandle;
 

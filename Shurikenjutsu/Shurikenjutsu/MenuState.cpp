@@ -64,7 +64,7 @@ bool MenuState::Initialize()
 
 	// Initialize play menu
 	m_ipbox = new MenuIpBox();
-	m_ipbox->Initialize(0.0f, 0.0f, BUTTONWIDTH*0.75f, BUTTONHEIGHT*0.5f);
+	m_ipbox->Initialize(0.0f, 0.0f, 301.0f, 55.0f);
 	m_ipboxText = new GUIText();
 	m_ipboxText->Initialize(m_ipbox->GetIp(), 36.0f, 0.0f, 0.0f, 0xffffffff);
 
@@ -159,7 +159,7 @@ void MenuState::Shutdown()
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
-	}
+}
 	
 	if (m_frustum != NULL)
 	{

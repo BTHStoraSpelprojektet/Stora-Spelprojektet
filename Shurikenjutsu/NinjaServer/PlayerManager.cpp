@@ -3,6 +3,7 @@
 #include "FanBoomerangManager.h"
 #include "ProjectileManager.h"
 #include "StickyTrapManager.h"
+#include "VolleyManager.h"
 
 #include "..\CommonLibs\ModelNames.h"
 
@@ -12,7 +13,7 @@ PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
-	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
+//	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
 
 	m_serverPeer = p_serverPeer;
 
@@ -53,7 +54,7 @@ void PlayerManager::Update(double p_deltaTime)
 			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
 		}
 	}*/
-	}
+}
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
 {
@@ -296,12 +297,12 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	return boundingBoxes;
 }
 
-
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager)
+void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
 	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
 	float stickyTrapDistance = p_stickyTrapManager.GetCurrentDistanceFromPlayer();
+	float volleyDistance = p_volleyManager.GetCurrentDistanceFromPlayer();
 	float dashDistance = 10.0f;
 	PlayerNet player;
 	RakNet::RakString abilityString = "Hej";
@@ -382,6 +383,15 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		abilityString = "stabboooostabby";
 		p_collisionManager.NaginataStabAttack(p_guid, this);
 		break;
+	case ABILITIES_VOLLEY:
+		abilityString = "VOLLEY!";
+		
+		if (volleyDistance > VOLLEY_RANGE)
+		{
+			volleyDistance = VOLLEY_RANGE;
+		}
+		p_volleyManager.Add(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX * volleyDistance, m_players[index].z + m_players[index].dirZ * volleyDistance);
+		break;
 	default:
 		break;
 	}
@@ -453,4 +463,12 @@ void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
 			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
 		}
 	}
+}
+void PlayerManager::NaginataStabAttackPerformed(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_NAGINATA_STAB_HAS_OCCURED);
+	bitStream.Write(p_guid);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
 }

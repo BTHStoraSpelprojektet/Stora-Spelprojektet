@@ -13,6 +13,8 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 
 bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 {
+	m_lastPosition = Point(0.0f, 0.0f);
+
 	m_intersections.clear();
 	m_vertices.clear();
 
@@ -181,9 +183,11 @@ void VisibilityComputer::Shutdown()
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
-	m_intersections.clear();
+	m_lastPosition = p_viewerPosition;
 
+	m_intersections.clear();
 	std::vector<PolygonPoint> totalIntersections;
+
 	std::vector<float> uniqueAngles = GetUniquePointAngles(p_viewerPosition);
 	std::vector<Line> boundries = ShadowShapes::GetInstance().GetBoundryLines();
 	std::vector<Line> segments = ShadowShapes::GetInstance().GetStaticLines(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
@@ -202,22 +206,6 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 		Line ray = Line(Point(p_viewerPosition.x, p_viewerPosition.y), Point(p_viewerPosition.x + dx, p_viewerPosition.y + dy));
 
 		Intersection closestIntersection = Intersection();
-
-		// Find the closest intersection in boundries.
-		for (unsigned int j = 0; j < boundries.size(); j++)
-		{
-			Intersection intersection = GetIntertersectionPoint(ray, boundries[j]);
-
-			// Ignore if there is no collision.
-			if (intersection.intersection)
-			{
-				// Sort to closest T1 value.
-				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
-				{
-					closestIntersection = intersection;
-				}
-			}
-		}
 
 		// Find the closest intersection in segments.
 		for (unsigned int j = 0; j < segments.size(); j++)
@@ -605,4 +593,9 @@ DirectX::XMFLOAT4X4 VisibilityComputer::GetProjectionPolygonMatrix()
 ID3D11ShaderResourceView* VisibilityComputer::GetRenderTarget()
 {
 	return m_renderTarget.GetRenderTarget();
+}
+
+Point VisibilityComputer::GetLastPosition()
+{
+	return m_lastPosition;
 }

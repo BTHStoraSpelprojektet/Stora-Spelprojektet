@@ -95,6 +95,7 @@
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp" />
     <ClCompile Include="FanBoomerang.cpp" />
     <ClCompile Include="FanBoomerangAbility.cpp" />
+    <ClCompile Include="FoliageShader.cpp" />
     <ClCompile Include="GUIElementColor.cpp" />
     <ClCompile Include="GUIText.cpp" />
     <ClCompile Include="InstanceManager.cpp" />
@@ -171,6 +172,9 @@
     <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VisibilityComputer.cpp" />
+    <ClCompile Include="Volley.cpp" />
+    <ClCompile Include="VolleyAbility.cpp" />
+    <ClCompile Include="VolleyObject.cpp" />
     <ClCompile Include="WhipPrimaryAttackAbility.cpp" />
     <ClCompile Include="WhipSecondaryAttackAbility.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -187,6 +191,7 @@
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h" />
     <ClInclude Include="FanBoomerang.h" />
     <ClInclude Include="FanBoomerangAbility.h" />
+    <ClInclude Include="FoliageShader.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="InstanceManager.h" />
@@ -267,6 +272,9 @@
     <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VisibilityComputer.h" />
+    <ClInclude Include="Volley.h" />
+    <ClInclude Include="VolleyAbility.h" />
+    <ClInclude Include="VolleyObject.h" />
     <ClInclude Include="WhipPrimaryAttackAbility.h" />
     <ClInclude Include="WhipSecondaryAttackAbility.h" />
     <ClInclude Include="Window.h" />
@@ -293,6 +301,24 @@
     <FxCompile Include="Shaders\Depth\InstancingDepthVertexShader.hlsl">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\Foliage\FoliageGeometryShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\Foliage\FoliagePixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\Foliage\FoliageVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>

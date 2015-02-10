@@ -163,7 +163,7 @@ void PlayingStateTest::Shutdown()
 	{
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
-	}
+}
 
 	if (m_countdown != NULL)
 	{
@@ -276,9 +276,12 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
 	}
 
+	// Update smokebomb shadow shapes.
+	ShadowShapes::GetInstance().Update();
+
 	// Set have updated network stuff last in the update
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
-
+	
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -312,6 +315,9 @@ void PlayingStateTest::Render()
 
 		ShadowShapes::GetInstance().DebugRender();	
 	}
+
+	GraphicsEngine::RenderFoliage();
+
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();

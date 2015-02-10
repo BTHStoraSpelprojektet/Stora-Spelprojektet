@@ -8,7 +8,7 @@
 bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_stickyTrapID, RakNet::RakNetGUID p_guid)
 {
 	m_stickyTrapBag = new Object();
-	m_stickyTrapBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
+	m_stickyTrapBag->Initialize("../Shurikenjutsu/Models/StickyTrapJar.SSP", p_startPosition);
 
 	m_stickyTrap = new Object();
 	m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", p_endPosition);

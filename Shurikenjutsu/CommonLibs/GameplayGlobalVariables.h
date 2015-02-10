@@ -49,6 +49,14 @@ const float FANBOOMERANG_COOLDOWN = 2.0f;
 const float FANBOOMERANG_DURATION = 3.0f;
 const float FANBOOMERANG_SPEED = 20.0f;
 
+// Volley
+const float VOLLEY_DAMAGE = 15.0f;
+const float VOLLEY_COOLDOWN = 4.0f;
+const float VOLLEY_RANGE = 20.0f;
+const float VOLLEY_RADIUS = 0.5f;
+const float VOLLEY_GRAVITY = 3.5f;
+const float VOLLEY_HEIGHT = 15.0f;
+
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
 // Katana
@@ -71,10 +79,12 @@ const float DASH_SPEED = 8.0f;
 
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 // Naginata stab
-const float NAGINATASTAB_DAMAGE = 40.0f;
+const float NAGINATASTAB_DAMAGE = 20.0f;
 const float NAGINATASTAB_RANGE = 8.0f;
-const float NAGINATASTAB_COOLDOWN = 8.0f;
-	// Bounding Box
+const float NAGINATASTAB_COOLDOWN = 9.0f;
+const float NAGINATASTAB_GLOBAL_COOLDOWN= 3.0f;
+const float NAGINATASTAB_DURATION = 1.5f;
+// Bounding Box
 const float NAGINATASTAB_BOXEXTENTX = 0.75f;
 const float NAGINATASTAB_BOXEXTENTY = 3.0f;
 const float NAGINATASTAB_BOXEXTENTZ = 4.0f;
