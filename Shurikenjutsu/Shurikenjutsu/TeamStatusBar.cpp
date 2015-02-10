@@ -38,19 +38,19 @@ bool TeamStatusBar::Initialize()
 
 	// Score text
 	m_redScore = GUIText();
-	m_redScore.Initialize("0", 25.0f, m_originPos.x + 20.0f, m_originPos.y - 13, 0xff0700B6);
+	m_redScore.Initialize("0", 25.0f, m_originPos.x + 20.0f, m_originPos.y - 13.0f, 0xff0700B6);
 	m_blueScore = GUIText();
-	m_blueScore.Initialize("0", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13, 0xffB71300);
+	m_blueScore.Initialize("0", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13.0f, 0xffB71300);
 
 	// Timer text
 	m_timerText = GUIText();
-	m_timerText.Initialize("", 25.0f, m_originPos.x, m_originPos.y + 15, 0xffffffff);
+	m_timerText.Initialize("", 25.0f, m_originPos.x, m_originPos.y + 15.0f, 0xffffffff);
 
 	// Send so we are synced with the server
 	Network::GetInstance()->SyncTimer();
 	Network::GetInstance()->SyncTeamScore();
 
-	m_fpsTimer.Initialize(GLOBAL::GetInstance().FPS, 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f)*0.5f, m_originPos.y + 18.0f, 0xffffffffff);
+	m_fpsTimer.Initialize(GLOBAL::GetInstance().FPS, 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f) * 0.5f, m_originPos.y + 18.0f, 0xffffffff);
 
 	return true;
 }

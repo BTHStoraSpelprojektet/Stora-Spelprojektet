@@ -78,12 +78,12 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			if (!IntersectingObjectWhenAttacking(spherePos, boxPosition))
 			{
-				// Damage the player
-				p_playerManager->DamagePlayer(playerList[i].guid, damage);
-				break;
-			}
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, damage);
+			break;
 		}
 	}
+}
 }
 
 void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager)
@@ -755,11 +755,11 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 		{
 			if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
-				// Damage the player
-				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
-			}
+			// Damage the player
+			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
 		}
 	}
+}
 }
 
 void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)

@@ -144,11 +144,11 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	SetSpeed(m_originalSpeed);
 	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
 	{
-		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
-		{
-			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
+			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+			{
+				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
+			}
 		}
-	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -180,22 +180,22 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		playerSphere.m_position.y += m_dashDistanceLeft * m_dashDirection.z;		
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
-			if (distance >= m_dashDistanceLeft)
-			{
-				m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-				m_position.z += m_dashDistanceLeft * m_dashDirection.z;
-				m_dashDistanceLeft = 0.0f;
-				m_isDashing = false;
-			}
-			else
-			{
-				m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-				m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-				m_dashDistanceLeft -= distance;
-			}
+		if (distance >= m_dashDistanceLeft)
+		{
+			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+			m_dashDistanceLeft = 0.0f;
+			m_isDashing = false;
+		}
+		else
+		{
+			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+			m_dashDistanceLeft -= distance;
+		}
 
-			// If we dashed, update shadow shapes.
-			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		// If we dashed, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 		}
 		else
 		{
