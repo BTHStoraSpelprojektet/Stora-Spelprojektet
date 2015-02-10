@@ -42,8 +42,8 @@ bool VolleyObject::Update(float p_timer)
 		m_position = DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + y, m_startPosition.z + z);
 
 		// Rotate
-		DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(m_lastPosition.x - m_position.x, m_lastPosition.y - m_position.y, m_lastPosition.z - m_position.z);
-		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(atan2f(direction.y, -direction.x), atan2f(-direction.z, direction.x) - 3.14f *0.5f, 0);
+		DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(m_position.x - m_lastPosition.x, m_position.y - m_lastPosition.y, m_position.z - m_lastPosition.z);
+		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(-atan2f(direction.y, (float)abs(direction.z)), atan2f(direction.x, direction.z), 0);
 		SetRotation(rotation);
 		m_lastPosition = m_position;
 	}
