@@ -43,7 +43,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Load the level.
 	Level level(p_levelName);
 
-	//Shadow Shapes
+	// Initialize the shadow shapes. 
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)
 	{
@@ -68,7 +68,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_playerManager->Initialize();
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), wallList);
 
-	// Frustum
+	// Initlialize the frustum.
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
 	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
@@ -79,14 +79,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
-	// Initialize team status bar.
+	// Initialize the team status bar.
 	m_teamStatusBar = new TeamStatusBar();
 	if (!m_teamStatusBar->Initialize())
 	{
 		return false;
 	}
 	
-	// Initialize directional light
+	// Initialize the directional light.
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
@@ -94,8 +94,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 	GraphicsEngine::InitializeOutling();
 
-
-	// Countdown
+	// Initialize the Countdown.
 	m_countdown = new Countdown();
 	if(!m_countdown->Initialize())
 	{
@@ -148,7 +147,7 @@ void PlayingStateTest::Shutdown()
 	{
 		m_countdown->Shutdown();
 		delete m_countdown;
-}
+	}
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
