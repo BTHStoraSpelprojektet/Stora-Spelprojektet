@@ -117,5 +117,7 @@ protected:
 	float m_originalSpeed;
 
 	float m_naginataStbTime;
+
+	bool m_updateVisibility;
 };
 #endif PLAYER

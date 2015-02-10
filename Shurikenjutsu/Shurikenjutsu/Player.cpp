@@ -59,6 +59,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	throwDistance = 0.0f;
 
+	m_updateVisibility = false;
+
 	m_globalCooldown = 0.0f;
 	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
 
@@ -118,6 +120,12 @@ void Player::Shutdown()
 
 void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 {
+	if (m_updateVisibility)
+	{
+		m_updateVisibility = false;
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+	}
+
 	// Check values from server
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -222,7 +230,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 		Network::GetInstance()->UpdatedMoveFromInvalidMove();
 
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(myPlayer.x, myPlayer.z), GraphicsEngine::GetDevice());
+		m_updateVisibility = true;
 	}
 
 	// Check if the player need to respawn
@@ -232,7 +240,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
 		Network::GetInstance()->SetHaveRespawned();
 
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(myPlayer.x, myPlayer.z), GraphicsEngine::GetDevice());
+		m_updateVisibility = true;
 	}
 
 	m_ability = m_noAbility;
