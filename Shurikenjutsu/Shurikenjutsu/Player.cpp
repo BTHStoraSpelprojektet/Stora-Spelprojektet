@@ -252,13 +252,6 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			m_globalCooldown = m_maxGlobalCooldown;
 	}
 	}
-
-	if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
-	{
-		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
-		Network::GetInstance()->ResetNaginataStabBoolean();
-	}
-
 	UpdateAbilityBar();
 }
 
@@ -268,23 +261,23 @@ void Player::CheckForSpecialAttack()
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_rangeSpecialAttack;
-	}
+			m_ability = m_rangeSpecialAttack;
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_meleeSpecialAttack;
-	}
+			m_ability = m_meleeSpecialAttack;
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_toolAbility;
+			m_ability = m_toolAbility;
+		}
 	}
-}
 }
 
 bool Player::CalculateDirection()
@@ -774,47 +767,57 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 }
 
 void Player::UpdateAbilityBar()
+{
+	if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
 	{
+		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		m_maxGlobalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		Network::GetInstance()->ResetNaginataStabBoolean();
+	}
+	else if (m_globalCooldown < 0)
+	{
+		m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+	}
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
-		{
-		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(),m_meleeAttack->GetStacks(), 0);
-		}
-		else
-		{
+	{
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), m_meleeAttack->GetStacks(), 0);
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
 	}
 	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
-		}
-		else
-		{
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
 	}
 	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
-		}
-		else
-		{
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
 	}
 	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
-		}
-		else
-		{
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
-			}
-	if ((float)m_toolAbility->GetCooldown() > 0.0f)
-			{
-		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
-}
+	}
 	else
-{
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
+	}
+	if ((float)m_toolAbility->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
-}
+	}	
 }
 
 void Player::Render()
