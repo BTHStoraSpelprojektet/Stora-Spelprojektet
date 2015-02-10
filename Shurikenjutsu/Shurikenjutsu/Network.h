@@ -118,6 +118,10 @@ public:
 	void SyncTeamScore();
 	int GetRedTeamScore();
 	int GetBlueTeamScore();
+	int GetLastWinningTeam();
+
+	bool CheckIfNaginataStabAttackIsPerformed();
+	void ResetNaginataStabBoolean();
 
 private:
 
@@ -159,6 +163,7 @@ private:
 	int m_connectionCount;
 	int m_previousCount;
 
+	bool m_NaginataStabPerformed;
 	bool m_newOrRemovedPlayers;
 	bool m_shurikenListUpdated;
 	bool m_smokebombListUpdated;
@@ -187,6 +192,7 @@ private:
 	DirectX::XMFLOAT3 m_dashLocation;
 	int m_redTeamScore;
 	int m_blueTeamScore;
+	int m_lastTeamWon;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;

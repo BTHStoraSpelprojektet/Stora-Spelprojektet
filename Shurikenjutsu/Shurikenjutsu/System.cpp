@@ -3,7 +3,6 @@
 #include "Timer.h"
 #include "ConsoleFunctions.h"
 #include "GraphicsEngine.h"
-#include "Debug.h"
 #include "GUIManager.h"
 #include "ChooseState.h"
 #include "MenuState.h"
@@ -112,7 +111,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('q'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('e'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('l'));
-	InputManager::GetInstance()->RegisterKey(VkKeyScan('f'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('v'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('r'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);
@@ -141,12 +139,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	Network::GetInstance()->Initialize();
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
-
-	// Run all tests that are in the debug class.
-	if (FLAG_RUN_TESTS == 1)
-	{
-		m_debug->RunTests(p_argc, p_argv);
-	}
 
 	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 
@@ -279,11 +271,7 @@ void System::Update()
 
 		if (fps != m_previousFPS)
 		{
-			std::string title = m_title + " (FPS: ";
-			title.append(std::to_string(m_timer->GetFPS()) + ") ");
-
-			m_window.SetTitle(title);
-
+			GLOBAL::GetInstance().FPS = std::to_string(m_timer->GetFPS());
 			m_previousFPS = fps;
 		}
 	}

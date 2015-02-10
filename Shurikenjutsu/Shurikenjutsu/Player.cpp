@@ -116,7 +116,6 @@ void Player::Shutdown()
 }
 }
 
-
 void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	// Check values from server
@@ -145,14 +144,11 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	SetSpeed(m_originalSpeed);
 	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
 	{
-		if (p_stickyTrapList[i]->GetGUID() != Network::GetInstance()->GetMyGUID())
-		{
 			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
 			{
 				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
 			}
 		}
-	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -237,8 +233,8 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_meleeAttack;
-	}
+			m_ability = m_meleeAttack;
+		}
 	}
 
 
@@ -248,15 +244,14 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
-	{
-		// Play ability animation if we did any
-		DoAnimation();
+		{
+			// Play ability animation if we did any
+			DoAnimation();
 
 			// Set global cooldown
 			m_globalCooldown = m_maxGlobalCooldown;
+		}
 	}
-	}
-
 	UpdateAbilityBar();
 }
 
@@ -773,9 +768,19 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::UpdateAbilityBar()
 	{
+	if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
+	{
+		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		m_maxGlobalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		Network::GetInstance()->ResetNaginataStabBoolean();
+	}
+	else if (m_globalCooldown < 0)
+	{
+		m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+	}
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
 		{
-		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(),m_meleeAttack->GetStacks(), 0);
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), m_meleeAttack->GetStacks(), 0);
 		}
 		else
 		{

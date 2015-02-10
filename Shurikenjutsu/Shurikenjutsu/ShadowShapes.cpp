@@ -1,4 +1,8 @@
 #include "ShadowShapes.h"
+#include "../CommonLibs/GameplayGlobalVariables.h"
+#include "Globals.h"
+#include "ConsoleFunctions.h"
+#include "VisibilityComputer.h"
 
 ShadowShapes& ShadowShapes::GetInstance()
 {
@@ -11,8 +15,6 @@ bool ShadowShapes::Initialize()
 {
 	m_boundries.clear();
 	m_staticLines.clear();
-	m_dynamicLines.clear();
-
 	m_uniquePoints.clear();
 	m_uniqueBoundryPoints.clear();
 
@@ -25,8 +27,6 @@ void ShadowShapes::Shutdown()
 {
 	m_boundries.clear();
 	m_staticLines.clear();
-	m_dynamicLines.clear();
-
 	m_uniquePoints.clear();
 	m_uniqueBoundryPoints.clear();
 
@@ -123,6 +123,30 @@ void ShadowShapes::AddStaticSquare(Point p_topLeft, Point p_bottomRight)
 	}
 }
 
+void ShadowShapes::AddSmokeBombShape(Point p_center)
+{
+	SmokeBombShadowShape smokebomb;
+
+	smokebomb.m_alive = true;
+
+	smokebomb.m_uniquePoints[0] = Point(p_center.x, p_center.y + 3.5f);
+	smokebomb.m_uniquePoints[1] = Point(p_center.x + 3.5f, p_center.y);
+	smokebomb.m_uniquePoints[2] = Point(p_center.x, p_center.y - 3.5f);
+	smokebomb.m_uniquePoints[3] = Point(p_center.x - 3.5f, p_center.y);
+
+	smokebomb.m_segments[0] = Line(smokebomb.m_uniquePoints[0], smokebomb.m_uniquePoints[1]);
+	smokebomb.m_segments[1] = Line(smokebomb.m_uniquePoints[1], smokebomb.m_uniquePoints[2]);
+	smokebomb.m_segments[2] = Line(smokebomb.m_uniquePoints[2], smokebomb.m_uniquePoints[3]);
+	smokebomb.m_segments[3] = Line(smokebomb.m_uniquePoints[3], smokebomb.m_uniquePoints[0]);
+
+	smokebomb.m_timePassed = 0.0f;
+	smokebomb.m_timeToLive = SMOKEBOMB_DURATION + 1.0f;
+
+	m_smokeBombs.push_back(smokebomb);
+
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), GraphicsEngine::GetDevice());
+}
+
 void ShadowShapes::UpdateBoundries(Point p_topLeft, Point p_bottomRight)
 {
 	m_boundries.clear();
@@ -149,65 +173,38 @@ void ShadowShapes::UpdateBoundries(Point p_topLeft, Point p_bottomRight)
 	m_uniqueBoundryPoints.push_back(left.a);
 }
 
-int ShadowShapes::AddDynamicLine(Line p_line)
+void ShadowShapes::Update()
 {
-	// Add the line to the list.
-	m_dynamicLines.push_back(p_line);
-	
-	// Return the index at which the line was placed.
-	return m_dynamicLines.size();
-}
+	float dt = (float)GLOBAL::GetInstance().GetDeltaTime();
 
-int ShadowShapes::AddDynamicShape(std::vector<Line> p_shape)
-{ 
-	int index = -1;
-
-	if (p_shape.size() > 0)
+	// Add delta time to all smokebombs.
+	for (unsigned int i = 0; i < m_smokeBombs.size(); i++)
 	{
-		// Add the first line to the list.
-		m_dynamicLines.push_back(p_shape[0]);
+		m_smokeBombs[i].m_timePassed += dt;
 
-		// Save the index at which the line was placed.
-		index = m_dynamicLines.size();
-
-		// Add the rest of the lines to the list.
-		for (unsigned int i = 1; i < p_shape.size(); i++)
+		if (m_smokeBombs[i].m_timePassed > m_smokeBombs[i].m_timeToLive)
 		{
-			m_dynamicLines.push_back(p_shape[i]);
+			m_smokeBombs[i].m_alive = false;
 		}
-
-		return index;
 	}
 
-	else
+	bool deletedThisFrame = false;
+
+	// Clear old smokebombs.
+	for (unsigned int i = m_smokeBombs.size(); i-- > 0;)
 	{
-		ConsolePrintError("Tried to add an empty shape to the dynamic shadow shapes.");
+		if (!m_smokeBombs[i].m_alive)
+		{
+			m_smokeBombs.erase(m_smokeBombs.begin() + i);
 
-		return index;
+			deletedThisFrame = true;
+		}
 	}
-}
 
-int ShadowShapes::AddSmokeBombShape(Point p_center)
-{
-	int index = 0;
-
-	// TODO
-
-	return index;
-}
-
-void ShadowShapes::RemoveDynamicLine(int p_atIndex)
-{
-	m_dynamicLines.erase(m_dynamicLines.begin() + p_atIndex);
-
-	// TODO, this will fuck over every other index...
-}
-
-void ShadowShapes::RemoveDynamicShape(int p_atIndex, int p_numberOfLines)
-{
-	m_dynamicLines.erase(m_dynamicLines.begin() + p_atIndex, m_dynamicLines.begin() + p_atIndex + p_numberOfLines);
-
-	// TODO, this will fuck over every other index...
+	if (deletedThisFrame)
+	{
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), GraphicsEngine::GetDevice());
+	}
 }
 
 std::vector<Line> ShadowShapes::GetBoundryLines()
@@ -219,6 +216,12 @@ std::vector<Line> ShadowShapes::GetStaticLines(Point a, Point b)
 {
 	std::vector<Line> list;
 
+	// Add boundries.
+	for (unsigned int i = 0; i < m_boundries.size(); i++)
+	{
+		list.push_back(m_boundries[i]);
+	}
+
 	for (unsigned int i = 0; i < m_staticLines.size(); i++)
 	{
 		if ((m_staticLines[i].a.x >= a.x && m_staticLines[i].a.x <= b.x && m_staticLines[i].a.y <= a.y && m_staticLines[i].a.y >= b.y) && (m_staticLines[i].b.x >= a.x && m_staticLines[i].b.x <= b.x && m_staticLines[i].b.y <= a.y && m_staticLines[i].b.y >= b.y))
@@ -227,20 +230,24 @@ std::vector<Line> ShadowShapes::GetStaticLines(Point a, Point b)
 		}
 	}
 
-	return list;
-}
+	for (unsigned int i = 0; i < m_smokeBombs.size(); i++)
+	{
+		if (m_smokeBombs[i].m_uniquePoints[3].x > a.x || m_smokeBombs[i].m_uniquePoints[1].x < b.x || m_smokeBombs[i].m_uniquePoints[0].y < a.y || m_smokeBombs[i].m_uniquePoints[2].y > b.y)
+		{
+			list.push_back(m_smokeBombs[i].m_segments[0]);
+			list.push_back(m_smokeBombs[i].m_segments[1]);
+			list.push_back(m_smokeBombs[i].m_segments[2]);
+			list.push_back(m_smokeBombs[i].m_segments[3]);
+		}
+	}
 
-std::vector<Line> ShadowShapes::GetDynamicLines()
-{
-	return m_dynamicLines;
+	return list;
 }
 
 void ShadowShapes::DebugRender()
 {
 	// Render every static line.
 	m_staticDebugLines.Render();
-
-	// TODO, perhaps render dynamic?
 }
 
 void ShadowShapes::AddDebugLines(Point p_a, Point p_b)
@@ -269,6 +276,13 @@ std::vector<Point> ShadowShapes::GetUniquePoints(Point a, Point b)
 {
 	std::vector<Point> points;
 
+	// Add boundries.
+	for (unsigned int i = 0; i < m_uniqueBoundryPoints.size(); i++)
+	{
+		points.push_back(m_uniqueBoundryPoints[i]);
+	}
+
+	// Add the points inside the boundries.
 	for (unsigned int i = 0; i < m_uniquePoints.size(); i++)
 	{
 		if (m_uniquePoints[i].x > a.x && m_uniquePoints[i].x < b.x && m_uniquePoints[i].y < a.y && m_uniquePoints[i].y > b.y)
@@ -277,9 +291,15 @@ std::vector<Point> ShadowShapes::GetUniquePoints(Point a, Point b)
 		}
 	}
 
-	for (unsigned int i = 0; i < m_uniqueBoundryPoints.size(); i++)
+	for (unsigned int i = 0; i < m_smokeBombs.size(); i++)
 	{
-		points.push_back(m_uniqueBoundryPoints[i]);
+		if (m_smokeBombs[i].m_uniquePoints[3].x > a.x || m_smokeBombs[i].m_uniquePoints[1].x < b.x || m_smokeBombs[i].m_uniquePoints[0].y < a.y || m_smokeBombs[i].m_uniquePoints[2].y > b.y)
+		{
+			points.push_back(m_smokeBombs[i].m_uniquePoints[0]);
+			points.push_back(m_smokeBombs[i].m_uniquePoints[1]);
+			points.push_back(m_smokeBombs[i].m_uniquePoints[2]);
+			points.push_back(m_smokeBombs[i].m_uniquePoints[3]);
+		}
 	}
 
 	return points;

@@ -60,5 +60,5 @@ float4 main(Input p_input) : SV_Target
 	}
 
 	// Return shaded pixel.
-	return float4(0.0f, 0.0f, 0.0f, 0.60f - shadowSum);;
+	return float4(0.0f, 0.0f, 0.0f, 0.75f - shadowSum);;
 }

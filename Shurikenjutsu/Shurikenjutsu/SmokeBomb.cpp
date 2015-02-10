@@ -5,6 +5,7 @@
 #include "ParticleEmitter.h"
 #include "Object.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "ShadowShapes.h"
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {
@@ -49,15 +50,20 @@ void SmokeBomb::Update()
 		{
 			ResetTimer();
 			m_isThrowing = false;
+			
+			ShadowShapes::GetInstance().AddSmokeBombShape(Point(m_startPosition.x + x, m_startPosition.z + z));
 		}
 	}
+
 	else
 	{		
 		m_particles->Update();
+
 		if (m_timer < SMOKEBOMB_DURATION)
 		{
 			m_particles->SetEmitParticleState(true);
 		}
+
 		else
 		{
 			m_particles->SetEmitParticleState(false);
@@ -99,6 +105,7 @@ bool SmokeBomb::GetIfActive()
 	{
 		return true;
 	}
+
 	else
 	{
 		return false;
@@ -111,6 +118,7 @@ Sphere SmokeBomb::GetSmokeSphere()
 	{
 		return m_bomb->GetFrustumSphere();
 	}
+
 	else
 	{
 		return m_SmokeSphere;

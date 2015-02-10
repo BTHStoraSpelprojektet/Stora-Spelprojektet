@@ -321,19 +321,6 @@ void Camera::HandleInput()
 			ResetCamera();
 		}
 	}
-
-	// Fullscreen toggle.
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('f')))
-	{
-		if (GLOBAL::GetInstance().FULLSCREEN)
-		{
-			ToggleFullscreen(false);
-		}
-		else
-		{
-			ToggleFullscreen(true);
-		}
-	}
 }
 
 void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)

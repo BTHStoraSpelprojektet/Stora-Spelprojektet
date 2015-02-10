@@ -115,5 +115,7 @@ protected:
 	DirectX::XMFLOAT3 m_oldPosition;
 
 	float m_originalSpeed;
+
+	float m_naginataStbTime;
 };
 #endif PLAYER
