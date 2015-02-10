@@ -12,9 +12,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_timer.Initialize();
 	m_timer.StartTimer();
 
-	// Run tests
-	m_debug.RunTests(p_argc, p_argv);
-
 	m_firstUpdate = true;
 	return true;
 }

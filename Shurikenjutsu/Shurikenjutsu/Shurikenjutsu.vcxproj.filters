@@ -36,12 +36,6 @@
     <Filter Include="Header Files\Models">
       <UniqueIdentifier>{ecef9444-c2bd-478b-a3a8-4d1becfb57b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Debug">
-      <UniqueIdentifier>{10cdd217-927d-4bba-9ee3-51c7526894f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Debug">
-      <UniqueIdentifier>{5ee85993-994a-4779-9555-2810aadce6d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Core\Input">
       <UniqueIdentifier>{d6518540-bebd-4645-b9bf-808ccb02fc68}</UniqueIdentifier>
     </Filter>
@@ -190,9 +184,6 @@
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
       <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Debug.cpp">
-      <Filter>Source Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
       <Filter>Source Files\Core\Input</Filter>
@@ -486,9 +477,6 @@
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Header Files\Debug</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Header Files\Core\Input</Filter>
