@@ -61,19 +61,20 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 		case(PARTICLE_PATTERN_WORLD_DUST) :
 		{
-			m_particlesPerSecond = 1250.0f;
-			m_maxParticles = 1250;
+			m_particlesPerSecond = 12000.0f;
+			m_maxParticles = 12000;
 
 			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(35.0f, 5.2f, 45.0f);
+			//m_emitionPositionOffset = DirectX::XMFLOAT3(35.0f, 5.2f, 45.0f);
+			m_emitionPositionOffset = DirectX::XMFLOAT3(0.0f, 5.2f, 45.0f);
 
 			// Set velocity and its variation.
 			m_velocity = 3.0f;
-			m_velocityVariation = 0.1f;
+			m_velocityVariation = 2.9f;
 
-			m_timeToLive = 300.0f;
+			m_timeToLive = 40.0f;
 
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldDustParticle.png");
+			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldDustParticle2.png");
 
 			break;
 		}
@@ -513,11 +514,11 @@ void ParticleEmitter::UpdateParticles()
 					//m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y;
 
-					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive)*35;
-					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive)*35;
+					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 
-					m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
-					m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
+					m_particleList[i].m_position.x = m_particleList[i].m_position.x + (xWindOffset * m_particleList[i].m_velocity);
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (zWindOffset * m_particleList[i].m_velocity);
 
 					// Add time passed.
 					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
@@ -748,10 +749,13 @@ void ParticleEmitter::UpdateBuffers()
 				{
 					if (m_particleList[i].m_color.w < 1.0f)
 					{
+						//m_particleList[i].m_color.w = 1.0f;
+						
 						m_particleList[i].m_color.w += 0.001f;
 						//m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime()
 						m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, m_particleList[i].m_color.w);
 
+						
 						m_particleList[i].m_timeSpecial = 0;
 					}
 

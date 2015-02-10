@@ -59,6 +59,7 @@ private:
 	unsigned int m_currentParticles;
 
 	float m_globalWindAngleDegree = 315;
+	//float m_globalWindAngleDegree = 0;
 	float getWindOffsetX(float timePassed, float timeToLive);
 	float getWindOffsetZ(float timePassed, float timeToLive);
 

@@ -154,8 +154,8 @@ const float PARTICLE_GREENLEAF_SIZE_Y = 0.15f;
 const float PARTICLE_WORLDMIST_SIZE_X = 14.15f;
 const float PARTICLE_WORLDMIST_SIZE_Y = 14.15f;
 
-const float PARTICLE_WORLDDUST_SIZE_X = 0.1f;
-const float PARTICLE_WORLDDUST_SIZE_Y = 0.1f;
+const float PARTICLE_WORLDDUST_SIZE_X = 0.03f;
+const float PARTICLE_WORLDDUST_SIZE_Y = 0.03f;
 
 ////////////////////////////////////////////////////////////////World Particles
 
