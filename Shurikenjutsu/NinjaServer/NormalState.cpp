@@ -1,5 +1,10 @@
 #include "NormalState.h"
 
+#include "SpikeManager.h"
+#include "ProjectileManager.h"
+#include "StickyTrapManager.h"
+#include "VolleyManager.h"
+
 
 NormalState::NormalState(){}
 NormalState::~NormalState(){}
@@ -78,6 +83,7 @@ void NormalState::Update(double p_deltaTime)
 			SendRestartedRound();
 			RespawnAllPlayers();
 			ResetTime();
+			ClearAllListAtRoundRestart();
 		}
 	}
 	// Check if there is only one team remaining
@@ -268,4 +274,15 @@ void NormalState::SendMatchOver(int p_winningTeam)
 	bitStream.Write(p_winningTeam);
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void NormalState::ClearAllListAtRoundRestart()
+{
+	m_shurikenManager->ResetLists();
+	m_smokeBombManager->ResetLists();
+	m_spikeManager->ResetLists();
+	m_fanBoomerangManager->ResetLists();
+	m_projectileManager->ResetLists();
+	m_stickyTrapManager->ResetLists();
+	m_volleyManager->ResetLists();
 }

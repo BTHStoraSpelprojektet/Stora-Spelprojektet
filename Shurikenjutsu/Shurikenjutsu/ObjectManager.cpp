@@ -180,6 +180,11 @@ void ObjectManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
+	if (Network::GetInstance()->RoundRestarted())
+	{
+		ResetListSinceRoundRestarted();
+	}
+
 	// Update all the shurikens
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
@@ -789,4 +794,49 @@ void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ,
 	DirectX::XMFLOAT3 end = DirectX::XMFLOAT3(p_endX, 0.0f, p_endZ);
 	temp->Initialize(start, end);
 	m_volleys.push_back(temp);
+}
+void ObjectManager::ResetListSinceRoundRestarted()
+{
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		m_shurikens[i]->Shutdown();
+		delete m_shurikens[i];
+	}
+	m_shurikens.clear();
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		m_smokeBombList[i]->Shutdown();
+		delete m_smokeBombList[i];
+	}
+	m_smokeBombList.clear();
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		m_spikeTrapList[i]->Shutdown();
+		delete m_spikeTrapList[i];
+	}
+	m_spikeTrapList.clear();
+	for (unsigned int i = 0; i < m_fans.size(); i++)
+	{
+		m_fans[i]->Shutdown();
+		delete m_fans[i];
+	}
+	m_fans.clear();
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		m_projectiles[i]->Shutdown();
+		delete m_projectiles[i];
+	}
+	m_projectiles.clear();
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		m_stickyTrapList[i]->Shutdown();
+		delete m_stickyTrapList[i];
+	}
+	m_stickyTrapList.clear();
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		m_volleys[i]->Shutdown();
+		delete m_volleys[i];
+	}
+	m_volleys.clear();
 }

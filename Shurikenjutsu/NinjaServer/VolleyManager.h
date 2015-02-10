@@ -25,6 +25,7 @@ public:
 
 	float GetCurrentDistanceFromPlayer();
 	void SetCurrentDistanceFromPlayer(float p_distance);
+	void ResetLists();
 
 private:
 	RakNet::RakPeerInterface *m_serverPeer;
