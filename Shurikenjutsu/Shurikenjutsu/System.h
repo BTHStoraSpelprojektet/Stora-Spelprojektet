@@ -29,7 +29,6 @@ private:
 
 	Window m_window;
 	Timer* m_timer;
-	Debug* m_debug;
 
 	std::string m_title;
 	int m_previousFPS;

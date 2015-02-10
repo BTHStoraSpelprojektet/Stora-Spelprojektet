@@ -252,13 +252,6 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			m_globalCooldown = m_maxGlobalCooldown;
 	}
 	}
-
-	if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
-	{
-		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
-		Network::GetInstance()->ResetNaginataStabBoolean();
-	}
-
 	UpdateAbilityBar();
 }
 
@@ -775,9 +768,19 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::UpdateAbilityBar()
 	{
+	if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
+	{
+		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		m_maxGlobalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		Network::GetInstance()->ResetNaginataStabBoolean();
+	}
+	else if (m_globalCooldown < 0)
+	{
+		m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+	}
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
 		{
-		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(),m_meleeAttack->GetStacks(), 0);
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), m_meleeAttack->GetStacks(), 0);
 		}
 		else
 		{

@@ -3,7 +3,6 @@
 #include "Timer.h"
 #include "ConsoleFunctions.h"
 #include "GraphicsEngine.h"
-#include "Debug.h"
 #include "GUIManager.h"
 #include "ChooseState.h"
 #include "MenuState.h"
@@ -141,12 +140,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	Network::GetInstance()->Initialize();
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
-
-	// Run all tests that are in the debug class.
-	if (FLAG_RUN_TESTS == 1)
-	{
-		m_debug->RunTests(p_argc, p_argv);
-	}
 
 	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
 

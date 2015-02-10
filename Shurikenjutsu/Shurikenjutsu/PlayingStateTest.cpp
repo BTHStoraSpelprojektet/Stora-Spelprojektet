@@ -14,6 +14,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
 #include "ParticleEmitter.h"
+#include "Countdown.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -41,9 +42,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	// Load the level.
 	Level level(p_levelName);
-
-	
-
 
 	//Shadow Shapes
 	std::vector<Line> lines = level.GetShadowsShapes();
@@ -108,7 +106,16 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 	GraphicsEngine::InitializeOutling();
 
+
+	// Countdown
+	m_countdown = new Countdown();
+	if(!m_countdown->Initialize())
+	{
+		return false;
+	}
+
 	m_renderOutlining = false;
+
 
 	OnScreenResize();
 
@@ -153,6 +160,12 @@ void PlayingStateTest::Shutdown()
 	{
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
+}
+
+	if (m_countdown != NULL)
+	{
+		m_countdown->Shutdown();
+		delete m_countdown;
 }
 }
 
@@ -251,6 +264,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
+	// Countdown
+	m_countdown->Update();
+	
 	if (resized)
 	{
 		// Reupdate the polygon.
@@ -303,6 +319,7 @@ void PlayingStateTest::Render()
 
 	m_minimap->Render();
 	m_teamStatusBar->Render();
+	m_countdown->Render();
 
 	// OUTLINING
 	if (m_renderOutlining)
