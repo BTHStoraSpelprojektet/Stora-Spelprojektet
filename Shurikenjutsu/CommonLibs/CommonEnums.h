@@ -35,7 +35,8 @@ enum EmitterType{
 	Smoke,
 	LeafTree,
 	LeafSakura,
-	WorldMist
+	WorldMist,
+	WorldDust
 };
 
 #endif // !COMMONENUMS_H_

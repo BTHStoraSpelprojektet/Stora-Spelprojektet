@@ -250,6 +250,9 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			else if (particleEmitterType.find("WorldMist") != std::string::npos){
 				particleEmitter.type = EmitterType::WorldMist;
 			}
+			else if (particleEmitterType.find("WorldDust") != std::string::npos){
+				particleEmitter.type = EmitterType::WorldDust;
+			}
 
 			m_particleEmitter.push_back(particleEmitter);
 		}
