@@ -76,7 +76,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		// Make collision test
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, range, attackDirection, boxPosition, boxExtent, range))
 		{
-			if (IntersectingObjectWhenAttacking(spherePos, boxPosition))
+			if (!IntersectingObjectWhenAttacking(spherePos, boxPosition))
 			{
 			// Damage the player
 			p_playerManager->DamagePlayer(playerList[i].guid, damage);
@@ -712,7 +712,7 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			if (*distance <= WHIP_RANGE)
 			{
-				if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+				if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 				{
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
@@ -753,7 +753,7 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackPosition, WHIP_SP_RANGE, spherePosition, 1.0f))
 		{
-			if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
 			// Damage the player
 			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
@@ -821,7 +821,7 @@ void CollisionManager::NaginataStbDot( PlayerManager* p_playerManager)
 		// Make collision test
 		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
 		{
-			if (IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
 				// Damage the player
 						p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE * m_deltaTime);
@@ -897,10 +897,10 @@ bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attac
 	{
 		if (distance > listOfDistances[i])
 		{
-			return false;
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 bool CollisionManager::RayOBBTest(Ray *p_ray, OBB p_Obb)
 {

@@ -1184,7 +1184,7 @@ bool Network::IsSmokeBombListUpdated()
 
 bool Network::IsSpikeTrapListUpdated()
 {
-	return m_stickyTrapListUpdated;
+	return m_spikeTrapListUpdated;
 }
 
 void Network::SetHaveUpdateSpikeTrapList()
