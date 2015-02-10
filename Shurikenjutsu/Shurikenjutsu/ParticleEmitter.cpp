@@ -451,30 +451,22 @@ void ParticleEmitter::UpdateParticles()
 			if (m_particleList != NULL){
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
-					// TODO kanske ge droppform.
-
-					// Burn upwards, ignoring direction.
-					//m_particleList[i].m_position.x = ;
-
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
-
 					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-
 					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-					//*(rand() % 1)
 
-					if (timeToDirectionChange>m_particleList[i].m_timePassed){
+					if (timeToDirectionChange>m_particleList[i].m_timePassed)
+					{
 						m_particleList[i].m_position.x = m_particleList[i].m_position.x - xWindOffset;
 					}
-					else{
+
+					else
+					{
 						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
 					}
 
-					m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
-
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
-					
-					//m_particleList[i].m_position.z = ;
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
 
 					// Add time passed.
 					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();

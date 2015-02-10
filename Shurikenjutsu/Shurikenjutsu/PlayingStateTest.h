@@ -50,13 +50,8 @@ private:
 
 	bool m_renderOutlining;
 
-	// ========== DEBUG LINES ==========
 	float m_mouseX;
 	float m_mouseY;
-
-	DebugDot m_debugDot;
-	DebugRectangle m_debugRect;
-	// ========== DEBUG LINES ==========
 
 	Frustum *m_frustum;
 
