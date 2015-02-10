@@ -64,13 +64,14 @@ bool MenuState::Initialize()
 
 	// Initialize play menu
 	m_ipbox = new MenuIpBox();
-	m_ipbox->Initialize(0.0f, 0.0f, 301.0f, 55.0f);
+	m_ipbox->Initialize(0.0f, 0.0f, 304.0f, 67.0f);
 	m_ipboxText = new GUIText();
 	m_ipboxText->Initialize(m_ipbox->GetIp(), 36.0f, 0.0f, 0.0f, 0xff333333);
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);
 	m_play->AddButton(0.0f, -2.0f*BUTTONHEIGHT -3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	m_play->AddTexture(0.0f, 96.0f, 97.0f, 96.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ip_text.png"));
 	m_hideIpBox = true;
 
 	// Initialize connecting menu;
@@ -271,6 +272,13 @@ GAMESTATESWITCH MenuState::Update()
 
 void MenuState::Render()
 {
+	// Special case for ipbox
+	if (!m_hideIpBox)
+	{
+		m_ipbox->Render();
+		m_ipboxText->Render();
+	}
+
 	if (!m_menues.empty())
 	{
 		if (m_menues.top() != NULL)
@@ -279,12 +287,7 @@ void MenuState::Render()
 		}
 	}
 
-	// Special case for ipbox
-	if (!m_hideIpBox)
-	{
-		m_ipbox->Render();
-		m_ipboxText->Render();
-	}
+
 
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
