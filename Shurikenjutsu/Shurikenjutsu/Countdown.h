@@ -18,6 +18,14 @@ public:
 private:
 	GUIText m_cdText;
 	bool m_render;
+
+	float m_minSize;
+	float m_maxSize;
+	int m_prevTime;
+	float m_currentSize;
+
+	UINT32 m_redColor;
+	UINT32 m_blueColor;
 };
 
 #endif
