@@ -233,3 +233,7 @@ float FanBoomerangManager::SetLifeTime(int p_index, float p_lifeTime)
 {
 	return m_fans[p_index].lifeTime = p_lifeTime;
 }
+void FanBoomerangManager::ResetLists()
+{
+	m_fans.clear();
+}

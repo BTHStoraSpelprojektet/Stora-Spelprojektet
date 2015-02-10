@@ -214,3 +214,8 @@ float ProjectileManager::GetProjectilePosZ(int p_index)
 	float lifeTime = setTimeLeft - m_projectiles[p_index].lifeTime;
 	return m_projectiles[p_index].z + m_projectiles[p_index].dirZ * m_projectiles[p_index].speed * lifeTime;
 }
+
+void ProjectileManager::ResetLists()
+{
+	m_projectiles.clear();
+}

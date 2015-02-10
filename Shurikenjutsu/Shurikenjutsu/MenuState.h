@@ -39,6 +39,7 @@ private:
 	MenuIpBox* m_ipbox;
 	bool m_hideIpBox;
 	GUIText* m_ipboxText;
+	GUIText* m_ipText;
 
 	bool m_lastvsync;
 	bool m_lastfullscreen;

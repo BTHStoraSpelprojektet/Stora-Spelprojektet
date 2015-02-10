@@ -21,6 +21,7 @@ public:
 	void BroadcastEmptyStickyTraps(unsigned int p_id);
 	float GetCurrentDistanceFromPlayer();
 	void SetCurrentDistanceFromPlayer(float p_distance);
+	void ResetLists();
 
 
 private:
