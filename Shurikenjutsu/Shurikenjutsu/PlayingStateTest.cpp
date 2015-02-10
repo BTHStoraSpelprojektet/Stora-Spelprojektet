@@ -14,6 +14,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
 #include "ParticleEmitter.h"
+#include "Countdown.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -93,6 +94,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 	GraphicsEngine::InitializeOutling();
 
+
+	// Countdown
+	m_countdown = new Countdown();
+	if(!m_countdown->Initialize())
+	{
+		return false;
+	}
+
 	m_renderOutlining = false;
 
 	m_mouseX = 0;
@@ -133,6 +142,12 @@ void PlayingStateTest::Shutdown()
 	{
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
+}
+
+	if (m_countdown != NULL)
+	{
+		m_countdown->Shutdown();
+		delete m_countdown;
 }
 }
 
@@ -231,6 +246,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
+	// Countdown
+	m_countdown->Update();
+	
 	if (resized)
 	{
 		// Reupdate the polygon.
@@ -273,6 +291,7 @@ void PlayingStateTest::Render()
 
 	m_minimap->Render();
 	m_teamStatusBar->Render();
+	m_countdown->Render();
 
 	// Render outlining.
 	if (m_renderOutlining)
