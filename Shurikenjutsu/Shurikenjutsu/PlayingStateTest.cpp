@@ -43,9 +43,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Load the level.
 	Level level(p_levelName);
 
-	
-
-
 	//Shadow Shapes
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)
@@ -169,7 +166,7 @@ void PlayingStateTest::Shutdown()
 	{
 		m_countdown->Shutdown();
 		delete m_countdown;
-	}
+}
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -266,7 +263,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
-	
+
 	// Countdown
 	m_countdown->Update();
 	
