@@ -16,6 +16,11 @@ bool Timer::Initialize()
 	return true;
 }
 
+void Timer::Shutdown()
+{
+	return;
+}
+
 void Timer::StartTimer()
 {
 	LARGE_INTEGER value;

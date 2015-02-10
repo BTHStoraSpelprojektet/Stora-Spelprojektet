@@ -78,6 +78,8 @@ public:
 	DirectX::XMFLOAT4X4 GetViewPolygonMatrix();
 	DirectX::XMFLOAT4X4 GetProjectionPolygonMatrix();
 
+	ID3D11ShaderResourceView* GetRenderTarget();
+
 	void RebuildQuad(Point p_topLeft, Point p_bottomRight);
 
 private:

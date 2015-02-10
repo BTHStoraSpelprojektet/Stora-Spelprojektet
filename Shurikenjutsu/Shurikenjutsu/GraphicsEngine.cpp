@@ -12,6 +12,7 @@
 #include "VisibilityComputer.h"
 #include "OutlingShader.h"
 #include "Object.h"
+#include "FoliageShader.h"
 
 DirectXWrapper GraphicsEngine::m_directX;
 SceneShader GraphicsEngine::m_sceneShader;
@@ -25,6 +26,7 @@ IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
 IFW1TextGeometry* GraphicsEngine::m_textGeometry;
 InstanceManager* GraphicsEngine::m_instanceManager;
 bool GraphicsEngine::m_screenChanged;
+FoliageShader GraphicsEngine::m_foliageShader;
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -78,6 +80,13 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsoleSkipLines(1);
 	}
 
+	// Initialize the foliage buffer.
+	if (m_foliageShader.Initialize(m_directX.GetDevice()))
+	{
+		ConsolePrintSuccess("Foliage shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+
 	// Initialize the visibility computer.
 	ShadowShapes::GetInstance().Initialize();
 	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
@@ -94,15 +103,6 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 
 		ConsoleSkipLines(1);
 	}
-
-	/*
-	// Initialize OutliningShader
-	if (m_outliningShader.Initialize())
-	{
-		ConsolePrintSuccess("Outlining shader initialized successfully.");
-		ConsoleSkipLines(1);
-	}
-	*/
 
 	// Create the font wrapper.
 	IFW1Factory* FW1Factory;
@@ -183,6 +183,11 @@ void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 	m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
 }
 
+void GraphicsEngine::RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap)
+{
+	m_sceneShader.RenderReversedShadows(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_visibilityMap);
+}
+
 void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
 	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
@@ -237,16 +242,27 @@ void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, Di
 	TurnOffAlphaBlending();
 }
 
+void GraphicsEngine::RenderFoliage()
+{
+	TurnOnAlphaBlending();
+
+	m_foliageShader.Render(m_directX.GetContext(), m_shadowMap.GetRenderTarget());
+
+	TurnOffAlphaBlending();
+}
+
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_foliageShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
 	m_sceneShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_foliageShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetShadowMap()

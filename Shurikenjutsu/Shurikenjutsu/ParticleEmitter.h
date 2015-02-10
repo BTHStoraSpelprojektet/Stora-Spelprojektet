@@ -58,12 +58,18 @@ private:
 	unsigned int m_maxParticles;
 	unsigned int m_currentParticles;
 
+	float m_globalWindAngleDegree = 315;
+	float getWindOffsetX(float timePassed, float timeToLive);
+	float getWindOffsetZ(float timePassed, float timeToLive);
 
 	struct Particle
 	{
+		DirectX::XMFLOAT3 m_initPosition;
+
 		DirectX::XMFLOAT3 m_position;
 		DirectX::XMFLOAT3 m_direction;
 		DirectX::XMFLOAT4 m_color;
+
 
 		float m_velocity;
 		float m_rotation;
@@ -73,6 +79,7 @@ private:
 
 		float m_timeToLive;
 		float m_timePassed;
+		float m_timeSpecial = 0.0f;
 	};
 	Particle* m_particleList;
 	

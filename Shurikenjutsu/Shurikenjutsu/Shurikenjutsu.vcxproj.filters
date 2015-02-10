@@ -156,6 +156,9 @@
     <Filter Include="Header Files\Utility\DebugDraw">
       <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Foliage">
+      <UniqueIdentifier>{69a518e2-9142-4210-8a9d-aaae94d9a5cd}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Header Files\Object\Tools">
       <UniqueIdentifier>{28a61adb-30fb-4a35-b435-d67b7127f896}</UniqueIdentifier>
     </Filter>
@@ -410,11 +413,11 @@
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="NaginataStab.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
     <ClCompile Include="TeamStatusBar.cpp">
       <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="InstanceManager.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="StickyTrapAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
@@ -430,6 +433,24 @@
     </ClCompile>
     <ClCompile Include="Spikes.cpp">
       <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Spikes.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="InstanceManager.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="FoliageShader.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="Volley.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="VolleyObject.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="VolleyAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -694,10 +715,16 @@
     <ClInclude Include="Projectile.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
+    <ClInclude Include="NaginataStab.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
     <ClInclude Include="TeamStatusBar.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="InstanceManager.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="FoliageShader.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
     <ClInclude Include="StickyTrapAbility.h">
@@ -714,6 +741,15 @@
     </ClInclude>
     <ClInclude Include="StickyTrap.h">
       <Filter>Header Files\Object\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Volley.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="VolleyObject.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="VolleyAbility.h">
+      <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -779,6 +815,18 @@
     </FxCompile>
     <FxCompile Include="Shaders\Scene\VertexShaderOutlining.hlsl">
       <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Foliage\FoliageGeometryShader.hlsl">
+      <Filter>Shaders\Foliage</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Foliage\FoliagePixelShader.hlsl">
+      <Filter>Shaders\Foliage</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Foliage\FoliageVertexShader.hlsl">
+      <Filter>Shaders\Foliage</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

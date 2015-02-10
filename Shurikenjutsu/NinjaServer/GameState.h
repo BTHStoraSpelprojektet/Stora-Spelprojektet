@@ -12,6 +12,7 @@ class MapManager;
 class CollisionManager;
 class SpikeManager;
 class ProjectileManager;
+class VolleyManager;
 class StickyTrapManager;
 
 class GameState
@@ -51,10 +52,12 @@ protected:
 	FanBoomerangManager* m_fanBoomerangManager;
 	ProjectileManager* m_projectileManager;
 	StickyTrapManager* m_stickyTrapManager;
+	VolleyManager* m_volleyManager;
 
 	std::map<int, int> m_winningTeams;
 	double m_timeMin;
 	double m_timeSec;
+	
 };
 
 #endif

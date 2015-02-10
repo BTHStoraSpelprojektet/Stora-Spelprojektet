@@ -18,29 +18,33 @@ bool TeamStatusBar::Initialize()
 	// Team 2 = blue
 	m_redColorPlayers = std::map<RakNet::RakNetGUID, GUIElement>();
 	m_blueColorPlayers = std::map<RakNet::RakNetGUID, GUIElement>();
-	m_dotSize = 40.0f;
-	m_dotPosOffset = 45.0f;
-	m_startOffset = 2;
+	m_dotSize = 50.0f;
+	m_dotPosOffset = 55.0f;
+	m_startOffset = 68.5f; // 67.5
 	m_addedMyself = false;
 	m_timeSec = 0;
 	m_timeMin = 0;
 
-	m_originPos = DirectX::XMFLOAT3(0.0f, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - 40.0f, 1.0f);
+	m_originPos = DirectX::XMFLOAT3(0.0f, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - 27.5f, 1.0f);
 
 	// Background squares
 	m_redSquares = std::vector<GUIElement>();
 	m_blueSquares = std::vector<GUIElement>();
+	
+	// Background
+	m_background = GUIElement();
+	m_background.Initialize(m_originPos, 80.0f, 55.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_BACKGROUND));
 
 
 	// Score text
 	m_redScore = GUIText();
-	m_redScore.Initialize("0", 25.0f, m_originPos.x + 15.0f, m_originPos.y - m_dotPosOffset * 0.3f, 0xff0700B6);
+	m_redScore.Initialize("0", 25.0f, m_originPos.x + 20.0f, m_originPos.y - 13, 0xff0700B6);
 	m_blueScore = GUIText();
-	m_blueScore.Initialize("0", 25.0f, m_originPos.x - 15.0f, m_originPos.y - m_dotPosOffset * 0.3f, 0xffB71300);
+	m_blueScore.Initialize("0", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13, 0xffB71300);
 
 	// Timer text
 	m_timerText = GUIText();
-	m_timerText.Initialize("", 25.0f, m_originPos.x, m_originPos.y + m_dotPosOffset * 0.3f, 0xffffffff);
+	m_timerText.Initialize("", 25.0f, m_originPos.x, m_originPos.y + 15, 0xffffffff);
 
 	// Send so we are synced with the server
 	Network::GetInstance()->SyncTimer();
@@ -66,7 +70,7 @@ void TeamStatusBar::Update()
 		if (player.team == 1)
 		{
 			GUIElement element = GUIElement();
-			element.Initialize(DirectX::XMFLOAT3((float)(m_redColorPlayers.size() + m_startOffset) * m_dotPosOffset, m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
+			element.Initialize(DirectX::XMFLOAT3((float)m_redColorPlayers.size() * m_dotPosOffset + m_startOffset, m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_redColorPlayers[player.guid] = element;
 			AddRedSquare();
 			m_addedMyself = true;
@@ -74,7 +78,7 @@ void TeamStatusBar::Update()
 		else if (player.team == 2)
 		{
 			GUIElement element = GUIElement();
-			element.Initialize(DirectX::XMFLOAT3(-((float)(m_blueColorPlayers.size() + m_startOffset) * m_dotPosOffset), m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
+			element.Initialize(DirectX::XMFLOAT3(-((float)m_blueColorPlayers.size() * m_dotPosOffset + m_startOffset), m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_blueColorPlayers[player.guid] = element;
 			AddBlueSquare();
 			m_addedMyself = true;
@@ -132,7 +136,7 @@ void TeamStatusBar::Update()
 			{
 				// Add new red dot
 				GUIElement element = GUIElement();
-				element.Initialize(DirectX::XMFLOAT3((float)(m_redColorPlayers.size() + m_startOffset) * m_dotPosOffset, m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
+				element.Initialize(DirectX::XMFLOAT3((float)m_redColorPlayers.size() * m_dotPosOffset + m_startOffset, m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_redColorPlayers[players[i].guid] = element;
 				AddRedSquare();
 			}
@@ -155,7 +159,7 @@ void TeamStatusBar::Update()
 			{
 				// Add new blue dot
 				GUIElement element = GUIElement();
-				element.Initialize(DirectX::XMFLOAT3(-((float)(m_blueColorPlayers.size() + m_startOffset) * m_dotPosOffset), m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
+				element.Initialize(DirectX::XMFLOAT3(-((float)m_blueColorPlayers.size() * m_dotPosOffset + m_startOffset), m_originPos.y, m_originPos.z), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_blueColorPlayers[players[i].guid] = element;
 				AddBlueSquare();
 			}
@@ -246,7 +250,11 @@ void TeamStatusBar::Update()
 
 void TeamStatusBar::Render()
 {
-	int index = 0;
+	// Render background
+	m_background.QueueRender();
+
+	// Players
+	unsigned int index = 0;
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
 	{
 		if (index < m_redSquares.size())
@@ -269,28 +277,30 @@ void TeamStatusBar::Render()
 		index++;
 	}
 
+	// Score
 	m_redScore.Render();
 	m_blueScore.Render();
 
+	// Timer
 	m_timerText.Render();
 }
 
 void TeamStatusBar::ResizeRedColorList()
 {
-	int index = m_startOffset;
+	float index = 0.0f;
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
 	{
-		m_redColorPlayers[it->first].SetPosition(DirectX::XMFLOAT3((float)index * m_dotPosOffset, m_originPos.y, m_originPos.z));
+		m_redColorPlayers[it->first].SetPosition(DirectX::XMFLOAT3(index * m_dotPosOffset + m_startOffset, m_originPos.y, m_originPos.z));
 		index++;
 	}
 }
 
 void TeamStatusBar::ResizeBlueColorList()
 {
-	int index = m_startOffset;
+	float index = 0.0f;
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
 	{
-		m_blueColorPlayers[it->first].SetPosition(DirectX::XMFLOAT3(-((float)index * m_dotPosOffset), m_originPos.y, m_originPos.z));
+		m_blueColorPlayers[it->first].SetPosition(DirectX::XMFLOAT3(-(index * m_dotPosOffset + m_startOffset), m_originPos.y, m_originPos.z));
 		index++;
 	}
 }

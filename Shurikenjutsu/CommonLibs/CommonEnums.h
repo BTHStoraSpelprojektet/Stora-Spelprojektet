@@ -15,7 +15,8 @@ enum ABILITIES
 	ABILITIES_NAGINATASLASH,
 	ABILITIES_KUNAI,
 	ABILITIES_STICKY_TRAP,
-	ABILITIES_NAGAINATASTAB
+	ABILITIES_NAGAINATASTAB,
+	ABILITIES_VOLLEY
 };
 
 enum AnimationState {
@@ -33,7 +34,8 @@ enum EmitterType{
 	Fire,
 	Smoke,
 	LeafTree,
-	LeafSakura
+	LeafSakura,
+	WorldMist
 };
 
 #endif // !COMMONENUMS_H_

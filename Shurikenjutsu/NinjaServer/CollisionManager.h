@@ -18,6 +18,7 @@ class ShurikenManager;
 class PlayerManager;
 class SpikeManager;
 class ProjectileManager;
+class VolleyManager;
 
 class CollisionManager
 {
@@ -39,6 +40,8 @@ public:
 	void NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	float GetAngle(float p_x, float p_y);
 	void SetDeltaTime(float p_deltaTime);
+
+	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
 
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);

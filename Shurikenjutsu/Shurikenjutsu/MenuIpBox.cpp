@@ -10,9 +10,8 @@ MenuIpBox::~MenuIpBox(){}
 
 bool MenuIpBox::Initialize(float p_x, float p_y, float p_width, float p_height)
 {
-	MenuItem::Initialize(p_x, p_y, p_width, p_height, TextureLibrary::GetInstance()->GetTexture(ABILITY_BG_TEXTURE));
-
-	m_counter = 0;
+	MenuItem::Initialize(p_x, p_y, p_width, p_height, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/ipbox.png"));
+	m_counter = 14;
 	m_active = false;
 	m_ip[0] = '1';
 	m_ip[1] = '9';
@@ -42,8 +41,6 @@ bool MenuIpBox::IsClicked()
 		if (MenuButton::IsClicked())
 		{
 			m_active = true;
-			m_counter = 0;
-			ResetIp();
 			return true;
 		}
 		else
@@ -60,15 +57,34 @@ bool MenuIpBox::GetInput()
 	if (m_active)
 	{
 		char temp = InputManager::GetInstance()->GetLastCharRead();
+
+		// Is not nothing?
 		if (temp != '\0')
 		{
-			m_ip[m_counter] = temp;
-			m_counter++;
-			if (m_counter > 14)
+			//'Enter' / 'Return'
+			if (temp == '\r')
 			{
 				m_active = false;
 			}
-			return true;
+			else if (temp == '\b')
+			{
+				if (m_counter > 0)
+				{
+					m_ip[--m_counter] = '\0';
+				}
+				return true;
+			}
+
+			else
+			{
+				if (m_counter < 15)
+				{
+					m_ip[m_counter] = temp;
+					m_counter++;
+
+					return true;
+				}
+			}
 		}
 	}
 	return false;

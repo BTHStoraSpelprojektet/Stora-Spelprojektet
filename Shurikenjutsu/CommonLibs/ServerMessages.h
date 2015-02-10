@@ -4,16 +4,6 @@
 #include "..\CommonLibs\RakNet\MessageIdentifiers.h"
 #include "..\CommonLibs\RakNet\RakNetTypes.h"
 
-struct Cooldowns
-{
-	float shurikenCD;
-	float meleeSwingCD;
-	float dashCD;
-	float megaShurikenCD;
-	float whipAttack;
-	float whipSpAttack;
-};
-
 struct PlayerNet
 {
 	float x, y, z;
@@ -25,7 +15,6 @@ struct PlayerNet
 	int charNr;
 	bool isAlive;
 	float gcd;
-	Cooldowns cooldownAbilites;
 };
 
 struct ShurikenNet
@@ -80,6 +69,14 @@ struct StickyTrapNet
 	float lifeTime, timeToLand;
 	RakNet::RakNetGUID guid;
 };
+struct VolleyNet
+{
+	unsigned int id;
+	float startX, startZ, endX, endZ;
+	float timeToLand;
+	float speed;
+	RakNet::RakNetGUID guid;
+};
 enum Messages
 {
 	ID_NR_CONNECTIONS = ID_USER_PACKET_ENUM + 1,
@@ -111,6 +108,7 @@ enum Messages
 	ID_FAN_THROWN,
 	ID_FAN_REMOVE,
 	ID_FAN_UPDATE,
+	ID_VOLLEY_THROWN,
 	ID_TIMER_SYNC,
 	ID_STICKYTRAP_THROW,
 	ID_STICKYTRAP_REMOVE,

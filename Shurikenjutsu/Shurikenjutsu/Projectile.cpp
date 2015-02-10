@@ -67,7 +67,15 @@ void Projectile::Update()
 	m_position.y += (float)(m_direction.y*m_speed*deltaTime);
 	m_position.z += (float)(m_direction.z*m_speed*deltaTime);
 
-	m_rotation.y += (float)(m_projRotationSpeed*deltaTime);
+	if (m_projRotationSpeed == 0)
+	{
+		
+		m_rotation.y = atan2(m_direction.x, m_direction.z);
+	}
+	else
+	{
+		m_rotation.y += (float)(m_projRotationSpeed*deltaTime);
+	}
 
 	// Update lifetime
 	SetLifetime((float)(GetLifetime() - deltaTime));

@@ -8,6 +8,8 @@
 #include "..\CommonLibs\BaseModel.h"
 #include "AnimationControl.h"
 
+class ModelImporter;
+
 class Model : public BaseModel
 {
 public:
@@ -31,6 +33,6 @@ public:
 	Sphere GetFrustumSphere()const;
 
 protected:
-
+	ModelImporter* importer;
 };
 #endif;

@@ -293,6 +293,9 @@ void PlayingStateTest::Render()
 
 		ShadowShapes::GetInstance().DebugRender();	
 	}
+
+	GraphicsEngine::RenderFoliage();
+
 	// ========== DEBUG TEMP LINES ==========
 
 	m_minimap->Render();
@@ -452,11 +455,6 @@ void PlayingStateTest::OnScreenResize()
 	m_quadWidth = pickedPlayer.x - pickedTopLeft.x;
 	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
 	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
-
-	// Update quad measurements.
-	Point topLeft = Point(-m_quadWidth, m_quadHeightTop);
-	Point bottomLeft = Point(m_quadWidth, -m_quadHeightBottom);
-	VisibilityComputer::GetInstance().RebuildQuad(topLeft, bottomLeft);
 
 	// Update projection matrix.
 	DirectX::XMFLOAT4X4 projection;

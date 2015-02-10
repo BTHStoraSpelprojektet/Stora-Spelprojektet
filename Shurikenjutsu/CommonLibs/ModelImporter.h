@@ -28,11 +28,13 @@ class ModelImporter
 public:
 	bool ImportModel(const char* p_filepath);
 	int ReadHierarchy(BoneFrame* bone, void* data, int readPosition);
+	void Shutdown();
 
 	MeshData GetMesh();
 
 private:
 	void CheckVertices(float x, float y, float z);
+	void ShutDownHierarchy(BoneFrame* bone);
 
 	DirectX::XMFLOAT3 m_averageVertexPosition;
 	MeshData m_importedMesh;

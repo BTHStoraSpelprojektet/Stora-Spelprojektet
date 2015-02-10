@@ -4,6 +4,7 @@
 #include "ShurikenManager.h"
 #include "ProjectileManager.h"
 #include "FanBoomerangManager.h"
+#include "VolleyManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
@@ -780,49 +781,49 @@ void CollisionManager::NaginataStbDot( PlayerManager* p_playerManager)
 		if (m_performingStabAttackList[j].m_performNaginataStabAttack)
 		{
 			PlayerNet attackingPlayer = p_playerManager->GetPlayer(m_performingStabAttackList[j].m_guid);
-			std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
-			DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
-			for (unsigned int i = 0; i < playerList.size(); i++)
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		// So you don't collide with yourself.
+		if (playerList[i].guid == attackingPlayer.guid)
+		{
+			continue;
+		}
+
+		// Check so you are not on the same team
+		if (playerList[i].team == attackingPlayer.team)
+		{
+			continue;
+		}
+
+		// Check so the player aren't already dead
+		if (!playerList[i].isAlive)
+		{
+			continue;
+		}
+
+		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(NAGINATASTAB_BOXEXTENTX, NAGINATASTAB_BOXEXTENTY, NAGINATASTAB_BOXEXTENTZ);
+		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
+
+		float faceAngle = atan2(attackDirection.x, attackDirection.z);
+
+		// Rotate around y axis
+		DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+		// Update rec location.
+		DirectX::XMFLOAT4 rotationQuaternion;
+		DirectX::XMStoreFloat4(&rotationQuaternion, DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
+		
+		attackPosition = DirectX::XMFLOAT3(attackPosition.x + attackDirection.x * boxExtent.z, attackPosition.y, attackPosition.z + attackDirection.z * boxExtent.z);
+
+		// Make collision test
+		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
+		{
+			if (IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
-				// So you don't collide with yourself.
-				if (playerList[i].guid == attackingPlayer.guid)
-				{
-					continue;
-				}
-
-				// Check so you are not on the same team
-				if (playerList[i].team == attackingPlayer.team)
-				{
-					continue;
-				}
-
-				// Check so the player aren't already dead
-				if (!playerList[i].isAlive)
-				{
-					continue;
-				}
-
-				DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(NAGINATASTAB_BOXEXTENTX, NAGINATASTAB_BOXEXTENTY, NAGINATASTAB_BOXEXTENTZ);
-				DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
-				DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
-
-				float faceAngle = atan2(attackDirection.x, attackDirection.z);
-
-				// Rotate around y axis
-				DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-
-				// Update rec location.
-				DirectX::XMFLOAT4 rotationQuaternion;
-				DirectX::XMStoreFloat4(&rotationQuaternion, DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
-
-				attackPosition = DirectX::XMFLOAT3(attackPosition.x + attackDirection.x * boxExtent.z, attackPosition.y, attackPosition.z + attackDirection.z * boxExtent.z);
-
-				// Make collision test
-				if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
-				{
-					if (IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
-					{
-						// Damage the player
+				// Damage the player
 						p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE * m_deltaTime);
 					}
 				}
@@ -833,9 +834,9 @@ void CollisionManager::NaginataStbDot( PlayerManager* p_playerManager)
 				m_performingStabAttackList[j].m_performNaginataStabAttack = false;
 				m_performingStabAttackList.erase(m_performingStabAttackList.begin() + j);
 			}
+			}
 		}
 	}
-}
 void CollisionManager::SetDeltaTime(float p_deltaTime)
 {
 	m_deltaTime = p_deltaTime;
@@ -931,4 +932,64 @@ bool CollisionManager::RaySphereTest(Ray *p_ray, Sphere p_sphere)
 float CollisionManager::GetAngle(float p_x, float p_y)
 {
 	return 1;
+}
+
+void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, PlayerManager* p_playerManager)
+{
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<VolleyNet> volleyList = p_volleyManager->GetObjects();
+	for (unsigned int i = 0; i < volleyList.size(); i++)
+	{
+		bool remove = false;
+		// Go through player list
+		for (unsigned int j = 0; j < playerList.size(); j++)
+		{
+			// This is so you don't collide with your own shurikens
+			if (playerList[j].guid == volleyList[i].guid)
+			{
+				continue;
+			}
+
+			// Check so you are not on the same team
+			PlayerNet owner = p_playerManager->GetPlayer(volleyList[i].guid);
+			if (playerList[j].team == owner.team)
+			{
+				continue;
+			}
+
+			// Check so the player aren't already dead
+			if (!playerList[j].isAlive)
+			{
+				continue;
+			}
+
+
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+			// Make collision test
+			if (volleyList[i].timeToLand <= 0.0f)
+			{
+				for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+				{
+					DirectX::XMFLOAT3 volleyPos = DirectX::XMFLOAT3(volleyList[i].endX, playerBoundingBoxes[l].m_center.y, volleyList[i].endZ);
+					if (SphereSphereTest(Sphere(volleyPos, VOLLEY_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
+					{
+						float damage = VOLLEY_DAMAGE;
+						p_playerManager->DamagePlayer(playerList[j].guid, damage);
+						break;
+					}
+				}
+				remove = true;
+			}
+		}
+
+		// Remove dead volley
+		if (remove)
+		{
+			p_volleyManager->Remove(i); // MAY WORK, BE CAUTIOUS!
+			volleyList.erase(volleyList.begin() + i);
+			i--;
+		}
+	}
 }

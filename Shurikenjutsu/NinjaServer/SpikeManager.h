@@ -27,6 +27,4 @@ private:
 	std::vector<SpikeNet> m_spikeTrapList;
 	float m_currentDistanceFromPlayer;
 };
-
-
 #endif

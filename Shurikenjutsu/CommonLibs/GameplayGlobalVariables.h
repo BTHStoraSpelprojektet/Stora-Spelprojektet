@@ -20,7 +20,7 @@ const float KUNAI_DAMAGE = 10.0f;
 const float KUNAI_COOLDOWN = 2.0f;
 const float KUNAI_DURATION = 2.0f;
 const int KUNAI_MAX_STACK = 4;
-const float KUNAI_ROTATION_SPEED = 10.0f;
+const float KUNAI_ROTATION_SPEED = 0.0f;
 const float KUNAI_SPEED = 50.0f;
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
@@ -48,6 +48,14 @@ const float FANBOOMERANG_DAMAGE = 25.0f;
 const float FANBOOMERANG_COOLDOWN = 2.0f;
 const float FANBOOMERANG_DURATION = 3.0f;
 const float FANBOOMERANG_SPEED = 20.0f;
+
+// Volley
+const float VOLLEY_DAMAGE = 15.0f;
+const float VOLLEY_COOLDOWN = 4.0f;
+const float VOLLEY_RANGE = 20.0f;
+const float VOLLEY_RADIUS = 0.5f;
+const float VOLLEY_GRAVITY = 3.5f;
+const float VOLLEY_HEIGHT = 15.0f;
 
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
@@ -134,14 +142,17 @@ const float CHARACTER_NAGINATA_SPEED = 11.0f;
 ////////////////////////////////////////////////////////////////Character Variables
 ////////////////////////////////////////////////////////////////World Particles
 
-const float PARTICLE_FIRE_SIZE_X = 0.2f;
-const float PARTICLE_FIRE_SIZE_Y = 0.2f;
+const float PARTICLE_FIRE_SIZE_X = 0.3f;
+const float PARTICLE_FIRE_SIZE_Y = 0.3f;
 
 const float PARTICLE_PINKLEAF_SIZE_X = 0.14f;
 const float PARTICLE_PINKLEAF_SIZE_Y = 0.14f;
 
 const float PARTICLE_GREENLEAF_SIZE_X = 0.15f;
 const float PARTICLE_GREENLEAF_SIZE_Y = 0.15f;
+
+const float PARTICLE_WORLDMIST_SIZE_X = 14.15f;
+const float PARTICLE_WORLDMIST_SIZE_Y = 14.15f;
 
 ////////////////////////////////////////////////////////////////World Particles
 

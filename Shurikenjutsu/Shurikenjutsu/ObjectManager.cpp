@@ -10,6 +10,7 @@
 #include "FanBoomerang.h"
 #include "Projectile.h"
 #include "StickyTrap.h"
+#include "Volley.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -95,6 +96,11 @@ bool ObjectManager::Initialize(Level* p_level)
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_GREEN_LEAVES);
 		}
+		else if (particleLevelEmitter[i].type == EmitterType::WorldMist){
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
+				DirectX::XMFLOAT2(PARTICLE_WORLDMIST_SIZE_X, PARTICLE_WORLDMIST_SIZE_Y), PARTICLE_PATTERN_WORLD_MIST);
+		}
 		else{
 			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
@@ -125,6 +131,7 @@ void ObjectManager::Shutdown()
 	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
 	{
 		m_animatedObjects[i]->Shutdown();
+		delete m_animatedObjects[i];
 	}
 	m_animatedObjects.clear();
 
@@ -154,6 +161,18 @@ void ObjectManager::Shutdown()
 	{
 		m_stickyTrapList[i]->Shutdown();
 		delete m_stickyTrapList[i];
+	}
+	
+	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
+	{
+		m_worldParticles[i]->Shutdown();
+		delete m_worldParticles[i];
+	}
+
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		m_volleys[i]->Shutdown();
+		delete m_volleys[i];
 	}
 }
 
@@ -335,6 +354,17 @@ void ObjectManager::Update()
 			}
 		}
 		
+		}
+		
+	// Update Volleys
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		bool remove = m_volleys[i]->Update();
+		if (remove)
+		{
+			m_volleys.erase(m_volleys.begin() + i);
+			i--;
+		}
 	}
 
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
@@ -460,6 +490,11 @@ void ObjectManager::Render()
 	{
 		
 		m_worldParticles[i]->Render();
+}
+
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		m_volleys[i]->Render();
 	}
 }
 
@@ -504,7 +539,7 @@ void ObjectManager::RenderDepth()
 		if (temp != NULL)
 		{
 			temp->RenderDepth();
-		}
+}
 	}
 
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
@@ -523,6 +558,11 @@ void ObjectManager::RenderDepth()
 			m_animatedObjects[i]->RenderDepth();
 		}		
 	}
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		m_volleys[i]->RenderDepth();
+	}
+
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
@@ -740,4 +780,13 @@ void ObjectManager::RemoveProjectile(unsigned int p_projId)
 			break;
 		}
 	}
+}
+
+void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid)
+{
+	Volley* temp = new Volley;
+	DirectX::XMFLOAT3 start = DirectX::XMFLOAT3(p_startX, 0.0f, p_startZ);
+	DirectX::XMFLOAT3 end = DirectX::XMFLOAT3(p_endX, 0.0f, p_endZ);
+	temp->Initialize(start, end);
+	m_volleys.push_back(temp);
 }

@@ -24,6 +24,7 @@ private:
 	std::map<RakNet::RakNetGUID, GUIElement> m_blueColorPlayers;
 	std::vector<GUIElement> m_redSquares;
 	std::vector<GUIElement> m_blueSquares;
+	GUIElement m_background;
 
 
 	void ResizeRedColorList();
@@ -35,7 +36,7 @@ private:
 
 	float m_dotSize;
 	float m_dotPosOffset;
-	int m_startOffset;
+	float m_startOffset;
 	DirectX::XMFLOAT3 m_originPos;
 	bool m_addedMyself;
 
