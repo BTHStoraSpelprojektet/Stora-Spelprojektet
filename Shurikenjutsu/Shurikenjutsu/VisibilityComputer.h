@@ -82,6 +82,8 @@ public:
 
 	void RebuildQuad(Point p_topLeft, Point p_bottomRight);
 
+	Point GetLastPosition();
+
 private:
 	VisibilityComputer() {};
 	VisibilityComputer(VisibilityComputer const&);
@@ -103,6 +105,7 @@ private:
 	std::vector<DirectX::XMFLOAT3> m_vertices;
 
 	BoundingShape m_boundingBox;
+	Point m_lastPosition;
 
 	std::string m_VSVersion;
 	std::string m_PSVersion;

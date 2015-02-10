@@ -250,16 +250,19 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
-	
-	// Set have updated network stuff last in the update
-	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
-	
+
 	if (resized)
 	{
 		// Reupdate the polygon.
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
 	}
 
+	// Update smokebomb shadow shapes.
+	ShadowShapes::GetInstance().Update();
+
+	// Set have updated network stuff last in the update
+	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
+	
 	return GAMESTATESWITCH_NONE;
 }
 
