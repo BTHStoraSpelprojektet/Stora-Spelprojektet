@@ -508,7 +508,13 @@ void Player::SetCalculatePlayerPosition()
 {
 	float speedXDeltaTime = m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 	// Check collision between player and static boxes
-	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(GetBoundingBoxes()[0], m_speed, m_direction);
+	OBB playerOBB;
+	playerOBB.m_radius = -1.0f;
+	if (GetBoundingBoxes().size() > 0)
+	{
+		playerOBB = GetBoundingBoxes()[0];
+	}
+	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(playerOBB, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{ 
 		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)

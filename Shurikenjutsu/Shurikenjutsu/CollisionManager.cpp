@@ -69,6 +69,10 @@ CollisionManager* CollisionManager::GetInstance()
 std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(OBB p_playerBox, float p_speed, DirectX::XMFLOAT3 p_direction)
 {
 	std::vector<OBB> CollisionList;
+	if (p_playerBox.m_radius < 0)
+	{
+		return CollisionList;
+	}
 	Sphere playerSphere = Sphere(p_playerBox.m_center, p_playerBox.m_radius);
 	float speedXDeltaTime = p_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 	if (m_staticBoxList.size() > 0)
