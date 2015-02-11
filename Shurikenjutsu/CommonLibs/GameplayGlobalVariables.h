@@ -73,7 +73,7 @@ const float NAGINATA_COOLDOWN = 0.5f;
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 //Dash
 const float DASH_MAX_RANGE = 10.0f;
-const float DASH_COOLDOWN = 0.5f;
+const float DASH_COOLDOWN = 6.0f;
 const float DASH_DAMAGE = 10.0f;
 const float DASH_SPEED = 8.0f;
 

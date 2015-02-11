@@ -35,6 +35,9 @@ bool TeamStatusBar::Initialize()
 	m_background = GUIElement();
 	m_background.Initialize(m_originPos, 80.0f, 55.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_BACKGROUND));
 
+	//Frame
+	m_frame = GUIElement();
+	m_frame.Initialize(DirectX::XMFLOAT3(m_originPos.x, m_originPos.y - 12.5f, m_originPos.z), 570.0f, 80.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_FRAME));
 
 	// Score text
 	m_redScore = GUIText();
@@ -255,6 +258,9 @@ void TeamStatusBar::Update()
 
 void TeamStatusBar::Render()
 {
+	//Render frame
+	m_frame.QueueRender();
+
 	// Render background
 	m_background.QueueRender();
 

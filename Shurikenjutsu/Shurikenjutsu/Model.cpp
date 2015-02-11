@@ -69,7 +69,7 @@ ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int 
 	{
 		D3D11_TEXTURE2D_DESC textureDesc;
 		textureDesc.Width = p_width;
-		textureDesc.Height = p_height;
+		textureDesc.Height = p_height; 
 		textureDesc.MipLevels = 1;
 		textureDesc.ArraySize = 1;
 		textureDesc.SampleDesc.Count = 1;
