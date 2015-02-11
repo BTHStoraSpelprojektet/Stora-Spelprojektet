@@ -75,6 +75,7 @@ private:
 		DirectX::XMFLOAT3 m_position;
 		DirectX::XMFLOAT3 m_direction;
 		DirectX::XMFLOAT4 m_color;
+		float opacity = 0.0f;
 
 
 		float m_velocity;
@@ -103,7 +104,7 @@ private:
 
 	float getWindOffsetX(float timePassed, float timeToLive);
 	float getWindOffsetZ(float timePassed, float timeToLive);
-	void fadeIn(ParticleVertex &mesh, Particle &particle, float timeToFade);
-	void fadeOut(ParticleVertex &mesh, Particle &particle, float timeToFade);
+	float fadeIn(ParticleVertex* mesh, Particle* particle, float timeToFade);
+	float fadeOut(ParticleVertex* mesh, Particle* particle, float timeToFade);
 };
 #endif

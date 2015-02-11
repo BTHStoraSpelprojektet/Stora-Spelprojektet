@@ -189,6 +189,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 	}
 
+
 	// Initialize the counters to 0.
 	m_currentParticles = 0;
 	m_time = 0.0f;
@@ -428,7 +429,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_initPosition.x = -m_emitBorderLeft;
 
 					m_particleList[index].m_direction = direction;
-					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 0.0f);
+					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
 					m_particleList[index].m_velocity = velocity;
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
@@ -457,7 +458,7 @@ void ParticleEmitter::EmitParticles()
 				{
 					m_particleList[index].m_direction = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 					m_particleList[index].m_position = position;
-					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x, m_color.y, m_color.z, 0.0f);
 					m_particleList[index].m_velocity = velocity;
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
@@ -514,6 +515,7 @@ void ParticleEmitter::EmitParticles()
 					break;
 				}
 			}
+			//m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[index].m_color.x, m_particleList[index].m_color.y, m_particleList[index].m_color.z, m_particleList[index].m_color.w);
 		}
 	}
 }
@@ -795,27 +797,29 @@ float ParticleEmitter::getWindOffsetZ(float timePassed, float timeToLive){
 	return ((timePassed / timeToLive) / 60)*sinf(angle);
 }
 
-void ParticleEmitter::fadeIn(ParticleVertex &mesh, Particle &particle, float timeToFade){
-	//if (m_particleList[i].m_timeSpecial>0.01f)
-	//{
-	if (particle.m_color.w < 1.0f)
+float ParticleEmitter::fadeIn(ParticleVertex* mesh, Particle* particle, float timeToFade){
+	float opacity = particle->opacity;
+	if (particle->m_timeSpecial>timeToFade)
 	{
-		particle.m_color.w += 0.001f*(float)GLOBAL::GetInstance().GetDeltaTime();
-		mesh.m_color = DirectX::XMFLOAT4(particle.m_color.x, particle.m_color.y, particle.m_color.z, particle.m_color.w);
-
-			//m_particleList[i].m_timeSpecial = 0;
+		if (particle->opacity < 1.0f)
+		{
+			//particle.m_color.w += 0.001f;
+			//mesh.m_color = DirectX::XMFLOAT4(particle.m_color.x, particle.m_color.y, particle.m_color.z, particle.m_color.w);
+			opacity += 0.001f;
+			particle->m_timeSpecial = 0;
+		}
 	}
-	//}
-	//m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();
+	particle->m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();
+	return opacity;
 }
 
-void ParticleEmitter::fadeOut(ParticleVertex &mesh, Particle &particle, float timeToFade){
+float ParticleEmitter::fadeOut(ParticleVertex* mesh, Particle* particle, float timeToFade){
 	float opacity = 1.0f;
-	if (particle.m_timePassed > particle.m_timeToLive * timeToFade)
+	if (particle->m_timePassed > particle->m_timeToLive * timeToFade)
 	{
-		opacity = ((-1.0f / (particle.m_timeToLive * timeToFade)) * (particle.m_timePassed - particle.m_timeToLive * timeToFade)) + 1.0f;
+		opacity = ((-1.0f / (particle->m_timeToLive * timeToFade)) * (particle->m_timePassed - particle->m_timeToLive * timeToFade)) + 1.0f;
 	}
-	mesh.m_color = DirectX::XMFLOAT4(particle.m_color.x, particle.m_color.y, particle.m_color.z, opacity);
+	return opacity;
 }
 
 void ParticleEmitter::ClearOldParticles()
@@ -855,6 +859,8 @@ void ParticleEmitter::UpdateBuffers()
 	// Initialize vertex array to zeros.
 	memset(m_mesh, 0, (sizeof(ParticleVertex) * m_vertices));
 
+	float opacity = 1.0f;
+
 	// Build the mesh using the particle list, every particle is made of two triangles.
 	for (unsigned int i = 0; i < m_currentParticles; i++)
 	{
@@ -862,13 +868,13 @@ void ParticleEmitter::UpdateBuffers()
 		m_mesh[i].m_position = m_particleList[i].m_position;
 		switch (m_pattern){
 			case PARTICLE_PATTERN_SMOKE:
-		{
-				fadeOut(m_mesh[i], m_particleList[i], 0.5f);
+			{
+				opacity = fadeOut(m_mesh[i], m_particleList[i], 0.5f);
 				break;
-		}
+			}
 			case PARTICLE_PATTERN_FIRE:
 			{
-				fadeOut(m_mesh[i], m_particleList[i], 0.5f);
+				opacity = fadeOut(m_mesh[i], m_particleList[i], 0.5f);
 
 				if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive * 0.7f)
 				{
@@ -889,8 +895,8 @@ void ParticleEmitter::UpdateBuffers()
 			}
 			case PARTICLE_PATTERN_FIREFLIES:
 			{
-				fadeIn(m_mesh[i], m_particleList[i], 0.5);
-				fadeOut(m_mesh[i], m_particleList[i], 0.5f);
+				//fadeIn(m_mesh[i], m_particleList[i], 4.0);
+				opacity = fadeOut(m_mesh[i], m_particleList[i], 0.5f);
 
 				//m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, opacity);
 				if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive * 0.7f)
@@ -912,27 +918,33 @@ void ParticleEmitter::UpdateBuffers()
 			}
 			case PARTICLE_PATTERN_WORLD_MIST:
 			{
-				fadeIn(m_mesh[i], m_particleList[i], 0.5);
+				//fadeIn(m_mesh[i], m_particleList[i], 0.5);
 				
-				if (m_particleList[i].m_timeSpecial>0.01f)
-				{
-					if (m_particleList[i].m_color.w < 1.0f)
+				opacity = fadeIn(m_mesh[i], m_particleList[i], 1.0);
+				
+				//if (m_particleList[i].m_timeSpecial>0.1f)
+				//{
+					/*if (m_particleList[i].opacity < 1.0f)
 					{
-						//m_particleList[i].m_color.w += 0.001f;
+						m_particleList[i].opacity += 0.001f;
 
-						//m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, m_particleList[i].m_color.w);
+						m_particleList[i].m_color.w = m_particleList[i].opacity;
+						//m_mesh[i].m_color.w = m_particleList[i].m_color.w;
+						opacity = m_particleList[i].m_color.w;
 
-						//m_particleList[i].m_timeSpecial = 0;
-					}
+						m_particleList[i].m_timeSpecial = 0;
+					}*/
 
 					//if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive){
 
-					if (m_particleList[i].m_position.x>30.0f && m_particleList[i].m_position.z>50.0f)
-					{
-						m_particleList[i].m_position = m_particleList[i].m_initPosition;
-					}
+					
 					//float opacity2 = (1.0f / (m_particleList[i].m_timePassed*0.1));
 					//m_particleList[i].m_color.w = opacity2;
+				//}
+				
+				if (m_particleList[i].m_position.x>30.0f && m_particleList[i].m_position.z>50.0f)
+				{
+					m_particleList[i].m_position = m_particleList[i].m_initPosition;
 				}
 				m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();
 				break;
@@ -978,7 +990,8 @@ void ParticleEmitter::UpdateBuffers()
 			//m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, opacity);
 
 		}
-		fadeOut(m_mesh[i], m_particleList[i], 0.5f);
+		//fadeOut(m_mesh[i], m_particleList[i], 0.5f);
+		m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, opacity);
 
 		m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
 	}
