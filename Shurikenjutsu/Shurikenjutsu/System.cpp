@@ -173,9 +173,6 @@ void System::Shutdown()
 	// Shutdown network
 	Network::GetInstance()->Shutdown();
 
-	// Shutdown model library
-	ModelLibrary::GetInstance()->Shutdown();
-
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
 
@@ -221,6 +218,9 @@ void System::Shutdown()
 		delete m_timer;
 		m_timer = 0;
 	}
+
+	// Shutdown model library
+	ModelLibrary::GetInstance()->Shutdown();
 }
 
 void System::Run()

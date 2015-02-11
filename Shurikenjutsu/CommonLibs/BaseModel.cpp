@@ -7,25 +7,38 @@ BaseModel::~BaseModel(){}
 
 bool BaseModel::LoadModel(const char* p_filepath)
 {
-	ModelImporter importer;
-	importer.ImportModel(p_filepath);
-
-	MeshData* mData = importer.GetMesh();
+	m_importer = new ModelImporter();
+	m_importer->ImportModel(p_filepath);
+	mData = new MeshData();
+	mData = m_importer->GetMesh();
 
 	m_boundingBoxes = mData->m_boundingBoxes;
 	m_boundingSpheres = mData->m_boundingSpheres;
 	m_vertexCount = 0;
 	free(mData->m_normalMap);
 	free(mData->m_textureMap);
-	importer.Shutdown();
 	return true;
 }
 
 void BaseModel::Shutdown()
 {
+	if (m_importer != nullptr)
+	{
+		m_importer->Shutdown();
+		delete m_importer;
+		m_importer = nullptr;
+	}
+	
 	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
 	{
 		m_animationStacks[i].Shutdown();
+	}
+	
+	if (mData != nullptr)
+	{
+		mData->Shutdown();
+		delete mData;
+		mData = nullptr;
 	}
 }
 

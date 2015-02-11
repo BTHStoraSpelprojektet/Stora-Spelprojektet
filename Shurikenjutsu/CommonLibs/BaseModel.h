@@ -3,6 +3,7 @@
 
 #include "CommonStructures.h"
 #include <d3d11.h>
+#include "../CommonLibs/ModelImporter.h"
 
 class BaseModel
 {
@@ -29,6 +30,8 @@ protected:
 	std::vector<Box> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
 	Sphere m_frustumSphere;
+	MeshData* mData;
+	ModelImporter* m_importer;
 };
 
 #endif

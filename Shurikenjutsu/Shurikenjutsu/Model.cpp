@@ -21,7 +21,7 @@ bool Model::LoadModel(const char* p_filepath)
 	// Load Mesh.
 	importer = new ModelImporter();
 	importer->ImportModel(p_filepath);
-	
+	mData = new MeshData();
 	mData = importer->GetMesh();
 
 	// Save mesh to buffer.
@@ -109,12 +109,19 @@ ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int 
 
 void Model::ShutdownModel()
 {
-	/*if (mData != NULL)
+	if (importer != NULL || importer != nullptr)
 	{
-		mData->Shutdown();
-		delete mData;
-		mData = NULL;
-	}*/
+		//importer->Shutdown();
+		//delete importer;
+		//importer = nullptr;
+	}
+	
+	if (mData != nullptr)
+	{
+		//mData->Shutdown();
+//		delete mData;
+		//mData = nullptr;
+	}
 
 	/*if (m_mesh != NULL)
 	{
@@ -133,12 +140,8 @@ void Model::ShutdownModel()
 		m_normalMap->Release();
 		m_normalMap = 0;
 	}*/
-
-	/*if (importer != NULL)
-	{
-		//importer->Shutdown();
-		delete importer;
-	}*/
+	
+	
 }
 
 void Model::Update()

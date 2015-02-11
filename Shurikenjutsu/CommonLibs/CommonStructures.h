@@ -265,8 +265,12 @@ struct BoneFrame
 	{
 		for (unsigned int i = 0; i < m_children.size(); i++)
 		{
-			m_children[i]->Shutdown();
-			delete m_children[i];
+			if (m_children[i] != nullptr)
+			{
+				m_children[i]->Shutdown();
+				delete m_children[i];
+				m_children[i] = nullptr;
+			}
 		}
 	}
 };
@@ -290,8 +294,12 @@ struct AnimationStack
 	{
 		for (unsigned int i = 0; i < m_root.size(); i++)
 		{
-			m_root[i]->Shutdown();
-			delete m_root[i];
+			if (m_root[i] != nullptr)
+			{
+				m_root[i]->Shutdown();
+				delete m_root[i];
+				m_root[i] = nullptr;
+			}
 		}
 	}
 };

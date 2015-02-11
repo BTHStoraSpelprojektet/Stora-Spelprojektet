@@ -42,10 +42,9 @@ public:
 
 private:
 	void CheckVertices(float x, float y, float z);
-	void ShutDownHierarchy(BoneFrame* bone);
 
 	DirectX::XMFLOAT3 m_averageVertexPosition;
-	MeshData m_importedMesh;
+	MeshData* m_importedMesh;
 };
 
 #endif;
