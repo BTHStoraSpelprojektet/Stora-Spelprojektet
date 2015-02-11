@@ -583,26 +583,10 @@ void Player::SetCalculatePlayerPosition()
 
 
 				// Special cases ftw. Dont ask!
-				if (angle1 < 0 && angle2 < 0)
+				if ((angle1 < 0 && angle2 < 0) || (angle2 >= 0 && angle1 < 0) || (angle2 >= DirectX::XM_PIDIV2 && angle1 <= -DirectX::XM_PIDIV2) || (angle2 <= -DirectX::XM_PIDIV2 && angle1 >= DirectX::XM_PIDIV2))
 				{
 					offset *= -1;
 				}
-
-				if (angle2 >= 0 && angle1 < 0)
-				{
-					offset *= -1;
-				}
-
-				if (angle2 >= DirectX::XM_PIDIV2 && angle1 <= -DirectX::XM_PIDIV2)
-				{
-					offset *= -1;
-				}
-
-				if (angle2 <= -DirectX::XM_PIDIV2 && angle1 >= DirectX::XM_PIDIV2)
-				{
-					offset *= -1;
-				}
-
 
 				// Circle equation:
 				// circleX * X + circleY * Y = Radius * Radius
