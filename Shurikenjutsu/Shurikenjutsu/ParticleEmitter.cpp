@@ -722,13 +722,13 @@ float ParticleEmitter::getWindOffsetZ(float timePassed, float timeToLive){
 void ParticleEmitter::fadeIn(ParticleVertex &mesh, Particle &particle, float timeToFade){
 	//if (m_particleList[i].m_timeSpecial>0.01f)
 	//{
-		//if (m_particleList[i].m_color.w < 1.0f)
-		//{
-	particle.m_color.w += 0.001f*(float)GLOBAL::GetInstance().GetDeltaTime();
-	mesh.m_color = DirectX::XMFLOAT4(particle.m_color.x, particle.m_color.y, particle.m_color.z, particle.m_color.w);
+	if (particle.m_color.w < 1.0f)
+	{
+		particle.m_color.w += 0.001f*(float)GLOBAL::GetInstance().GetDeltaTime();
+		mesh.m_color = DirectX::XMFLOAT4(particle.m_color.x, particle.m_color.y, particle.m_color.z, particle.m_color.w);
 
 			//m_particleList[i].m_timeSpecial = 0;
-		//}
+	}
 	//}
 	//m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();
 }
@@ -811,6 +811,7 @@ void ParticleEmitter::UpdateBuffers()
 			}
 			case PARTICLE_PATTERN_FIREFLIES:
 			{
+				fadeIn(m_mesh[i], m_particleList[i], 0.5);
 				fadeOut(m_mesh[i], m_particleList[i], 0.5f);
 
 				//m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, opacity);
@@ -838,11 +839,11 @@ void ParticleEmitter::UpdateBuffers()
 				{
 					if (m_particleList[i].m_color.w < 1.0f)
 					{
-						m_particleList[i].m_color.w += 0.001f;
-						//m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime()
-						m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, m_particleList[i].m_color.w);
+						//m_particleList[i].m_color.w += 0.001f;
 
-						m_particleList[i].m_timeSpecial = 0;
+						//m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, m_particleList[i].m_color.w);
+
+						//m_particleList[i].m_timeSpecial = 0;
 					}
 
 					//if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive){
