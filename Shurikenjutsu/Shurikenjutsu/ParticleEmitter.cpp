@@ -894,7 +894,6 @@ void ParticleEmitter::UpdateBuffers()
 					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, (((m_particleSize.y / (m_particleList[i].m_timeToLive * 0.5f)) * (m_particleList[i].m_timePassed - m_particleList[i].m_timeToLive * 0.5f)) + m_particleSize.y));
 					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
 				}
-				break;
 			}
 			case PARTICLE_PATTERN_WORLD_MIST:
 			{
@@ -920,7 +919,6 @@ void ParticleEmitter::UpdateBuffers()
 					//m_particleList[i].m_color.w = opacity2;
 				}
 				m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();
-				break;
 			}
 			case PARTICLE_PATTERN_WORLD_DUST:
 			{
