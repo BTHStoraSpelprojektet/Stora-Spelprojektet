@@ -13,6 +13,8 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 
 bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 {
+	m_lastPosition = Point(0.0f, 0.0f);
+
 	m_intersections.clear();
 	m_vertices.clear();
 
@@ -140,6 +142,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 
+	UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
 	m_renderTarget.Initialize(GraphicsEngine::GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
@@ -181,9 +184,11 @@ void VisibilityComputer::Shutdown()
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
 {
-	m_intersections.clear();
+	m_lastPosition = p_viewerPosition;
 
+	m_intersections.clear();
 	std::vector<PolygonPoint> totalIntersections;
+
 	std::vector<float> uniqueAngles = GetUniquePointAngles(p_viewerPosition);
 	std::vector<Line> boundries = ShadowShapes::GetInstance().GetBoundryLines();
 	std::vector<Line> segments = ShadowShapes::GetInstance().GetStaticLines(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
@@ -202,22 +207,6 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 		Line ray = Line(Point(p_viewerPosition.x, p_viewerPosition.y), Point(p_viewerPosition.x + dx, p_viewerPosition.y + dy));
 
 		Intersection closestIntersection = Intersection();
-
-		// Find the closest intersection in boundries.
-		for (unsigned int j = 0; j < boundries.size(); j++)
-		{
-			Intersection intersection = GetIntertersectionPoint(ray, boundries[j]);
-
-			// Ignore if there is no collision.
-			if (intersection.intersection)
-			{
-				// Sort to closest T1 value.
-				if (!closestIntersection.intersection || intersection.T1 < closestIntersection.T1)
-				{
-					closestIntersection = intersection;
-				}
-			}
-		}
 
 		// Find the closest intersection in segments.
 		for (unsigned int j = 0; j < segments.size(); j++)
@@ -403,7 +392,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
 	GraphicsEngine::TurnOnAlphaBlending();
 
-	// TODO, Render the reveresed poylgon texture here.
+	// Render the quad to reverse project the polygon onto.
 	GraphicsEngine::RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget());
 
 	GraphicsEngine::TurnOffAlphaBlending();
@@ -606,4 +595,9 @@ DirectX::XMFLOAT4X4 VisibilityComputer::GetProjectionPolygonMatrix()
 ID3D11ShaderResourceView* VisibilityComputer::GetRenderTarget()
 {
 	return m_renderTarget.GetRenderTarget();
+}
+
+Point VisibilityComputer::GetLastPosition()
+{
+	return m_lastPosition;
 }

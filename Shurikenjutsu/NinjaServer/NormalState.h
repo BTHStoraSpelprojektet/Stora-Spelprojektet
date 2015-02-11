@@ -19,6 +19,7 @@ public:
 public:
 	bool OneTeamRemaining(std::vector<PlayerNet> p_players);
 private:	
+	void ClearAllListAtRoundRestart();
 	int GetRoundWinningTeam();
 	int GetTotalWinningTeam();
 	void RespawnAllPlayers();
@@ -38,6 +39,8 @@ private:
 	int m_roundLimit;
 	int m_currentRound;
 	bool m_roundRestarting;
+	bool m_matchOver;
+	float m_matchTimer;
 };
 
 #endif

@@ -19,7 +19,6 @@ SceneShader GraphicsEngine::m_sceneShader;
 GUIShader GraphicsEngine::m_GUIShader;
 DepthShader GraphicsEngine::m_depthShader;
 ParticleShader GraphicsEngine::m_particleShader;
-//OutliningShader GraphicsEngine::m_outliningShader;
 HWND GraphicsEngine::m_windowHandle;
 RenderTarget GraphicsEngine::m_shadowMap;
 IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
@@ -506,6 +505,11 @@ void GraphicsEngine::TurnOnDepthStencil()
 void GraphicsEngine::TurnOffDepthStencil()
 {
 	m_directX.TurnOffDepthStencil();
+}
+
+void GraphicsEngine::SetDepthStateForParticles()
+{
+	m_directX.SetDepthStateForParticles();
 }
 
 void GraphicsEngine::SetVsync(bool p_state)

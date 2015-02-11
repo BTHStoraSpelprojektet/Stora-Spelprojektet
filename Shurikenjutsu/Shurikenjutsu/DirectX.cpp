@@ -199,9 +199,20 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
+	depthState.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	depthState.StencilWriteMask = 0xFF;
+
+	// Depth state: for particles
+	if (FAILED(m_device->CreateDepthStencilState(&depthState, &m_depthStateParticles)))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil particle state failed to create.");
+		return false;
+	}
+
 	depthState.DepthEnable = false;
 	depthState.StencilEnable = false;
 
+	// Depth state: fully disabled
 	if (FAILED(m_device->CreateDepthStencilState(&depthState, &m_depthDisabled)))
 	{
 		ConsolePrintErrorAndQuit("DirectX depth stencil disabled state failed to create.");
@@ -369,12 +380,12 @@ void DirectXWrapper::ResetRenderTarget()
 
 void DirectXWrapper::TurnOnDepthStencil()
 {
-	m_context->OMSetDepthStencilState(m_depthEnabled, 1);
+	m_context->OMSetDepthStencilState(m_depthEnabled, 0);
 }
 
 void DirectXWrapper::TurnOffDepthStencil()
 {
-	m_context->OMSetDepthStencilState(m_depthDisabled, 1);
+	m_context->OMSetDepthStencilState(m_depthDisabled, 0);
 }
 
 bool DirectXWrapper::InitializeOutlinging()
@@ -479,4 +490,9 @@ void DirectXWrapper::SetVsync(bool p_state)
 	{
 		m_vsync = 0;
 	}
+}
+
+void DirectXWrapper::SetDepthStateForParticles()
+{
+	m_context->OMSetDepthStencilState(m_depthStateParticles, 0);
 }

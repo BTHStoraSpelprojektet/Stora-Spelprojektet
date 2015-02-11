@@ -30,6 +30,7 @@ public:
 	float GetShurikenPosX(int p_index);
 	float GetShurikenPosY(int p_index);
 	float GetShurikenPosZ(int p_index);
+	void ResetLists();
 private:
 	void UpdateShurikens(double p_deltaTime);
 	void BroadcastDestoyedShuriken(unsigned int p_id);

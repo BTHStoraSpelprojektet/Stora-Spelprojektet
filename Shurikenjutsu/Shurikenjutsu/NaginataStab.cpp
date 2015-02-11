@@ -4,14 +4,8 @@
 #include "StatusEffect.h"
 #include <iostream>
 
-NaginataStab::NaginataStab()
-{
-}
-
-
-NaginataStab::~NaginataStab()
-{
-}
+NaginataStab::NaginataStab(){}
+NaginataStab::~NaginataStab(){}
 
 bool NaginataStab::Initialize()
 {

@@ -59,6 +59,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	throwDistance = 0.0f;
 
+	m_updateVisibility = false;
+
 	m_globalCooldown = 0.0f;
 	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
 
@@ -116,9 +118,14 @@ void Player::Shutdown()
 }
 }
 
-
 void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 {
+	if (m_updateVisibility)
+	{
+		m_updateVisibility = false;
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+	}
+
 	// Check values from server
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -145,14 +152,11 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	SetSpeed(m_originalSpeed);
 	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
 	{
-		if (p_stickyTrapList[i]->GetGUID() != Network::GetInstance()->GetMyGUID())
-		{
 			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
 			{
 				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
 			}
 		}
-	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -181,7 +185,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		float distance = DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 		Sphere playerSphere = m_playerSphere;
 		playerSphere.m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-		playerSphere.m_position.y += m_dashDistanceLeft * m_dashDirection.z;		
+		playerSphere.m_position.z += m_dashDistanceLeft * m_dashDirection.z;		
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
 		if (distance >= m_dashDistanceLeft)
@@ -219,6 +223,26 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 	m_playerSphere.m_position = m_position;
 	
+	// Check if the player have made an invalid move
+	if (Network::GetInstance()->MadeInvalidMove())
+	{
+		PlayerNet myPlayer = Network::GetInstance()->GetMyPlayer();
+		SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
+		Network::GetInstance()->UpdatedMoveFromInvalidMove();
+
+		m_updateVisibility = true;
+	}
+
+	// Check if the player need to respawn
+	if (Network::GetInstance()->HasRespawned())
+	{
+		PlayerNet myPlayer = Network::GetInstance()->GetMyPlayer();
+		SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
+		Network::GetInstance()->SetHaveRespawned();
+
+		m_updateVisibility = true;
+	}
+
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
 
@@ -256,6 +280,8 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			m_globalCooldown = m_maxGlobalCooldown;
 	}
 	}
+
+
 
 	UpdateAbilityBar();
 }
@@ -772,47 +798,57 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 }
 
 void Player::UpdateAbilityBar()
-{
-	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
 	{
-		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(),m_meleeAttack->GetStacks(), 0);
+	if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
+	{
+		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		m_maxGlobalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+		Network::GetInstance()->ResetNaginataStabBoolean();
 	}
-	else
+	else if (m_globalCooldown < 0)
 	{
+		m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+	}
+	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
+		{
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), m_meleeAttack->GetStacks(), 0);
+		}
+		else
+		{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
 	}
 	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
-	{
+		{
 		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
-	}
-	else
-	{
+		}
+		else
+		{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
 	}
 	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
-	{
+		{
 		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
-	}
-	else
-	{
+		}
+		else
+		{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
 	}
 	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
-	{
+		{
 		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
-	}
-	else
-	{
+		}
+		else
+		{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
-	}
+			}
 	if ((float)m_toolAbility->GetCooldown() > 0.0f)
-	{
+			{
 		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
-	}
+}
 	else
-	{
+{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
-	}
+}
 }
 
 void Player::Render()

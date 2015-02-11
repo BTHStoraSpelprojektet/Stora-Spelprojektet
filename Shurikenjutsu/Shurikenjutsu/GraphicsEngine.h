@@ -77,6 +77,8 @@ public:
 	static void TurnOnDepthStencil();
 	static void TurnOffDepthStencil();
 
+	static void SetDepthStateForParticles();
+
 	static int GetNumberOfInstanceBuffer();
 
 	static void SetVsync(bool p_state);
