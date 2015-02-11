@@ -242,3 +242,7 @@ std::vector<Box> ShurikenManager::GetMegaBoundingBoxes(int p_index)
 
 	return boundingBoxes;
 }
+void ShurikenManager::ResetLists()
+{
+	m_shurikens.clear();
+}

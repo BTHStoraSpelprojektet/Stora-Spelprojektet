@@ -100,3 +100,7 @@ void SpikeManager::SetCurrentDistanceFromPlayer(float p_distance)
 {
 	m_currentDistanceFromPlayer = p_distance;
 }
+void SpikeManager::ResetLists()
+{
+	m_spikeTrapList.clear();
+}

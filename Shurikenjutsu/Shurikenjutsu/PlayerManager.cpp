@@ -42,30 +42,10 @@ void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
 
 	if (Network::GetInstance()->IsConnected())
 	{
-		PlayerNet myPlayer = Network::GetInstance()->GetMyPlayer();
-
 		// Check if the round have restarted
 		if (Network::GetInstance()->RoundRestarted())
 		{
 			ResetCooldowns();
-		}
-
-		// Check if the player need to respawn
-		if (Network::GetInstance()->HasRespawned())
-		{
-			m_player->SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
-			Network::GetInstance()->SetHaveRespawned();
-
-			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(myPlayer.x, myPlayer.z), GraphicsEngine::GetDevice());
-		}
-
-		// Check if the player have made an invalid move
-		if (Network::GetInstance()->MadeInvalidMove())
-		{
-			m_player->SendPosition(DirectX::XMFLOAT3(myPlayer.x, myPlayer.y, myPlayer.z));
-			Network::GetInstance()->UpdatedMoveFromInvalidMove();
-
-			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(myPlayer.x, myPlayer.z), GraphicsEngine::GetDevice());
 		}
 
 		std::vector<PlayerNet> enemyPlayers = Network::GetInstance()->GetOtherPlayers();

@@ -100,3 +100,7 @@ void StickyTrapManager::SetCurrentDistanceFromPlayer(float p_distance)
 {
 	m_currentDistanceFromPlayer = p_distance;
 }
+void StickyTrapManager::ResetLists()
+{
+	m_stickyTrapList.clear();
+}

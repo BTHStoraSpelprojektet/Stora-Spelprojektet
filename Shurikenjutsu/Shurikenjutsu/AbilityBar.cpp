@@ -11,42 +11,43 @@ AbilityBar::~AbilityBar(){}
 bool AbilityBar::Initialize(float p_positionX, float p_positionY, int p_numberOfAbilities)
 {
 	DirectX::XMFLOAT3 position;
-	float halfLength = 26.0f*(p_numberOfAbilities-1);
+	float y_position = p_positionY + 10.0f;
+	float halfLength = 160.0f; //half texture - half ability icon
 
 	// ABILITY 1
-	position = DirectX::XMFLOAT3(p_positionX - halfLength, p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 25.0f, y_position, 0.0f);
 	GUIAbility *temp;
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility1Name()));
 	m_abilities.push_back(temp);
 
 	// ABILITY 2
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 52.0f, p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 90.0f, y_position, 0.0f);
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility2Name()));
 	m_abilities.push_back(temp);
 
 	// ABILITY 3
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 104.0f, p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 155.0f, y_position, 0.0f);
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility3Name()));
 	m_abilities.push_back(temp);
 
 	// ABILITY 4
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 156.0f, p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 220.0f, y_position, 0.0f);
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility4Name()));
 	m_abilities.push_back(temp);
 
 	// ABILITY 5
-	position = DirectX::XMFLOAT3(p_positionX - halfLength + 208.0f, p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX - halfLength + 295.0f, y_position, 0.0f);
 	temp = new GUIAbility();
 	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility5Name()));
 	m_abilities.push_back(temp);
 
-	position = DirectX::XMFLOAT3(p_positionX, p_positionY, 0.0f);
+	position = DirectX::XMFLOAT3(p_positionX, y_position, 0.0f);
 	m_background = new GUIElement();
-	m_background->Initialize(position, 52.0f*p_numberOfAbilities + 4.0f, 56.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_BG_TEXTURE));
+	m_background->Initialize(position, 370.0f, 100.0f, TextureLibrary::GetInstance()->GetTexture(ABILITY_BG_TEXTURE));
 
 	return true;
 }
