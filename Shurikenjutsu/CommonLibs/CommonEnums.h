@@ -31,12 +31,14 @@ enum AnimationState {
 };
 
 enum EmitterType{
-	Fire,
+	BrazierFire,
+	Fireflies,
 	FireSpark,
 	Smoke,
 	LeafTree,
 	LeafSakura,
-	WorldMist
+	WorldMist,
+	WorldDust
 };
 
 #endif // !COMMONENUMS_H_
