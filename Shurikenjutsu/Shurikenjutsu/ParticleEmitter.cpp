@@ -76,9 +76,9 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			//m_emitionPositionOffset = DirectX::XMFLOAT3(0.0f, 2.9f, 55.0f);
 
 			// Set velocity and its variation.
-			m_velocity = 3.0f;
+			m_velocity = 18.0f;
 			//m_velocityVariation = 2.9f;
-			m_velocityVariation = 0.0f;
+			m_velocityVariation = 2.9f;
 
 			m_timeToLive = FLT_MAX;
 			
@@ -615,21 +615,21 @@ void ParticleEmitter::UpdateParticles()
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
-					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float xWindOffset = 0.01;//= getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float zWindOffset = 0.01;//= getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 
 					if (timeToDirectionChange>m_particleList[i].m_timePassed)
 					{
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x - xWindOffset;
+						//m_particleList[i].m_position.x = m_particleList[i].m_position.x - xWindOffset;
 					}
 
 					else
 					{
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
+						//m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
 					}
 
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
-					m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
+					//m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
 
 					// Add time passed.
 					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();

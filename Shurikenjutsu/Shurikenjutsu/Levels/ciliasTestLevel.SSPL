@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 376
+Number of objects: 377
 Number of bounding boxes: 4
 LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_12 58.349 0 0 0 0 0 60 8.5 15
@@ -34,10 +34,11 @@ LampPost_Animated_5 2 0 34 0 4.71239 0
 LampPost_Animated_6 -3 0 -34 0 1.5708 0
 LampPost_Animated_6 -3 0 -34 0 1.5708 0
 ParticleEmitter_BrazierFire_1 -2 1.79524 17 0 0 0
-ParticleEmitter_BrazierFire_2 2 1.79524 17 0 0 0
-ParticleEmitter_BrazierFire_3 2 1.79524 -17 0 0 0
+ParticleEmitter_BrazierFire_2 -2 1.79524 22 0 0 0
+ParticleEmitter_BrazierFire_3 2 1.79524 -5 0 0 0
 ParticleEmitter_BrazierFire_4 -2 1.79524 -17 0 0 0
 ParticleEmitter_Fireflies_1 -18 4 -38 0 0 0
+ParticleEmitter_Fireflies_2 18 4 39 0 0 0
 ParticleEmitter_LeafSakura_1 -13.1396 5.24337 -28.081 0 1.5708 0
 ParticleEmitter_LeafSakura_2 13.3515 5.88991 28.9578 0 1.5708 0
 ParticleEmitter_LeafTree_1 -20.6992 8.14514 21.7818 0 0 0
@@ -48,7 +49,7 @@ ParticleEmitter_LeafTree_5 35.7264 8.14514 -26.9097 0 0 0
 ParticleEmitter_LeafTree_6 26.1205 8.14514 -36.2251 0 0 0
 ParticleEmitter_LeafTree_7 20.8051 8.14514 -20.7672 0 0 0
 ParticleEmitter_LeafTree_8 -34.4048 8.14514 -25.3612 0 0 0
-ParticleEmitter_WorldDust_1 0 3 3 0 0 0
+ParticleEmitter_WorldDust_1 0 3 0 0 0 0
 ShadowShapes_10_A 12.0833 1.28743 12.6872 0 0 0
 ShadowShapes_10_B 12.0833 1.28743 1.18847 0 0 0
 ShadowShapes_11_A -13.0712 1.28743 -18.827 0 0 0
