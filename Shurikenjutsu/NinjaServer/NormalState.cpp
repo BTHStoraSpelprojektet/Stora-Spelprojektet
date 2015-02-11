@@ -51,9 +51,11 @@ bool NormalState::Initialize()
 	m_roundLimit = 5;
 	m_currentRound = 1;
 	m_roundTimer = 10.0f;
+	m_matchTimer = 20.0f;
 	m_currentTimer = m_roundTimer;
 	m_sendTime = (int)m_roundTimer;
 	m_roundRestarting = false;
+	m_matchOver = false;
 
 	return true;
 }
@@ -86,6 +88,21 @@ void NormalState::Update(double p_deltaTime)
 			ClearAllListAtRoundRestart();
 		}
 	}
+	// Check if all rounds have been played and the match is over
+	else if (m_matchOver)
+	{
+		m_currentTimer -= (float)p_deltaTime;
+		if ((int)m_currentTimer < m_sendTime)
+		{
+			m_sendTime = (int)m_currentTimer;
+			SendRestartingRoundTime(m_sendTime + 1);
+		}
+
+		if (m_currentTimer <= 0.0f)
+		{
+			StartNewLevel();
+		}
+	}
 	// Check if there is only one team remaining
 	else if (OneTeamRemaining(m_playerManager->GetPlayers()))
 	{
@@ -99,7 +116,9 @@ void NormalState::Update(double p_deltaTime)
 		if (m_currentRound > m_roundLimit)
 		{
 			SendMatchOver(GetTotalWinningTeam());
-			StartNewLevel();
+			m_currentTimer = m_matchTimer;
+			m_sendTime = (int)m_matchTimer;
+			m_matchOver = true;
 		}
 		else
 		{
