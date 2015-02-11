@@ -16,6 +16,7 @@
 #include "TextureLibrary.h"
 #include "VisibilityComputer.h"
 #include "Cursor.h"
+#include "ParticleRenderer.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
@@ -211,6 +212,8 @@ void System::Shutdown()
 		delete m_timer;
 		m_timer = 0;
 	}
+
+	ParticleRenderer::GetInstance()->Shutdown();
 }
 
 void System::Run()
@@ -316,6 +319,12 @@ void System::Render()
 
 	// Render Current GameState
 	m_gameState->Render();
+
+	// Render Particles
+	GraphicsEngine::SetDepthStateForParticles();
+	ParticleRenderer::GetInstance()->Render();
+
+	// The need to switch back to the original depth stencil state is not needed yet, since GUI switches it to be completely off
 
 	//Render GUI
 	GraphicsEngine::TurnOffDepthStencil();

@@ -67,6 +67,25 @@ void Countdown::Update()
 		}
 		m_prevTime = time;
 	}
+	// Check if a match is over
+	else if (Network::GetInstance()->GetMatchOver())
+	{
+		std::string text = "";
+		if (Network::GetInstance()->GetMatchWinningTeam() == Network::GetInstance()->GetMyPlayer().team)
+		{
+			// Victory
+			text = "Victory!";
+		}
+		else
+		{
+			// Defeat
+			text = "Defeat!";
+		}
+		m_cdText.SetColor(0xffffffff);
+		m_cdText.SetText(text);
+		m_cdText.SetSize(0.5f * m_maxSize);
+		m_render = true;
+	}
 	else
 	{
 		m_render = false;

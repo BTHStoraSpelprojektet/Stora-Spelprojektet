@@ -39,6 +39,8 @@ private:
 	int m_roundLimit;
 	int m_currentRound;
 	bool m_roundRestarting;
+	bool m_matchOver;
+	float m_matchTimer;
 };
 
 #endif

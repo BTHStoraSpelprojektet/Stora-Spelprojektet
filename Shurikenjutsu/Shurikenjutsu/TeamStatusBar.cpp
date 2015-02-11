@@ -232,7 +232,7 @@ void TeamStatusBar::Update()
 	m_timerText.SetText(std::to_string((int)m_timeMin) + ":" + secString);
 
 	// Check if a new round is about to start (then show negative time i.e. -0:05 if new round is starting in 5 sec)
-	if (Network::GetInstance()->RoundRestarting())
+	if (Network::GetInstance()->RoundRestarting() || Network::GetInstance()->GetMatchOver())
 	{
 		secString = std::to_string(Network::GetInstance()->GetRestartingTimer());
 		if (Network::GetInstance()->GetRestartingTimer() < 10)

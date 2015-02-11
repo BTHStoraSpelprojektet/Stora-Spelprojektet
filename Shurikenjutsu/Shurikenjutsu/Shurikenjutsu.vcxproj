@@ -144,6 +144,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
+    <ClCompile Include="ParticleRenderer.cpp" />
     <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="OutlingShader.h" />
     <ClInclude Include="ParticleEmitter.h" />
+    <ClInclude Include="ParticleRenderer.h" />
     <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />

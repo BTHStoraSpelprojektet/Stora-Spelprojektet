@@ -9,7 +9,7 @@
 // Players
 #define KATANA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
 #define TESSEN_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja2Shape.SSP"
-#define NAGINATA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"
+#define NAGINATA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja3Shape.SSP"
 
 // Shurikens
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
@@ -49,6 +49,7 @@
 #define ABILITY_NAGINATA_STAB_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_E.png"
 #define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Ranged.png"
 #define ABILITY_KUNAI_VOLLEY_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Q.png"
+#define ABILITY_STICKY_TRAP_TEXTURE "../Shurikenjutsu/2DTextures/TB_StickyTARP.png"
 
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/"

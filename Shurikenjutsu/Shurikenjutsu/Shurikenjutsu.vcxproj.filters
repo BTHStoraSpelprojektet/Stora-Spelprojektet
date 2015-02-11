@@ -446,6 +446,9 @@
     <ClCompile Include="VolleyAbility.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleRenderer.cpp">
+      <Filter>Source Files\Graphics\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -744,6 +747,9 @@
     </ClInclude>
     <ClInclude Include="VolleyAbility.h">
       <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleRenderer.h">
+      <Filter>Header Files\Graphics\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

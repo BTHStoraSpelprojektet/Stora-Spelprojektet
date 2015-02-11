@@ -185,7 +185,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		float distance = DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 		Sphere playerSphere = m_playerSphere;
 		playerSphere.m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-		playerSphere.m_position.y += m_dashDistanceLeft * m_dashDirection.z;		
+		playerSphere.m_position.z += m_dashDistanceLeft * m_dashDirection.z;		
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
 			if (distance >= m_dashDistanceLeft)

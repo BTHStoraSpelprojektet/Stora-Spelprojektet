@@ -86,6 +86,11 @@ bool ObjectManager::Initialize(Level* p_level)
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
 		}
+		else if (particleLevelEmitter[i].type == EmitterType::FireSpark){
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0, 1, 0),
+				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE_SPARK);
+		}
 		else if (particleLevelEmitter[i].type == EmitterType::LeafSakura){
 			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
