@@ -283,14 +283,13 @@ void PlayingStateTest::Render()
 	// Draw to the scene.
 	m_playerManager->Render();
 	m_objectManager->Render();
+	GraphicsEngine::RenderFoliage();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 
 	if (FLAG_DEBUG == 1)
 	{
 		ShadowShapes::GetInstance().DebugRender();	
-	}
-
-	GraphicsEngine::RenderFoliage();
+	}	
 
 	m_minimap->Render();
 	m_teamStatusBar->Render();
@@ -423,8 +422,8 @@ ObjectManager* PlayingStateTest::GetObjectManager()
 
 void PlayingStateTest::OnScreenResize()
 {
-	float width = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
-	float height = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
+	float width = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	float height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 
 	// Update texture size.
 	VisibilityComputer::GetInstance().UpdateTextureSize((int)width, (int)height);
