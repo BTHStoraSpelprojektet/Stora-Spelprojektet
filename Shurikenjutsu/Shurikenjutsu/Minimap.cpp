@@ -19,7 +19,7 @@ bool Minimap::Initialize()
 	m_playerDot = new GUIElement();
 	m_minimap = new GUIElement();
 	
-	m_minimapWidth = 200.0f;
+	m_minimapWidth = 222.0f;
 	m_minimapHeight = 250.0f;
 	
 	// Save center of minimap
@@ -82,11 +82,11 @@ DirectX::XMFLOAT3 Minimap::ConvertPosToMinimapPos(DirectX::XMFLOAT3 p_playerPos)
 	playerPos.y = playerPos.z;
 	playerPos.z = 0;
 	// offset for map being higher than width..
-	float offset = 25;
+	float offset = 13;
 	// Calc where the player is on the minimap in precent from center
 	xPercent = playerPos.x / MAPSIZEX;	// 43 size of map in x from middle
 	yPercent = playerPos.y / MAPSIZEY;	// 50 size of map in z from middle
-	playerPos.x = xPercent * m_minimapWidth * 0.5f;
+	playerPos.x = xPercent * (m_minimapWidth - offset) * 0.5f;
 	playerPos.y = yPercent * (m_minimapHeight - offset) * 0.5f;
 	playerPos.x = m_centerOfMinimapPos.x + playerPos.x;
 	playerPos.y = m_centerOfMinimapPos.y + playerPos.y;
