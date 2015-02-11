@@ -63,5 +63,6 @@
 #define TEAM_STATUS_RED_PLAYER "../Shurikenjutsu/2DTextures/statusBar_redSquare.png"
 #define TEAM_STATUS_BLUE_PLAYER "../Shurikenjutsu/2DTextures/statusBar_blueSquare.png"
 #define TEAM_STATUS_DEAD_PLAYER "../Shurikenjutsu/2DTextures/statusBar_dead.png"
+#define TEAM_STATUS_FRAME "../Shurikenjutsu/2DTextures/statusBar_frame.png"
 
 #endif

@@ -25,6 +25,7 @@ private:
 	std::vector<GUIElement> m_redSquares;
 	std::vector<GUIElement> m_blueSquares;
 	GUIElement m_background;
+	GUIElement m_frame;
 
 
 	void ResizeRedColorList();
