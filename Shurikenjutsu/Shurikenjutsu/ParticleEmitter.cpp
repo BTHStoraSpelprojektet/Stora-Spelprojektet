@@ -864,6 +864,7 @@ void ParticleEmitter::UpdateBuffers()
 			case PARTICLE_PATTERN_SMOKE:
 		{
 				fadeOut(m_mesh[i], m_particleList[i], 0.5f);
+				break;
 		}
 			case PARTICLE_PATTERN_FIRE:
 			{
@@ -884,6 +885,7 @@ void ParticleEmitter::UpdateBuffers()
 					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, (((m_particleSize.y / (m_particleList[i].m_timeToLive * 0.5f)) * (m_particleList[i].m_timePassed - m_particleList[i].m_timeToLive * 0.5f)) + m_particleSize.y));
 					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
 				}
+				break;
 			}
 			case PARTICLE_PATTERN_FIREFLIES:
 			{
@@ -906,6 +908,7 @@ void ParticleEmitter::UpdateBuffers()
 					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, (((m_particleSize.y / (m_particleList[i].m_timeToLive * 0.5f)) * (m_particleList[i].m_timePassed - m_particleList[i].m_timeToLive * 0.5f)) + m_particleSize.y));
 					//m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
 				}
+				break;
 			}
 			case PARTICLE_PATTERN_WORLD_MIST:
 			{
@@ -932,6 +935,7 @@ void ParticleEmitter::UpdateBuffers()
 					//m_particleList[i].m_color.w = opacity2;
 				}
 				m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();
+				break;
 			}
 			case PARTICLE_PATTERN_WORLD_DUST:
 			{
@@ -963,19 +967,20 @@ void ParticleEmitter::UpdateBuffers()
 					}
 				}
 				m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();*/
+				break;
 			}
 
 			default:
 			{
-				fadeOut(m_mesh[i], m_particleList[i], 0.5f);
-
-				m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
 				break;
 			}
 
 			//m_mesh[i].m_color = DirectX::XMFLOAT4(m_particleList[i].m_color.x, m_particleList[i].m_color.y, m_particleList[i].m_color.z, opacity);
 
 		}
+		fadeOut(m_mesh[i], m_particleList[i], 0.5f);
+
+		m_mesh[i].m_size = DirectX::XMFLOAT2(m_particleSize.x, m_particleSize.y);
 	}
 
 	// Lock the dynamic vertex buffer.

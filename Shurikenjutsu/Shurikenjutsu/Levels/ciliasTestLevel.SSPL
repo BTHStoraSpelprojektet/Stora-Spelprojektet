@@ -34,8 +34,8 @@ LampPost_Animated_5 2 0 34 0 4.71239 0
 LampPost_Animated_6 -3 0 -34 0 1.5708 0
 LampPost_Animated_6 -3 0 -34 0 1.5708 0
 ParticleEmitter_BrazierFire_1 -2 1.79524 17 0 0 0
-ParticleEmitter_BrazierFire_2 -2 1.79524 22 0 0 0
-ParticleEmitter_BrazierFire_3 2 1.79524 -5 0 0 0
+ParticleEmitter_BrazierFire_2 2 1.79524 17 0 0 0
+ParticleEmitter_BrazierFire_3 2 1.79524 -17 0 0 0
 ParticleEmitter_BrazierFire_4 -2 1.79524 -17 0 0 0
 ParticleEmitter_Fireflies_1 -18 4 -38 0 0 0
 ParticleEmitter_Fireflies_2 18 4 39 0 0 0
