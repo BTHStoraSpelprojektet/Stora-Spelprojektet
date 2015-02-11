@@ -44,13 +44,13 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 void Object::Shutdown()
 {
-	if (m_model != nullptr)
+	/*if (m_model != nullptr)
 	{
 		m_model->ShutdownModel();
 		m_model->Shutdown();
 		//delete m_model;
 		//m_model = NULL;
-	}
+	}*/
 }
 
 void Object::Render()
