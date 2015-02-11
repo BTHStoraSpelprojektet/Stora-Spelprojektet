@@ -62,18 +62,26 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 		case(PARTICLE_PATTERN_WORLD_DUST) :
 		{
-			m_particlesPerSecond = 12000.0f;
-			m_maxParticles = 12000;
+			m_particlesPerSecond = 10000.0f;
+			m_maxParticles = 10000;
+
+			//Border limit
+			m_emitBorderLeft = 45.0f;
+			float hight = 3.0f;
+			float topBottomSpawnLimit = 45.0f;
 
 			// Set the random offset limits for the particles when emitted.
-			//m_emitionPositionOffset = DirectX::XMFLOAT3(35.0f, 5.2f, 45.0f);
-			m_emitionPositionOffset = DirectX::XMFLOAT3(0.0f, 5.2f, 45.0f);
+			m_emitionPositionOffset = DirectX::XMFLOAT3(topBottomSpawnLimit, hight, m_emitBorderLeft);
+			//m_emitionPositionOffset = DirectX::XMFLOAT3(5.0f, 2.9f, 55.0f);
+			//m_emitionPositionOffset = DirectX::XMFLOAT3(0.0f, 2.9f, 55.0f);
 
 			// Set velocity and its variation.
 			m_velocity = 3.0f;
-			m_velocityVariation = 2.9f;
+			//m_velocityVariation = 2.9f;
+			m_velocityVariation = 0.0f;
 
-			m_timeToLive = 40.0f;
+			m_timeToLive = FLT_MAX;
+			
 
 			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldDustParticle2.png");
 
@@ -415,6 +423,10 @@ void ParticleEmitter::EmitParticles()
 
 					m_particleList[index].m_position = position;
 					m_particleList[index].m_initPosition = position;
+
+					//Move to setting
+					m_particleList[index].m_initPosition.x = -m_emitBorderLeft;
+
 					m_particleList[index].m_direction = direction;
 					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 0.0f);
 					m_particleList[index].m_velocity = velocity;
@@ -570,10 +582,10 @@ void ParticleEmitter::UpdateParticles()
 			if (m_particleList != NULL){
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
-					float halfTime = m_particleList[i].m_timeToLive / 2.0f;
+					//float halfTime = m_particleList[i].m_timeToLive / 2.0f;
 					float angle = 30.0f * (float)3.14159265359 / 180;
 					float height = 3.0f;
-					float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
+					//float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
 
 					// Fly in an arc in the given xz direction.
 					//m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
@@ -582,8 +594,8 @@ void ParticleEmitter::UpdateParticles()
 					//m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y;
 
-					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, 100);
+					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, 100);
 
 					m_particleList[i].m_position.x = m_particleList[i].m_position.x + (xWindOffset * m_particleList[i].m_velocity);
 					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (zWindOffset * m_particleList[i].m_velocity);
@@ -911,7 +923,8 @@ void ParticleEmitter::UpdateBuffers()
 					}
 
 					//if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive){
-					if (m_particleList[i].m_position.x>30.0f && m_particleList[i].m_position.z>20.0f)
+
+					if (m_particleList[i].m_position.x>30.0f && m_particleList[i].m_position.z>50.0f)
 					{
 						m_particleList[i].m_position = m_particleList[i].m_initPosition;
 					}
@@ -924,7 +937,19 @@ void ParticleEmitter::UpdateBuffers()
 			{
 				//fadeOut(m_mesh[i], m_particleList[i], 0.5f);
 
-				if (m_particleList[i].m_timeSpecial>0.01f)
+				if (m_particleList[i].m_position.x>m_emitBorderLeft)
+				{
+					//Reset particle
+
+					m_particleList[i].m_position.x = m_particleList[i].m_initPosition.x;
+					m_particleList[i].m_position.y = m_particleList[i].m_initPosition.y;
+					m_particleList[i].m_position.z = m_particleList[i].m_initPosition.z;
+
+					m_particleList[i].m_timePassed = 0;
+				}
+
+				//Fadein
+				/*if (m_particleList[i].m_timeSpecial>0.01f)
 				{
 					if (m_particleList[i].m_color.w < 1.0f)
 					{
@@ -937,7 +962,7 @@ void ParticleEmitter::UpdateBuffers()
 						m_particleList[i].m_timeSpecial = 0;
 					}
 				}
-				m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_timeSpecial += (float)GLOBAL::GetInstance().GetDeltaTime();*/
 			}
 
 			default:

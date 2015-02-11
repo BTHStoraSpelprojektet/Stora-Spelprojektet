@@ -63,8 +63,10 @@ private:
 	unsigned int m_maxParticles;
 	unsigned int m_currentParticles;
 
-	float m_globalWindAngleDegree = 315;
-	//float m_globalWindAngleDegree = 0;
+	float m_emitBorderLeft;
+
+	//float m_globalWindAngleDegree = 315;
+	float m_globalWindAngleDegree = 0;
 
 	struct Particle
 	{
