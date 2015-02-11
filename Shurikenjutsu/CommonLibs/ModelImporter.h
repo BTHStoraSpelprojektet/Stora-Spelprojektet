@@ -21,6 +21,14 @@ struct MeshData
 	std::vector<Sphere> m_boundingSpheres;
 	std::vector<Line> m_shadowPoints;
 	Sphere m_frustumSphere;
+
+	void Shutdown()
+	{
+		for (unsigned int i = 0; i < m_stacks.size(); i++)
+		{
+			m_stacks[i].Shutdown();
+		}
+	}
 };
 
 class ModelImporter
@@ -30,14 +38,13 @@ public:
 	int ReadHierarchy(BoneFrame* bone, void* data, int readPosition);
 	void Shutdown();
 
-	MeshData GetMesh();
+	MeshData* GetMesh();
 
 private:
 	void CheckVertices(float x, float y, float z);
-	void ShutDownHierarchy(BoneFrame* bone);
 
 	DirectX::XMFLOAT3 m_averageVertexPosition;
-	MeshData m_importedMesh;
+	MeshData* m_importedMesh;
 };
 
 #endif;

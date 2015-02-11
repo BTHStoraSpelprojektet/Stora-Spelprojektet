@@ -9,7 +9,7 @@ GUIText::~GUIText(){}
 
 bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
 {
-	IDWriteFactory* wf;
+	IDWriteFactory* wf = NULL;
 	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
 	
 	wf->CreateTextFormat(
@@ -54,7 +54,7 @@ void GUIText::SetText(std::string p_text)
 	const wchar_t* your_result = wstring.c_str();
 	m_textLength = p_text.size();
 
-	IDWriteFactory* wf;
+	IDWriteFactory* wf = NULL;
 	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
 	
 	wf->CreateTextLayout(your_result, m_textLength, m_format, 0.0f, 0.0f, &m_textLayout);

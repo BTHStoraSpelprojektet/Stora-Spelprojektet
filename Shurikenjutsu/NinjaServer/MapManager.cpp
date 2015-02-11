@@ -19,7 +19,7 @@ bool MapManager::Initialize(std::string p_levelName)
 		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(mapObject.m_rotationX, mapObject.m_rotationY, mapObject.m_rotationZ);
 
 
-		std::vector<Sphere> boundingSpheres = ModelLibrary::GetInstance()->GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingSpheres();
+		std::vector<Sphere> boundingSpheres = ModelLibrary::GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingSpheres();
 		std::vector<Sphere> sphereList = TransformToSphere(boundingSpheres, position, rotation);
 		for each(Sphere sphere in sphereList)
 		{

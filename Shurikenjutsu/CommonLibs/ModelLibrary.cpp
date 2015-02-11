@@ -21,9 +21,11 @@ void ModelLibrary::Shutdown()
 	{
 		it->second.Shutdown();
 	}
-
-	delete m_instance;
-	m_instance = nullptr;
+	if (m_instance != nullptr)
+	{
+		delete m_instance;
+		m_instance = nullptr;
+	}
 }
 
 ModelLibrary* ModelLibrary::GetInstance()

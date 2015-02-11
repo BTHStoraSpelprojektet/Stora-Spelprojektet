@@ -42,7 +42,8 @@ void InstanceManager::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	if (FAILED(p_context->Map(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
-		//ConsolePrintErrorAndQuit("Failed to update instance buffer.");
+		ConsolePrintErrorAndQuit("Failed to update instance buffer.");
+		return;
 	}
 	std::vector<InstancePos> instances;
 	for (unsigned int i = 0; i < p_ObjectList.size(); i++)
