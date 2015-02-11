@@ -79,12 +79,26 @@ bool CollisionManager::CheckCollisionWithAllStaticObjects(Sphere p_sphere)
 	{
 		for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
 		{
-			if (Collisions::SphereSphereCollision(Sphere(m_staticBoxList[i].m_center, m_staticBoxList[i].m_radius), p_sphere))
+			OBB temp = m_staticBoxList[i];
+			temp.m_center.y = p_sphere.m_position.y;
+			if (Collisions::SphereSphereCollision(Sphere(temp.m_center, temp.m_radius), p_sphere))
 			{
-				if (Collisions::OBBSphereCollision(m_staticBoxList[i], p_sphere))
+				if (Collisions::OBBSphereCollision(temp, p_sphere))
 				{
 					return true;
 				}
+			}
+		}
+	}
+	if (m_staticSphereList.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+		{
+			Sphere tempSphere = m_staticSphereList[i];
+			tempSphere.m_position.y = p_sphere.m_position.y;
+			if (Collisions::SphereSphereCollision(tempSphere, p_sphere))
+			{
+				return true;
 			}
 		}
 	}

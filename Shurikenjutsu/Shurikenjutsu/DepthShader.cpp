@@ -505,6 +505,7 @@ void DepthShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vect
 	if (FAILED(p_context->Map(m_animationMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map scene animated matrix buffer.");
+		return;
 	}
 
 	// Get pointer to the matrix buffer data.

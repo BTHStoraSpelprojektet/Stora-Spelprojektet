@@ -7,15 +7,17 @@
 
 #include "..\CommonLibs\BaseModel.h"
 #include "AnimationControl.h"
-
-class ModelImporter;
+#include "../CommonLibs/ModelImporter.h"
 
 class Model : public BaseModel
 {
 public:
+	Model();
+	Model(Model&);
+	~Model();
 	bool LoadModel(const char* p_filepath);
 	ID3D11ShaderResourceView* LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels);
-	void Shutdown();
+	void ShutdownModel();
 
 	void Update();
 
@@ -34,5 +36,6 @@ public:
 
 protected:
 	ModelImporter* importer;
+	MeshData* mData;
 };
 #endif;
