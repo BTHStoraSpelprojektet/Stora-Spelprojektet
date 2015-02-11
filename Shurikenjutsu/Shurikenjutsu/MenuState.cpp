@@ -160,7 +160,7 @@ void MenuState::Shutdown()
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
-}
+	}
 	
 	if (m_frustum != NULL)
 	{
@@ -168,6 +168,7 @@ void MenuState::Shutdown()
 		delete m_frustum;
 	}
 }
+
 GAMESTATESWITCH MenuState::Update()
 {
 	MenuActionData action = m_menues.top()->Update();
