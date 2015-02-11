@@ -23,11 +23,11 @@ void NaginataNinja::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_charNr)
 {
 	bool result;
 
-	result = Player::Initialize(NAGINATA_NINJA_MODEL_NAME, p_pos, p_direction);
+	result = Player::Initialize(NAGINATA_NINJA_MODEL_NAME, p_pos, p_direction, p_charNr);
 	if (!result)
 	{
 		return false;

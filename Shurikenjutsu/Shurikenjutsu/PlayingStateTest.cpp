@@ -66,7 +66,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initiate the player.
 	m_playerManager = new PlayerManager();
 	m_playerManager->Initialize();
-	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), wallList);
+	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
 
 	// Initlialize the frustum.
 	m_frustum = new Frustum();
@@ -423,8 +423,8 @@ ObjectManager* PlayingStateTest::GetObjectManager()
 
 void PlayingStateTest::OnScreenResize()
 {
-	float width = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
-	float height = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
+	float width = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	float height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 
 	// Update texture size.
 	VisibilityComputer::GetInstance().UpdateTextureSize((int)width, (int)height);

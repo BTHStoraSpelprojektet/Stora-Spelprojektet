@@ -20,6 +20,7 @@ private:
 	std::vector<Sphere> TransformToSphere(std::vector<Sphere> p_sphereInList, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_rotation);
 
 	std::vector<LevelImporter::CommonObject> m_mapObjects;
+	std::vector<LevelImporter::AnimatedObject> m_mapAnimatedObjects;
 	std::vector<OBB> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
 	std::vector<LevelImporter::LevelBoundingBox> m_levelBoundingBoxes;

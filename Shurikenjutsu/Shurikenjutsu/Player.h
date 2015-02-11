@@ -4,7 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include "AnimatedObject.h"
 #include "Network.h"
-
+#include "ParticleEmitter.h"
 
 class Ability;
 class InputManager;
@@ -12,8 +12,7 @@ class HealthBar;
 class AbilityBar;
 class StickyTrap;
 
-class Player :
-	public AnimatedObject
+class Player : public AnimatedObject
 {
 public:
 	Player();
@@ -22,7 +21,7 @@ public:
 	void* operator new(size_t p_i);
 	void operator delete(void* p_p);
 
-	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
+	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType);
 	void Shutdown();
 	void UpdateMe(std::vector<StickyTrap*> p_stickyTrapList);
 	void Update();
@@ -75,7 +74,6 @@ protected:
 	bool CheckSidesIfMultipleCollisions();
 	void SetOriginalSpeed(float p_speed);
 
-
 	//float m_damage = 0; // Sätts nog inviduellt per ability senare.
 	//int m_spells; // antalet spells om det behövs - skapa lista
 	float m_health; // Player health
@@ -119,5 +117,10 @@ protected:
 	float m_naginataStbTime;
 
 	bool m_updateVisibility;
+
+	ParticleEmitter* m_dashParticles1;
+	ParticleEmitter* m_dashParticles2;
+
+	int m_ninjaType;
 };
 #endif PLAYER

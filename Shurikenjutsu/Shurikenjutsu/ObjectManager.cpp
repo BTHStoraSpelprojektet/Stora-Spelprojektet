@@ -16,13 +16,13 @@ ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize(Level* p_level)
-{
-	//m_projectiles = std::vector<Projectile*>();
-	
+{	
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
 	std::vector<LevelImporter::AnimatedObject> animatedLevelObjects = p_level->GetAnimatedObjects();
 	std::vector<LevelImporter::ParticleEmitter> particleLevelEmitter = p_level->GetParticleEmitters();
+
+	m_projectiles = std::vector<Projectile*>();
 
 	//Stuff needed for the loop
 	std::vector<DirectX::XMFLOAT4X4> modelPositions;
@@ -171,6 +171,7 @@ void ObjectManager::Shutdown()
 	{
 		m_projectiles[i]->Shutdown();
 		delete m_projectiles[i];
+		m_projectiles[i] = nullptr;
 	}
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
@@ -707,6 +708,11 @@ std::vector<Object> ObjectManager::GetStaticObjectList()const
 	return m_staticObjects;
 }
 
+std::vector<AnimatedObject*> ObjectManager::GetAnimatedObjectList()const
+{
+	return m_animatedObjects;
+}
+
 void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 {
 	m_frustum = p_frustum;
@@ -782,7 +788,7 @@ void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX,
 	Projectile* tempProjectile;
 	tempProjectile = new Projectile();
 	tempProjectile->Initialize(DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(p_dirX, p_dirY, p_dirZ), p_uniqueId, p_ability, p_guid);
-	
+
 	m_projectiles.push_back(tempProjectile);
 }
 
