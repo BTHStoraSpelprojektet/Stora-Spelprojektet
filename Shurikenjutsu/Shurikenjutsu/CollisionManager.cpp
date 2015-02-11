@@ -7,14 +7,14 @@ CollisionManager* CollisionManager::m_instance;
 CollisionManager::CollisionManager(){}
 CollisionManager::~CollisionManager(){}
 
-void CollisionManager::Initialize(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList)
+void CollisionManager::Initialize(std::vector<Object> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList)
 {
 	m_staticBoxList = std::vector<OBB>();
 	m_staticSphereList = std::vector<Sphere>();
-	SetLists(p_StaticObjectList, p_outerWallList);
+	SetLists(p_StaticObjectList, p_animatedObjectList, p_outerWallList);
 }
 
-void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList)
+void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList)
 {
 	m_staticBoxList.push_back(OBB(p_outerWallList[0]));
 	m_staticBoxList.push_back(OBB(p_outerWallList[1]));
@@ -30,6 +30,23 @@ void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vec
 
 		for (unsigned int j = 0; j < tempBoxList.size(); j++)
 		{ 
+			tempBoxList[j].CalculateRadius();
+			m_staticBoxList.push_back(tempBoxList[j]);
+		}
+		for (unsigned int j = 0; j < tempSphereList.size(); j++)
+		{
+			m_staticSphereList.push_back(tempSphereList[j]);
+		}
+	}
+
+	// Go through all animated objects
+	for (unsigned int i = 0; i < p_animatedObjectList.size(); i++)
+	{
+		std::vector<OBB> tempBoxList = p_animatedObjectList[i]->GetBoundingBoxes();
+		std::vector<Sphere> tempSphereList = p_animatedObjectList[i]->GetBoundingSpheres();
+
+		for (unsigned int j = 0; j < tempBoxList.size(); j++)
+		{
 			tempBoxList[j].CalculateRadius();
 			m_staticBoxList.push_back(tempBoxList[j]);
 		}

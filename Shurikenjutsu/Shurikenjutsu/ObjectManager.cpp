@@ -697,6 +697,11 @@ std::vector<Object> ObjectManager::GetStaticObjectList()const
 	return m_staticObjects;
 }
 
+std::vector<AnimatedObject*> ObjectManager::GetAnimatedObjectList()const
+{
+	return m_animatedObjects;
+}
+
 void ObjectManager::UpdateFrustum(Frustum* p_frustum)
 {
 	m_frustum = p_frustum;

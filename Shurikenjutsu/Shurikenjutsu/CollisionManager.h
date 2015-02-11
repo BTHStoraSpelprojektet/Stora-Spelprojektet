@@ -1,6 +1,7 @@
 #ifndef COLLISIONMANAGER_H
 #define COLLISIONMANAGER_H
 
+#include "AnimatedObject.h"
 #include "Object.h"
 
 
@@ -10,7 +11,7 @@ public:
 	CollisionManager(const CollisionManager&) = delete;
 	CollisionManager& operator=(const CollisionManager&) = delete;
 
-	void Initialize(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList);
+	void Initialize(std::vector<Object> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList);
 	static CollisionManager* GetInstance();
 	
 	void Update(float p_pickedx, float p_pickedZ);
@@ -26,7 +27,7 @@ private:
 	CollisionManager();
 	~CollisionManager();
 	static CollisionManager* m_instance;
-	void SetLists(std::vector<Object> p_StaticObjectList, std::vector<Box> p_outerWallList);
+	void SetLists(std::vector<Object> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList);
 	std::vector<OBB> m_staticBoxList;
 	std::vector<Sphere> m_staticSphereList;
 	DirectX::XMFLOAT2 m_pickedLocation;
