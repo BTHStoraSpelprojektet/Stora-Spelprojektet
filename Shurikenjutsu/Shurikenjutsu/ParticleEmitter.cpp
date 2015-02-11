@@ -3,6 +3,7 @@
 #include "ConsoleFunctions.h"
 #include "Globals.h"
 #include "GraphicsEngine.h"
+#include "ParticleRenderer.h"
 
 bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, DirectX::XMFLOAT2 p_size, PARTICLE_PATTERN p_pattern)
 {
@@ -208,7 +209,7 @@ void ParticleEmitter::Update()
 
 void ParticleEmitter::Render()
 {
-	GraphicsEngine::RenderParticles(m_vertexBuffer, m_vertices, m_worldMatrix, m_particleTexture);
+	ParticleRenderer::GetInstance()->QueueRender(this);
 }
 
 void ParticleEmitter::EmitParticles()
@@ -737,4 +738,24 @@ void ParticleEmitter::SetEmitParticleState(bool p_emit)
 int ParticleEmitter::GetParticleCount()
 {
 	return m_currentParticles;
+}
+
+ID3D11Buffer* ParticleEmitter::GetVertexBuffer()
+{
+	return m_vertexBuffer;
+}
+
+unsigned int ParticleEmitter::GetVertices()
+{
+	return m_vertices;
+}
+
+DirectX::XMFLOAT4X4 ParticleEmitter::GetWorldMatrix()
+{
+	return m_worldMatrix;
+}
+
+ID3D11ShaderResourceView* ParticleEmitter::GetParticleTexture()
+{
+	return m_particleTexture;
 }
