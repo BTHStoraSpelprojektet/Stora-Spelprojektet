@@ -5,6 +5,8 @@
 #include <unordered_map>
 class string;
 #include "BaseModel.h"
+#include "../Shurikenjutsu/Model.h"
+class Model;
 
 class ModelLibrary
 {

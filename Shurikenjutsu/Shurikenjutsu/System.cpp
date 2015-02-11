@@ -156,6 +156,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 void System::Shutdown()
 {
+	
 	// Shutdown input.
 	InputManager::GetInstance()->Shutdown();
 
@@ -164,9 +165,6 @@ void System::Shutdown()
 
 	// Shutdown network
 	Network::GetInstance()->Shutdown();
-
-	// Shutdown model library
-	ModelLibrary::GetInstance()->Shutdown();
 
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
@@ -190,6 +188,11 @@ void System::Shutdown()
 	VisibilityComputer::GetInstance().Shutdown();
 
 	//Shutdown current state
+	if (m_menuState != NULL)
+	{
+		m_menuState->Shutdown();
+		delete m_menuState;
+	}
 	if (m_playingState != NULL)
 	{
 		m_playingState->Shutdown();
@@ -200,11 +203,7 @@ void System::Shutdown()
 		m_chooseNinjaState->Shutdown();
 		delete m_chooseNinjaState;
 	}
-	if (m_menuState != NULL)
-	{
-		m_menuState->Shutdown();
-		delete m_menuState;
-	}
+
 
 	if (m_timer)
 	{
@@ -214,6 +213,9 @@ void System::Shutdown()
 	}
 
 	ParticleRenderer::GetInstance()->Shutdown();
+
+	// Shutdown model library
+	ModelLibrary::GetInstance()->Shutdown();
 }
 
 void System::Run()
