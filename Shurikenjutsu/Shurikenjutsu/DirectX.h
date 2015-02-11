@@ -21,6 +21,7 @@ public:
 
 	void TurnOnDepthStencil();
 	void TurnOffDepthStencil();
+	void SetDepthStateForParticles();
 
 	void SetClearColor(float R, float G, float B, float p_opacity);
 
@@ -51,6 +52,7 @@ private:
 
 	ID3D11DepthStencilState* m_depthEnabled;
 	ID3D11DepthStencilState* m_depthDisabled;
+	ID3D11DepthStencilState* m_depthStateParticles;
 	ID3D11DepthStencilState* m_outliningALWAYS;
 	ID3D11DepthStencilState* m_outliningNOTEQUAL;
 

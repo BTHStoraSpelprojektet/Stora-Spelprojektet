@@ -141,8 +141,8 @@ const float CHARACTER_NAGINATA_SPEED = 11.0f;
 ////////////////////////////////////////////////////////////////Character Variables
 ////////////////////////////////////////////////////////////////World Particles
 
-const float PARTICLE_FIRE_SIZE_X = 0.3f;
-const float PARTICLE_FIRE_SIZE_Y = 0.3f;
+const float PARTICLE_FIRE_SIZE_X = 1.3f;
+const float PARTICLE_FIRE_SIZE_Y = 1.3f;
 
 const float PARTICLE_FIREFLIES_SIZE_X = 0.1f;
 const float PARTICLE_FIREFLIES_SIZE_Y = 0.1f;

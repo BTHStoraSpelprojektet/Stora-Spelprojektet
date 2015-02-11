@@ -90,3 +90,7 @@ void VolleyManager::SetCurrentDistanceFromPlayer(float p_distance)
 {
 	m_currentDistanceFromPlayer = p_distance;
 }
+void VolleyManager::ResetLists()
+{
+	m_volleys.clear();
+}

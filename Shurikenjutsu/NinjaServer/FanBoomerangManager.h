@@ -31,6 +31,7 @@ public:
 	float GetPosZ(int p_index);
 
 	float SetLifeTime(int p_index, float p_lifeTime);
+	void ResetLists();
 
 private:
 	void BroadcastDestoyed(unsigned int p_id);

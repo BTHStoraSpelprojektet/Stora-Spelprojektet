@@ -28,6 +28,11 @@ public:
 
 	int GetParticleCount();
 
+	ID3D11Buffer* GetVertexBuffer();
+	unsigned int GetVertices();
+	DirectX::XMFLOAT4X4 GetWorldMatrix();
+	ID3D11ShaderResourceView* GetParticleTexture();
+
 private:
 
 	bool m_emit;

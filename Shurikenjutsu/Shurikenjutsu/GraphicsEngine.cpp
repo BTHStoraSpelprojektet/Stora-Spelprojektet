@@ -449,6 +449,11 @@ void GraphicsEngine::TurnOffDepthStencil()
 	m_directX.TurnOffDepthStencil();
 }
 
+void GraphicsEngine::SetDepthStateForParticles()
+{
+	m_directX.SetDepthStateForParticles();
+}
+
 void GraphicsEngine::SetVsync(bool p_state)
 {
 	m_directX.SetVsync(p_state);
