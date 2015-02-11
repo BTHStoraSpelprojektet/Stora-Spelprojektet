@@ -423,8 +423,8 @@ ObjectManager* PlayingStateTest::GetObjectManager()
 
 void PlayingStateTest::OnScreenResize()
 {
-	float width = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
-	float height = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
+	float width = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	float height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 
 	// Update texture size.
 	VisibilityComputer::GetInstance().UpdateTextureSize((int)width, (int)height);
