@@ -63,9 +63,10 @@ private:
 	unsigned int m_maxParticles;
 	unsigned int m_currentParticles;
 
-	float m_globalWindAngleDegree = 315;
-	float getWindOffsetX(float timePassed, float timeToLive);
-	float getWindOffsetZ(float timePassed, float timeToLive);
+	float m_emitBorderLeft;
+
+	//float m_globalWindAngleDegree = 315;
+	float m_globalWindAngleDegree = 0;
 
 	struct Particle
 	{
@@ -98,5 +99,11 @@ private:
 
 	ID3D11Buffer* m_vertexBuffer;
 	unsigned int m_vertices;
+
+
+	float getWindOffsetX(float timePassed, float timeToLive);
+	float getWindOffsetZ(float timePassed, float timeToLive);
+	void fadeIn(ParticleVertex &mesh, Particle &particle, float timeToFade);
+	void fadeOut(ParticleVertex &mesh, Particle &particle, float timeToFade);
 };
 #endif

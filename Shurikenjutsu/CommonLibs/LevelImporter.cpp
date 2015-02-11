@@ -235,8 +235,11 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			particleEmitter.m_rotationY = -rotateY;
 			particleEmitter.m_rotationZ = rotateZ;
 			
-			if (particleEmitterType.find("Fire") != std::string::npos){
-				particleEmitter.type = EmitterType::Fire;
+			if (particleEmitterType.find("BrazierFire") != std::string::npos){
+				particleEmitter.type = EmitterType::BrazierFire;
+			}
+			else if (particleEmitterType.find("FireSpark") != std::string::npos){
+				particleEmitter.type = EmitterType::FireSpark;
 			}
 			else if (particleEmitterType.find("Smoke") != std::string::npos){
 				particleEmitter.type = EmitterType::Smoke;
@@ -249,6 +252,16 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			}
 			else if (particleEmitterType.find("WorldMist") != std::string::npos){
 				particleEmitter.type = EmitterType::WorldMist;
+			}
+			else if (particleEmitterType.find("WorldDust") != std::string::npos){
+				particleEmitter.type = EmitterType::WorldDust;
+			}
+			else if (particleEmitterType.find("Fireflies") != std::string::npos){
+				particleEmitter.type = EmitterType::Fireflies;
+			}
+			else{
+				//Set a defualt type
+				particleEmitter.type = EmitterType::Smoke;
 			}
 
 			m_particleEmitter.push_back(particleEmitter);

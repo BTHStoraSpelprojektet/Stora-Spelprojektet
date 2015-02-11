@@ -13,8 +13,8 @@ const float NEXTWIDTH = 100.0f;
 const float NEXTHEIGHT = 98.0f;
 
 // PORTRAIT
-const float PORTRAITWIDTH = 242.0f;
-const float PORTRAITHEIGHT = 300.0f;
+const float PORTRAITWIDTH = 200.0f;
+const float PORTRAITHEIGHT = 200.0f;
 
 // OFFSET
 const float OFFSET = 10.0f;
