@@ -122,13 +122,13 @@ void Player::Shutdown()
 	if (m_abilityBar != nullptr)
 	{
 		m_abilityBar->Shutdown();
-	}
+}
 
 	if (m_dashParticles1 != nullptr)
 	{
 		m_dashParticles1->Shutdown();
 		delete m_dashParticles1;
-	}
+}
 
 	if (m_dashParticles2 != nullptr)
 	{
@@ -215,32 +215,32 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 		Sphere playerSphere = m_playerSphere;
 		playerSphere.m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-		playerSphere.m_position.z += m_dashDistanceLeft * m_dashDirection.z;	
+		playerSphere.m_position.z += m_dashDistanceLeft * m_dashDirection.z;		
 
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
-			if (distance >= m_dashDistanceLeft)
-			{
-				m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-				m_position.z += m_dashDistanceLeft * m_dashDirection.z;
-				m_dashDistanceLeft = 0.0f;
-				m_isDashing = false;
+		if (distance >= m_dashDistanceLeft)
+		{
+			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+			m_dashDistanceLeft = 0.0f;
+			m_isDashing = false;
 
 				Network::GetInstance()->SendAnimationState(AnimationState::None);
 
 				m_dashParticles1->SetEmitParticleState(false);
 				m_dashParticles2->SetEmitParticleState(false);
-			}
+		}
 
-			else
-			{
-				m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-				m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-				m_dashDistanceLeft -= distance;
-			}
+		else
+		{
+			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+			m_dashDistanceLeft -= distance;
+		}
 
-			// If we dashed, update shadow shapes.
-			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		// If we dashed, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
 		}
 
 		else
@@ -315,13 +315,13 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
-		{
-			// Play ability animation if we did any
-			DoAnimation();
+	{
+		// Play ability animation if we did any
+		DoAnimation();
 
-				// Set global cooldown
-				m_globalCooldown = m_maxGlobalCooldown;
-		}
+			// Set global cooldown
+			m_globalCooldown = m_maxGlobalCooldown;
+	}
 	}
 
 
@@ -568,7 +568,13 @@ void Player::SetCalculatePlayerPosition()
 {
 	float speedXDeltaTime = m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 	// Check collision between player and static boxes
-	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(Sphere(m_position, m_playerSphere.m_radius), m_speed, m_direction);
+	OBB playerOBB;
+	playerOBB.m_radius = -1.0f;
+	if (GetBoundingBoxes().size() > 0)
+	{
+		playerOBB = GetBoundingBoxes()[0];
+	}
+	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(playerOBB, m_speed, m_direction);
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{ 
 		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
