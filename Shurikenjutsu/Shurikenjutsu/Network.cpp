@@ -42,6 +42,8 @@ bool Network::Initialize()
 	m_redTeamScore = 0;
 	m_blueTeamScore = 0;
 	m_lastTeamWon = 0;
+	m_matchOver = false;
+	m_matchWinningTeam = 0;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -455,8 +457,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
 
-			m_redTeamScore = 0;
-			m_blueTeamScore = 0;
+			m_matchOver = true;
+			m_matchWinningTeam = winningTeam;
 
 			std::cout << "Team " << winningTeam << " won this match\n";
 			break;
@@ -472,10 +474,11 @@ void Network::ReceviePacket()
 
 			m_newLevel = true;
 			m_levelName = levelName;
-
-			// Send invalid positions to get an invalid move from server and therefore update correct position according to server
-			SendPlayerPos(100.0f, -100.0f, 100.0f);
-			SendPlayerPos(-100.0f, 100.0f, -100.0f);
+			m_redTeamScore = 0;
+			m_blueTeamScore = 0;
+			m_matchOver = false;
+			m_matchWinningTeam = 0;
+			m_restartingRound = false;
 
 			std::cout << "Starting new level\n";
 			break;
@@ -1486,4 +1489,14 @@ void Network::ResetNaginataStabBoolean()
 void Network::AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid)
 {
 	m_objectManager->AddVolley(p_id, p_startX, p_startZ, p_endX, p_endZ, p_guid);
+}
+
+bool Network::GetMatchOver()
+{
+	return m_matchOver;
+}
+
+int Network::GetMatchWinningTeam()
+{
+	return m_matchWinningTeam;
 }
