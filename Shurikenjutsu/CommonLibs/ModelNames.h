@@ -28,6 +28,7 @@
 #define MINIMAP_TEXTURE "../Shurikenjutsu/2DTextures/minimap.png"
 #define MINIMAP_RED_DOT_TEXTURE "../Shurikenjutsu/2DTextures/minimap_redDot.png"
 #define MINIMAP_BLUE_DOT_TEXTURE "../Shurikenjutsu/2DTextures/minimap_blueDot.png"
+#define MINIMAP_BG_TEXTURE "../Shurikenjutsu/2DTextures/minimapframe.png"
 
 // Abilities
 #define ABILITY_BG_TEXTURE "../Shurikenjutsu/2DTextures/tb_bg.png"
