@@ -66,10 +66,10 @@ CollisionManager* CollisionManager::GetInstance()
 	return m_instance;
 }
 
-std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction)
+std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(OBB p_playerBox, float p_speed, DirectX::XMFLOAT3 p_direction)
 {
 	std::vector<OBB> CollisionList;
-	Sphere playerSphere = p_playerSphere;
+	Sphere playerSphere = Sphere(p_playerBox.m_center, p_playerBox.m_radius);
 	float speedXDeltaTime = p_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 	if (m_staticBoxList.size() > 0)
 	{
@@ -77,10 +77,20 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(
 		{
 			OBB box = m_staticBoxList[i];
 
-			playerSphere.m_position.x = p_playerSphere.m_position.x + p_direction.x * speedXDeltaTime;
-			playerSphere.m_position.y = p_playerSphere.m_position.y + p_direction.y * speedXDeltaTime;
-			playerSphere.m_position.z = p_playerSphere.m_position.z + p_direction.z * speedXDeltaTime;
+			playerSphere.m_position.x = p_playerBox.m_center.x + p_direction.x * speedXDeltaTime;
+			playerSphere.m_position.y = p_playerBox.m_center.y + p_direction.y * speedXDeltaTime;
+			playerSphere.m_position.z = p_playerBox.m_center.z + p_direction.z * speedXDeltaTime;
 
+			if (playerSphere.m_position.y + playerSphere.m_radius < box.m_center.y - box.m_extents.y)
+			{
+				// Sphere bellow box
+				playerSphere.m_position.y = p_playerBox.m_center.y + p_playerBox.m_extents.y - playerSphere.m_radius;
+			}
+			if (playerSphere.m_position.y - playerSphere.m_radius > box.m_center.y + box.m_extents.y)
+			{
+				// Sphere above box
+				playerSphere.m_position.y = p_playerBox.m_center.y - p_playerBox.m_extents.y + playerSphere.m_radius;
+			}
 			if (Collisions::OBBSphereCollision(box, playerSphere))
 			{
 				CollisionList.push_back(box);

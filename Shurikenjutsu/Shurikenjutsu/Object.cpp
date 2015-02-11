@@ -156,6 +156,7 @@ void Object::TransformBoundingBoxes()
 		DirectX::XMStoreFloat3(&temp.m_center, transCenter);
 		temp.m_extents = bbList[i].m_extents;
 		temp.m_direction = orientation;
+		temp.CalculateRadius();
 		m_boundingBoxes.push_back(temp);
 	}
 }
