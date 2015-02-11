@@ -18,8 +18,9 @@ bool Minimap::Initialize()
 {
 	m_playerDot = new GUIElement();
 	m_minimap = new GUIElement();
+	m_background = new GUIElement();
 	
-	m_minimapWidth = 200.0f;
+	m_minimapWidth = 222.0f;
 	m_minimapHeight = 250.0f;
 	
 	// Save center of minimap
@@ -30,6 +31,9 @@ bool Minimap::Initialize()
 	m_minimap->Initialize(m_centerOfMinimapPos,	m_minimapWidth, m_minimapHeight, TextureLibrary::GetInstance()->GetTexture(MINIMAP_TEXTURE));
 	
 	m_playerDot->Initialize(m_centerOfMinimapPos, 10, 10, TextureLibrary::GetInstance()->GetTexture(MINIMAP_RED_DOT_TEXTURE));
+
+	
+	m_background->Initialize(DirectX::XMFLOAT3(m_centerOfMinimapPos.x + 12.0f, m_centerOfMinimapPos.y + 12.0f, 0.0f) , 246, 275, TextureLibrary::GetInstance()->GetTexture(MINIMAP_BG_TEXTURE));
 
 	DirectX::XMFLOAT3 startPosForOtherPlayers = DirectX::XMFLOAT3(-1000, -1000, 0);
 	for (int i = 0; i < 7; i++)
@@ -61,6 +65,7 @@ void Minimap::Update(DirectX::XMFLOAT3 p_playerPos)
 
 void Minimap::Render()
 {
+	m_background->QueueRender();
 	m_minimap->QueueRender();
 	for (int i = 0; i < 7; i++)
 	{
@@ -82,11 +87,11 @@ DirectX::XMFLOAT3 Minimap::ConvertPosToMinimapPos(DirectX::XMFLOAT3 p_playerPos)
 	playerPos.y = playerPos.z;
 	playerPos.z = 0;
 	// offset for map being higher than width..
-	float offset = 25;
+	float offset = 13;
 	// Calc where the player is on the minimap in precent from center
 	xPercent = playerPos.x / MAPSIZEX;	// 43 size of map in x from middle
 	yPercent = playerPos.y / MAPSIZEY;	// 50 size of map in z from middle
-	playerPos.x = xPercent * m_minimapWidth * 0.5f;
+	playerPos.x = xPercent * (m_minimapWidth - offset) * 0.5f;
 	playerPos.y = yPercent * (m_minimapHeight - offset) * 0.5f;
 	playerPos.x = m_centerOfMinimapPos.x + playerPos.x;
 	playerPos.y = m_centerOfMinimapPos.y + playerPos.y;

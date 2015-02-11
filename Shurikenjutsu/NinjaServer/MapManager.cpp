@@ -10,6 +10,7 @@ bool MapManager::Initialize(std::string p_levelName)
 	m_boundingBoxes = std::vector<OBB>();
 	m_boundingSpheres = std::vector<Sphere>();
 	m_mapObjects = level.GetObjects();
+	m_mapAnimatedObjects = level.GetAnimatedObjects();
 	m_levelBoundingBoxes = level.getLevelBoundingBoxes();
 
 	for each (LevelImporter::CommonObject mapObject in m_mapObjects)
@@ -18,7 +19,7 @@ bool MapManager::Initialize(std::string p_levelName)
 		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(mapObject.m_rotationX, mapObject.m_rotationY, mapObject.m_rotationZ);
 
 
-		std::vector<Sphere> boundingSpheres = ModelLibrary::GetInstance()->GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingSpheres();
+		std::vector<Sphere> boundingSpheres = ModelLibrary::GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingSpheres();
 		std::vector<Sphere> sphereList = TransformToSphere(boundingSpheres, position, rotation);
 		for each(Sphere sphere in sphereList)
 		{
@@ -29,6 +30,30 @@ bool MapManager::Initialize(std::string p_levelName)
 		}
 
 		std::vector<Box> boundingBoxes = ModelLibrary::GetInstance()->GetModel(mapObject.m_filePath)->GetBoundingBoxes();
+		std::vector<OBB> obbList = TransformToOBB(boundingBoxes, position, rotation);
+		for each(OBB box in obbList)
+		{
+			m_boundingBoxes.push_back(box);
+		}
+	}
+
+	for each(LevelImporter::AnimatedObject mapAnimatedObject in m_mapAnimatedObjects)
+	{
+		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(mapAnimatedObject.m_translationX, mapAnimatedObject.m_translationY, mapAnimatedObject.m_translationZ);
+		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(mapAnimatedObject.m_rotationX, mapAnimatedObject.m_rotationY, mapAnimatedObject.m_rotationZ);
+
+
+		std::vector<Sphere> boundingSpheres = ModelLibrary::GetInstance()->GetInstance()->GetModel(mapAnimatedObject.m_filePath)->GetBoundingSpheres();
+		std::vector<Sphere> sphereList = TransformToSphere(boundingSpheres, position, rotation);
+		for each(Sphere sphere in sphereList)
+		{
+			Sphere tmp;
+			tmp.m_position = DirectX::XMFLOAT3(sphere.m_position.x + (mapAnimatedObject.m_translationX * mapAnimatedObject.m_rotationX), sphere.m_position.y + (mapAnimatedObject.m_translationY * mapAnimatedObject.m_rotationY), sphere.m_position.z + (mapAnimatedObject.m_translationZ * mapAnimatedObject.m_rotationZ));
+			tmp.m_radius = sphere.m_radius;
+			m_boundingSpheres.push_back(tmp);
+		}
+
+		std::vector<Box> boundingBoxes = ModelLibrary::GetInstance()->GetModel(mapAnimatedObject.m_filePath)->GetBoundingBoxes();
 		std::vector<OBB> obbList = TransformToOBB(boundingBoxes, position, rotation);
 		for each(OBB box in obbList)
 		{

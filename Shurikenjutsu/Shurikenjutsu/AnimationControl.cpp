@@ -69,7 +69,7 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 
 	int* index = new int(0);
 	CombineMatrices(index, m_currentArms->m_root[(int)m_frameArms], m_currentLegs->m_root[(int)m_frameLegs], startQuaternion, startTranslation);
-	delete[] index;
+	delete index;
 
 	m_surujinChild = false;
 

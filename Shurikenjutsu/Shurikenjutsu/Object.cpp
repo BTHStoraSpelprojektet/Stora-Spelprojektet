@@ -42,7 +42,16 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	return true;
 }
 
-void Object::Shutdown(){}
+void Object::Shutdown()
+{
+	/*if (m_model != nullptr)
+	{
+		m_model->ShutdownModel();
+		m_model->Shutdown();
+		//delete m_model;
+		//m_model = NULL;
+	}*/
+}
 
 void Object::Render()
 {
@@ -147,6 +156,7 @@ void Object::TransformBoundingBoxes()
 		DirectX::XMStoreFloat3(&temp.m_center, transCenter);
 		temp.m_extents = bbList[i].m_extents;
 		temp.m_direction = orientation;
+		temp.CalculateRadius();
 		m_boundingBoxes.push_back(temp);
 	}
 }

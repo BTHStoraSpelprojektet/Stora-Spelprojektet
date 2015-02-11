@@ -845,6 +845,7 @@ void SceneShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map scene matrix buffer.");
+		return;
 	}
 
 	// Get pointer to the matrix buffer data.
@@ -889,6 +890,7 @@ void SceneShader::UpdateReversedShadowMatrices(ID3D11DeviceContext* p_context)
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map scene matrix buffer.");
+		return;
 	}
 
 	// Get pointer to the matrix buffer data.
@@ -916,11 +918,11 @@ void SceneShader::UpdateFogBuffer(ID3D11DeviceContext* p_context, float p_fogSta
 	if (FAILED(p_context->Map(m_fogBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map scene fog buffer.");
+		return;
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	FogBuffer* fogBuffer;
-	fogBuffer = (FogBuffer*)mappedBuffer.pData;
+	FogBuffer* fogBuffer = (FogBuffer*)mappedBuffer.pData;
 
 	// Copy the fog information into the fog constant buffer.
 	fogBuffer->m_fogStart = p_fogStart;
@@ -941,11 +943,11 @@ void SceneShader::UpdateColorBuffer(ID3D11DeviceContext* p_context, float R, flo
 	if (FAILED(p_context->Map(m_colorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map color buffer.");
+		return;
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	ColorBuffer* colorBuffer;
-	colorBuffer = (ColorBuffer*)mappedBuffer.pData;
+	ColorBuffer* colorBuffer = (ColorBuffer*)mappedBuffer.pData;
 
 	// Copy the fog information into the fog constant buffer.
 	colorBuffer->m_color.x = R;
@@ -976,6 +978,7 @@ void SceneShader::UpdateWorldMatrixOutlining(ID3D11DeviceContext* p_context, Dir
 	if (FAILED(p_context->Map(m_matrixBufferOutlining, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map outlining matrix buffer.");
+		return;
 	}
 
 	// Get pointer to the matrix buffer data.
@@ -1000,11 +1003,11 @@ void SceneShader::UpdateAnimatedBuffer(ID3D11DeviceContext* p_context, std::vect
 	if (FAILED(p_context->Map(m_animationMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map scene animated matrix buffer.");
+		return;
 	}
 
 	// Get pointer to the matrix buffer data.
-	AnimationMatrixBuffer* animatedMatrixBuffer;
-	animatedMatrixBuffer = (AnimationMatrixBuffer*)mappedBuffer.pData;
+	AnimationMatrixBuffer* animatedMatrixBuffer = (AnimationMatrixBuffer*)mappedBuffer.pData;
 
 	// Set matrices in buffer.
 	for (unsigned int i = 0; i < p_boneTransforms.size(); i++)
@@ -1032,11 +1035,11 @@ void SceneShader::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 	if (FAILED(p_context->Map(m_frameBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map scene frame buffer.");
+		return;
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	FrameBuffer* frameBuffer;
-	frameBuffer = (FrameBuffer*)mappedBuffer.pData;
+	FrameBuffer* frameBuffer = (FrameBuffer*)mappedBuffer.pData;
 
 	// Copy the fog information into the frame constant buffer.
 	frameBuffer->m_directionalLight = p_dlight;
@@ -1053,7 +1056,7 @@ ID3D11ShaderResourceView* SceneShader::GetShadowMap()
 }
 void SceneShader::SetShadowMapDimensions(ID3D11Device* p_device, ID3D11DeviceContext* p_context, float p_width, float p_height)
 {
-	ID3D11Buffer* buffer;
+	ID3D11Buffer* buffer = NULL;
 
 	// Create the cbuffer where size data is stored
 	D3D11_BUFFER_DESC bufferDescription;
@@ -1078,8 +1081,7 @@ void SceneShader::SetShadowMapDimensions(ID3D11Device* p_device, ID3D11DeviceCon
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	ShadowMapSizeBuffer* sizeBuffer;
-	sizeBuffer = (ShadowMapSizeBuffer*)mappedBuffer.pData;
+	ShadowMapSizeBuffer* sizeBuffer = (ShadowMapSizeBuffer*)mappedBuffer.pData;
 
 	// Copy the fog information into the frame constant buffer.
 	sizeBuffer->m_shadowMapWidth = p_width;

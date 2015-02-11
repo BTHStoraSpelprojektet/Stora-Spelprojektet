@@ -119,6 +119,9 @@ public:
 	int GetRedTeamScore();
 	int GetBlueTeamScore();
 	int GetLastWinningTeam();
+	
+	bool GetMatchOver();
+	int GetMatchWinningTeam();
 
 	bool CheckIfNaginataStabAttackIsPerformed();
 	void ResetNaginataStabBoolean();
@@ -193,6 +196,8 @@ private:
 	int m_redTeamScore;
 	int m_blueTeamScore;
 	int m_lastTeamWon;
+	bool m_matchOver;
+	int m_matchWinningTeam;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;

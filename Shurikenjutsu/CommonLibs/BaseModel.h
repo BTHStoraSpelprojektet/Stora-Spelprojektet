@@ -3,11 +3,13 @@
 
 #include "CommonStructures.h"
 #include <d3d11.h>
+#include "../CommonLibs/ModelImporter.h"
 
 class BaseModel
 {
 public:
 	BaseModel();
+	BaseModel(BaseModel&);
 	~BaseModel();
 
 	virtual bool LoadModel(const char* p_filepath);
@@ -28,6 +30,8 @@ protected:
 	std::vector<Box> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
 	Sphere m_frustumSphere;
+	MeshData* mData;
+	ModelImporter* m_importer;
 };
 
 #endif

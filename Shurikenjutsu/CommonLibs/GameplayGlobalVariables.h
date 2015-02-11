@@ -73,7 +73,7 @@ const float NAGINATA_COOLDOWN = 0.5f;
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 //Dash
 const float DASH_MAX_RANGE = 10.0f;
-const float DASH_COOLDOWN = 6.0f;
+const float DASH_COOLDOWN = 0.5f;
 const float DASH_DAMAGE = 10.0f;
 const float DASH_SPEED = 8.0f;
 
@@ -144,6 +144,9 @@ const float CHARACTER_NAGINATA_SPEED = 11.0f;
 const float PARTICLE_FIRE_SIZE_X = 0.3f;
 const float PARTICLE_FIRE_SIZE_Y = 0.3f;
 
+const float PARTICLE_FIREFLIES_SIZE_X = 0.1f;
+const float PARTICLE_FIREFLIES_SIZE_Y = 0.1f;
+
 const float PARTICLE_PINKLEAF_SIZE_X = 0.14f;
 const float PARTICLE_PINKLEAF_SIZE_Y = 0.14f;
 
@@ -152,6 +155,9 @@ const float PARTICLE_GREENLEAF_SIZE_Y = 0.15f;
 
 const float PARTICLE_WORLDMIST_SIZE_X = 14.15f;
 const float PARTICLE_WORLDMIST_SIZE_Y = 14.15f;
+
+const float PARTICLE_WORLDDUST_SIZE_X = 0.05f;
+const float PARTICLE_WORLDDUST_SIZE_Y = 0.05f;
 
 ////////////////////////////////////////////////////////////////World Particles
 
