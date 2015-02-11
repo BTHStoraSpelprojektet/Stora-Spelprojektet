@@ -8,6 +8,7 @@ class BaseModel
 {
 public:
 	BaseModel();
+	BaseModel(BaseModel&);
 	~BaseModel();
 
 	virtual bool LoadModel(const char* p_filepath);

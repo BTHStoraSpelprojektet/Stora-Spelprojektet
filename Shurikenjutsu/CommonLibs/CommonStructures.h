@@ -260,6 +260,15 @@ struct BoneFrame
 
 	int m_childrenCount;
 	std::vector<BoneFrame*> m_children;
+	
+	void Shutdown()
+	{
+		for (unsigned int i = 0; i < m_children.size(); i++)
+		{
+			m_children[i]->Shutdown();
+			delete m_children[i];
+		}
+	}
 };
 
 struct BindPose
@@ -276,6 +285,15 @@ struct AnimationStack
 
 	std::vector<BoneFrame*> m_root;
 	std::vector<BindPose> m_bindPoses;
+
+	void Shutdown()
+	{
+		for (unsigned int i = 0; i < m_root.size(); i++)
+		{
+			m_root[i]->Shutdown();
+			delete m_root[i];
+		}
+	}
 };
 
 struct Point

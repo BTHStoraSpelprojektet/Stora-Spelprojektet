@@ -36,14 +36,17 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	m_windowHandle = p_handle;
 
 	// Initialize directX.
-	result = m_directX.Initialize(p_handle);
-	if (result)
+	if (m_directX.Initialize(p_handle))
 	{
 		m_directX.Present();
 		ConsolePrintSuccess("DirectX initialized successfully.");
 		std::string version = "DirectX version: " + CreateTitle(m_directX.GetVersion());
 		ConsolePrintText(version);
 		ConsoleSkipLines(1);
+	}
+	else
+	{
+		return false;
 	}
 	
 	// Initialize the scene shader.
@@ -52,12 +55,20 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+	else
+	{
+		return false;
+	}
 
 	// Initialize 2D GUI shader.
 	if (m_GUIShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("GUI 2D shader initialized successfully.");
 		ConsoleSkipLines(1);
+	}
+	else
+	{
+		return false;
 	}
 
 	// Initialize the particle shader.
@@ -66,11 +77,19 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Particle shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+	else
+	{
+		return false;
+	}
 
 	if (m_GUIShader.InitializeColorShader(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("GUI 2D color shader initialized successfully.");
 		ConsoleSkipLines(1);
+	}
+	else
+	{
+		return false;
 	}
 
 	// Initialize the depth buffer.
@@ -79,6 +98,10 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Depth shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+	else
+	{
+		return false;
+	}
 
 	// Initialize the foliage buffer.
 	if (m_foliageShader.Initialize(m_directX.GetDevice()))
@@ -86,11 +109,31 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		ConsolePrintSuccess("Foliage shader initialized successfully.");
 		ConsoleSkipLines(1);
 	}
+	else
+	{
+		return false;
+	}
 
 	// Initialize the visibility computer.
-	ShadowShapes::GetInstance().Initialize();
-	VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice());
-	ConsoleSkipLines(1);
+	if (ShadowShapes::GetInstance().Initialize())
+	{
+		ConsolePrintSuccess("ShadowShapes initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+	else
+	{
+		return false;
+	}
+
+	if (VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice()))
+	{
+		ConsolePrintSuccess("VisibilityComputer initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+	else
+	{
+		return false;
+	}
 
 	// Initialize shadow map.
 	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
@@ -103,9 +146,13 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 
 		ConsoleSkipLines(1);
 	}
+	else
+	{
+		return false;
+	}
 
 	// Create the font wrapper.
-	IFW1Factory* FW1Factory;
+	IFW1Factory* FW1Factory = NULL;
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &FW1Factory);
 	hResult = FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Calibri", &m_fontWrapper);
 	if (FAILED(hResult))
@@ -119,13 +166,25 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	ConsoleSkipLines(1);
 
 	// Create text geometry
-	FW1Factory->CreateTextGeometry(&m_textGeometry);
+	hResult = FW1Factory->CreateTextGeometry(&m_textGeometry);
+	if (FAILED(hResult))
+	{
+		ConsolePrintError("Failed to create the font wrapper!");
+	}
+	else
+	{
+		ConsolePrintSuccess("Successfully created the font wrapper.");
+	}
+	ConsoleSkipLines(1);
+
 
 	if (FW1Factory != NULL)
 	{
 		FW1Factory->Release();
 	}
+
 	m_instanceManager = new InstanceManager();
+
 	return result;
 }
 
@@ -137,7 +196,6 @@ void GraphicsEngine::Shutdown()
 	m_sceneShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
-	//m_outliningShader.Shutdown();
 
 	if (m_fontWrapper != NULL)
 	{
@@ -154,7 +212,7 @@ void GraphicsEngine::Shutdown()
 
 ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
 {
-	ID3D11ShaderResourceView* textureView;
+	ID3D11ShaderResourceView* textureView = NULL;
 	std::wstring wstring;
 
 	for (unsigned int i = 0; i < p_filename.length(); ++i)

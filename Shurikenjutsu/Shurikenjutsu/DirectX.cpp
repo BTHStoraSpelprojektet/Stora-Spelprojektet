@@ -31,8 +31,8 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	m_width = (window.right - window.left);
 	m_height = (window.bottom - window.top);
 
-	IDXGIFactory* factory;
-	IDXGIAdapter* adapter;
+	IDXGIFactory* factory = NULL;
+	IDXGIAdapter* adapter = NULL;
 	IDXGIOutput* adapterOutput;
 	unsigned int numModes;
 	DXGI_MODE_DESC* displayModeList;
@@ -79,8 +79,8 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
-	unsigned int numerator;
-	unsigned int denominator;
+	unsigned int numerator = 0;
+	unsigned int denominator = 1;
 
 	// Now go through all the display modes and find the one that matches the screen width and height.
 	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
@@ -139,13 +139,11 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
-	IDXGIDevice* device;
+	IDXGIDevice* device = NULL;
 	m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&device);
 
-	adapter;
 	device->GetParent(__uuidof(IDXGIAdapter), (void **)&adapter);
 
-	factory;
 	adapter->GetParent(__uuidof(IDXGIFactory), (void **)&factory);
 
 	if (FAILED(factory->MakeWindowAssociation(p_handle, DXGI_MWA_NO_ALT_ENTER)))

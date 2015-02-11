@@ -42,7 +42,10 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	return true;
 }
 
-void Object::Shutdown(){}
+void Object::Shutdown()
+{
+	m_model->ShutdownModel();
+}
 
 void Object::Render()
 {

@@ -122,7 +122,7 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	readPosition += sizeof(unsigned int);
 
 	if (boundingBoxCount < 10)
-	{
+	{	
 		m_importedMesh.m_boundingBoxes.resize(boundingBoxCount);
 
 		for (unsigned int i = 0; i < boundingBoxCount; i++)
@@ -220,30 +220,32 @@ void ModelImporter::CheckVertices(float x, float y, float z)
 	}	
 }
 
-MeshData ModelImporter::GetMesh()
+MeshData* ModelImporter::GetMesh()
 {
-	return m_importedMesh;
+	return &m_importedMesh;
 }
 
 void ModelImporter::Shutdown()
 {
-	for (unsigned int i = 0; i < m_importedMesh.m_stacks.size(); i++)
+	//m_importedMesh.Shutdown();
+	/*for (unsigned int i = 0; i < m_importedMesh.m_stacks.size(); i++)
 	{
 		for (unsigned int j = 0; j < m_importedMesh.m_stacks[i].m_root.size(); j++)
 		{
 			ShutDownHierarchy(m_importedMesh.m_stacks[i].m_root[j]);
 		}
-	}
+	}*/
 }
 
 void ModelImporter::ShutDownHierarchy(BoneFrame* bone)
 {
-	for (int i = 0; i < bone->m_childrenCount; i++)
+	if (bone->m_childrenCount > -1)
 	{
-		ShutDownHierarchy(bone->m_children[i]);
+		for (int i = 0; i < bone->m_childrenCount; i++)
+		{
+			ShutDownHierarchy(bone->m_children[i]);
+		}
+		delete bone;
+		bone = NULL;
 	}
-	
-
-	delete bone;
-	bone = NULL;
 }

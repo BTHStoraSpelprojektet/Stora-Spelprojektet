@@ -232,10 +232,11 @@ void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_wor
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map GUI matrix buffer.");
+		return;
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	MatrixBuffer* matrixBuffer;
+	MatrixBuffer* matrixBuffer = NULL;
 	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
 
 	// Copy the fog information into the frame constant buffer.
@@ -427,10 +428,11 @@ void GUIShader::RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map GUI color matrix buffer.");
+		return;
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	MatrixBuffer* matrixBuffer;
+	MatrixBuffer* matrixBuffer = NULL;
 	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
 
 	// Copy the fog information into the frame constant buffer.
@@ -445,10 +447,11 @@ void GUIShader::RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 
 	if (FAILED(p_context->Map(m_colorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map GUI color colorbuffer.");
+		return;
 	}
 
 	// Get a pointer to the data in the constant buffer.
-	ColorBuffer* colorBuffer;
+	ColorBuffer* colorBuffer = NULL;
 	colorBuffer = (ColorBuffer*)mappedBuffer.pData;
 	colorBuffer->m_color = p_color;
 

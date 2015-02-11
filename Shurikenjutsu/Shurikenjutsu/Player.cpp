@@ -772,47 +772,47 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 }
 
 void Player::UpdateAbilityBar()
-	{
+{
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(),m_meleeAttack->GetStacks(), 0);
-		}
-		else
-		{
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
 	}
 	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
-		}
-		else
-		{
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
 	}
 	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
-		}
-		else
-		{
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
 	}
 	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
-		}
-		else
-		{
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
-			}
-	if ((float)m_toolAbility->GetCooldown() > 0.0f)
-			{
-		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
-}
+	}
 	else
-{
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
+	}
+	if ((float)m_toolAbility->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
-}
+	}
 }
 
 void Player::Render()

@@ -17,7 +17,7 @@
 #include "TextureLibrary.h"
 #include "VisibilityComputer.h"
 #include "Cursor.h"
-//#include <vld.h>
+#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -163,6 +163,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 void System::Shutdown()
 {
+	
 	// Shutdown input.
 	InputManager::GetInstance()->Shutdown();
 
@@ -197,6 +198,11 @@ void System::Shutdown()
 	VisibilityComputer::GetInstance().Shutdown();
 
 	//Shutdown current state
+	if (m_menuState != NULL)
+	{
+		m_menuState->Shutdown();
+		delete m_menuState;
+	}
 	if (m_playingState != NULL)
 	{
 		m_playingState->Shutdown();
@@ -207,11 +213,7 @@ void System::Shutdown()
 		m_chooseNinjaState->Shutdown();
 		delete m_chooseNinjaState;
 	}
-	if (m_menuState != NULL)
-	{
-		m_menuState->Shutdown();
-		delete m_menuState;
-	}
+	
 
 	if (m_timer)
 	{

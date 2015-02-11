@@ -29,7 +29,7 @@ bool NaginataStab::Execute(float p_distance)
 	if (Ability::Execute(p_distance))
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_NAGAINATASTAB, 0);
-		SetCooldown(NAGINATA_COOLDOWN);
+		SetCooldown(NAGINATASTAB_COOLDOWN);
 		std::cout << "Stabby stab" << std::endl;
 		return true;
 	}

@@ -425,6 +425,7 @@ void VisibilityComputer::UpdatePolygonMatrices(ID3D11DeviceContext* p_context)
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map shadow shapes matrix buffer.");
+		return;
 	}
 
 	// Get pointer to the matrix buffer data.

@@ -182,6 +182,9 @@ std::string AbilityBar::GetAbility5Name()
 		return ABILITY_CALTROP_TEXTURE;
 		break;
 	}
+	case 2:
+		//return ABILIY_STICKYTRAP_TEXTURE;
+		break;
 	}
 
 	return ABILITY_CD_TEXTURE;

@@ -679,6 +679,7 @@ void ParticleEmitter::UpdateBuffers()
 
 ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
 {
+	HRESULT hr;
 	ID3D11ShaderResourceView* textureSRV = NULL;
 
 	int combinedSize = p_width * p_height * p_depth;
@@ -702,15 +703,23 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 		data.SysMemPitch = p_width * 4;
 		data.SysMemSlicePitch = 0;
 
-		ID3D11Texture2D* texture;
-		GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
+		ID3D11Texture2D* texture = NULL;
+		hr = GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
+		if (FAILED(hr))
+		{
+			ConsolePrintError("Failed creating CreateTexture2D - particleemmiter");
+		}
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC sRVDesc;
 		sRVDesc.Format = textureDesc.Format;
 		sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 		sRVDesc.Texture2D.MostDetailedMip = 0;
-		GraphicsEngine::GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+		hr = GraphicsEngine::GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+		if (FAILED(hr))
+		{
+			ConsolePrintError("Failed creating shaderresource - particleemmiter");
+		}
 	}
 
 	return textureSRV;
