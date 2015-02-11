@@ -99,3 +99,7 @@ void SmokeBombManager::SetCurrentDistanceFromPlayer(float p_distance)
 {
 	m_currentDistanceFromPlayer = p_distance;
 }
+void SmokeBombManager::ResetLists()
+{
+	m_smokeBombs.clear();
+}

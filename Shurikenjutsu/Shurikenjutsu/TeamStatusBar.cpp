@@ -38,17 +38,19 @@ bool TeamStatusBar::Initialize()
 
 	// Score text
 	m_redScore = GUIText();
-	m_redScore.Initialize("0", 25.0f, m_originPos.x + 20.0f, m_originPos.y - 13, 0xff0700B6);
+	m_redScore.Initialize("0", 25.0f, m_originPos.x + 20.0f, m_originPos.y - 13.0f, 0xff0700B6);
 	m_blueScore = GUIText();
-	m_blueScore.Initialize("0", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13, 0xffB71300);
+	m_blueScore.Initialize("0", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13.0f, 0xffB71300);
 
 	// Timer text
 	m_timerText = GUIText();
-	m_timerText.Initialize("", 25.0f, m_originPos.x, m_originPos.y + 15, 0xffffffff);
+	m_timerText.Initialize("", 25.0f, m_originPos.x, m_originPos.y + 15.0f, 0xffffffff);
 
 	// Send so we are synced with the server
 	Network::GetInstance()->SyncTimer();
 	Network::GetInstance()->SyncTeamScore();
+
+	m_fpsTimer.Initialize(GLOBAL::GetInstance().FPS, 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f) * 0.5f, m_originPos.y + 18.0f, 0xffffffff);
 
 	return true;
 }
@@ -216,6 +218,7 @@ void TeamStatusBar::Update()
 
 	// Add time and change text
 	m_timeSec += GLOBAL::GetInstance().GetDeltaTime();
+
 	if (m_timeSec >= 60)
 	{
 		m_timeSec -= 60;
@@ -229,7 +232,7 @@ void TeamStatusBar::Update()
 	m_timerText.SetText(std::to_string((int)m_timeMin) + ":" + secString);
 
 	// Check if a new round is about to start (then show negative time i.e. -0:05 if new round is starting in 5 sec)
-	if (Network::GetInstance()->RoundRestarting())
+	if (Network::GetInstance()->RoundRestarting() || Network::GetInstance()->GetMatchOver())
 	{
 		secString = std::to_string(Network::GetInstance()->GetRestartingTimer());
 		if (Network::GetInstance()->GetRestartingTimer() < 10)
@@ -246,6 +249,8 @@ void TeamStatusBar::Update()
 		m_timeMin = min;
 		m_timeSec = sec;
 	}
+
+	m_fpsTimer.SetText(GLOBAL::GetInstance().FPS);
 }
 
 void TeamStatusBar::Render()
@@ -283,6 +288,7 @@ void TeamStatusBar::Render()
 
 	// Timer
 	m_timerText.Render();
+	m_fpsTimer.Render();
 }
 
 void TeamStatusBar::ResizeRedColorList()

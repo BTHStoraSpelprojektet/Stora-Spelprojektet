@@ -11,6 +11,7 @@ void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<
 	m_staticBoxList = std::vector<OBB>();
 	m_staticSphereList = std::vector<Sphere>();
 	SetLists(p_staticBoxList, p_staticSphereList);
+	m_deltaTime = 0;
 }
 
 void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
@@ -75,7 +76,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		// Make collision test
 		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, range, attackDirection, boxPosition, boxExtent, range))
 		{
-			if (IntersectingObjectWhenAttacking(spherePos, boxPosition))
+			if (!IntersectingObjectWhenAttacking(spherePos, boxPosition))
 			{
 			// Damage the player
 			p_playerManager->DamagePlayer(playerList[i].guid, damage);
@@ -626,7 +627,7 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	return dashLength;
 }
 
-void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager, float p_deltaTime)
+void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager)
 {
 	float radius = 1.0f;
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
@@ -667,7 +668,7 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
 					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 					{
-						float damage = SPIKE_DAMAGE * p_deltaTime;
+						float damage = SPIKE_DAMAGE * m_deltaTime;
 						p_playerManager->DamagePlayer(playerList[j].guid, damage);
 						break;
 					}
@@ -711,7 +712,7 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			if (*distance <= WHIP_RANGE)
 			{
-				if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+				if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 				{
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
@@ -752,7 +753,7 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackPosition, WHIP_SP_RANGE, spherePosition, 1.0f))
 		{
-			if (IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
 			// Damage the player
 			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE);
@@ -763,7 +764,23 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 
 void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
 {
-	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
+	NaginataStabAttacks temp;
+	temp.m_timer = 0;
+	temp.m_guid = p_guid;
+	temp.m_performNaginataStabAttack = true;
+	m_performingStabAttackList.push_back(temp);
+	
+	p_playerManager->NaginataStabAttackPerformed(p_guid);
+}
+
+void CollisionManager::NaginataStbDot( PlayerManager* p_playerManager)
+{
+	for (unsigned int j = 0; j < m_performingStabAttackList.size(); j++)
+	{
+		m_performingStabAttackList[j].m_timer += m_deltaTime;
+		if (m_performingStabAttackList[j].m_performNaginataStabAttack)
+		{
+			PlayerNet attackingPlayer = p_playerManager->GetPlayer(m_performingStabAttackList[j].m_guid);
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
 	DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 	for (unsigned int i = 0; i < playerList.size(); i++)
@@ -804,13 +821,25 @@ void CollisionManager::NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManag
 		// Make collision test
 		if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
 		{
-			if (IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
 				// Damage the player
-				p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE);
+						p_playerManager->DamagePlayer(playerList[i].guid, NAGINATASTAB_DAMAGE * m_deltaTime);
+					}
+				}
+			}
+			if (m_performingStabAttackList[j].m_timer > NAGINATASTAB_DURATION)
+			{
+				m_performingStabAttackList[j].m_timer = 0;
+				m_performingStabAttackList[j].m_performNaginataStabAttack = false;
+				m_performingStabAttackList.erase(m_performingStabAttackList.begin() + j);
+			}
 			}
 		}
 	}
+void CollisionManager::SetDeltaTime(float p_deltaTime)
+{
+	m_deltaTime = p_deltaTime;
 }
 
 //Private
@@ -868,10 +897,10 @@ bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attac
 	{
 		if (distance > listOfDistances[i])
 		{
-			return false;
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 bool CollisionManager::RayOBBTest(Ray *p_ray, OBB p_Obb)
 {

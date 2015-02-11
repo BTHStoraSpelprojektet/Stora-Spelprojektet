@@ -1,6 +1,8 @@
 #ifndef GLOBALS
 #define GLOBALS
 
+#include <string>
+
 class GLOBAL
 {
 public:
@@ -25,6 +27,8 @@ public:
 
 	float BORDER_SIZE;
 	float TITLE_BORDER_SIZE;
+
+	std::string FPS;
 
 private:
 	GLOBAL() {};

@@ -13,7 +13,7 @@ PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
-	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
+//	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
 
 	m_serverPeer = p_serverPeer;
 
@@ -54,7 +54,7 @@ void PlayerManager::Update(double p_deltaTime)
 			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
 		}
 	}*/
-	}
+}
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
 {
@@ -78,7 +78,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 
 	PlayerNet player;
 	player.guid = p_guid;
-	player.team = (m_players.size() % 2) + 1;
+	player.team = GetTeamForPlayer();
 	player.charNr = p_charNr;
 	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
 	player.x = spawnPoint.m_translationX;
@@ -463,4 +463,31 @@ void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
 			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
 		}
 	}
+}
+void PlayerManager::NaginataStabAttackPerformed(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_NAGINATA_STAB_HAS_OCCURED);
+	bitStream.Write(p_guid);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+}
+
+int PlayerManager::GetTeamForPlayer()
+{
+	int team1 = 0;
+	int team2 = 0;
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].team == 1)
+		{
+			team1++;
+		}
+		else if (m_players[i].team == 2)
+		{
+			team2++;
+		}
+	}
+
+	return team2 >= team1 ? 1 : 2;
 }

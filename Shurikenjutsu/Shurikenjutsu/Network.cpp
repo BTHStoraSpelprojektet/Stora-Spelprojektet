@@ -41,6 +41,9 @@ bool Network::Initialize()
 	m_timerSec = 0;
 	m_redTeamScore = 0;
 	m_blueTeamScore = 0;
+	m_lastTeamWon = 0;
+	m_matchOver = false;
+	m_matchWinningTeam = 0;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
 	
@@ -377,7 +380,7 @@ void Network::ReceviePacket()
 			{
 				m_blueTeamScore++;
 			}
-
+			m_lastTeamWon = winningTeam;
 			std::cout << "Team " << winningTeam << " won this round\n";
 			break;
 		}
@@ -454,8 +457,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
 
-			m_redTeamScore = 0;
-			m_blueTeamScore = 0;
+			m_matchOver = true;
+			m_matchWinningTeam = winningTeam;
 
 			std::cout << "Team " << winningTeam << " won this match\n";
 			break;
@@ -471,10 +474,11 @@ void Network::ReceviePacket()
 
 			m_newLevel = true;
 			m_levelName = levelName;
-
-			// Send invalid positions to get an invalid move from server and therefore update correct position according to server
-			SendPlayerPos(100.0f, -100.0f, 100.0f);
-			SendPlayerPos(-100.0f, 100.0f, -100.0f);
+			m_redTeamScore = 0;
+			m_blueTeamScore = 0;
+			m_matchOver = false;
+			m_matchWinningTeam = 0;
+			m_restartingRound = false;
 
 			std::cout << "Starting new level\n";
 			break;
@@ -692,6 +696,22 @@ void Network::ReceviePacket()
 			}
 			break;
 		}
+		case ID_NAGINATA_STAB_HAS_OCCURED:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			//TODO: Implement set cooldown for player;
+
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+
+			if (m_myPlayer.guid == guid)
+			{
+				m_NaginataStabPerformed = true;
+			}
+
+			break;
+		}
 		case ID_VOLLEY_THROWN:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -707,6 +727,7 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 
 			AddVolley(id, startX, startZ, endX, endZ, guid);
+			break;
 		}
 
 		default:
@@ -1166,7 +1187,7 @@ bool Network::IsSmokeBombListUpdated()
 
 bool Network::IsSpikeTrapListUpdated()
 {
-	return m_stickyTrapListUpdated;
+	return m_spikeTrapListUpdated;
 }
 
 void Network::SetHaveUpdateSpikeTrapList()
@@ -1446,12 +1467,36 @@ int Network::GetBlueTeamScore()
 	return m_blueTeamScore;
 }
 
+int Network::GetLastWinningTeam()
+{
+	return m_lastTeamWon;
+}
+
 void Network::RemoveProjectile(unsigned int p_projId)
 {
 	m_objectManager->RemoveProjectile(p_projId);
 }
 
+bool Network::CheckIfNaginataStabAttackIsPerformed()
+{
+	return m_NaginataStabPerformed;
+}
+void Network::ResetNaginataStabBoolean()
+{
+	m_NaginataStabPerformed = false;
+}
+
 void Network::AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid)
 {
 	m_objectManager->AddVolley(p_id, p_startX, p_startZ, p_endX, p_endZ, p_guid);
+}
+
+bool Network::GetMatchOver()
+{
+	return m_matchOver;
+}
+
+int Network::GetMatchWinningTeam()
+{
+	return m_matchWinningTeam;
 }
