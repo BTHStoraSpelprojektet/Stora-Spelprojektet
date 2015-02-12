@@ -293,6 +293,7 @@ void ObjectManager::Update()
 			{
 				// Remove shuriken
 				m_shurikens[i]->Shutdown();
+				delete m_shurikens[i];
 				m_shurikens.erase(m_shurikens.begin() + i);
 				i--;
 			}
@@ -366,6 +367,7 @@ void ObjectManager::Update()
 			if (!IsFanInNetworkList(m_fans[i]->GetID()))
 			{
 				m_fans[i]->Shutdown();
+				delete m_fans[i];
 				m_fans.erase(m_fans.begin() + i);
 				i--;
 			}
@@ -392,6 +394,8 @@ void ObjectManager::Update()
 		bool remove = m_volleys[i]->Update();
 		if (remove)
 		{
+			m_volleys[i]->Shutdown();
+			delete m_volleys[i];
 			m_volleys.erase(m_volleys.begin() + i);
 			i--;
 		}
@@ -811,6 +815,8 @@ void ObjectManager::RemoveProjectile(unsigned int p_projId)
 	{
 		if (m_projectiles[i]->GetID() == p_projId)
 		{
+			m_projectiles[i]->Shutdown();
+			delete m_projectiles[i];
 			m_projectiles.erase(m_projectiles.begin() + i);
 			break;
 		}

@@ -56,7 +56,7 @@ void StickyTrap::Shutdown()
 	{
 		m_stickyTrapBag->Shutdown();
 		delete m_stickyTrapBag;
-		m_stickyTrap = nullptr;
+		m_stickyTrapBag = nullptr;
 	}
 
 	if (m_stickyTrap != nullptr)
