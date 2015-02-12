@@ -9,14 +9,15 @@ bool BaseModel::LoadModel(const char* p_filepath)
 {
 	m_importer = new ModelImporter();
 	m_importer->ImportModel(p_filepath);
-	mData = new MeshData();
 	mData = m_importer->GetMesh();
 
-	m_boundingBoxes = mData->m_boundingBoxes;
-	m_boundingSpheres = mData->m_boundingSpheres;
+	m_boundingBoxes = mData.m_boundingBoxes;
+	m_boundingSpheres = mData.m_boundingSpheres;
 	m_vertexCount = 0;
-	free(mData->m_normalMap);
-	free(mData->m_textureMap);
+	free(mData.m_normalMap);
+	free(mData.m_textureMap);
+
+	mData.Shutdown();
 	return true;
 }
 
@@ -32,13 +33,6 @@ void BaseModel::Shutdown()
 	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
 	{
 		m_animationStacks[i].Shutdown();
-	}
-	
-	if (mData != nullptr)
-	{
-		mData->Shutdown();
-		delete mData;
-		mData = nullptr;
 	}
 }
 

@@ -21,40 +21,38 @@ bool Model::LoadModel(const char* p_filepath)
 	// Load Mesh.
 	importer = new ModelImporter();
 	importer->ImportModel(p_filepath);
-	mData = new MeshData();
-	mData = importer->GetMesh();
+	MeshData mData = importer->GetMesh();
 
 	// Save mesh to buffer.
-	if (!mData->m_animated)
+	if (!mData.m_animated)
 	{
 		std::vector<VertexAnimated> nullVector;
-		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, GraphicsEngine::GetDevice(), mData->m_vertices, nullVector);
-		m_vertexCount = mData->m_vertices.size();
+		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, GraphicsEngine::GetDevice(), mData.m_vertices, nullVector);
+		m_vertexCount = mData.m_vertices.size();
 	}
 	else
 	{
 		std::vector<Vertex> nullVector;
-		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEXANIMATED, GraphicsEngine::GetDevice(), nullVector, mData->m_verticesAnimated);
-		m_vertexCount = mData->m_verticesAnimated.size();
+		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEXANIMATED, GraphicsEngine::GetDevice(), nullVector, mData.m_verticesAnimated);
+		m_vertexCount = mData.m_verticesAnimated.size();
 	}
 
 	// Load Textures
-	m_texture = LoadTexture(mData->m_textureMapSize[0], mData->m_textureMapSize[1], mData->m_textureMapSize[2], mData->m_textureMap);
-	m_normalMap = LoadTexture(mData->m_normalMapSize[0], mData->m_normalMapSize[1], mData->m_normalMapSize[2], mData->m_normalMap);
+	m_texture = LoadTexture(mData.m_textureMapSize[0], mData.m_textureMapSize[1], mData.m_textureMapSize[2], mData.m_textureMap);
+	m_normalMap = LoadTexture(mData.m_normalMapSize[0], mData.m_normalMapSize[1], mData.m_normalMapSize[2], mData.m_normalMap);
 
 	// Store animation stacks
-	m_animationStacks = mData->m_stacks;
+	m_animationStacks = mData.m_stacks;
 
 	// Store bounding box
-	m_boundingBoxes = mData->m_boundingBoxes;
-	m_shadowLines = mData->m_shadowPoints;
-	m_boundingSpheres = mData->m_boundingSpheres;
-	m_frustumSphere = mData->m_frustumSphere;
+	m_boundingBoxes = mData.m_boundingBoxes;
+	m_shadowLines = mData.m_shadowPoints;
+	m_boundingSpheres = mData.m_boundingSpheres;
+	m_frustumSphere = mData.m_frustumSphere;
 	
-	//mData->Shutdown();
-	free(mData->m_textureMap);
-	free(mData->m_normalMap);
-	//importer->Shutdown();
+	free(mData.m_textureMap);
+	free(mData.m_normalMap);
+	delete importer;
 
 	return true;
 }
@@ -116,12 +114,12 @@ void Model::ShutdownModel()
 		//importer = nullptr;
 	}
 	
-	if (mData != nullptr)
+	/*if (mData != nullptr)
 	{
-		//mData->Shutdown();
-//		delete mData;
-		//mData = nullptr;
-	}
+		mData.Shutdown();
+		delete mData;
+		mData = nullptr;
+	}*/
 
 	/*if (m_mesh != NULL)
 	{
@@ -140,8 +138,6 @@ void Model::ShutdownModel()
 		m_normalMap->Release();
 		m_normalMap = 0;
 	}*/
-	
-	
 }
 
 void Model::Update()

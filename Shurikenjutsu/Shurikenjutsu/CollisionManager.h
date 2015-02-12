@@ -13,6 +13,8 @@ public:
 
 	void Initialize(std::vector<Object> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList);
 	static CollisionManager* GetInstance();
+
+	void Shutdown();
 	
 	void Update(float p_pickedx, float p_pickedZ);
 	std::vector<OBB> CalculateLocalPlayerCollisionWithStaticBoxes(OBB p_playerBox, float p_speed, DirectX::XMFLOAT3 p_direction);

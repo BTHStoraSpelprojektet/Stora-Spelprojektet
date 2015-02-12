@@ -142,12 +142,24 @@ void PlayingStateTest::Shutdown()
 	{
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
-}
+	}
 
 	if (m_countdown != NULL)
 	{
 		m_countdown->Shutdown();
 		delete m_countdown;
+	}
+
+	if (m_frustum != NULL)
+	{
+		m_frustum->Shutdown();
+		delete m_frustum;
+		m_frustum = nullptr;
+	}
+
+	if (CollisionManager::GetInstance() != NULL)
+	{
+		CollisionManager::GetInstance()->Shutdown();
 	}
 }
 

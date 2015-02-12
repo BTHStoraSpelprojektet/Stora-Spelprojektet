@@ -60,6 +60,12 @@ void AbilityBar::Shutdown()
 		m_abilities[i] = 0;
 	}
 	m_abilities.clear();
+
+	if (m_background != nullptr)
+	{
+		delete m_background;
+		m_background = nullptr;
+	}
 }
 
 // TODO: Send ability information to update

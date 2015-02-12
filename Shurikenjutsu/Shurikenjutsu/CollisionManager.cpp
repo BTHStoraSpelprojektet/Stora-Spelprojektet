@@ -66,6 +66,15 @@ CollisionManager* CollisionManager::GetInstance()
 	return m_instance;
 }
 
+void CollisionManager::Shutdown()
+{
+	if (m_instance != nullptr)
+	{
+		delete m_instance;
+		m_instance = nullptr;
+	}
+}
+
 std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(OBB p_playerBox, float p_speed, DirectX::XMFLOAT3 p_direction)
 {
 	std::vector<OBB> CollisionList;

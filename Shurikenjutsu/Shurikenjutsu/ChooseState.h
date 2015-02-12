@@ -14,6 +14,7 @@ public:
 	ChooseState();
 	~ChooseState();
 
+	void Shutdown();
 	bool Initialize();
 	GAMESTATESWITCH Update();
 	void Render();

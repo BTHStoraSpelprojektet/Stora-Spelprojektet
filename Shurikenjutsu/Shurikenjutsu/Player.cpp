@@ -36,7 +36,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
 	
-	m_ability = new Ability();
 	m_noAbility = new Ability();
 
 	m_healthbar = new HealthBar();
@@ -122,7 +121,9 @@ void Player::Shutdown()
 	if (m_abilityBar != nullptr)
 	{
 		m_abilityBar->Shutdown();
-}
+		delete m_abilityBar;
+		m_abilityBar = nullptr;
+	}
 
 	if (m_dashParticles1 != nullptr)
 	{
