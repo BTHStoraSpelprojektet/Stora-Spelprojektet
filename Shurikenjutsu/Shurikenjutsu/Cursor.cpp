@@ -29,9 +29,10 @@ bool Cursor::Initialize()
 
 void Cursor::Shutdown()
 {
-	if (m_cursor != NULL)
+	if (m_cursor != nullptr)
 	{
 		delete m_cursor;
+		m_cursor = nullptr;
 	}
 }
 
