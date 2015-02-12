@@ -53,6 +53,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_timeMin = 0;
 	m_timeSec = 0;
 
+	m_roundRestarting = false;
 	
 
 	return true;
@@ -204,4 +205,15 @@ void GameState::SendCurrentTeamScore(RakNet::RakNetGUID p_guid)
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+}
+
+void GameState::UserConnected(RakNet::RakNetGUID p_guid)
+{
+	// If round is restarting send it to the new user
+	if (m_roundRestarting)
+	{
+		RakNet::BitStream bitStream;
+		bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND);
+		m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+	}
 }

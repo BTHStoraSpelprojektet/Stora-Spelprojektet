@@ -38,9 +38,10 @@ public:
 	void BroadcastPlayers();
 	void SyncTime(RakNet::RakNetGUID p_guid);
 	void SendCurrentTeamScore(RakNet::RakNetGUID p_guid);
+	void UserConnected(RakNet::RakNetGUID p_guid);
 protected:
 	void UpdateTime(double p_deltaTime);
-	void ResetTime();	
+	void ResetTime();
 
 	RakNet::RakPeerInterface* m_serverPeer;
 	PlayerManager* m_playerManager;
@@ -57,6 +58,7 @@ protected:
 	std::map<int, int> m_winningTeams;
 	double m_timeMin;
 	double m_timeSec;
+	bool m_roundRestarting;
 	
 };
 

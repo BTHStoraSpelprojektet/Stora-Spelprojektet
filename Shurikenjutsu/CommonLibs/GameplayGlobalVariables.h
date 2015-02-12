@@ -82,7 +82,7 @@ const float DASH_SPEED = 8.0f;
 const float NAGINATASTAB_DAMAGE = 20.0f;
 const float NAGINATASTAB_RANGE = 8.0f;
 const float NAGINATASTAB_COOLDOWN = 9.0f;
-const float NAGINATASTAB_GLOBAL_COOLDOWN= 3.0f;
+const float NAGINATASTAB_GLOBAL_COOLDOWN = 3.0f;
 const float NAGINATASTAB_DURATION = 1.5f;
 // Bounding Box
 const float NAGINATASTAB_BOXEXTENTX = 0.75f;
