@@ -81,59 +81,69 @@ void Player::Shutdown()
 	{
 		m_noAbility->Shutdown();
 		delete m_noAbility;
+		m_noAbility = nullptr;
 	}
 
 	if (m_meleeAttack != nullptr)
 	{
 		m_meleeAttack->Shutdown();
 		delete m_meleeAttack;
+		m_meleeAttack = nullptr;
 	}
 
 	if (m_meleeSpecialAttack != nullptr)
 	{
 		m_meleeSpecialAttack->Shutdown();
 		delete m_meleeSpecialAttack;
+		m_meleeAttack = nullptr;
 	}
 
 	if (m_rangeAttack != nullptr)
 	{
 		m_rangeAttack->Shutdown();
 		delete m_rangeAttack;
+		m_rangeAttack = nullptr;
 	}
 
 	if (m_rangeSpecialAttack != nullptr)
 	{
 		m_rangeSpecialAttack->Shutdown();
 		delete m_rangeSpecialAttack;
+		m_rangeSpecialAttack = nullptr;
 	}
 
 	if (m_toolAbility != nullptr)
 	{
 		m_toolAbility->Shutdown();
 		delete m_toolAbility;
+		m_toolAbility = nullptr;
 	}
 
 	if (m_healthbar != nullptr)
 	{
 		m_healthbar->Shutdown();
 		delete m_healthbar;
+		m_healthbar = nullptr;
 	}
 
 	if (m_abilityBar != nullptr)
 	{
 		m_abilityBar->Shutdown();
-}
+		m_abilityBar = nullptr;
+	}
 
 	if (m_dashParticles1 != nullptr)
 	{
 		m_dashParticles1->Shutdown();
 		delete m_dashParticles1;
-}
+		m_dashParticles1 = nullptr;
+	}
 
 	if (m_dashParticles2 != nullptr)
 	{
 		m_dashParticles2->Shutdown();
 		delete m_dashParticles2;
+		m_dashParticles2 = nullptr;
 	}
 }
 

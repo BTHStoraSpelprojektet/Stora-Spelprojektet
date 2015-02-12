@@ -50,10 +50,19 @@ void Spikes::Update()
 
 void Spikes::Shutdown()
 {
-	m_spikeBag->Shutdown();
-	delete m_spikeBag;
-	m_spikesTrap->Shutdown();
-	delete m_spikesTrap;
+	if (m_spikeBag != nullptr)
+	{
+		m_spikeBag->Shutdown();
+		delete m_spikeBag;
+		m_spikeBag = nullptr;
+	}
+
+	if (m_spikesTrap != nullptr)
+	{
+		m_spikesTrap->Shutdown();
+		delete m_spikesTrap;
+		m_spikesTrap = nullptr;
+	}
 }
 
 void Spikes::Render()

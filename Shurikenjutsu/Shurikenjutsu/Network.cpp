@@ -72,6 +72,7 @@ void Network::Shutdown()
 	RakNet::RakPeerInterface::DestroyInstance(m_clientPeer);
 
 	delete m_instance;
+	m_instance = nullptr;
 
 	// Add delete objetmanager?
 

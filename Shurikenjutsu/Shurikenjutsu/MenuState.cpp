@@ -155,17 +155,20 @@ void MenuState::Shutdown()
 	{
 		m_camera->Shutdown();
 		delete m_camera;
+		m_camera = NULL;
 	}
 	if (m_objectManager != NULL)
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
+		m_objectManager = NULL;
 	}
 	
 	if (m_frustum != NULL)
 	{
 		m_frustum->Shutdown();
 		delete m_frustum;
+		m_frustum = NULL;
 	}
 }
 

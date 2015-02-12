@@ -73,9 +73,18 @@ void SmokeBomb::Update()
 
 void SmokeBomb::Shutdown()
 {
-	m_bomb->Shutdown();
-	delete m_bomb;
-	m_particles->Shutdown();
+	if (m_bomb != nullptr)
+	{
+		m_bomb->Shutdown();
+		delete m_bomb;
+		m_bomb = nullptr;
+	}
+	if (m_particles != nullptr)
+	{
+		m_particles->Shutdown();
+		delete m_particles;
+		m_particles = nullptr;
+	}
 }
 
 void SmokeBomb::Render()
