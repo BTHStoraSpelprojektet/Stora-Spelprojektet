@@ -147,7 +147,7 @@ void PlayingStateTest::Shutdown()
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
 		m_teamStatusBar = NULL;
-	}
+}
 
 	if (m_countdown != NULL)
 	{
