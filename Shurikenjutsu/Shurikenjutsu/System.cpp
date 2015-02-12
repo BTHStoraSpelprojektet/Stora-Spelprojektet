@@ -180,6 +180,7 @@ void System::Shutdown()
 	{
 		m_cursor->Shutdown();
 		delete m_cursor;
+		m_cursor = NULL;
 	}
 
 	GUIManager::GetInstance()->Shutdown();
@@ -192,16 +193,19 @@ void System::Shutdown()
 	{
 		m_menuState->Shutdown();
 		delete m_menuState;
+		m_menuState = NULL;
 	}
 	if (m_playingState != NULL)
 	{
 		m_playingState->Shutdown();
 		delete m_playingState;
+		m_playingState = NULL;
 	}
 	if (m_chooseNinjaState != NULL)
 	{
 		m_chooseNinjaState->Shutdown();
 		delete m_chooseNinjaState;
+		m_chooseNinjaState = NULL;
 	}
 
 
@@ -286,10 +290,13 @@ void System::Update()
 	case GAMESTATESWITCH_CHOOSENINJA:
 		m_gameState = m_chooseNinjaState;
 		m_gameState->Initialize();
+		m_playingState->Initialize();
+		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		m_cursor->LargeSize();
 		break;
 	case GAMESTATESWITCH_PLAY:
 		m_gameState = m_playingState;
+		m_playingState->Shutdown();
 		m_gameState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		m_cursor->SmallSize();

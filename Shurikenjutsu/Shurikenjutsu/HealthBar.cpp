@@ -25,16 +25,19 @@ void HealthBar::Shutdown()
 	if (m_border)
 	{
 		delete m_border;
+		m_border = nullptr;
 	}
 
 	if (m_background)
 	{
 		delete m_background;
+		m_background = nullptr;
 	}
 
 	if (m_foreground)
 	{
 		delete m_foreground;
+		m_foreground = nullptr;
 	}
 }
 void HealthBar::Update(DirectX::XMFLOAT3 p_position, int p_health, int p_maxHealth, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)

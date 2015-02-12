@@ -26,6 +26,7 @@ void PlayerManager::Shutdown()
 	{
 		m_player->Shutdown();
 		delete m_player;
+		m_player = nullptr;
 	}
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
@@ -33,6 +34,7 @@ void PlayerManager::Shutdown()
 		delete m_enemyList[i];
 	}
 	delete[] m_enemyList;
+	m_enemyListSize = 0;
 }
 
 void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)

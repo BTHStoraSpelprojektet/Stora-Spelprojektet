@@ -648,8 +648,8 @@ void ParticleEmitter::UpdateParticles()
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
-					float xWindOffset = 0.01;//= getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-					float zWindOffset = 0.01;//= getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float xWindOffset = 0.01f;//= getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float zWindOffset = 0.01f;//= getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 
 					if (timeToDirectionChange>m_particleList[i].m_timePassed)
 					{

@@ -118,36 +118,42 @@ void PlayingStateTest::Shutdown()
 	{
 		m_camera->Shutdown();
 		delete m_camera;
+		m_camera = NULL;
 	}
 
 	if (m_playerManager != NULL)
 	{
 		m_playerManager->Shutdown();
 		delete m_playerManager;
+		m_playerManager = NULL;
 	}
 
 	if (m_objectManager != NULL)
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
+		m_objectManager = NULL;
 	}
 
 	if (m_minimap != NULL)
 	{
 		m_minimap->Shutdown();
 		delete m_minimap;
+		m_minimap = NULL;
 	}
 
 	if (m_teamStatusBar != NULL)
 	{
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
-	}
+		m_teamStatusBar = NULL;
+}
 
 	if (m_countdown != NULL)
 	{
 		m_countdown->Shutdown();
 		delete m_countdown;
+		m_countdown = NULL;
 	}
 
 	if (m_frustum != NULL)
@@ -250,7 +256,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Calculate new visibility polygon boundries.
 	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
-	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 0.5f);
+	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
 
 	// Keep the the visibility polygon boundries within the maps boundries.
 	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;

@@ -37,16 +37,21 @@ void Menu::Shutdown()
 		m_buttons[i]->Shutdown();
 		delete m_buttons[i];
 	}
+	m_buttons.clear();
+
 	for (unsigned int i = 0; i < m_checkboxes.size(); i++)
 	{
 		m_checkboxes[i]->Shutdown();
 		delete m_checkboxes[i];
 	}
+	m_checkboxes.clear();
+
 	for (unsigned int i = 0; i < m_items.size(); i++)
 	{
 		m_items[i]->Shutdown();
 		delete m_items[i];
 	}
+	m_items.clear();
 }
 void Menu::Render()
 {

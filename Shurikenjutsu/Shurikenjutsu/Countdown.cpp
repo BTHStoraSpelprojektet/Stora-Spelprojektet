@@ -17,21 +17,48 @@ bool Countdown::Initialize()
 	m_cdText = GUIText();
 	m_cdText.Initialize("", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, m_redColor);
 
-	m_render = true;
+	m_roundTeamText = GUIText();
+	m_roundTeamText.Initialize("", 50.0f, 0.0f, -(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f), 0xffffffff);
+
+	m_renderCd = true;
+	m_renderRoundTeam = false;
 	return true;
 }
 
 void Countdown::Shutdown()
 {
 	m_cdText.Shutdown();
+	m_roundTeamText.Shutdown();
 }
 
 void Countdown::Update()
 {
-	// Check so a round is restarting
+	// Check if a round is restarting for text
+	if (Network::GetInstance()->RoundRestarting())
+	{
+		int lastTeamWon = Network::GetInstance()->GetLastWinningTeam();
+		// Red victory
+		if (lastTeamWon == 1 && m_roundTeamText.GetColor() != m_redColor)
+		{
+			m_roundTeamText.SetText("Red team won this round!");
+			m_roundTeamText.SetColor(m_redColor);
+		}
+		// Blue victory
+		else if (lastTeamWon == 2 && m_roundTeamText.GetColor() != m_blueColor)
+		{
+			m_roundTeamText.SetText("Blue team won this round!");
+			m_roundTeamText.SetColor(m_blueColor);
+		}
+		m_renderRoundTeam = true;
+	}
+	else
+	{
+		m_renderRoundTeam = false;
+	}
+	// Check so a round is restarting for timer
 	if (Network::GetInstance()->RoundRestarting() && Network::GetInstance()->GetRestartingTimer() <= 5)
 	{
-		m_render = true;
+		m_renderCd = true;
 		int time = Network::GetInstance()->GetRestartingTimer();
 		// if statement check if a new number is to be displayed (1 sec have passed)
 		if (time != m_prevTime)
@@ -63,7 +90,7 @@ void Countdown::Update()
 		// Just so it dont render the first frame
 		if (m_prevTime == -1)
 		{
-			m_render = false;
+			m_renderCd = false;
 		}
 		m_prevTime = time;
 	}
@@ -84,19 +111,24 @@ void Countdown::Update()
 		m_cdText.SetColor(0xffffffff);
 		m_cdText.SetText(text);
 		m_cdText.SetSize(0.5f * m_maxSize);
-		m_render = true;
+		m_renderCd = true;
 	}
 	else
 	{
-		m_render = false;
+		m_renderCd = false;
 		m_prevTime = -1;
 	}
 }
 
 void Countdown::Render()
 {
-	if (m_render)
+	if (m_renderCd)
 	{
 		m_cdText.Render();
+	}
+
+	if (m_renderRoundTeam)
+	{
+		m_roundTeamText.Render();
 	}
 }

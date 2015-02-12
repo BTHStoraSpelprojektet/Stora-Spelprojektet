@@ -318,7 +318,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		abilityString = "Dash";
 		//Calculate new location for the dashing player and inflict damage on enemies
 		player = GetPlayer(p_guid);
-		dashDistance = p_collisionManager.CalculateDashRange(player, this) - 1.0f;
+		dashDistance = p_collisionManager.CalculateDashRange(p_guid,player, this) - 1.0f;
 		
 		l_bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
 		l_bitStream.Write(player.x + dashDistance * player.dirX);
