@@ -86,7 +86,8 @@ private:
 
 		float m_timeToLive;
 		float m_timePassed;
-		float m_timeSpecial = 0.0f;
+		float m_timeToFadeInPassed = 0.0f;
+		float m_timeToScaleChange = 0.0f;
 	};
 	Particle* m_particleList;
 	
