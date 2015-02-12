@@ -38,7 +38,6 @@ public:
 	void WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
-	float GetAngle(float p_x, float p_y);
 	void SetDeltaTime(float p_deltaTime);
 
 	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
@@ -65,6 +64,8 @@ private:
 		bool m_performNaginataStabAttack;
 	};
 	std::vector<NaginataStabAttacks> m_performingStabAttackList;
+
+	float DashLengthCalculation(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 };
 #endif
 
