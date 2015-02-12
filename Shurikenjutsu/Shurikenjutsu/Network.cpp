@@ -91,8 +91,6 @@ void Network::ReceviePacket()
 	unsigned char messageID;
 	for (m_packet = m_clientPeer->Receive(); m_packet; m_clientPeer->DeallocatePacket(m_packet), m_packet = m_clientPeer->Receive())
 	{
-		if (ConnectedNow())
-			break;
 		switch (m_packet->data[0])
 		{
 		case ID_CONNECTION_REQUEST_ACCEPTED:

@@ -286,12 +286,12 @@ void System::Update()
 	case GAMESTATESWITCH_CHOOSENINJA:
 		m_gameState = m_chooseNinjaState;
 		m_gameState->Initialize();
+		m_playingState->Initialize();
+		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		m_cursor->LargeSize();
 		break;
 	case GAMESTATESWITCH_PLAY:
 		m_gameState = m_playingState;
-		m_gameState->Initialize();
-		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		m_cursor->SmallSize();
 		break;
 	case GAMESTATESWITCH_MENU:
