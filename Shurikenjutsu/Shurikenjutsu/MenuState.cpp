@@ -58,7 +58,6 @@ bool MenuState::Initialize()
 	// Initialize main menu
 	m_main = new Menu();
 	m_main->AddButton(0.0f, -BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_IP);
-	//m_main->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/choose.png"), MENUACTION_CHOOSENINJA);
 	m_main->AddButton(0.0f, -1.0f * BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/options.png"), MENUACTION_OPTIONS);
 	m_main->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"), MENUACTION_BACK);
 
@@ -75,13 +74,10 @@ bool MenuState::Initialize()
 	m_hideIpBox = true;
 
 	// Initialize connecting menu;
-	//m_connecting.AddButton(0, -140.0f, 360.0f, 60.0f, MENUACTION_BACK); // 
 	m_connecting = new Menu();
 
 	// Push main menu
 	m_menues.push(m_main);
-
-	// Things for background
 
 	// Initialize the camera.
 	m_camera = new Camera();
@@ -106,8 +102,6 @@ bool MenuState::Initialize()
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
-
-	//
 
 	return true;
 }
@@ -260,6 +254,22 @@ GAMESTATESWITCH MenuState::Update()
 
 	// Update Camera position
 	m_camera->MenuCameraRotation();
+
+	// Handles screen changes.
+	if (GraphicsEngine::HasScreenChanged())
+	{
+		if (GLOBAL::GetInstance().FULLSCREEN)
+		{
+			m_camera->ToggleFullscreen(true);
+		}
+		
+		else
+		{
+			m_camera->ToggleFullscreen(false);
+		}
+
+		GraphicsEngine::ScreenChangeHandled();
+	}
 
 	// Update Frustum
 	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
