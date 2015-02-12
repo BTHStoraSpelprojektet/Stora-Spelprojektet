@@ -4,7 +4,7 @@
 // Model names
 
 // Levels
-#define LEVEL_NAME "../Shurikenjutsu/Levels/ciliasTestLevel.SSPL"
+#define LEVEL_NAME "../Shurikenjutsu/Levels/FirstLevelV2.SSPL"
 
 // Players
 #define KATANA_NINJA_MODEL_NAME "../Shurikenjutsu/Models/Ninja1Shape.SSP"

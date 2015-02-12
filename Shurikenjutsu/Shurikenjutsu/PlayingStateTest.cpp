@@ -155,6 +155,18 @@ void PlayingStateTest::Shutdown()
 		delete m_countdown;
 		m_countdown = NULL;
 	}
+
+	if (m_frustum != NULL)
+	{
+		m_frustum->Shutdown();
+		delete m_frustum;
+		m_frustum = nullptr;
+	}
+
+	if (CollisionManager::GetInstance() != NULL)
+	{
+		CollisionManager::GetInstance()->Shutdown();
+	}
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()

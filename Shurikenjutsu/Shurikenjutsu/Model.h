@@ -36,6 +36,5 @@ public:
 
 protected:
 	ModelImporter* importer;
-	MeshData* mData;
 };
 #endif;

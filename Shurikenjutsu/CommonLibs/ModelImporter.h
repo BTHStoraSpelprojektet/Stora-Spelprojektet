@@ -25,7 +25,7 @@ struct MeshData
 	void Shutdown()
 	{
 		for (unsigned int i = 0; i < m_stacks.size(); i++)
-		{
+		{			
 			m_stacks[i].Shutdown();
 		}
 	}
@@ -38,13 +38,13 @@ public:
 	int ReadHierarchy(BoneFrame* bone, void* data, int readPosition);
 	void Shutdown();
 
-	MeshData* GetMesh();
+	MeshData GetMesh();
 
 private:
 	void CheckVertices(float x, float y, float z);
 
 	DirectX::XMFLOAT3 m_averageVertexPosition;
-	MeshData* m_importedMesh;
+	MeshData m_importedMesh;
 };
 
 #endif;

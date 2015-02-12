@@ -34,7 +34,7 @@ public:
 
 	void SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, PlayerManager* p_playerManager);
 	void NaginataStbDot(PlayerManager* p_playerManager);
-	float CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
+	float CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 	void WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
@@ -65,7 +65,7 @@ private:
 	};
 	std::vector<NaginataStabAttacks> m_performingStabAttackList;
 
-	float DashLengthCalculation(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
+	float DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
 };
 #endif
 

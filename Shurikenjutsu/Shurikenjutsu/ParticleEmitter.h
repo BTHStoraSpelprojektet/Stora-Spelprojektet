@@ -75,6 +75,7 @@ private:
 		DirectX::XMFLOAT3 m_position;
 		DirectX::XMFLOAT3 m_direction;
 		DirectX::XMFLOAT4 m_color;
+		float m_opacity = 0.0f;
 
 
 		float m_velocity;
@@ -85,10 +86,11 @@ private:
 
 		float m_timeToLive;
 		float m_timePassed;
-		float m_timeSpecial = 0.0f;
+		float m_timeToFadeInPassed = 0.0f;
+		float m_timeToScaleChange = 0.0f;
 	};
 	Particle* m_particleList;
-	
+
 	struct ParticleVertex
 	{
 		DirectX::XMFLOAT3 m_position;
@@ -103,7 +105,7 @@ private:
 
 	float getWindOffsetX(float timePassed, float timeToLive);
 	float getWindOffsetZ(float timePassed, float timeToLive);
-	void fadeIn(ParticleVertex &mesh, Particle &particle, float timeToFade);
-	void fadeOut(ParticleVertex &mesh, Particle &particle, float timeToFade);
+	float fadeIn(ParticleVertex* mesh, Particle* particle, float timeToFade);
+	float fadeOut(ParticleVertex* mesh, Particle* particle, float timeToFade);
 };
 #endif

@@ -52,6 +52,25 @@ bool ChooseState::Initialize()
 	return true;
 }
 
+void ChooseState::Shutdown()
+{
+	if (m_chooseButton != nullptr)
+	{
+		delete m_chooseButton;
+		m_chooseButton = nullptr;
+	}
+	
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		if (m_ninjas[i] != nullptr)
+		{
+			m_ninjas[i]->Shutdown();
+			delete m_ninjas[i];
+			m_ninjas[i] = nullptr;
+		}
+	}	
+}
+
 GAMESTATESWITCH ChooseState::Update()
 {
 	MenuActionData action = m_chooseButton->Update();

@@ -116,7 +116,7 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp, fl
 }
 
 void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isAnimatedObject, bool &isParticleEmitter, std::string &particleEmitterType, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
-	
+
 
 	if (currentWordTemp == 0){
 
@@ -143,10 +143,10 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			//char * c = new char[objectName.size() + 1];
 			currentShadowShape.resize(tmpStr.size());
 			memcpy(&currentShadowShape[0], tmpStr.c_str(), tmpStr.size());
-			 
-			 //c[objectName.size()] = '\0';
-			 std::cout << "";
-			 //currentShadowShape = c;
+
+			//c[objectName.size()] = '\0';
+			std::cout << "";
+			//currentShadowShape = c;
 		}
 		else if (objectName.find("ParticleEmitter") != std::string::npos){
 			isParticleEmitter = true;
@@ -213,7 +213,7 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			if (strcmp(currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str(), "A") == 0){
 				tmpPointA.x = x;
 				tmpPointA.y = -z;
-				
+
 			}
 			else if (strcmp(currentShadowShape.substr(currentShadowShape.length() - 2, 1).c_str(), "B") == 0){
 				tmpPointB.x = x;
@@ -234,7 +234,7 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 			particleEmitter.m_rotationX = rotateX;
 			particleEmitter.m_rotationY = -rotateY;
 			particleEmitter.m_rotationZ = rotateZ;
-			
+
 			if (particleEmitterType.find("BrazierFire") != std::string::npos){
 				particleEmitter.type = EmitterType::BrazierFire;
 			}
@@ -354,7 +354,7 @@ bool LevelImporter::readData(){
 				readBoundingBox(tmpStr, currentWordTemp, x, y, z, rotateX, rotateY, rotateZ, boundingBoxWidth, boundingBoxHeight, boundingBoxDepth);
 			}
 
-			else if (currentLineTemp > (unsigned int)(headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (unsigned int)(numberOfObjects + headerSize + numberOfBoundingBoxesToSkip))
+			else if (currentLineTemp >(unsigned int)(headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (unsigned int)(numberOfObjects + headerSize + numberOfBoundingBoxesToSkip))
 			{
 				readLevelObject(tmpStr, currentWordTemp, isAnimatedObject, isParticleEmitter, particleEmitterType, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 			}

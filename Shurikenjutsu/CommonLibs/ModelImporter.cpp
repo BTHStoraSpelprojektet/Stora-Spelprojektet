@@ -6,7 +6,6 @@
 
 bool ModelImporter::ImportModel(const char* p_filepath)
 {
-	m_importedMesh = new MeshData();
 	//Import Mesh
 	std::ifstream inputFile;
 	inputFile.open(p_filepath, std::ios::binary);
@@ -23,18 +22,20 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	int readPosition = 0;
 	readPosition += sizeof(int);
 	readPosition += 64;
-	readPosition += (sizeof(float) * 16);
+	readPosition += (sizeof(float)* 16);
 
-	memcpy(&m_importedMesh->m_animated, (char*)data + readPosition, sizeof(bool));
+	memcpy(&m_importedMesh.m_animated, (char*)data + readPosition, sizeof(bool));
 	readPosition += sizeof(bool);
 
 	int vertexVectorSize = 0;
 	memcpy(&vertexVectorSize, (char*)data + readPosition, sizeof(unsigned int));
 	readPosition += sizeof(unsigned int);
-	
-	m_importedMesh->m_frustumSphere.m_radius = 0.0f;
+
+	m_importedMesh.m_frustumSphere.m_radius = 0.0f;
 	m_averageVertexPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-	if (!m_importedMesh->m_animated)
+
+	if (!m_importedMesh.m_animated)
+	{
 		for (int i = 0; i < vertexVectorSize; i++)
 		{
 			Vertex temp(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -43,47 +44,50 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 
 			CheckVertices(temp.m_position.x, temp.m_position.y, temp.m_position.z);
 
-			m_importedMesh->m_vertices.push_back(temp);
+			m_importedMesh.m_vertices.push_back(temp);
 		}
+	}
 	else
+	{
 		for (int i = 0; i < vertexVectorSize; i++)
 		{
-			VertexAnimated temp(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0, 0 ,0);
+			VertexAnimated temp(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0, 0, 0);
 			memcpy(&temp, (char*)data + readPosition, sizeof(VertexAnimated));
 			readPosition += sizeof(VertexAnimated);
 
 			CheckVertices(temp.m_position.x, temp.m_position.y, temp.m_position.z);
 
-			m_importedMesh->m_verticesAnimated.push_back(temp);
+			m_importedMesh.m_verticesAnimated.push_back(temp);
 		}
+	}
 
 	m_averageVertexPosition.x /= vertexVectorSize;
 	m_averageVertexPosition.y /= vertexVectorSize;
 	m_averageVertexPosition.z /= vertexVectorSize;
 
-	m_importedMesh->m_frustumSphere.m_position = m_averageVertexPosition;
+	m_importedMesh.m_frustumSphere.m_position = m_averageVertexPosition;
 
-	memcpy(&m_importedMesh->m_textureMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
+	memcpy(&m_importedMesh.m_textureMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
 	readPosition += (sizeof(unsigned int)* 3);
 	
-	m_importedMesh->m_textureMap = (char*)malloc(0);
-	int combinedTextureSize = m_importedMesh->m_textureMapSize[0] * m_importedMesh->m_textureMapSize[1] * m_importedMesh->m_textureMapSize[2];
+	m_importedMesh.m_textureMap = (char*)malloc(0);
+	int combinedTextureSize = m_importedMesh.m_textureMapSize[0] * m_importedMesh.m_textureMapSize[1] * m_importedMesh.m_textureMapSize[2];
 	if (combinedTextureSize > 0)
 	{
-		m_importedMesh->m_textureMap = (char*)realloc(m_importedMesh->m_textureMap, combinedTextureSize);
-		memcpy(m_importedMesh->m_textureMap, (char*)data + readPosition, combinedTextureSize);
+		m_importedMesh.m_textureMap = (char*)realloc(m_importedMesh.m_textureMap, combinedTextureSize);
+		memcpy(m_importedMesh.m_textureMap, (char*)data + readPosition, combinedTextureSize);
 		readPosition += combinedTextureSize;
 	}
 
-	memcpy(&m_importedMesh->m_normalMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
+	memcpy(&m_importedMesh.m_normalMapSize, (char*)data + readPosition, (sizeof(unsigned int)* 3));
 	readPosition += (sizeof(unsigned int)* 3);
 
-	m_importedMesh->m_normalMap = (char*)malloc(0);
-	combinedTextureSize = m_importedMesh->m_normalMapSize[0] * m_importedMesh->m_normalMapSize[1] * m_importedMesh->m_normalMapSize[2];
+	m_importedMesh.m_normalMap = (char*)malloc(0);
+	combinedTextureSize = m_importedMesh.m_normalMapSize[0] * m_importedMesh.m_normalMapSize[1] * m_importedMesh.m_normalMapSize[2];
 	if (combinedTextureSize > 0)
 	{
-		m_importedMesh->m_normalMap = (char*)realloc(m_importedMesh->m_normalMap, combinedTextureSize);
-		memcpy(m_importedMesh->m_normalMap, (char*)data + readPosition, combinedTextureSize);
+		m_importedMesh.m_normalMap = (char*)realloc(m_importedMesh.m_normalMap, combinedTextureSize);
+		memcpy(m_importedMesh.m_normalMap, (char*)data + readPosition, combinedTextureSize);
 		readPosition += combinedTextureSize;
 	}
 
@@ -91,29 +95,29 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	unsigned int stackCount = 0;
 	memcpy(&stackCount, (char*)data + readPosition, sizeof(unsigned int));
 	readPosition += sizeof(unsigned int);
-	m_importedMesh->m_stacks.resize(stackCount);
+	m_importedMesh.m_stacks.resize(stackCount);
 
 	for (unsigned int i = 0; i < stackCount; i++)
 	{
-		memcpy(&m_importedMesh->m_stacks[i].m_name, (char*)data + readPosition, 64);
+		memcpy(&m_importedMesh.m_stacks[i].m_name, (char*)data + readPosition, 64);
 		readPosition += 64;
 
-		memcpy(&m_importedMesh->m_stacks[i].m_endFrame, (char*)data + readPosition, sizeof(int));
+		memcpy(&m_importedMesh.m_stacks[i].m_endFrame, (char*)data + readPosition, sizeof(int));
 		readPosition += sizeof(int);
-		memcpy(&m_importedMesh->m_stacks[i].m_jointCount, (char*)data + readPosition, sizeof(int));
+		memcpy(&m_importedMesh.m_stacks[i].m_jointCount, (char*)data + readPosition, sizeof(int));
 		readPosition += sizeof(int);
 
-		for (int x = 0; x < m_importedMesh->m_stacks[i].m_endFrame - 1; x++)
+		for (int x = 0; x < m_importedMesh.m_stacks[i].m_endFrame - 1; x++)
 		{
 			BoneFrame* root = new BoneFrame;
 			readPosition = ReadHierarchy(root, data, readPosition);
-			m_importedMesh->m_stacks[i].m_root.push_back(root);
+			m_importedMesh.m_stacks[i].m_root.push_back(root);
 		}
 
-		m_importedMesh->m_stacks[i].m_bindPoses.resize(m_importedMesh->m_stacks[i].m_jointCount);
-		for (int x = 0; x < m_importedMesh->m_stacks[i].m_jointCount; x++)
+		m_importedMesh.m_stacks[i].m_bindPoses.resize(m_importedMesh.m_stacks[i].m_jointCount);
+		for (int x = 0; x < m_importedMesh.m_stacks[i].m_jointCount; x++)
 		{
-			memcpy(&m_importedMesh->m_stacks[i].m_bindPoses[x], (char*)data + readPosition, sizeof(BindPose));
+			memcpy(&m_importedMesh.m_stacks[i].m_bindPoses[x], (char*)data + readPosition, sizeof(BindPose));
 			readPosition += sizeof(BindPose);
 		}
 	}
@@ -124,12 +128,12 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 
 	if (boundingBoxCount < 10)
 	{	
-		m_importedMesh->m_boundingBoxes.resize(boundingBoxCount);
+		m_importedMesh.m_boundingBoxes.resize(boundingBoxCount);
 
 		for (unsigned int i = 0; i < boundingBoxCount; i++)
 		{
-			memcpy(&m_importedMesh->m_boundingBoxes[i], (char*)data + readPosition, 24);
-			m_importedMesh->m_boundingBoxes[i].CalculateRadius();
+			memcpy(&m_importedMesh.m_boundingBoxes[i], (char*)data + readPosition, 24);
+			m_importedMesh.m_boundingBoxes[i].CalculateRadius();
 			readPosition += 24;
 		}
 	}
@@ -140,11 +144,11 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 
 	if (shadowVolumeCount < 100)
 	{
-		m_importedMesh->m_shadowPoints.resize(shadowVolumeCount);
+		m_importedMesh.m_shadowPoints.resize(shadowVolumeCount);
 
 		for (unsigned int i = 0; i < shadowVolumeCount; i++)
 		{
-			memcpy(&m_importedMesh->m_shadowPoints[i], (char*)data + readPosition, (sizeof(Line)));
+			memcpy(&m_importedMesh.m_shadowPoints[i], (char*)data + readPosition, (sizeof(Line)));
 			readPosition += (sizeof(Line));
 		}
 	}
@@ -155,11 +159,11 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 
 	if (boundingSphereCount < 10)
 	{
-		m_importedMesh->m_boundingSpheres.resize(boundingSphereCount);
+		m_importedMesh.m_boundingSpheres.resize(boundingSphereCount);
 
 		for (unsigned int i = 0; i < boundingSphereCount; i++)
 		{
-			memcpy(&m_importedMesh->m_boundingSpheres[i], (char*)data + readPosition, (sizeof(Sphere)));
+			memcpy(&m_importedMesh.m_boundingSpheres[i], (char*)data + readPosition, (sizeof(Sphere)));
 			readPosition += sizeof(Sphere);
 		}
 	}
@@ -211,27 +215,22 @@ void ModelImporter::CheckVertices(float x, float y, float z)
 		z *= -1;
 	}
 
-	if (m_importedMesh->m_frustumSphere.m_radius < x)
+	if (m_importedMesh.m_frustumSphere.m_radius < x)
 	{
-		m_importedMesh->m_frustumSphere.m_radius = x;
+		m_importedMesh.m_frustumSphere.m_radius = x;
 	}
-	if (m_importedMesh->m_frustumSphere.m_radius < z)
+	if (m_importedMesh.m_frustumSphere.m_radius < z)
 	{
-		m_importedMesh->m_frustumSphere.m_radius = z;
+		m_importedMesh.m_frustumSphere.m_radius = z;
 	}	
 }
 
-MeshData* ModelImporter::GetMesh()
+MeshData ModelImporter::GetMesh()
 {
 	return m_importedMesh;
 }
 
 void ModelImporter::Shutdown()
 {
-	if (m_importedMesh != nullptr)
-	{
-		m_importedMesh->Shutdown();
-		delete m_importedMesh;
-		m_importedMesh = nullptr;
-	}
+	m_importedMesh.Shutdown();
 }
