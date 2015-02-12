@@ -558,19 +558,30 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 	}
 }
 
-float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
+float CollisionManager::CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
 {
 	PlayerNet tempPlayer = p_attackingPlayer;
-	float returnValue = DashLengthCalculation(tempPlayer, p_playerManager);
+	float returnValue = DashLengthCalculation(p_guid, tempPlayer, p_playerManager);
 
-	tempPlayer.x += 1.0f;
+	tempPlayer.x -= 0.5f;
+	float test1 = DashLengthCalculation(p_guid, tempPlayer, p_playerManager);
+	
+	tempPlayer = p_attackingPlayer;
+	tempPlayer.x += 0.5f;
+	float test2 = DashLengthCalculation(p_guid, tempPlayer, p_playerManager);
 
-	float test2 = DashLengthCalculation(tempPlayer, p_playerManager);
+	tempPlayer = p_attackingPlayer;
+	tempPlayer.z -= 0.5f;
+	float test3 = DashLengthCalculation(p_guid, tempPlayer, p_playerManager);
 
-	tempPlayer.x -= 2.0f;
+	tempPlayer = p_attackingPlayer;
+	tempPlayer.z += 0.5f;
+	float test4 = DashLengthCalculation(p_guid, tempPlayer, p_playerManager);
 
-	float test3 = DashLengthCalculation(tempPlayer, p_playerManager);
-
+	if (returnValue > test1)
+	{
+		returnValue = test1;
+	}
 	if (returnValue > test2)
 	{
 		returnValue = test2;
@@ -578,6 +589,10 @@ float CollisionManager::CalculateDashRange(PlayerNet p_attackingPlayer, PlayerMa
 	if (returnValue > test3)
 	{
 		returnValue = test3;
+	}
+	if (returnValue > test4)
+	{
+		returnValue = test4;
 	}
 	
 	return returnValue;
@@ -945,7 +960,7 @@ void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, Pla
 		}
 	}
 }
-float CollisionManager::DashLengthCalculation(PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
+float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
 {
 	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_attackingPlayer.dirX, 0.1f, p_attackingPlayer.dirZ);
 	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(p_attackingPlayer.x, 0.1f, p_attackingPlayer.z);
@@ -982,14 +997,17 @@ float CollisionManager::DashLengthCalculation(PlayerNet p_attackingPlayer, Playe
 	// Go through player list
 	for (unsigned int i = 0; i < playerList.size(); i++)
 	{
-		// Get the players bounding boxes
-		std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
-		for (unsigned int j = 0; j < playerBoundingBoxes.size(); j++)
+		if (playerList[i].guid != p_guid)
 		{
-			Box box = playerBoundingBoxes[j];
-			if (Collisions::RayBoxCollision(ray, box))
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
+			for (unsigned int j = 0; j < playerBoundingBoxes.size(); j++)
 			{
-				rayLengths.push_back(ray->m_distance);
+				Box box = playerBoundingBoxes[j];
+				if (Collisions::RayBoxCollision(ray, box))
+				{
+					rayLengths.push_back(ray->m_distance);
+				}
 			}
 		}
 	}

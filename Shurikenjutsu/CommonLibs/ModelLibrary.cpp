@@ -52,7 +52,6 @@ void ModelLibrary::AddModel(std::string p_path, BaseModel *p_modelTypes)
 
 void ModelLibrary::LoadModelDirectory(BaseModel *p_modelTypes)
 {
-
 	WIN32_FIND_DATA ffd;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	DWORD dwError = 0;

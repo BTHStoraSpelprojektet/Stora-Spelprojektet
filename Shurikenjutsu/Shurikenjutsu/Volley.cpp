@@ -21,6 +21,7 @@ void Volley::Shutdown()
 	{
 		m_projectiles[i]->Shutdown();
 	}
+	m_projectiles.clear();
 }
 
 bool Volley::Update()

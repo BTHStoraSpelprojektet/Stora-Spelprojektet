@@ -17,7 +17,9 @@ public:
 	void Render();
 private:
 	GUIText m_cdText;
-	bool m_render;
+	bool m_renderCd;
+	GUIText m_roundTeamText;
+	bool m_renderRoundTeam;
 
 	float m_minSize;
 	float m_maxSize;

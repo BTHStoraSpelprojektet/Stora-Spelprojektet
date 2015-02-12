@@ -36,7 +36,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	m_inputManager = InputManager::GetInstance();
 	
-	m_ability = new Ability();
 	m_noAbility = new Ability();
 
 	m_healthbar = new HealthBar();
@@ -81,59 +80,70 @@ void Player::Shutdown()
 	{
 		m_noAbility->Shutdown();
 		delete m_noAbility;
+		m_noAbility = nullptr;
 	}
 
 	if (m_meleeAttack != nullptr)
 	{
 		m_meleeAttack->Shutdown();
 		delete m_meleeAttack;
+		m_meleeAttack = nullptr;
 	}
 
 	if (m_meleeSpecialAttack != nullptr)
 	{
 		m_meleeSpecialAttack->Shutdown();
 		delete m_meleeSpecialAttack;
+		m_meleeAttack = nullptr;
 	}
 
 	if (m_rangeAttack != nullptr)
 	{
 		m_rangeAttack->Shutdown();
 		delete m_rangeAttack;
+		m_rangeAttack = nullptr;
 	}
 
 	if (m_rangeSpecialAttack != nullptr)
 	{
 		m_rangeSpecialAttack->Shutdown();
 		delete m_rangeSpecialAttack;
+		m_rangeSpecialAttack = nullptr;
 	}
 
 	if (m_toolAbility != nullptr)
 	{
 		m_toolAbility->Shutdown();
 		delete m_toolAbility;
+		m_toolAbility = nullptr;
 	}
 
 	if (m_healthbar != nullptr)
 	{
 		m_healthbar->Shutdown();
 		delete m_healthbar;
+		m_healthbar = nullptr;
 	}
 
 	if (m_abilityBar != nullptr)
 	{
 		m_abilityBar->Shutdown();
-}
+		delete m_abilityBar;
+		m_abilityBar = nullptr;
+	}
 
 	if (m_dashParticles1 != nullptr)
 	{
 		m_dashParticles1->Shutdown();
 		delete m_dashParticles1;
-}
+		m_dashParticles1 = nullptr;
+	}
 
 	if (m_dashParticles2 != nullptr)
 	{
 		m_dashParticles2->Shutdown();
 		delete m_dashParticles2;
+		m_dashParticles2 = nullptr;
 	}
 }
 
@@ -335,23 +345,23 @@ void Player::CheckForSpecialAttack()
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_rangeSpecialAttack;
-		}
+		m_ability = m_rangeSpecialAttack;
+	}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_meleeSpecialAttack;
-		}
+		m_ability = m_meleeSpecialAttack;
+	}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_ability = m_toolAbility;
-		}
+		m_ability = m_toolAbility;
 	}
+}
 }
 
 bool Player::CalculateDirection()
@@ -580,7 +590,7 @@ void Player::SetCalculatePlayerPosition()
 
 
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
-	{
+	{ 
 		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
 			Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
@@ -601,7 +611,7 @@ void Player::SetCalculatePlayerPosition()
 			{
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
-		}
+			}
 		else if (collidingBoxes.size() > 1)
 		{
 
@@ -609,11 +619,11 @@ void Player::SetCalculatePlayerPosition()
 			{
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
-			else
-			{
-				CalculatePlayerCubeCollision(collidingBoxes[i]);
-			}
+		else
+		{
+			CalculatePlayerCubeCollision(collidingBoxes[i]);
 		}
+	}
 		else
 		{
 			CalculatePlayerCubeCollision(collidingBoxes[i]);
@@ -630,51 +640,51 @@ void Player::SetCalculatePlayerPosition()
 		//}
 		//else
 		//{
-			float r = collidingSpheres[i].m_radius;
-			float deltaZ = m_position.z - collidingSpheres[i].m_position.z;
-			float deltaX = m_position.x - collidingSpheres[i].m_position.x;
-			float angle = atan2f(deltaZ, deltaX);
+		float r = collidingSpheres[i].m_radius;
+		float deltaZ = m_position.z - collidingSpheres[i].m_position.z;
+		float deltaX = m_position.x - collidingSpheres[i].m_position.x;
+		float angle = atan2f(deltaZ, deltaX);
 
-			float circleX = cosf(angle) * r;
-			float circleY = sinf(angle) * r;
+		float circleX = cosf(angle) * r;
+		float circleY = sinf(angle) * r;
 
-			float dz = collidingSpheres[i].m_position.z - m_position.z;
-			float dx = collidingSpheres[i].m_position.x - m_position.x;
-			float angle1 = atan2(dz, dx);
-			float angle2 = atan2(m_direction.z, m_direction.x);
-			float offset = angle1 - angle2;
+		float dz = collidingSpheres[i].m_position.z - m_position.z;
+		float dx = collidingSpheres[i].m_position.x - m_position.x;
+		float angle1 = atan2(dz, dx);
+		float angle2 = atan2(m_direction.z, m_direction.x);
+		float offset = angle1 - angle2;
+		
 
+		// Special cases ftw. Dont ask!
+		if (angle1 < 0 && angle2 < 0)
+		{
+			offset *= -1;
+		}		
+		if (angle2 >= 0 && angle1 < 0)
+		{
+			offset *= -1;
+		}
+		if (angle2 >= DirectX::XM_PIDIV2 && angle1 <= -DirectX::XM_PIDIV2)
+		{
+			offset *= -1;
+		}
+		if (angle2 <= -DirectX::XM_PIDIV2 && angle1 >= DirectX::XM_PIDIV2)
+		{
+			offset *= -1;
+		}
 
-			// Special cases ftw. Dont ask!
-			if (angle1 < 0 && angle2 < 0) 
-			{
-				offset *= -1;
-			}
-			if (angle2 >= 0 && angle1 < 0) 
-			{
-				offset *= -1;
-			}
-			if (angle2 >= DirectX::XM_PIDIV2 && angle1 <= -DirectX::XM_PIDIV2) 
-			{
-				offset *= -1;
-			}
-			if (angle2 <= -DirectX::XM_PIDIV2 && angle1 >= DirectX::XM_PIDIV2)
-			{
-				offset *= -1;
-			}
-
-			// Circle equation:
-			// circleX * X + circleY * Y = Radius * Radius
-			// Bryt ut så att y blir ensam
-			// Y = (Radius * Radius - circleX * X) / circleY		
-			float yValue = (r * r - circleX * (circleX + offset)) / circleY;
-
-			DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + offset) - circleX, 0, yValue - circleY);
-			// Normalize
-			float length = sqrt(dir.x * dir.x + dir.z * dir.z);
-			dir.x = dir.x / length;
-			dir.z = dir.z / length;
-			SetDirection(dir);
+		// Circle equation:
+		// circleX * X + circleY * Y = Radius * Radius
+		// Bryt ut så att y blir ensam
+		// Y = (Radius * Radius - circleX * X) / circleY		
+		float yValue = (r * r - circleX * (circleX + offset)) / circleY;
+		
+		DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + offset) - circleX, 0, yValue - circleY);
+		// Normalize
+		float length = sqrt(dir.x * dir.x + dir.z * dir.z);
+		dir.x = dir.x / length;
+		dir.z = dir.z / length;
+		SetDirection(dir);
 		/*}*/
 
 	}

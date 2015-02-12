@@ -52,10 +52,19 @@ void StickyTrap::Update()
 }
 void StickyTrap::Shutdown()
 {
-	m_stickyTrapBag->Shutdown();
-	delete m_stickyTrapBag;
-	m_stickyTrap->Shutdown();
-	delete m_stickyTrap;
+	if (m_stickyTrapBag != nullptr)
+	{
+		m_stickyTrapBag->Shutdown();
+		delete m_stickyTrapBag;
+		m_stickyTrap = nullptr;
+	}
+
+	if (m_stickyTrap != nullptr)
+	{
+		m_stickyTrap->Shutdown();
+		delete m_stickyTrap;
+		m_stickyTrap = nullptr;
+	}
 }
 void StickyTrap::Render()
 {

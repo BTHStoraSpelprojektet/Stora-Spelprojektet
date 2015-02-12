@@ -30,7 +30,7 @@ protected:
 	std::vector<Box> m_boundingBoxes;
 	std::vector<Sphere> m_boundingSpheres;
 	Sphere m_frustumSphere;
-	MeshData* mData;
+	MeshData mData;
 	ModelImporter* m_importer;
 };
 

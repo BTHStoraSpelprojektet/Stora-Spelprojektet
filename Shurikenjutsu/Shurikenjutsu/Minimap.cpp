@@ -48,13 +48,29 @@ bool Minimap::Initialize()
 void Minimap::Shutdown()
 {
 	// Shutdown minimap pointer
-	if (m_minimap != NULL)
+	if (m_minimap != nullptr)
 	{
-		//m_minimap->Shutdown();
+		delete m_minimap;
+		m_minimap = nullptr;
 	}
-	if (m_playerDot != NULL)
+	if (m_playerDot != nullptr)
 	{
-		//m_playerDot->Shutdown();
+		delete m_playerDot;
+		m_playerDot = nullptr;
+	}
+	if (m_background != nullptr)
+	{
+		delete m_background;
+		m_background = nullptr;
+	}
+
+	for (int i = 0; i < 7; i++)
+	{
+		if (m_otherPlayers[i] != nullptr)
+		{
+			delete m_otherPlayers[i];
+			m_otherPlayers[i] = nullptr;
+		}
 	}
 }
 
