@@ -26,7 +26,7 @@ struct MeshData
 	{
 		for (unsigned int i = 0; i < m_stacks.size(); i++)
 		{			
-			m_stacks[i].Shutdown();
+			m_stacks[i].Shutdown();		
 		}
 	}
 };
