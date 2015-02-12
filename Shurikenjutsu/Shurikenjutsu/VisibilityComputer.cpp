@@ -190,7 +190,6 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 	std::vector<PolygonPoint> totalIntersections;
 
 	std::vector<float> uniqueAngles = GetUniquePointAngles(p_viewerPosition);
-	std::vector<Line> boundries = ShadowShapes::GetInstance().GetBoundryLines();
 	std::vector<Line> segments = ShadowShapes::GetInstance().GetStaticLines(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
 	PolygonPoint polygonPoint = PolygonPoint();
 
