@@ -283,14 +283,13 @@ void PlayingStateTest::Render()
 	// Draw to the scene.
 	m_playerManager->Render();
 	m_objectManager->Render();
+	GraphicsEngine::RenderFoliage();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
 
 	if (FLAG_DEBUG == 1)
 	{
 		ShadowShapes::GetInstance().DebugRender();	
-	}
-
-	GraphicsEngine::RenderFoliage();
+	}	
 
 	m_minimap->Render();
 	m_teamStatusBar->Render();
