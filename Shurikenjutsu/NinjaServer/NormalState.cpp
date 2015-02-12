@@ -12,13 +12,14 @@ NormalState::~NormalState(){}
 bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 {
 	bool result;
-	result = Initialize();
+
+	result = GameState::Initialize(p_serverPeer);
 	if (!result)
 	{
 		return false;
 	}
 
-	result = GameState::Initialize(p_serverPeer);
+	result = Initialize();
 	if (!result)
 	{
 		return false;
@@ -31,18 +32,18 @@ bool NormalState::Initialize(std::string p_levelName)
 {
 	bool result;
 
-	result = Initialize();
-	if (!result)
-	{
-		return false;
-	}
-
 	result = GameState::Initialize(p_levelName);
 	if (!result)
 	{
 		return false;
 	}
 
+	result = Initialize();
+	if (!result)
+	{
+		return false;
+	}
+	
 	return true;
 }
 
@@ -52,9 +53,9 @@ bool NormalState::Initialize()
 	m_currentRound = 1;
 	m_roundTimer = 10.0f;
 	m_matchTimer = 20.0f;
-	m_currentTimer = m_roundTimer;
-	m_sendTime = (int)m_roundTimer;
-	m_roundRestarting = false;
+	m_currentTimer = 30.0f;
+	m_sendTime = (int)m_currentTimer;
+	m_roundRestarting = true;
 	m_matchOver = false;
 
 	return true;

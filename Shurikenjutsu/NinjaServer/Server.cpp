@@ -54,6 +54,7 @@ void Server::ReceviePacket()
 			m_nrOfConnections++;
 			std::cout << "A new connection is incoming (" << m_nrOfConnections << ")" << std::endl;
 			
+			m_gameState->UserConnected(m_packet->guid);
 
 			RakNet::BitStream bitStream;
 
@@ -85,7 +86,7 @@ void Server::ReceviePacket()
 			bitStream.Write(m_nrOfConnections);
 
 			// Broadcast the nr of connections to all clients
-			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);			
 
 			break;
 		}
