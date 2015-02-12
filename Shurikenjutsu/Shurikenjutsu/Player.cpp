@@ -576,100 +576,111 @@ void Player::SetCalculatePlayerPosition()
 		playerOBB = GetBoundingBoxes()[0];
 	}
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(playerOBB, m_speed, m_direction);
-	std::vector<Sphere> collidingSpheres = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticSpheres(m_playerSphere, m_speed, m_direction);
 
-	if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
+
+
+	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
 	{
-		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	}
-	else
-	{
-		for (unsigned int i = 0; i < collidingBoxes.size(); i++)
+		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
-			if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
-			{
-				Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
-				playerSphere.m_position.x = m_position.x;
-				playerSphere.m_position.z = m_position.z - 1.0f * speedXDeltaTime;
-				bool down = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
-				playerSphere.m_position.x = m_position.x;
-				playerSphere.m_position.z = m_position.z + 1.0f * speedXDeltaTime;
-				bool up = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
-				playerSphere.m_position.x = m_position.x + 1.0f * speedXDeltaTime;
-				playerSphere.m_position.z = m_position.z;
-				bool right = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
-				playerSphere.m_position.x = m_position.x - 1.0f * speedXDeltaTime;
-				playerSphere.m_position.z = m_position.z;
-				bool left = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+			Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
+			playerSphere.m_position.x = m_position.x;
+			playerSphere.m_position.z = m_position.z - 1.0f * speedXDeltaTime;
+			bool down = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+			playerSphere.m_position.x = m_position.x;
+			playerSphere.m_position.z = m_position.z + 1.0f * speedXDeltaTime;
+			bool up = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+			playerSphere.m_position.x = m_position.x + 1.0f * speedXDeltaTime;
+			playerSphere.m_position.z = m_position.z;
+			bool right = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
+			playerSphere.m_position.x = m_position.x - 1.0f * speedXDeltaTime;
+			playerSphere.m_position.z = m_position.z;
+			bool left = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
 
-				if ((down && m_direction.z == -1) || (up && m_direction.z == 1) || (right && m_direction.x == 1)|| (left && m_direction.x == -1))
-				{
-					SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-				}
-			}
-			else if (collidingBoxes.size() > 1)
+			if ((down && m_direction.z == -1) || (up && m_direction.z == 1) || (right && m_direction.x == 1)|| (left && m_direction.x == -1))
 			{
-
-				if (CheckSidesIfMultipleCollisions() == true)
-				{
-					SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-				}
-				else
-				{
-					CalculatePlayerCubeCollision(collidingBoxes[i]);
-				}
-			}
-			else
-			{
-				CalculatePlayerCubeCollision(collidingBoxes[i]);
+				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
 		}
-
-		// Check collision between player and static spheres
-		for (unsigned int i = 0; i < collidingSpheres.size(); i++)
+		else if (collidingBoxes.size() > 1)
 		{
+
 			if (CheckSidesIfMultipleCollisions() == true)
 			{
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
 			else
 			{
-				float r = collidingSpheres[i].m_radius;
-				float deltaZ = m_position.z - collidingSpheres[i].m_position.z;
-				float deltaX = m_position.x - collidingSpheres[i].m_position.x;
-				float angle = atan2f(deltaZ, deltaX);
+				CalculatePlayerCubeCollision(collidingBoxes[i]);
+			}
+		}
+		else
+		{
+			CalculatePlayerCubeCollision(collidingBoxes[i]);
+		}
+	}
 
-				float circleX = cosf(angle) * r;
-				float circleY = sinf(angle) * r;
+	std::vector<Sphere> collidingSpheres = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticSpheres(m_playerSphere, m_speed, m_direction);
+	// Check collision between player and static spheres
+	for (unsigned int i = 0; i < collidingSpheres.size(); i++)
+	{
+		//if (CheckSidesIfMultipleCollisions() == true)
+		//{
+		//	SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+		//}
+		//else
+		//{
+			float r = collidingSpheres[i].m_radius;
+			float deltaZ = m_position.z - collidingSpheres[i].m_position.z;
+			float deltaX = m_position.x - collidingSpheres[i].m_position.x;
+			float angle = atan2f(deltaZ, deltaX);
 
-				float dz = collidingSpheres[i].m_position.z - m_position.z;
-				float dx = collidingSpheres[i].m_position.x - m_position.x;
-				float angle1 = atan2(dz, dx);
-				float angle2 = atan2(m_direction.z, m_direction.x);
-				float offset = angle1 - angle2;
+			float circleX = cosf(angle) * r;
+			float circleY = sinf(angle) * r;
+
+			float dz = collidingSpheres[i].m_position.z - m_position.z;
+			float dx = collidingSpheres[i].m_position.x - m_position.x;
+			float angle1 = atan2(dz, dx);
+			float angle2 = atan2(m_direction.z, m_direction.x);
+			float offset = angle1 - angle2;
 
 
-				// Special cases ftw. Dont ask!
-				if ((angle1 < 0 && angle2 < 0) || (angle2 >= 0 && angle1 < 0) || (angle2 >= DirectX::XM_PIDIV2 && angle1 <= -DirectX::XM_PIDIV2) || (angle2 <= -DirectX::XM_PIDIV2 && angle1 >= DirectX::XM_PIDIV2))
-				{
-					offset *= -1;
-				}
-
-				// Circle equation:
-				// circleX * X + circleY * Y = Radius * Radius
-				// Bryt ut så att y blir ensam
-				// Y = (Radius * Radius - circleX * X) / circleY		
-				float yValue = (r * r - circleX * (circleX + offset)) / circleY;
-
-				DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + offset) - circleX, 0, yValue - circleY);
-				// Normalize
-				float length = sqrt(dir.x * dir.x + dir.z * dir.z);
-				dir.x = dir.x / length;
-				dir.z = dir.z / length;
-				SetDirection(dir);
+			// Special cases ftw. Dont ask!
+			if (angle1 < 0 && angle2 < 0) 
+			{
+				offset *= -1;
+			}
+			if (angle2 >= 0 && angle1 < 0) 
+			{
+				offset *= -1;
+			}
+			if (angle2 >= DirectX::XM_PIDIV2 && angle1 <= -DirectX::XM_PIDIV2) 
+			{
+				offset *= -1;
+			}
+			if (angle2 <= -DirectX::XM_PIDIV2 && angle1 >= DirectX::XM_PIDIV2)
+			{
+				offset *= -1;
 			}
 
-		}
+			// Circle equation:
+			// circleX * X + circleY * Y = Radius * Radius
+			// Bryt ut så att y blir ensam
+			// Y = (Radius * Radius - circleX * X) / circleY		
+			float yValue = (r * r - circleX * (circleX + offset)) / circleY;
+
+			DirectX::XMFLOAT3 dir = DirectX::XMFLOAT3((circleX + offset) - circleX, 0, yValue - circleY);
+			// Normalize
+			float length = sqrt(dir.x * dir.x + dir.z * dir.z);
+			dir.x = dir.x / length;
+			dir.z = dir.z / length;
+			SetDirection(dir);
+		/*}*/
+
+	}
+	if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
+	{
+		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 
 
