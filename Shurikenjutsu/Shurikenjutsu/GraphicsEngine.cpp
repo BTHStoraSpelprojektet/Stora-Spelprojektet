@@ -205,8 +205,13 @@ void GraphicsEngine::Shutdown()
 	{
 		m_textGeometry->Release();
 	}
-	m_instanceManager->Shutdown();
-	delete m_instanceManager;
+
+	if (m_instanceManager != nullptr)
+	{
+		m_instanceManager->Shutdown();
+		delete m_instanceManager;
+		m_instanceManager = nullptr;
+	}
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename)
