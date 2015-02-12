@@ -101,6 +101,11 @@ bool ObjectManager::Initialize(Level* p_level)
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_GREEN_LEAVES);
 		}
+		else if (particleLevelEmitter[i].type == EmitterType::LeafAcerPalmatum){
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
+				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_ACERPALMATUM_LEAVES);
+		}
 		else if (particleLevelEmitter[i].type == EmitterType::WorldMist){
 			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
@@ -293,6 +298,7 @@ void ObjectManager::Update()
 			{
 				// Remove shuriken
 				m_shurikens[i]->Shutdown();
+				delete m_shurikens[i];
 				m_shurikens.erase(m_shurikens.begin() + i);
 				i--;
 			}
@@ -366,6 +372,7 @@ void ObjectManager::Update()
 			if (!IsFanInNetworkList(m_fans[i]->GetID()))
 			{
 				m_fans[i]->Shutdown();
+				delete m_fans[i];
 				m_fans.erase(m_fans.begin() + i);
 				i--;
 			}
@@ -392,6 +399,8 @@ void ObjectManager::Update()
 		bool remove = m_volleys[i]->Update();
 		if (remove)
 		{
+			m_volleys[i]->Shutdown();
+			delete m_volleys[i];
 			m_volleys.erase(m_volleys.begin() + i);
 			i--;
 		}
@@ -811,6 +820,8 @@ void ObjectManager::RemoveProjectile(unsigned int p_projId)
 	{
 		if (m_projectiles[i]->GetID() == p_projId)
 		{
+			m_projectiles[i]->Shutdown();
+			delete m_projectiles[i];
 			m_projectiles.erase(m_projectiles.begin() + i);
 			break;
 		}

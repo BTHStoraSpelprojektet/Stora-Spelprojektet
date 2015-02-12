@@ -348,7 +348,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 
 	// Lock camera on the player.
 	playerPosition = p_playerPos;
-	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 40.0f, playerPosition.z - 20.0f);
+	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 30.0f, playerPosition.z - 15.0f);		// y: 40, z: -20
 	target = playerPosition;
 
 	UpdatePosition(position);

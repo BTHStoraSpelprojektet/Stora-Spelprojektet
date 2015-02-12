@@ -37,6 +37,7 @@ enum EmitterType{
 	Smoke,
 	LeafTree,
 	LeafSakura,
+	LeafAcerPalmatum,
 	WorldMist,
 	WorldDust
 };
