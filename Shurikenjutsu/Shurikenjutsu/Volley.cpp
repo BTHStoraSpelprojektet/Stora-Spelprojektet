@@ -20,6 +20,7 @@ void Volley::Shutdown()
 	for (unsigned int i = 0; i < m_projectiles.size(); i++)
 	{
 		m_projectiles[i]->Shutdown();
+		delete m_projectiles[i];
 	}
 	m_projectiles.clear();
 }
@@ -33,6 +34,8 @@ bool Volley::Update()
 		bool remove = m_projectiles[i]->Update(m_timer);
 		if (remove)
 		{
+			m_projectiles[i]->Shutdown();
+			delete m_projectiles[i];
 			m_projectiles.erase(m_projectiles.begin() + i);
 			i--;
 		}

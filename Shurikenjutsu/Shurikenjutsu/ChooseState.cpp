@@ -56,6 +56,7 @@ void ChooseState::Shutdown()
 {
 	if (m_chooseButton != nullptr)
 	{
+		m_chooseButton->Shutdown();
 		delete m_chooseButton;
 		m_chooseButton = nullptr;
 	}
