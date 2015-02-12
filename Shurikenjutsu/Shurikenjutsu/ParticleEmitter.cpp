@@ -91,7 +91,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_FIRE) :
 		{
 			m_particlesPerSecond = 100.0f;
-			m_maxParticles = 500;
+			m_maxParticles = 100;
 
 			// Set the random offset limits for the particles when emitted.
 			m_emitionPositionOffset = DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f);
@@ -148,7 +148,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_PINK_LEAVES) :
 		{
 			m_particlesPerSecond = 1.0f;
-			m_maxParticles = 1000;
+			m_maxParticles = 100;
 
 			// Set the random offset limits for the particles when emitted.
 			m_emitionPositionOffset = DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f);
@@ -167,7 +167,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_GREEN_LEAVES) :
 		{
 			m_particlesPerSecond = 1.0f;
-			m_maxParticles = 1000;
+			m_maxParticles = 100;
 
 			// Set the random offset limits for the particles when emitted.
 			m_emitionPositionOffset = DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f);
@@ -182,6 +182,25 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 			break;
 		}							
+
+		case(PARTICLE_PATTERN_DASH_TRAIL) :
+		{
+			m_particlesPerSecond = 0.0f;
+			m_maxParticles = 100;
+
+			// Set the random offset limits for the particles when emitted.
+			m_emitionPositionOffset = DirectX::XMFLOAT3(0.4f, 0.25f, 0.4f);
+
+			// Set velocity and its variation.
+			m_velocity = 0.0f;
+			m_velocityVariation = 0.0f;
+
+			m_timeToLive = 0.75f;
+
+			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particle_Sparkle.png");
+
+			break;
+		}
 
 		default:
 		{
@@ -288,7 +307,7 @@ void ParticleEmitter::EmitParticles()
 	m_time += (float)GLOBAL::GetInstance().GetDeltaTime();
 
 	// Check if it is time to emit more particles.
-	if (m_time > (1.0f / m_particlesPerSecond))
+	if (m_time > (1.0f / m_particlesPerSecond) || m_pattern == PARTICLE_PATTERN_DASH_TRAIL)
 	{
 		m_time = 0.0f;
 
@@ -502,6 +521,20 @@ void ParticleEmitter::EmitParticles()
 				{
 					m_particleList[index].m_position = position;
 					m_particleList[index].m_direction = m_emitterDirection;
+					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = 0.0f;
+
+					break;
+				}
+
+				case(PARTICLE_PATTERN_DASH_TRAIL) :
+				{
+					m_particleList[index].m_position = DirectX::XMFLOAT3(position.x, position.y + 2.5f, position.z);
+					m_particleList[index].m_direction = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 					m_particleList[index].m_color = m_color;
 					m_particleList[index].m_velocity = velocity;
 					m_particleList[index].m_alive = true;
@@ -782,6 +815,20 @@ void ParticleEmitter::UpdateParticles()
 			break;
 		}
 
+		case(PARTICLE_PATTERN_DASH_TRAIL) :
+		{
+			if (m_particleList != NULL)
+			{
+				for (unsigned int i = 0; i < m_currentParticles; i++)
+				{
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
+			}
+
+			break;
+		}
+
 		default:
 		{
 			break;
@@ -789,13 +836,17 @@ void ParticleEmitter::UpdateParticles()
 	}
 }
 
-float ParticleEmitter::getWindOffsetX(float timePassed, float timeToLive){
+float ParticleEmitter::getWindOffsetX(float timePassed, float timeToLive)
+{
 	float angle = m_globalWindAngleDegree * (float)3.14159265359 / 180;
+
 	return ((timePassed / timeToLive) / 60)*cosf(angle);
 }
 
-float ParticleEmitter::getWindOffsetZ(float timePassed, float timeToLive){
+float ParticleEmitter::getWindOffsetZ(float timePassed, float timeToLive)
+{
 	float angle = m_globalWindAngleDegree * (float)3.14159265359 / 180;
+
 	return ((timePassed / timeToLive) / 60)*sinf(angle);
 }
 
@@ -1118,4 +1169,9 @@ DirectX::XMFLOAT4X4 ParticleEmitter::GetWorldMatrix()
 ID3D11ShaderResourceView* ParticleEmitter::GetParticleTexture()
 {
 	return m_particleTexture;
+}
+
+void ParticleEmitter::SetColor(DirectX::XMFLOAT4 p_color)
+{
+	m_color = p_color;
 }
