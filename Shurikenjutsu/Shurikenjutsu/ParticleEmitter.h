@@ -75,7 +75,7 @@ private:
 		DirectX::XMFLOAT3 m_position;
 		DirectX::XMFLOAT3 m_direction;
 		DirectX::XMFLOAT4 m_color;
-		float opacity = 0.0f;
+		float m_opacity = 0.0f;
 
 
 		float m_velocity;
@@ -90,7 +90,7 @@ private:
 		float m_timeToScaleChange = 0.0f;
 	};
 	Particle* m_particleList;
-	
+
 	struct ParticleVertex
 	{
 		DirectX::XMFLOAT3 m_position;
