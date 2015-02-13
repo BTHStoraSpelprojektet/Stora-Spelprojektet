@@ -394,6 +394,7 @@ void Network::ReceviePacket()
 			m_roundRestarted = true;
 			m_restartingRound = false;
 			m_timeRestarting = 0;
+			ClearListsAtNewRound();
 			std::cout << "New round has started\n";
 			break;
 
@@ -404,7 +405,7 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			m_restartingRound = true;
-			ClearListsAtNewRound();
+			
 			std::cout << "Restarting round in:\n";
 			break;
 		}
