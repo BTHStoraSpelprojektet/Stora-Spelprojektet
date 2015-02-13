@@ -31,6 +31,8 @@ void Server::Shutdown()
 	m_gameState->Shutdown();
 	delete m_gameState;
 
+	ModelLibrary::GetInstance()->Shutdown();
+
 	m_serverPeer->Shutdown(1000);
 	RakNet::RakPeerInterface::DestroyInstance(m_serverPeer);
 }

@@ -36,6 +36,20 @@ void BaseModel::Shutdown()
 	}
 }
 
+void BaseModel::ServerShutdown()
+{
+	if (m_importer != nullptr)
+	{
+		delete m_importer;
+		m_importer = nullptr;
+	}
+
+	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
+	{
+		m_animationStacks[i].Shutdown();
+	}
+}
+
 std::vector<Box> BaseModel::GetBoundingBoxes()
 {
 	return m_boundingBoxes;

@@ -89,6 +89,8 @@ void GameState::Shutdown()
 	delete m_playerManager;
 	delete m_shurikenManager;
 	delete m_smokeBombManager;
+	delete m_spikeManager;
+	delete m_stickyTrapManager;
 	delete m_mapManager;
 	delete m_fanBoomerangManager;
 	delete m_collisionManager;

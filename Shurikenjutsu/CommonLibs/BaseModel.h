@@ -14,6 +14,7 @@ public:
 
 	virtual bool LoadModel(const char* p_filepath);
 	virtual void Shutdown();
+	void ServerShutdown();
 
 	std::vector<Box> GetBoundingBoxes();
 	std::vector<Sphere> GetBoundingSpheres();
