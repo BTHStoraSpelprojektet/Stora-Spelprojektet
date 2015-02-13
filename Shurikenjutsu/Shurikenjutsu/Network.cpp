@@ -394,8 +394,10 @@ void Network::ReceviePacket()
 			m_roundRestarted = true;
 			m_restartingRound = false;
 			m_timeRestarting = 0;
+			ClearListsAtNewRound();
 			std::cout << "New round has started\n";
 			break;
+
 		}
 		case ID_RESTARTING_ROUND:
 		{
@@ -403,7 +405,7 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			m_restartingRound = true;
-
+			
 			std::cout << "Restarting round in:\n";
 			break;
 		}
@@ -1500,4 +1502,13 @@ bool Network::GetMatchOver()
 int Network::GetMatchWinningTeam()
 {
 	return m_matchWinningTeam;
+}
+void Network::ClearListsAtNewRound()
+{
+	m_shurikensList.clear();
+	m_smokeBombList.clear();
+	m_spikeTrapList.clear();
+	m_stickyTrapList.clear();
+	m_fanList.clear();
+
 }
