@@ -338,7 +338,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 
 	// Visibility view projection..
 	playerPosition = p_playerPos;
-	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 40.0f, playerPosition.z - 40.0f);
+	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 30.0f, playerPosition.z - 30.0f);
 	target = playerPosition;
 
 	UpdatePosition(position);
