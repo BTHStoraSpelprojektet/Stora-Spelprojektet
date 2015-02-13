@@ -53,10 +53,9 @@ bool NormalState::Initialize()
 	m_currentRound = 1;
 	m_roundTimer = 10.0f;
 	m_matchTimer = 20.0f;
-	m_currentTimer = 30.0f;
+	m_currentTimer = 10.0f;
 	m_sendTime = (int)m_currentTimer;
-	m_roundRestarting = true;
-	SendRestartingRound();
+	m_roundRestarting = false;
 	m_matchOver = false;
 
 	return true;
