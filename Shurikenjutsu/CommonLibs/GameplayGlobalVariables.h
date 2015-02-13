@@ -44,13 +44,13 @@ const float MEGASHURIKEN_DURATION = 4.0f;
 const float MEGASHURIKEN_SPEED = 25.0f;
 
 // Fan Boomerang
-const float FANBOOMERANG_DAMAGE = 25.0f;
+const float FANBOOMERANG_DAMAGE = 50.0f;
 const float FANBOOMERANG_COOLDOWN = 2.0f;
 const float FANBOOMERANG_DURATION = 3.0f;
 const float FANBOOMERANG_SPEED = 20.0f;
 
 // Volley
-const float VOLLEY_DAMAGE = 15.0f;
+const float VOLLEY_DAMAGE = 25.0f;
 const float VOLLEY_COOLDOWN = 4.0f;
 const float VOLLEY_RANGE = 20.0f;
 const float VOLLEY_RADIUS = 0.5f;
@@ -80,8 +80,8 @@ const float DASH_SPEED = 8.0f;
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 // Naginata stab
 const float NAGINATASTAB_DAMAGE = 20.0f;
-const float NAGINATASTAB_RANGE = 8.0f;
-const float NAGINATASTAB_COOLDOWN = 9.0f;
+const float NAGINATASTAB_RANGE = 5.0f;
+const float NAGINATASTAB_COOLDOWN = 6.0f;
 const float NAGINATASTAB_GLOBAL_COOLDOWN = 3.0f;
 const float NAGINATASTAB_DURATION = 1.5f;
 // Bounding Box
@@ -92,9 +92,9 @@ const float NAGINATASTAB_BOXEXTENTZ = 4.0f;
 
 ////////////////////////////////////////////////////////////////Tools
 //Smoke bomb
-const float SMOKEBOMB_DURATION = 3.0f;
+const float SMOKEBOMB_DURATION = 4.0f;
 const float SMOKEBOMB_DAMAGE = 0.0f;
-const float SMOKEBOMB_COOLDOWN = 1.0f;
+const float SMOKEBOMB_COOLDOWN = 6.0f;
 const float SMOKEBOMB_SPEED = 30.0f;
 
 const float SMOKEBOMB_RANGE = 30.0f;
@@ -116,7 +116,7 @@ const float SPIKE_SPEED = 30.0f;
 const float SPIKE_SIZE_X = 3.0f;
 const float SPIKE_RADIUS = 1.5f;
 
-//Spike Trap
+//Sticky Trap
 const float STICKY_TRAP_DAMAGE = 0.0f;
 const float STICKY_TRAP_COOLDOWN = 6.0f;
 const float STICKY_TRAP_RANGE = 30.0f;
