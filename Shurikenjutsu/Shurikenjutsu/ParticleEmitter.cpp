@@ -154,7 +154,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 void ParticleEmitter::initParticles(float particlesPerSecond, float maxParticles, DirectX::XMFLOAT3 emitionPositionOffset, float velocity, float velocityVariation, float timeToLive, ID3D11ShaderResourceView* particleTexture){
 	m_particlesPerSecond = particlesPerSecond;
-	m_maxParticles = maxParticles;
+	m_maxParticles = (unsigned int)maxParticles;
 
 	// Set the random offset limits for the particles when emitted.
 	m_emitionPositionOffset = emitionPositionOffset;

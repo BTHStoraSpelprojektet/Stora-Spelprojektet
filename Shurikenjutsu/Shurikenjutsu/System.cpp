@@ -17,7 +17,7 @@
 #include "VisibilityComputer.h"
 #include "Cursor.h"
 #include "ParticleRenderer.h"
-#include <vld.h>
+//#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
