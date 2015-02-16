@@ -1062,7 +1062,7 @@ void ParticleEmitter::UpdateBuffers()
 			{
 			//fadeIn(m_mesh[i], m_particleList[i], 0.5);
 
-			m_particleList[i].m_opacity = fadeIn(&m_mesh[i], &m_particleList[i], 0.001);
+			m_particleList[i].m_opacity = fadeIn(&m_mesh[i], &m_particleList[i], 0.001f);
 			//m_particleList[i].opacity = 1.0f;
 				
 			//if (m_particleList[i].m_timeSpecial>0.1f)
