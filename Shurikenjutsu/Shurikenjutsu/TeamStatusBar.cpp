@@ -24,6 +24,7 @@ bool TeamStatusBar::Initialize()
 	m_addedMyself = false;
 	m_timeSec = 0;
 	m_timeMin = 0;
+	m_myTeam = 0;
 
 	m_originPos = DirectX::XMFLOAT3(0.0f, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - 27.5f, 1.0f);
 
@@ -79,6 +80,7 @@ void TeamStatusBar::Update()
 			m_redColorPlayers[player.guid] = element;
 			AddRedSquare();
 			m_addedMyself = true;
+			m_myTeam = player.team;
 		}
 		else if (player.team == 2)
 		{
@@ -87,6 +89,26 @@ void TeamStatusBar::Update()
 			m_blueColorPlayers[player.guid] = element;
 			AddBlueSquare();
 			m_addedMyself = true;
+			m_myTeam = player.team;
+		}
+	}
+	// Player have changed team so remove him from current potraits (that team, very change, such noob)
+	else if (m_addedMyself && player.team != m_myTeam)
+	{
+		// Look which team the player is in and remove him
+		if (m_redColorPlayers.find(player.guid) != m_redColorPlayers.end())
+		{
+			m_redColorPlayers.erase(player.guid);
+			ResizeRedColorList();
+			m_addedMyself = false;
+			m_myTeam = 0;
+		}
+		if (m_blueColorPlayers.find(player.guid) != m_blueColorPlayers.end())
+		{
+			m_blueColorPlayers.erase(player.guid);
+			ResizeBlueColorList();
+			m_addedMyself = false;
+			m_myTeam = 0;
 		}
 	}
 	else
@@ -145,6 +167,13 @@ void TeamStatusBar::Update()
 				m_redColorPlayers[players[i].guid] = element;
 				AddRedSquare();
 			}
+
+			// Check so player havn't changed from blue color
+			if (m_blueColorPlayers.find(players[i].guid) != m_blueColorPlayers.end())
+			{
+				m_blueColorPlayers.erase(players[i].guid);
+				ResizeBlueColorList();
+			}
 		}
 		// Team blue
 		else if (players[i].team == 2)
@@ -168,15 +197,22 @@ void TeamStatusBar::Update()
 				m_blueColorPlayers[players[i].guid] = element;
 				AddBlueSquare();
 			}
+
+			// Check so player havn't changed from red color
+			if (m_redColorPlayers.find(players[i].guid) != m_redColorPlayers.end())
+			{
+				m_redColorPlayers.erase(players[i].guid);
+				ResizeRedColorList();
+			}
 		}
 	}
 
-	// Check for dead players in red team
+	// Check for disconnected players in red team
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end();)
 	{
 		if (it->first != player.guid && playersMap.find(it->first) == playersMap.end())
 		{
-			// Found a dead player
+			// Found a disconnected player
 			it = m_redColorPlayers.erase(it);
 			ResizeRedColorList();
 			m_redSquares.pop_back();
@@ -188,12 +224,12 @@ void TeamStatusBar::Update()
 	}
 
 
-	// Check for dead players in blue team
+	// Check for disconnected players in blue team
 	for (std::map<RakNet::RakNetGUID, GUIElement>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end();)
 	{
 		if (it->first != player.guid && playersMap.find(it->first) == playersMap.end())
 		{
-			// Found a dead player
+			// Found a disconnected player
 			it = m_blueColorPlayers.erase(it);
 			ResizeBlueColorList();
 			m_blueSquares.pop_back();
