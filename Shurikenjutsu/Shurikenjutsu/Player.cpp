@@ -34,7 +34,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	}
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
-	m_inputManager = InputManager::GetInstance();
 	
 	m_noAbility = new Ability();
 
@@ -339,21 +338,21 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 void Player::CheckForSpecialAttack()
 {
-	if (m_inputManager->IsKeyClicked(VkKeyScan('e')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('e')))
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
 			m_ability = m_rangeSpecialAttack;
 		}
 	}
-	if (m_inputManager->IsKeyClicked(VkKeyScan('q')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
 			m_ability = m_meleeSpecialAttack;
 		}
 	}
-	if (m_inputManager->IsKeyClicked(VkKeyScan('r')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
@@ -372,25 +371,25 @@ bool Player::CalculateDirection()
 	z = 0;
 	//m_playerPrevPos = m_position;
 
-	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('w')))
 	{
 		z += 1;
 		moved = true;
 	}
 
-	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('a')))
 	{
 		x += -1;
 		moved = true;
 	}
 
-	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('s')))
 	{
 		z += -1;
 		moved = true;
 	}
 
-	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('d')))
 	{
 		x += 1;
 		moved = true;
@@ -944,6 +943,7 @@ void Player::Render()
 	m_dashParticles1->Render();
 	m_dashParticles2->Render();
 
+	CheckAttackProjections();
 	AnimatedObject::RenderPlayer(m_team);
 }
 
@@ -1070,4 +1070,44 @@ OBB Player::GetOBB()
 void Player::SetOriginalSpeed(float p_speed)
 {
 	m_originalSpeed = p_speed;
+}
+
+void Player::CheckAttackProjections()
+{
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+	{
+		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
+	{
+		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+	{
+		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+		{
+
+		}
+	}
+	if (InputManager::GetInstance()->IsRightMousePressed())
+	{
+		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		{
+
+		}
+	}
+	if (InputManager::GetInstance()->IsLeftMousePressed())
+	{
+		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		{
+
+		}
+	}
+
 }
