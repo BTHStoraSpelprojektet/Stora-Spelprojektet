@@ -373,6 +373,7 @@ void PlayerManager::AddEnemyToList(Player* p_enemy)
 		newList[i] = m_enemyList[i];
 	}
 	newList[m_enemyListSize] = p_enemy;
+	delete[] m_enemyList;
 	m_enemyList = newList;
 	m_enemyListSize++;
 }
@@ -388,10 +389,12 @@ void PlayerManager::RemoveEnemyFromList(unsigned int p_index)
 			continue;
 		}
 		newList[index] = m_enemyList[i];
+		delete m_enemyList[i];
 		index++;
 	}
 	m_enemyList[p_index]->Shutdown();
 	delete m_enemyList[p_index];
+	delete[] m_enemyList;
 	m_enemyList = newList;
 	m_enemyListSize--;
 }
