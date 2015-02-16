@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 425
+Number of objects: 431
 Number of bounding boxes: 4
 LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_12 58.349 0 0 0 0 0 60 8.5 15
@@ -54,6 +54,12 @@ ParticleEmitter_BrazierFire_6 30.812 1.79524 37.7466 0 -0.785398 0
 ParticleEmitter_BrazierFire_7 5.35181 1.79524 -5.04196 0 3.14159 0
 ParticleEmitter_BrazierFire_8 -5.352 1.79524 -5.042 -0 -1.5708 0
 ParticleEmitter_BrazierFire_9 5.04196 1.79524 5.042 -0 1.5708 0
+ParticleEmitter_BrazierSparks_1 -30.812 1.79524 -37.7466 0 2.35619 0
+ParticleEmitter_BrazierSparks_11 -5.35181 1.79524 5.042 0 0 0
+ParticleEmitter_BrazierSparks_12 30.812 1.79524 37.7466 0 -0.785398 0
+ParticleEmitter_BrazierSparks_13 5.35181 1.79524 -5.04196 0 3.14159 0
+ParticleEmitter_BrazierSparks_14 -5.352 1.79524 -5.042 -0 -1.5708 0
+ParticleEmitter_BrazierSparks_15 5.04196 1.79524 5.042 -0 1.5708 0
 ParticleEmitter_Fireflies_1 -18 4 -38 0 0 0
 ParticleEmitter_Fireflies_2 18 4 39 0 0 0
 ParticleEmitter_LeafAcerPalmatum_3 -19.3634 6.37349 40.5038 0 1.5708 0
@@ -305,14 +311,14 @@ WallW_7 -4.314 0 12 0 1.5708 0
 WallW_8 12 0 -4.314 0 0 0
 WallW_9 12 0 -9.263 0 0 0
 bg_mountains_1 0 0 0 0 0 0
-bigBush_01__ -37.3 0 30.4 0 0 0
+bigBush_01__ -36.851 0 29.2444 0 0 0
 bigBush_01__1 -31.5 0 36.5 0 0.698132 0
 bigBush_01__10 25.4724 0 43.6528 0 1.0472 0
 bigBush_01__11 37.5076 0 42.9787 0 1.0472 0
 bigBush_01__2 -23.3 0 39 0 2.61799 0
 bigBush_01__3 23.3 0 -39 0 5.75959 0
 bigBush_01__4 31.5 0 -36.5 0 3.83972 0
-bigBush_01__5 37.3 0 -30.4 0 3.14159 0
+bigBush_01__5 37.3 0 -29.4873 0 3.14159 0
 bigBush_01__6 18 0 39 0 1.0472 0
 bigBush_01__7 -18 0 -39 0 3.83972 0
 bigBush_01__8 -25.4724 0 -43.6528 0 4.18879 0
@@ -345,8 +351,8 @@ pillar_2 32.2262 0 39.1608 0 0.785398 0
 sakuraTree_ 13.5 0 28 0 0.349066 0
 sakuraTree_1 -13.5 0 -28 0 5.93412 0
 sakuraTree_2 -29.0922 0 -44.446 0 5.93412 0
-spawnPoint_1_team_1 -36.9826 0 38.8355 0 0 0
-spawnPoint_1_team_2 31.0029 4.02777e-008 -42.8466 0 0 0
+spawnPoint_1_team_1 -38.7572 0 41.0559 0 0 0
+spawnPoint_1_team_2 33.646 4.02777e-008 -44.6341 0 0 0
 tile_torg_ 0 0.01 0 0 0 0
 tree_02__ 21.7 0 -19.5 0 4.18879 0
 tree_02__1 -21.7 0 19.5 0 1.0472 0
