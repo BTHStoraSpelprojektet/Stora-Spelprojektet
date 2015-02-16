@@ -15,6 +15,7 @@
 #include "TeamStatusBar.h"
 #include "ParticleEmitter.h"
 #include "Countdown.h"
+#include "ConsoleFunctions.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -363,6 +364,7 @@ void PlayingStateTest::BasicPicking()
 
 	m_mouseX = shurPos.x;
 	m_mouseY = shurPos.z;
+	InputManager::GetInstance()->Set3DMousePosition(m_mouseX, m_mouseY);
 }
 
 DirectX::XMFLOAT3 PlayingStateTest::Pick(Point p_point)

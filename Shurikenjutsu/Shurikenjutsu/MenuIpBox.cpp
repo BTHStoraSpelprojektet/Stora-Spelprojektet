@@ -3,6 +3,7 @@
 #include "TextureLibrary.h"
 #include "InputManager.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "ConsoleFunctions.h"
 
 MenuIpBox::MenuIpBox(){}
 MenuIpBox::~MenuIpBox(){}

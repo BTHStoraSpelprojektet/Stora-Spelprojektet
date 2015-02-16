@@ -14,6 +14,7 @@ public:
 
 	bool Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_charNr);
 	void Shutdown();
+	void RenderAttackLocations();
 };
 
 #endif

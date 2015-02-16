@@ -27,6 +27,7 @@ public:
 	void Update();
 	void UpdateAbilities();
 	void Render();
+	virtual void RenderAttackLocations();
 	void RenderDepth();
 	void RenderOutlining();
 	void RenderAbilityBar();
@@ -73,7 +74,6 @@ protected:
 	void CalculatePlayerCubeCollision(OBB p_collidingBoxes);
 	bool CheckSidesIfMultipleCollisions();
 	void SetOriginalSpeed(float p_speed);
-	void CheckAttackProjections();
 
 	float m_health; // Player health
 	float m_maxHealth; // Max player health
@@ -118,5 +118,10 @@ protected:
 	ParticleEmitter* m_dashParticles2;
 
 	int m_ninjaType;
+
+	Object* m_aimSphere;
+	Object* m_aimArrow;
+	Object* m_aimPole;
+	Object* m_aimFrustrum;
 };
 #endif PLAYER

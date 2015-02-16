@@ -2,6 +2,7 @@
 #include "InputManager.h"
 #include "Globals.h"
 
+#include "ConsoleFunctions.h"
 #include <D3Dcompiler.h>
 
 VisibilityComputer& VisibilityComputer::GetInstance()

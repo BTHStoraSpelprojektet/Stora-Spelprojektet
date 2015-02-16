@@ -69,11 +69,47 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dashParticles1->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
 	m_dashParticles2->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
 
+	m_aimSphere = new Object();
+	m_aimSphere->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+
+	m_aimArrow = new Object();
+	m_aimArrow->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+
+	m_aimPole = new Object();
+	m_aimPole->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+	
+	m_aimFrustrum = new Object();
+	m_aimFrustrum->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+	
 	return true;
 }
 
 void Player::Shutdown()
 {
+	if (m_aimSphere != nullptr)
+	{
+		m_aimSphere->Shutdown();
+		delete m_aimSphere;
+		m_aimSphere = nullptr;
+	}
+	if (m_aimArrow != nullptr)
+	{
+		m_aimArrow->Shutdown();
+		delete m_aimArrow;
+		m_aimArrow = nullptr;
+	}
+	if (m_aimPole != nullptr)
+	{
+		m_aimPole->Shutdown();
+		delete m_aimPole;
+		m_aimPole = nullptr;
+	}
+	if (m_aimFrustrum != nullptr)
+	{
+		m_aimFrustrum->Shutdown();
+		delete m_aimFrustrum;
+		m_aimFrustrum = nullptr;
+	}
 	AnimatedObject::Shutdown();
 	if (m_noAbility != nullptr)
 	{
@@ -943,7 +979,7 @@ void Player::Render()
 	m_dashParticles1->Render();
 	m_dashParticles2->Render();
 
-	CheckAttackProjections();
+	RenderAttackLocations();
 	AnimatedObject::RenderPlayer(m_team);
 }
 
@@ -1072,42 +1108,7 @@ void Player::SetOriginalSpeed(float p_speed)
 	m_originalSpeed = p_speed;
 }
 
-void Player::CheckAttackProjections()
+void Player::RenderAttackLocations()
 {
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
-	{
-		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
-		{
-
-		}
-	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
-	{
-		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
-		{
-
-		}
-	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
-	{
-		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
-		{
-
-		}
-	}
-	if (InputManager::GetInstance()->IsRightMousePressed())
-	{
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
-		{
-
-		}
-	}
-	if (InputManager::GetInstance()->IsLeftMousePressed())
-	{
-		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
-		{
-
-		}
-	}
-
+	
 }
