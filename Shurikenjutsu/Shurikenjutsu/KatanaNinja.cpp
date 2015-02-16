@@ -61,19 +61,20 @@ void KatanaNinja::Shutdown()
 
 void KatanaNinja::RenderAttackLocations()
 {
-	if (InputManager::GetInstance()->IsRightMousePressed())
-	{
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
-		{
-			m_aimFrustrum->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
-		}
-	}
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
 			m_aimArrow->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
-			m_aimPole->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
+			m_aimArrow->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsRightMousePressed())
+	{
+		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		{
+			m_aimFrustrum->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
+			m_aimFrustrum->Render();
 		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
@@ -88,8 +89,8 @@ void KatanaNinja::RenderAttackLocations()
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_aimArrow->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
 			m_aimPole->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
+			m_aimPole->Render();
 		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
