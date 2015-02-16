@@ -3,6 +3,7 @@
 #include "FW1FontWrapper.h"
 #include "GraphicsEngine.h"
 #include "Globals.h"
+#include "ConsoleFunctions.h"
 
 GUIText::GUIText(){}
 GUIText::~GUIText(){}
@@ -40,7 +41,7 @@ void GUIText::Render()
 void GUIText::Shutdown()
 {
 	m_format->Release();
-	m_textLayout->Release();
+	m_layouts[0]->Release();
 }
 
 void GUIText::SetText(std::string p_text)
@@ -56,12 +57,21 @@ void GUIText::SetText(std::string p_text)
 
 	IDWriteFactory* wf = NULL;
 	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
-	
-	wf->CreateTextLayout(your_result, m_textLength, m_format, 0.0f, 0.0f, &m_textLayout);
-	m_textLayout->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
-	m_textLayout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-	m_textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 
+	if (m_layouts.size() > 0)
+	{
+		m_layouts[0]->Release();
+		m_layouts.clear();
+	}
+
+	IDWriteTextLayout* textLayout;
+
+	wf->CreateTextLayout(your_result, m_textLength, m_format, 0.0f, 0.0f, &textLayout);
+	textLayout->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
+	textLayout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+	textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+	m_layouts.push_back(textLayout);
+	
 	wf->Release();
 }
 
@@ -77,7 +87,7 @@ void GUIText::SetSize(float p_size)
 	DWRITE_TEXT_RANGE range;
 	range.length = m_textLength;
 	range.startPosition = 0;
-	m_textLayout->SetFontSize(p_size, range);
+	m_layouts[0]->SetFontSize(p_size, range);
 }
 
 void GUIText::SetColor(UINT32 p_color)
@@ -102,5 +112,5 @@ UINT32 GUIText::GetColor()
 
 IDWriteTextLayout* GUIText::GetLayout()
 {
-	return m_textLayout;
+	return m_layouts[0];
 }

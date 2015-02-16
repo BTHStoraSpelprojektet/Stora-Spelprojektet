@@ -2,6 +2,7 @@
 #define GUITEXT_H_
 
 #include <string>
+#include <vector>
 
 #include <D3D11.h>
 struct IDWriteTextLayout;
@@ -32,7 +33,8 @@ private:
 	int m_textLength;
 	UINT32 m_color;
 	IDWriteTextFormat* m_format;
-	IDWriteTextLayout* m_textLayout;
+	//IDWriteTextLayout* m_textLayout;
+	std::vector<IDWriteTextLayout*> m_layouts;
 };
 
 #endif
