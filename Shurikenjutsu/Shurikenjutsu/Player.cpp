@@ -345,23 +345,23 @@ void Player::CheckForSpecialAttack()
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_rangeSpecialAttack;
-	}
+			m_ability = m_rangeSpecialAttack;
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_meleeSpecialAttack;
-	}
+			m_ability = m_meleeSpecialAttack;
+		}
 	}
 	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_toolAbility;
+			m_ability = m_toolAbility;
+		}
 	}
-}
 }
 
 bool Player::CalculateDirection()
