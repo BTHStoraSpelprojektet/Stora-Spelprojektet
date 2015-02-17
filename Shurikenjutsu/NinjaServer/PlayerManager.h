@@ -67,6 +67,7 @@ private:
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
 	std::vector<Box> m_katanaBoundingBoxes;
 	std::vector<Box> m_tessenBoundingBoxes;
+	std::vector<Box> m_naginataBoundingBoxes;
 
 	//float m_gcd;
 	float m_playerHealth;
