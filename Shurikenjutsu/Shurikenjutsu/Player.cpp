@@ -80,7 +80,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	
 	m_aimFrustrum = new Object();
 	m_aimFrustrum->Initialize("../Shurikenjutsu/Models/Marker_ConeShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
-	
+	localPlayer = true;
 	return true;
 }
 
@@ -202,17 +202,18 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
 		SetTeam(Network::GetInstance()->GetMyPlayer().team);
+		SetGuID(Network::GetInstance()->GetMyPlayer().guid);
 		//SetPosition(DirectX::XMFLOAT3(Network::GetInstance()->GetMyPlayer().x, Network::GetInstance()->GetMyPlayer().y, Network::GetInstance()->GetMyPlayer().z));
 	}
 	
 	SetSpeed(m_originalSpeed);
 	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
 	{
-			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
-			{
-				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
-			}
+		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+		{
+			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
 		}
+	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -961,12 +962,15 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		m_healthbar->Render();
+		if (Network::GetInstance()->GetMyPlayer().guid == m_guid)
+		{
+			RenderAttackLocations();
+		}
 	}
 
 	m_dashParticles1->Render();
 	m_dashParticles2->Render();
 
-	RenderAttackLocations();
 
 	AnimatedObject::RenderPlayer(m_team);
 }

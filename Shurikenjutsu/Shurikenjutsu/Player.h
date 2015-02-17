@@ -123,5 +123,6 @@ protected:
 	Object* m_aimArrow;
 	Object* m_aimPole;
 	Object* m_aimFrustrum;
+	bool localPlayer;
 };
 #endif PLAYER
