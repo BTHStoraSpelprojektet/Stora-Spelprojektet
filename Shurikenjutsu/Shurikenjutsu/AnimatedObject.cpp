@@ -86,27 +86,27 @@ void AnimatedObject::RenderPlayer(int p_team)
 {
 	if (p_team == 1)
 	{
-		GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
+		GraphicsEngine::GetInstance()->RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 	}
 	else
 	{
-		GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_texture, m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
+		GraphicsEngine::GetInstance()->RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_texture, m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 	}	
 }
 
 void AnimatedObject::Render()
 {
-	GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
+	GraphicsEngine::GetInstance()->RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 }
 
 void AnimatedObject::RenderDepth()
 {
-	GraphicsEngine::RenderAnimatedDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_animationController.UpdateAnimation());
+	GraphicsEngine::GetInstance()->RenderAnimatedDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_animationController.UpdateAnimation());
 }
 
 void AnimatedObject::RenderOutlining()
 {
-	GraphicsEngine::RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaled(1.05f), m_animationController.GetBoneTransforms());
+	GraphicsEngine::GetInstance()->RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaled(1.05f), m_animationController.GetBoneTransforms());
 }
 
 void AnimatedObject::ChangeAnimationState(AnimationState p_newState)

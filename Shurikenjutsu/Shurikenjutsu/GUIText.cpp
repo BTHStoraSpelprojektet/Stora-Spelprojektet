@@ -10,10 +10,10 @@ GUIText::~GUIText(){}
 bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
 {
 	IDWriteFactory* wf = NULL;
-	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
+	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
 	
 	wf->CreateTextFormat(
-		L"Calibri",
+		L"Calibri", 
 		NULL,
 		DWRITE_FONT_WEIGHT_ULTRA_BOLD,
 		DWRITE_FONT_STYLE_NORMAL,
@@ -55,7 +55,7 @@ void GUIText::SetText(std::string p_text)
 	m_textLength = p_text.size();
 
 	IDWriteFactory* wf = NULL;
-	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
+	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
 	
 	wf->CreateTextLayout(your_result, m_textLength, m_format, 0.0f, 0.0f, &m_textLayout);
 	m_textLayout->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);

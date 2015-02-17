@@ -295,6 +295,11 @@ void ParticleEmitter::Shutdown()
 		delete m_mesh;
 		m_mesh = 0;
 	}
+	if (m_particleTexture != nullptr)
+	{
+		//m_particleTexture->Release();
+		m_particleTexture = nullptr;
+	}
 }
 
 void ParticleEmitter::Update()
@@ -1062,7 +1067,7 @@ void ParticleEmitter::UpdateBuffers()
 			{
 			//fadeIn(m_mesh[i], m_particleList[i], 0.5);
 
-			m_particleList[i].m_opacity = fadeIn(&m_mesh[i], &m_particleList[i], 0.001);
+			m_particleList[i].m_opacity = fadeIn(&m_mesh[i], &m_particleList[i], 0.001f);
 			//m_particleList[i].opacity = 1.0f;
 				
 			//if (m_particleList[i].m_timeSpecial>0.1f)
@@ -1140,7 +1145,7 @@ void ParticleEmitter::UpdateBuffers()
 	}
 
 	// Lock the dynamic vertex buffer.
-	if (FAILED(GraphicsEngine::GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+	if (FAILED(GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map particle buffer.");
 		return;
@@ -1153,7 +1158,7 @@ void ParticleEmitter::UpdateBuffers()
 	memcpy(vertex, (void*)m_mesh, (sizeof(ParticleVertex) * m_vertices));
 
 	// Unlock the vertex buffer.
-	GraphicsEngine::GetContext()->Unmap(m_vertexBuffer, 0);
+	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
 }
 
 ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
@@ -1183,7 +1188,7 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 		data.SysMemSlicePitch = 0;
 
 		ID3D11Texture2D* texture = NULL;
-		hr = GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
+		hr = GraphicsEngine::GetInstance()->GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
 		if (FAILED(hr))
 		{
 			ConsolePrintError("Failed creating CreateTexture2D - particleemmiter");
@@ -1194,7 +1199,7 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 		sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 		sRVDesc.Texture2D.MostDetailedMip = 0;
-		hr = GraphicsEngine::GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+		hr = GraphicsEngine::GetInstance()->GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
 		if (FAILED(hr))
 		{
 			ConsolePrintError("Failed creating shaderresource - particleemmiter");
