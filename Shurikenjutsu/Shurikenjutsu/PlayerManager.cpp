@@ -389,7 +389,6 @@ void PlayerManager::RemoveEnemyFromList(unsigned int p_index)
 			continue;
 		}
 		newList[index] = m_enemyList[i];
-		delete m_enemyList[i];
 		index++;
 	}
 	m_enemyList[p_index]->Shutdown();
