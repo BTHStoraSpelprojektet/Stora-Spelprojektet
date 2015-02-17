@@ -8,6 +8,7 @@
 #include "SpikeAbility.h"
 #include "FanBoomerangAbility.h"
 #include "InputManager.h"
+#include "AttackPredictionEditor.h"
 
 TessenNinja::TessenNinja(){}
 TessenNinja::~TessenNinja(){}
@@ -60,36 +61,41 @@ void TessenNinja::Shutdown()
 }
 void TessenNinja::RenderAttackLocations()
 {
-	m_aimSphere->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
-	m_aimArrow->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
-	m_aimPole->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
-
-	if (InputManager::GetInstance()->IsRightMousePressed())
-	{
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
-		{
-
-		}
-	}
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
+			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position);
 
+			m_aimFrustrum->Render();
 		}
 	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
-		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
 		{
+			m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
 
+			m_aimPole->Render();
+			m_aimArrow->Render();
 		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_aimSphere->SetScale(DirectX::XMFLOAT3(0.5f, m_aimSphere->GetScale().y, 0.5f));
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
+
+			m_aimArrow->Render();
+			m_aimPole->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+	{
+		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+			m_ape->SpinAttackBigSphere(m_aimSphere, m_position, 16.0f);
 			m_aimSphere->Render();
 		}
 	}
@@ -97,8 +103,9 @@ void TessenNinja::RenderAttackLocations()
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_aimSphere->SetScale(DirectX::XMFLOAT3(1.0f, m_aimSphere->GetScale().y, 1.0f));
+			m_ape->ThrowSphere(m_aimSphere, 5.0f);
 			m_aimSphere->Render();
 		}
 	}
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }

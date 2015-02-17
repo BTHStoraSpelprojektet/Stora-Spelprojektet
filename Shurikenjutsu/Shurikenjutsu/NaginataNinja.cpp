@@ -7,6 +7,7 @@
 #include "KunaiAbility.h"
 #include "StickyTrapAbility.h"
 #include "VolleyAbility.h"
+#include "AttackPredictionEditor.h"
 
 
 NaginataNinja::NaginataNinja(){}
@@ -60,21 +61,40 @@ void NaginataNinja::Shutdown()
 }
 void NaginataNinja::RenderAttackLocations()
 {
-	m_aimSphere->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
-	m_aimArrow->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
-	m_aimPole->SetPosition(DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.13f, InputManager::GetInstance()->Get3DMousePositionZ()));
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
-		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
+			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position);
 
+			m_aimFrustrum->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsRightMousePressed())
+	{
+		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		{
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
+
+			m_aimPole->Render();
+			m_aimArrow->Render();
 		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_aimSphere->SetScale(DirectX::XMFLOAT3(0.5f, m_aimSphere->GetScale().y, 0.5f));
+			m_ape->ThickRectanglePrediction(m_aimPole, m_attackDir, m_position, NAGINATASTAB_RANGE * 2);
+
+			m_aimPole->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+	{
+		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+			m_ape->ThrowSphere(m_aimSphere, 3.5f);
 			m_aimSphere->Render();
 		}
 	}
@@ -82,22 +102,9 @@ void NaginataNinja::RenderAttackLocations()
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_aimSphere->SetScale(DirectX::XMFLOAT3(1.0f, m_aimSphere->GetScale().y, 1.0f));
+			m_ape->ThrowSphere(m_aimSphere, 7.0f);
 			m_aimSphere->Render();
 		}
 	}
-	if (InputManager::GetInstance()->IsRightMousePressed())
-	{
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
-		{
-
-		}
-	}
-	if (InputManager::GetInstance()->IsLeftMousePressed())
-	{
-		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
-		{
-
-		}
-	}
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }

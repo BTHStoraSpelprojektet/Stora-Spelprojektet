@@ -8,7 +8,6 @@
 #include "SmokeBombAbility.h"
 #include "InputManager.h"
 #include "AttackPredictionEditor.h"
-//#include "StickyTrapAbility.h"
 
 KatanaNinja::KatanaNinja(){}
 KatanaNinja::~KatanaNinja(){}
@@ -62,12 +61,13 @@ void KatanaNinja::Shutdown()
 
 void KatanaNinja::RenderAttackLocations()
 {
-	GraphicsEngine::TurnOnAlphaBlending();
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
 			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position);
+
 			m_aimFrustrum->Render();
 		}
 	}
@@ -75,20 +75,7 @@ void KatanaNinja::RenderAttackLocations()
 	{
 		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
 		{
-			DirectX::XMFLOAT3 mousePos3D = DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.03f, InputManager::GetInstance()->Get3DMousePositionZ());
-			DirectX::XMFLOAT3 vectorToMouse = DirectX::XMFLOAT3(mousePos3D.x - m_position.x, 0.03f, mousePos3D.z - m_position.z);
-			float poleLength = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
-			DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / poleLength, 0.03f, vectorToMouse.z / poleLength);
-			float yaw = atan2(m_attackDir.x, m_attackDir.z);
-
-			m_aimArrow->SetPosition(DirectX::XMFLOAT3(mousePos3D));
-			m_aimPole->SetPosition(DirectX::XMFLOAT3(m_position.x + vectorToMouseNorm.x * (poleLength * 0.5f), 0.03f, m_position.z + vectorToMouseNorm.z * (poleLength * 0.5f)));
-
-			m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
-			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
-
-			m_aimArrow->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-			m_aimPole->SetScale(DirectX::XMFLOAT3(poleLength * 10.0f, 1.0f, 1.0f));
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
 
 			m_aimPole->Render();
 			m_aimArrow->Render();
@@ -98,17 +85,7 @@ void KatanaNinja::RenderAttackLocations()
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			DirectX::XMFLOAT3 mousePos3D = DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.03f, InputManager::GetInstance()->Get3DMousePositionZ());
-			DirectX::XMFLOAT3 vectorToMouse = DirectX::XMFLOAT3(mousePos3D.x - m_position.x, 0.03f, mousePos3D.z - m_position.z);
-			float poleLength = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
-			DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / poleLength, 0.03f, vectorToMouse.z / poleLength);
-			float yaw = atan2(m_attackDir.x, m_attackDir.z);
-
-			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
-
-			m_aimPole->SetScale(DirectX::XMFLOAT3(9.0f * 10.0f, 1.0f, 5.0f));
-	
-			m_aimPole->SetPosition(DirectX::XMFLOAT3(m_position.x + vectorToMouseNorm.x * 4.5f, 0.03f, m_position.z + vectorToMouseNorm.z * 4.5f));
+			m_ape->ThickRectanglePrediction(m_aimPole, m_attackDir, m_position, 10.0f);
 
 			m_aimPole->Render();
 		}
@@ -117,20 +94,7 @@ void KatanaNinja::RenderAttackLocations()
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			DirectX::XMFLOAT3 mousePos3D = DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.03f, InputManager::GetInstance()->Get3DMousePositionZ());
-			DirectX::XMFLOAT3 vectorToMouse = DirectX::XMFLOAT3(mousePos3D.x - m_position.x, 0.03f, mousePos3D.z - m_position.z);
-			float poleLength = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
-			DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / poleLength, 0.03f, vectorToMouse.z / poleLength);
-			float yaw = atan2(m_attackDir.x, m_attackDir.z);
-
-			m_aimArrow->SetPosition(DirectX::XMFLOAT3(mousePos3D));
-			m_aimPole->SetPosition(DirectX::XMFLOAT3(m_position.x + vectorToMouseNorm.x * (poleLength * 0.5f), 0.03f, m_position.z + vectorToMouseNorm.z * (poleLength * 0.5f)));
-
-			m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
-			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
-
-			m_aimArrow->SetScale(DirectX::XMFLOAT3(5.0f, 1.0f, 5.0f));
-			m_aimPole->SetScale(DirectX::XMFLOAT3(poleLength * 10.0f, 1.0f, 5.0f));
+			m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
 
 			m_aimPole->Render();
 			m_aimArrow->Render();
@@ -140,12 +104,9 @@ void KatanaNinja::RenderAttackLocations()
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			DirectX::XMFLOAT3 mousePos3D = DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.03f, InputManager::GetInstance()->Get3DMousePositionZ());
-
-			m_aimSphere->SetPosition(mousePos3D);
-			m_aimSphere->SetScale(DirectX::XMFLOAT3(7.0f, m_aimSphere->GetScale().y, 7.0f));
+			m_ape->ThrowSphere(m_aimSphere, 7.0f);
 			m_aimSphere->Render();
 		}
 	}
-	GraphicsEngine::TurnOffAlphaBlending();
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }
