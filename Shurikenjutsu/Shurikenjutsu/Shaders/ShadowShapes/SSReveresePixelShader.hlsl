@@ -1,8 +1,7 @@
 Texture2D m_shadowMap : register(t0);
+Texture2D m_texture : register(t1);
 
 SamplerState m_sampler : register(s);
-
-Texture2D m_texture : register(t0);
 
 // Vertex structure.
 struct Input
@@ -81,5 +80,5 @@ float4 main(Input p_input) : SV_Target
 	}
 
 	// Return shaded pixel.
-	return float4(0.1f * textureColor.x, 0.1f * textureColor.y, 0.1f * textureColor.z, 0.75f - shadowSum);
+	return float4(textureColor.x, textureColor.y, textureColor.z, 0.75f - shadowSum);
 }

@@ -735,7 +735,7 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap)
+void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(Vertex);
@@ -750,7 +750,8 @@ void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Bu
 
 	UpdateReversedShadowMatrices(p_context);
 	p_context->PSSetShaderResources(0, 1, &p_visibilityMap);
-	p_context->PSSetSamplers(0, 1, &m_samplerShadowMapState);
+	p_context->PSSetShaderResources(1, 1, &p_texture);
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
 
 	p_context->Draw(p_numberOfVertices, 0);
 }

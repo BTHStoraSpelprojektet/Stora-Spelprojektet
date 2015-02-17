@@ -4,6 +4,7 @@
 
 #include "ConsoleFunctions.h"
 #include <D3Dcompiler.h>
+#include "TextureLibrary.h"
 
 VisibilityComputer& VisibilityComputer::GetInstance()
 {
@@ -180,6 +181,12 @@ void VisibilityComputer::Shutdown()
 	{
 		m_matrixBuffer->Release();
 		m_matrixBuffer = 0;
+	}
+
+	if (m_texture)
+	{
+		m_texture->Release();
+		m_texture = 0;
 	}
 }
 
@@ -392,8 +399,13 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
+	if (!m_texture)
+	{
+		m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/shadowstuff.png");
+	}
+
 	// Render the quad to reverse project the polygon onto.
-	GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget());
+	GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
 
 	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }
