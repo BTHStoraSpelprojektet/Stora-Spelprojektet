@@ -1017,6 +1017,8 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 		{
 			ConsolePrintError("Failed creating shaderresource - particleemmiter");
 		}
+
+		texture->Release();
 	}
 
 	return textureSRV;
