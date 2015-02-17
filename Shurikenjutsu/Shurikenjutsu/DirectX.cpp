@@ -312,14 +312,10 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 
 void DirectXWrapper::Shutdown()
 {
-	m_context->ClearState();
-	m_context->Flush();
-
-	m_device->Release();
-	m_context->Release();
-
-	m_device = nullptr;
-	m_context = nullptr;
+	if (m_swapChain)
+	{
+		m_swapChain->SetFullscreenState(false, NULL);
+	}
 
 	m_outliningNOTEQUAL->Release();
 	m_outliningALWAYS->Release();
@@ -331,7 +327,6 @@ void DirectXWrapper::Shutdown()
 	m_depthStencilOutlining->Release();
 	m_depthStencil->Release();
 	m_renderTarget->Release();
-	m_swapChain->Release();
 
 	if (m_alphaDisabled != nullptr)
 	{
@@ -345,9 +340,16 @@ void DirectXWrapper::Shutdown()
 		m_alphaEnabled = nullptr;
 	}
 
+	m_context->ClearState();
+	m_context->Flush();
 
+	m_context->Release();
+	m_device->Release();
 
-	
+	m_context = nullptr;
+	m_device = nullptr;	
+
+	m_swapChain->Release();
 
 	d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY | D3D11_RLDO_DETAIL);
 	d3dDebug->Release();
