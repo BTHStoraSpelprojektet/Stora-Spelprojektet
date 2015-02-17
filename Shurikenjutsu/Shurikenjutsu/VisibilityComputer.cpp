@@ -144,7 +144,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 	}
 
 	UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
-	m_renderTarget.Initialize(GraphicsEngine::GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+	m_renderTarget.Initialize(GraphicsEngine::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
 	return true;
@@ -248,7 +248,7 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 	CalculateVisibilityPolygon(p_viewerPosition, p_device);
 
 	// Reverse the polygon.
-	CalculateReversedVisibilityPolygon(GraphicsEngine::GetContext());
+	CalculateReversedVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 }
 
 void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
@@ -315,7 +315,7 @@ void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext*
 
 	p_context->Draw(m_vertices.size(), 0);
 
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
 Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segment)
@@ -390,12 +390,12 @@ inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewe
 
 void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
-	GraphicsEngine::TurnOnAlphaBlending();
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	// Render the quad to reverse project the polygon onto.
-	GraphicsEngine::RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget());
+	GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget());
 
-	GraphicsEngine::TurnOffAlphaBlending();
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }
 
 void VisibilityComputer::UpdatePolygonMatrices(ID3D11DeviceContext* p_context)
@@ -520,7 +520,7 @@ void VisibilityComputer::QuickSortAngles(std::vector<PolygonPoint>& p_list, int 
 void VisibilityComputer::UpdateTextureSize(int p_width, int p_height)
 {
 	m_renderTarget.Shutdown();
-	m_renderTarget.Initialize(GraphicsEngine::GetDevice(), p_width, p_height);
+	m_renderTarget.Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_width, p_height);
 }
 
 void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
@@ -559,7 +559,7 @@ void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
 	vertexData.SysMemSlicePitch = 0;
 
 	// Create the vertex buffer.
-	GraphicsEngine::GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_quadMesh);
+	GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_quadMesh);
 }
 
 void VisibilityComputer::SetWorldPolygonMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

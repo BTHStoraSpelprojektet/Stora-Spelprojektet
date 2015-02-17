@@ -21,7 +21,7 @@ void DebugLineList::AddLine(DirectX::XMFLOAT3 p_startPoint, DirectX::XMFLOAT3 p_
 	m_lines.push_back(p_startPoint);
 	m_lines.push_back(p_endPoint);
 
-	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetDevice(), m_lines);
+	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetInstance()->GetDevice(), m_lines);
 	m_vertices = m_lines.size();
 }
 
@@ -33,7 +33,7 @@ void DebugLineList::RemoveLine(int p_index)
 
 void DebugLineList::Render()
 {
-	GraphicsEngine::RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
+	GraphicsEngine::GetInstance()->RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
 }
 
 void DebugLineList::UpdateWorldMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

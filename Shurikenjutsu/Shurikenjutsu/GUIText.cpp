@@ -11,7 +11,7 @@ GUIText::~GUIText(){}
 bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
 {
 	IDWriteFactory* wf = NULL;
-	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
+	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
 	
 	wf->CreateTextFormat(
 		L"Calibri",
@@ -56,8 +56,8 @@ void GUIText::SetText(std::string p_text)
 	m_textLength = p_text.size();
 
 	IDWriteFactory* wf = NULL;
-	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
-
+	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
+	
 	if (m_layouts.size() > 0)
 	{
 		m_layouts[0]->Release();
@@ -71,7 +71,7 @@ void GUIText::SetText(std::string p_text)
 	textLayout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 	textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 	m_layouts.push_back(textLayout);
-	
+
 	wf->Release();
 }
 

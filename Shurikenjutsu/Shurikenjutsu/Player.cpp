@@ -67,8 +67,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_dashParticles1 = new ParticleEmitter();
 	m_dashParticles2 = new ParticleEmitter();
-	m_dashParticles1->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
-	m_dashParticles2->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
+	m_dashParticles1->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
+	m_dashParticles2->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
 
 	m_aimSphere = new Object();
 	m_aimSphere->Initialize("../Shurikenjutsu/Models/Marker_CircleShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
@@ -199,7 +199,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	if (m_updateVisibility)
 	{
 		m_updateVisibility = false;
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 	}
 
 	// Check values from server
@@ -280,7 +280,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		}
 
 		// If we dashed, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 		}
 
 		else
@@ -302,7 +302,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		SetCalculatePlayerPosition();
 
 		// If we moved, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 	}
 	m_playerSphere.m_position = m_position;
 	

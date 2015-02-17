@@ -39,7 +39,7 @@ bool DebugBox::Initialize(DirectX::XMFLOAT3 p_centrum, float p_width, float p_de
 	lines.push_back(DirectX::XMFLOAT3(p_centrum.x - p_width / 2.0f, p_centrum.y + p_height, p_centrum.z + p_depth / 2.0f));
 	lines.push_back(DirectX::XMFLOAT3(p_centrum.x - p_width / 2.0f, p_centrum.y + p_height, p_centrum.z - p_depth / 2.0f));
 
-	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetDevice(), lines);
+	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetInstance()->GetDevice(), lines);
 	m_vertices = lines.size();
 	m_color = p_color;
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
@@ -58,7 +58,7 @@ void DebugBox::Shutdown()
 
 void DebugBox::Render()
 {
-	GraphicsEngine::RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
+	GraphicsEngine::GetInstance()->RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
 }
 
 void DebugBox::UpdateWorldMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

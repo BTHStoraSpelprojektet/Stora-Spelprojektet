@@ -674,6 +674,12 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 void SceneShader::Shutdown()
 {
+#if defined(_DEBUG) || defined(PROFILE)
+	// Only works if device is created with the D3D10 or D3D11 debug layer, or when attached to PIX for Windows
+	const char c_szName[] = "PIXELSHADER.DEBUG";
+	m_pixelShader->SetPrivateData(WKPDID_D3DDebugObjectName,
+		sizeof(c_szName) - 1, c_szName);
+#endif
 	m_vertexShader->Release();
 	m_instanceShader->Release();
 	m_animatedVertexShader->Release();
@@ -681,7 +687,11 @@ void SceneShader::Shutdown()
 	m_reversedShadowPixelShader->Release();
 	m_lineVertexShader->Release();
 	m_linePixelShader->Release();
+	m_vertexShaderOutlining->Release();
+	m_pixelShaderOutlining->Release();
+	m_layoutOutlining->Release();
 	m_layout->Release();
+	m_instanceLayout->Release();
 	m_animatedLayout->Release();
 	m_lineLayout->Release();
 	m_samplerState->Release();
@@ -693,6 +703,7 @@ void SceneShader::Shutdown()
 		m_shadowMap->Release();
 	}
 	m_matrixBuffer->Release();
+	m_matrixBufferOutlining->Release();
 	m_fogBuffer->Release();
 	m_animationMatrixBuffer->Release();
 	m_frameBuffer->Release();
