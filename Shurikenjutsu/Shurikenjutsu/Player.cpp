@@ -70,16 +70,16 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dashParticles2->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
 
 	m_aimSphere = new Object();
-	m_aimSphere->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+	m_aimSphere->Initialize("../Shurikenjutsu/Models/Marker_CircleShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 
 	m_aimArrow = new Object();
-	m_aimArrow->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+	m_aimArrow->Initialize("../Shurikenjutsu/Models/Marker_ArrowEndShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 
 	m_aimPole = new Object();
-	m_aimPole->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+	m_aimPole->Initialize("../Shurikenjutsu/Models/Marker_ArrowStartShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 	
 	m_aimFrustrum = new Object();
-	m_aimFrustrum->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+	m_aimFrustrum->Initialize("../Shurikenjutsu/Models/Marker_ConeShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 	
 	return true;
 }
@@ -204,20 +204,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		SetTeam(Network::GetInstance()->GetMyPlayer().team);
 		//SetPosition(DirectX::XMFLOAT3(Network::GetInstance()->GetMyPlayer().x, Network::GetInstance()->GetMyPlayer().y, Network::GetInstance()->GetMyPlayer().z));
 	}
-
-	// Move
-
-
-	//////////////////////*********************************************************************************************
-	////	VARFÖR UPPDATERAS MOVE TVÅ GÅNGER?? HÄNDER ÄVEN LÄNGRE NER
-	////    Detta löser även problemet med att man rör sig efter man är död.
-	////	Speeden var dock tvungen att dubblas nu när den bara uppdateras en gång per update.
-	////////////////////**********************************************************************
-	/*if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
-	{
-		SetCalculatePlayerPosition();
-	}*/
-
+	
 	SetSpeed(m_originalSpeed);
 	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
 	{
@@ -980,6 +967,7 @@ void Player::Render()
 	m_dashParticles2->Render();
 
 	RenderAttackLocations();
+
 	AnimatedObject::RenderPlayer(m_team);
 }
 
@@ -1108,7 +1096,4 @@ void Player::SetOriginalSpeed(float p_speed)
 	m_originalSpeed = p_speed;
 }
 
-void Player::RenderAttackLocations()
-{
-	
-}
+void Player::RenderAttackLocations(){}
