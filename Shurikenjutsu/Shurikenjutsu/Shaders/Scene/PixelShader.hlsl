@@ -86,7 +86,7 @@ float4 main(Input p_input) : SV_Target
 	if ((saturate(shadowMapCoordinates.x) == shadowMapCoordinates.x) && (saturate(shadowMapCoordinates.y) == shadowMapCoordinates.y))
 	{
 		// Sample the shadow map using PCF.
-		float depth[9];
+		float depth[17];
 		depth[0] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates).r;
 		depth[1] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(0.0f, 1.0f / 1152.0f)).r;
 		depth[2] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(1.0f / 2048.0f, 1.0f / 1152.0f)).r;
@@ -96,6 +96,14 @@ float4 main(Input p_input) : SV_Target
 		depth[6] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 2048.0f, -1.0f / 1152.0f)).r;
 		depth[7] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 2048.0f, 0.0f)).r;
 		depth[8] = m_shadowMap.Sample(m_samplerShadowMap, shadowMapCoordinates + float2(-1.0f / 2048.0f, 1.0f / 1152.0f)).r;
+		depth[9] = m_shadowMap.Sample(m_sampler, shadowMapCoordinates + float2(0.0f, 2.0f / 1152.0f)).r;
+		depth[10] = m_shadowMap.Sample(m_sampler, shadowMapCoordinates + float2(2.0f / 2048.0f, 2.0f / 1152.0f)).r;
+		depth[11] = m_shadowMap.Sample(m_sampler, shadowMapCoordinates + float2(2.0f / 2048.0f, 0.0f)).r;
+		depth[12] = m_shadowMap.Sample(m_sampler, shadowMapCoordinates + float2(2.0f / 2048.0f, -2.0f / 1152.0f)).r;
+		depth[13] = m_shadowMap.Sample(m_sampler, shadowMapCoordinates + float2(0.0f, -2.0f / 1152.0f)).r;
+		depth[14] = m_shadowMap.Sample(m_sampler, shadowMapCoordinates + float2(-2.0f / 2048.0f, -2.0f / 1152.0f)).r;
+		depth[15] = m_shadowMap.Sample(m_sampler, shadowMapCoordinates + float2(-2.0f / 2048.0f, 0.0f)).r;
+		depth[16] = m_shadowMap.Sample(m_sampler, shadowMapCoordinates + float2(-2.0f / 2048.0f, 2.0f / 1152.0f)).r;
 
 		// Calculate the depth of the light.
 		float lightDepth = p_input.m_lightPositionHomogenous.z - 0.0001f;
@@ -110,7 +118,15 @@ float4 main(Input p_input) : SV_Target
 		shadowSum += lightDepth < depth[6];
 		shadowSum += lightDepth < depth[7];
 		shadowSum += lightDepth < depth[8];
-		shadowSum = shadowSum / 9.0f;
+		shadowSum += lightDepth < depth[9];
+		shadowSum += lightDepth < depth[10];
+		shadowSum += lightDepth < depth[11];
+		shadowSum += lightDepth < depth[12];
+		shadowSum += lightDepth < depth[13];
+		shadowSum += lightDepth < depth[14];
+		shadowSum += lightDepth < depth[15];
+		shadowSum += lightDepth < depth[16];
+		shadowSum = shadowSum / 17.0f;
 	}
 
 	// Add light.
