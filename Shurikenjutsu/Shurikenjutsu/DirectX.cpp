@@ -547,7 +547,7 @@ void DirectXWrapper::SetDepthStateForParticles()
 }
 
 void DirectXWrapper::DoReportLiveObjects()
-{	/*
+{	
 	if (SUCCEEDED(m_device->QueryInterface(__uuidof(ID3D11Debug), (void**)&d3dDebug)))
 	{
 		ID3D11InfoQueue *d3dInfoQueue = nullptr;
@@ -572,7 +572,7 @@ void DirectXWrapper::DoReportLiveObjects()
 			d3dInfoQueue->Release();
 		}
 		d3dDebug->Release();
-	}*/
+	}
 }
 
 void DirectXWrapper::SetDebugName(ID3D11DeviceChild* child, const std::string& name)
