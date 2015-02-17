@@ -4,9 +4,6 @@
 
 #pragma comment(lib, "dxgi.lib")
 
-#include <atlcomcli.h>
-#include <atlbase.h>
-
 bool DirectXWrapper::Initialize(HWND p_handle)
 {
 	m_depthStencilViewOutlining = NULL;
@@ -348,9 +345,10 @@ void DirectXWrapper::Shutdown()
 
 
 	
-
+#ifdef _DEBUG
 	d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY | D3D11_RLDO_DETAIL);
 	d3dDebug->Release();
+#endif
 }
 
 void DirectXWrapper::Clear()
@@ -547,10 +545,7 @@ void DirectXWrapper::SetDepthStateForParticles()
 }
 
 void DirectXWrapper::DoReportLiveObjects()
-{
-	//ATL::CComPtr<ID3D11Debug> pDebug;
-	//HRESULT hr = m_device->QueryInterface(IID_PPV_ARGS(&pDebug));
-	
+{	/*
 	if (SUCCEEDED(m_device->QueryInterface(__uuidof(ID3D11Debug), (void**)&d3dDebug)))
 	{
 		ID3D11InfoQueue *d3dInfoQueue = nullptr;
@@ -575,11 +570,11 @@ void DirectXWrapper::DoReportLiveObjects()
 			d3dInfoQueue->Release();
 		}
 		d3dDebug->Release();
-	}
+	}*/
 }
 
 void DirectXWrapper::SetDebugName(ID3D11DeviceChild* child, const std::string& name)
 {
-	if (child != nullptr)
-		child->SetPrivateData(WKPDID_D3DDebugObjectName, name.size(), name.c_str());
+	//if (child != nullptr)
+		//child->SetPrivateData(WKPDID_D3DDebugObjectName, name.size(), name.c_str());
 }
