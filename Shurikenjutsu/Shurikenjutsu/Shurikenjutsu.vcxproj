@@ -87,6 +87,7 @@
     <ClCompile Include="Ability.cpp" />
     <ClCompile Include="AbilityBar.cpp" />
     <ClCompile Include="AnimationControl.cpp" />
+    <ClCompile Include="AttackPredictionEditor.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChooseState.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Ability.h" />
     <ClInclude Include="AbilityBar.h" />
     <ClInclude Include="AnimationControl.h" />
+    <ClInclude Include="AttackPredictionEditor.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ChooseState.h" />

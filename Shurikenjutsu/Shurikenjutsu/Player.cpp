@@ -10,6 +10,7 @@
 #include "AnimationControl.h"
 #include "VisibilityComputer.h"
 #include "StickyTrap.h"
+#include "AttackPredictionEditor.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -34,7 +35,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	}
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
-	m_inputManager = InputManager::GetInstance();
 	
 	m_noAbility = new Ability();
 
@@ -67,14 +67,56 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	m_dashParticles1 = new ParticleEmitter();
 	m_dashParticles2 = new ParticleEmitter();
-	m_dashParticles1->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
-	m_dashParticles2->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
+	m_dashParticles1->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
+	m_dashParticles2->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
 
+	m_aimSphere = new Object();
+	m_aimSphere->Initialize("../Shurikenjutsu/Models/Marker_CircleShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+
+	m_aimArrow = new Object();
+	m_aimArrow->Initialize("../Shurikenjutsu/Models/Marker_ArrowEndShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+
+	m_aimPole = new Object();
+	m_aimPole->Initialize("../Shurikenjutsu/Models/Marker_ArrowStartShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+	
+	m_aimFrustrum = new Object();
+	m_aimFrustrum->Initialize("../Shurikenjutsu/Models/Marker_ConeShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
+
+	m_ape = new AttackPredictionEditor();
 	return true;
 }
 
 void Player::Shutdown()
 {
+	if (m_ape != nullptr)
+	{
+		delete m_ape;
+		m_ape = 0;
+	}
+	if (m_aimSphere != nullptr)
+	{
+		m_aimSphere->Shutdown();
+		delete m_aimSphere;
+		m_aimSphere = nullptr;
+	}
+	if (m_aimArrow != nullptr)
+	{
+		m_aimArrow->Shutdown();
+		delete m_aimArrow;
+		m_aimArrow = nullptr;
+	}
+	if (m_aimPole != nullptr)
+	{
+		m_aimPole->Shutdown();
+		delete m_aimPole;
+		m_aimPole = nullptr;
+	}
+	if (m_aimFrustrum != nullptr)
+	{
+		m_aimFrustrum->Shutdown();
+		delete m_aimFrustrum;
+		m_aimFrustrum = nullptr;
+	}
 	AnimatedObject::Shutdown();
 	if (m_noAbility != nullptr)
 	{
@@ -157,7 +199,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	if (m_updateVisibility)
 	{
 		m_updateVisibility = false;
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 	}
 
 	// Check values from server
@@ -167,30 +209,18 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		SetMaxHealth(Network::GetInstance()->GetMyPlayer().maxHP);
 		SetIsAlive(Network::GetInstance()->GetMyPlayer().isAlive);
 		SetTeam(Network::GetInstance()->GetMyPlayer().team);
+		SetGuID(Network::GetInstance()->GetMyPlayer().guid);
 		//SetPosition(DirectX::XMFLOAT3(Network::GetInstance()->GetMyPlayer().x, Network::GetInstance()->GetMyPlayer().y, Network::GetInstance()->GetMyPlayer().z));
 	}
-
-	// Move
-
-
-	//////////////////////*********************************************************************************************
-	////	VARFÖR UPPDATERAS MOVE TVÅ GÅNGER?? HÄNDER ÄVEN LÄNGRE NER
-	////    Detta löser även problemet med att man rör sig efter man är död.
-	////	Speeden var dock tvungen att dubblas nu när den bara uppdateras en gång per update.
-	////////////////////**********************************************************************
-	/*if (CalculateDirection() || Network::GetInstance()->ConnectedNow())
-	{
-		SetCalculatePlayerPosition();
-	}*/
-
+	
 	SetSpeed(m_originalSpeed);
 	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
 	{
-			if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
-			{
-				SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
-			}
+		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+		{
+			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
 		}
+	}
 
 	// Don't update player if he is dead
 	if (!m_isAlive)
@@ -250,7 +280,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		}
 
 		// If we dashed, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 		}
 
 		else
@@ -272,7 +302,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		SetCalculatePlayerPosition();
 
 		// If we moved, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 	}
 	m_playerSphere.m_position = m_position;
 	
@@ -339,21 +369,21 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 void Player::CheckForSpecialAttack()
 {
-	if (m_inputManager->IsKeyClicked(VkKeyScan('e')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('e')))
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
 			m_ability = m_rangeSpecialAttack;
 		}
 	}
-	if (m_inputManager->IsKeyClicked(VkKeyScan('q')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
 			m_ability = m_meleeSpecialAttack;
 		}
 	}
-	if (m_inputManager->IsKeyClicked(VkKeyScan('r')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
@@ -372,25 +402,25 @@ bool Player::CalculateDirection()
 	z = 0;
 	//m_playerPrevPos = m_position;
 
-	if (m_inputManager->IsKeyPressed(VkKeyScan('w')))
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('w')))
 	{
 		z += 1;
 		moved = true;
 	}
 
-	if (m_inputManager->IsKeyPressed(VkKeyScan('a')))
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('a')))
 	{
 		x += -1;
 		moved = true;
 	}
 
-	if (m_inputManager->IsKeyPressed(VkKeyScan('s')))
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('s')))
 	{
 		z += -1;
 		moved = true;
 	}
 
-	if (m_inputManager->IsKeyPressed(VkKeyScan('d')))
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('d')))
 	{
 		x += 1;
 		moved = true;
@@ -939,10 +969,15 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		m_healthbar->Render();
+		if (Network::GetInstance()->GetMyPlayer().guid == m_guid)
+		{
+			RenderAttackLocations();
+		}
 	}
 
 	m_dashParticles1->Render();
 	m_dashParticles2->Render();
+
 
 	AnimatedObject::RenderPlayer(m_team);
 }
@@ -1071,3 +1106,5 @@ void Player::SetOriginalSpeed(float p_speed)
 {
 	m_originalSpeed = p_speed;
 }
+
+void Player::RenderAttackLocations(){}

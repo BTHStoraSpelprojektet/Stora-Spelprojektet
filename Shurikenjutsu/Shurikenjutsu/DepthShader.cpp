@@ -277,11 +277,15 @@ void DepthShader::Shutdown()
 {
 	m_vertexShader->Release();
 	m_pixelShader->Release();
+	m_instanceShader->Release();
 	m_layout->Release();
+	m_instanceLayout->Release();
 	m_rasterizer->Release();
 	m_samplerState->Release();
-
-	m_instanceShader->Release();
+	m_animatedVertexShader->Release();
+	m_animatedLayout->Release();
+	m_animationMatrixBuffer->Release();
+	m_matrixBuffer->Release();
 }
 
 void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture)

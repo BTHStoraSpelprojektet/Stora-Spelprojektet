@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Source Files\Core">
-      <UniqueIdentifier>{99c94013-ae70-4a11-aefe-95183f7a9b65}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{bd49b8cf-8bf0-4f38-b691-026f1aac2144}</UniqueIdentifier>
     </Filter>
@@ -38,9 +35,6 @@
     </Filter>
     <Filter Include="Header Files\Core\Input">
       <UniqueIdentifier>{d6518540-bebd-4645-b9bf-808ccb02fc68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Input">
-      <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Object">
       <UniqueIdentifier>{fefb1194-3e7f-4004-a760-76dc6ad184ad}</UniqueIdentifier>
@@ -83,9 +77,6 @@
     </Filter>
     <Filter Include="Header Files\Graphics\Particles">
       <UniqueIdentifier>{e7ff7528-8b45-486b-b4cf-e03973d7aad8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Camera">
-      <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Core\Camera">
       <UniqueIdentifier>{6105dfd1-efa5-4bde-94c1-581b7b9720a2}</UniqueIdentifier>
@@ -158,6 +149,15 @@
     </Filter>
     <Filter Include="Source Files\Object\Tools">
       <UniqueIdentifier>{d6f8df41-a2e5-446e-b07c-e719b8e05b34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{99c94013-ae70-4a11-aefe-95183f7a9b65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Input">
+      <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Camera">
+      <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -448,6 +448,9 @@
     </ClCompile>
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="AttackPredictionEditor.cpp">
+      <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -750,6 +753,9 @@
     </ClInclude>
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Header Files\Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackPredictionEditor.h">
+      <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
