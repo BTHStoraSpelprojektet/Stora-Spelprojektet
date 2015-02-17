@@ -298,9 +298,9 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
-
+	
 	// Range attack
-	if (InputManager::GetInstance()->IsRightMousePressed())
+	if (InputManager::GetInstance()->IsRightMouseClicked())
 	{
 		// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
 		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
@@ -310,12 +310,12 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 
 	// Melee attack
-	if (InputManager::GetInstance()->IsLeftMousePressed())
+	if (InputManager::GetInstance()->IsLeftMouseClicked())
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_meleeAttack;
-	}
+			m_ability = m_meleeAttack;
+		}
 	}
 
 
@@ -325,43 +325,41 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
-	{
-		// Play ability animation if we did any
-		DoAnimation();
+		{
+			// Play ability animation if we did any
+			DoAnimation();
 
 			// Set global cooldown
 			m_globalCooldown = m_maxGlobalCooldown;
+		}
 	}
-	}
-
-
 
 	UpdateAbilityBar();
 }
 
 void Player::CheckForSpecialAttack()
 {
-	if (m_inputManager->IsKeyPressed(VkKeyScan('e')))
+	if (m_inputManager->IsKeyClicked(VkKeyScan('e')))
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_rangeSpecialAttack;
+			m_ability = m_rangeSpecialAttack;
+		}
 	}
-	}
-	if (m_inputManager->IsKeyPressed(VkKeyScan('q')))
+	if (m_inputManager->IsKeyClicked(VkKeyScan('q')))
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_meleeSpecialAttack;
+			m_ability = m_meleeSpecialAttack;
+		}
 	}
-	}
-	if (m_inputManager->IsKeyPressed(VkKeyScan('r')))
+	if (m_inputManager->IsKeyClicked(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-		m_ability = m_toolAbility;
+			m_ability = m_toolAbility;
+		}
 	}
-}
 }
 
 bool Player::CalculateDirection()

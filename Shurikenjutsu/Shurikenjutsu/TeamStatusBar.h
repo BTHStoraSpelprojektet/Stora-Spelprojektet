@@ -40,6 +40,7 @@ private:
 	float m_startOffset;
 	DirectX::XMFLOAT3 m_originPos;
 	bool m_addedMyself;
+	int m_myTeam;
 
 	GUIText m_redScore;
 	GUIText m_blueScore;
@@ -49,6 +50,7 @@ private:
 	GUIText m_timerText;
 
 	GUIText m_fpsTimer;
+	GUIText m_pingText;
 };
 
 #endif

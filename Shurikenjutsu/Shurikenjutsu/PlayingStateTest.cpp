@@ -171,13 +171,13 @@ void PlayingStateTest::Shutdown()
 
 GAMESTATESWITCH PlayingStateTest::Update()
 {
-	// Check if new level have started
+	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
 		std::string levelName = Network::GetInstance()->LevelName();
 		Network::GetInstance()->SetHaveUpdateNewLevel();
 		Shutdown();
-		//Initialize(levelName);
+
 		return GAMESTATESWITCH_CHOOSENINJA;
 	}
 
@@ -202,12 +202,13 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Get picking data.
 	BasicPicking();
 
-	// Update every object.
+	// Update every scene object.
 	m_objectManager->Update();
 
+	// Update health bars.
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
-	// Update frustum
+	// Run debug checks.
 	if (FLAG_DEBUG == 1)
 	{
 		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')))
@@ -221,6 +222,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		}
 	}
 
+	// Update the frustum.
 	if (m_updateFrustum)
 	{
 		m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
@@ -228,19 +230,19 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		m_playerManager->UpdateFrustum(m_frustum);
 	}
 
+	// Update the minimap.
 	m_minimap->Update(m_playerManager->GetPlayerPosition());
 	MinimapUpdatePos(m_minimap);
-
 	m_minimap->SetPlayerTexture(m_playerManager->GetPlayerTeam());
 	for (int i = 0; i < 7; i++)
 	{
 		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
 	}
 
-	// Update Team status bar
+	// Update the team status bar.
 	m_teamStatusBar->Update();
 
-	// Update Directional Light's camera position
+	// Update the directional light camera position.
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	
 	OutliningRays();
@@ -267,7 +269,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
-	// Countdown
+	// Update the countdown.
 	m_countdown->Update();
 	
 	if (resized)
@@ -279,7 +281,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update smokebomb shadow shapes.
 	ShadowShapes::GetInstance().Update();
 
-	// Set have updated network stuff last in the update
+	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
 	return GAMESTATESWITCH_NONE;
@@ -298,7 +300,7 @@ void PlayingStateTest::Render()
 
 	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
-	// Draw to the scene.
+	// Render to the scene normally.
 	m_playerManager->Render();
 	m_objectManager->Render();
 	GraphicsEngine::GetInstance()->RenderFoliage();
@@ -309,11 +311,12 @@ void PlayingStateTest::Render()
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
 
+	// Render the UI.
 	m_minimap->Render();
 	m_teamStatusBar->Render();
 	m_countdown->Render();
 
-	// Render outlining.
+	// Render character outlining.
 	if (m_renderOutlining)
 	{
 		GraphicsEngine::GetInstance()->ClearOutlining();
@@ -409,7 +412,6 @@ void PlayingStateTest::OutliningRays()
 	}
 	
 	delete rayTest;
-	//m_renderOutlining = true;
 }
 
 DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
