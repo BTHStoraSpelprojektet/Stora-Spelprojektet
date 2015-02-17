@@ -87,16 +87,15 @@ void KatanaNinja::RenderAttackLocations()
 			float poleLength = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
 			DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / poleLength, 0.03f, vectorToMouse.z / poleLength);
 			float yaw = atan2(m_attackDir.x, m_attackDir.z);
-			float tempYaw = yaw - 1.57f;
 
 			m_aimArrow->SetPosition(DirectX::XMFLOAT3(mousePos3D));
 			m_aimPole->SetPosition(DirectX::XMFLOAT3(m_position.x + vectorToMouseNorm.x * (poleLength * 0.5f), 0.03f, m_position.z + vectorToMouseNorm.z * (poleLength * 0.5f)));
 
-			//m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
-			//m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
+			m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
+			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
 
-			m_aimArrow->SetScale(DirectX::XMFLOAT3(2.0f, 1.0f, 2.0f));
-			m_aimPole->SetScale(DirectX::XMFLOAT3(poleLength, 2.0f, 2.0f));
+			m_aimArrow->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+			m_aimPole->SetScale(DirectX::XMFLOAT3(poleLength*20.0f, 1.0f, 1.0f));
 
 			m_aimPole->Render();
 			m_aimArrow->Render();
@@ -111,10 +110,9 @@ void KatanaNinja::RenderAttackLocations()
 			float poleLength = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
 			DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / poleLength, 0.03f, vectorToMouse.z / poleLength);
 			float yaw = atan2(m_attackDir.x, m_attackDir.z);
-			float tempYaw = yaw - 1.57f;
 
-			m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
-			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
+			m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
+			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, yaw, 0.0f));
 
 			m_aimArrow->SetScale(DirectX::XMFLOAT3(5.0f, 1.0f, 5.0f));
 			m_aimPole->SetScale(DirectX::XMFLOAT3(9.0f, 1.0f, 5.0f));
@@ -135,13 +133,12 @@ void KatanaNinja::RenderAttackLocations()
 			float poleLength = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
 			DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / poleLength, 0.03f, vectorToMouse.z / poleLength);
 			float yaw = atan2(m_attackDir.x, m_attackDir.z);
-			float tempYaw = yaw - 1.57f;
 
 			m_aimArrow->SetPosition(DirectX::XMFLOAT3(mousePos3D));
 			m_aimPole->SetPosition(DirectX::XMFLOAT3(m_position.x + vectorToMouseNorm.x * (poleLength * 0.5f), 0.03f, m_position.z + vectorToMouseNorm.z * (poleLength * 0.5f)));
 
-			m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
-			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
+			m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
+			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
 
 			m_aimArrow->SetScale(DirectX::XMFLOAT3(5.0f, 1.0f, 5.0f));
 			m_aimPole->SetScale(DirectX::XMFLOAT3(poleLength, 1.0f, 5.0f));
