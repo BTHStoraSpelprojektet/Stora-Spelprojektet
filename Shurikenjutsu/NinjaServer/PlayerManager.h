@@ -58,6 +58,7 @@ private:
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
 	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive);
+	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable);
 	int GetTeamForPlayer();
 
 	RakNet::RakPeerInterface *m_serverPeer;
