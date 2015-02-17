@@ -31,6 +31,8 @@ public:
 
 	void OutliningRays();
 	ObjectManager* GetObjectManager();
+
+	DirectX::XMFLOAT2 GetMousePosition();
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);

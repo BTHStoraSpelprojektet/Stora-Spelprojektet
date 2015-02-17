@@ -27,6 +27,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	// Todo: move to player
 	m_katanaBoundingBoxes = ModelLibrary::GetInstance()->GetModel(KATANA_NINJA_MODEL_NAME)->GetBoundingBoxes();
 	m_tessenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(TESSEN_NINJA_MODEL_NAME)->GetBoundingBoxes();
+	m_naginataBoundingBoxes = ModelLibrary::GetInstance()->GetModel(NAGINATA_NINJA_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
@@ -275,6 +276,11 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 			tmpBB = m_tessenBoundingBoxes;
 			break;
 		}
+		case 2:
+		{
+			tmpBB = m_naginataBoundingBoxes;
+			break;
+		}
 	}
 
 	for (unsigned int i = 0; i < tmpBB.size(); i++)
@@ -286,13 +292,6 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 
 		boundingBoxes.push_back(box);
 	}
-
-	// Temp code to create a box around the player
-	Box playerBox = Box(0.0f, 2.0f, 0.0f, 1.0f, 2.0f, 1.0f);
-	playerBox.m_center.x += m_players[p_index].x;
-	playerBox.m_center.y += m_players[p_index].y;
-	playerBox.m_center.z += m_players[p_index].z;
-	boundingBoxes.push_back(playerBox);
 
 	return boundingBoxes;
 }
@@ -436,15 +435,21 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage)
 
 void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive)
 {
+	UpdateHealth(p_guid, p_health, p_isAlive, p_health <= 0);
+}
+
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable)
+{
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_PLAYER_HP_CHANGED);
 	bitStream.Write(p_guid);
 	bitStream.Write(p_health);
 	bitStream.Write(p_isAlive);
-	
+
 	PacketReliability reliability = UNRELIABLE_SEQUENCED;
-	if (p_health <= 0)
+	// Need reliable on dead players and when they get full health
+	if (p_sendReliable)
 	{
 		reliability = RELIABLE;
 	}
@@ -464,7 +469,7 @@ void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
 		{
 			m_players[i].currentHP = m_players[i].maxHP;
 			m_players[i].isAlive = true;
-			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
+			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive, true);
 		}
 	}
 }

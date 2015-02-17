@@ -58,6 +58,7 @@ private:
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
 	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive);
+	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable);
 	int GetTeamForPlayer();
 
 	RakNet::RakPeerInterface *m_serverPeer;
@@ -66,6 +67,7 @@ private:
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
 	std::vector<Box> m_katanaBoundingBoxes;
 	std::vector<Box> m_tessenBoundingBoxes;
+	std::vector<Box> m_naginataBoundingBoxes;
 
 	//float m_gcd;
 	float m_playerHealth;

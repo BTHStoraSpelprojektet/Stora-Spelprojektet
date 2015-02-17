@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include "ConsoleFunctions.h"
 
 InputManager* InputManager::m_instance;
 
@@ -202,4 +203,18 @@ bool InputManager::IsRightMouseClicked() const
 char InputManager::GetLastCharRead() const
 {
 	return m_lastCharRead;
+}
+
+void InputManager::Set3DMousePosition(float p_x, float p_z)
+{
+	m_3DMouseX = p_x;
+	m_3DMouseZ = p_z;
+}
+float InputManager::Get3DMousePositionX()
+{
+	return m_3DMouseX;
+}
+float InputManager::Get3DMousePositionZ()
+{
+	return m_3DMouseZ;
 }

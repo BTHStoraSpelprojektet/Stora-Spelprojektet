@@ -2,6 +2,7 @@
 #define KATANANINJA_H_
 
 #include "Player.h"
+class AttackPredictionEditor;
 
 class KatanaNinja : public Player
 {
@@ -14,6 +15,7 @@ public:
 
 	bool Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_charNr);
 	void Shutdown();
+	void RenderAttackLocations();
 };
 
 #endif
