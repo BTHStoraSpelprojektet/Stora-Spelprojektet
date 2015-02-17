@@ -436,15 +436,21 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage)
 
 void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive)
 {
+	UpdateHealth(p_guid, p_health, p_isAlive, p_health <= 0);
+}
+
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable)
+{
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_PLAYER_HP_CHANGED);
 	bitStream.Write(p_guid);
 	bitStream.Write(p_health);
 	bitStream.Write(p_isAlive);
-	
+
 	PacketReliability reliability = UNRELIABLE_SEQUENCED;
-	if (p_health <= 0)
+	// Need reliable on dead players and when they get full health
+	if (p_sendReliable)
 	{
 		reliability = RELIABLE;
 	}
@@ -464,7 +470,7 @@ void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
 		{
 			m_players[i].currentHP = m_players[i].maxHP;
 			m_players[i].isAlive = true;
-			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
+			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive, true);
 		}
 	}
 }
