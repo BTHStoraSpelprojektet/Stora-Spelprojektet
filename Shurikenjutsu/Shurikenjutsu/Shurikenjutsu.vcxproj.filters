@@ -449,6 +449,9 @@
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="AttackPredictionEditor.cpp">
+      <Filter>Source Files\Ninjas</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -750,6 +753,9 @@
     </ClInclude>
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Header Files\Graphics\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="AttackPredictionEditor.h">
+      <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
