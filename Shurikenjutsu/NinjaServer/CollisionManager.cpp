@@ -68,22 +68,29 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			continue;
 		}
+		float attackAngle = 1.047f;
+		DirectX::XMFLOAT3 attackingPlayerPos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, 0.0f , attackingPlayer.dirZ);
+		DirectX::XMFLOAT3 defendingPlayerPos = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+		DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 
-		DirectX::XMFLOAT3 spherePos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
-		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
-		DirectX::XMFLOAT3 boxPosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
-		DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerPos.x - attackingPlayerPos.x, 0.0f, defendingPlayerPos.z - attackingPlayerPos.z);
+		//Ta reda på den jävla vinkel hellvetet... -.-' om den är inom vissa parametrar så kör nästa beräkning
 		// Make collision test
-		if (IntersectionTests::Intersections::MeleeAttackCollision(spherePos, range, attackDirection, boxPosition, boxExtent, range))
-		{
-			if (!IntersectingObjectWhenAttacking(spherePos, boxPosition))
+		if (IntersectionTests::Intersections::SphereBoxCollision(attackingPlayerPos, range, defendingPlayerPos, defendingPlayerBoxExtents))
+		{//IntersectionTests::Intersections::MeleeAttackCollision(attackingPlayerPos, range, attackDirection, defendingPlayerPos, defendingPlayerBoxExtents, range)
+
+			if (true)
 			{
-			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, damage);
-			break;
+				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos))
+				{
+					// Damage the player
+					p_playerManager->DamagePlayer(playerList[i].guid, damage);
+					break;
+				}
+			}
 		}
 	}
-}
 }
 
 void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManager, PlayerManager* p_playerManager)
