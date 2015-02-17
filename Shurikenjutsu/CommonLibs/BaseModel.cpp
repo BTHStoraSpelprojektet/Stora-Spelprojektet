@@ -23,13 +23,6 @@ bool BaseModel::LoadModel(const char* p_filepath)
 
 void BaseModel::Shutdown()
 {
-	/*if (m_importer != nullptr)
-	{
-		m_importer->Shutdown();
-		delete m_importer;
-		m_importer = nullptr;
-	}*/
-	
 	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
 	{
 		m_animationStacks[i].Shutdown();

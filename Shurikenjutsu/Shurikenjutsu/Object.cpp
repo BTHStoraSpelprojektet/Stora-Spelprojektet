@@ -44,6 +44,11 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 void Object::Shutdown()
 {
+
+}
+
+void Object::ShutdownGameExit()
+{
 	if (m_model != nullptr)
 	{
 		m_model->ShutdownModel();
