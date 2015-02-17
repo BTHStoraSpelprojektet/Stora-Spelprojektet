@@ -125,7 +125,7 @@ void Server::ReceviePacket()
 				wBitStream.Write(player.y);
 				wBitStream.Write(player.z);
 
-				m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+				m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			}
 			break;
 		}
@@ -153,7 +153,7 @@ void Server::ReceviePacket()
 				wBitStream.Write(player.dirY);
 				wBitStream.Write(player.dirZ);
 
-				m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+				m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			}
 			break;
 		}
@@ -202,7 +202,7 @@ void Server::ReceviePacket()
 				wBitStream.Write(m_packet->guid);
 				wBitStream.Write(state);
 
-				m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, true);
+				m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 5, m_packet->guid, true);
 			}
 			break;
 		}

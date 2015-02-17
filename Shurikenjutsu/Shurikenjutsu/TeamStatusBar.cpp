@@ -55,6 +55,7 @@ bool TeamStatusBar::Initialize()
 	Network::GetInstance()->SyncTeamScore();
 
 	m_fpsTimer.Initialize(GLOBAL::GetInstance().FPS, 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f) * 0.5f, m_originPos.y + 18.0f, 0xffffffff);
+	m_pingText.Initialize("0", 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f) * 0.5f, m_originPos.y - 10.0f, 0xffffffff);
 
 	return true;
 }
@@ -65,6 +66,12 @@ void TeamStatusBar::Shutdown()
 	m_blueColorPlayers.clear();
 	m_redSquares.clear();
 	m_blueSquares.clear();
+	
+	m_redScore.Shutdown();
+	m_blueScore.Shutdown();
+	m_timerText.Shutdown();
+	m_fpsTimer.Shutdown();
+	m_pingText.Shutdown();
 }
 
 void TeamStatusBar::Update()
@@ -290,6 +297,7 @@ void TeamStatusBar::Update()
 	}
 
 	m_fpsTimer.SetText(GLOBAL::GetInstance().FPS);
+	m_pingText.SetText(std::to_string(Network::GetInstance()->GetLastPing()));
 }
 
 void TeamStatusBar::Render()
@@ -331,6 +339,7 @@ void TeamStatusBar::Render()
 	// Timer
 	m_timerText.Render();
 	m_fpsTimer.Render();
+	m_pingText.Render();
 }
 
 void TeamStatusBar::ResizeRedColorList()

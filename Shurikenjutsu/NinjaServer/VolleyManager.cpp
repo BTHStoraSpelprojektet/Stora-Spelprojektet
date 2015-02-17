@@ -44,7 +44,7 @@ void VolleyManager::Add(RakNet::RakNetGUID p_guid, float p_startPosX, float p_st
 	wBitStream.Write(temp.endZ);
 	wBitStream.Write(temp.guid);
 	
-	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void VolleyManager::Remove(int index)
