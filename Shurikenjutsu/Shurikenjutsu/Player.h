@@ -11,6 +11,7 @@ class InputManager;
 class HealthBar;
 class AbilityBar;
 class StickyTrap;
+class AttackPredictionEditor;
 
 class Player : public AnimatedObject
 {
@@ -124,5 +125,6 @@ protected:
 	Object* m_aimPole;
 	Object* m_aimFrustrum;
 	bool localPlayer;
+	AttackPredictionEditor *m_ape;
 };
 #endif PLAYER

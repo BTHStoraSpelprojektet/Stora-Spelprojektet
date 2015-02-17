@@ -2,6 +2,7 @@
 #define KATANANINJA_H_
 
 #include "Player.h"
+class AttackPredictionEditor;
 
 class KatanaNinja : public Player
 {

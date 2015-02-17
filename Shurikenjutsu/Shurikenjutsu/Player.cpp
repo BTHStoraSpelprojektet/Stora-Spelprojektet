@@ -10,6 +10,7 @@
 #include "AnimationControl.h"
 #include "VisibilityComputer.h"
 #include "StickyTrap.h"
+#include "AttackPredictionEditor.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -80,12 +81,18 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	
 	m_aimFrustrum = new Object();
 	m_aimFrustrum->Initialize("../Shurikenjutsu/Models/Marker_ConeShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
-	localPlayer = true;
+
+	m_ape = new AttackPredictionEditor();
 	return true;
 }
 
 void Player::Shutdown()
 {
+	if (m_ape != nullptr)
+	{
+		delete m_ape;
+		m_ape = 0;
+	}
 	if (m_aimSphere != nullptr)
 	{
 		m_aimSphere->Shutdown();
