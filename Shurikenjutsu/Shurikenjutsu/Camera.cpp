@@ -211,14 +211,14 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		// Go to fullscreen
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-		SetWindowPos(GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
-		GraphicsEngine::ToggleFullscreen(true);
+		SetWindowPos(GraphicsEngine::GetInstance()->GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		GraphicsEngine::GetInstance()->ToggleFullscreen(true);
 
 		// Update aspect ratio.
 		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix(false);
-		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
@@ -230,18 +230,18 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		// Go to windowed mode.
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
-		GraphicsEngine::ToggleFullscreen(false);
+		GraphicsEngine::GetInstance()->ToggleFullscreen(false);
 
 		// Update aspect ratio.
 		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 		UpdateAspectRatio(aspectRatio);
 		UpdateProjectionMatrix(false);
-		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Set both window positions.
 		HWND console = GetConsoleWindow();
 		MoveWindow(console, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, 0, 670, 1000, true);
-		SetWindowPos(GraphicsEngine::GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
+		SetWindowPos(GraphicsEngine::GetInstance()->GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
 	}
 
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
@@ -311,7 +311,7 @@ void Camera::HandleInput()
 		UpdateMovedCamera();
 
 		// Set shader variables from the camera.
-		GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 		// Reset the camera when BACKSPACE key is pressed.
 		if (GetAsyncKeyState(VK_BACK))
@@ -334,7 +334,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	UpdateTarget(target);
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(true);
-	GraphicsEngine::SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 	// Visibility view projection..
 	playerPosition = p_playerPos;
@@ -355,7 +355,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	UpdateTarget(target);
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(false);
-	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }
 
 void Camera::MenuCameraRotation()
@@ -378,7 +378,7 @@ void Camera::MenuCameraRotation()
 	UpdateTarget(DirectX::XMFLOAT3(shadowPosition.x, 5.0f, 0.0f));
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(true);
-	GraphicsEngine::SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 	// Lock camera in center and rotate camera.	
 	position = DirectX::XMFLOAT3(0.0f, 40.0f, -24.0f);
@@ -390,7 +390,7 @@ void Camera::MenuCameraRotation()
 
 	DirectX::XMStoreFloat4x4(&m_viewMatrix, DirectX::XMMatrixMultiply(rotation, DirectX::XMLoadFloat4x4(&m_viewMatrix)));
 
-	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }
 
 void Camera::ResetCamera()
@@ -419,7 +419,7 @@ void Camera::ResetCamera()
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(false);
 
-	GraphicsEngine::SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }
 
 void Camera::ResetCameraToLight()
@@ -448,5 +448,5 @@ void Camera::ResetCameraToLight()
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(true);
 
-	GraphicsEngine::SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 }

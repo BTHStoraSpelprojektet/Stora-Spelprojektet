@@ -35,7 +35,7 @@ void DebugShape3D::Initialize(std::vector<DirectX::XMFLOAT3> p_shape, float p_he
 	lines.push_back(shapeTop[shapeTop.size() - 1]);
 	lines.push_back(shapeTop[0]);
 
-	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetDevice(), lines);
+	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetInstance()->GetDevice(), lines);
 	m_vertices = lines.size();
 	m_color = p_color;
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
@@ -52,7 +52,7 @@ void DebugShape3D::Shutdown()
 
 void DebugShape3D::Render()
 {
-	GraphicsEngine::RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
+	GraphicsEngine::GetInstance()->RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
 }
 
 void DebugShape3D::UpdateWorldMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

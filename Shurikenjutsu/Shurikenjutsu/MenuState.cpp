@@ -223,11 +223,11 @@ GAMESTATESWITCH MenuState::Update()
 		case MENUACTION_OPTIONAPPLY:
 			bool temp = m_options->GetCheckboxState(m_vsyncIndex);
 			m_lastvsync = temp;
-			GraphicsEngine::SetVsync(temp);
+			GraphicsEngine::GetInstance()->SetVsync(temp);
 
 			temp = m_options->GetCheckboxState(m_fullscreenIndex);
 			m_lastfullscreen = temp;
-			GraphicsEngine::ToggleFullscreen(temp);
+			GraphicsEngine::GetInstance()->ToggleFullscreen(temp);
 			break;
 	}
 
@@ -256,7 +256,7 @@ GAMESTATESWITCH MenuState::Update()
 	m_camera->MenuCameraRotation();
 
 	// Handles screen changes.
-	if (GraphicsEngine::HasScreenChanged())
+	if (GraphicsEngine::GetInstance()->HasScreenChanged())
 	{
 		if (GLOBAL::GetInstance().FULLSCREEN)
 		{
@@ -268,7 +268,7 @@ GAMESTATESWITCH MenuState::Update()
 			m_camera->ToggleFullscreen(false);
 		}
 
-		GraphicsEngine::ScreenChangeHandled();
+		GraphicsEngine::GetInstance()->ScreenChangeHandled();
 	}
 
 	// Update Frustum
@@ -304,14 +304,14 @@ void MenuState::Render()
 
 
 	// Draw to the shadowmap.
-	GraphicsEngine::BeginRenderToShadowMap();
+	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
-	GraphicsEngine::SetShadowMap();
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->SetShadowMap();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 
-	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
 	// Draw to the scene.
 	m_objectManager->Render();
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }

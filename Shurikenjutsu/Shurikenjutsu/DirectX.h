@@ -2,11 +2,13 @@
 #define DIRECTX
 
 #include <D3D11.h>
+#include <string>
 
 class DirectXWrapper
 {
 public:
 	bool Initialize(HWND p_handle);
+	void Shutdown();
 	void Clear();
 	void ClearOutlining();
 	void Present();
@@ -33,6 +35,9 @@ public:
 	void SetOutliningPassOne();
 	void SetOutliningPassTwo();
 
+	void DoReportLiveObjects();
+	void SetDebugName(ID3D11DeviceChild* child, const std::string& name);
+
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_context;
@@ -56,11 +61,15 @@ private:
 	ID3D11DepthStencilState* m_outliningALWAYS;
 	ID3D11DepthStencilState* m_outliningNOTEQUAL;
 
+	ID3D11Debug *d3dDebug;
+
 	int	m_width;
 	int m_height;
 
 	float m_clearColor[4];
 
 	int m_vsync;
+	
+
 };
 #endif;

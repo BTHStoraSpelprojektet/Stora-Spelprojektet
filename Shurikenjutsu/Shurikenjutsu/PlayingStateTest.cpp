@@ -92,7 +92,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
-	GraphicsEngine::InitializeOutling();
+	//GraphicsEngine::GetInstance()->InitializeOutling();
 
 	// Initialize the Countdown.
 	m_countdown = new Countdown();
@@ -107,7 +107,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_mouseY = 0;
 
 	OnScreenResize();
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
 
 	return true;
 }
@@ -147,7 +147,7 @@ void PlayingStateTest::Shutdown()
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
 		m_teamStatusBar = NULL;
-	}
+}
 
 	if (m_countdown != NULL)
 	{
@@ -249,7 +249,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Check if the screen changed.
 	bool resized = false;
-	if (GraphicsEngine::HasScreenChanged())
+	if (GraphicsEngine::GetInstance()->HasScreenChanged())
 	{
 		OnScreenResize();
 		resized = true;
@@ -275,7 +275,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	if (resized)
 	{
 		// Reupdate the polygon.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
 	}
 
 	// Update smokebomb shadow shapes.
@@ -289,25 +289,22 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 void PlayingStateTest::Render()
 {
-	// Draw scene to the shadowmap.
-	GraphicsEngine::BeginRenderToShadowMap();
+	bool testBB = false;
+
+	// Draw to the shadowmap.
+	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
 	m_playerManager->RenderDepth();
-	GraphicsEngine::SetShadowMap();
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->SetShadowMap();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 
-	// Update the directional light.
-	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
 	m_playerManager->Render();
 	m_objectManager->Render();
-
-	// Render all of the foliage.
-	GraphicsEngine::RenderFoliage();
-
-	// Render the reversed visibility polygon.
-	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
+	GraphicsEngine::GetInstance()->RenderFoliage();
+	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 
 	if (FLAG_DEBUG == 1)
 	{
@@ -322,19 +319,14 @@ void PlayingStateTest::Render()
 	// Render character outlining.
 	if (m_renderOutlining)
 	{
-		GraphicsEngine::ClearOutlining();
-
-		// Pass 1.
-		GraphicsEngine::SetOutliningPassOne();
+		GraphicsEngine::GetInstance()->ClearOutlining();
+		GraphicsEngine::GetInstance()->SetOutliningPassOne();
 		m_playerManager->RenderOutliningPassOne();
-
-		// Pass 2.
-		GraphicsEngine::SetOutliningPassTwo();
+		GraphicsEngine::GetInstance()->SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
 	}
 
-	// Reset the render target.
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
@@ -472,5 +464,5 @@ void PlayingStateTest::OnScreenResize()
 	VisibilityComputer::GetInstance().SetProjectionPolygonMatrix(projection);
 
 	// Tell the graphics engine that changes have been handled.
-	GraphicsEngine::ScreenChangeHandled();
+	GraphicsEngine::GetInstance()->ScreenChangeHandled();
 }
