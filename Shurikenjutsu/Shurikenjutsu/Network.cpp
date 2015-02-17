@@ -762,7 +762,7 @@ void Network::ChooseChar(int p_charNr)
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
 	bitStream.Write(p_charNr);
 
-	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 
 	m_myPlayer.charNr = p_charNr;
 }
@@ -786,7 +786,7 @@ void Network::SendPlayerPos(float p_x, float p_y, float p_z)
 	bitStream.Write(p_y);
 	bitStream.Write(p_z);
 
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 void Network::SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ)
@@ -798,7 +798,7 @@ void Network::SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ)
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
 
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 2, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z)
@@ -924,7 +924,7 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 	bitStream.Write(p_dirY);
 	bitStream.Write(p_dirZ);
 	
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
@@ -1257,7 +1257,7 @@ void Network::DoMeleeAttack()
 
 	bitStream.Write((RakNet::MessageID)ID_MELEE_ATTACK);
 	
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 bool Network::MadeInvalidMove()
@@ -1320,7 +1320,7 @@ void Network::SendAbility(ABILITIES p_ability, float p_distanceFromPlayer)
 	bitStream.Write(p_ability);
 	bitStream.Write(p_distanceFromPlayer);
 
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 bool Network::RoundRestarted()
@@ -1365,7 +1365,7 @@ void Network::SendAnimationState(AnimationState p_state)
 	bitStream.Write((RakNet::MessageID)ID_PLAYER_ANIMATION_CHANGED);
 	bitStream.Write(p_state);
 
-	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 5, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 int Network::AnimationChanged(RakNet::RakNetGUID p_guid)
@@ -1431,7 +1431,7 @@ void Network::SyncTimer()
 
 	bitStream.Write((RakNet::MessageID)ID_TIMER_SYNC);
 
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 bool Network::TimerSynced(double &p_min, double &p_sec)
@@ -1457,7 +1457,7 @@ void Network::SyncTeamScore()
 
 	bitStream.Write((RakNet::MessageID)ID_SEND_TEAM_SCORE);
 
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
 int Network::GetRedTeamScore()
