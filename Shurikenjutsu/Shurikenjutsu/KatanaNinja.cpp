@@ -92,11 +92,11 @@ void KatanaNinja::RenderAttackLocations()
 			m_aimArrow->SetPosition(DirectX::XMFLOAT3(mousePos3D));
 			m_aimPole->SetPosition(DirectX::XMFLOAT3(m_position.x + vectorToMouseNorm.x * (poleLength * 0.5f), 0.03f, m_position.z + vectorToMouseNorm.z * (poleLength * 0.5f)));
 
-			m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
-			m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
+			//m_aimArrow->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
+			//m_aimPole->SetRotation(DirectX::XMFLOAT3(0.0f, tempYaw, 0.0f));
 
-			m_aimArrow->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-			m_aimPole->SetScale(DirectX::XMFLOAT3(poleLength, 1.0f, 1.0f));
+			m_aimArrow->SetScale(DirectX::XMFLOAT3(2.0f, 1.0f, 2.0f));
+			m_aimPole->SetScale(DirectX::XMFLOAT3(poleLength, 2.0f, 2.0f));
 
 			m_aimPole->Render();
 			m_aimArrow->Render();
