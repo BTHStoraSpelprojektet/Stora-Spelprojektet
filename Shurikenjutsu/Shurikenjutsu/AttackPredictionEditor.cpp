@@ -47,6 +47,23 @@ void AttackPredictionEditor::ThickArrowPrediction(Object *p_arrowHead, Object *p
 	p_arrowHead->SetScale(DirectX::XMFLOAT3(5.0f, 1.0f, 5.0f));
 	p_arrowBody->SetScale(DirectX::XMFLOAT3(poleLength * 10.0f, 1.0f, 5.0f));
 }
+void AttackPredictionEditor::ThickArrowPrediction(Object *p_arrowHead, Object *p_arrowBody, DirectX::XMFLOAT3 p_attackDirection, DirectX::XMFLOAT3 p_playerPosition, float p_maxLength)
+{
+	DirectX::XMFLOAT3 mousePos3D = DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.03f, InputManager::GetInstance()->Get3DMousePositionZ());
+	DirectX::XMFLOAT3 vectorToMouse = DirectX::XMFLOAT3(mousePos3D.x - p_playerPosition.x, 0.03f, mousePos3D.z - p_playerPosition.z);
+	float poleLength = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
+	DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / poleLength, 0.03f, vectorToMouse.z / poleLength);
+	float yaw = atan2(p_attackDirection.x, p_attackDirection.z);
+		
+	p_arrowHead->SetPosition(DirectX::XMFLOAT3(p_playerPosition.x + vectorToMouseNorm.x * 9.0f, 0.03f, p_playerPosition.z + vectorToMouseNorm.z * 9.0f));
+	p_arrowBody->SetPosition(DirectX::XMFLOAT3(p_playerPosition.x + vectorToMouseNorm.x * 4.5f, 0.03f, p_playerPosition.z + vectorToMouseNorm.z * 4.5f));
+
+	p_arrowHead->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
+	p_arrowBody->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
+
+	p_arrowHead->SetScale(DirectX::XMFLOAT3(5.0f, 1.0f, 5.0f));
+	p_arrowBody->SetScale(DirectX::XMFLOAT3(p_maxLength * 9.0f, 1.0f, 5.0f));
+}
 void AttackPredictionEditor::ThickRectanglePrediction(Object *p_object, DirectX::XMFLOAT3 p_attackDirection, DirectX::XMFLOAT3 p_playerPosition, float p_length)
 {
 	DirectX::XMFLOAT3 mousePos3D = DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.03f, InputManager::GetInstance()->Get3DMousePositionZ());
