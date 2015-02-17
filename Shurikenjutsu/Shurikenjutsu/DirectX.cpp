@@ -521,7 +521,8 @@ bool DirectXWrapper::InitializeOutlinging()
 
 void DirectXWrapper::SetOutliningPassOne()
 {
-	m_context->OMSetRenderTargets(0, NULL, m_depthStencilViewOutlining);
+	ID3D11RenderTargetView* nullRenderTarget = NULL;
+	m_context->OMSetRenderTargets(0, &nullRenderTarget, m_depthStencilViewOutlining);
 	m_context->OMSetDepthStencilState(m_outliningALWAYS, 0);
 }
 
