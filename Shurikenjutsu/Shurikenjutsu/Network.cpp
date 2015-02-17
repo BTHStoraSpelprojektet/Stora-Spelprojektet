@@ -2,6 +2,7 @@
 #include <iostream>
 #include "ConsoleFunctions.h"
 #include "ObjectManager.h"
+#include "Globals.h"
 
 Network* Network::m_instance;
 
@@ -58,6 +59,9 @@ bool Network::Initialize()
 
 	m_networkStatus = NETWORKSTATUS_NONE;
 
+	m_pingTimer = 5;
+	m_timeToPing = m_pingTimer;
+
 	return true;
 }
 
@@ -70,6 +74,7 @@ void Network::Shutdown()
 {
 	m_clientPeer->Shutdown(300);
 	RakNet::RakPeerInterface::DestroyInstance(m_clientPeer);
+	m_clientPeer = nullptr;
 
 	delete m_instance;
 	m_instance = nullptr;
@@ -82,6 +87,14 @@ void Network::Update()
 {
 	m_prevConnected = m_connected;
 	ReceviePacket();
+
+	// Ping
+	m_timeToPing -= GLOBAL::GetInstance().GetDeltaTime();
+	if (m_timeToPing < 0)
+	{
+		m_clientPeer->Ping(RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT));
+		m_timeToPing = m_pingTimer;
+	}
 }
 
 void Network::ReceviePacket()
@@ -1511,4 +1524,9 @@ void Network::ClearListsAtNewRound()
 	m_stickyTrapList.clear();
 	m_fanList.clear();
 
+}
+
+int Network::GetLastPing()
+{
+	return m_clientPeer->GetLastPing(RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT));
 }
