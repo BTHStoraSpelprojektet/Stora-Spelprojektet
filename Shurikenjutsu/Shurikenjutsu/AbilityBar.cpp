@@ -18,31 +18,31 @@ bool AbilityBar::Initialize(float p_positionX, float p_positionY, int p_numberOf
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 25.0f, y_position, 0.0f);
 	GUIAbility *temp;
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility1Name()));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility1Name()), "M1");
 	m_abilities.push_back(temp);
 
 	// ABILITY 2
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 90.0f, y_position, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility2Name()));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility2Name()), "M2");
 	m_abilities.push_back(temp);
 
 	// ABILITY 3
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 155.0f, y_position, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility3Name()));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility3Name()), "Q");
 	m_abilities.push_back(temp);
 
 	// ABILITY 4
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 220.0f, y_position, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility4Name()));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility4Name()), "E");
 	m_abilities.push_back(temp);
 
 	// ABILITY 5
 	position = DirectX::XMFLOAT3(p_positionX - halfLength + 295.0f, y_position, 0.0f);
 	temp = new GUIAbility();
-	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility5Name()));
+	temp->Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetAbility5Name()), "R");
 	m_abilities.push_back(temp);
 
 	position = DirectX::XMFLOAT3(p_positionX, y_position, 0.0f);
