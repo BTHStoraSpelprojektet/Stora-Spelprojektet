@@ -42,6 +42,7 @@ public:
 	void MinimapUpdatePos(Minimap *p_minimap);
 	bool IsPlayersVisible(int p_index);
 	int GetPlayerTeam();
+	Player* GetEnemyTeamMember(int p_index);
 	int GetEnemyTeam(int p_index);
 
 private:

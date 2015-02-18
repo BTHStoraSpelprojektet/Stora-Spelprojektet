@@ -883,6 +883,7 @@ void SceneShader::UpdateReversedShadowMatrices(ID3D11DeviceContext* p_context)
 {
 	DirectX::XMFLOAT4X4 identity;
 	DirectX::XMStoreFloat4x4(&identity, DirectX::XMMatrixIdentity());
+
 	DirectX::XMFLOAT4X4 worldMatrix = identity;
 	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
 	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;
