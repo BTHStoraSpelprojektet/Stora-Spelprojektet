@@ -76,7 +76,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize the graphics engine.
 	GraphicsEngine::GetInstance()->Initialize(m_window.GetHandle());
-	GraphicsEngine::GetInstance()->SetClearColor(0.5f, 0.5f, 1.0f, 1.0f);
+	GraphicsEngine::GetInstance()->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	GraphicsEngine::GetInstance()->SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::GetInstance()->SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();

@@ -304,8 +304,8 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
-	m_playerManager->Render();
 	m_objectManager->Render();
+	m_playerManager->Render();
 	GraphicsEngine::GetInstance()->RenderFoliage();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 
@@ -426,15 +426,15 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 
 void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 {
-	for (int i = 0; i < 7; i++)
+	for (unsigned int i = 0; i < 7; i++)
 	{
-		if (m_playerManager->IsPlayersVisible(i) || m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i))
+		m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000, -1000, 0));
+
+		Player* player = m_playerManager->GetEnemyTeamMember(i);
+
+		if (player && (m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || VisibilityComputer::GetInstance().IsPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
 		{
-			m_playerManager->MinimapUpdatePos(p_minimap);
-		}
-		else
-		{
-			m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000,-1000,0));
+			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
 		}
 	}
 }

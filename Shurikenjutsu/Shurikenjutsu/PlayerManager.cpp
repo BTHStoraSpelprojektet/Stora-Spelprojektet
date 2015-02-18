@@ -327,6 +327,7 @@ bool PlayerManager::IsPlayersVisible(int p_index)
 	{
 		return false;
 	}
+
 	return m_enemyList[p_index]->IsVisible();
 }
 
@@ -353,6 +354,16 @@ int PlayerManager::GetEnemyTeam(int p_index)
 		return 0;
 	}
 	return m_enemyList[p_index]->GetTeam();
+}
+
+Player* PlayerManager::GetEnemyTeamMember(int p_index)
+{
+	if (m_enemyListSize <= (unsigned int)p_index)
+	{
+		return nullptr;
+	}
+
+	return m_enemyList[p_index];
 }
 
 OBB PlayerManager::GetPlayerBoundingBox()

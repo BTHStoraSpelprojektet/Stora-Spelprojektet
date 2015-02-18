@@ -117,6 +117,7 @@ void Player::Shutdown()
 		delete m_aimFrustrum;
 		m_aimFrustrum = nullptr;
 	}
+
 	AnimatedObject::Shutdown();
 	if (m_noAbility != nullptr)
 	{

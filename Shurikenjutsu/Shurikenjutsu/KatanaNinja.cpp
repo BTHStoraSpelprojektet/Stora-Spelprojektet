@@ -66,7 +66,7 @@ void KatanaNinja::RenderAttackLocations()
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
-			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position);
+			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
 
 			m_aimFrustrum->Render();
 		}
