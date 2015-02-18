@@ -32,19 +32,27 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 {
 	float range;
 	float damage;
+	float attackAngle;
 	switch (p_ability)
 	{
 	case ABILITIES_MELEESWING:
+		//range = KATANA_RANGE;
+		//damage = KATANA_DAMAGE;
 		range = KATANA_RANGE;
 		damage = KATANA_DAMAGE;
+		attackAngle = 0.9f;
 		break;
 	case ABILITIES_NAGINATASLASH:
+		//range = NAGINATA_RANGE;
+		//damage = NAGINATA_DAMAGE;
 		range = NAGINATA_RANGE;
-		damage = NAGINATA_DAMAGE;
+		damage = 10.0f;
+		attackAngle = 0.74f;
 		break;
 	default:
 		range = 0;
 		damage = 0;
+		attackAngle = 0;
 		break;
 	}
 	PlayerNet attackingPlayer = p_playerManager->GetPlayer(p_guid);
@@ -68,9 +76,8 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			continue;
 		}
-		float attackAngle = 1.047f;
 		DirectX::XMFLOAT3 attackingPlayerPos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
-		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, 0.0f , attackingPlayer.dirZ);
+		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, 0.0f, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 defendingPlayerPos = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 
@@ -79,8 +86,15 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereBoxCollision(attackingPlayerPos, range, defendingPlayerPos, defendingPlayerBoxExtents))
 		{//IntersectionTests::Intersections::MeleeAttackCollision(attackingPlayerPos, range, attackDirection, defendingPlayerPos, defendingPlayerBoxExtents, range)
+			DirectX::XMFLOAT3 A = attackDirection;
+			float aLength = sqrt(A.x * A.x + A.z * A.z);
+			DirectX::XMFLOAT3 B = vectorFromAttackerToDefender;
+			float bLength = sqrt(B.x * B.x + B.z * B.z);
+			float dotProduct = A.x * B.x + A.z * B.z;
+			//A*B = |A| * |B| * cos(vinkel)
+			float angle = acos(dotProduct / (aLength * bLength));
 
-			if (true)
+			if (angle < attackAngle)
 			{
 				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos))
 				{
