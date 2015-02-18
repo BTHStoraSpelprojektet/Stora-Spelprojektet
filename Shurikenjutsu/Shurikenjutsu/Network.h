@@ -15,6 +15,7 @@
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\NetworkLogger.h"
 #include <vector>
 #include <map>
 #include <DirectXMath.h>
@@ -138,6 +139,8 @@ private:
 	~Network();
 	
 	static Network* m_instance;
+
+	NetworkLogger m_networkLogger;
 
 	void ReceviePacket();
 	void UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
