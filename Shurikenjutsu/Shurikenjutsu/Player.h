@@ -11,6 +11,7 @@ class InputManager;
 class HealthBar;
 class AbilityBar;
 class StickyTrap;
+class AttackPredictionEditor;
 
 class Player : public AnimatedObject
 {
@@ -27,6 +28,7 @@ public:
 	void Update();
 	void UpdateAbilities();
 	void Render();
+	virtual void RenderAttackLocations();
 	void RenderDepth();
 	void RenderOutlining();
 	void RenderAbilityBar();
@@ -74,21 +76,16 @@ protected:
 	bool CheckSidesIfMultipleCollisions();
 	void SetOriginalSpeed(float p_speed);
 
-	//float m_damage = 0; // Sätts nog inviduellt per ability senare.
-	//int m_spells; // antalet spells om det behövs - skapa lista
 	float m_health; // Player health
 	float m_maxHealth; // Max player health
-	//float m_agility; // Speed på attacker och rullning m.m
 	bool m_isAlive; // bool to check if the player should render and update itself
-	InputManager* m_inputManager;
 	DirectX::XMFLOAT3 m_attackDir;
 	RakNet::RakNetGUID m_guid;
 	int m_team;
 	bool m_visible;
 
 	void SetCalculatePlayerPosition();
-	//DirectX::XMFLOAT3 m_playerPrevPos;
-	
+
 	DirectX::XMFLOAT3 m_dashDirection;
 	float m_dashDistanceLeft;
 	bool m_isDashing;
@@ -122,5 +119,12 @@ protected:
 	ParticleEmitter* m_dashParticles2;
 
 	int m_ninjaType;
+
+	Object* m_aimSphere;
+	Object* m_aimArrow;
+	Object* m_aimPole;
+	Object* m_aimFrustrum;
+	bool localPlayer;
+	AttackPredictionEditor *m_ape;
 };
 #endif PLAYER

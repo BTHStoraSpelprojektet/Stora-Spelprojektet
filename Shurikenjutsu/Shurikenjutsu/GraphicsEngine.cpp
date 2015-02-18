@@ -14,18 +14,17 @@
 #include "Object.h"
 #include "FoliageShader.h"
 
-DirectXWrapper GraphicsEngine::m_directX;
-SceneShader GraphicsEngine::m_sceneShader;
-GUIShader GraphicsEngine::m_GUIShader;
-DepthShader GraphicsEngine::m_depthShader;
-ParticleShader GraphicsEngine::m_particleShader;
-HWND GraphicsEngine::m_windowHandle;
-RenderTarget GraphicsEngine::m_shadowMap;
-IFW1FontWrapper *GraphicsEngine::m_fontWrapper;
-IFW1TextGeometry* GraphicsEngine::m_textGeometry;
-InstanceManager* GraphicsEngine::m_instanceManager;
-bool GraphicsEngine::m_screenChanged;
-FoliageShader GraphicsEngine::m_foliageShader;
+GraphicsEngine* GraphicsEngine::m_instance;
+
+GraphicsEngine* GraphicsEngine::GetInstance()
+{
+	if (m_instance == nullptr)
+	{
+		m_instance = new GraphicsEngine();
+	}
+
+	return m_instance;
+}
 
 bool GraphicsEngine::Initialize(HWND p_handle)
 {
@@ -124,7 +123,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		return false;
 	}
 
-	if (VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetDevice()))
+	if (VisibilityComputer::GetInstance().Initialize(GraphicsEngine::GetInstance()->GetDevice()))
 	{
 		ConsolePrintSuccess("VisibilityComputer initialized successfully.");
 		ConsoleSkipLines(1);
@@ -153,7 +152,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	// Create the font wrapper.
 	IFW1Factory* FW1Factory = NULL;
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &FW1Factory);
-	hResult = FW1Factory->CreateFontWrapper(GraphicsEngine::GetDevice(), L"Calibri", &m_fontWrapper);
+	hResult = FW1Factory->CreateFontWrapper(GraphicsEngine::GetInstance()->GetDevice(), L"Calibri", &m_fontWrapper);
 	if (FAILED(hResult))
 	{
 		ConsolePrintError("Failed to create the font wrapper!");
@@ -195,15 +194,18 @@ void GraphicsEngine::Shutdown()
 	m_sceneShader.Shutdown();
 	m_GUIShader.Shutdown();
 	m_depthShader.Shutdown();
+	m_foliageShader.Shutdown();
 
 	if (m_fontWrapper != NULL)
 	{
 		m_fontWrapper->Release();
+		m_fontWrapper = nullptr;
 	}
 
-	if (m_fontWrapper != NULL)
+	if (m_textGeometry != NULL)
 	{
 		m_textGeometry->Release();
+		m_textGeometry = nullptr;
 	}
 
 	if (m_instanceManager != nullptr)
@@ -211,6 +213,14 @@ void GraphicsEngine::Shutdown()
 		m_instanceManager->Shutdown();
 		delete m_instanceManager;
 		m_instanceManager = nullptr;
+	}
+
+	m_directX.Shutdown();
+
+	if (m_instance)
+	{
+		delete m_instance;
+		m_instance = nullptr;
 	}
 }
 
@@ -245,11 +255,10 @@ void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 	m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
 }
 
-void GraphicsEngine::RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap)
+void GraphicsEngine::RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture)
 {
-	m_sceneShader.RenderReversedShadows(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_visibilityMap);
+	m_sceneShader.RenderReversedShadows(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_visibilityMap, p_texture);
 }
-
 void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
 	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
@@ -592,4 +601,9 @@ void GraphicsEngine::ClearRenderTargetsForGBuffers()
 void GraphicsEngine::SetRenderTargetsForGBuffers()
 {
 	m_directX.SetRenderTargetsForGBuffers();
+}
+
+void GraphicsEngine::DoReportLiveObjects()
+{
+	m_directX.DoReportLiveObjects();
 }

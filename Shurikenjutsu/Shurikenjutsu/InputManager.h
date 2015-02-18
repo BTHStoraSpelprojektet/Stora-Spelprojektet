@@ -4,7 +4,6 @@
 #include <vector>
 #include "Windows.h"
 #include "Windowsx.h"
-#include "ConsoleFunctions.h"
 #include "KButtonEvent.h"
 
 class InputManager
@@ -37,6 +36,9 @@ public:
 
 	char GetLastCharRead() const;
 
+	void Set3DMousePosition(float p_x, float p_z);
+	float Get3DMousePositionX();
+	float Get3DMousePositionZ();
 
 private:
 	static InputManager* m_instance;
@@ -53,6 +55,10 @@ private:
 	int m_mousePositionY;
 	int m_mousePositionX_prev;
 	int m_mousePositionY_prev;
+
+
+	float m_3DMouseX;
+	float m_3DMouseZ;
 
 	char m_lastCharRead;
 };

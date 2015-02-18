@@ -24,21 +24,22 @@ void GUIManager::Render()
 {
 	for (unsigned int i = 0; i < m_elements.size(); i++)
 	{
-		GraphicsEngine::RenderGUI(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetTexture());
+		GraphicsEngine::GetInstance()->RenderGUI(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetTexture());
 	}
+
 	for (unsigned int i = 0; i < m_elementsColor.size(); i++)
 	{
-		GraphicsEngine::RenderGUIColor(m_elementsColor[i]->GetWorldMatrix(), m_elementsColor[i]->GetColor());
+		GraphicsEngine::GetInstance()->RenderGUIColor(m_elementsColor[i]->GetWorldMatrix(), m_elementsColor[i]->GetColor());
 	}
 
 	if (m_texts.size() > 0)
 	{
 		for (unsigned int i = 0; i < m_texts.size(); i++)
 		{
-			GraphicsEngine::AnalyzeText(m_texts[i]->GetLayout(), m_texts[i]->GetPositionX(), m_texts[i]->GetPositionY(), m_texts[i]->GetColor(), 0);
+			GraphicsEngine::GetInstance()->AnalyzeText(m_texts[i]->GetLayout(), m_texts[i]->GetPositionX(), m_texts[i]->GetPositionY(), m_texts[i]->GetColor(), 0);
 		}
 
-		GraphicsEngine::RenderTextGeometry(FW1_RESTORESTATE);
+		GraphicsEngine::GetInstance()->RenderTextGeometry(FW1_RESTORESTATE);
 
 	}
 

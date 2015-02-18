@@ -51,7 +51,7 @@ void SmokeBombManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float 
 	wBitStream.Write(temp.lifeTime);
 
 
-	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 unsigned int SmokeBombManager::GetSmokeBombUniqueId()
@@ -84,7 +84,7 @@ void SmokeBombManager::BroadcastEmptySmokeBombs(unsigned int p_id)
 	bitStream.Write((RakNet::MessageID)ID_SMOKEBOMB_REMOVE);
 	bitStream.Write(p_id);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 std::vector<SmokeBombNet> SmokeBombManager::GetSmokeBombs()
 {

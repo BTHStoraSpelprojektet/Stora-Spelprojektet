@@ -50,6 +50,7 @@ private:
 	GUIText m_timerText;
 
 	GUIText m_fpsTimer;
+	GUIText m_pingText;
 };
 
 #endif

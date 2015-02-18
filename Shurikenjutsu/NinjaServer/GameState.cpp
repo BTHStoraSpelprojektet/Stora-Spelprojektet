@@ -190,7 +190,7 @@ void GameState::SyncTime(RakNet::RakNetGUID p_guid)
 	bitStream.Write(m_timeMin);
 	bitStream.Write(m_timeSec);
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, p_guid, false);
 }
 
 void GameState::SendCurrentTeamScore(RakNet::RakNetGUID p_guid)
@@ -206,7 +206,7 @@ void GameState::SendCurrentTeamScore(RakNet::RakNetGUID p_guid)
 		bitStream.Write(it->second);
 	}
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, p_guid, false);
 }
 
 void GameState::UserConnected(RakNet::RakNetGUID p_guid)
@@ -216,6 +216,6 @@ void GameState::UserConnected(RakNet::RakNetGUID p_guid)
 	{
 		RakNet::BitStream bitStream;
 		bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND);
-		m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+		m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, p_guid, false);
 	}
 }

@@ -7,6 +7,8 @@
 #include "WhipSecondaryAttackAbility.h"
 #include "SpikeAbility.h"
 #include "FanBoomerangAbility.h"
+#include "InputManager.h"
+#include "AttackPredictionEditor.h"
 
 TessenNinja::TessenNinja(){}
 TessenNinja::~TessenNinja(){}
@@ -56,4 +58,54 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 void TessenNinja::Shutdown()
 {
 	Player::Shutdown();
+}
+void TessenNinja::RenderAttackLocations()
+{
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	if (InputManager::GetInstance()->IsLeftMousePressed())
+	{
+		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		{
+			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
+
+			m_aimFrustrum->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsRightMousePressed())
+	{
+		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		{
+			m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
+
+			m_aimPole->Render();
+			m_aimArrow->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
+	{
+		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
+
+			m_aimArrow->Render();
+			m_aimPole->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+	{
+		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+			m_ape->SpinAttackBigSphere(m_aimSphere, m_position, 16.0f);
+			m_aimSphere->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+	{
+		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+		{
+			m_ape->ThrowSphere(m_aimSphere, 5.0f);
+			m_aimSphere->Render();
+		}
+	}
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }

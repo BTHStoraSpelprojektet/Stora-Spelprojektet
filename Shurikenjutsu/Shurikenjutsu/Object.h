@@ -17,6 +17,7 @@ public:
 	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos);
 	virtual bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_rotation, DirectX::XMFLOAT3 p_scale);
 	virtual void Shutdown();
+	virtual void ShutdownGameExit();
 	virtual void Render();
 	virtual void RenderDepth();
 	virtual void RenderDepthInstanced();

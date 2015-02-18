@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Source Files\Core">
-      <UniqueIdentifier>{99c94013-ae70-4a11-aefe-95183f7a9b65}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{bd49b8cf-8bf0-4f38-b691-026f1aac2144}</UniqueIdentifier>
     </Filter>
@@ -38,9 +35,6 @@
     </Filter>
     <Filter Include="Header Files\Core\Input">
       <UniqueIdentifier>{d6518540-bebd-4645-b9bf-808ccb02fc68}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Input">
-      <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Object">
       <UniqueIdentifier>{fefb1194-3e7f-4004-a760-76dc6ad184ad}</UniqueIdentifier>
@@ -83,9 +77,6 @@
     </Filter>
     <Filter Include="Header Files\Graphics\Particles">
       <UniqueIdentifier>{e7ff7528-8b45-486b-b4cf-e03973d7aad8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Core\Camera">
-      <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Core\Camera">
       <UniqueIdentifier>{6105dfd1-efa5-4bde-94c1-581b7b9720a2}</UniqueIdentifier>
@@ -144,12 +135,6 @@
     <Filter Include="Header Files\Ninjas">
       <UniqueIdentifier>{a6867d01-73db-4cd3-a267-4f0ea3cb3317}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Utility">
-      <UniqueIdentifier>{50e9b74b-568e-4883-8d0d-54ac882643cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Utility\DebugDraw">
-      <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Foliage">
       <UniqueIdentifier>{69a518e2-9142-4210-8a9d-aaae94d9a5cd}</UniqueIdentifier>
     </Filter>
@@ -159,6 +144,15 @@
     <Filter Include="Source Files\Object\Tools">
       <UniqueIdentifier>{d6f8df41-a2e5-446e-b07c-e719b8e05b34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{99c94013-ae70-4a11-aefe-95183f7a9b65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Input">
+      <UniqueIdentifier>{5cf320c2-6717-4a01-99fa-e9e3990fa2cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Camera">
+      <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\Graphics\SSAO">
       <UniqueIdentifier>{55c310fd-8aaf-468b-97ec-ec2b928f7a15}</UniqueIdentifier>
     </Filter>
@@ -167,6 +161,15 @@
     </Filter>
     <Filter Include="Shaders\SSAO">
       <UniqueIdentifier>{0c263ccc-4f79-4948-86d3-51db4e4dfb70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Composition">
+      <UniqueIdentifier>{e3a15c1d-637f-4ac7-9242-157567058b8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{50e9b74b-568e-4883-8d0d-54ac882643cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility\DebugDraw">
+      <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -458,8 +461,14 @@
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="AttackPredictionEditor.cpp">
+      <Filter>Source Files\Ninjas</Filter>
+    </ClCompile>
     <ClCompile Include="SSAO.cpp">
       <Filter>Source Files\Graphics\SSAO</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenSpace.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -763,8 +772,14 @@
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Header Files\Graphics\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="AttackPredictionEditor.h">
+      <Filter>Header Files\Ninjas</Filter>
+    </ClInclude>
     <ClInclude Include="SSAO.h">
       <Filter>Header Files\Graphics\SSAO</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenSpace.h">
+      <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -854,6 +869,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\SSAO\SSAOVertexShader.hlsl">
       <Filter>Shaders\SSAO</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Composition\CompositionPixelShader.hlsl">
+      <Filter>Shaders\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Composition\CompositionVertexShader.hlsl">
+      <Filter>Shaders\Composition</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

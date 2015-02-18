@@ -19,6 +19,15 @@ ParticleRenderer* ParticleRenderer::GetInstance()
 
 void ParticleRenderer::Shutdown()
 {
+	for (unsigned int i = 0; i < m_renderQueue.size(); i++)
+	{
+		if (m_renderQueue[i] != nullptr)
+		{
+			m_renderQueue[i]->Shutdown();
+			delete m_renderQueue[i];
+			m_renderQueue[i] = nullptr;
+		}
+	}
 	m_renderQueue.clear();
 	delete m_instance;
 	m_instance = nullptr;
@@ -33,7 +42,7 @@ void ParticleRenderer::Render()
 {
 	for (unsigned int i = 0; i < m_renderQueue.size(); i++)
 	{
-		GraphicsEngine::RenderParticles(m_renderQueue[i]->GetVertexBuffer(), m_renderQueue[i]->GetVertices(), m_renderQueue[i]->GetWorldMatrix(), m_renderQueue[i]->GetParticleTexture());
+		GraphicsEngine::GetInstance()->RenderParticles(m_renderQueue[i]->GetVertexBuffer(), m_renderQueue[i]->GetVertices(), m_renderQueue[i]->GetWorldMatrix(), m_renderQueue[i]->GetParticleTexture());
 	}
 	m_renderQueue.clear();
 }

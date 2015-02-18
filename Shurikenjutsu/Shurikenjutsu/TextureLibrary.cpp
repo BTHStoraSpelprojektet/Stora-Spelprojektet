@@ -16,14 +16,17 @@ void TextureLibrary::Initialize()
 
 void TextureLibrary::Shutdown()
 {
-	// Shutdown Models using iterator to loop through the map
-	/*for (auto it = m_textures.begin(); it != m_textures.end(); it++)
+	// Shutdown texture using iterator to loop through the map
+	for (auto it = m_textures.begin(); it != m_textures.end(); it++)
 	{
-		it->second.Shutdown();
-	}*/
+		it->second->Release();
+	}
 
-	delete m_instance;
-	m_instance = nullptr;
+	if (m_instance)
+	{
+		delete m_instance;
+		m_instance = nullptr;
+	}
 }
 
 TextureLibrary* TextureLibrary::GetInstance()
@@ -43,7 +46,8 @@ ID3D11ShaderResourceView* TextureLibrary::GetTexture(std::string p_path)
 
 void TextureLibrary::AddTexture(std::string p_path)
 {
-	m_textures[p_path] = GraphicsEngine::Create2DTexture(p_path);;
+	m_textures[p_path] = GraphicsEngine::GetInstance()->Create2DTexture(p_path);
+	
 }
 
 void TextureLibrary::LoadTextureDirectory()

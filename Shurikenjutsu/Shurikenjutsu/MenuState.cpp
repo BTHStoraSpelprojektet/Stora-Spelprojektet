@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Frustum.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "MenuItem.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -25,6 +26,11 @@ const float VSYNCHEIGHT = 59.0f;
 const float FULLSCREENWIDTH = 173.0f;
 const float FULLSCREENHEIGHT = 58.0f;
 
+// LOGO
+const float LOGOPOSX = 0.0f;
+const float LOGOPOSY = -200.0f;
+const float LOGOWIDTH = 100.0f;
+const float LOGOHEIGHT = 100.0f;
 
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
@@ -43,6 +49,9 @@ bool MenuState::Initialize()
 {
 	m_lastvsync = false;
 	m_lastfullscreen = false;
+
+	// Initialize logo
+	m_logo->Initialize(LOGOPOSX, LOGOPOSY, LOGOWIDTH, LOGOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/vs_text.png"));
 
 	// Initialize options menu
 	m_options = new Menu();
@@ -223,11 +232,11 @@ GAMESTATESWITCH MenuState::Update()
 		case MENUACTION_OPTIONAPPLY:
 			bool temp = m_options->GetCheckboxState(m_vsyncIndex);
 			m_lastvsync = temp;
-			GraphicsEngine::SetVsync(temp);
+			GraphicsEngine::GetInstance()->SetVsync(temp);
 
 			temp = m_options->GetCheckboxState(m_fullscreenIndex);
 			m_lastfullscreen = temp;
-			GraphicsEngine::ToggleFullscreen(temp);
+			GraphicsEngine::GetInstance()->ToggleFullscreen(temp);
 			break;
 	}
 
@@ -256,7 +265,7 @@ GAMESTATESWITCH MenuState::Update()
 	m_camera->MenuCameraRotation();
 
 	// Handles screen changes.
-	if (GraphicsEngine::HasScreenChanged())
+	if (GraphicsEngine::GetInstance()->HasScreenChanged())
 	{
 		if (GLOBAL::GetInstance().FULLSCREEN)
 		{
@@ -268,7 +277,7 @@ GAMESTATESWITCH MenuState::Update()
 			m_camera->ToggleFullscreen(false);
 		}
 
-		GraphicsEngine::ScreenChangeHandled();
+		GraphicsEngine::GetInstance()->ScreenChangeHandled();
 	}
 
 	// Update Frustum
@@ -304,14 +313,15 @@ void MenuState::Render()
 
 
 	// Draw to the shadowmap.
-	GraphicsEngine::BeginRenderToShadowMap();
+	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
-	GraphicsEngine::SetShadowMap();
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->SetShadowMap();
 
-	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
 	// Draw to the scene.
+	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
+	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }

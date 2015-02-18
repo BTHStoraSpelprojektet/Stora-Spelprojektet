@@ -148,9 +148,9 @@ void SSAO::BuildRandomVec()
 	initData.pSysMem = color;
 
 	ID3D11Texture2D* tex = 0;
-	GraphicsEngine::GetDevice()->CreateTexture2D(&texDesc, &initData, &tex);
+	GraphicsEngine::GetInstance()->GetDevice()->CreateTexture2D(&texDesc, &initData, &tex);
 
-	GraphicsEngine::GetDevice()->CreateShaderResourceView(tex, 0, &m_RandomVecSRV);
+	GraphicsEngine::GetInstance()->GetDevice()->CreateShaderResourceView(tex, 0, &m_RandomVecSRV);
 
 	//view saves a reference.
 	tex->Release();
@@ -161,14 +161,14 @@ void SSAO::BuildRandomVec()
 void SSAO::SetRenderToSSAO()
 {
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	GraphicsEngine::GetContext()->OMSetRenderTargets(1, &m_SSAORTV, 0);
-	GraphicsEngine::GetContext()->RSSetViewports(1, &m_SSAOVP);
+	GraphicsEngine::GetInstance()->GetContext()->OMSetRenderTargets(1, &m_SSAORTV, 0);
+	GraphicsEngine::GetInstance()->GetContext()->RSSetViewports(1, &m_SSAOVP);
 }
 
 void SSAO::ClearSSAO()
 {
 	float color[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
-	GraphicsEngine::GetContext()->ClearRenderTargetView(m_SSAORTV, color);
+	GraphicsEngine::GetInstance()->GetContext()->ClearRenderTargetView(m_SSAORTV, color);
 }
 
 bool SSAO::InitSSAOMap(int textureWidth, int textureHeight)
@@ -202,12 +202,12 @@ bool SSAO::InitSSAOMap(int textureWidth, int textureHeight)
 	textureDesc.MiscFlags = 0;
 
 	// Create the render target texture.
-	result = GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_SSAORTT);
+	result = GraphicsEngine::GetInstance()->GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_SSAORTT);
 	if (FAILED(result))
 	{
 		return false;
 	}
-	result = GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_SSAOBlurRTT);
+	result = GraphicsEngine::GetInstance()->GetDevice()->CreateTexture2D(&textureDesc, NULL, &m_SSAOBlurRTT);
 	if (FAILED(result))
 	{
 		return false;
@@ -219,12 +219,12 @@ bool SSAO::InitSSAOMap(int textureWidth, int textureHeight)
 	renderTargetViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the render target view.
-	result = GraphicsEngine::GetDevice()->CreateRenderTargetView(m_SSAORTT, &renderTargetViewDesc, &m_SSAORTV);
+	result = GraphicsEngine::GetInstance()->GetDevice()->CreateRenderTargetView(m_SSAORTT, &renderTargetViewDesc, &m_SSAORTV);
 	if (FAILED(result))
 	{
 		return false;
 	}
-	result = GraphicsEngine::GetDevice()->CreateRenderTargetView(m_SSAOBlurRTT, &renderTargetViewDesc, &m_SSAOBlurRTV);
+	result = GraphicsEngine::GetInstance()->GetDevice()->CreateRenderTargetView(m_SSAOBlurRTT, &renderTargetViewDesc, &m_SSAOBlurRTV);
 	if (FAILED(result))
 	{
 		return false;
@@ -237,12 +237,12 @@ bool SSAO::InitSSAOMap(int textureWidth, int textureHeight)
 	shaderResourceViewDesc.Texture2D.MipLevels = 1;
 
 	// Create the shader resource view.
-	result = GraphicsEngine::GetDevice()->CreateShaderResourceView(m_SSAORTT, &shaderResourceViewDesc, &m_SSAOSRV);
+	result = GraphicsEngine::GetInstance()->GetDevice()->CreateShaderResourceView(m_SSAORTT, &shaderResourceViewDesc, &m_SSAOSRV);
 	if (FAILED(result))
 	{
 		return false;
 	}
-	result = GraphicsEngine::GetDevice()->CreateShaderResourceView(m_SSAOBlurRTT, &shaderResourceViewDesc, &m_SSAOBlurSRV);
+	result = GraphicsEngine::GetInstance()->GetDevice()->CreateShaderResourceView(m_SSAOBlurRTT, &shaderResourceViewDesc, &m_SSAOBlurSRV);
 	if (FAILED(result))
 	{
 		return false;
@@ -255,14 +255,14 @@ HRESULT SSAO::RenderSSAO(DirectX::XMFLOAT4X4 p_P)
 	ClearSSAO();
 	SetRenderToSSAO();
 
-	GraphicsEngine::GetContext()->IASetVertexBuffers(0, 1, NULL, 0, 0);
-	GraphicsEngine::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	GraphicsEngine::GetInstance()->GetContext()->IASetVertexBuffers(0, 1, NULL, 0, 0);
+	GraphicsEngine::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	DirectX::XMFLOAT4X4 PT;
 
 	DirectX::XMStoreFloat4x4(&PT, DirectX::XMMatrixMultiply(DirectX::XMLoadFloat4x4(&p_P), DirectX::XMLoadFloat4x4(&m_T)));
 
-	GraphicsEngine::GetContext()->Draw(0, 0);
+	GraphicsEngine::GetInstance()->GetContext()->Draw(0, 0);
 
 	BlurSSAO();
 	return S_OK;
@@ -280,11 +280,11 @@ void SSAO::BlurSSAO()
 void SSAO::BlurSSAO(ID3D11ShaderResourceView* input, ID3D11RenderTargetView* output, bool horizontal)
 {
 	float color[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
-	GraphicsEngine::GetContext()->ClearRenderTargetView(output, color);
-	GraphicsEngine::GetContext()->OMSetRenderTargets(1, &output, 0);
-	GraphicsEngine::GetContext()->RSSetViewports(1, &m_SSAOVP);
+	GraphicsEngine::GetInstance()->GetContext()->ClearRenderTargetView(output, color);
+	GraphicsEngine::GetInstance()->GetContext()->OMSetRenderTargets(1, &output, 0);
+	GraphicsEngine::GetInstance()->GetContext()->RSSetViewports(1, &m_SSAOVP);
 
-	GraphicsEngine::GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	GraphicsEngine::GetInstance()->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// SET SHADER RESOURCES!
 
@@ -293,7 +293,7 @@ void SSAO::BlurSSAO(ID3D11ShaderResourceView* input, ID3D11RenderTargetView* out
 	else
 		mSsaoBlurShader->Apply(1);*/
 
-	GraphicsEngine::GetContext()->Draw(0, 0);
+	GraphicsEngine::GetInstance()->GetContext()->Draw(0, 0);
 }
 
 ID3D11ShaderResourceView* SSAO::GetSSAO()
