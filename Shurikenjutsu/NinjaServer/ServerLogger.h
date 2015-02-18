@@ -22,7 +22,8 @@ public:
 	void OnPushBackPacket(const char *data, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress);
 
 	void Update(double p_deltaTime);
-
+protected:
+	const char* UserIDTOString(unsigned char Id);
 private:
 	RakNet::BitSize_t m_frameBitsIn, m_frameBitsOut;
 	double m_time;
