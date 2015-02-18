@@ -4,8 +4,6 @@
 
 #pragma comment(lib, "dxgi.lib")
 
-#include <dxgi.h>
-
 bool DirectXWrapper::Initialize(HWND p_handle)
 {
 	m_depthStencilViewOutlining = NULL;
@@ -157,6 +155,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	adapter->Release();
 	adapterOutput->Release();
 	factory->Release();
+	device->Release();
 
 	// Retrieve the backbuffer texture from the swap chain.
 	ID3D11Texture2D* backBuffer = NULL;
@@ -301,7 +300,56 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
+	InitializeOutlinging();
+
+	DoReportLiveObjects();
+
 	return true;
+}
+
+void DirectXWrapper::Shutdown()
+{
+	if (m_swapChain)
+	{
+		m_swapChain->SetFullscreenState(false, NULL);
+	}
+
+	m_outliningNOTEQUAL->Release();
+	m_outliningALWAYS->Release();
+	m_depthStateParticles->Release();
+	m_depthEnabled->Release();
+	m_depthDisabled->Release();
+	m_depthStencilViewOutlining->Release();
+	m_depthStencilView->Release();
+	m_depthStencilOutlining->Release();
+	m_depthStencil->Release();
+	m_renderTarget->Release();
+
+	if (m_alphaDisabled != nullptr)
+	{
+		m_alphaDisabled->Release();
+		m_alphaDisabled = nullptr;
+	}
+
+	if (m_alphaEnabled != nullptr)
+	{
+		m_alphaEnabled->Release();
+		m_alphaEnabled = nullptr;
+	}
+
+	m_context->ClearState();
+	m_context->Flush();
+
+	m_context->Release();
+	m_device->Release();
+
+	m_context = nullptr;
+	m_device = nullptr;	
+	m_swapChain->Release();
+#ifdef _DEBUG
+	d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY | D3D11_RLDO_DETAIL);
+	d3dDebug->Release();
+#endif
 }
 
 void DirectXWrapper::Clear()
@@ -470,7 +518,8 @@ bool DirectXWrapper::InitializeOutlinging()
 
 void DirectXWrapper::SetOutliningPassOne()
 {
-	m_context->OMSetRenderTargets(0, NULL, m_depthStencilViewOutlining);
+	ID3D11RenderTargetView* nullRenderTarget = NULL;
+	m_context->OMSetRenderTargets(0, &nullRenderTarget, m_depthStencilViewOutlining);
 	m_context->OMSetDepthStencilState(m_outliningALWAYS, 0);
 }
 
@@ -495,4 +544,39 @@ void DirectXWrapper::SetVsync(bool p_state)
 void DirectXWrapper::SetDepthStateForParticles()
 {
 	m_context->OMSetDepthStencilState(m_depthStateParticles, 0);
+}
+
+void DirectXWrapper::DoReportLiveObjects()
+{	
+	if (SUCCEEDED(m_device->QueryInterface(__uuidof(ID3D11Debug), (void**)&d3dDebug)))
+	{
+		ID3D11InfoQueue *d3dInfoQueue = nullptr;
+		if (SUCCEEDED(d3dDebug->QueryInterface(__uuidof(ID3D11InfoQueue), (void**)&d3dInfoQueue)))
+		{
+#ifdef _DEBUG
+			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+			d3dInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+#endif
+
+			D3D11_MESSAGE_ID hide[] =
+			{
+				D3D11_MESSAGE_ID_SETPRIVATEDATA_CHANGINGPARAMS,
+				// Add more message IDs here as needed
+			};
+
+			D3D11_INFO_QUEUE_FILTER filter;
+			memset(&filter, 0, sizeof(filter));
+			filter.DenyList.NumIDs = _countof(hide);
+			filter.DenyList.pIDList = hide;
+			d3dInfoQueue->AddStorageFilterEntries(&filter);
+			d3dInfoQueue->Release();
+		}
+		d3dDebug->Release();
+	}
+}
+
+void DirectXWrapper::SetDebugName(ID3D11DeviceChild* child, const std::string& name)
+{
+	//if (child != nullptr)
+		//child->SetPrivateData(WKPDID_D3DDebugObjectName, name.size(), name.c_str());
 }

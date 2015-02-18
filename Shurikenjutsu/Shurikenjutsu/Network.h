@@ -126,8 +126,10 @@ public:
 	bool CheckIfNaginataStabAttackIsPerformed();
 	void ResetNaginataStabBoolean();
 
-private:
+	int GetLastPing();
 
+private:
+	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
 	void UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
 	void RemoveSpikeTrap(unsigned int p_spikeTrapId);
@@ -203,5 +205,8 @@ private:
 	std::string m_ip;
 
 	ObjectManager* m_objectManager;
+
+	double m_timeToPing;
+	double m_pingTimer;
 };
 #endif

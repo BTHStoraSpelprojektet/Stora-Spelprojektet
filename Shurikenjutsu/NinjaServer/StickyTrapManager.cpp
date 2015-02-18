@@ -53,7 +53,7 @@ void StickyTrapManager::AddStickyTrap(RakNet::RakNetGUID p_guid, float p_startPo
 	wBitStream.Write(temp.lifeTime);
 	wBitStream.Write(temp.guid);
 
-	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 unsigned int StickyTrapManager::GetSpikeTrapUniqueId()
 {
@@ -85,7 +85,7 @@ void StickyTrapManager::BroadcastEmptyStickyTraps(unsigned int p_id)
 	bitStream.Write((RakNet::MessageID)ID_STICKYTRAP_REMOVE);
 	bitStream.Write(p_id);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 std::vector<StickyTrapNet> StickyTrapManager::GetStickyTraps()
 {

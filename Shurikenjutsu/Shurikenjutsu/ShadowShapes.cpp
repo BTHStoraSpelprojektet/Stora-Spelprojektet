@@ -140,11 +140,11 @@ void ShadowShapes::AddSmokeBombShape(Point p_center)
 	smokebomb.m_segments[3] = Line(smokebomb.m_uniquePoints[3], smokebomb.m_uniquePoints[0]);
 
 	smokebomb.m_timePassed = 0.0f;
-	smokebomb.m_timeToLive = SMOKEBOMB_DURATION + 1.0f;
+	smokebomb.m_timeToLive = SMOKEBOMB_DURATION + 0.5f;
 
 	m_smokeBombs.push_back(smokebomb);
 
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), GraphicsEngine::GetDevice());
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), GraphicsEngine::GetInstance()->GetDevice());
 }
 
 void ShadowShapes::UpdateBoundries(Point p_topLeft, Point p_bottomRight)
@@ -203,7 +203,7 @@ void ShadowShapes::Update()
 
 	if (deletedThisFrame)
 	{
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), GraphicsEngine::GetInstance()->GetDevice());
 	}
 }
 

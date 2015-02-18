@@ -130,5 +130,6 @@ private:
 	};
 
 	RenderTarget m_renderTarget;
+	ID3D11ShaderResourceView* m_texture;
 };
 #endif

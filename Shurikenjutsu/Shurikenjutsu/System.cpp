@@ -17,17 +17,13 @@
 #include "VisibilityComputer.h"
 #include "Cursor.h"
 #include "ParticleRenderer.h"
-//#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
-	bool result = true;
-
-	// Set default game state.s
+	// Set default game state.
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
 	m_playingState = new PlayingStateTest();
-	//void *prt = _aligned_malloc(100, 16);
 	m_gameState = m_menuState;
 
 	// Set starting window values.
@@ -77,11 +73,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_window.SetTitle(m_title);
 
 	// Initialize the graphics engine.
-	GraphicsEngine::Initialize(m_window.GetHandle());
-	GraphicsEngine::SetClearColor(0.5f, 0.5f, 1.0f, 1.0f);
-	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
-	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
-	GraphicsEngine::TurnOnAlphaBlending();
+	GraphicsEngine::GetInstance()->Initialize(m_window.GetHandle());
+	GraphicsEngine::GetInstance()->SetClearColor(0.5f, 0.5f, 1.0f, 1.0f);
+	GraphicsEngine::GetInstance()->SetSceneFog(0.0f, 500.0f, 0.01f);
+	GraphicsEngine::GetInstance()->SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
 	// Initialize model library.
@@ -132,36 +128,26 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		ConsolePrintSuccess("Sound initialized successfully.");
 		ConsoleSkipLines(1);
 	}
-	
-	ConsolePrintSuccess("Light source and light camera initialized successfully.");
-	ConsoleSkipLines(1);
 
-	// Initialize network
+	// Initialize the network.
 	Network::GetInstance()->Initialize();
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
 
-	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
-
-	// Cursor
+	// Initialize the cursor.
 	m_cursor = new Cursor();
-	result = m_cursor->Initialize();
-	if (!result)
+	if (!m_cursor->Initialize())
 	{
 		return false;
 	}
 
-	return result;
+	return true;
 }
 
 void System::Shutdown()
 {
-	
 	// Shutdown input.
 	InputManager::GetInstance()->Shutdown();
-
-	// Shutdown graphics engine.
-	GraphicsEngine::Shutdown();
 
 	// Shutdown network
 	Network::GetInstance()->Shutdown();
@@ -208,7 +194,6 @@ void System::Shutdown()
 		m_chooseNinjaState = NULL;
 	}
 
-
 	if (m_timer)
 	{
 		m_timer->Shutdown();
@@ -220,6 +205,9 @@ void System::Shutdown()
 
 	// Shutdown model library
 	ModelLibrary::GetInstance()->Shutdown();
+
+	// Shutdown graphics engine.
+	GraphicsEngine::GetInstance()->Shutdown();
 }
 
 void System::Run()
@@ -324,28 +312,28 @@ void System::Update()
 void System::Render()
 {
 	// Clear the scene to begin rendering.
-	GraphicsEngine::Clear();
+	GraphicsEngine::GetInstance()->Clear();
 
 	// Render Current GameState
 	m_gameState->Render();
 
 	// Render Particles
-	GraphicsEngine::SetDepthStateForParticles();
+	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	ParticleRenderer::GetInstance()->Render();
 
 	// The need to switch back to the original depth stencil state is not needed yet, since GUI switches it to be completely off
 
 	//Render GUI
-	GraphicsEngine::TurnOffDepthStencil();
-	GraphicsEngine::TurnOnAlphaBlending();
+	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	GUIManager::GetInstance()->Render();
 
 	// Render cursor
 	m_cursor->Render();
-	GraphicsEngine::TurnOffAlphaBlending();
-	GraphicsEngine::TurnOnDepthStencil();
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	// Present the result.
-	GraphicsEngine::Present();
+	GraphicsEngine::GetInstance()->Present();
 }

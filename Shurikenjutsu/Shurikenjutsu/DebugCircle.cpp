@@ -21,7 +21,7 @@ void DebugCircle::Initialize(DirectX::XMFLOAT3 p_centrum, float p_radius, int p_
 		lines.push_back(position);
 	}
 
-	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetDevice(), lines);
+	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetInstance()->GetDevice(), lines);
 	m_vertices = lines.size();
 	m_color = p_color;
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
@@ -39,7 +39,7 @@ void DebugCircle::Shutdown()
 
 void DebugCircle::Render()
 {
-	GraphicsEngine::RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
+	GraphicsEngine::GetInstance()->RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
 }
 
 void DebugCircle::UpdateWorldMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

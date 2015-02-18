@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 423
+Number of objects: 433
 Number of bounding boxes: 4
 LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_12 58.349 0 0 0 0 0 60 8.5 15
@@ -8,14 +8,16 @@ LevelBoundingBox_14 0 0 -65.137 0 0 0 15 8.5 60
 AcerPalmatum_1 29.8317 0 46.0169 0 1.705 0
 AcerPalmatum_2 20.91 0 -40.807 0 -1.43659 0
 AcerPalmatum_3 -20.9098 0 40.8066 0 1.705 0
-BigBird_Animated_1 -5.24211 8.63265 33.2289 0 0 0
-BigBird_Animated_2 5.68299 8.63265 -32.5192 0 3.14159 0
+BigBird_Animated_3 -4.81501 7.9076 33.0306 0 1.5708 0
+BigBird_Animated_3 -4.81501 7.9076 33.0306 0 1.5708 0
+BigBird_Animated_4 4.80109 7.9186 -33.032 0 4.71239 0
+BigBird_Animated_4 4.80109 7.9186 -33.032 0 4.71239 0
 Brazier_1 -5.35181 0 5.042 0 0 0
 Brazier_5 -30.812 0 -37.7466 0 2.35619 0
 Brazier_6 30.812 0 37.7466 0 -0.785398 0
 Brazier_7 5.35181 0 -5.04196 0 3.14159 0
-Brazier_8 -5.352 0 -5.042 -0 -1.5708 0
-Brazier_9 5.04196 0 5.042 -0 1.5708 0
+Brazier_8 -5.352 0 -5.042 0 -1.5708 0
+Brazier_9 5.04196 0 5.042 0 1.5708 0
 Deco_smallBush_01_ -37.7385 0 15.2333 0 0 0
 Deco_smallBush_01_13 -23.5531 0 -37.7745 0 -0.610865 0
 Deco_smallBush_01_17 34.6345 0 45.3331 0 2.53073 0
@@ -33,10 +35,10 @@ DecorativeHouse_02 33 0 0 0 4.71239 0
 Hedge_01__16 -3.657 0 5.063 0 0 0
 Hedge_01__17 -5.38878 0 3.381 0 1.5708 0
 Hedge_01__18 3.65684 0 -5.06284 0 3.14159 0
-Hedge_01__19 5.38878 0 -3.38063 -0 -1.5708 0
-Hedge_01__20 -5.389 0 -3.381 -0 -1.5708 0
+Hedge_01__19 5.38878 0 -3.38063 0 -1.5708 0
+Hedge_01__20 -5.389 0 -3.381 0 -1.5708 0
 Hedge_01__21 -3.657 0 -5.063 0 -4.44089e-016 0
-Hedge_01__22 5.06284 0 3.381 -0 1.5708 0
+Hedge_01__22 5.06284 0 3.381 0 1.5708 0
 Hedge_01__23 3.38063 0 5.063 0 3.14159 0
 LampPost_Animated_3 2 0 40 0 4.71239 0
 LampPost_Animated_3 2 0 40 0 4.71239 0
@@ -50,8 +52,14 @@ ParticleEmitter_BrazierFire_1 -5.35181 1.79524 5.042 0 0 0
 ParticleEmitter_BrazierFire_5 -30.812 1.79524 -37.7466 0 2.35619 0
 ParticleEmitter_BrazierFire_6 30.812 1.79524 37.7466 0 -0.785398 0
 ParticleEmitter_BrazierFire_7 5.35181 1.79524 -5.04196 0 3.14159 0
-ParticleEmitter_BrazierFire_8 -5.352 1.79524 -5.042 -0 -1.5708 0
-ParticleEmitter_BrazierFire_9 5.04196 1.79524 5.042 -0 1.5708 0
+ParticleEmitter_BrazierFire_8 -5.352 1.79524 -5.042 0 -1.5708 0
+ParticleEmitter_BrazierFire_9 5.04196 1.79524 5.042 0 1.5708 0
+ParticleEmitter_BrazierSparks_1 -30.812 1.79524 -37.7466 0 2.35619 0
+ParticleEmitter_BrazierSparks_11 -5.35181 1.79524 5.042 0 0 0
+ParticleEmitter_BrazierSparks_12 30.812 1.79524 37.7466 0 -0.785398 0
+ParticleEmitter_BrazierSparks_13 5.35181 1.79524 -5.04196 0 3.14159 0
+ParticleEmitter_BrazierSparks_14 -5.352 1.79524 -5.042 0 -1.5708 0
+ParticleEmitter_BrazierSparks_15 5.04196 1.79524 5.042 0 1.5708 0
 ParticleEmitter_Fireflies_1 -18 4 -38 0 0 0
 ParticleEmitter_Fireflies_2 18 4 39 0 0 0
 ParticleEmitter_LeafAcerPalmatum_3 -19.3634 6.37349 40.5038 0 1.5708 0
@@ -303,14 +311,14 @@ WallW_7 -4.314 0 12 0 1.5708 0
 WallW_8 12 0 -4.314 0 0 0
 WallW_9 12 0 -9.263 0 0 0
 bg_mountains_1 0 0 0 0 0 0
-bigBush_01__ -37.3 0 30.4 0 0 0
+bigBush_01__ -36.851 0 29.2444 0 0 0
 bigBush_01__1 -31.5 0 36.5 0 0.698132 0
 bigBush_01__10 25.4724 0 43.6528 0 1.0472 0
 bigBush_01__11 37.5076 0 42.9787 0 1.0472 0
 bigBush_01__2 -23.3 0 39 0 2.61799 0
 bigBush_01__3 23.3 0 -39 0 5.75959 0
 bigBush_01__4 31.5 0 -36.5 0 3.83972 0
-bigBush_01__5 37.3 0 -30.4 0 3.14159 0
+bigBush_01__5 37.3 0 -29.4873 0 3.14159 0
 bigBush_01__6 18 0 39 0 1.0472 0
 bigBush_01__7 -18 0 -39 0 3.83972 0
 bigBush_01__8 -25.4724 0 -43.6528 0 4.18879 0
@@ -318,8 +326,6 @@ bigBush_01__9 -37.5076 0 -42.9787 0 4.18879 0
 boxpile_01__ 29.2505 0 10.8397 0 0 0
 boxpile_01__1 -29.25 0 -9.97302 0 3.14159 0
 grass_tile_2 0 0 0 0 0 0
-path_dirtILONG__ 0 0.01 -52.5 0 0 0
-path_dirtILONG__1 0 0.01 52.5 0 0 0
 path_dirtISemi__ 15 0.01 7.5 0 0 0
 path_dirtISemi__1 -15 0.01 -7.5 0 3.14159 0
 path_dirtISemi__10 -15 0.01 7.5 0 3.14159 0
@@ -330,10 +336,16 @@ path_dirtISemi__6 -7.5 0.01 15 0 1.5708 0
 path_dirtISemi__7 7.5 0.01 15 0 1.5708 0
 path_dirtISemi__8 -7.5 0.01 -15 0 1.5708 0
 path_dirtISemi__9 22.5 0.01 0 0 1.5708 0
+path_dirtIToGates__ -0.923562 0.01 44.4723 0 0 0
+path_dirtIToGates__1 1.04225 0.01 -56.03 0 0 0
+path_dirtIToShrine__ -0.92189 0.01 24.152 0 0 0
+path_dirtIToShrine__1 0.00120518 0.01 -23.6 0 0 0
 path_dirtL__2 -15 0.01 -15 0 1.5708 0
 path_dirtL__3 15 0.01 -15 0 0 0
 path_dirtL__4 -15 0.01 15 0 3.14159 0
 path_dirtL__5 15 0.01 15 0 4.71239 0
+path_dirtT__ 1.0415 0.01 -32.7521 0 3.14159 0
+path_dirtT__1 -1.00487 0.01 32.752 0 0 0
 path_dirtX__ 15 0.01 0 0 0 0
 path_dirtX__1 -15 0.01 0 0 0 0
 path_dirtX__2 0 0.01 -15 0 0 0
@@ -343,8 +355,8 @@ pillar_2 32.2262 0 39.1608 0 0.785398 0
 sakuraTree_ 13.5 0 28 0 0.349066 0
 sakuraTree_1 -13.5 0 -28 0 5.93412 0
 sakuraTree_2 -29.0922 0 -44.446 0 5.93412 0
-spawnPoint_1_team_1 -35 0 35 0 0 0
-spawnPoint_1_team_2 27.8913 4.02777e-008 -40.2458 0 0 0
+spawnPoint_1_team_1 -38.7572 0 41.0559 0 0 0
+spawnPoint_1_team_2 33.646 4.02777e-008 -44.6341 0 0 0
 tile_torg_ 0 0.01 0 0 0 0
 tree_02__ 21.7 0 -19.5 0 4.18879 0
 tree_02__1 -21.7 0 19.5 0 1.0472 0

@@ -14,12 +14,12 @@ void DebugDraw::RenderSingleLine(DirectX::XMFLOAT3 p_startPoint, DirectX::XMFLOA
 	line.push_back(p_startPoint);
 	line.push_back(p_endPoint);
 
-	ID3D11Buffer* mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetDevice(), line);
+	ID3D11Buffer* mesh = Buffer::CreateLineBuffer(GraphicsEngine::GetInstance()->GetDevice(), line);
 
 	DirectX::XMFLOAT4X4 world;
 	DirectX::XMStoreFloat4x4(&world, DirectX::XMMatrixIdentity());
 
-	GraphicsEngine::RenderLines(mesh, line.size(), p_color, world);
+	GraphicsEngine::GetInstance()->RenderLines(mesh, line.size(), p_color, world);
 
 	mesh->Release();
 	mesh = 0;

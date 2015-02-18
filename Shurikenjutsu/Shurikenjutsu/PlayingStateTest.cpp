@@ -15,6 +15,7 @@
 #include "TeamStatusBar.h"
 #include "ParticleEmitter.h"
 #include "Countdown.h"
+#include "ConsoleFunctions.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -92,7 +93,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
-	GraphicsEngine::InitializeOutling();
+
+	ConsolePrintSuccess("Light source initialized successfully.");
+	ConsoleSkipLines(1);
 
 	// Initialize the Countdown.
 	m_countdown = new Countdown();
@@ -107,63 +110,63 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_mouseY = 0;
 
 	OnScreenResize();
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
 
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
-	if (m_camera != NULL)
+	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
 		delete m_camera;
-		m_camera = NULL;
+		m_camera = nullptr;
 	}
 
-	if (m_playerManager != NULL)
+	if (m_playerManager != nullptr)
 	{
 		m_playerManager->Shutdown();
 		delete m_playerManager;
-		m_playerManager = NULL;
+		m_playerManager = nullptr;
 	}
 
-	if (m_objectManager != NULL)
+	if (m_objectManager != nullptr)
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
-		m_objectManager = NULL;
+		m_objectManager = nullptr;
 	}
 
-	if (m_minimap != NULL)
+	if (m_minimap != nullptr)
 	{
 		m_minimap->Shutdown();
 		delete m_minimap;
-		m_minimap = NULL;
+		m_minimap = nullptr;
 	}
 
-	if (m_teamStatusBar != NULL)
+	if (m_teamStatusBar != nullptr)
 	{
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
-		m_teamStatusBar = NULL;
-}
+		m_teamStatusBar = nullptr;
+	}
 
-	if (m_countdown != NULL)
+	if (m_countdown != nullptr)
 	{
 		m_countdown->Shutdown();
 		delete m_countdown;
-		m_countdown = NULL;
+		m_countdown = nullptr;
 	}
 
-	if (m_frustum != NULL)
+	if (m_frustum != nullptr)
 	{
 		m_frustum->Shutdown();
 		delete m_frustum;
 		m_frustum = nullptr;
 	}
 
-	if (CollisionManager::GetInstance() != NULL)
+	if (CollisionManager::GetInstance() != nullptr)
 	{
 		CollisionManager::GetInstance()->Shutdown();
 	}
@@ -171,13 +174,13 @@ void PlayingStateTest::Shutdown()
 
 GAMESTATESWITCH PlayingStateTest::Update()
 {
-	// Check if new level have started
+	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
 		std::string levelName = Network::GetInstance()->LevelName();
 		Network::GetInstance()->SetHaveUpdateNewLevel();
 		Shutdown();
-		//Initialize(levelName);
+
 		return GAMESTATESWITCH_CHOOSENINJA;
 	}
 
@@ -202,12 +205,13 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Get picking data.
 	BasicPicking();
 
-	// Update every object.
+	// Update every scene object.
 	m_objectManager->Update();
 
+	// Update health bars.
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
-	// Update frustum
+	// Run debug checks.
 	if (FLAG_DEBUG == 1)
 	{
 		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')))
@@ -221,6 +225,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		}
 	}
 
+	// Update the frustum.
 	if (m_updateFrustum)
 	{
 		m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
@@ -228,26 +233,26 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		m_playerManager->UpdateFrustum(m_frustum);
 	}
 
+	// Update the minimap.
 	m_minimap->Update(m_playerManager->GetPlayerPosition());
 	MinimapUpdatePos(m_minimap);
-
 	m_minimap->SetPlayerTexture(m_playerManager->GetPlayerTeam());
 	for (int i = 0; i < 7; i++)
 	{
 		m_minimap->SetTeamTexture(i, m_playerManager->GetEnemyTeam(i));
 	}
 
-	// Update Team status bar
+	// Update the team status bar.
 	m_teamStatusBar->Update();
 
-	// Update Directional Light's camera position
+	// Update the directional light camera position.
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	
 	OutliningRays();
 
 	// Check if the screen changed.
 	bool resized = false;
-	if (GraphicsEngine::HasScreenChanged())
+	if (GraphicsEngine::GetInstance()->HasScreenChanged())
 	{
 		OnScreenResize();
 		resized = true;
@@ -267,19 +272,19 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
-	// Countdown
+	// Update the countdown.
 	m_countdown->Update();
 	
 	if (resized)
 	{
 		// Reupdate the polygon.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
 	}
 
 	// Update smokebomb shadow shapes.
 	ShadowShapes::GetInstance().Update();
 
-	// Set have updated network stuff last in the update
+	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
 	return GAMESTATESWITCH_NONE;
@@ -287,43 +292,42 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 void PlayingStateTest::Render()
 {
-	bool testBB = false;
-
 	// Draw to the shadowmap.
-	GraphicsEngine::BeginRenderToShadowMap();
+	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
 	m_playerManager->RenderDepth();
-	GraphicsEngine::SetShadowMap();
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->SetShadowMap();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 
-	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
-	// Draw to the scene.
+	// Render to the scene normally.
 	m_playerManager->Render();
 	m_objectManager->Render();
-	GraphicsEngine::RenderFoliage();
-	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetContext());
+	GraphicsEngine::GetInstance()->RenderFoliage();
+	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 
 	if (FLAG_DEBUG == 1)
 	{
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
 
+	// Render the UI.
 	m_minimap->Render();
 	m_teamStatusBar->Render();
 	m_countdown->Render();
 
-	// Render outlining.
+	// Render character outlining.
 	if (m_renderOutlining)
 	{
-		GraphicsEngine::ClearOutlining();
-		GraphicsEngine::SetOutliningPassOne();
+		GraphicsEngine::GetInstance()->ClearOutlining();
+		GraphicsEngine::GetInstance()->SetOutliningPassOne();
 		m_playerManager->RenderOutliningPassOne();
-		GraphicsEngine::SetOutliningPassTwo();
+		GraphicsEngine::GetInstance()->SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
 	}
 
-	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
@@ -352,6 +356,7 @@ void PlayingStateTest::BasicPicking()
 
 	m_mouseX = shurPos.x;
 	m_mouseY = shurPos.z;
+	InputManager::GetInstance()->Set3DMousePosition(m_mouseX, m_mouseY);
 }
 
 DirectX::XMFLOAT3 PlayingStateTest::Pick(Point p_point)
@@ -409,7 +414,6 @@ void PlayingStateTest::OutliningRays()
 	}
 	
 	delete rayTest;
-	//m_renderOutlining = true;
 }
 
 DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
@@ -462,5 +466,5 @@ void PlayingStateTest::OnScreenResize()
 	VisibilityComputer::GetInstance().SetProjectionPolygonMatrix(projection);
 
 	// Tell the graphics engine that changes have been handled.
-	GraphicsEngine::ScreenChangeHandled();
+	GraphicsEngine::GetInstance()->ScreenChangeHandled();
 }

@@ -11,6 +11,7 @@ void InstanceManager::Shutdown()
 	for (unsigned int i = 0; i < m_instanceBufferList.size(); i++)
 	{
 		m_instanceBufferList[i]->Release();
+		m_instanceBufferList[i] = 0;
 	}
 }
 void InstanceManager::AddInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position)

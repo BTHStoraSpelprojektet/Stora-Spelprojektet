@@ -53,10 +53,9 @@ bool NormalState::Initialize()
 	m_currentRound = 1;
 	m_roundTimer = 10.0f;
 	m_matchTimer = 20.0f;
-	m_currentTimer = 30.0f;
+	m_currentTimer = 10.0f;
 	m_sendTime = (int)m_currentTimer;
-	m_roundRestarting = true;
-	SendRestartingRound();
+	m_roundRestarting = false;
 	m_matchOver = false;
 
 	return true;
@@ -237,7 +236,7 @@ void NormalState::SendWinningTeam(int p_winningTeam)
 	bitStream.Write((RakNet::MessageID)ID_ROUND_OVER);
 	bitStream.Write(p_winningTeam);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 	std::cout << "Team " << p_winningTeam << " won this round\n";
 }
@@ -248,7 +247,7 @@ void NormalState::SendRestartedRound()
 
 	bitStream.Write((RakNet::MessageID)ID_RESTARTED_ROUND);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void NormalState::SendRestartingRound()
@@ -257,7 +256,7 @@ void NormalState::SendRestartingRound()
 
 	bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 	std::cout << "Restarting round in: \n";
 }
@@ -269,7 +268,7 @@ void NormalState::SendRestartingRoundTime(int p_time)
 	bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND_TIMER);
 	bitStream.Write(p_time);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE_SEQUENCED, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 	std::cout << p_time << "\n";
 }
@@ -284,7 +283,7 @@ void NormalState::StartNewLevel()
 	bitStream.Write((RakNet::MessageID)ID_NEW_LEVEL);
 	bitStream.Write(LEVEL_NAME);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void NormalState::SendMatchOver(int p_winningTeam)
@@ -294,7 +293,7 @@ void NormalState::SendMatchOver(int p_winningTeam)
 	bitStream.Write((RakNet::MessageID)ID_MATCH_OVER);
 	bitStream.Write(p_winningTeam);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void NormalState::ClearAllListAtRoundRestart()

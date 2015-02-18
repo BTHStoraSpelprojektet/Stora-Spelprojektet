@@ -19,7 +19,7 @@ void ModelLibrary::Shutdown()
 	// Shutdown Models using iterator to loop through the map
 	for (auto it = m_models.begin(); it != m_models.end(); it++)
 	{
-		it->second.Shutdown();
+		it->second.ServerShutdown();
 	}
 	if (m_instance != nullptr)
 	{

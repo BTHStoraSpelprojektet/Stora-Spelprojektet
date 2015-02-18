@@ -24,199 +24,75 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	{
 		case(PARTICLE_PATTERN_SMOKE) :
 		{
-			m_particlesPerSecond = 50.0f;
-			m_maxParticles = 75;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(1.0f, 0.5f, 1.0f);
-
-			// Set velocity and its variation.
-			m_velocity = 3.0f;
-			m_velocityVariation = 0.1f;
-
-			m_timeToLive = 1.25f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/smokeParticle_texture.png");
+			initParticles(50.0f, 75, DirectX::XMFLOAT3(1.0f, 0.5f, 1.0f), 3.0f, 0.1f, 1.25f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/smokeParticle_texture.png"));
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_WORLD_MIST) :
 		{
-			m_particlesPerSecond = 125.0f;
-			m_maxParticles = 125;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(35.0f, 5.2f, 45.0f);
-			
-			// Set velocity and its variation.
-			m_velocity = 3.0f;
-			m_velocityVariation = 0.1f;
-
-			m_timeToLive = 300.0f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldMistParticle.png");
+			initParticles(125.0f, 125, DirectX::XMFLOAT3(35.0f, 5.2f, 45.0f), 3.0f, 0.1f, 300.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldMistParticle.png"));
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_WORLD_DUST) :
 		{
-			m_particlesPerSecond = 10000.0f;
-			m_maxParticles = 10000;
-
 			//Border limit
 			m_emitBorderLeft = 45.0f;
 			float hight = 3.0f;
 			float topBottomSpawnLimit = 45.0f;
 
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(topBottomSpawnLimit, hight, m_emitBorderLeft);
-			//m_emitionPositionOffset = DirectX::XMFLOAT3(5.0f, 2.9f, 55.0f);
-			//m_emitionPositionOffset = DirectX::XMFLOAT3(0.0f, 2.9f, 55.0f);
-
-			// Set velocity and its variation.
-			m_velocity = 18.0f;
-			//m_velocityVariation = 2.9f;
-			m_velocityVariation = 2.9f;
-
-			m_timeToLive = FLT_MAX;
-			
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldDustParticle2.png");
+			initParticles(1000.0f, 1000, DirectX::XMFLOAT3(topBottomSpawnLimit, hight, m_emitBorderLeft), 1.0f, 0.1f, FLT_MAX, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldDustParticle2.png"));
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_FIRE) :
 		{
-			m_particlesPerSecond = 100.0f;
-			m_maxParticles = 100;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f);
-
-			// Set velocity and its variation.
-			m_velocity = 1.5f;
-			m_velocityVariation = 0.5f;
-
-			m_timeToLive = 1.0f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle_texture2.png");
+			initParticles(100.0f, 100, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle_texture2.png"));
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_FIRE_SPARK) :
 		{
-			m_particlesPerSecond = 0.5f;
-			m_maxParticles = 5;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f);
-
-			// Set velocity and its variation.
-			m_velocity = 2.5f;
-			m_velocityVariation = 2.0f;
-
-			m_timeToLive = 2.0f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireSparkParticle.png");
+			initParticles(0.5f, 5, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 2.5f, 2.0f, 2.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireSparkParticle.png"));
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_FIREFLIES) :
 		{
-			m_particlesPerSecond = 10.0f;
-			m_maxParticles = 50;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(3.0f, 0.3f, 3.0f);
-
-			// Set velocity and its variation.
-		m_velocity = 0.0f;
-		m_velocityVariation = 0.0f;
-
-		m_timeToLive = 30.0f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/FireFlies.png");
+			initParticles(10.0f, 50, DirectX::XMFLOAT3(3.0f, 0.3f, 3.0f), 0.0f, 0.0f, 30.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/FireFlies.png"));
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_PINK_LEAVES) :
 		{
-			m_particlesPerSecond = 1.0f;
-			m_maxParticles = 100;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f);
-
-			// Set velocity and its variation.
-			m_velocity = 1.5f;
-			m_velocityVariation = 0.4f;
-
-			m_timeToLive = 60.0f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/sakuraLeafParticle_texture.png");
+			initParticles(1.0f, 100, DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f), 1.5f, 0.4f, 60.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/sakuraLeafParticle_texture.png"));
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_GREEN_LEAVES) :
 		{
-			m_particlesPerSecond = 1.0f;
-			m_maxParticles = 100;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f);
-
-			// Set velocity and its variation.
-			m_velocity = 1.0f;
-			m_velocityVariation = 0.4f;
-
-			m_timeToLive = 60.0f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/greenLeafParticle_texture.png");
+			initParticles(1.0f, 100, DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f), 1.0f, 0.4f, 60.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/greenLeafParticle_texture.png"));
 
 			break;
 		}		
 
 		case(PARTICLE_PATTERN_ACERPALMATUM_LEAVES) :
 		{
-			m_particlesPerSecond = 1.0f;
-			m_maxParticles = 100;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f);
-
-			// Set velocity and its variation.
-			m_velocity = 1.0f;
-			m_velocityVariation = 0.4f;
-
-			m_timeToLive = 60.0f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/AcerPlamatumLeafParticle.png");
+			initParticles(1.0f, 100, DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f), 1.0f, 0.4f, 60.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/AcerPlamatumLeafParticle.png"));
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_DASH_TRAIL) :
 		{
-			m_particlesPerSecond = 0.0f;
-			m_maxParticles = 100;
-
-			// Set the random offset limits for the particles when emitted.
-			m_emitionPositionOffset = DirectX::XMFLOAT3(0.4f, 0.25f, 0.4f);
-
-			// Set velocity and its variation.
-			m_velocity = 0.0f;
-			m_velocityVariation = 0.0f;
-
-			m_timeToLive = 0.75f;
-
-			m_particleTexture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particle_Sparkle.png");
+			initParticles(0.0f, 100, DirectX::XMFLOAT3(0.4f, 0.25f, 0.4f), 0.0f, 0.0f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particle_Sparkle.png"));
 
 			break;
 		}
@@ -276,6 +152,22 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	return true;
 }
 
+void ParticleEmitter::initParticles(float particlesPerSecond, float maxParticles, DirectX::XMFLOAT3 emitionPositionOffset, float velocity, float velocityVariation, float timeToLive, ID3D11ShaderResourceView* particleTexture){
+	m_particlesPerSecond = particlesPerSecond;
+	m_maxParticles = (unsigned int)maxParticles;
+
+	// Set the random offset limits for the particles when emitted.
+	m_emitionPositionOffset = emitionPositionOffset;
+
+	// Set velocity and its variation.
+	m_velocity = velocity;
+	m_velocityVariation = velocityVariation;
+
+	m_timeToLive = timeToLive;
+
+	m_particleTexture = particleTexture;
+}
+
 void ParticleEmitter::Shutdown()
 {
 	if (m_particleList)
@@ -294,6 +186,11 @@ void ParticleEmitter::Shutdown()
 	{
 		delete m_mesh;
 		m_mesh = 0;
+	}
+	if (m_particleTexture != nullptr)
+	{
+		//m_particleTexture->Release();
+		m_particleTexture = nullptr;
 	}
 }
 
@@ -694,18 +591,20 @@ void ParticleEmitter::UpdateParticles()
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
-					float xWindOffset = 0.01f;//= getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-					float zWindOffset = 0.01f;//= getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 
 					if (timeToDirectionChange>m_particleList[i].m_timePassed)
 					{
-						//m_particleList[i].m_position.x = m_particleList[i].m_position.x - xWindOffset;
+						m_particleList[i].m_position.x = m_particleList[i].m_position.x;
 					}
 
 					else
 					{
-						//m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
+						m_particleList[i].m_position.x = m_particleList[i].m_position.x + (xWindOffset/2.5f);
 					}
+
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (zWindOffset / 2.5f);
 
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
 					//m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
@@ -723,39 +622,15 @@ void ParticleEmitter::UpdateParticles()
 			if (m_particleList != NULL){
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
-					//float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
-					//float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-					//float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-
-					//float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
-
-				/*if (m_particleList[i].m_direction.x<1 && m_particleList[i].m_direction.x>-1){
-						m_particleList[i].m_direction.x += 0.01f*(float)GLOBAL::GetInstance().GetDeltaTime();
-					}
-					else{
-						m_particleList[i].m_direction.x = 0;
-					}
-					if (m_particleList[i].m_direction.z<1 && m_particleList[i].m_direction.z>-1){
-						m_particleList[i].m_direction.z += 0.01f*(float)GLOBAL::GetInstance().GetDeltaTime();
-					}
-					else{
-						m_particleList[i].m_direction.z = 0;
-				}*/
-
-					//DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
-
-				m_particleList[i].m_position.x = m_particleList[i].m_position.x; // +m_particleList[i].m_velocity * m_particleList[i].m_direction.x*(float)GLOBAL::GetInstance().GetDeltaTime();
+					m_particleList[i].m_position.x = m_particleList[i].m_position.x; 
 
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y;
-				m_particleList[i].m_position.z = m_particleList[i].m_position.z; //+ m_particleList[i].m_velocity * m_particleList[i].m_direction.z*(float)GLOBAL::GetInstance().GetDeltaTime();
-
-					
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z; 
 
 					// Add time passed.
 					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
 				}
 			}
-
 			break;
 		}
 
@@ -764,22 +639,24 @@ void ParticleEmitter::UpdateParticles()
 			if (m_particleList != NULL){
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
-					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
+					float timeToDirectionChange = m_particleList[i].m_timeToLive / 10.0f;
 					float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 					float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 
 					if (timeToDirectionChange>m_particleList[i].m_timePassed)
 					{
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x - xWindOffset;
+						m_particleList[i].m_position.x = m_particleList[i].m_position.x;
 					}
 
 					else
 					{
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
+						m_particleList[i].m_position.x = m_particleList[i].m_position.x + (xWindOffset / 2.5f);
 					}
 
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (zWindOffset / 2.5f);
+
 					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
-					m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
+					//m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
 
 					// Add time passed.
 					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
@@ -791,109 +668,21 @@ void ParticleEmitter::UpdateParticles()
 
 		case(PARTICLE_PATTERN_PINK_LEAVES) :
 		{
-			if (m_particleList != NULL){
-				for (unsigned int i = 0; i < m_currentParticles; i++)
-				{
-					float velocity = m_particleList[i].m_velocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_velocityVariation;
-
-					if (m_particleList[i].m_position.y > 0.2f){
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x + velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
-						m_particleList[i].m_position.y = m_particleList[i].m_position.y + velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.y;
-						m_particleList[i].m_position.z = m_particleList[i].m_position.z + velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
-
-						float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-						float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
-						m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
-
-					}
-
-					// Add time passed.
-					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
-				}
-			}
+			fallingLeafUpdate();
 
 			break;
 		}
 
 		case(PARTICLE_PATTERN_GREEN_LEAVES) :
 		{
-			if (m_particleList != NULL){
-				for (unsigned int i = 0; i < m_currentParticles; i++)
-				{
-					if (m_particleList[i].m_timePassed>0.00f&&m_particleList[i].m_timePassed<0.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					else if (m_particleList[i].m_timePassed>4.00f&&m_particleList[i].m_timePassed<4.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					else if (m_particleList[i].m_timePassed>8.00f&&m_particleList[i].m_timePassed<8.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					else if (m_particleList[i].m_timePassed>12.00f&&m_particleList[i].m_timePassed<12.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					else if (m_particleList[i].m_timePassed>16.00f&&m_particleList[i].m_timePassed<16.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					m_particleList[i].m_velocityXZ = m_particleList[i].m_velocityXZ;
-
-					if (m_particleList[i].m_position.y > 0.2f){
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocityXZ * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
-						m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.y;
-						m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocityXZ * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
-
-						float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-						float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
-						m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
-					}
-
-					// Add time passed.
-					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
-				}
-			}
+			fallingLeafUpdate();
 
 			break;
-		}
+					}
 
 		case(PARTICLE_PATTERN_ACERPALMATUM_LEAVES) :
 		{
-			if (m_particleList != NULL){
-				for (unsigned int i = 0; i < m_currentParticles; i++)
-				{
-					if (m_particleList[i].m_timePassed>0.00f&&m_particleList[i].m_timePassed<0.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					else if (m_particleList[i].m_timePassed>4.00f&&m_particleList[i].m_timePassed<4.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					else if (m_particleList[i].m_timePassed>8.00f&&m_particleList[i].m_timePassed<8.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					else if (m_particleList[i].m_timePassed>12.00f&&m_particleList[i].m_timePassed<12.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					else if (m_particleList[i].m_timePassed>16.00f&&m_particleList[i].m_timePassed<16.01f){
-						m_particleList[i].m_velocityXZ = m_particleList[i].m_velocity + rand() % 5 + (-2);
-					}
-					m_particleList[i].m_velocityXZ = m_particleList[i].m_velocityXZ;
-
-					if (m_particleList[i].m_position.y > 0.2f){
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocityXZ * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
-						m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.y;
-						m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocityXZ * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
-
-						float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-						float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
-						m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
-					}
-
-					// Add time passed.
-					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
-				}
-			}
+			fallingLeafUpdate();
 
 			break;
 		}
@@ -901,7 +690,7 @@ void ParticleEmitter::UpdateParticles()
 		case(PARTICLE_PATTERN_DASH_TRAIL) :
 		{
 			if (m_particleList != NULL)
-			{
+		{
 				for (unsigned int i = 0; i < m_currentParticles; i++)
 				{
 					// Add time passed.
@@ -913,24 +702,49 @@ void ParticleEmitter::UpdateParticles()
 		}
 
 		default:
-		{
+				{
 			break;
-		}
-	}
+					}
+					}
+					}
+
+void ParticleEmitter::fallingLeafUpdate(){
+	if (m_particleList != NULL){
+		for (unsigned int i = 0; i < m_currentParticles; i++)
+		{
+					if (m_particleList[i].m_position.y > 0.2f){
+				float angle = m_particleList[i].m_timePassed*2.5f;
+
+				//Make the leaves fall nicely
+				m_particleList[i].m_position.x = m_particleList[i].m_position.x +sinf(angle) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_position.z = m_particleList[i].m_position.z; //+ sinf(angle)* (float)GLOBAL::GetInstance().GetDeltaTime();
+
+						m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.y;
+
+						float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+						float zWindOffset = getWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+						m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
+						m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
+					}
+
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
+			}
 }
 
 float ParticleEmitter::getWindOffsetX(float timePassed, float timeToLive)
 {
 	float angle = m_globalWindAngleDegree * (float)3.14159265359 / 180;
 
-	return ((timePassed / timeToLive) / 60)*cosf(angle);
+	return ((timePassed / timeToLive) / 60)*cosf(angle)*m_globalWindSpeed;
 }
 
 float ParticleEmitter::getWindOffsetZ(float timePassed, float timeToLive)
 {
 	float angle = m_globalWindAngleDegree * (float)3.14159265359 / 180;
 
-	return ((timePassed / timeToLive) / 60)*sinf(angle);
+	return ((timePassed / timeToLive) / 60)*sinf(angle)*m_globalWindSpeed;
 }
 
 float ParticleEmitter::fadeIn(ParticleVertex* mesh, Particle* particle, float timeToFade){
@@ -1034,6 +848,10 @@ void ParticleEmitter::UpdateBuffers()
 				}
 				break;
 			}
+			case PARTICLE_PATTERN_FIRE_SPARK:
+			{
+				m_particleList[i].m_opacity = fadeOut(&m_mesh[i], &m_particleList[i], 0.5f);
+			}
 			case PARTICLE_PATTERN_FIREFLIES:
 			{
 			//fadeIn(m_mesh[i], m_particleList[i], 4.0);
@@ -1062,7 +880,7 @@ void ParticleEmitter::UpdateBuffers()
 			{
 			//fadeIn(m_mesh[i], m_particleList[i], 0.5);
 
-			m_particleList[i].m_opacity = fadeIn(&m_mesh[i], &m_particleList[i], 0.001);
+			m_particleList[i].m_opacity = fadeIn(&m_mesh[i], &m_particleList[i], 0.001f);
 			//m_particleList[i].opacity = 1.0f;
 				
 			//if (m_particleList[i].m_timeSpecial>0.1f)
@@ -1140,7 +958,7 @@ void ParticleEmitter::UpdateBuffers()
 	}
 
 	// Lock the dynamic vertex buffer.
-	if (FAILED(GraphicsEngine::GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+	if (FAILED(GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map particle buffer.");
 		return;
@@ -1153,7 +971,7 @@ void ParticleEmitter::UpdateBuffers()
 	memcpy(vertex, (void*)m_mesh, (sizeof(ParticleVertex) * m_vertices));
 
 	// Unlock the vertex buffer.
-	GraphicsEngine::GetContext()->Unmap(m_vertexBuffer, 0);
+	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
 }
 
 ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
@@ -1183,7 +1001,7 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 		data.SysMemSlicePitch = 0;
 
 		ID3D11Texture2D* texture = NULL;
-		hr = GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
+		hr = GraphicsEngine::GetInstance()->GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
 		if (FAILED(hr))
 		{
 			ConsolePrintError("Failed creating CreateTexture2D - particleemmiter");
@@ -1194,11 +1012,13 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 		sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 		sRVDesc.Texture2D.MostDetailedMip = 0;
-		hr = GraphicsEngine::GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+		hr = GraphicsEngine::GetInstance()->GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
 		if (FAILED(hr))
 		{
 			ConsolePrintError("Failed creating shaderresource - particleemmiter");
 		}
+
+		texture->Release();
 	}
 
 	return textureSRV;

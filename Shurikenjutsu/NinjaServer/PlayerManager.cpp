@@ -27,6 +27,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	// Todo: move to player
 	m_katanaBoundingBoxes = ModelLibrary::GetInstance()->GetModel(KATANA_NINJA_MODEL_NAME)->GetBoundingBoxes();
 	m_tessenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(TESSEN_NINJA_MODEL_NAME)->GetBoundingBoxes();
+	m_naginataBoundingBoxes = ModelLibrary::GetInstance()->GetModel(NAGINATA_NINJA_MODEL_NAME)->GetBoundingBoxes();
 
 	return true;
 }
@@ -209,7 +210,7 @@ void PlayerManager::RespawnPlayer(RakNet::RakNetGUID p_guid)
 			bitStream.Write(m_players[i].y);
 			bitStream.Write(m_players[i].z);
 
-			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 2, p_guid, false);
 			break;
 		}
 	}
@@ -234,7 +235,7 @@ void PlayerManager::SendInvalidMessage(RakNet::RakNetGUID p_guid)
 
 	bitStream.Write((RakNet::MessageID)ID_PLAYER_INVALID_MOVE);
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 1, p_guid, false);
 }
 
 LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(int p_team)
@@ -275,6 +276,11 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 			tmpBB = m_tessenBoundingBoxes;
 			break;
 		}
+		case 2:
+		{
+			tmpBB = m_naginataBoundingBoxes;
+			break;
+		}
 	}
 
 	for (unsigned int i = 0; i < tmpBB.size(); i++)
@@ -286,13 +292,6 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 
 		boundingBoxes.push_back(box);
 	}
-
-	// Temp code to create a box around the player
-	Box playerBox = Box(0.0f, 2.0f, 0.0f, 1.0f, 2.0f, 1.0f);
-	playerBox.m_center.x += m_players[p_index].x;
-	playerBox.m_center.y += m_players[p_index].y;
-	playerBox.m_center.z += m_players[p_index].z;
-	boundingBoxes.push_back(playerBox);
 
 	return boundingBoxes;
 }
@@ -324,7 +323,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		l_bitStream.Write(player.x + dashDistance * player.dirX);
 		l_bitStream.Write(player.y);
 		l_bitStream.Write(player.z + dashDistance * player.dirZ);
-		m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+		m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE, 3, p_guid, false);
 		break;
 	case ABILITIES_MELEESWING:
 		abilityString = "MeleeSwinged";
@@ -402,7 +401,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	bitStream.Write(p_readAbility);
 	bitStream.Write(abilityString);
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 3, p_guid, false);
 }
 
 int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
@@ -436,15 +435,25 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage)
 
 void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive)
 {
+	UpdateHealth(p_guid, p_health, p_isAlive, p_health <= 0);
+}
+
+void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable)
+{
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_PLAYER_HP_CHANGED);
 	bitStream.Write(p_guid);
 	bitStream.Write(p_health);
 	bitStream.Write(p_isAlive);
-	
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	PacketReliability reliability = UNRELIABLE_SEQUENCED;
+	// Need reliable on dead players and when they get full health
+	if (p_sendReliable)
+	{
+		reliability = RELIABLE;
+	}
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, reliability, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 float PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
@@ -460,7 +469,7 @@ void PlayerManager::ResetHealth(RakNet::RakNetGUID p_guid)
 		{
 			m_players[i].currentHP = m_players[i].maxHP;
 			m_players[i].isAlive = true;
-			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
+			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive, true);
 		}
 	}
 }
@@ -470,7 +479,7 @@ void PlayerManager::NaginataStabAttackPerformed(RakNet::RakNetGUID p_guid)
 
 	bitStream.Write((RakNet::MessageID)ID_NAGINATA_STAB_HAS_OCCURED);
 	bitStream.Write(p_guid);
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, p_guid, false);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, p_guid, false);
 }
 
 int PlayerManager::GetTeamForPlayer()

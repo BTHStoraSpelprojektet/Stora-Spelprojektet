@@ -53,7 +53,7 @@ void ShurikenManager::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float
 	wBitStream.Write(shuriken.speed);
 	wBitStream.Write(shuriken.megaShuriken);
 
-	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void ShurikenManager::AddMegaShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)
@@ -85,7 +85,7 @@ void ShurikenManager::AddMegaShuriken(RakNet::RakNetGUID p_guid, float p_posX, f
 	wBitStream.Write(shuriken.speed);
 	wBitStream.Write(shuriken.megaShuriken);
 
-	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void ShurikenManager::RemoveShuriken(unsigned int p_id)
@@ -126,7 +126,7 @@ void ShurikenManager::BroadcastDestoyedShuriken(unsigned int p_id)
 	bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
 	bitStream.Write(p_id);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 unsigned int ShurikenManager::GetShurikenUniqueId()

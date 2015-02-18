@@ -44,7 +44,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	{		
 		if (prevModelFileName != levelObjects[i].m_filePath)
 		{
-			GraphicsEngine::AddInstanceBuffer(numberOfSameModel, modelPositions);
+			GraphicsEngine::GetInstance()->AddInstanceBuffer(numberOfSameModel, modelPositions);
 			//Reset for new type of model
 			numberOfSameModel = 0;
 			modelPositions.clear();
@@ -82,47 +82,47 @@ bool ObjectManager::Initialize(Level* p_level)
 		ParticleEmitter* particleEmitter = new ParticleEmitter();
 
 		if (particleLevelEmitter[i].type == EmitterType::BrazierFire){
-		particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+		particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
 		}
 		else if (particleLevelEmitter[i].type == EmitterType::FireSpark){
-			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
-				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE_SPARK);
+				DirectX::XMFLOAT2(PARTICLE_FIRE_SPARK_SIZE_X, PARTICLE_FIRE_SPARK_SIZE_Y), PARTICLE_PATTERN_FIRE_SPARK);
 		}
 		else if (particleLevelEmitter[i].type == EmitterType::LeafSakura){
-			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_PINKLEAF_SIZE_X, PARTICLE_PINKLEAF_SIZE_Y), PARTICLE_PATTERN_PINK_LEAVES);
 		}
 		else if (particleLevelEmitter[i].type == EmitterType::LeafTree){
-			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_GREEN_LEAVES);
 		}
 		else if (particleLevelEmitter[i].type == EmitterType::LeafAcerPalmatum){
-			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_ACERPALMATUM_LEAVES);
 		}
 		else if (particleLevelEmitter[i].type == EmitterType::WorldMist){
-			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDMIST_SIZE_X, PARTICLE_WORLDMIST_SIZE_Y), PARTICLE_PATTERN_WORLD_MIST);
 		}
 		else if (particleLevelEmitter[i].type == EmitterType::WorldDust){
-			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDDUST_SIZE_X, PARTICLE_WORLDDUST_SIZE_Y), PARTICLE_PATTERN_WORLD_DUST);
 		}
 		else if (particleLevelEmitter[i].type == EmitterType::Fireflies){
-			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_FIREFLIES_SIZE_X, PARTICLE_FIREFLIES_SIZE_Y), PARTICLE_PATTERN_FIREFLIES);
 		}
 		else{
-			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 		}
@@ -201,6 +201,79 @@ void ObjectManager::Shutdown()
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
 		m_volleys[i]->Shutdown();
+		delete m_volleys[i];
+	}
+	m_volleys.clear();
+}
+
+void ObjectManager::ShutdownExit()
+{
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		m_shurikens[i]->ShutdownGameExit();
+		delete m_shurikens[i];
+	}
+	m_shurikens.clear();
+
+	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	{
+		m_staticObjects[i].ShutdownGameExit();
+	}
+	m_staticObjects.clear();
+
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		m_animatedObjects[i]->ShutdownGameExit();
+		delete m_animatedObjects[i];
+	}
+	m_animatedObjects.clear();
+
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		//m_smokeBombList[i]->ShutdownGameExit();
+		delete m_smokeBombList[i];
+	}
+	m_smokeBombList.clear();
+
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		//m_spikeTrapList[i]->ShutdownGameExit();
+		delete m_spikeTrapList[i];
+	}
+	m_spikeTrapList.clear();
+
+	for (unsigned int i = 0; i < m_fans.size(); i++)
+	{
+		m_fans[i]->ShutdownGameExit();
+		delete m_fans[i];
+	}
+	m_fans.clear();
+
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		m_projectiles[i]->ShutdownGameExit();
+		delete m_projectiles[i];
+		m_projectiles[i] = nullptr;
+	}
+	m_projectiles.clear();
+
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		//m_stickyTrapList[i]->ShutdownGameExit();
+		delete m_stickyTrapList[i];
+	}
+	m_stickyTrapList.clear();
+
+	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
+	{
+		//m_worldParticles[i]->ShutdownGameExit();
+		delete m_worldParticles[i];
+	}
+	m_worldParticles.clear();
+
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		//m_volleys[i]->ShutdownGameExit();
 		delete m_volleys[i];
 	}
 	m_volleys.clear();
@@ -447,7 +520,7 @@ void ObjectManager::UpdateRenderLists()
 				if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
 				{
 					m_objectsToInstanceRender.push_back(tempList[i]);
-					GraphicsEngine::UpdateInstanceBuffers(temp);
+					GraphicsEngine::GetInstance()->UpdateInstanceBuffers(temp);
 				}
 			}
 		}
@@ -502,18 +575,18 @@ void ObjectManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_spikeTrapList[i]->GetSpikeSphere(), 2.0f))
 		{
-			GraphicsEngine::TurnOnAlphaBlending();
+			GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 			m_spikeTrapList[i]->Render();
-			GraphicsEngine::TurnOffAlphaBlending();
+			GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 		}
 	}
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_stickyTrapList[i]->GetStickyTrapSphere(), 2.0f))
 		{
-			GraphicsEngine::TurnOnAlphaBlending();
+			GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 			m_stickyTrapList[i]->Render();
-			GraphicsEngine::TurnOffAlphaBlending();
+			GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 		}
 	}
 

@@ -6,7 +6,8 @@
 #include "ShurikenAbility.h"
 #include "MegaShuriken.h"
 #include "SmokeBombAbility.h"
-//#include "StickyTrapAbility.h"
+#include "InputManager.h"
+#include "AttackPredictionEditor.h"
 
 KatanaNinja::KatanaNinja(){}
 KatanaNinja::~KatanaNinja(){}
@@ -56,4 +57,57 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 void KatanaNinja::Shutdown()
 {
 	Player::Shutdown();
+}
+
+void KatanaNinja::RenderAttackLocations()
+{
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	if (InputManager::GetInstance()->IsLeftMousePressed())
+	{
+		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		{
+			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position);
+
+			m_aimFrustrum->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsRightMousePressed())
+	{
+		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		{
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
+
+			m_aimPole->Render();
+			m_aimArrow->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
+	{
+		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+			m_ape->ThickArrowPrediction(m_aimArrow,m_aimPole, m_attackDir, m_position, 10.0f);
+
+			m_aimPole->Render();
+			m_aimArrow->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+	{
+		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		{
+			m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
+
+			m_aimPole->Render();
+			m_aimArrow->Render();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+	{
+		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+		{
+			m_ape->ThrowSphere(m_aimSphere, 7.0f);
+			m_aimSphere->Render();
+		}
+	}
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }
