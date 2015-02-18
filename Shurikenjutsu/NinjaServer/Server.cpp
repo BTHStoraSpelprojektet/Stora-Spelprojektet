@@ -14,6 +14,10 @@ bool Server::Initialize()
 	m_serverPeer->Startup(MAX_CLIENTS, &m_socketDesc, 1);
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
+	m_serverLogger = ServerLogger();
+	m_serverLogger.Initialize();
+	m_serverPeer->AttachPlugin(&m_serverLogger);
+
 	m_nrOfConnections = 0;
 
 	// Initiate models (for boundingboxes)
@@ -40,6 +44,7 @@ void Server::Shutdown()
 void Server::Update(double p_deltaTime)
 {
 	ReceviePacket();
+	m_serverLogger.Update(p_deltaTime);
 
 	m_gameState->Update(p_deltaTime);
 }
