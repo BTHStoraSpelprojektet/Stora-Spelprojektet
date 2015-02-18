@@ -11,11 +11,22 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_stickyTrapBag->Initialize("../Shurikenjutsu/Models/StickyTrapJar.SSP", p_startPosition);
 
 	m_stickyTrap = new Object();
-	m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", p_endPosition);
+	int randomModel = std::rand() % 4 + 1;
+	if (randomModel == 1)
+	{
+		m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrap1Shape.SSP", p_endPosition);
+	}
+	else if (randomModel == 2)
+	{
+		m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrap2Shape.SSP", p_endPosition);
+	}
+	else 
+	{
+		m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrap3Shape.SSP", p_endPosition);
+	}
 
-	float randomY = std::rand() % 6283 + 1;
-	randomY = randomY / 1000;
-	m_stickyTrap->SetRotation(DirectX::XMFLOAT3(0.0f,randomY,0.0f));
+	int randomY = std::rand() % 8;
+	m_stickyTrap->SetRotation(DirectX::XMFLOAT3(0.0f,(float)randomY,0.0f));
 
 	m_startPosition = p_startPosition;
 	m_isThrowing = true;

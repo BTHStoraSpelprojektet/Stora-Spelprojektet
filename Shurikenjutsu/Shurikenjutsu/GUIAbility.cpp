@@ -11,7 +11,7 @@ bool GUIAbility::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p
 	m_ability.Initialize(p_position, p_width - 4.0f, p_height - 4.0f, p_texture);
 	m_cooldown.Initialize(p_position, 0, 0, TextureLibrary::GetInstance()->GetTexture(ABILITY_CD_TEXTURE));
 	m_stacks.Initialize("", 30.0f, p_position.x, p_position.y + 30.0f, 0xffffffff);
-	m_hotKeyText.Initialize(p_hotKey, 30.0f, p_position.x, p_position.y - 30.0f, 0xff0000ff);
+	m_hotKeyText.Initialize(p_hotKey, 20.0f, p_position.x, p_position.y - 35.0f, 0xff071e31);
 	m_cooldownText.Initialize("", 36.0f, p_position.x, p_position.y, 0xff0000ff);
 	m_lastnrofStacks = -1;
 	return true;
