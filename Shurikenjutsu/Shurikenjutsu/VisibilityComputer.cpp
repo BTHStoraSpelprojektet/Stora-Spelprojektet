@@ -148,6 +148,9 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 	m_renderTarget.Initialize(GraphicsEngine::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
+	ConsolePrintSuccess("Visibility computer initialized successfully.");
+	ConsoleSkipLines(1);
+
 	return true;
 }
 

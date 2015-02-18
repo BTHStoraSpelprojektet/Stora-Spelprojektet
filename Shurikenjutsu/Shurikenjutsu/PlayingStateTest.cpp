@@ -93,7 +93,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
-	//GraphicsEngine::GetInstance()->InitializeOutling();
+
+	ConsolePrintSuccess("Light source initialized successfully.");
+	ConsoleSkipLines(1);
 
 	// Initialize the Countdown.
 	m_countdown = new Countdown();
@@ -115,56 +117,56 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 void PlayingStateTest::Shutdown()
 {
-	if (m_camera != NULL)
+	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
 		delete m_camera;
-		m_camera = NULL;
+		m_camera = nullptr;
 	}
 
-	if (m_playerManager != NULL)
+	if (m_playerManager != nullptr)
 	{
 		m_playerManager->Shutdown();
 		delete m_playerManager;
-		m_playerManager = NULL;
+		m_playerManager = nullptr;
 	}
 
-	if (m_objectManager != NULL)
+	if (m_objectManager != nullptr)
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
-		m_objectManager = NULL;
+		m_objectManager = nullptr;
 	}
 
-	if (m_minimap != NULL)
+	if (m_minimap != nullptr)
 	{
 		m_minimap->Shutdown();
 		delete m_minimap;
-		m_minimap = NULL;
+		m_minimap = nullptr;
 	}
 
-	if (m_teamStatusBar != NULL)
+	if (m_teamStatusBar != nullptr)
 	{
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
-		m_teamStatusBar = NULL;
-}
+		m_teamStatusBar = nullptr;
+	}
 
-	if (m_countdown != NULL)
+	if (m_countdown != nullptr)
 	{
 		m_countdown->Shutdown();
 		delete m_countdown;
-		m_countdown = NULL;
+		m_countdown = nullptr;
 	}
 
-	if (m_frustum != NULL)
+	if (m_frustum != nullptr)
 	{
 		m_frustum->Shutdown();
 		delete m_frustum;
 		m_frustum = nullptr;
 	}
 
-	if (CollisionManager::GetInstance() != NULL)
+	if (CollisionManager::GetInstance() != nullptr)
 	{
 		CollisionManager::GetInstance()->Shutdown();
 	}
@@ -290,8 +292,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 void PlayingStateTest::Render()
 {
-	bool testBB = false;
-
 	// Draw to the shadowmap.
 	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();

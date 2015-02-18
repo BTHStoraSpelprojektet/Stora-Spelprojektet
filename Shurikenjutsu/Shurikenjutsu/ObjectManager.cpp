@@ -206,6 +206,79 @@ void ObjectManager::Shutdown()
 	m_volleys.clear();
 }
 
+void ObjectManager::ShutdownExit()
+{
+	for (unsigned int i = 0; i < m_shurikens.size(); i++)
+	{
+		m_shurikens[i]->ShutdownGameExit();
+		delete m_shurikens[i];
+	}
+	m_shurikens.clear();
+
+	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
+	{
+		m_staticObjects[i].ShutdownGameExit();
+	}
+	m_staticObjects.clear();
+
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		m_animatedObjects[i]->ShutdownGameExit();
+		delete m_animatedObjects[i];
+	}
+	m_animatedObjects.clear();
+
+	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
+	{
+		//m_smokeBombList[i]->ShutdownGameExit();
+		delete m_smokeBombList[i];
+	}
+	m_smokeBombList.clear();
+
+	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
+	{
+		//m_spikeTrapList[i]->ShutdownGameExit();
+		delete m_spikeTrapList[i];
+	}
+	m_spikeTrapList.clear();
+
+	for (unsigned int i = 0; i < m_fans.size(); i++)
+	{
+		m_fans[i]->ShutdownGameExit();
+		delete m_fans[i];
+	}
+	m_fans.clear();
+
+	for (unsigned int i = 0; i < m_projectiles.size(); i++)
+	{
+		m_projectiles[i]->ShutdownGameExit();
+		delete m_projectiles[i];
+		m_projectiles[i] = nullptr;
+	}
+	m_projectiles.clear();
+
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		//m_stickyTrapList[i]->ShutdownGameExit();
+		delete m_stickyTrapList[i];
+	}
+	m_stickyTrapList.clear();
+
+	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
+	{
+		//m_worldParticles[i]->ShutdownGameExit();
+		delete m_worldParticles[i];
+	}
+	m_worldParticles.clear();
+
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		//m_volleys[i]->ShutdownGameExit();
+		delete m_volleys[i];
+	}
+	m_volleys.clear();
+}
+
 void ObjectManager::Update()
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
