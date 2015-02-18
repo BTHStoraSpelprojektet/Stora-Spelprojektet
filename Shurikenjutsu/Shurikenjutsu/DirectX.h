@@ -33,6 +33,13 @@ public:
 	void SetOutliningPassOne();
 	void SetOutliningPassTwo();
 
+	bool InitializePostProcessing();
+
+	void SetRenderTargetsForGBuffers();
+	void ClearRenderTargetsForGBuffers();
+	ID3D11ShaderResourceView* GetPostProcessingSRV1();
+	ID3D11ShaderResourceView* GetPostProcessingSRV2();
+
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_context;
@@ -62,5 +69,9 @@ private:
 	float m_clearColor[4];
 
 	int m_vsync;
+
+	// POST PROCESSING STUFF
+	ID3D11RenderTargetView* m_postProcessingRTV[2];
+	ID3D11ShaderResourceView* m_postProcessingSRV[2];
 };
 #endif;

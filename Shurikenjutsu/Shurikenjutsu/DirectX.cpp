@@ -270,6 +270,8 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Create the view port.
 	m_context->RSSetViewports(1, &m_viewPort);
 
+	InitializePostProcessing();
+
 	// Clear the render target.
 	Clear();
 
@@ -495,4 +497,139 @@ void DirectXWrapper::SetVsync(bool p_state)
 void DirectXWrapper::SetDepthStateForParticles()
 {
 	m_context->OMSetDepthStencilState(m_depthStateParticles, 0);
+}
+
+bool DirectXWrapper::InitializePostProcessing()
+{
+	HRESULT result;
+	D3D11_TEXTURE2D_DESC textureDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+	ID3D11Texture2D* postProcessingTexture[2];
+
+	// Initialize the post processing target texture
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+	textureDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	textureDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	// Create the render target texture.
+	result = m_device->CreateTexture2D(&textureDesc, NULL, &postProcessingTexture[0]);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	result = m_device->CreateTexture2D(&textureDesc, NULL, &postProcessingTexture[1]);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Setup the description of the render target view.
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	// Create the render target view.
+	result = m_device->CreateRenderTargetView(postProcessingTexture[0], &renderTargetViewDesc, &m_postProcessingRTV[0]);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	result = m_device->CreateRenderTargetView(postProcessingTexture[1], &renderTargetViewDesc, &m_postProcessingRTV[1]);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Setup the description of the shader resource view.
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Create the shader resource view.
+	result = m_device->CreateShaderResourceView(postProcessingTexture[0], &shaderResourceViewDesc, &m_postProcessingSRV[0]);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	result = m_device->CreateShaderResourceView(postProcessingTexture[1], &shaderResourceViewDesc, &m_postProcessingSRV[1]);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Release Texture
+	if (postProcessingTexture)
+	{
+		postProcessingTexture[0]->Release();
+		postProcessingTexture[0] = 0;
+	}
+
+	if (postProcessingTexture)
+	{
+		postProcessingTexture[1]->Release();
+		postProcessingTexture[1] = 0;
+	}
+
+	return true;
+
+	// Move to shutdown after merge 
+	if (m_postProcessingSRV[0])
+	{
+		m_postProcessingSRV[0]->Release();
+		m_postProcessingSRV[0] = 0;
+	}
+
+	if (m_postProcessingSRV[1])
+	{
+		m_postProcessingSRV[1]->Release();
+		m_postProcessingSRV[1] = 0;
+	}
+
+	if (m_postProcessingRTV[0])
+	{
+		m_postProcessingRTV[0]->Release();
+		m_postProcessingRTV[0] = 0;
+	}
+
+	if (m_postProcessingRTV[1])
+	{
+		m_postProcessingRTV[1]->Release();
+		m_postProcessingRTV[1] = 0;
+	}
+}
+
+void DirectXWrapper::ClearRenderTargetsForGBuffers()
+{
+	m_context->ClearRenderTargetView(m_postProcessingRTV[0], m_clearColor);
+	m_context->ClearRenderTargetView(m_postProcessingRTV[1], m_clearColor);
+}
+
+void DirectXWrapper::SetRenderTargetsForGBuffers()
+{
+	m_context->OMSetRenderTargets(2, &m_postProcessingRTV[0], m_depthStencilView);
+}
+
+ID3D11ShaderResourceView* DirectXWrapper::GetPostProcessingSRV1()
+{
+	return m_postProcessingSRV[0];
+}
+
+ID3D11ShaderResourceView* DirectXWrapper::GetPostProcessingSRV2()
+{
+	return m_postProcessingSRV[1];
 }

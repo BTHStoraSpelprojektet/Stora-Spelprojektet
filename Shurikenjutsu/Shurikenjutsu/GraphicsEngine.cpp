@@ -573,3 +573,23 @@ void GraphicsEngine::ScreenChangeHandled()
 {
 	m_screenChanged = false;
 }
+
+ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture1()
+{
+	return m_directX.GetPostProcessingSRV1();
+}
+
+ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture2()
+{
+	return m_directX.GetPostProcessingSRV2();
+}
+
+void GraphicsEngine::ClearRenderTargetsForGBuffers()
+{
+	m_directX.ClearRenderTargetsForGBuffers();
+}
+
+void GraphicsEngine::SetRenderTargetsForGBuffers()
+{
+	m_directX.SetRenderTargetsForGBuffers();
+}

@@ -96,6 +96,13 @@ public:
 	static bool HasScreenChanged();
 	static void ScreenChangeHandled();
 
+	static ID3D11ShaderResourceView* GetPostProcessingTexture1();
+	static ID3D11ShaderResourceView* GetPostProcessingTexture2();
+
+	static void ClearRenderTargetsForGBuffers();
+	static void SetRenderTargetsForGBuffers();
+
+
 private:
 	GraphicsEngine(){};
 

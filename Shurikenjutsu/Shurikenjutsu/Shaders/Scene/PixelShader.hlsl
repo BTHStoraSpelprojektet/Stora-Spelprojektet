@@ -37,8 +37,14 @@ struct Input
 	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
+struct gBuffer
+{
+	float4 a: SV_Target0;
+	float4 b: SV_Target1;
+};
+
 // Pixel shader function.
-float4 main(Input p_input) : SV_Target
+void main(Input p_input , out gBuffer p_output)
 {
 	// Sample texture using texture coordinates.
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
@@ -120,5 +126,6 @@ float4 main(Input p_input) : SV_Target
 	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
 
 	// Return shaded pixel.
-	return coloredPixel;
+	p_output.a = float4(coloredPixel.xyz, 1.0f);
+	p_output.b = float4(p_input.m_normal, 1.0f);
 }

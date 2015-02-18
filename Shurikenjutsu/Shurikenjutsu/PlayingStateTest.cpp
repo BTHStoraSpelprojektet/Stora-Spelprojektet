@@ -294,14 +294,17 @@ void PlayingStateTest::Render()
 	m_objectManager->RenderDepth();
 	m_playerManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
-	GraphicsEngine::ResetRenderTarget();
+	
 
 	// Update the directional light.
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
+	GraphicsEngine::ClearRenderTargetsForGBuffers();
+	GraphicsEngine::SetRenderTargetsForGBuffers();
 	m_playerManager->Render();
 	m_objectManager->Render();
+	GraphicsEngine::ResetRenderTarget();
 
 	// Render all of the foliage.
 	GraphicsEngine::RenderFoliage();

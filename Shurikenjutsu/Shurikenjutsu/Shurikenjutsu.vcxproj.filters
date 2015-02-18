@@ -159,6 +159,15 @@
     <Filter Include="Source Files\Object\Tools">
       <UniqueIdentifier>{d6f8df41-a2e5-446e-b07c-e719b8e05b34}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Graphics\SSAO">
+      <UniqueIdentifier>{55c310fd-8aaf-468b-97ec-ec2b928f7a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics\SSAO">
+      <UniqueIdentifier>{1325de63-30b6-438e-a9c2-674d859effcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\SSAO">
+      <UniqueIdentifier>{0c263ccc-4f79-4948-86d3-51db4e4dfb70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -448,6 +457,9 @@
     </ClCompile>
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="SSAO.cpp">
+      <Filter>Source Files\Graphics\SSAO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -751,6 +763,9 @@
     <ClInclude Include="ParticleRenderer.h">
       <Filter>Header Files\Graphics\Particles</Filter>
     </ClInclude>
+    <ClInclude Include="SSAO.h">
+      <Filter>Header Files\Graphics\SSAO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -827,6 +842,18 @@
     </FxCompile>
     <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
       <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SSAO\SSAOBlurPixelShader.hlsl">
+      <Filter>Shaders\SSAO</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SSAO\SSAOBlurVertexShader.hlsl">
+      <Filter>Shaders\SSAO</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SSAO\SSAOPixelShader.hlsl">
+      <Filter>Shaders\SSAO</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SSAO\SSAOVertexShader.hlsl">
+      <Filter>Shaders\SSAO</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
