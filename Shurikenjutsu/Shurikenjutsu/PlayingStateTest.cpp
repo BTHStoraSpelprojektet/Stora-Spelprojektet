@@ -302,8 +302,8 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
-	m_playerManager->Render();
 	m_objectManager->Render();
+	m_playerManager->Render();
 	GraphicsEngine::GetInstance()->RenderFoliage();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 
