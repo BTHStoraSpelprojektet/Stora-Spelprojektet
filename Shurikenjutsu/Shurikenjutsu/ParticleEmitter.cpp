@@ -105,7 +105,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		default:
 		{
-			break;
+			return false;
 		}
 	}
 
@@ -516,6 +516,8 @@ void ParticleEmitter::EmitParticles()
 
 void ParticleEmitter::UpdateParticles()
 {
+	if (m_pattern > 10)
+		return;
 	// Update the particles to move upwards from their position.
 	switch (m_pattern)
 	{

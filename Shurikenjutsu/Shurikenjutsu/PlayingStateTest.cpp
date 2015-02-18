@@ -112,6 +112,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	OnScreenResize();
 	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
 
+	m_spectateIndex = -1;
+	m_spectateCountDown = 0.0f;
+
 	return true;
 }
 
@@ -194,13 +197,48 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	m_playerManager->Update(m_objectManager->GetStickyTrapList());
 
+	
+	if (!m_playerManager->GetPlayerIsAlive())
+	{
+		if (!GLOBAL::GetInstance().CAMERA_SPECTATE)
+		{
+			m_spectateCountDown = 2.0f;
+		}
+		GLOBAL::GetInstance().CAMERA_SPECTATE = true;
+	}
+	else 
+	{
+		GLOBAL::GetInstance().CAMERA_SPECTATE = false;
+		m_spectateIndex = -1;
+	}
+
+	if (m_spectateCountDown > 0.0f)
+	{
+		m_spectateCountDown -= deltaTime;
+	}
+
 	// Handle camera input.
 	m_camera->HandleInput();
 
 	// The camera should follow the character if not flying.
-	if (!GLOBAL::GetInstance().CAMERA_FLYING)
+	if (GLOBAL::GetInstance().CAMERA_FLYING)
+	{
+		// Handle camera input.
+		m_camera->HandleInput();
+	}
+	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
+	{
+
+		m_camera->FollowCharacter(m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam()));
+	}
+	else
 	{
 		m_camera->FollowCharacter(m_playerManager->GetPlayerPosition());
+	}
+
+	if (InputManager::GetInstance()->IsLeftMouseClicked() && GLOBAL::GetInstance().CAMERA_SPECTATE)
+	{
+		m_spectateIndex += 1;
 	}
 
 	// Update every scene object.

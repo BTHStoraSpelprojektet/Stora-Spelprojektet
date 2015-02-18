@@ -22,6 +22,7 @@ public:
 	bool SWITCHING_SCREEN_MODE;
 	bool CAMERA_FLYING;
 	bool CAMERA_MOVING;
+	bool CAMERA_SPECTATE;
 
 	void SetDeltaTime(double p_deltaTime);
 	double GetDeltaTime();

@@ -45,7 +45,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}
 
-	GLOBAL::GetInstance().CAMERA_MOVING = false;
+	GLOBAL::GetInstance().CAMERA_MOVING = true;
+	GLOBAL::GetInstance().CAMERA_SPECTATE = false;
 
 	ConsolePrintSuccess("Application initialized.");
 	ConsoleSkipLines(1);
