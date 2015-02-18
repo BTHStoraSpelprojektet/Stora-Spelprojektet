@@ -275,8 +275,10 @@ void NormalState::SendRestartingRoundTime(int p_time)
 
 void NormalState::StartNewLevel()
 {
+	std::cout << "New level initializing\n";
 	Shutdown();
 	Initialize(LEVEL_NAME);
+	std::cout << "New level finished initializing\n";
 
 	RakNet::BitStream bitStream;
 

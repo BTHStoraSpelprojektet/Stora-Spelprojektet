@@ -309,15 +309,15 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 
 void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
-	float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	float color[4] = { 0.0f, 0.0f, 0.0f, 0.5f };
 	m_minimapTarget.SetAsRenderTarget(p_context);
 	m_minimapTarget.Clear(p_context, color);
+
+	UpdatePolygonMatrices(p_context);
 
 	// Set parameters and then render the unreversed polygon.
 	unsigned int stride = sizeof(DirectX::XMFLOAT3);
 	const unsigned int offset = 0;
-
-	UpdatePolygonMatrices(p_context);
 
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);

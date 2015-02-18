@@ -93,6 +93,7 @@
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="ProjectileManager.cpp" />
     <ClCompile Include="Server.cpp" />
+    <ClCompile Include="ServerLogger.cpp" />
     <ClCompile Include="ShurikenManager.cpp" />
     <ClCompile Include="SmokeBombManager.cpp" />
     <ClCompile Include="SpikeManager.cpp" />
@@ -112,6 +113,7 @@
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="ProjectileManager.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="ServerLogger.h" />
     <ClInclude Include="ShurikenManager.h" />
     <ClInclude Include="SmokeBombManager.h" />
     <ClInclude Include="SpikeManager.h" />
