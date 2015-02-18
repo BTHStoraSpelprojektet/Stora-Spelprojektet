@@ -28,9 +28,9 @@ const float FULLSCREENHEIGHT = 58.0f;
 
 // LOGO
 const float LOGOPOSX = 0.0f;
-const float LOGOPOSY = -200.0f;
-const float LOGOWIDTH = 100.0f;
-const float LOGOHEIGHT = 100.0f;
+const float LOGOPOSY = 250.0f;
+const float LOGOWIDTH = 906.0f;
+const float LOGOHEIGHT = 307.0f;
 
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
@@ -51,7 +51,8 @@ bool MenuState::Initialize()
 	m_lastfullscreen = false;
 
 	// Initialize logo
-	m_logo->Initialize(LOGOPOSX, LOGOPOSY, LOGOWIDTH, LOGOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/vs_text.png"));
+	m_logo = new MenuItem();
+	m_logo->Initialize(LOGOPOSX, LOGOPOSY, LOGOWIDTH, LOGOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Logo_Shurikenjutsu.png"));
 
 	// Initialize options menu
 	m_options = new Menu();
@@ -172,6 +173,13 @@ void MenuState::Shutdown()
 		m_frustum->Shutdown();
 		delete m_frustum;
 		m_frustum = NULL;
+	}
+
+	if (m_logo != NULL)
+	{
+		m_logo->Shutdown();
+		delete m_logo;
+		m_logo = NULL;
 	}
 }
 
@@ -310,6 +318,7 @@ void MenuState::Render()
 		}
 	}
 
+	m_logo->Render();
 
 
 	// Draw to the shadowmap.
