@@ -11,7 +11,7 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_stickyTrapBag->Initialize("../Shurikenjutsu/Models/StickyTrapJar.SSP", p_startPosition);
 
 	m_stickyTrap = new Object();
-	float randomModel = std::rand() % 3 + 1;
+	int randomModel = std::rand() % 4 + 1;
 	if (randomModel == 1)
 	{
 		m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrap1Shape.SSP", p_endPosition);
@@ -25,8 +25,8 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 		m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrap3Shape.SSP", p_endPosition);
 	}
 
-	float randomY = std::rand() % 8;
-	m_stickyTrap->SetRotation(DirectX::XMFLOAT3(0.0f,randomY,0.0f));
+	int randomY = std::rand() % 8;
+	m_stickyTrap->SetRotation(DirectX::XMFLOAT3(0.0f,(float)randomY,0.0f));
 
 	m_startPosition = p_startPosition;
 	m_isThrowing = true;
