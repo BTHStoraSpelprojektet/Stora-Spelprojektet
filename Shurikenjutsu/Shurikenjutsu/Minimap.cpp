@@ -85,6 +85,7 @@ void Minimap::Shutdown()
 void Minimap::Update(DirectX::XMFLOAT3 p_playerPos)
 {
 	m_playerDot->SetPosition(ConvertPosToMinimapPos(p_playerPos));
+	m_vision->SetPosition(ConvertPosToMinimapPos(p_playerPos));
 }
 
 void Minimap::Render()
@@ -99,8 +100,8 @@ void Minimap::Render()
 
 	m_playerDot->QueueRender();
 
-	/*m_vision->SetTexture(VisibilityComputer::GetInstance().GetMinimapTarget());
-	m_vision->QueueRender();*/
+	m_vision->SetTexture(VisibilityComputer::GetInstance().GetMinimapTarget());
+	m_vision->QueueRender();
 }
 
 void Minimap::UpdatePlayersPositon(int p_index, DirectX::XMFLOAT3 p_pos)
