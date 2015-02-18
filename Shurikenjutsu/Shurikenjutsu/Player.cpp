@@ -11,6 +11,7 @@
 #include "VisibilityComputer.h"
 #include "StickyTrap.h"
 #include "AttackPredictionEditor.h"
+#include "FloatingText.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -83,11 +84,19 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_aimFrustrum->Initialize("../Shurikenjutsu/Models/Marker_ConeShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 
 	m_ape = new AttackPredictionEditor();
+	m_floatingText = new FloatingText();
+	m_floatingText->Initialize();
 	return true;
 }
 
 void Player::Shutdown()
 {
+	if (m_floatingText != nullptr)
+	{
+		m_floatingText->Shutdown();
+		delete m_floatingText;
+		m_floatingText = nullptr;
+	}
 	if (m_ape != nullptr)
 	{
 		delete m_ape;
@@ -366,6 +375,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 
 	UpdateAbilityBar();
+	m_floatingText->Update();
 }
 
 void Player::CheckForSpecialAttack()
@@ -979,7 +989,7 @@ void Player::Render()
 	m_dashParticles1->Render();
 	m_dashParticles2->Render();
 
-
+	m_floatingText->Render();
 	AnimatedObject::RenderPlayer(m_team);
 }
 
