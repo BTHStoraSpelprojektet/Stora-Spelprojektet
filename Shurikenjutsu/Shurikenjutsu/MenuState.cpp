@@ -29,7 +29,7 @@ const float FULLSCREENHEIGHT = 58.0f;
 // LOGO
 const float LOGOPOSX = 0.0f;
 const float LOGOPOSY = 250.0f;
-const float LOGOWIDTH = 906.0f;
+const float LOGOWIDTH = 900.0f;
 const float LOGOHEIGHT = 307.0f;
 
 MenuState::MenuState(){}
