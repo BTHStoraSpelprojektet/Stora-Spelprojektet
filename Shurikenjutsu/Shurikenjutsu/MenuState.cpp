@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Frustum.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "MenuItem.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -25,6 +26,11 @@ const float VSYNCHEIGHT = 59.0f;
 const float FULLSCREENWIDTH = 173.0f;
 const float FULLSCREENHEIGHT = 58.0f;
 
+// LOGO
+const float LOGOPOSX = 0.0f;
+const float LOGOPOSY = 250.0f;
+const float LOGOWIDTH = 906.0f;
+const float LOGOHEIGHT = 307.0f;
 
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
@@ -43,6 +49,10 @@ bool MenuState::Initialize()
 {
 	m_lastvsync = false;
 	m_lastfullscreen = false;
+
+	// Initialize logo
+	m_logo = new MenuItem();
+	m_logo->Initialize(LOGOPOSX, LOGOPOSY, LOGOWIDTH, LOGOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Logo_Shurikenjutsu.png"));
 
 	// Initialize options menu
 	m_options = new Menu();
@@ -69,7 +79,7 @@ bool MenuState::Initialize()
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);
-	m_play->AddButton(0.0f, -2.0f*BUTTONHEIGHT -3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	m_play->AddButton(0.0f, -2.0f*BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 	m_play->AddTexture(0.0f, 96.0f, 97.0f, 96.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ip_text.png"));
 	m_hideIpBox = true;
 
@@ -157,12 +167,19 @@ void MenuState::Shutdown()
 		delete m_objectManager;
 		m_objectManager = NULL;
 	}
-	
+
 	if (m_frustum != NULL)
 	{
 		m_frustum->Shutdown();
 		delete m_frustum;
 		m_frustum = NULL;
+	}
+
+	if (m_logo != NULL)
+	{
+		m_logo->Shutdown();
+		delete m_logo;
+		m_logo = NULL;
 	}
 }
 
@@ -186,49 +203,49 @@ GAMESTATESWITCH MenuState::Update()
 	// Check buttons
 	switch (action.m_action)
 	{
-		case MENUACTION_BACK:
-			m_hideIpBox = true;
-			m_menues.pop();
-			if (m_menues.empty())
-			{
-				PostQuitMessage(0);
-			}
-			break;
+	case MENUACTION_BACK:
+		m_hideIpBox = true;
+		m_menues.pop();
+		if (m_menues.empty())
+		{
+			PostQuitMessage(0);
+		}
+		break;
 
-		case MENUACTION_IP:
-			m_hideIpBox = false;
-			m_menues.push(m_play);
-			break;
+	case MENUACTION_IP:
+		m_hideIpBox = false;
+		m_menues.push(m_play);
+		break;
 
-		case MENUACTION_PLAY:
-			break;
+	case MENUACTION_PLAY:
+		break;
 
-		case MENUACTION_CHOOSENINJA:
-			return GAMESTATESWITCH_CHOOSENINJA;
-			break;
+	case MENUACTION_CHOOSENINJA:
+		return GAMESTATESWITCH_CHOOSENINJA;
+		break;
 
-		case MENUACTION_OPTIONS:
-			m_menues.push(m_options);
-			m_options->SetCheckboxState(m_vsyncIndex, m_lastvsync);
-			m_options->SetCheckboxState(m_fullscreenIndex, m_lastfullscreen);
-			break;
+	case MENUACTION_OPTIONS:
+		m_menues.push(m_options);
+		m_options->SetCheckboxState(m_vsyncIndex, m_lastvsync);
+		m_options->SetCheckboxState(m_fullscreenIndex, m_lastfullscreen);
+		break;
 
-		case MENUACTION_CONNECT:
-			m_menues.push(m_connecting);
-			m_hideIpBox = true;
-			Network::GetInstance()->Connect((std::string)m_ipbox->GetIp());
-			Network::GetInstance()->SetNetworkStatusConnecting();
-			break;
+	case MENUACTION_CONNECT:
+		m_menues.push(m_connecting);
+		m_hideIpBox = true;
+		Network::GetInstance()->Connect((std::string)m_ipbox->GetIp());
+		Network::GetInstance()->SetNetworkStatusConnecting();
+		break;
 
-		case MENUACTION_OPTIONAPPLY:
-			bool temp = m_options->GetCheckboxState(m_vsyncIndex);
-			m_lastvsync = temp;
-			GraphicsEngine::GetInstance()->SetVsync(temp);
+	case MENUACTION_OPTIONAPPLY:
+		bool temp = m_options->GetCheckboxState(m_vsyncIndex);
+		m_lastvsync = temp;
+		GraphicsEngine::GetInstance()->SetVsync(temp);
 
-			temp = m_options->GetCheckboxState(m_fullscreenIndex);
-			m_lastfullscreen = temp;
-			GraphicsEngine::GetInstance()->ToggleFullscreen(temp);
-			break;
+		temp = m_options->GetCheckboxState(m_fullscreenIndex);
+		m_lastfullscreen = temp;
+		GraphicsEngine::GetInstance()->ToggleFullscreen(temp);
+		break;
 	}
 
 	// Check network status
@@ -262,7 +279,7 @@ GAMESTATESWITCH MenuState::Update()
 		{
 			m_camera->ToggleFullscreen(true);
 		}
-		
+
 		else
 		{
 			m_camera->ToggleFullscreen(false);
@@ -300,6 +317,8 @@ void MenuState::Render()
 			m_menues.top()->Render();
 		}
 	}
+
+	m_logo->Render();
 
 
 
