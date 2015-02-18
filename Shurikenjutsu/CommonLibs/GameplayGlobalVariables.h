@@ -61,13 +61,13 @@ const float VOLLEY_HEIGHT = 15.0f;
 ////////////////////////////////////////////////////////////////Melee Attacks
 // Katana
 const float KATANA_DAMAGE = 40.0f;
-const float KATANA_RANGE = 2.5f;
+const float KATANA_RANGE = 2.0f;
 const float KATANA_COOLDOWN = 0.5f;
 
 ////////////////////////////////////////////////////////////////Melee Attacks
 // Naginata
 const float NAGINATA_DAMAGE = 30.0f;
-const float NAGINATA_RANGE = 3.5f;
+const float NAGINATA_RANGE = 3.0f;
 const float NAGINATA_COOLDOWN = 0.5f;
 
 ////////////////////////////////////////////////////////////////Special Melee Attacks
