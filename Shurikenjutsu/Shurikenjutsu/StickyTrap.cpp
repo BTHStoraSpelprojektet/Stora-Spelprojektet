@@ -4,6 +4,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "GraphicsEngine.h"
 #include "PlayerManager.h"
+#include "ParticleEmitter.h"
 
 bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_stickyTrapID, RakNet::RakNetGUID p_guid)
 {
@@ -42,7 +43,10 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_angle = asinf((9.82f * length) / (m_speed * m_speed)) * 0.5f;
 
 	m_guid = p_guid;
-	
+
+	m_stickyParticles = new ParticleEmitter();
+	m_stickyParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_endPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BUBBLES);
+	m_stickyParticles->SetEmitParticleState(true);
 	return true;
 }
 void StickyTrap::Update()
@@ -63,10 +67,18 @@ void StickyTrap::Update()
 			m_isThrowing = false;
 		}
 	}
+	m_stickyParticles->Update();
 	
 }
 void StickyTrap::Shutdown()
 {
+	if (m_stickyParticles != nullptr)
+	{
+		m_stickyParticles->Shutdown();
+		delete m_stickyParticles;
+		m_stickyParticles = nullptr;
+	}
+
 	if (m_stickyTrapBag != nullptr)
 	{
 		m_stickyTrapBag->Shutdown();
@@ -90,6 +102,7 @@ void StickyTrap::Render()
 	else
 	{
 		m_stickyTrap->Render();
+		m_stickyParticles->Render();
 	}
 }
 void StickyTrap::SetPosition(DirectX::XMFLOAT3 p_position)
