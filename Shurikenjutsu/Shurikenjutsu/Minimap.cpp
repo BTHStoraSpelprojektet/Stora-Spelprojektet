@@ -1,17 +1,19 @@
 #include "Minimap.h"
 #include "Globals.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "VisibilityComputer.h"
 
 #define MAPSIZEX 43
 #define MAPSIZEY 50
 
 Minimap::Minimap()
 {
-}
 
+}
 
 Minimap::~Minimap()
 {
+
 }
 
 bool Minimap::Initialize()
@@ -19,21 +21,19 @@ bool Minimap::Initialize()
 	m_playerDot = new GUIElement();
 	m_minimap = new GUIElement();
 	m_background = new GUIElement();
+	m_vision = new GUIElement();
 	
 	m_minimapWidth = 222.0f;
 	m_minimapHeight = 250.0f;
 	
-	// Save center of minimap
-	m_centerOfMinimapPos = DirectX::XMFLOAT3(-1 * (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) + (m_minimapWidth * 0.5f),
-		-1 * (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + (m_minimapHeight * 0.5f), 0.0f);
+	// Save center of minimap.
+	m_centerOfMinimapPos = DirectX::XMFLOAT3(-1 * (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) + (m_minimapWidth * 0.5f), -1 * (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + (m_minimapHeight * 0.5f), 0.0f);
 	
-	// Initiliaze with pos, size and textures, draw center of texture at center of minimap..
+	// Initiliaze with pos, size and textures, draw center of texture at center of minimap.
 	m_minimap->Initialize(m_centerOfMinimapPos,	m_minimapWidth, m_minimapHeight, TextureLibrary::GetInstance()->GetTexture(MINIMAP_TEXTURE));
-	
 	m_playerDot->Initialize(m_centerOfMinimapPos, 10, 10, TextureLibrary::GetInstance()->GetTexture(MINIMAP_RED_DOT_TEXTURE));
-
-	
 	m_background->Initialize(DirectX::XMFLOAT3(m_centerOfMinimapPos.x + 12.0f, m_centerOfMinimapPos.y + 12.0f, 0.0f) , 246, 275, TextureLibrary::GetInstance()->GetTexture(MINIMAP_BG_TEXTURE));
+	m_vision->Initialize(m_centerOfMinimapPos, m_minimapWidth, m_minimapHeight, VisibilityComputer::GetInstance().GetRenderTarget());
 
 	DirectX::XMFLOAT3 startPosForOtherPlayers = DirectX::XMFLOAT3(-1000, -1000, 0);
 	for (int i = 0; i < 7; i++)
@@ -53,11 +53,13 @@ void Minimap::Shutdown()
 		delete m_minimap;
 		m_minimap = nullptr;
 	}
+
 	if (m_playerDot != nullptr)
 	{
 		delete m_playerDot;
 		m_playerDot = nullptr;
 	}
+
 	if (m_background != nullptr)
 	{
 		delete m_background;
@@ -72,6 +74,12 @@ void Minimap::Shutdown()
 			m_otherPlayers[i] = nullptr;
 		}
 	}
+
+	if (m_vision != nullptr)
+	{
+		delete m_vision;
+		m_vision = nullptr;
+	}
 }
 
 void Minimap::Update(DirectX::XMFLOAT3 p_playerPos)
@@ -83,11 +91,14 @@ void Minimap::Render()
 {
 	m_background->QueueRender();
 	m_minimap->QueueRender();
+
 	for (int i = 0; i < 7; i++)
 	{
 		m_otherPlayers[i]->QueueRender();
 	}
+
 	m_playerDot->QueueRender();
+	m_vision->QueueRender();
 }
 
 void Minimap::UpdatePlayersPositon(int p_index, DirectX::XMFLOAT3 p_pos)
@@ -102,8 +113,10 @@ DirectX::XMFLOAT3 Minimap::ConvertPosToMinimapPos(DirectX::XMFLOAT3 p_playerPos)
 	DirectX::XMFLOAT3 playerPos = p_playerPos;
 	playerPos.y = playerPos.z;
 	playerPos.z = 0;
+
 	// offset for map being higher than width..
 	float offset = 13;
+
 	// Calc where the player is on the minimap in precent from center
 	xPercent = playerPos.x / MAPSIZEX;	// 43 size of map in x from middle
 	yPercent = playerPos.y / MAPSIZEY;	// 50 size of map in z from middle

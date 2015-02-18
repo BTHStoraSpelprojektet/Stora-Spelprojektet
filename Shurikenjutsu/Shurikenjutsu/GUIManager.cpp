@@ -26,6 +26,7 @@ void GUIManager::Render()
 	{
 		GraphicsEngine::GetInstance()->RenderGUI(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetTexture());
 	}
+
 	for (unsigned int i = 0; i < m_elementsColor.size(); i++)
 	{
 		GraphicsEngine::GetInstance()->RenderGUIColor(m_elementsColor[i]->GetWorldMatrix(), m_elementsColor[i]->GetColor());
