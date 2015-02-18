@@ -13,8 +13,7 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_stickyTrap = new Object();
 	m_stickyTrap->Initialize("../Shurikenjutsu/Models/StickyTrapShape.SSP", p_endPosition);
 
-	float randomY = std::rand() % 6283 + 1;
-	randomY = randomY / 1000;
+	float randomY = std::rand() % 8;
 	m_stickyTrap->SetRotation(DirectX::XMFLOAT3(0.0f,randomY,0.0f));
 
 	m_startPosition = p_startPosition;
