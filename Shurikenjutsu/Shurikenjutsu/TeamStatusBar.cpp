@@ -316,7 +316,7 @@ void TeamStatusBar::Update()
 	std::sprintf(arrayY, "%f", InputManager::GetInstance()->Get3DMousePositionZ());
 
 	m_3DMouseX.SetText(arrayX);
-	m_3DMouseX.SetText(arrayY);
+	m_3DMouseY.SetText(arrayY);
 }
 
 void TeamStatusBar::Render()

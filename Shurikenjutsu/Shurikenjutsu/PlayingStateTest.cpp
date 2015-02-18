@@ -198,11 +198,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_camera->HandleInput();
 
 	// The camera should follow the character if not flying.
-	if (GLOBAL::GetInstance().CAMERA_MOVING)
-	{
-		m_camera->MovingCamera(m_playerManager->GetPlayerPosition());
-	}
-	else if (!GLOBAL::GetInstance().CAMERA_FLYING)
+	if (!GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		m_camera->FollowCharacter(m_playerManager->GetPlayerPosition());
 	}
