@@ -21,7 +21,6 @@ bool Minimap::Initialize()
 	m_playerDot = new GUIElement();
 	m_minimap = new GUIElement();
 	m_background = new GUIElement();
-	m_vision = new GUIElement();
 	
 	m_minimapWidth = 222.0f;
 	m_minimapHeight = 250.0f;
@@ -33,7 +32,6 @@ bool Minimap::Initialize()
 	m_minimap->Initialize(m_centerOfMinimapPos,	m_minimapWidth, m_minimapHeight, TextureLibrary::GetInstance()->GetTexture(MINIMAP_TEXTURE));
 	m_playerDot->Initialize(m_centerOfMinimapPos, 10, 10, TextureLibrary::GetInstance()->GetTexture(MINIMAP_RED_DOT_TEXTURE));
 	m_background->Initialize(DirectX::XMFLOAT3(m_centerOfMinimapPos.x + 12.0f, m_centerOfMinimapPos.y + 12.0f, 0.0f) , 246, 275, TextureLibrary::GetInstance()->GetTexture(MINIMAP_BG_TEXTURE));
-	m_vision->Initialize(m_centerOfMinimapPos, m_minimapWidth, m_minimapHeight, TextureLibrary::GetInstance()->GetTexture(MINIMAP_TEXTURE));
 
 	DirectX::XMFLOAT3 startPosForOtherPlayers = DirectX::XMFLOAT3(-1000, -1000, 0);
 	for (int i = 0; i < 7; i++)
@@ -74,12 +72,6 @@ void Minimap::Shutdown()
 			m_otherPlayers[i] = nullptr;
 		}
 	}
-
-	if (m_vision != nullptr)
-	{
-		delete m_vision;
-		m_vision = nullptr;
-	}
 }
 
 void Minimap::Update(DirectX::XMFLOAT3 p_playerPos)
@@ -98,9 +90,6 @@ void Minimap::Render()
 	}
 
 	m_playerDot->QueueRender();
-
-	/*m_vision->SetTexture(VisibilityComputer::GetInstance().GetMinimapTarget());
-	m_vision->QueueRender();*/
 }
 
 void Minimap::UpdatePlayersPositon(int p_index, DirectX::XMFLOAT3 p_pos)

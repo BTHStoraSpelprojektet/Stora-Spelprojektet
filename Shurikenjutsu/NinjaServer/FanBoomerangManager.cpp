@@ -64,7 +64,10 @@ void FanBoomerangManager::Update(double p_deltaTime, PlayerManager* p_playerMana
 		}
 	}
 
-	UpdateClients();
+	if (m_fans.size() > 0)
+	{
+		UpdateClients();
+	}
 }
 
 void FanBoomerangManager::Add(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)

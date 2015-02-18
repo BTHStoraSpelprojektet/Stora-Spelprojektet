@@ -26,7 +26,6 @@ public:
 private:
 	ID3D11ShaderResourceView* m_texture;
 	GUIElement* m_minimap;
-	GUIElement* m_vision;
 	GUIElement* m_playerDot;
 	GUIElement* m_background;
 	GUIElement* m_otherPlayers[7];
