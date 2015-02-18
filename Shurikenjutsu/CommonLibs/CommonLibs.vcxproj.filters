@@ -522,6 +522,9 @@
     <ClInclude Include="ModelNames.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RakNet\_FindFirst.cpp">
@@ -871,6 +874,9 @@
     </ClCompile>
     <ClCompile Include="BaseModel.cpp">
       <Filter>Source Files\Models</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkLogger.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

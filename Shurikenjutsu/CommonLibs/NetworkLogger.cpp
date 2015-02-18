@@ -1,17 +1,17 @@
-#include "ServerLogger.h"
+#include "NetworkLogger.h"
 #include "..\CommonLibs\ServerMessages.h"
 
-ServerLogger::ServerLogger() : PacketLogger() {}
-ServerLogger::~ServerLogger(){}
+NetworkLogger::NetworkLogger() : PacketLogger() {}
+NetworkLogger::~NetworkLogger(){}
 
-void ServerLogger::Initialize()
+void NetworkLogger::Initialize()
 {
 	m_frameBitsIn = 0;
 	m_frameBitsOut = 0;
 	m_time = 0;
 }
 
-void ServerLogger::Update(double p_deltaTime)
+void NetworkLogger::Update(double p_deltaTime)
 {
 	m_time += p_deltaTime;
 	if (m_time > 5)
@@ -22,22 +22,22 @@ void ServerLogger::Update(double p_deltaTime)
 		m_time = 0;
 		m_frameBitsIn = 0;
 		m_frameBitsOut = 0;
-	}	
+	}
 }
 
-void ServerLogger::OnDirectSocketSend(const char *data, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress)
+void NetworkLogger::OnDirectSocketSend(const char *data, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress)
 {
 }
 
-void ServerLogger::OnDirectSocketReceive(const char *data, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress)
+void NetworkLogger::OnDirectSocketReceive(const char *data, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress)
 {
 }
 
-void ServerLogger::OnReliabilityLayerNotification(const char *errorMessage, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress, bool isError)
+void NetworkLogger::OnReliabilityLayerNotification(const char *errorMessage, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress, bool isError)
 {
 }
 
-void ServerLogger::OnInternalPacket(RakNet::InternalPacket *internalPacket, unsigned frameNumber, RakNet::SystemAddress remoteSystemAddress, RakNet::TimeMS time, int isSend)
+void NetworkLogger::OnInternalPacket(RakNet::InternalPacket *internalPacket, unsigned frameNumber, RakNet::SystemAddress remoteSystemAddress, RakNet::TimeMS time, int isSend)
 {
 	if (isSend)
 	{
@@ -49,18 +49,18 @@ void ServerLogger::OnInternalPacket(RakNet::InternalPacket *internalPacket, unsi
 		//std::cout << "Message in: " << IDTOString(internalPacket->data[0]) << std::endl;
 		m_frameBitsIn += internalPacket->dataBitLength;
 	}
-	
+
 }
 
-void ServerLogger::OnAck(unsigned int messageNumber, RakNet::SystemAddress remoteSystemAddress, RakNet::TimeMS time)
+void NetworkLogger::OnAck(unsigned int messageNumber, RakNet::SystemAddress remoteSystemAddress, RakNet::TimeMS time)
 {
 }
 
-void ServerLogger::OnPushBackPacket(const char *data, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress)
+void NetworkLogger::OnPushBackPacket(const char *data, const RakNet::BitSize_t bitsUsed, RakNet::SystemAddress remoteSystemAddress)
 {
 }
 
-const char* ServerLogger::UserIDTOString(unsigned char Id)
+const char* NetworkLogger::UserIDTOString(unsigned char Id)
 {
 	const char *IDTable[((int)ID_NAGINATA_STAB_HAS_OCCURED) - (int)ID_NR_CONNECTIONS + 1] =
 	{

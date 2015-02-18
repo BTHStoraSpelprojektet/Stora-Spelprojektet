@@ -14,9 +14,9 @@ bool Server::Initialize()
 	m_serverPeer->Startup(MAX_CLIENTS, &m_socketDesc, 1);
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
-	m_serverLogger = ServerLogger();
-	m_serverLogger.Initialize();
-	m_serverPeer->AttachPlugin(&m_serverLogger);
+	m_networkLogger = NetworkLogger();
+	m_networkLogger.Initialize();
+	m_serverPeer->AttachPlugin(&m_networkLogger);
 
 	m_nrOfConnections = 0;
 
@@ -44,7 +44,7 @@ void Server::Shutdown()
 void Server::Update(double p_deltaTime)
 {
 	ReceviePacket();
-	m_serverLogger.Update(p_deltaTime);
+	m_networkLogger.Update(p_deltaTime);
 
 	m_gameState->Update(p_deltaTime);
 }

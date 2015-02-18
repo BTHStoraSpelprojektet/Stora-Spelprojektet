@@ -1,16 +1,16 @@
-#ifndef SERVERLOGGER_H_
-#define SERVERLOGGER_H_
+#ifndef NETWORKLOGGER_H_
+#define NETWORKLOGGER_H_
 
 #include "..\CommonLibs\RakNet\PacketLogger.h"
 #include "..\CommonLibs\RakNet\InternalPacket.h"
 #include <string>
 #include <iostream>
 
-class ServerLogger : public RakNet::PacketLogger
+class NetworkLogger : public RakNet::PacketLogger
 {
 public:
-	ServerLogger();
-	~ServerLogger();
+	NetworkLogger();
+	~NetworkLogger();
 
 	void Initialize();
 
