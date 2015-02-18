@@ -4,7 +4,7 @@
 #include "Structures.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
 class Object;
-
+class ParticleEmitter;
 class StickyTrap
 {
 public:
@@ -37,6 +37,7 @@ private:
 	unsigned int m_StickyTrapID;
 	float m_decreasePercentage;
 	RakNet::RakNetGUID m_guid;
+	ParticleEmitter* m_stickyParticles;
 };
 
 #endif
