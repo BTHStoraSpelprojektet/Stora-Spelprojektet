@@ -17,17 +17,13 @@
 #include "VisibilityComputer.h"
 #include "Cursor.h"
 #include "ParticleRenderer.h"
-#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
-	bool result = true;
-
-	// Set default game state.s
+	// Set default game state.
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
 	m_playingState = new PlayingStateTest();
-	//void *prt = _aligned_malloc(100, 16);
 	m_gameState = m_menuState;
 
 	// Set starting window values.
@@ -132,26 +128,20 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		ConsolePrintSuccess("Sound initialized successfully.");
 		ConsoleSkipLines(1);
 	}
-	
-	ConsolePrintSuccess("Light source and light camera initialized successfully.");
-	ConsoleSkipLines(1);
 
-	// Initialize network
+	// Initialize the network.
 	Network::GetInstance()->Initialize();
 	ConsolePrintSuccess("Network initialized successfully.");
 	ConsoleSkipLines(1);
 
-	//m_sound->PlaySound(PLAYSOUND_BACKGROUND_SOUND);
-
-	// Cursor
+	// Initialize the cursor.
 	m_cursor = new Cursor();
-	result = m_cursor->Initialize();
-	if (!result)
+	if (!m_cursor->Initialize())
 	{
 		return false;
 	}
 
-	return result;
+	return true;
 }
 
 void System::Shutdown()

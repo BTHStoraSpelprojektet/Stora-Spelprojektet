@@ -93,7 +93,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
-	//GraphicsEngine::GetInstance()->InitializeOutling();
+
+	ConsolePrintSuccess("Light source initialized successfully.");
+	ConsoleSkipLines(1);
 
 	// Initialize the Countdown.
 	m_countdown = new Countdown();
@@ -148,7 +150,7 @@ void PlayingStateTest::Shutdown()
 		m_teamStatusBar->Shutdown();
 		delete m_teamStatusBar;
 		m_teamStatusBar = NULL;
-}
+	}
 
 	if (m_countdown != NULL)
 	{
@@ -161,7 +163,7 @@ void PlayingStateTest::Shutdown()
 	{
 		m_frustum->Shutdown();
 		delete m_frustum;
-		m_frustum = nullptr;
+		m_frustum = NULL;
 	}
 
 	if (CollisionManager::GetInstance() != NULL)
@@ -290,8 +292,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 void PlayingStateTest::Render()
 {
-	bool testBB = false;
-
 	// Draw to the shadowmap.
 	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
