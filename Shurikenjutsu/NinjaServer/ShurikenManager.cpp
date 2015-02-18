@@ -126,7 +126,7 @@ void ShurikenManager::BroadcastDestoyedShuriken(unsigned int p_id)
 	bitStream.Write((RakNet::MessageID)ID_SHURIKEN_REMOVE);
 	bitStream.Write(p_id);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 unsigned int ShurikenManager::GetShurikenUniqueId()
