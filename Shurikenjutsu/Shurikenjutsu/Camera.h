@@ -41,6 +41,8 @@ public:
 
 	void MenuCameraRotation();
 
+	void MovingCamera(DirectX::XMFLOAT3 p_playerPos);
+
 private:
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT3 m_target;

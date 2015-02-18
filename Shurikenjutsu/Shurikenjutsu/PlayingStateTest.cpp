@@ -189,6 +189,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	
 	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
+	// Get picking data.
 	BasicPicking();
 
 	m_playerManager->Update(m_objectManager->GetStickyTrapList());
@@ -197,13 +198,14 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_camera->HandleInput();
 
 	// The camera should follow the character if not flying.
-	if (!GLOBAL::GetInstance().CAMERA_FLYING)
+	if (GLOBAL::GetInstance().CAMERA_MOVING)
+	{
+		m_camera->MovingCamera(m_playerManager->GetPlayerPosition());
+	}
+	else if (!GLOBAL::GetInstance().CAMERA_FLYING)
 	{
 		m_camera->FollowCharacter(m_playerManager->GetPlayerPosition());
 	}
-
-	// Get picking data.
-	BasicPicking();
 
 	// Update every scene object.
 	m_objectManager->Update();

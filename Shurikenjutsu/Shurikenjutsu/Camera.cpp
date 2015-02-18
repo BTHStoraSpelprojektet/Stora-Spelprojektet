@@ -28,6 +28,9 @@ bool Camera::Initialize()
 
 	m_menuRotation = 0.0f;
 
+	m_oldMouseX = 0.0f;
+	m_oldMouseY = 0.0f;
+
 	return true;
 }
 
@@ -352,11 +355,18 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 30.0f, playerPosition.z - 15.0f);		// y: 40, z: -20
 	target = playerPosition;
 
-	UpdatePosition(position);
-	UpdateTarget(target);
-	UpdateViewMatrix();
-	UpdateProjectionMatrix(false);
-	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	if (GLOBAL::GetInstance().CAMERA_MOVING)
+	{
+		MovingCamera(position);
+	}
+	else
+	{
+		UpdatePosition(position);
+		UpdateTarget(target);
+		UpdateViewMatrix();
+		UpdateProjectionMatrix(false);
+		GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	}	
 }
 
 void Camera::MenuCameraRotation()
@@ -450,4 +460,41 @@ void Camera::ResetCameraToLight()
 	UpdateProjectionMatrix(true);
 
 	GraphicsEngine::GetInstance()->SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+}
+
+void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
+{
+	/*POINT mousePosition;
+	GetCursorPos(&mousePosition);
+
+	float moveX, moveY, centerX, centerY, posX, posY;
+	centerX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f;
+	centerY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f;
+	posX = mousePosition.x - centerX;
+	posY = mousePosition.y - centerY;
+	float procX = abs(posX / 440);
+	float procY = abs(posY / 352); // 512 *0,68 //0.68 = 440/640;
+	if (procX > 1.0f)
+		procX = 1.0f;
+	if (procY > 1.0f)
+		procY = 1.0f;
+	moveX = (float)mousePosition.x - m_oldMouseX;
+	moveY = (float)mousePosition.y - m_oldMouseY;
+	*/
+	DirectX::XMFLOAT3 position, target;
+	float musX, musY;
+	DirectX::XMFLOAT3 playerPosition = p_pos;
+	musX = InputManager::GetInstance()->Get3DMousePositionX();
+	musY = InputManager::GetInstance()->Get3DMousePositionZ();
+	position = DirectX::XMFLOAT3(playerPosition.x + InputManager::GetInstance()->Get3DMousePositionX(), playerPosition.y + 30.0f, playerPosition.z + InputManager::GetInstance()->Get3DMousePositionZ() - 15.0f);
+	target = DirectX::XMFLOAT3(playerPosition.x, 0, playerPosition.z);
+
+	UpdatePosition(position);
+	UpdateTarget(target);
+	UpdateViewMatrix();
+	UpdateProjectionMatrix(false);
+	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+
+	/*m_oldMouseX = (float)mousePosition.x;
+	m_oldMouseY = (float)mousePosition.y;*/
 }

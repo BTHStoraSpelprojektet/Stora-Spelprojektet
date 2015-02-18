@@ -909,6 +909,7 @@ void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ,
 	temp->Initialize(start, end);
 	m_volleys.push_back(temp);
 }
+
 void ObjectManager::ResetListSinceRoundRestarted()
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
