@@ -25,6 +25,7 @@ public:
 
 	bool Initialize(Level* p_level);
 	void Shutdown();
+	void ShutdownExit();
 
 	void Update();
 	void Render();

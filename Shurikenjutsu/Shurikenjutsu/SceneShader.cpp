@@ -735,7 +735,7 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap)
+void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(Vertex);
@@ -750,7 +750,8 @@ void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Bu
 
 	UpdateReversedShadowMatrices(p_context);
 	p_context->PSSetShaderResources(0, 1, &p_visibilityMap);
-	p_context->PSSetSamplers(0, 1, &m_samplerShadowMapState);
+	p_context->PSSetShaderResources(1, 1, &p_texture);
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
 
 	p_context->Draw(p_numberOfVertices, 0);
 }
@@ -779,6 +780,7 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 
 	p_context->Draw(p_numberOfVertices, 0);
 }
+
 void SceneShader::RenderAnimatedOutlining(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	// Set parameters and then render.
@@ -881,6 +883,7 @@ void SceneShader::UpdateReversedShadowMatrices(ID3D11DeviceContext* p_context)
 {
 	DirectX::XMFLOAT4X4 identity;
 	DirectX::XMStoreFloat4x4(&identity, DirectX::XMMatrixIdentity());
+
 	DirectX::XMFLOAT4X4 worldMatrix = identity;
 	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
 	DirectX::XMFLOAT4X4 projectionMatrix = m_projectionMatrix;

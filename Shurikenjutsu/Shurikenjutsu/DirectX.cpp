@@ -4,9 +4,6 @@
 
 #pragma comment(lib, "dxgi.lib")
 
-#include <atlcomcli.h>
-#include <atlbase.h>
-
 bool DirectXWrapper::Initialize(HWND p_handle)
 {
 	m_depthStencilViewOutlining = NULL;
@@ -312,14 +309,10 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 
 void DirectXWrapper::Shutdown()
 {
-	m_context->ClearState();
-	m_context->Flush();
-
-	m_device->Release();
-	m_context->Release();
-
-	m_device = nullptr;
-	m_context = nullptr;
+	if (m_swapChain)
+	{
+		m_swapChain->SetFullscreenState(false, NULL);
+	}
 
 	m_outliningNOTEQUAL->Release();
 	m_outliningALWAYS->Release();
@@ -331,7 +324,6 @@ void DirectXWrapper::Shutdown()
 	m_depthStencilOutlining->Release();
 	m_depthStencil->Release();
 	m_renderTarget->Release();
-	m_swapChain->Release();
 
 	if (m_alphaDisabled != nullptr)
 	{
@@ -345,12 +337,19 @@ void DirectXWrapper::Shutdown()
 		m_alphaEnabled = nullptr;
 	}
 
+	m_context->ClearState();
+	m_context->Flush();
 
+	m_context->Release();
+	m_device->Release();
 
-	
-
+	m_context = nullptr;
+	m_device = nullptr;	
+	m_swapChain->Release();
+#ifdef _DEBUG
 	d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY | D3D11_RLDO_DETAIL);
 	d3dDebug->Release();
+#endif
 }
 
 void DirectXWrapper::Clear()
@@ -519,7 +518,8 @@ bool DirectXWrapper::InitializeOutlinging()
 
 void DirectXWrapper::SetOutliningPassOne()
 {
-	m_context->OMSetRenderTargets(0, NULL, m_depthStencilViewOutlining);
+	ID3D11RenderTargetView* nullRenderTarget = NULL;
+	m_context->OMSetRenderTargets(0, &nullRenderTarget, m_depthStencilViewOutlining);
 	m_context->OMSetDepthStencilState(m_outliningALWAYS, 0);
 }
 
@@ -547,10 +547,7 @@ void DirectXWrapper::SetDepthStateForParticles()
 }
 
 void DirectXWrapper::DoReportLiveObjects()
-{
-	//ATL::CComPtr<ID3D11Debug> pDebug;
-	//HRESULT hr = m_device->QueryInterface(IID_PPV_ARGS(&pDebug));
-	
+{	
 	if (SUCCEEDED(m_device->QueryInterface(__uuidof(ID3D11Debug), (void**)&d3dDebug)))
 	{
 		ID3D11InfoQueue *d3dInfoQueue = nullptr;
@@ -580,6 +577,6 @@ void DirectXWrapper::DoReportLiveObjects()
 
 void DirectXWrapper::SetDebugName(ID3D11DeviceChild* child, const std::string& name)
 {
-	if (child != nullptr)
-		child->SetPrivateData(WKPDID_D3DDebugObjectName, name.size(), name.c_str());
+	//if (child != nullptr)
+		//child->SetPrivateData(WKPDID_D3DDebugObjectName, name.size(), name.c_str());
 }

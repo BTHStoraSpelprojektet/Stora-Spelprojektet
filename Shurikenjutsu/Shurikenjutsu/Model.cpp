@@ -100,6 +100,8 @@ ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int 
 		{
 			ConsolePrintError("Failed create shader resource loadtexture - model");
 		}
+
+		//texture->Release();
 	}
 
 	return textureSRV;
@@ -107,37 +109,23 @@ ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int 
 
 void Model::ShutdownModel()
 {
-	if (importer != NULL || importer != nullptr)
-	{
-		//importer->Shutdown();
-		//delete importer;
-		//importer = nullptr;
-	}
-	
-	/*if (mData != nullptr)
-	{
-		mData.Shutdown();
-		delete mData;
-		mData = nullptr;
-	}*/
-
-	/*if (m_mesh != NULL)
+	if (m_mesh != NULL)
 	{
 		m_mesh->Release();
 		m_mesh = 0;
-	}*/
+	}
 
-	/*if (m_texture != NULL)
+	if (m_texture != NULL)
 	{
 		m_texture->Release();
 		m_texture = 0;
-	}*/
+	}
 
-	/*if (m_normalMap != NULL)
+	if (m_normalMap != NULL)
 	{
 		m_normalMap->Release();
 		m_normalMap = 0;
-	}*/
+	}
 }
 
 void Model::Update()
