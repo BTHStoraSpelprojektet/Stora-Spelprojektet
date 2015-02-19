@@ -11,6 +11,9 @@ bool FanBoomerangManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	m_fans = std::vector<FanNet>();
 
 	m_boundingBoxes = ModelLibrary::GetInstance()->GetModel(FANBOOMERANG_MODEL_NAME)->GetBoundingBoxes();
+
+	m_sendIntervall = 0.02;
+	m_lastTimeSent = 0.0;
 	
 	return true;
 }
@@ -64,9 +67,14 @@ void FanBoomerangManager::Update(double p_deltaTime, PlayerManager* p_playerMana
 		}
 	}
 
-	if (m_fans.size() > 0)
+	m_lastTimeSent -= p_deltaTime;
+	if (m_lastTimeSent < 0)
 	{
-		UpdateClients();
+		m_lastTimeSent = m_sendIntervall;
+		if (m_fans.size() > 0)
+		{
+			UpdateClients();
+		}
 	}
 }
 
@@ -134,7 +142,7 @@ void FanBoomerangManager::UpdateClients()
 		bitStream.Write(m_fans[i].speed);
 	}
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 std::vector<FanNet> FanBoomerangManager::GetObjects()
@@ -205,7 +213,7 @@ void FanBoomerangManager::BroadcastDestoyed(unsigned int p_id)
 	bitStream.Write((RakNet::MessageID)ID_FAN_REMOVE);
 	bitStream.Write(p_id);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 unsigned int FanBoomerangManager::GetUniqueId()
@@ -236,6 +244,7 @@ float FanBoomerangManager::SetLifeTime(int p_index, float p_lifeTime)
 {
 	return m_fans[p_index].lifeTime = p_lifeTime;
 }
+
 void FanBoomerangManager::ResetLists()
 {
 	m_fans.clear();

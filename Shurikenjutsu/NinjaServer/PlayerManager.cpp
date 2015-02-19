@@ -29,6 +29,9 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_tessenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(TESSEN_NINJA_MODEL_NAME)->GetBoundingBoxes();
 	m_naginataBoundingBoxes = ModelLibrary::GetInstance()->GetModel(NAGINATA_NINJA_MODEL_NAME)->GetBoundingBoxes();
 
+	m_sendIntervall = 0.03;
+	m_lastTimeSent = 0.0;
+
 	return true;
 }
 
@@ -36,25 +39,13 @@ void PlayerManager::Shutdown(){}
 
 void PlayerManager::Update(double p_deltaTime)
 {
-	/*for (unsigned int i = 0; i < m_players.size(); i++)
+	m_lastTimeSent -= p_deltaTime;
+	if (m_lastTimeSent < 0)
 	{
-		if (m_players[i].gcd > 0.0f)
-		{
-			m_players[i].gcd -= (float)p_deltaTime;
-		}
-		if (m_players[i].cooldownAbilites.shurikenCD > 0.0f)
-		{
-			m_players[i].cooldownAbilites.shurikenCD -= (float)p_deltaTime;
-		}
-		if (m_players[i].cooldownAbilites.dashCD > 0.0f)
-		{
-			m_players[i].cooldownAbilites.dashCD -= (float)p_deltaTime;
-		}
-		if (m_players[i].cooldownAbilites.meleeSwingCD > 0.0f)
-		{
-			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
-		}
-	}*/
+		m_lastTimeSent = m_sendIntervall;
+		// Send dir
+		SendPlayerDir();
+	}
 }
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
@@ -499,4 +490,34 @@ int PlayerManager::GetTeamForPlayer()
 	}
 
 	return team2 >= team1 ? 1 : 2;
+}
+
+void PlayerManager::SendPlayerPos()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		RakNet::BitStream wBitStream;
+		wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
+		wBitStream.Write(m_players[i].guid);
+		wBitStream.Write(m_players[i].x);
+		wBitStream.Write(m_players[i].y);
+		wBitStream.Write(m_players[i].z);
+
+		m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	}
+}
+
+void PlayerManager::SendPlayerDir()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		RakNet::BitStream wBitStream;
+		wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
+		wBitStream.Write(m_players[i].guid);
+		wBitStream.Write(m_players[i].dirX);
+		wBitStream.Write(m_players[i].dirY);
+		wBitStream.Write(m_players[i].dirZ);
+
+		m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	}
 }

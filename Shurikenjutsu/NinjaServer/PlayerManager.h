@@ -71,6 +71,12 @@ private:
 
 	//float m_gcd;
 	float m_playerHealth;
+
+	void SendPlayerPos();
+	void SendPlayerDir();
+	double m_sendIntervall;
+	double m_lastTimeSent;
+	
 };
 
 #endif

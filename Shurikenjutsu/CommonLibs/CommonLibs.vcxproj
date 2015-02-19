@@ -80,6 +80,7 @@
     <ClInclude Include="ModelImporter.h" />
     <ClInclude Include="ModelLibrary.h" />
     <ClInclude Include="ModelNames.h" />
+    <ClInclude Include="NetworkLogger.h" />
     <ClInclude Include="RakNet\AutopatcherPatchContext.h" />
     <ClInclude Include="RakNet\AutopatcherRepositoryInterface.h" />
     <ClInclude Include="RakNet\Base64Encoder.h" />
@@ -241,6 +242,7 @@
     <ClCompile Include="LevelImporter.cpp" />
     <ClCompile Include="ModelImporter.cpp" />
     <ClCompile Include="ModelLibrary.cpp" />
+    <ClCompile Include="NetworkLogger.cpp" />
     <ClCompile Include="RakNet\Base64Encoder.cpp" />
     <ClCompile Include="RakNet\BitStream.cpp" />
     <ClCompile Include="RakNet\CCRakNetSlidingWindow.cpp" />

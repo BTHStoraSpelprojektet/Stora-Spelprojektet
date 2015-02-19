@@ -45,6 +45,9 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}
 
+	GLOBAL::GetInstance().CAMERA_MOVING = true;
+	GLOBAL::GetInstance().CAMERA_SPECTATE = false;
+
 	ConsolePrintSuccess("Application initialized.");
 	ConsoleSkipLines(1);
 
@@ -110,6 +113,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('l'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('v'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('r'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('o'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
@@ -270,6 +274,18 @@ void System::Update()
 		{
 			GLOBAL::GetInstance().FPS = std::to_string(m_timer->GetFPS());
 			m_previousFPS = fps;
+		}
+	}
+
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('o')))
+	{
+		if (!GLOBAL::GetInstance().CAMERA_MOVING)
+		{
+			GLOBAL::GetInstance().CAMERA_MOVING = true;
+		}
+		else
+		{
+			GLOBAL::GetInstance().CAMERA_MOVING = false;
 		}
 	}
 

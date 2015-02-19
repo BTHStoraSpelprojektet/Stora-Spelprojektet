@@ -44,6 +44,10 @@ public:
 	int GetPlayerTeam();
 	Player* GetEnemyTeamMember(int p_index);
 	int GetEnemyTeam(int p_index);
+	
+	DirectX::XMFLOAT3 GetTeamMemberPosSpectate(int &p_index, int p_team);
+	bool GetPlayerIsAlive();
+	int GetNrOfPlayersInTeam(int p_team);
 
 private:
 	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);

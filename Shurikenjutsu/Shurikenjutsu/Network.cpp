@@ -46,9 +46,12 @@ bool Network::Initialize()
 	m_matchOver = false;
 	m_matchWinningTeam = 0;
 
-	m_clientPeer = RakNet::RakPeerInterface::GetInstance();
-	
+	m_clientPeer = RakNet::RakPeerInterface::GetInstance();	
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
+
+	m_networkLogger = NetworkLogger();
+	m_networkLogger.Initialize();
+	m_clientPeer->AttachPlugin(&m_networkLogger);
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
@@ -90,6 +93,7 @@ void Network::Update()
 {
 	m_prevConnected = m_connected;
 	ReceviePacket();
+	m_networkLogger.Update(GLOBAL::GetInstance().GetDeltaTime());
 
 	// Ping
 	m_timeToPing -= GLOBAL::GetInstance().GetDeltaTime();
