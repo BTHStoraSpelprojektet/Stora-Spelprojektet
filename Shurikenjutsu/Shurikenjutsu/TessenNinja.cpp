@@ -72,6 +72,10 @@ void TessenNinja::RenderAttackLocations()
 
 			m_aimFrustrum->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
@@ -80,6 +84,10 @@ void TessenNinja::RenderAttackLocations()
 			m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
 
 			m_aimPole->Render();
+		}
+		else
+		{
+			StillCDText();
 		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
@@ -91,6 +99,10 @@ void TessenNinja::RenderAttackLocations()
 			m_aimArrow->Render();
 			m_aimPole->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 	{
@@ -99,6 +111,10 @@ void TessenNinja::RenderAttackLocations()
 			m_ape->SpinAttackBigSphere(m_aimSphere, m_position, 16.0f);
 			m_aimSphere->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
 	{
@@ -106,6 +122,10 @@ void TessenNinja::RenderAttackLocations()
 		{
 			m_ape->ThrowSphere(m_aimSphere, 5.0f);
 			m_aimSphere->Render();
+		}
+		else
+		{
+			StillCDText();
 		}
 	}
 	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();

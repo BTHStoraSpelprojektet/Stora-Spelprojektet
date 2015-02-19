@@ -349,6 +349,10 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		{
 			m_ability = m_rangeAttack;
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 
 	// Melee attack
@@ -357,6 +361,10 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
 			m_ability = m_meleeAttack;
+		}
+		else
+		{
+			StillCDText();
 		}
 	}
 
@@ -1095,3 +1103,9 @@ void Player::SetOriginalSpeed(float p_speed)
 }
 
 void Player::RenderAttackLocations(){}
+
+void Player::StillCDText()
+{
+	int temp = std::rand() % 5;
+	m_floatingText->SetcantUseAbilityText(temp);
+}
