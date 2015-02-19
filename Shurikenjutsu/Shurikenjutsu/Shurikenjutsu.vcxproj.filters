@@ -93,9 +93,6 @@
     <Filter Include="Header Files\GUI\Internal">
       <UniqueIdentifier>{fb93a324-473a-4d57-b35a-f79fef42c390}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Abilities">
-      <UniqueIdentifier>{b0c8a535-7d03-4685-94fc-456b01c98d3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Abilities">
       <UniqueIdentifier>{b0121fa2-8f9d-42a5-8c09-594f399da5c8}</UniqueIdentifier>
     </Filter>
@@ -170,6 +167,9 @@
     </Filter>
     <Filter Include="Header Files\Utility\DebugDraw">
       <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Core\Abilities">
+      <UniqueIdentifier>{b0c8a535-7d03-4685-94fc-456b01c98d3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -309,19 +309,19 @@
       <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
     <ClCompile Include="Dash.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="Ability.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="StatusEffect.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="MeleeSwing.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="ShurikenAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="AbilityBar.cpp">
       <Filter>Source Files\GUI</Filter>
@@ -330,10 +330,10 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="MegaShuriken.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="SmokeBombAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="MenuCheckbox.cpp">
       <Filter>Source Files\GUI\Menu\Menu Items</Filter>
@@ -381,7 +381,7 @@
       <Filter>Source Files\ShadowShapes</Filter>
     </ClCompile>
     <ClCompile Include="SpikeAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="KatanaNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
@@ -390,19 +390,19 @@
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
     <ClCompile Include="WhipPrimaryAttackAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="WhipSecondaryAttackAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="FanBoomerang.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="FanBoomerangAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="NaginataSlash.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="NaginataNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
@@ -411,19 +411,19 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="KunaiAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="NaginataStab.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="TeamStatusBar.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="StickyTrapAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="NaginataStab.cpp">
       <Filter>Source Files\Abilities</Filter>
@@ -456,7 +456,7 @@
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="VolleyAbility.cpp">
-      <Filter>Source Files\Abilities</Filter>
+      <Filter>Source Files\Core\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>

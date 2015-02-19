@@ -44,6 +44,7 @@ public:
 	void ClearRenderTargetsForGBuffers();
 	ID3D11ShaderResourceView* GetPostProcessingSRV1();
 	ID3D11ShaderResourceView* GetPostProcessingSRV2();
+	ID3D11ShaderResourceView* DirectXWrapper::GetDepthSRV();
 
 private:
 	ID3D11Device* m_device;
@@ -80,5 +81,6 @@ private:
 	// POST PROCESSING STUFF
 	ID3D11RenderTargetView* m_postProcessingRTV[2];
 	ID3D11ShaderResourceView* m_postProcessingSRV[2];
+	ID3D11ShaderResourceView* m_depthSRV;
 };
 #endif;

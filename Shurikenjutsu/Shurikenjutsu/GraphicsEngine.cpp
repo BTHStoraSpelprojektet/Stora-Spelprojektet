@@ -13,6 +13,7 @@
 #include "OutlingShader.h"
 #include "Object.h"
 #include "FoliageShader.h"
+#include "ScreenSpace.h"
 
 GraphicsEngine* GraphicsEngine::m_instance;
 
@@ -48,7 +49,8 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 	
 	// Initialize the scene shader.
-	if (m_sceneShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
+	m_sceneShader = new SceneShader();
+	if (m_sceneShader->Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("Scene shader initialized successfully.");
 		ConsoleSkipLines(1);
@@ -59,7 +61,8 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 
 	// Initialize 2D GUI shader.
-	if (m_GUIShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
+	m_GUIShader = new GUIShader();
+	if (m_GUIShader->Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("GUI 2D shader initialized successfully.");
 		ConsoleSkipLines(1);
@@ -69,18 +72,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		return false;
 	}
 
-	// Initialize the particle shader.
-	if (m_particleShader.Initialize(m_directX.GetDevice()))
-	{
-		ConsolePrintSuccess("Particle shader initialized successfully.");
-		ConsoleSkipLines(1);
-	}
-	else
-	{
-		return false;
-	}
-
-	if (m_GUIShader.InitializeColorShader(m_directX.GetDevice(), m_directX.GetContext()))
+	if (m_GUIShader->InitializeColorShader(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("GUI 2D color shader initialized successfully.");
 		ConsoleSkipLines(1);
@@ -90,8 +82,21 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		return false;
 	}
 
+	// Initialize the particle shader.
+	m_particleShader = new ParticleShader();
+	if (m_particleShader->Initialize(m_directX.GetDevice()))
+	{
+		ConsolePrintSuccess("Particle shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+	else
+	{
+		return false;
+	}
+
 	// Initialize the depth buffer.
-	if (m_depthShader.Initialize(m_directX.GetDevice(), m_directX.GetContext()))
+	m_depthShader = new DepthShader();
+	if (m_depthShader->Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("Depth shader initialized successfully.");
 		ConsoleSkipLines(1);
@@ -101,8 +106,21 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 		return false;
 	}
 
-	// Initialize the foliage buffer.
-	if (m_foliageShader.Initialize(m_directX.GetDevice()))
+	// Initialize the foliage shader.
+	m_foliageShader = new FoliageShader();
+	if (m_foliageShader->Initialize(m_directX.GetDevice()))
+	{
+		ConsolePrintSuccess("Foliage shader initialized successfully.");
+		ConsoleSkipLines(1);
+	}
+	else
+	{
+		return false;
+	}
+
+	// Initialize the screen space shader.
+	m_screenSpace = new ScreenSpace();
+	if (m_screenSpace->Initialize(m_directX.GetDevice(), m_directX.GetContext()))
 	{
 		ConsolePrintSuccess("Foliage shader initialized successfully.");
 		ConsoleSkipLines(1);
@@ -188,21 +206,57 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 
 void GraphicsEngine::Shutdown()
 {
-	m_particleShader.Shutdown();
+	if (m_particleShader != nullptr)
+	{
+		m_particleShader->Shutdown();
+		delete m_particleShader;
+		m_particleShader = nullptr;
+	}
+	
 	m_shadowMap.Shutdown();
 
-	m_sceneShader.Shutdown();
-	m_GUIShader.Shutdown();
-	m_depthShader.Shutdown();
-	m_foliageShader.Shutdown();
+	if (m_sceneShader != nullptr)
+	{
+		m_sceneShader->Shutdown();
+		delete m_sceneShader;
+		m_sceneShader = nullptr;
+	}
 
-	if (m_fontWrapper != NULL)
+	if (m_GUIShader != nullptr)
+	{
+		m_GUIShader->Shutdown();
+		delete m_GUIShader;
+		m_GUIShader = nullptr;
+	}
+
+	if (m_depthShader != nullptr)
+	{
+		m_depthShader->Shutdown();
+		delete m_depthShader;
+		m_depthShader = nullptr;
+	}
+
+	if (m_foliageShader != nullptr)
+	{
+		m_foliageShader->Shutdown();
+		delete m_foliageShader;
+		m_foliageShader = nullptr;
+	}
+
+	if (m_screenSpace != nullptr)
+	{
+		m_screenSpace->Shutdown();
+		delete m_screenSpace;
+		m_screenSpace = nullptr;
+	}
+
+	if (m_fontWrapper != nullptr)
 	{
 		m_fontWrapper->Release();
 		m_fontWrapper = nullptr;
 	}
 
-	if (m_textGeometry != NULL)
+	if (m_textGeometry != nullptr)
 	{
 		m_textGeometry->Release();
 		m_textGeometry = nullptr;
@@ -252,63 +306,63 @@ ID3D11ShaderResourceView* GraphicsEngine::Create2DTexture(std::string p_filename
 
 void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
 {
-	m_sceneShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
+	m_sceneShader->Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
 }
 
 void GraphicsEngine::RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture)
 {
-	m_sceneShader.RenderReversedShadows(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_visibilityMap, p_texture);
+	m_sceneShader->RenderReversedShadows(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_visibilityMap, p_texture);
 }
 void GraphicsEngine::RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex)
 {
-	m_sceneShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
+	m_sceneShader->RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
 }
 
 void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
-	m_sceneShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
+	m_sceneShader->RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
 }
 
 void GraphicsEngine::RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
-	m_sceneShader.RenderAnimatedOutlining(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
+	m_sceneShader->RenderAnimatedOutlining(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
 }
 
 void GraphicsEngine::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
-	m_depthShader.Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
+	m_depthShader->Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 }
 
 void GraphicsEngine::RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 {
-	m_depthShader.RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex, m_instanceManager);
+	m_depthShader->RenderInstance(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex, m_instanceManager);
 }
 
 void GraphicsEngine::RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
-	m_depthShader.RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_boneTransforms);
+	m_depthShader->RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_boneTransforms);
 }
 
 void GraphicsEngine::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
-	m_GUIShader.Render(m_directX.GetContext(), p_worldMatrix, p_texture);
+	m_GUIShader->Render(m_directX.GetContext(), p_worldMatrix, p_texture);
 }
 
 void GraphicsEngine::RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color)
 {
-	m_GUIShader.RenderColor(m_directX.GetContext(), p_worldMatrix, p_color);
+	m_GUIShader->RenderColor(m_directX.GetContext(), p_worldMatrix, p_color);
 }
 
 void GraphicsEngine::RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix)
 {
-	m_sceneShader.RenderLine(m_directX.GetContext(), p_mesh, p_number, p_color, p_worldMatrix);
+	m_sceneShader->RenderLine(m_directX.GetContext(), p_mesh, p_number, p_color, p_worldMatrix);
 }
 
 void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	TurnOnAlphaBlending();
 
-	m_particleShader.Render(m_directX.GetContext(), p_mesh, p_vertexCount, p_worldMatrix, p_texture);
+	m_particleShader->Render(m_directX.GetContext(), p_mesh, p_vertexCount, p_worldMatrix, p_texture);
 
 	TurnOffAlphaBlending();
 }
@@ -317,23 +371,23 @@ void GraphicsEngine::RenderFoliage()
 {
 	TurnOnAlphaBlending();
 
-	m_foliageShader.Render(m_directX.GetContext(), m_shadowMap.GetRenderTarget());
+	m_foliageShader->Render(m_directX.GetContext(), m_shadowMap.GetRenderTarget());
 
 	TurnOffAlphaBlending();
 }
 
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
-	m_sceneShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	m_particleShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	m_foliageShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_sceneShader->UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_particleShader->UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_foliageShader->UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 {
-	m_sceneShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	m_depthShader.UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
-	m_foliageShader.UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_sceneShader->UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_depthShader->UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
+	m_foliageShader->UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 }
 
 void GraphicsEngine::SetShadowMap()
@@ -343,17 +397,22 @@ void GraphicsEngine::SetShadowMap()
 		ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
 	}
 
-	m_sceneShader.UpdateShadowMap(m_shadowMap.GetRenderTarget());
+	m_sceneShader->UpdateShadowMap(m_shadowMap.GetRenderTarget());
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
 {
-	m_sceneShader.UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
+	m_sceneShader->UpdateFogBuffer(m_directX.GetContext(), p_fogStart, p_fogEnd, p_fogDensity);
 }
 
 void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
 {
-	m_sceneShader.UpdateFrameBuffer(m_directX.GetContext(), p_dLight);
+	m_sceneShader->UpdateFrameBuffer(m_directX.GetContext(), p_dLight);
+}
+
+void GraphicsEngine::SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection)
+{
+	m_screenSpace->UpdateFrameBuffer(m_directX.GetContext(), p_dLight, p_projection);
 }
 
 void GraphicsEngine::Clear()
@@ -393,7 +452,7 @@ ID3D11ShaderResourceView* GraphicsEngine::GetShadowMap()
 
 ID3D11ShaderResourceView* GraphicsEngine::GetSceneShaderShadowMap()
 {
-	return m_sceneShader.GetShadowMap();
+	return m_sceneShader->GetShadowMap();
 }
 
 std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
@@ -508,7 +567,7 @@ HWND GraphicsEngine::GetWindowHandle()
 
 void GraphicsEngine::SetShadowMapDimensions(float p_width, float p_height)
 {
-	m_sceneShader.SetShadowMapDimensions(m_directX.GetDevice(), m_directX.GetContext(), p_width, p_height);
+	m_sceneShader->SetShadowMapDimensions(m_directX.GetDevice(), m_directX.GetContext(), p_width, p_height);
 }
 
 void GraphicsEngine::TurnOnDepthStencil()
@@ -606,4 +665,9 @@ void GraphicsEngine::SetRenderTargetsForGBuffers()
 void GraphicsEngine::DoReportLiveObjects()
 {
 	m_directX.DoReportLiveObjects();
+}
+
+void GraphicsEngine::Composition()
+{
+	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetPostProcessingSRV2(), m_directX.GetPostProcessingSRV1(), m_directX.GetDepthSRV());
 }

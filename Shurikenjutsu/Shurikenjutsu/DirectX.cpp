@@ -225,11 +225,11 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	depthStencilDescription.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	depthStencilDescription.MipLevels = 1;
 	depthStencilDescription.ArraySize = 1;
-	depthStencilDescription.Format = DXGI_FORMAT_D32_FLOAT;
+	depthStencilDescription.Format = DXGI_FORMAT_R32_TYPELESS;
 	depthStencilDescription.SampleDesc.Count = 1;
 	depthStencilDescription.SampleDesc.Quality = 0;
 	depthStencilDescription.Usage = D3D11_USAGE_DEFAULT;
-	depthStencilDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDescription.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	depthStencilDescription.CPUAccessFlags = 0;
 	depthStencilDescription.MiscFlags = 0;
 
@@ -243,7 +243,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Initialize the depth stencil view.
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDescription;
 	ZeroMemory(&depthStencilViewDescription, sizeof(depthStencilViewDescription));
-	depthStencilViewDescription.Format = depthStencilViewDescription.Format;
+	depthStencilViewDescription.Format = DXGI_FORMAT_D32_FLOAT;
 	depthStencilViewDescription.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDescription.Texture2D.MipSlice = 0;
 
@@ -251,6 +251,21 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	if (FAILED(m_device->CreateDepthStencilView(m_depthStencil, &depthStencilViewDescription, &m_depthStencilView)))
 	{
 		ConsolePrintErrorAndQuit("DirectX depth stencil view failed to create.");
+		return false;
+	}
+
+	// Setup the description of the shader resource view.
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+	shaderResourceViewDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Create the shader resource view.
+	result = m_device->CreateShaderResourceView(m_depthStencil, &shaderResourceViewDesc, &m_depthSRV);
+	if (FAILED(result))
+	{
+		ConsolePrintErrorAndQuit("DirectX depth stencil SRV failed to create.");
 		return false;
 	}
 
@@ -681,6 +696,11 @@ ID3D11ShaderResourceView* DirectXWrapper::GetPostProcessingSRV1()
 ID3D11ShaderResourceView* DirectXWrapper::GetPostProcessingSRV2()
 {
 	return m_postProcessingSRV[1];
+}
+
+ID3D11ShaderResourceView* DirectXWrapper::GetDepthSRV()
+{
+	return m_depthSRV;
 }
 
 void DirectXWrapper::DoReportLiveObjects()

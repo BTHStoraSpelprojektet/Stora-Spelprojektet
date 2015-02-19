@@ -86,12 +86,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	{
 		return false;
 	}
-	
+
+
 	// Initialize the directional light.
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
-	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
+	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f);
+	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 
 	ConsolePrintSuccess("Light source initialized successfully.");
@@ -305,7 +307,14 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render();
+	
+
+	// Composition
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	GraphicsEngine::GetInstance()->RenderFoliage();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());

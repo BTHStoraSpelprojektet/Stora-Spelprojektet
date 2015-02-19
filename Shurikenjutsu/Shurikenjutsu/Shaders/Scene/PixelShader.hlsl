@@ -56,17 +56,17 @@ void main(Input p_input , out gBuffer p_output)
 	float4 fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
 	// Calculate light
-	Material material;
-	material.m_ambient = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	//Material material;
+	//material.m_ambient = float4(1.0f, 1.0f, 1.0f, 1.0f);
+	//material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-	float4 A = m_directionalLight.m_ambient;
-	float4 D = 0.0f;
-	float4 S = 0.0f;
+	//float4 A = m_directionalLight.m_ambient;
+	//float4 D = 0.0f;
+	//float4 S = 0.0f;
 
 	// Sample NormalMap.
 	float4 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgba;
-	material.m_specular = float4(normalMapSample.a, normalMapSample.a, normalMapSample.a, normalMapSample.a * 255.0f);
+	//material.m_specular = float4(normalMapSample.a, normalMapSample.a, normalMapSample.a, normalMapSample.a * 255.0f);
 
 	// Uncompress NormalMap - to get it into the right range.
 	float3 normalT = 2.0f * normalMapSample.xyz - 1.0f;
@@ -78,10 +78,10 @@ void main(Input p_input , out gBuffer p_output)
 	float3 normal = normalize(bumpedNormalW);
 
 	// Calculate the vector to the camera.
-	float3 toCamera = normalize(m_directionalLight.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
+	//float3 toCamera = normalize(m_directionalLight.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
 
 	// Compute directional light
-	ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
+	//ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
 
 	// Calculate projected shadow map coordinates.
 	float2 shadowMapCoordinates;
@@ -136,12 +136,14 @@ void main(Input p_input , out gBuffer p_output)
 	}
 
 	// Add light.
-	textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
+	//textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
 	
 	// Add fog.
-	float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
+	//float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
 
 	// Return shaded pixel.
-	p_output.a = float4(coloredPixel.xyz, 1.0f);
-	p_output.b = float4(p_input.m_normal, 1.0f);
+	normal = 0.5f * normal + 0.5f;
+
+	p_output.a = float4(textureColor.xyz, normalMapSample.a);
+	p_output.b = float4(normal, shadowSum);
 }
