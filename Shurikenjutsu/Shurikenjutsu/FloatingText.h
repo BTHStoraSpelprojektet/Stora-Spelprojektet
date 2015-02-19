@@ -11,7 +11,7 @@ public:
 	void Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 	void Shutdown();
 	void Render();
-	void SetReceivedDamageText(std::string p_damage);
+	void SetReceivedDamageText(float p_damage);
 	void SetDealtDamageText(float p_damage);
 	void SetHealingText(float p_healing);
 private:

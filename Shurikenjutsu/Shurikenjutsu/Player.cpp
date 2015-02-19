@@ -505,7 +505,7 @@ void Player::SetHealth(float p_health)
 
 	if (m_health > p_health)
 	{
-		m_floatingText->SetReceivedDamageText(std::to_string(p_health-m_health));
+		m_floatingText->SetReceivedDamageText(p_health-m_health);
 	}
 
 	if (p_health < 0 )

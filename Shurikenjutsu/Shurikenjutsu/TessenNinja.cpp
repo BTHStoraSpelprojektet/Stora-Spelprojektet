@@ -51,6 +51,8 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_toolAbility->Initialize();
 
 	SetOriginalSpeed(GetSpeed());
+	SetHealth(CHARACTER_TESSEN_HEALTH);
+	SetMaxHealth(CHARACTER_TESSEN_HEALTH);
 
 	return true;
 }

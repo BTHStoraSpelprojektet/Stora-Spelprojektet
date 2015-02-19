@@ -73,12 +73,20 @@ void FloatingText::RenderText(GUIText* p_text)
 	}
 }
 
-void FloatingText::SetReceivedDamageText(std::string p_damage)
+void FloatingText::SetReceivedDamageText(float p_damage)
 {
-	std::string temp = p_damage;
-	temp.resize(3);
-	m_receivedDamageText->SetText(temp);
-	m_receivedDamageText->SetColor(0xff0000ff);
+	int resize = 3;
+	if ( p_damage > -10)
+	{
+		resize = 2;
+	}
+	if (p_damage != 0)
+	{
+		std::string temp = std::to_string(p_damage);
+		temp.resize(resize);
+		m_dealtDamageText->SetText(temp);
+		m_dealtDamageText->SetColor(0xff0000ff);
+	}
 }
 void FloatingText::SetDealtDamageText(float p_damage)
 {
