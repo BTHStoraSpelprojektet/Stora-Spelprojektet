@@ -21,16 +21,24 @@ void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_vi
 	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText, 1.0f, 6.0f);
 	DecreaseTextOpacity(m_receivedDamageText);
 	DecreaseTextOpacity(m_receivedDamageText);
+	DecreaseTextOpacity(m_receivedDamageText);
+	DecreaseTextOpacity(m_receivedDamageText);
 
 	CalculatePosition(p_position, p_view, p_projection, m_dealtDamageText, 2.0f, 0.0f);
+	DecreaseTextOpacity(m_dealtDamageText);
+	DecreaseTextOpacity(m_dealtDamageText);
 	DecreaseTextOpacity(m_dealtDamageText);
 	DecreaseTextOpacity(m_dealtDamageText);
 
 	CalculatePosition(p_position, p_view, p_projection, m_healingText, -1.0f, 6.0f);
 	DecreaseTextOpacity(m_healingText);
 	DecreaseTextOpacity(m_healingText);
+	DecreaseTextOpacity(m_healingText);
+	DecreaseTextOpacity(m_healingText);
 
 	CalculatePosition(p_position, p_view, p_projection, m_cantUseAbilityText, 0.0f, 0.0f);
+	DecreaseTextOpacity(m_cantUseAbilityText);
+	DecreaseTextOpacity(m_cantUseAbilityText);
 	DecreaseTextOpacity(m_cantUseAbilityText);
 	DecreaseTextOpacity(m_cantUseAbilityText);
 }
