@@ -4,14 +4,14 @@
 #define WIN32_LEAN_AND_MEAN
 #include "AnimatedObject.h"
 #include "Network.h"
-#include "ParticleEmitter.h"
-
 class Ability;
 class InputManager;
 class HealthBar;
 class AbilityBar;
 class StickyTrap;
 class AttackPredictionEditor;
+class FloatingText;
+class ParticleEmitter;
 
 class Player : public AnimatedObject
 {
@@ -126,5 +126,6 @@ protected:
 	Object* m_aimFrustrum;
 	bool localPlayer;
 	AttackPredictionEditor *m_ape;
+	FloatingText* m_floatingText;
 };
 #endif PLAYER

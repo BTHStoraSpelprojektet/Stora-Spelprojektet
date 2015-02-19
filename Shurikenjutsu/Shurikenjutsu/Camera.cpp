@@ -468,14 +468,11 @@ void Camera::ResetCameraToLight()
 
 void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 {
-	POINT mousePosition;
-	GetCursorPos(&mousePosition);
-
 	float moveX, moveY, centerX, centerY, posX, posY;
 	centerX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f;
 	centerY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f;
-	posX = mousePosition.x - centerX;
-	posY = mousePosition.y - centerY;
+	posX = InputManager::GetInstance()->GetMousePositionX() - centerX;
+	posY = InputManager::GetInstance()->GetMousePositionY() - centerY;
 	float procX = posX / 440;
 	float procY = posY / 352; // 512 *0,68 //0.68 = 440/640;
 	if (procX > 1.0f)

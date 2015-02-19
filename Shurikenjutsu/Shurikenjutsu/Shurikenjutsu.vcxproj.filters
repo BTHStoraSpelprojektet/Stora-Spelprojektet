@@ -455,6 +455,9 @@
     <ClCompile Include="AttackPredictionEditor.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
+    <ClCompile Include="FloatingText.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -759,6 +762,9 @@
     </ClInclude>
     <ClInclude Include="AttackPredictionEditor.h">
       <Filter>Header Files\Ninjas</Filter>
+    </ClInclude>
+    <ClInclude Include="FloatingText.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
