@@ -8,7 +8,7 @@ void FloatingText::Initialize()
 	m_receivedDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff0000ff);
 
 	m_dealtDamageText = new GUIText();
-	m_dealtDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff00ff00);
+	m_dealtDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xffffff00);
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
@@ -17,7 +17,7 @@ void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_vi
 	DecreaseTextOpacity(m_receivedDamageText);
 
 
-	CalculatePosition(p_position, p_view, p_projection, m_dealtDamageText, 6.0f, 0.0f);
+	CalculatePosition(p_position, p_view, p_projection, m_dealtDamageText, 2.0f, 0.0f);
 	DecreaseTextOpacity(m_dealtDamageText);
 	DecreaseTextOpacity(m_dealtDamageText);
 }
@@ -69,10 +69,13 @@ void FloatingText::SetReceivedDamageText(std::string p_damage)
 }
 void FloatingText::SetDealtDamageText(std::string p_damage)
 {
-	std::string temp = p_damage;
-	temp.resize(3);
-	m_dealtDamageText->SetText(temp);
-	m_dealtDamageText->SetColor(0xff00ff00);
+	if (p_damage != "")
+	{
+		std::string temp = p_damage;
+		temp.resize(2);
+		m_dealtDamageText->SetText(temp);
+		m_dealtDamageText->SetColor(0xff00ffff);
+	}
 }
 void FloatingText::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection, GUIText* p_text, float p_xOffset, float p_yOffset)
 {
