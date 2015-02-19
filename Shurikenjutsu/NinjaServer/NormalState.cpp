@@ -268,7 +268,7 @@ void NormalState::SendRestartingRoundTime(int p_time)
 	bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND_TIMER);
 	bitStream.Write(p_time);
 
-	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE_SEQUENCED, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_SEQUENCED, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 	std::cout << p_time << "\n";
 }

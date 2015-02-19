@@ -41,6 +41,9 @@ private:
 
 	std::vector<FanNet> m_fans;
 	std::vector<Box> m_boundingBoxes;
+
+	double m_sendIntervall;
+	double m_lastTimeSent;
 };
 
 #endif

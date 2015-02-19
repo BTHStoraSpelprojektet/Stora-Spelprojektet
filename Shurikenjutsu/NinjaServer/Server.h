@@ -14,7 +14,7 @@
 #include "GameState.h"
 #include "DebugState.h"
 #include "NormalState.h"
-#include "ServerLogger.h"
+#include "..\CommonLibs\NetworkLogger.h"
 
 class Server
 {
@@ -34,7 +34,7 @@ private:
 	int m_nrOfConnections;
 	GameState* m_gameState;
 
-	ServerLogger m_serverLogger;
+	NetworkLogger m_networkLogger;
 };
 
 #endif SERVER

@@ -78,7 +78,6 @@ void TessenNinja::RenderAttackLocations()
 			m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
 
 			m_aimPole->Render();
-			m_aimArrow->Render();
 		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
