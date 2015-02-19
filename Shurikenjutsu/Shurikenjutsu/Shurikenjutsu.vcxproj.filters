@@ -159,6 +159,9 @@
     <Filter Include="Source Files\Core\Camera">
       <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Trail">
+      <UniqueIdentifier>{e70e4063-628a-4b59-b9c0-d9a393c5e931}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -833,6 +836,15 @@
     </FxCompile>
     <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
       <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Trails\TrailGeometryShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Trails\TrailPixelShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Trails\TrailVertexShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
