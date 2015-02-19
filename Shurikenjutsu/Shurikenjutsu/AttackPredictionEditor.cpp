@@ -92,10 +92,18 @@ void AttackPredictionEditor::ThinRectanglePrediction(Object *p_object, DirectX::
 
 	p_object->SetPosition(DirectX::XMFLOAT3(p_playerPosition.x + vectorToMouseNorm.x * (p_length * 0.5f), 0.03f, p_playerPosition.z + vectorToMouseNorm.z * (p_length * 0.5f)));
 }
-void AttackPredictionEditor::ThrowSphere(Object *p_object, float p_radius)
+void AttackPredictionEditor::ThrowSphere(Object *p_object, DirectX::XMFLOAT3 p_playerPosition, float p_radius, float p_maxRange)
 {
 	DirectX::XMFLOAT3 mousePos3D = DirectX::XMFLOAT3(InputManager::GetInstance()->Get3DMousePositionX(), 0.03f, InputManager::GetInstance()->Get3DMousePositionZ());
-	p_object->SetPosition(mousePos3D);
+	DirectX::XMFLOAT3 vectorToMouse = DirectX::XMFLOAT3(mousePos3D.x - p_playerPosition.x, 0.03f, mousePos3D.z - p_playerPosition.z);
+	float distance = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
+	DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / distance, 0.03f, vectorToMouse.z / distance);
+	if (distance > p_maxRange)
+	{
+		distance = p_maxRange;
+	}
+
+	p_object->SetPosition(DirectX::XMFLOAT3(p_playerPosition.x + vectorToMouseNorm.x * distance, 0.03f, p_playerPosition.z + vectorToMouseNorm.z * distance));
 	p_object->SetScale(DirectX::XMFLOAT3(p_radius, p_object->GetScale().y, p_radius));
 }
 void AttackPredictionEditor::SpinAttackBigSphere(Object *p_object, DirectX::XMFLOAT3 p_playerPosition, float p_radius)

@@ -15,7 +15,7 @@ bool Collisions::SphereBoxCollision(Sphere p_sphere, Box p_box)
 }
 bool Collisions::RaySphereCollision(Ray* p_ray, Sphere p_sphere)
 {
-	return IntersectionTests::Intersections::RaySphereCollision(p_ray->m_position, p_ray->m_direction, p_sphere.m_position, p_sphere.m_radius, &p_ray->m_distance);
+	return IntersectionTests::Intersections::RaySphereCollision(p_ray->m_position, p_ray->m_direction, p_sphere.m_position, p_sphere.m_radius, p_ray->m_distance);
 }
 bool Collisions::RayBoxCollision(Ray *p_ray, Box p_box)
 {
@@ -28,7 +28,7 @@ bool Collisions::RayBoxCollision(Ray *p_ray, Box p_box)
 }
 bool Collisions::RayOBBCollision(Ray *p_ray, OBB p_OBB)
 {
-	bool temp = IntersectionTests::Intersections::RayOBBCollision(p_ray->m_position, DirectX::XMFLOAT3(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z), p_OBB.m_center, p_OBB.m_extents, p_OBB.m_direction, &p_ray->m_distance);
+	bool temp = IntersectionTests::Intersections::RayOBBCollision(p_ray->m_position, DirectX::XMFLOAT3(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z), p_OBB.m_center, p_OBB.m_extents, p_OBB.m_direction, p_ray->m_distance);
 
 	return temp;
 }

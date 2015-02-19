@@ -8,20 +8,40 @@ void FloatingText::Initialize()
 	m_receivedDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff0000ff);
 
 	m_dealtDamageText = new GUIText();
-	m_dealtDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xffffff00);
+	m_dealtDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff00ffff);
+
+	m_healingText = new GUIText();
+	m_healingText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff00ff00);
+
+	m_cantUseAbilityText = new GUIText();
+	m_cantUseAbilityText->Initialize("Can't use that ability.", 30.0f, 20.0f, 115.0f, 0x000000ff);
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText, 0.0f, 6.0f);
+	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText, 1.0f, 6.0f);
 	DecreaseTextOpacity(m_receivedDamageText);
 	DecreaseTextOpacity(m_receivedDamageText);
-	
+
 	CalculatePosition(p_position, p_view, p_projection, m_dealtDamageText, 2.0f, 0.0f);
 	DecreaseTextOpacity(m_dealtDamageText);
 	DecreaseTextOpacity(m_dealtDamageText);
+
+	CalculatePosition(p_position, p_view, p_projection, m_healingText, -1.0f, 6.0f);
+	DecreaseTextOpacity(m_healingText);
+	DecreaseTextOpacity(m_healingText);
+
+	CalculatePosition(p_position, p_view, p_projection, m_cantUseAbilityText, 0.0f, 0.0f);
+	DecreaseTextOpacity(m_cantUseAbilityText);
+	DecreaseTextOpacity(m_cantUseAbilityText);
 }
 void FloatingText::Shutdown()
 {
+	if (m_healingText != nullptr)
+	{
+		m_healingText->Shutdown();
+		delete m_healingText;
+		m_healingText = nullptr;
+	}
 	if (m_dealtDamageText != nullptr)
 	{
 		m_dealtDamageText->Shutdown();
@@ -34,11 +54,19 @@ void FloatingText::Shutdown()
 		delete m_receivedDamageText;
 		m_receivedDamageText = nullptr;
 	}
+	if (m_cantUseAbilityText != nullptr)
+	{
+		m_cantUseAbilityText->Shutdown();
+		delete m_cantUseAbilityText;
+		m_cantUseAbilityText = nullptr;
+	}
 }
 void FloatingText::Render()
 {
 	RenderText(m_receivedDamageText);
 	RenderText(m_dealtDamageText);
+	RenderText(m_healingText);
+	RenderText(m_cantUseAbilityText);
 }
 void FloatingText::DecreaseTextOpacity(GUIText* p_text)
 {
@@ -59,12 +87,20 @@ void FloatingText::RenderText(GUIText* p_text)
 	}
 }
 
-void FloatingText::SetReceivedDamageText(std::string p_damage)
+void FloatingText::SetReceivedDamageText(float p_damage)
 {
-	std::string temp = p_damage;
-	temp.resize(3);
-	m_receivedDamageText->SetText(temp);
-	m_receivedDamageText->SetColor(0xff0000ff);
+	int resize = 3;
+	if ( p_damage > -10)
+	{
+		resize = 2;
+	}
+	if (p_damage != 0)
+	{
+		std::string temp = std::to_string(p_damage);
+		temp.resize(resize);
+		m_dealtDamageText->SetText(temp);
+		m_dealtDamageText->SetColor(0xff0000ff);
+	}
 }
 void FloatingText::SetDealtDamageText(float p_damage)
 {
@@ -94,4 +130,48 @@ void FloatingText::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFL
 	position.z = 1.0f;
 
 	p_text->SetPosition(position.x, position.y);
+}
+void FloatingText::SetHealingText(float p_healing)
+{
+	int resize = 2;
+	if (p_healing < 10 && p_healing > 0)
+	{
+		resize = 1;
+	}
+	if (p_healing != 0)
+	{
+		std::string temp = std::to_string(p_healing);
+		temp.resize(resize);
+		m_healingText->SetText(temp);
+		m_healingText->SetColor(0xff00ff00);
+	}
+}
+void FloatingText::SetcantUseAbilityText(int p_messageIndex)
+{
+	std::string text;
+
+	/*if (p_messageIndex == 1)
+	{
+		text = "Un fucking believable...";
+	}
+	else if (p_messageIndex == 2)
+	{
+		text = "No comment can describe you're stupidity...";
+	}
+	else if (p_messageIndex == 3)
+	{
+		text = "Stop H4XX1NG!!";
+	}
+	else if (p_messageIndex == 4)
+	{
+		text = "What are you stupid?";
+	}
+	else
+	{
+		text = "Can't use that ability.";
+	}*/
+	
+	text = "Can't use that ability.";
+	m_healingText->SetText(text);
+	m_healingText->SetColor(0xff0000ff);
 }
