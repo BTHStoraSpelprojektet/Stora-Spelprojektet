@@ -8,20 +8,33 @@ void FloatingText::Initialize()
 	m_receivedDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff0000ff);
 
 	m_dealtDamageText = new GUIText();
-	m_dealtDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xffffff00);
+	m_dealtDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff00ffff);
+
+	m_healingText = new GUIText();
+	m_healingText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff00ff00);
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText, 0.0f, 6.0f);
+	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText, 1.0f, 6.0f);
 	DecreaseTextOpacity(m_receivedDamageText);
 	DecreaseTextOpacity(m_receivedDamageText);
-	
+
 	CalculatePosition(p_position, p_view, p_projection, m_dealtDamageText, 2.0f, 0.0f);
 	DecreaseTextOpacity(m_dealtDamageText);
 	DecreaseTextOpacity(m_dealtDamageText);
+
+	CalculatePosition(p_position, p_view, p_projection, m_healingText, -1.0f, 6.0f);
+	DecreaseTextOpacity(m_healingText);
+	DecreaseTextOpacity(m_healingText);
 }
 void FloatingText::Shutdown()
 {
+	if (m_healingText != nullptr)
+	{
+		m_healingText->Shutdown();
+		delete m_healingText;
+		m_healingText = nullptr;
+	}
 	if (m_dealtDamageText != nullptr)
 	{
 		m_dealtDamageText->Shutdown();
@@ -39,6 +52,7 @@ void FloatingText::Render()
 {
 	RenderText(m_receivedDamageText);
 	RenderText(m_dealtDamageText);
+	RenderText(m_healingText);
 }
 void FloatingText::DecreaseTextOpacity(GUIText* p_text)
 {
@@ -94,4 +108,19 @@ void FloatingText::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFL
 	position.z = 1.0f;
 
 	p_text->SetPosition(position.x, position.y);
+}
+void FloatingText::SetHealingText(float p_healing)
+{
+	int resize = 2;
+	if (p_healing < 10 && p_healing > 0)
+	{
+		resize = 1;
+	}
+	if (p_healing != 0)
+	{
+		std::string temp = std::to_string(p_healing);
+		temp.resize(resize);
+		m_healingText->SetText(temp);
+		m_healingText->SetColor(0xff00ff00);
+	}
 }

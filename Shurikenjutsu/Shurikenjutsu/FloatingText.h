@@ -13,6 +13,7 @@ public:
 	void Render();
 	void SetReceivedDamageText(std::string p_damage);
 	void SetDealtDamageText(float p_damage);
+	void SetHealingText(float p_healing);
 private:
 	void RenderText(GUIText* p_text);
 	void CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection, GUIText* p_text,float p_xOffset, float p_yOffset);
@@ -20,6 +21,7 @@ private:
 
 	GUIText* m_receivedDamageText;
 	GUIText* m_dealtDamageText;
+	GUIText* m_healingText;
 };
 
 #endif
