@@ -42,7 +42,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_noAbility = new Ability();
 
 	m_healthbar = new HealthBar();
-	m_healthbar->Initialize(100.0f, 15.0f);
+	m_healthbar->Initialize(110.0f, 21.0f);
 
 	m_team = 0;
 	m_isDashing = false;
