@@ -12,6 +12,8 @@
 #include "StickyTrap.h"
 #include "AttackPredictionEditor.h"
 #include "FloatingText.h"
+#include "ParticleEmitter.h"
+
 
 Player::Player(){}
 Player::~Player(){}

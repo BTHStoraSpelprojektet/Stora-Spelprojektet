@@ -5,7 +5,6 @@
 #include <vector>
 #include "Shuriken.h"
 #include "AnimatedObject.h"
-#include "ParticleEmitter.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
 
@@ -16,6 +15,7 @@ class Spikes;
 class FanBoomerang;
 class Projectile;
 class StickyTrap;
+class ParticleEmitter;
 
 class ObjectManager
 {
