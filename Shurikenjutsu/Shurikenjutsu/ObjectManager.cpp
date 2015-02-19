@@ -717,19 +717,15 @@ void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_
 }
 float ObjectManager::CheckStickyTrapYPosition()
 {
-	int temp = std::rand() % 200;
-	float randomY = (float)temp / 10000.0f;
-
+	float returnValue = 0.001f;
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
-		if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y == randomY)
+		if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y >= returnValue)
 		{
-			randomY = CheckStickyTrapYPosition();
-			break;
+			returnValue = m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y + 0.01f;
 		}
 	}
-
-	return randomY;
+	return returnValue;
 }
 void ObjectManager::AddStaticObject(Object p_object)
 {
