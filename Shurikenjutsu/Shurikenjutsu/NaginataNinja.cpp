@@ -51,6 +51,8 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_toolAbility->Initialize();
 
 	SetOriginalSpeed(GetSpeed());
+	SetHealth(CHARACTER_NAGINATA_HEALTH);
+	SetMaxHealth(CHARACTER_NAGINATA_HEALTH);
 
 	return true;
 }

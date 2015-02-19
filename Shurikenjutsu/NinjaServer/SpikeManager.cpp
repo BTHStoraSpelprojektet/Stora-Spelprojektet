@@ -24,7 +24,7 @@ void SpikeManager::Update(double p_deltaTime)
 		}
 	}
 }
-void SpikeManager::AddSpikeTrap(RakNet::RakNetGUID p_guid, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ)
+void SpikeManager::AddSpikeTrap(RakNet::RakNetGUID p_guid, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, int p_team)
 {
 	float x = p_endPosX - p_startPosX;
 	float z = p_endPosZ - p_startPosZ;
@@ -42,6 +42,7 @@ void SpikeManager::AddSpikeTrap(RakNet::RakNetGUID p_guid, float p_startPosX, fl
 	temp.lifeTime = SPIKE_DURATION + timeToLand;
 	temp.guid = p_guid;
 	temp.timeToLand = timeToLand;
+	temp.team = p_team;
 	m_spikeTrapList.push_back(temp);
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_SPIKETRAP_THROW);
@@ -52,6 +53,7 @@ void SpikeManager::AddSpikeTrap(RakNet::RakNetGUID p_guid, float p_startPosX, fl
 	wBitStream.Write(temp.endZ);
 	wBitStream.Write(temp.lifeTime);
 	wBitStream.Write(temp.guid);
+	wBitStream.Write(temp.team);
 	
 	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

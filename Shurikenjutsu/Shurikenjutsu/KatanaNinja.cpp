@@ -50,6 +50,8 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_toolAbility->Initialize();
 
 	SetOriginalSpeed(GetSpeed());
+	SetHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
+	SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
 
 	return true;
 }

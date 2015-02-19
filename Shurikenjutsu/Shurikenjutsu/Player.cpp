@@ -375,7 +375,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			m_globalCooldown = m_maxGlobalCooldown;
 		}
 	}
-
+	m_floatingText->SetDealtDamageText(Network::GetInstance()->GetDealtDamage());
 	UpdateAbilityBar();
 }
 
@@ -485,7 +485,7 @@ void Player::UpdateAbilities()
 	if (m_globalCooldown > 0.0f)
 	{
 		m_globalCooldown -= (float)GLOBAL::GetInstance().GetDeltaTime();
-}
+	}
 
 }
 
@@ -505,7 +505,7 @@ void Player::SetHealth(float p_health)
 
 	if (m_health > p_health)
 	{
-		m_floatingText->SetReceivedDamageText(std::to_string(p_health-m_health));
+		m_floatingText->SetReceivedDamageText(p_health-m_health);
 	}
 
 	if (p_health < 0 )
@@ -633,10 +633,8 @@ void Player::SetCalculatePlayerPosition()
 	}
 	std::vector<OBB> collidingBoxes = CollisionManager::GetInstance()->CalculateLocalPlayerCollisionWithStaticBoxes(playerOBB, m_speed, m_direction);
 
-
-
 	for (unsigned int i = 0; i < collidingBoxes.size(); i++)
-	{ 
+	{
 		if (m_direction.x == 1 || m_direction.x == -1 || m_direction.z == 1 || m_direction.z == -1)
 		{
 			Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
@@ -653,11 +651,11 @@ void Player::SetCalculatePlayerPosition()
 			playerSphere.m_position.z = m_position.z;
 			bool left = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
 
-			if ((down && m_direction.z == -1) || (up && m_direction.z == 1) || (right && m_direction.x == 1)|| (left && m_direction.x == -1))
+			if ((down && m_direction.z == -1) || (up && m_direction.z == 1) || (right && m_direction.x == 1) || (left && m_direction.x == -1))
 			{
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
-			}
+		}
 		else if (collidingBoxes.size() > 1)
 		{
 
@@ -665,11 +663,11 @@ void Player::SetCalculatePlayerPosition()
 			{
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 			}
-		else
-		{
-			CalculatePlayerCubeCollision(collidingBoxes[i]);
+			else
+			{
+				CalculatePlayerCubeCollision(collidingBoxes[i]);
+			}
 		}
-	}
 		else
 		{
 			CalculatePlayerCubeCollision(collidingBoxes[i]);
@@ -767,19 +765,6 @@ bool Player::CheckSidesIfMultipleCollisions()
 	playerSphere.m_position.z = m_position.z;
 	bool left = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);//True if collision
 
-	//playerSphere.m_position.x = m_position.x + 1.0f * speedXDeltaTime;
-	//playerSphere.m_position.z = m_position.z + 1.0f * speedXDeltaTime;
-	//bool upRight = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
-	//playerSphere.m_position.x = m_position.x - 1.0f * speedXDeltaTime;
-	//playerSphere.m_position.z = m_position.z + 1.0f * speedXDeltaTime;
-	//bool upLeft = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
-	//playerSphere.m_position.x = m_position.x + 1.0f * speedXDeltaTime;
-	//playerSphere.m_position.z = m_position.z - 1.0f * speedXDeltaTime;
-	//bool downRight = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
-	//playerSphere.m_position.x = m_position.x - 1.0f * speedXDeltaTime;
-	//playerSphere.m_position.z = m_position.z - 1.0f * speedXDeltaTime;
-	//bool downLeft = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
-
 	if ((!left && !up && !right) || (!up && !right && !down) || (!right && !down && !left) || (!down && !left && !up))
 	{
 		return false;
@@ -792,24 +777,6 @@ bool Player::CheckSidesIfMultipleCollisions()
 	{
 		return false;
 	}
-
-	//if (upRight)
-	//{
-	//	return false;
-	//}
-	//else if (upLeft)
-	//{
-	//	return false;
-	//}
-	//else if (downRight)
-	//{
-	//	return false;
-	//}
-	//else if (downLeft)
-	//{
-	//	return false;
-	//}
-
 
 	return true;
 }
@@ -931,7 +898,7 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 }
 
 void Player::UpdateAbilityBar()
-	{
+{
 	if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
 	{
 		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
@@ -943,45 +910,45 @@ void Player::UpdateAbilityBar()
 		m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
 	}
 	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), m_meleeAttack->GetStacks(), 0);
-		}
-		else
-		{
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
 	}
 	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
-		}
-		else
-		{
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
 	}
 	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
-		}
-		else
-		{
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
 	}
 	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
-		{
+	{
 		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
-		}
-		else
-		{
-		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
-			}
-	if ((float)m_toolAbility->GetCooldown() > 0.0f)
-			{
-		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
-}
+	}
 	else
-{
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
+	}
+	if ((float)m_toolAbility->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
+	}
+	else
+	{
 		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
-}
+	}
 }
 
 void Player::Render()

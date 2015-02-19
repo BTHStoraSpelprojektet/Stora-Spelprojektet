@@ -64,7 +64,7 @@ bool Network::Initialize()
 
 	m_pingTimer = 5;
 	m_timeToPing = m_pingTimer;
-
+	m_dealtDamage = 0;
 	return true;
 }
 
@@ -528,6 +528,7 @@ void Network::ReceviePacket()
 			RakNet::RakNetGUID guid;
 			unsigned int spikeTrapId;
 			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
+			int team;
 			bitStream.Read(messageID);
 			bitStream.Read(spikeTrapId);
 			bitStream.Read(startPosX);
@@ -536,9 +537,10 @@ void Network::ReceviePacket()
 			bitStream.Read(endPosZ);
 			bitStream.Read(lifetime);
 			bitStream.Read(guid);
+			bitStream.Read(team);
 
 
-			UpdateSpikeTrap(guid, spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime);
+			UpdateSpikeTrap(guid, spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime, team);
 			break;
 		}
 		case ID_SPIKETRAP_REMOVE:
@@ -741,7 +743,18 @@ void Network::ReceviePacket()
 			AddVolley(id, startX, startZ, endX, endZ, guid);
 			break;
 		}
+		case ID_HAS_INFLICTED_DAMAGE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			float damage;
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			bitStream.Read(damage);
 
+			m_dealtDamage = damage;
+			break;
+		}			
 		default:
 		{
 			break;
@@ -963,7 +976,7 @@ void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, flo
 	}
 }
 
-void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
+void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team)
 {
 
 	bool addSpikeTrap = true;
@@ -975,6 +988,7 @@ void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTra
 	temp.endZ = p_endPosZ;
 	temp.lifeTime = p_lifetime;
 	temp.guid = p_guid;
+	temp.team = p_team;
 
 	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
 	{
@@ -1525,4 +1539,11 @@ void Network::ClearListsAtNewRound()
 int Network::GetLastPing()
 {
 	return m_clientPeer->GetLastPing(RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT));
+}
+
+float Network::GetDealtDamage()
+{
+	float damage = m_dealtDamage;
+	m_dealtDamage = 0;
+	return damage;
 }
