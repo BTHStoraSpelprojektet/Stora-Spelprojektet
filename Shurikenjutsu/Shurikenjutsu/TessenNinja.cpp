@@ -120,7 +120,7 @@ void TessenNinja::RenderAttackLocations()
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThrowSphere(m_aimSphere, 5.0f);
+			m_ape->ThrowSphere(m_aimSphere,m_position, 5.0f, SPIKE_RANGE);
 			m_aimSphere->Render();
 		}
 		else
