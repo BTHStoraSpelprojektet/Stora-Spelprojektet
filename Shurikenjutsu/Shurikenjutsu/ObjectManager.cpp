@@ -11,6 +11,7 @@
 #include "Projectile.h"
 #include "StickyTrap.h"
 #include "Volley.h"
+#include "ParticleEmitter.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
