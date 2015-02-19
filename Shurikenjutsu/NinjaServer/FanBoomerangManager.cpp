@@ -134,12 +134,7 @@ void FanBoomerangManager::UpdateClients()
 	{
 		bitStream.Write(m_fans[i].id);
 		bitStream.Write(m_fans[i].x);
-		bitStream.Write(m_fans[i].y);
 		bitStream.Write(m_fans[i].z);
-		bitStream.Write(m_fans[i].dirX);
-		bitStream.Write(m_fans[i].dirY);
-		bitStream.Write(m_fans[i].dirZ);
-		bitStream.Write(m_fans[i].speed);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
