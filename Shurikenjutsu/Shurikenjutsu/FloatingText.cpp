@@ -10,7 +10,6 @@ void FloatingText::Initialize()
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-
 	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText);
 	DecreaseTextOpacity(m_receivedDamageText);
 	DecreaseTextOpacity(m_receivedDamageText);
@@ -64,12 +63,12 @@ void FloatingText::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFL
 	DirectX::XMFLOAT4X4 vp;
 	DirectX::XMStoreFloat4x4(&vp, DirectX::XMLoadFloat4x4(&p_view) * DirectX::XMLoadFloat4x4(&p_projection));
 
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_position.x, p_position.y + 500.0f, p_position.z);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_position.x, p_position.y + 6.0f, p_position.z);
 	DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&vp)));
 
 	position.x *= GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 2.0f;
 	position.y *= position.z * GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 2.0f;
 	position.z = 1.0f;
 
-	p_text->SetPosition(position.x, position.z);
+	p_text->SetPosition(position.x, position.y);
 }
