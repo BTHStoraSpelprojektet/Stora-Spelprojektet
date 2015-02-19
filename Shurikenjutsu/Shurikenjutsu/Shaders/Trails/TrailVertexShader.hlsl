@@ -2,9 +2,10 @@ struct TrailPoint
 {
 	float3 m_position : POSITION;
 	float m_angle : ANGLE;
-	float2 m_width : WIDTH;
+	float m_width : WIDTH;
 	float2 m_timeValues : TIMES;
 	float4 m_color : COLOR;
+	bool m_endpoint : BOOL;
 };
 
 TrailPoint main(TrailPoint p_input)
