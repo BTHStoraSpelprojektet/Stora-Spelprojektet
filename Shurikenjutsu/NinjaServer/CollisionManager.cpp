@@ -1014,24 +1014,26 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 		}
 	}
 
-	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
-	// Go through player list
-	for (unsigned int i = 0; i < playerList.size(); i++)
-	{
-		if (playerList[i].guid != p_guid)
-		{
-			// Get the players bounding boxes
-			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
-			for (unsigned int j = 0; j < playerBoundingBoxes.size(); j++)
-			{
-				Box box = playerBoundingBoxes[j];
-				if (Collisions::RayBoxCollision(ray, box))
-				{
-					rayLengths.push_back(ray->m_distance);
-				}
-			}
-		}
-	}
+	// Uncomment this to stop dash infront of players
+
+	//std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	//// Go through player list
+	//for (unsigned int i = 0; i < playerList.size(); i++)
+	//{
+	//	if (playerList[i].guid != p_guid)
+	//	{
+	//		// Get the players bounding boxes
+	//		std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
+	//		for (unsigned int j = 0; j < playerBoundingBoxes.size(); j++)
+	//		{
+	//			Box box = playerBoundingBoxes[j];
+	//			if (Collisions::RayBoxCollision(ray, box))
+	//			{
+	//				rayLengths.push_back(ray->m_distance);
+	//			}
+	//		}
+	//	}
+	//}
 
 	//Go through the shortest intersecting object
 	for (unsigned int i = 0; i < rayLengths.size(); i++)
