@@ -28,6 +28,13 @@ bool Camera::Initialize()
 
 	m_menuRotation = 0.0f;
 
+	m_oldMouseX = 0.0f;
+	m_oldMouseY = 0.0f;
+
+	timerTesting = 2.0f;
+
+	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+
 	return true;
 }
 
@@ -339,7 +346,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 
 	// Visibility view projection..
 	playerPosition = p_playerPos;
-	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 30.0f, playerPosition.z - 30.0f);
+	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 30.0f, playerPosition.z);
 	target = playerPosition;
 
 	UpdatePosition(position);
@@ -349,14 +356,21 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 
 	// Lock camera on the player.
 	playerPosition = p_playerPos;
-	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 30.0f, playerPosition.z - 15.0f);		// y: 40, z: -20
+	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 30.0f, playerPosition.z - 15.0f);
 	target = playerPosition;
 
-	UpdatePosition(position);
-	UpdateTarget(target);
-	UpdateViewMatrix();
-	UpdateProjectionMatrix(false);
-	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	if (GLOBAL::GetInstance().CAMERA_MOVING)
+	{
+		MovingCamera(playerPosition);
+	}
+	else
+	{
+		UpdatePosition(position);
+		UpdateTarget(target);
+		UpdateViewMatrix();
+		UpdateProjectionMatrix(false);
+		GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+	}	
 }
 
 void Camera::MenuCameraRotation()
@@ -450,4 +464,44 @@ void Camera::ResetCameraToLight()
 	UpdateProjectionMatrix(true);
 
 	GraphicsEngine::GetInstance()->SetLightViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+}
+
+void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
+{
+	POINT mousePosition;
+	GetCursorPos(&mousePosition);
+
+	float moveX, moveY, centerX, centerY, posX, posY;
+	centerX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f;
+	centerY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f;
+	posX = mousePosition.x - centerX;
+	posY = mousePosition.y - centerY;
+	float procX = posX / 440;
+	float procY = posY / 352; // 512 *0,68 //0.68 = 440/640;
+	if (procX > 1.0f)
+		procX = 1.0f;
+	if (procX < -1.0f)
+		procX = -1.0f;
+	if (procY > 1.0f)
+		procY = 1.0f;
+	if (procY < -1.0f)
+		procY = -1.0f;
+
+	moveX = 10 * procX;
+	moveY = 10 * procY;
+	
+	DirectX::XMFLOAT3 position, target, finalPos;
+	DirectX::XMFLOAT3 playerPosition = p_pos;
+	position = DirectX::XMFLOAT3(playerPosition.x + moveX, playerPosition.y + 30.0f, playerPosition.z - moveY - 15.0f);
+	target = DirectX::XMFLOAT3(playerPosition.x + moveX, 0, playerPosition.z - moveY);
+
+	DirectX::XMStoreFloat3(&finalPos, DirectX::XMVectorLerp(DirectX::XMLoadFloat3(&m_oldPosition), DirectX::XMLoadFloat3(&position), 0.6f));
+	target = DirectX::XMFLOAT3(finalPos.x, 0, finalPos.z + 15.0f);
+	UpdatePosition(finalPos);
+	UpdateTarget(target);
+	UpdateViewMatrix();
+	UpdateProjectionMatrix(false);
+	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+
+	m_oldPosition = position;
 }

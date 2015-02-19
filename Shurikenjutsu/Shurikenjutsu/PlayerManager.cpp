@@ -408,3 +408,41 @@ void PlayerManager::RemoveEnemyFromList(unsigned int p_index)
 	m_enemyList = newList;
 	m_enemyListSize--;
 }
+
+DirectX::XMFLOAT3 PlayerManager::GetTeamMemberPosSpectate(int &p_index, int p_team)
+{
+	for (unsigned int i = 0; i < m_enemyListSize; i++)
+	{
+		if (m_enemyListSize <= (unsigned int)p_index || p_index == -1)
+		{
+			p_index = -1;
+			return m_player->GetPosition();
+		}
+
+		if (m_enemyList[p_index]->GetTeam() == p_team)
+		{
+			return m_enemyList[p_index]->GetPosition();
+		}
+		p_index++;
+	}
+
+	return m_player->GetPosition();
+}
+
+bool PlayerManager::GetPlayerIsAlive()
+{
+	return m_player->GetIsAlive();
+}
+
+int PlayerManager::GetNrOfPlayersInTeam(int p_team)
+{
+	int nrOfTeamMates = 0;
+	for (unsigned int i = 0; i < m_enemyListSize; i++)
+	{
+		if (m_enemyList[i]->GetTeam() == p_team)
+		{
+			nrOfTeamMates += 1;
+		}
+	}
+	return nrOfTeamMates;
+}

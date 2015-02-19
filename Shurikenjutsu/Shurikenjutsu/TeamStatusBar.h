@@ -51,6 +51,9 @@ private:
 
 	GUIText m_fpsTimer;
 	GUIText m_pingText;
+
+	GUIText m_3DMouseX;
+	GUIText m_3DMouseY;
 };
 
 #endif
