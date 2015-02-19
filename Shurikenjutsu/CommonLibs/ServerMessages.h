@@ -60,6 +60,7 @@ struct SpikeNet
 	unsigned int spikeId;
 	float startX, startZ, endX, endZ;
 	float lifeTime, timeToLand;
+	int team;
 	RakNet::RakNetGUID guid;
 };
 struct StickyTrapNet
@@ -68,6 +69,7 @@ struct StickyTrapNet
 	float startX, startZ, endX, endZ;
 	float lifeTime, timeToLand;
 	RakNet::RakNetGUID guid;
+	int team;
 };
 struct VolleyNet
 {
@@ -113,7 +115,8 @@ enum Messages
 	ID_STICKYTRAP_THROW,
 	ID_STICKYTRAP_REMOVE,
 	ID_SEND_TEAM_SCORE,
-	ID_NAGINATA_STAB_HAS_OCCURED
+	ID_NAGINATA_STAB_HAS_OCCURED,
+	ID_HAS_INFLICTED_DAMAGE
 };
 
 #endif

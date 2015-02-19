@@ -338,7 +338,8 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		{
 			spikeTrapDistance = SPIKE_RANGE;
 		}
-		p_spikeTrap.AddSpikeTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
+		std::cout << m_players[index].team << std::endl;
+		p_spikeTrap.AddSpikeTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance, m_players[index].team);
 
 		break;
 	case ABILITIES_WHIP_PRIMARY:
@@ -408,18 +409,19 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage)
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
-		if (m_players[i].guid == p_guid)
+		if (m_players[i].guid == p_defendingGuid)
 		{
 			m_players[i].currentHP -= p_damage;
 			if (m_players[i].currentHP <= 0)
 			{
 				m_players[i].isAlive = false;
 			}
-			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
+			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
+			SendDealtDamage(p_attackingGuid, p_damage);
 		}
 	}
 }
@@ -445,6 +447,7 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool
 		reliability = RELIABLE;
 	}
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, reliability, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
 }
 
 float PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
@@ -520,4 +523,12 @@ void PlayerManager::SendPlayerDir()
 
 		m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 	}
+}
+void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage)
+{
+	RakNet::BitStream bitStream2;
+	bitStream2.Write((RakNet::MessageID)ID_HAS_INFLICTED_DAMAGE);
+	bitStream2.Write(p_attackingPlayerGUID);
+	bitStream2.Write(p_damage);
+	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 2, p_attackingPlayerGUID, false);
 }

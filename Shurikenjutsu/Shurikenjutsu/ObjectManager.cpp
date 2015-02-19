@@ -11,6 +11,7 @@
 #include "Projectile.h"
 #include "StickyTrap.h"
 #include "Volley.h"
+#include "ParticleEmitter.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -403,7 +404,7 @@ void ObjectManager::Update()
 			if (!IsSpikeTrapInList(tempSpikeTrapList[i].spikeId))
 			{
 				// Add Smoke bomb
-				AddSpikeTrap(tempSpikeTrapList[i].startX, tempSpikeTrapList[i].startZ, tempSpikeTrapList[i].endX, tempSpikeTrapList[i].endZ, tempSpikeTrapList[i].spikeId);
+				AddSpikeTrap(tempSpikeTrapList[i].startX, tempSpikeTrapList[i].startZ, tempSpikeTrapList[i].endX, tempSpikeTrapList[i].endZ, tempSpikeTrapList[i].spikeId, tempSpikeTrapList[i].team);
 			}
 		}
 		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
@@ -695,11 +696,11 @@ void ObjectManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_e
 	m_smokeBombList.push_back(tempSmokeBomb);
 }
 
-void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID)
+void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeBombID, int p_team)
 {
 	Spikes *tempSpikeTrap;
 	tempSpikeTrap = new Spikes();
-	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_smokeBombID);
+	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_spikeBombID, p_team);
 	tempSpikeTrap->ResetTimer();
 	m_spikeTrapList.push_back(tempSpikeTrap);
 }

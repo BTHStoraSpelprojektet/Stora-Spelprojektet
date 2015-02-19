@@ -14,7 +14,7 @@ bool Cursor::Initialize()
 	m_useCustomCursor = true;
 	m_renderCursor = true;
 	m_largeSize = 100.0f;
-	m_smallSize = 50.0f;
+	m_smallSize = 62.5f;
 	ShowCursor(!m_useCustomCursor && m_renderCursor);
 
 	m_cursor = new GUIElement();
