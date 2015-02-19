@@ -703,19 +703,31 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		Ray* whipRay = new Ray(attackPosition, attackDirection);
-		float *distance = new float(0);
+		float distance = 0;
 		// Make collision test
 		if (IntersectionTests::Intersections::RaySphereCollision(whipRay->m_position, whipRay->m_direction, spherePosition, 1.0f, distance))
 		{
-			if (*distance <= WHIP_RANGE)
+			if (distance <= WHIP_RANGE)
 			{
 				if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 				{
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE);
+
+				if (whipRay != nullptr)
+				{
+					delete whipRay;
+					whipRay = nullptr;
+				}
 				break;
 				}
 			}
+		}
+
+		if (whipRay != nullptr)
+		{
+			delete whipRay;
+			whipRay = nullptr;
 		}
 	}
 }
@@ -889,7 +901,14 @@ bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attac
 		{
 			listOfDistances.push_back(ray->m_distance);
 		}
-	}	
+	}
+
+	if (ray != nullptr)
+	{
+		delete ray;
+		ray = nullptr;
+	}
+
 	for (unsigned int i = 0; i < listOfDistances.size(); i++)
 	{
 		if (distance > listOfDistances[i])
@@ -901,10 +920,10 @@ bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attac
 }
 bool CollisionManager::RayOBBTest(Ray *p_ray, OBB p_Obb)
 {
-	float *temp = new float(0);
+	float temp = 0;
 	if (IntersectionTests::Intersections::RayOBBCollision(p_ray->m_position, DirectX::XMFLOAT3(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z), p_Obb.m_center, p_Obb.m_extents, p_Obb.m_direction, temp))
 	{
-		p_ray->m_distance = *temp;
+		p_ray->m_distance = temp;
 		return true;
 	}
 	else
@@ -914,10 +933,10 @@ bool CollisionManager::RayOBBTest(Ray *p_ray, OBB p_Obb)
 }
 bool CollisionManager::RaySphereTest(Ray *p_ray, Sphere p_sphere)
 {
-	float *temp = new float(0);
+	float temp = 0;
 	if (IntersectionTests::Intersections::RaySphereCollision(p_ray->m_position, p_ray->m_direction, p_sphere.m_position, p_sphere.m_radius, temp))
 	{
-		p_ray->m_distance = *temp;
+		p_ray->m_distance = temp;
 		return true;
 	}
 	else
@@ -1038,6 +1057,12 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 	//		}
 	//	}
 	//}
+
+	if (ray != nullptr)
+	{
+		delete ray;
+		ray = nullptr;
+	}
 
 	//Go through the shortest intersecting object
 	for (unsigned int i = 0; i < rayLengths.size(); i++)
