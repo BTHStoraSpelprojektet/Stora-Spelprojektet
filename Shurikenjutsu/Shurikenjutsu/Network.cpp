@@ -597,10 +597,8 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID guid;
-			float x, y, z;
-			float dirX, dirY, dirZ;
+			float x, z;
 			unsigned int id;
-			float speed;
 			int nrOfFans;
 
 			bitStream.Read(messageID);
@@ -610,24 +608,15 @@ void Network::ReceviePacket()
 			{
 				bitStream.Read(id);
 				bitStream.Read(x);
-				bitStream.Read(y);
 				bitStream.Read(z);
-				bitStream.Read(dirX);
-				bitStream.Read(dirY);
-				bitStream.Read(dirZ);
-				bitStream.Read(speed);
 
 				for (unsigned int j = 0; j < m_fanList.size(); j++)
 				{
-					if (id == m_fanList[j].id)
+					if (m_fanList[j].id == id)
 					{
-						m_fanList[j].dirX = dirX;
-						m_fanList[j].dirY = dirY;
-						m_fanList[j].dirZ = dirZ;
-						m_fanList[j].speed = speed;
 						m_fanList[j].x = x;
-						m_fanList[j].y = y;
 						m_fanList[j].z = z;
+						break;
 					}
 				}
 			}
