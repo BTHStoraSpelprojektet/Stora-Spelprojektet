@@ -11,10 +11,11 @@ struct PixelInput
 
 float4 main(PixelInput p_input) : SV_TARGET
 {
-	// Combine the texture color and the particle color to get the final pixel.
+	// Sample texture, and blend in color.
 	float4 pixel = (m_texture.Sample(m_sampler, p_input.m_UV)) * p_input.m_color;
 
-	pixel.w = 0.5f; // TODO, applya tiden till opacity.
+	// Fade the trail by time lived.	
+	pixel.w *= (p_input.m_timeValues.x - p_input.m_timeValues.y) / p_input.m_timeValues.x;
 
 	return pixel;
 }
