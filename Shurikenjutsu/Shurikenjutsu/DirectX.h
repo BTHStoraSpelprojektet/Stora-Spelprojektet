@@ -41,6 +41,7 @@ public:
 	bool InitializePostProcessing();
 
 	void SetRenderTargetsForGBuffers();
+	void ScreenSpaceRenderTarget();
 	void ClearRenderTargetsForGBuffers();
 	ID3D11ShaderResourceView* GetPostProcessingSRV1();
 	ID3D11ShaderResourceView* GetPostProcessingSRV2();

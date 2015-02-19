@@ -6,7 +6,7 @@ cbuffer FrameBuffer : register(b0)
 	matrix m_projectionMatrix;
 };
 
-Texture2D m_textures[3] : register(t0);
+Texture2D m_textures[3] : register(t3);
 
 struct Input
 {
@@ -58,7 +58,7 @@ float4 main(Input p_input) : SV_Target
 
 	float3 toCamera = normalize(-positionView);
 
-	ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
+	ComputeDirectionalLight(material, m_directionalLight, normal.xyz, toCamera, A, D, S);
 
 	albedo.xyz = albedo.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
 	albedo.w = 1.0f;

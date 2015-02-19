@@ -310,12 +310,13 @@ void PlayingStateTest::Render()
 	
 
 	// Composition
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->SetScreenSpaceRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->Composition();
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->RenderFoliage();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 

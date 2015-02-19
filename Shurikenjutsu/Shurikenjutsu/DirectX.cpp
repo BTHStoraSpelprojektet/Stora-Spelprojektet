@@ -440,7 +440,24 @@ void DirectXWrapper::TurnOffAlphaBlending()
 
 void DirectXWrapper::ResetRenderTarget()
 {
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_context->PSSetShaderResources(3, 1, &nullPointer);
+	m_context->PSSetShaderResources(4, 1, &nullPointer);
+	m_context->PSSetShaderResources(5, 1, &nullPointer);
+
+	m_context->OMSetRenderTargets(0, 0, 0);
 	m_context->OMSetRenderTargets(1, &m_renderTarget, m_depthStencilView);
+}
+
+void DirectXWrapper::ScreenSpaceRenderTarget()
+{
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_context->PSSetShaderResources(3, 1, &nullPointer);
+	m_context->PSSetShaderResources(4, 1, &nullPointer);
+	m_context->PSSetShaderResources(5, 1, &nullPointer);
+
+	m_context->OMSetRenderTargets(0, 0, 0);
+	m_context->OMSetRenderTargets(1, &m_renderTarget, NULL);
 }
 
 void DirectXWrapper::TurnOnDepthStencil()
@@ -685,6 +702,12 @@ void DirectXWrapper::ClearRenderTargetsForGBuffers()
 
 void DirectXWrapper::SetRenderTargetsForGBuffers()
 {
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_context->PSSetShaderResources(3, 1, &nullPointer);
+	m_context->PSSetShaderResources(4, 1, &nullPointer);
+	m_context->PSSetShaderResources(5, 1, &nullPointer);
+
+	m_context->OMSetRenderTargets(0, 0, 0);
 	m_context->OMSetRenderTargets(2, &m_postProcessingRTV[0], m_depthStencilView);
 }
 

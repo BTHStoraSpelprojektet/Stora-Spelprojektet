@@ -124,9 +124,9 @@ void ScreenSpace::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceVie
 	ID3D11ShaderResourceView* textures[3];
 	textures[0] = p_normal;
 	textures[1] = p_color;
-	textures[2] = p_color;
-
-	p_context->PSSetShaderResources(0, 3, &textures[0]);
+	textures[2] = p_depth;
+	
+	p_context->PSSetShaderResources(3, 3, &textures[0]);
 
 	p_context->IASetVertexBuffers(0, 0, 0, 0, 0);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

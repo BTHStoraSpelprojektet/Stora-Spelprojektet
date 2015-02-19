@@ -113,6 +113,8 @@ public:
 	void Composition();
 	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection);
 
+	void SetScreenSpaceRenderTarget();
+
 
 private:
 	static GraphicsEngine* m_instance;

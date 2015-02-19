@@ -671,3 +671,8 @@ void GraphicsEngine::Composition()
 {
 	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetPostProcessingSRV2(), m_directX.GetPostProcessingSRV1(), m_directX.GetDepthSRV());
 }
+
+void GraphicsEngine::SetScreenSpaceRenderTarget()
+{
+	m_directX.ScreenSpaceRenderTarget();
+}
