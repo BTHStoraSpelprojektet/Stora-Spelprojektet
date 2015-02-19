@@ -709,11 +709,28 @@ void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_
 {
 	StickyTrap *tempStickyTrap;
 	tempStickyTrap = new StickyTrap();
-	tempStickyTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_stickyTrapID, p_guid);
+
+	float yPos = CheckStickyTrapYPosition();
+	tempStickyTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, yPos, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, yPos, p_endPosZ), p_stickyTrapID, p_guid);
 	tempStickyTrap->ResetTimer();
 	m_stickyTrapList.push_back(tempStickyTrap);
 }
+float ObjectManager::CheckStickyTrapYPosition()
+{
+	int temp = std::rand() % 200;
+	float randomY = (float)temp / 10000.0f;
 
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y == randomY)
+		{
+			randomY = CheckStickyTrapYPosition();
+			break;
+		}
+	}
+
+	return randomY;
+}
 void ObjectManager::AddStaticObject(Object p_object)
 {
 	m_staticObjects.push_back(p_object);

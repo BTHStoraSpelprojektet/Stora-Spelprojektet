@@ -51,6 +51,7 @@ public:
 
 	void RemoveProjectile(unsigned int p_projId);
 private:
+	float CheckStickyTrapYPosition();
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
 	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
 	void ResetListSinceRoundRestarted();
@@ -78,6 +79,7 @@ private:
 	bool IsStickyTrapInList(unsigned int p_stickyeTrapId);
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
+	
 
 };
 #endif
