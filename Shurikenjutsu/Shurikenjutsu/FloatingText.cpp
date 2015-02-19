@@ -70,13 +70,13 @@ void FloatingText::Render()
 }
 void FloatingText::DecreaseTextOpacity(GUIText* p_text)
 {
-	if (p_text->GetColor() < 15777216)
+	if (p_text->GetColor() < 16777216)
 	{
 		p_text->SetColor(0);
 	}
 	else
 	{
-		p_text->SetColor(p_text->GetColor() - 15777216);
+		p_text->SetColor(p_text->GetColor() - 16777216);
 	}
 }
 void FloatingText::RenderText(GUIText* p_text)
