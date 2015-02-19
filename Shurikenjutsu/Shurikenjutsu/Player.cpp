@@ -355,7 +355,6 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
 			m_ability = m_meleeAttack;
-			m_floatingText->ResetTimer();
 		}
 	}
 

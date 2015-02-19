@@ -6,7 +6,6 @@ void FloatingText::Initialize()
 {
 	m_receivedDamageText = new GUIText();
 	m_receivedDamageText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff0000ff);
-	m_timer = 0;
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
@@ -26,11 +25,6 @@ void FloatingText::Shutdown()
 void FloatingText::Render()
 {
 	RenderText(m_receivedDamageText);
-}
-void FloatingText::ResetTimer()
-{
-	//m_receivedDamageText->SetColor(0xffffffff);
-	m_timer = 0;
 }
 void FloatingText::DecreaseTextOpacity(GUIText* p_text)
 {
