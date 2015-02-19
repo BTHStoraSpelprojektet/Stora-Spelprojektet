@@ -14,7 +14,7 @@ void FloatingText::Initialize()
 	m_healingText->Initialize("", 30.0f, 20.0f, 115.0f, 0xff00ff00);
 
 	m_cantUseAbilityText = new GUIText();
-	m_cantUseAbilityText->Initialize("", 30.0f, 20.0f, 115.0f, 0x000000ff);
+	m_cantUseAbilityText->Initialize("Can't use that ability.", 30.0f, 20.0f, 115.0f, 0x000000ff);
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
@@ -70,13 +70,13 @@ void FloatingText::Render()
 }
 void FloatingText::DecreaseTextOpacity(GUIText* p_text)
 {
-	if (p_text->GetColor() < 16777216)
+	if (p_text->GetColor() < 15777216)
 	{
 		p_text->SetColor(0);
 	}
 	else
 	{
-		p_text->SetColor(p_text->GetColor() - 16777216);
+		p_text->SetColor(p_text->GetColor() - 15777216);
 	}
 }
 void FloatingText::RenderText(GUIText* p_text)
@@ -150,7 +150,7 @@ void FloatingText::SetcantUseAbilityText(int p_messageIndex)
 {
 	std::string text;
 
-	if (p_messageIndex == 1)
+	/*if (p_messageIndex == 1)
 	{
 		text = "Un fucking believable...";
 	}
@@ -169,8 +169,8 @@ void FloatingText::SetcantUseAbilityText(int p_messageIndex)
 	else
 	{
 		text = "Can't use that ability.";
-	}
-
+	}*/
+	
 	text = "Can't use that ability.";
 	m_healingText->SetText(text);
 	m_healingText->SetColor(0xff0000ff);
