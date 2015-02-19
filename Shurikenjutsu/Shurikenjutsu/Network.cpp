@@ -1552,16 +1552,9 @@ int Network::GetLastPing()
 	return m_clientPeer->GetLastPing(RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT));
 }
 
-std::string Network::GetDealtDamager()
+float Network::GetDealtDamage()
 {
-	if (m_dealtDamage == 0)
-	{
-		return "";
-	}
-	else
-	{
-		std::string damage = std::to_string(m_dealtDamage);
-		m_dealtDamage = 0;
-		return damage;
-	}
+	float damage = m_dealtDamage;
+	m_dealtDamage = 0;
+	return damage;
 }

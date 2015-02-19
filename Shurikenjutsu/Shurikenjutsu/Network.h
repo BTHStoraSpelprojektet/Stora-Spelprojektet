@@ -129,7 +129,7 @@ public:
 
 	int GetLastPing();
 
-	std::string GetDealtDamager();
+	float GetDealtDamage();
 
 private:
 	void ClearListsAtNewRound();
