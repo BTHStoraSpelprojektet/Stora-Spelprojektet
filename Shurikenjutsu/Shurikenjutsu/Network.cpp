@@ -3,6 +3,7 @@
 #include "ConsoleFunctions.h"
 #include "ObjectManager.h"
 #include "Globals.h"
+#include "DeathBoard.h"
 
 Network* Network::m_instance;
 
@@ -1307,6 +1308,11 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 				m_enemyPlayers[i].isAlive = p_isAlive;
 			}
 		}
+	}
+
+	if (!p_isAlive)
+	{
+		DeathBoard::GetInstance()->DeathEverywhere();
 	}
 }
 

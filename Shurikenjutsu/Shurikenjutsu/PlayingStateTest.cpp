@@ -16,6 +16,7 @@
 #include "ParticleEmitter.h"
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
+#include "DeathBoard.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -114,6 +115,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	m_spectateIndex = -1;
 	m_spectateCountDown = 0.0f;
+
+	if (!DeathBoard::GetInstance()->Initialize())
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -322,6 +328,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
+
+	// Update the killingboard
+	DeathBoard::GetInstance()->Update();
 	
 	return GAMESTATESWITCH_NONE;
 }
@@ -352,6 +361,7 @@ void PlayingStateTest::Render()
 	m_minimap->Render();
 	m_teamStatusBar->Render();
 	m_countdown->Render();
+	DeathBoard::GetInstance()->Render();
 
 	// Render character outlining.
 	if (m_renderOutlining)

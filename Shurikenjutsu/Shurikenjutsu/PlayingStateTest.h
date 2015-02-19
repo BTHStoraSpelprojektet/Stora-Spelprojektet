@@ -12,6 +12,7 @@ class Camera;
 class Minimap;
 class TeamStatusBar;
 class Countdown;
+class DeathBoard;
 
 class PlayingStateTest : public GameState
 {

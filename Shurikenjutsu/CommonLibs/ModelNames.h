@@ -65,4 +65,9 @@
 #define TEAM_STATUS_DEAD_PLAYER "../Shurikenjutsu/2DTextures/statusBar_dead.png"
 #define TEAM_STATUS_FRAME "../Shurikenjutsu/2DTextures/statusBar_frame.png"
 
+// DeathBoard
+#define DEATHBOARD_KILL1 "../Shurikenjutsu/2DTextures/killStatus1.png"
+#define DEATHBOARD_KILL2 "../Shurikenjutsu/2DTextures/killStatus2.png"
+#define DEATHBOARD_KILL3 "../Shurikenjutsu/2DTextures/killStatusDead.png"
+
 #endif

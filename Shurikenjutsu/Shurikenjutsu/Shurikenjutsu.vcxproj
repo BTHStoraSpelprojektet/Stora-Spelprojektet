@@ -93,6 +93,7 @@
     <ClCompile Include="ChooseState.cpp" />
     <ClCompile Include="Countdown.cpp" />
     <ClCompile Include="Cursor.cpp" />
+    <ClCompile Include="DeathBoard.cpp" />
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp" />
     <ClCompile Include="FanBoomerang.cpp" />
     <ClCompile Include="FanBoomerangAbility.cpp" />
@@ -191,6 +192,7 @@
     <ClInclude Include="ChooseState.h" />
     <ClInclude Include="Countdown.h" />
     <ClInclude Include="Cursor.h" />
+    <ClInclude Include="DeathBoard.h" />
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h" />
     <ClInclude Include="FanBoomerang.h" />
     <ClInclude Include="FanBoomerangAbility.h" />

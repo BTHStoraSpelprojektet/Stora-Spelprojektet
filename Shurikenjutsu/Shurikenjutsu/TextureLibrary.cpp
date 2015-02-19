@@ -19,7 +19,10 @@ void TextureLibrary::Shutdown()
 	// Shutdown texture using iterator to loop through the map
 	for (auto it = m_textures.begin(); it != m_textures.end(); it++)
 	{
-		it->second->Release();
+		if (it->second != nullptr)
+		{
+			it->second->Release();
+		}
 	}
 
 	if (m_instance)

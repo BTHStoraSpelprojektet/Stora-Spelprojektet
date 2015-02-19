@@ -17,6 +17,8 @@
 #include "VisibilityComputer.h"
 #include "Cursor.h"
 #include "ParticleRenderer.h"
+#include "DeathBoard.h"
+#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -156,6 +158,8 @@ void System::Shutdown()
 	// Shutdown network
 	Network::GetInstance()->Shutdown();
 
+	
+
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
 
@@ -212,6 +216,9 @@ void System::Shutdown()
 
 	// Shutdown graphics engine.
 	GraphicsEngine::GetInstance()->Shutdown();
+
+	DeathBoard::GetInstance()->Shutdown();
+
 }
 
 void System::Run()

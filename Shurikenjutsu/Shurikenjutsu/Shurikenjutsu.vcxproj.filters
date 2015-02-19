@@ -455,6 +455,9 @@
     <ClCompile Include="FloatingText.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="DeathBoard.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -761,6 +764,9 @@
       <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
     <ClInclude Include="FloatingText.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathBoard.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
