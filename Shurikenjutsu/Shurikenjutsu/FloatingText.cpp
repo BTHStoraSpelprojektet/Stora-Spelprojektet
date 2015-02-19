@@ -10,7 +10,7 @@ void FloatingText::Initialize()
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText);
+	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText, 0.0f, 6.0f);
 	DecreaseTextOpacity(m_receivedDamageText);
 	DecreaseTextOpacity(m_receivedDamageText);
 }
@@ -58,12 +58,12 @@ void FloatingText::SetReceivedDamageText(std::string p_damage)
 	m_receivedDamageText->SetText(temp);
 	m_receivedDamageText->SetColor(0xff0000ff);
 }
-void FloatingText::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection, GUIText* p_text)
+void FloatingText::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection, GUIText* p_text, float p_xOffset, float p_yOffset)
 {
 	DirectX::XMFLOAT4X4 vp;
 	DirectX::XMStoreFloat4x4(&vp, DirectX::XMLoadFloat4x4(&p_view) * DirectX::XMLoadFloat4x4(&p_projection));
 
-	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_position.x, p_position.y + 6.0f, p_position.z);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_position.x + p_xOffset, p_position.y + p_yOffset, p_position.z);
 	DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&vp)));
 
 	position.x *= GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 2.0f;
