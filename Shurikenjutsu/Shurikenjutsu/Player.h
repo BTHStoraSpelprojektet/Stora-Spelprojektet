@@ -12,6 +12,7 @@ class HealthBar;
 class AbilityBar;
 class StickyTrap;
 class AttackPredictionEditor;
+class FloatingText;
 
 class Player : public AnimatedObject
 {
@@ -126,5 +127,6 @@ protected:
 	Object* m_aimFrustrum;
 	bool localPlayer;
 	AttackPredictionEditor *m_ape;
+	FloatingText* m_floatingText;
 };
 #endif PLAYER

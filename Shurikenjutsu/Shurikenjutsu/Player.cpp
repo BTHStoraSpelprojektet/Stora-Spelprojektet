@@ -11,6 +11,7 @@
 #include "VisibilityComputer.h"
 #include "StickyTrap.h"
 #include "AttackPredictionEditor.h"
+#include "FloatingText.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -83,11 +84,19 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_aimFrustrum->Initialize("../Shurikenjutsu/Models/Marker_ConeShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 
 	m_ape = new AttackPredictionEditor();
+	m_floatingText = new FloatingText();
+	m_floatingText->Initialize();
 	return true;
 }
 
 void Player::Shutdown()
 {
+	if (m_floatingText != nullptr)
+	{
+		m_floatingText->Shutdown();
+		delete m_floatingText;
+		m_floatingText = nullptr;
+	}
 	if (m_ape != nullptr)
 	{
 		delete m_ape;
@@ -491,7 +500,13 @@ void Player::ResetCooldowns()
 
 void Player::SetHealth(float p_health)
 {
-	if (p_health < 0)
+
+	if (m_health > p_health)
+	{
+		m_floatingText->SetReceivedDamageText(std::to_string(p_health-m_health));
+	}
+
+	if (p_health < 0 )
 	{
 		m_health = 0;
 	}
@@ -909,6 +924,8 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar->Update(m_position, (int)m_health, (int)m_maxHealth, p_view, p_projection);
+
+	m_floatingText->Update(m_position, p_view, p_projection);
 }
 
 void Player::UpdateAbilityBar()
@@ -973,12 +990,12 @@ void Player::Render()
 		if (Network::GetInstance()->GetMyPlayer().guid == m_guid)
 		{
 			RenderAttackLocations();
+			m_floatingText->Render();
 		}
 	}
 
 	m_dashParticles1->Render();
 	m_dashParticles2->Render();
-
 
 	AnimatedObject::RenderPlayer(m_team);
 }

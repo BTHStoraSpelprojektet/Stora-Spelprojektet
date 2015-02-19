@@ -214,7 +214,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	if (m_spectateCountDown > 0.0f)
 	{
-		m_spectateCountDown -= deltaTime;
+		m_spectateCountDown -= (float)deltaTime;
 	}
 
 	// Handle camera input.

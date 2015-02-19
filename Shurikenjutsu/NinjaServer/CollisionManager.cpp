@@ -615,6 +615,10 @@ float CollisionManager::CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerNet 
 	{
 		returnValue = test4;
 	}
+	if (returnValue <= 0)
+	{
+		returnValue = 0.0;
+	}
 	
 	return returnValue;
 
