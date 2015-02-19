@@ -355,6 +355,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
 			m_ability = m_meleeAttack;
+			m_floatingText->ResetTimer();
 		}
 	}
 
@@ -375,7 +376,6 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 
 	UpdateAbilityBar();
-	m_floatingText->Update();
 }
 
 void Player::CheckForSpecialAttack()
@@ -501,7 +501,13 @@ void Player::ResetCooldowns()
 
 void Player::SetHealth(float p_health)
 {
-	if (p_health < 0)
+
+	if (m_health > p_health)
+	{
+		m_floatingText->SetReceivedDamageText(std::to_string(p_health-m_health));
+	}
+
+	if (p_health < 0 )
 	{
 		m_health = 0;
 	}
@@ -919,6 +925,8 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_healthbar->Update(m_position, (int)m_health, (int)m_maxHealth, p_view, p_projection);
+
+	m_floatingText->Update(m_position, p_view, p_projection);
 }
 
 void Player::UpdateAbilityBar()
@@ -983,13 +991,13 @@ void Player::Render()
 		if (Network::GetInstance()->GetMyPlayer().guid == m_guid)
 		{
 			RenderAttackLocations();
+			m_floatingText->Render();
 		}
 	}
 
 	m_dashParticles1->Render();
 	m_dashParticles2->Render();
 
-	m_floatingText->Render();
 	AnimatedObject::RenderPlayer(m_team);
 }
 

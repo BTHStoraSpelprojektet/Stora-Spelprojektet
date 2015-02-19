@@ -2,17 +2,23 @@
 #define FLOATINGTEXT_H_
 
 #include "GUIText.h"
+#include "Structures.h"
 
 class FloatingText
 {
 public:
 	void Initialize();
-	void Update();
+	void Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 	void Shutdown();
 	void Render();
 	void ResetTimer();
+	void SetReceivedDamageText(std::string p_damage);
 private:
-	GUIText* m_receivedDamage;
+	void RenderText(GUIText* p_text);
+	void CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection, GUIText* p_text);
+	void DecreaseTextOpacity(GUIText* p_text);
+
+	GUIText* m_receivedDamageText;
 	float m_timer;
 };
 
