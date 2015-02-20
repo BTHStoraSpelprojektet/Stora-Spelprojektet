@@ -64,7 +64,6 @@ void TessenNinja::Shutdown()
 }
 void TessenNinja::RenderAttackLocations()
 {
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
@@ -129,5 +128,4 @@ void TessenNinja::RenderAttackLocations()
 			StillCDText();
 		}
 	}
-	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }
