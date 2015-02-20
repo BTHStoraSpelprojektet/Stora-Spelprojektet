@@ -469,7 +469,7 @@
     </ClCompile>
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="FloatingText.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
@@ -783,7 +783,7 @@
     </ClInclude>
     <ClInclude Include="ScreenSpace.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="FloatingText.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -881,6 +881,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\Composition\CompositionVertexShader.hlsl">
       <Filter>Shaders\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Scene\PixelShaderForward.hlsl">
+      <Filter>Shaders\Scene</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
