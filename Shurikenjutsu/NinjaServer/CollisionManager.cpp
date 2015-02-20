@@ -631,17 +631,17 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 		for (unsigned int j = 0; j < playerList.size(); j++)
 		{
 			// This is so you don't collide with your own shurikens
-			if (playerList[j].guid == spikeList[i].guid)
-			{
-				continue;
-			}
+			//if (playerList[j].guid == spikeList[i].guid)
+			//{
+			//	continue;
+			//}
 
 			// Check so you are not on the same team
 			PlayerNet owner = p_playerManager->GetPlayer(spikeList[i].guid);
-			if (playerList[j].team == owner.team)
-			{
-				continue;
-			}
+			//if (playerList[j].team == owner.team)
+			//{
+			//	continue;
+			//}
 
 			// Check so the player aren't already dead
 			if (!playerList[j].isAlive)
@@ -661,8 +661,15 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
 					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 					{
-						float damage = SPIKE_DAMAGE * m_deltaTime;
-						p_playerManager->DamagePlayer(playerList[j].guid, damage, owner.guid);
+						if (playerList[j].spikeTrapDamage > 0.1f)
+						{
+							//p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].spikeTrapDamage, owner.guid);
+							//p_playerManager->GetPlayer(playerList[j].guid).spikeTrapDamage = 0.0f;
+						}
+						else
+						{
+							playerList[j].spikeTrapDamage += SPIKE_DAMAGE * m_deltaTime;
+						}
 						break;
 					}
 				}

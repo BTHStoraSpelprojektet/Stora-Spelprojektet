@@ -83,6 +83,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 	player.maxHP = m_playerHealth;
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
+	player.spikeTrapDamage = 0.0f;
 	m_players.push_back(player);
 
 	std::cout << "Player added" << std::endl;
