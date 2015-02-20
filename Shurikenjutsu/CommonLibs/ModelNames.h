@@ -70,4 +70,5 @@
 #define DEATHBOARD_KILL2 "../Shurikenjutsu/2DTextures/killStatus2.png"
 #define DEATHBOARD_KILL3 "../Shurikenjutsu/2DTextures/killStatusDead.png"
 
+
 #endif

@@ -72,8 +72,8 @@ void DeathBoard::Render()
 	if (m_deathTimer > 0)
 	{
 		m_killer->QueueRender();
-		m_deadGuy->QueueRender();
 		m_killAbility->QueueRender();
+		m_deadGuy->QueueRender();
 	}
 }
 
