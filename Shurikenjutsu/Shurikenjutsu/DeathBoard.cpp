@@ -25,11 +25,16 @@ bool DeathBoard::Initialize()
 	m_killer = new GUIElement();
 	m_deadGuy = new GUIElement();
 	m_killAbility = new GUIElement();
+
 	m_killer->Initialize(m_originalPos, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILL1));
 	m_originalPos.x += 55;
+
 	m_killAbility->Initialize(m_originalPos, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILL3));
 	m_originalPos.x += 55;
+
 	m_deadGuy->Initialize(m_originalPos, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILL2));
+
+
 	return true;
 }
 
@@ -79,5 +84,10 @@ void DeathBoard::Render()
 
 void DeathBoard::DeathEverywhere()
 {
+	if (m_deathTimer > 0.0)
+	{
+
+	}
 	m_deathTimer = 5.0;
+	
 }
