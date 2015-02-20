@@ -168,11 +168,11 @@ void System::Shutdown()
 		m_sound = 0;
 	}
 
-	if (m_cursor != NULL)
+	if (m_cursor != nullptr)
 	{
 		m_cursor->Shutdown();
 		delete m_cursor;
-		m_cursor = NULL;
+		m_cursor = nullptr;
 	}
 
 	GUIManager::GetInstance()->Shutdown();
@@ -181,30 +181,30 @@ void System::Shutdown()
 	VisibilityComputer::GetInstance().Shutdown();
 
 	//Shutdown current state
-	if (m_menuState != NULL)
+	if (m_menuState != nullptr)
 	{
 		m_menuState->Shutdown();
 		delete m_menuState;
-		m_menuState = NULL;
+		m_menuState = nullptr;
 	}
-	if (m_playingState != NULL)
+	if (m_playingState != nullptr)
 	{
 		m_playingState->Shutdown();
 		delete m_playingState;
-		m_playingState = NULL;
+		m_playingState = nullptr;
 	}
-	if (m_chooseNinjaState != NULL)
+	if (m_chooseNinjaState != nullptr)
 	{
 		m_chooseNinjaState->Shutdown();
 		delete m_chooseNinjaState;
-		m_chooseNinjaState = NULL;
+		m_chooseNinjaState = nullptr;
 	}
 
 	if (m_timer)
 	{
 		m_timer->Shutdown();
 		delete m_timer;
-		m_timer = 0;
+		m_timer = nullptr;
 	}
 
 	ParticleRenderer::GetInstance()->Shutdown();
@@ -332,8 +332,8 @@ void System::Update()
 		}
 		if (m_gameState == m_playingState)
 		{
-			//In game menu
-			PostQuitMessage(0);
+			//In game menum
+			m_gameState->EscapeIsPressed();
 		}
 	}
 }

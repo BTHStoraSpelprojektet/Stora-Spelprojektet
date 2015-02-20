@@ -108,61 +108,61 @@ bool MenuState::Initialize()
 
 void MenuState::Shutdown()
 {
-	if (m_main != NULL)
+	if (m_main != nullptr)
 	{
 		m_main->Shutdown();
 		delete m_main;
-		m_main = 0;
+		m_main = nullptr;
 	}
-	if (m_options != NULL)
+	if (m_options != nullptr)
 	{
 		m_options->Shutdown();
 		delete m_options;
-		m_options = 0;
+		m_options = nullptr;
 	}
-	if (m_play != NULL)
+	if (m_play != nullptr)
 	{
 		m_play->Shutdown();
 		delete m_play;
-		m_play = 0;
+		m_play = nullptr;
 	}
-	if (m_connecting != NULL)
+	if (m_connecting != nullptr)
 	{
 		m_connecting->Shutdown();
 		delete m_connecting;
-		m_connecting = 0;
+		m_connecting = nullptr;
 	}
-	if (m_ipbox != NULL)
+	if (m_ipbox != nullptr)
 	{
 		m_ipbox->Shutdown();
 		delete m_ipbox;
-		m_ipbox = 0;
+		m_ipbox = nullptr;
 	}
-	if (m_ipboxText != NULL)
+	if (m_ipboxText != nullptr)
 	{
 		m_ipboxText->Shutdown();
 		delete m_ipboxText;
-		m_ipboxText = 0;
+		m_ipboxText = nullptr;
 	}
 
-	if (m_camera != NULL)
+	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
 		delete m_camera;
-		m_camera = NULL;
+		m_camera = nullptr;
 	}
-	if (m_objectManager != NULL)
+	if (m_objectManager != nullptr)
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
-		m_objectManager = NULL;
+		m_objectManager = nullptr;
 	}
 	
-	if (m_frustum != NULL)
+	if (m_frustum != nullptr)
 	{
 		m_frustum->Shutdown();
 		delete m_frustum;
-		m_frustum = NULL;
+		m_frustum = nullptr;
 	}
 }
 

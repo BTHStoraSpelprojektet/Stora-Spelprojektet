@@ -16,6 +16,7 @@
 #include "ParticleEmitter.h"
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
+#include "InGameMenu.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -36,6 +37,18 @@ bool PlayingStateTest::Initialize()
 
 void PlayingStateTest::EscapeIsPressed()
 {
+	PostQuitMessage(0);
+	if (m_inGameMenuIsActive)
+	{
+		//PostQuitMessage(0);
+		m_inGameMenuIsActive = false;
+		GLOBAL::GetInstance().CAMERA_MOVING = true;
+	}
+	else
+	{
+		m_inGameMenuIsActive = true;
+		GLOBAL::GetInstance().CAMERA_MOVING = false;
+	}
 }
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
@@ -118,11 +131,20 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_spectateIndex = -1;
 	m_spectateCountDown = 0.0f;
 
+	m_inGameMenuIsActive = false;
+	m_inGameMenu = new InGameMenu();
+	m_inGameMenu->Initialize();
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_inGameMenu != nullptr)
+	{
+		m_inGameMenu->Shutdown();
+		delete m_inGameMenu;
+		m_inGameMenu = nullptr;
+	}
 	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
@@ -326,6 +348,10 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
+	if (m_inGameMenuIsActive)
+	{
+		m_inGameMenu->Update();
+	}
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -365,7 +391,10 @@ void PlayingStateTest::Render()
 		GraphicsEngine::GetInstance()->SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
 	}
-
+	if (m_inGameMenuIsActive)
+	{
+		m_inGameMenu->Render();
+	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
