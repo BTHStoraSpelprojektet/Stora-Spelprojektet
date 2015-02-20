@@ -1,5 +1,5 @@
-#ifndef EMITER
-#define EMITER
+#ifndef EMITTER
+#define EMITTER
 
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -102,7 +102,6 @@ private:
 
 	ID3D11Buffer* m_vertexBuffer;
 	unsigned int m_vertices;
-
 
 	float getWindOffsetX(float timePassed, float timeToLive);
 	float getWindOffsetZ(float timePassed, float timeToLive);
