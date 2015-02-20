@@ -43,8 +43,8 @@ void PlayerManager::Update(double p_deltaTime)
 	if (m_lastTimeSent < 0)
 	{
 		m_lastTimeSent = m_sendIntervall;
-		// Send dir
-		SendPlayerDir();
+		// Send position and direction of players
+		SendPlayerPosAndDir();
 	}
 }
 
@@ -532,4 +532,21 @@ void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, fl
 	bitStream2.Write(p_attackingPlayerGUID);
 	bitStream2.Write(p_damage);
 	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 2, p_attackingPlayerGUID, false);
+}
+
+void PlayerManager::SendPlayerPosAndDir()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		RakNet::BitStream bitStream;
+
+		bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVE_AND_ROTATE);
+		bitStream.Write(m_players[i].guid);
+		bitStream.Write(m_players[i].x);
+		bitStream.Write(m_players[i].z);
+		bitStream.Write(m_players[i].dirX);
+		bitStream.Write(m_players[i].dirZ);
+
+		m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	}
 }
