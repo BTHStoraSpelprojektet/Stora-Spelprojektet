@@ -247,6 +247,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		m_spectateCountDown -= (float)deltaTime;
 	}
 
+	// Calculate new visibility polygon boundries.
+	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
+
 	// Handle camera input.
 	m_camera->HandleInput();
 
@@ -258,12 +261,12 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	}
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
 	{
-
-		m_camera->FollowCharacter(m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam()));
+		player = m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam());
+		m_camera->FollowCharacter(player);
 	}
 	else
 	{
-		m_camera->FollowCharacter(m_playerManager->GetPlayerPosition());
+		m_camera->FollowCharacter(player);
 	}
 
 	if (InputManager::GetInstance()->IsLeftMouseClicked() && GLOBAL::GetInstance().CAMERA_SPECTATE)
@@ -324,8 +327,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		resized = true;
 	} 
 
-	// Calculate new visibility polygon boundries.
-	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
+	
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
 	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
 
@@ -344,7 +346,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	if (resized)
 	{
 		// Reupdate the polygon.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(player.x, player.z), GraphicsEngine::GetInstance()->GetDevice());
 	}
 
 	// Update smokebomb shadow shapes.

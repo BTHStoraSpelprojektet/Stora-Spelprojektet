@@ -371,6 +371,8 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 		UpdateProjectionMatrix(false);
 		GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 	}	
+
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(playerPosition.x, playerPosition.z), GraphicsEngine::GetInstance()->GetDevice());
 }
 
 void Camera::MenuCameraRotation()
