@@ -30,20 +30,20 @@ void FanBoomerangManager::Update(double p_deltaTime, PlayerManager* p_playerMana
 	// Update all the fans
 	for (unsigned int i = 0; i < m_fans.size(); i++)
 	{
+		float previousLifeTime = m_fans[i].lifeTime;
 		m_fans[i].lifeTime -= (float)p_deltaTime;
-
-		// Update life, it sucks
 		if (m_fans[i].lifeTime > 0)
 		{
-			
 			m_fans[i].x += m_fans[i].dirX*m_fans[i].speed*(float)p_deltaTime;
 			m_fans[i].y += m_fans[i].dirY*m_fans[i].speed*(float)p_deltaTime;
 			m_fans[i].z += m_fans[i].dirZ*m_fans[i].speed*(float)p_deltaTime;
 		}
-
-		// pepsi
 		else
 		{
+			if (previousLifeTime >= 0)
+			{
+				BroadcastLifetime(m_fans[i].id, m_fans[i].lifeTime);
+			}
 			for (unsigned int j = 0; j < players.size(); j++)
 			{
 				if (m_fans[i].guid == players[j].guid)
@@ -64,16 +64,6 @@ void FanBoomerangManager::Update(double p_deltaTime, PlayerManager* p_playerMana
 					m_fans[i].z += m_fans[i].dirZ*m_fans[i].speed*(float)-p_deltaTime;
 				}
 			}
-		}
-	}
-
-	m_lastTimeSent -= p_deltaTime;
-	if (m_lastTimeSent < 0)
-	{
-		m_lastTimeSent = m_sendIntervall;
-		if (m_fans.size() > 0)
-		{
-			UpdateClients();
 		}
 	}
 }
@@ -243,4 +233,15 @@ float FanBoomerangManager::SetLifeTime(int p_index, float p_lifeTime)
 void FanBoomerangManager::ResetLists()
 {
 	m_fans.clear();
+}
+
+void FanBoomerangManager::BroadcastLifetime(unsigned int p_id, float p_lifeTime)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_FAN_DEAD_UPDATE);
+	bitStream.Write(p_id);
+	bitStream.Write(p_lifeTime);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

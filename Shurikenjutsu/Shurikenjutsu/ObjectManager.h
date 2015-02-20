@@ -40,7 +40,7 @@ public:
 	std::vector<Object> GetStaticObjectList()const;
 	std::vector<AnimatedObject*> GetAnimatedObjectList()const;
 
-	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id);
+	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_owner);
 
 	void UpdateFrustum(Frustum* p_frustum);
 

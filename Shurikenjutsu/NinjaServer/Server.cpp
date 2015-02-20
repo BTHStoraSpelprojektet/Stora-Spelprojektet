@@ -116,22 +116,8 @@ void Server::ReceviePacket()
 			rBitStream.Read(z);
 
 			// Can player move?
-			bool canMove = m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
+			m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
 
-			//if (canMove)
-			//{
-			//	// Get player pos
-			//	PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
-
-			//	RakNet::BitStream wBitStream;
-			//	wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
-			//	wBitStream.Write(player.guid);
-			//	wBitStream.Write(player.x);
-			//	wBitStream.Write(player.y);
-			//	wBitStream.Write(player.z);
-
-			//	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
-			//}
 			break;
 		}
 		case ID_PLAYER_ROTATED:
