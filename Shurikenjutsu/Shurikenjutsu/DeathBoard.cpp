@@ -43,7 +43,7 @@ bool DeathBoard::Initialize()
 
 		m_deadGuy[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
 	}
-	m_nrOfDeaths = 0;
+	m_nrOfDeaths = -1;
 
 	return true;
 }
@@ -60,16 +60,19 @@ void DeathBoard::Shutdown()
 
 void DeathBoard::Update()
 {
-	for (int i = 0; i < 5; i++)
+	if (m_nrOfDeaths != -1)
 	{
-		if (m_deathTimer[i] > 0.0)
+		for (int i = 0; i < 5; i++)
 		{
-			m_deathTimer[i] -= GLOBAL::GetInstance().GetDeltaTime();
-		}
-		else
-		{
-			ChangeOrder(i);
-			m_nrOfDeaths -= 1;
+			if (m_deathTimer[i] > 0.0)
+			{
+				m_deathTimer[i] -= GLOBAL::GetInstance().GetDeltaTime();
+				if (m_deathTimer[i] <= 0.0)
+				{
+					ChangeOrder(i);
+					m_nrOfDeaths -= 1;
+				}
+			}
 		}
 	}
 }
@@ -103,6 +106,7 @@ void DeathBoard::DeathEverywhere()
 
 void DeathBoard::KillHappened(int p_ninjaKilling, int p_ninjaKilled, ABILITIES p_abilityUsed)
 {
+	DeathEverywhere();
 	
 	DirectX::XMFLOAT3 position = m_originalPos;
 	position.y += (55 * m_nrOfDeaths);

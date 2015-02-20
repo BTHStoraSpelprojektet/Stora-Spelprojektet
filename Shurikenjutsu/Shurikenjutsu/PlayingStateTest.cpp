@@ -134,6 +134,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_inGameMenuIsActive = false;
 	m_inGameMenu = new InGameMenu();
 	m_inGameMenu->Initialize();
+
 	if (!DeathBoard::GetInstance()->Initialize())
 	{
 		return false;
@@ -329,16 +330,16 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
-	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
-
+	Point bottomRight = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
+	
 	// Keep the the visibility polygon boundries within the maps boundries.
 	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
 	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
-	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
-	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
+	bottomRight.x > 45.0f ? bottomRight.x = 45.0f : bottomRight.x;
+	bottomRight.y < -52.0f ? bottomRight.y = -52.0f : bottomRight.y;
 
 	// Update the visibility polygon boundries.
-	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
+	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomRight);
 
 	// Update the countdown.
 	m_countdown->Update();
@@ -355,6 +356,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
+	DeathBoard::GetInstance()->Update();
+
 	if (m_inGameMenuIsActive)
 	{
 		switch (m_inGameMenu->Update())
