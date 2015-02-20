@@ -62,5 +62,8 @@ private:
 	float m_quadWidth;
 	float m_quadHeightTop;
 	float m_quadHeightBottom;
+
+	int m_spectateIndex;
+	float m_spectateCountDown;
 };
 #endif PLAYINGSTATE

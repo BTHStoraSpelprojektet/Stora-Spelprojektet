@@ -50,6 +50,8 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_toolAbility->Initialize();
 
 	SetOriginalSpeed(GetSpeed());
+	SetHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
+	SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
 
 	return true;
 }
@@ -70,6 +72,10 @@ void KatanaNinja::RenderAttackLocations()
 
 			m_aimFrustrum->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
@@ -79,6 +85,10 @@ void KatanaNinja::RenderAttackLocations()
 
 			m_aimPole->Render();
 			m_aimArrow->Render();
+		}
+		else
+		{
+			StillCDText();
 		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
@@ -90,6 +100,10 @@ void KatanaNinja::RenderAttackLocations()
 			m_aimPole->Render();
 			m_aimArrow->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 	{
@@ -100,13 +114,21 @@ void KatanaNinja::RenderAttackLocations()
 			m_aimPole->Render();
 			m_aimArrow->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThrowSphere(m_aimSphere, 7.0f);
+			m_ape->ThrowSphere(m_aimSphere,m_position, 7.0f, SMOKEBOMB_RANGE);
 			m_aimSphere->Render();
+		}
+		else
+		{
+			StillCDText();
 		}
 	}
 	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();

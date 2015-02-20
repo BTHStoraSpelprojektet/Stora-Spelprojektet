@@ -1,5 +1,7 @@
 #include "HealthBar.h"
+#include "GUIElement.h"
 #include "GUIElementColor.h"
+#include "TextureLibrary.h"
 #include "Globals.h"
 
 HealthBar::HealthBar(){}
@@ -9,13 +11,13 @@ bool HealthBar::Initialize(float p_width, float p_height)
 {
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
-	m_border = new GUIElementColor();
-	m_border->Initialize(position, p_width, p_height, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	m_border = new GUIElement();
+	m_border->Initialize(position, p_width, p_height, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/hpBorder.png"));
 
-	m_background = new GUIElementColor();
-	m_background->Initialize(position, p_width - 4.0f, p_height - 3.0f, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-	m_foreground = new GUIElementColor();
-	m_foreground->Initialize(position, p_width - 4.0f, p_height - 3.0f, DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+	m_background = new GUIElement();
+	m_background->Initialize(position, p_width - 10.0f, p_height - 6.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/hpRed.png")); //DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	m_foreground = new GUIElement();
+	m_foreground->Initialize(position, p_width - 10.0f, p_height - 6.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/hpGreen.png")); //DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -60,9 +62,9 @@ void HealthBar::Update(DirectX::XMFLOAT3 p_position, int p_health, int p_maxHeal
 
 void HealthBar::Render()
 {
-	m_border->QueueRender();
 	m_background->QueueRender();
 	m_foreground->QueueRender();
+	m_border->QueueRender();
 }
 
 void HealthBar::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)

@@ -15,6 +15,7 @@
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\NetworkLogger.h"
 #include <vector>
 #include <map>
 #include <DirectXMath.h>
@@ -128,9 +129,11 @@ public:
 
 	int GetLastPing();
 
+	float GetDealtDamage();
+
 private:
 	void ClearListsAtNewRound();
-	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
+	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
 	void UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
 	void RemoveSpikeTrap(unsigned int p_spikeTrapId);
 	void RemoveStickyTrap(unsigned int p_stickyTrapId);
@@ -138,6 +141,8 @@ private:
 	~Network();
 	
 	static Network* m_instance;
+
+	NetworkLogger m_networkLogger;
 
 	void ReceviePacket();
 	void UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
@@ -208,5 +213,7 @@ private:
 
 	double m_timeToPing;
 	double m_pingTimer;
+
+	float m_dealtDamage;
 };
 #endif

@@ -11,6 +11,7 @@
 #include "Projectile.h"
 #include "StickyTrap.h"
 #include "Volley.h"
+#include "ParticleEmitter.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -403,7 +404,7 @@ void ObjectManager::Update()
 			if (!IsSpikeTrapInList(tempSpikeTrapList[i].spikeId))
 			{
 				// Add Smoke bomb
-				AddSpikeTrap(tempSpikeTrapList[i].startX, tempSpikeTrapList[i].startZ, tempSpikeTrapList[i].endX, tempSpikeTrapList[i].endZ, tempSpikeTrapList[i].spikeId);
+				AddSpikeTrap(tempSpikeTrapList[i].startX, tempSpikeTrapList[i].startZ, tempSpikeTrapList[i].endX, tempSpikeTrapList[i].endZ, tempSpikeTrapList[i].spikeId, tempSpikeTrapList[i].team);
 			}
 		}
 		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
@@ -695,11 +696,11 @@ void ObjectManager::AddSmokeBomb(float p_startPosX, float p_startPosZ, float p_e
 	m_smokeBombList.push_back(tempSmokeBomb);
 }
 
-void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_smokeBombID)
+void ObjectManager::AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeBombID, int p_team)
 {
 	Spikes *tempSpikeTrap;
 	tempSpikeTrap = new Spikes();
-	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_smokeBombID);
+	tempSpikeTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_spikeBombID, p_team);
 	tempSpikeTrap->ResetTimer();
 	m_spikeTrapList.push_back(tempSpikeTrap);
 }
@@ -708,11 +709,27 @@ void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_
 {
 	StickyTrap *tempStickyTrap;
 	tempStickyTrap = new StickyTrap();
-	tempStickyTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, 0.02f, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, 0.02f, p_endPosZ), p_stickyTrapID, p_guid);
+
+	float yPos = CheckStickyTrapYPosition();
+	tempStickyTrap->Initialize(DirectX::XMFLOAT3(p_startPosX, yPos, p_startPosZ), DirectX::XMFLOAT3(p_endPosX, yPos, p_endPosZ), p_stickyTrapID, p_guid);
 	tempStickyTrap->ResetTimer();
 	m_stickyTrapList.push_back(tempStickyTrap);
 }
-
+float ObjectManager::CheckStickyTrapYPosition()
+{
+	float returnValue = 0.001f;
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y < 1.0f)
+		{
+			if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y >= returnValue)
+			{
+				returnValue = m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y + 0.01f;
+			}
+		}
+	}
+	return returnValue;
+}
 void ObjectManager::AddStaticObject(Object p_object)
 {
 	m_staticObjects.push_back(p_object);
@@ -909,6 +926,7 @@ void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ,
 	temp->Initialize(start, end);
 	m_volleys.push_back(temp);
 }
+
 void ObjectManager::ResetListSinceRoundRestarted()
 {
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)

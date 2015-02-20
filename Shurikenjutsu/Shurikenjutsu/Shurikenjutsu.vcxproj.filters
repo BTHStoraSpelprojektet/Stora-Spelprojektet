@@ -469,6 +469,9 @@
     </ClCompile>
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
+	</ClCompile>
+    <ClCompile Include="FloatingText.cpp">
+      <Filter>Source Files\GUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -780,6 +783,9 @@
     </ClInclude>
     <ClInclude Include="ScreenSpace.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
+	</ClInclude>
+    <ClInclude Include="FloatingText.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

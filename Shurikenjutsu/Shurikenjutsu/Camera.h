@@ -41,12 +41,15 @@ public:
 
 	void MenuCameraRotation();
 
+	void MovingCamera(DirectX::XMFLOAT3 p_playerPos);
+
 private:
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT3 m_target;
 	DirectX::XMFLOAT3 m_look;
 	DirectX::XMFLOAT3 m_upVector;
 	DirectX::XMFLOAT3 m_right;
+	DirectX::XMFLOAT3 m_oldPosition;
 
 	float m_fieldOfView;
 	float m_aspectRatio;
@@ -63,6 +66,8 @@ private:
 
 	float m_oldMouseX;
 	float m_oldMouseY;
+
+	float timerTesting;
 
 	DirectX::XMFLOAT4X4 m_positionMatrix;
 	DirectX::XMFLOAT4X4 m_rotationX;

@@ -14,9 +14,9 @@ bool Server::Initialize()
 	m_serverPeer->Startup(MAX_CLIENTS, &m_socketDesc, 1);
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
-	m_serverLogger = ServerLogger();
-	m_serverLogger.Initialize();
-	m_serverPeer->AttachPlugin(&m_serverLogger);
+	m_networkLogger = NetworkLogger();
+	m_networkLogger.Initialize();
+	m_serverPeer->AttachPlugin(&m_networkLogger);
 
 	m_nrOfConnections = 0;
 
@@ -44,7 +44,7 @@ void Server::Shutdown()
 void Server::Update(double p_deltaTime)
 {
 	ReceviePacket();
-	m_serverLogger.Update(p_deltaTime);
+	m_networkLogger.Update(p_deltaTime);
 
 	m_gameState->Update(p_deltaTime);
 }
@@ -145,21 +145,7 @@ void Server::ReceviePacket()
 			bitStream.Read(dirY);
 			bitStream.Read(dirZ);
 
-			bool canRotate = m_gameState->RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
-
-			if (canRotate)
-			{
-				PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
-
-				RakNet::BitStream wBitStream;
-				wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
-				wBitStream.Write(player.guid);
-				wBitStream.Write(player.dirX);
-				wBitStream.Write(player.dirY);
-				wBitStream.Write(player.dirZ);
-
-				m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
-			}
+			m_gameState->RotatePlayer(m_packet->guid, dirX, dirY, dirZ);
 			break;
 		}
 		case ID_DOWNLOAD_PLAYERS:

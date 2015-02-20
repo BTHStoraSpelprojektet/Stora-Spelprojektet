@@ -29,14 +29,14 @@ namespace IntersectionTests
 		DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_spherePosition, p_sphereRadius);
 		return box.Intersects(sphere);
 	}
-	bool Intersections::RaySphereCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT4 p_rayDirection, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius, float *p_returnValue)
+	bool Intersections::RaySphereCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT4 p_rayDirection, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius, float &p_returnValue)
 	{
 		float temp;
 		DirectX::BoundingSphere sphere = DirectX::BoundingSphere(p_spherePosition, p_sphereRadius);
 		DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_rayOrigin.x, p_rayOrigin.y, p_rayOrigin.z, 0.0f);
 		DirectX::XMVECTOR rayDirection = DirectX::XMVector3Normalize(DirectX::XMVectorSet(p_rayDirection.x, p_rayDirection.y, p_rayDirection.z, p_rayDirection.w));
 		bool boolValue = sphere.Intersects(rayOrigin, rayDirection, temp);
-		*p_returnValue = temp;
+		p_returnValue = temp;
 		return boolValue;
 	}
 	float Intersections::RayBoxCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_boxCenter, DirectX::XMFLOAT3 p_boxExtents)
@@ -48,7 +48,7 @@ namespace IntersectionTests
 		bool temp2 = box.Intersects(rayOrigin, rayDirection, temp);
 		return temp;
 	}
-	bool Intersections::RayOBBCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT4 p_OBBDirection, float* p_returnValue)
+	bool Intersections::RayOBBCollision(DirectX::XMFLOAT3 p_rayOrigin, DirectX::XMFLOAT3 p_rayDirection, DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT4 p_OBBDirection, float &p_returnValue)
 	{
 		float temp2 = 0;
 		DirectX::XMVECTOR rayOrigin = DirectX::XMVectorSet(p_rayOrigin.x, p_rayOrigin.y, p_rayOrigin.z, 0.0f);
@@ -59,7 +59,7 @@ namespace IntersectionTests
 		obb.Orientation = p_OBBDirection; 
 		float asdf;
 		bool temp = obb.Intersects(rayOrigin,rayDirection, asdf);
-		*p_returnValue = asdf;
+		p_returnValue = asdf;
 		//bool temp = obb.Intersects(rayOrigin, rayDirection, p_returnValue);
 		return temp;
 	}
