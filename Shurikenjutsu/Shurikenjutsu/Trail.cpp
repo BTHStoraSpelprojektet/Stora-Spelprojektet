@@ -1,6 +1,4 @@
 #include "Trail.h"
-
-#include "TrailRenderer.h"
 #include "TextureLibrary.h"
 #include "Globals.h"
 #include "ConsoleFunctions.h"
@@ -88,8 +86,8 @@ void Trail::Update(DirectX::XMFLOAT3 p_position, float p_angle)
 	// Increase time for all points in the trail.
 	for (unsigned int i = 0; i < m_segments.size(); i++)
 	{
-		m_segments[i].m_top.m_timeValues.y += deltaTime;
-		m_segments[i].m_bottom.m_timeValues.y += deltaTime;
+		m_segments[i].m_top.m_timeValues.y += (float)deltaTime;
+		m_segments[i].m_bottom.m_timeValues.y += (float)deltaTime;
 	}
 
 	// Clear old points.
@@ -98,7 +96,7 @@ void Trail::Update(DirectX::XMFLOAT3 p_position, float p_angle)
 	if (m_emiting)
 	{
 		// Increase point emission timer, and emit a point if it is time to do so.
-		m_timeSinceLastEmission += deltaTime;
+		m_timeSinceLastEmission += (float)deltaTime;
 		if (m_timeSinceLastEmission > (1.0f / m_pointsPerSecond))
 		{
 			EmitPoint(p_position, p_angle);
@@ -182,11 +180,11 @@ void Trail::ClearOldPoints()
 				return;
 			}
 
+			// Erase all elements that are old, and the move the end point bool.
 			else
 			{
-				// TODO, clear list of old points.
-
-				// TODO, dont forget to move the end point bool!
+				m_segments.erase(m_segments.begin(), m_segments.begin() + i);
+				m_segments[0].m_bottom.m_endpoint = true;
 
 				return;
 			}

@@ -71,7 +71,7 @@ void main(line GeometryInput p_input[2], inout TriangleStream<GeometryOutput> p_
 	float3 b2;
 
 	// Calculate corners for tile segments.
-	if (p_input[1].m_endpoint)
+	if (!p_input[1].m_endpoint)
 	{
 		t1 = float3(p_input[0].m_position.x - (cos(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z + (sin(p_input[0].m_angle) * p_input[0].m_width));
 		t2 = float3(p_input[0].m_position.x - (cos(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z - (sin(p_input[0].m_angle) * p_input[0].m_width));

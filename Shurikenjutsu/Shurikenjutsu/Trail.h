@@ -4,16 +4,8 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <string>
-
-struct TrailPoint
-{
-	DirectX::XMFLOAT3 m_position;
-	float m_angle;
-	float m_width;
-	DirectX::XMFLOAT2 m_timeValues;
-	DirectX::XMFLOAT4 m_color;
-	bool m_endpoint;
-};
+#include <vector>
+#include "TrailRenderer.h"
 
 struct TrailSegment
 {
