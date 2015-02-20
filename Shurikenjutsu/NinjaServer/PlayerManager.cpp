@@ -83,7 +83,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 	player.maxHP = m_playerHealth;
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
-	player.spikeTrapDamage = 0.0f;
+	player.dotDamage = 0.0f;
 	m_players.push_back(player);
 
 	std::cout << "Player added" << std::endl;
@@ -552,13 +552,13 @@ void PlayerManager::SendPlayerPosAndDir()
 	}
 }
 
-void PlayerManager::SetPlayerSpikeTrapDamage(RakNet::RakNetGUID p_guid, float p_damage)
+void PlayerManager::SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			m_players[i].spikeTrapDamage = p_damage;
+			m_players[i].dotDamage = p_damage;
 		}
 	}
 }

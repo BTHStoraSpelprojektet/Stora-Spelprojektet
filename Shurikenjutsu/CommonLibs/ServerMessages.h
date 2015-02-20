@@ -15,7 +15,7 @@ struct PlayerNet
 	int charNr;
 	bool isAlive;
 	float gcd;
-	float spikeTrapDamage;
+	float dotDamage;
 };
 
 struct ShurikenNet

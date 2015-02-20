@@ -661,14 +661,14 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
 					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 					{
-						if (playerList[j].spikeTrapDamage > 1.0f)
+						if (playerList[j].dotDamage > 1.0f)
 						{
-							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].spikeTrapDamage, owner.guid);
-							p_playerManager->SetPlayerSpikeTrapDamage(playerList[j].guid, 0.0f);
+							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].dotDamage, owner.guid);
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, 0.0f);
 						}
 						else
 						{
-							p_playerManager->SetPlayerSpikeTrapDamage(playerList[j].guid, playerList[j].spikeTrapDamage + (SPIKE_DAMAGE * m_deltaTime));						;
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, playerList[j].dotDamage + (SPIKE_DAMAGE * m_deltaTime));;
 						}
 						break;
 					}
@@ -836,14 +836,14 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 					if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 					{
 						// Damage the player
-						if (playerList[j].spikeTrapDamage > 1.0f)
+						if (playerList[j].dotDamage > 1.0f)
 						{
-							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].spikeTrapDamage, attackingPlayer.guid);
-							p_playerManager->SetPlayerSpikeTrapDamage(playerList[j].guid, 0.0f);
+							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].dotDamage, attackingPlayer.guid);
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, 0.0f);
 						}
 						else
 						{
-							p_playerManager->SetPlayerSpikeTrapDamage(playerList[j].guid, playerList[j].spikeTrapDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));;
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, playerList[j].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));;
 						}
 					}
 				}
