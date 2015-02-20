@@ -74,6 +74,7 @@ private:
 
 	void SendPlayerPos();
 	void SendPlayerDir();
+	void SendPlayerPosAndDir();
 	double m_sendIntervall;
 	double m_lastTimeSent;
 	
