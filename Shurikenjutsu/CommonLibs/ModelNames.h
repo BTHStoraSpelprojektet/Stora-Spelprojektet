@@ -47,9 +47,9 @@
 #define ABILITY_CALTROP_TEXTURE "../Shurikenjutsu/2DTextures/TB_Caltrops.png"
 
 #define ABILITY_NAGINATA_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Melee.png"
-#define ABILITY_NAGINATA_STAB_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_E.png"
+#define ABILITY_NAGINATA_STAB_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Q.png"
 #define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Ranged.png"
-#define ABILITY_KUNAI_VOLLEY_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_Q.png"
+#define ABILITY_KUNAI_VOLLEY_TEXTURE "../Shurikenjutsu/2DTextures/TB_N3_E.png"
 #define ABILITY_STICKY_TRAP_TEXTURE "../Shurikenjutsu/2DTextures/TB_StickyTARP.png"
 
 // Pictures
@@ -66,9 +66,11 @@
 #define TEAM_STATUS_FRAME "../Shurikenjutsu/2DTextures/statusBar_frame.png"
 
 // DeathBoard
-#define DEATHBOARD_KILL1 "../Shurikenjutsu/2DTextures/killStatus1.png"
-#define DEATHBOARD_KILL2 "../Shurikenjutsu/2DTextures/killStatus2.png"
-#define DEATHBOARD_KILL3 "../Shurikenjutsu/2DTextures/killStatusDead.png"
+#define DEATHBOARD_NINJA1 "../Shurikenjutsu/2DTextures/DeathBoardN1.png"
+#define DEATHBOARD_NINJA2 "../Shurikenjutsu/2DTextures/DeathBoardN2.png"
+#define DEATHBOARD_NINJA3 "../Shurikenjutsu/2DTextures/DeathBoardN3.png"
+
+#define DEATHBOARD_KILLARROW "../Shurikenjutsu/2DTextures/KillStatusDead.png"
 
 
 #endif

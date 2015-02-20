@@ -2,8 +2,8 @@
 #define DEATHBOARD_H_
 
 #include <DirectXMath.h>
-
-class GUIElement;
+#include "../CommonLibs/CommonEnums.h"
+#include "GUIElement.h"
 
 class DeathBoard
 {
@@ -20,19 +20,22 @@ public:
 	void Render();
 	
 	void DeathEverywhere();
-
+	void KillHappened(int p_ninjaKilling, int p_ninjaKilled, ABILITIES p_abilityUsed);
 
 private:
 	DeathBoard();
 	~DeathBoard();
 	static DeathBoard* m_instance;
 
-	//DirectX::XMFLOAT3 m_originalPos;
-	GUIElement* m_killer;
-	GUIElement* m_deadGuy;
-	GUIElement* m_killAbility;
+	void ChangeOrder(int p_index);
 
-	double m_deathTimer;
+	DirectX::XMFLOAT3 m_originalPos;
+	GUIElement m_killer[5];
+	GUIElement m_deadGuy[5];
+	GUIElement m_killAbility[5];
+
+	double m_deathTimer[5];
+	int m_nrOfDeaths;
 };
 
 #endif // !DEATHBOARD_H_
