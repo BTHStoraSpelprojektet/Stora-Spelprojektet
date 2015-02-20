@@ -8,10 +8,10 @@ void InGameMenu::Initialize()
 	m_menu = new Menu();
 	//Resume button
 	m_menu->AddButton(0.0f, -BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, 
-		TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_INGAME_RESUME);
+		TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/resume.png"), MENUACTION_INGAME_RESUME);
 	//Main menu button
 	m_menu->AddButton(0.0f, -1.0f * BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, 
-		TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/options.png"), MENUACTION_INGAME_TO_MAIN);
+		TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/main_menu.png"), MENUACTION_INGAME_TO_MAIN);
 	//Quit button
 	m_menu->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, 
 		TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"), MENUACTION_INGAME_QUIT);
