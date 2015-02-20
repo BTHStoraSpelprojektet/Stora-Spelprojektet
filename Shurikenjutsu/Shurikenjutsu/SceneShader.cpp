@@ -432,6 +432,33 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
+	// Compile the pixel shader.
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShaderForward.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShaderForward.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile scene forward pixel shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_PSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_PSVersion = "5.0";
+	}
+
+	// Create the pixel shader.
+	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderForward)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create scene pixel shader");
+		return false;
+	}
+
 	// Compile the reversed shadow pixel shader.
 	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReveresePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
 	{

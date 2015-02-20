@@ -49,6 +49,7 @@ private:
 	ID3D11VertexShader* m_instanceShader;
 	ID3D11VertexShader* m_animatedVertexShader;
 	ID3D11PixelShader* m_pixelShader;
+	ID3D11PixelShader* m_pixelShaderForward;
 	ID3D11PixelShader* m_reversedShadowPixelShader;
 
 	ID3D11VertexShader* m_lineVertexShader;
