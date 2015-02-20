@@ -2,30 +2,10 @@ Visual Leak Detector Version 2.4RC2 installed.
     Aggregating duplicate leaks.
     Outputting the report to the debugger and to C:\Users\kalle\Documents\GitHub\Stora-Spelprojektet\Shurikenjutsu\Shurikenjutsu\memory_leak_report.txt
 WARNING: Visual Leak Detector detected memory leaks!
----------- Block 291559 at 0x0299E558: 24 bytes ----------
-  Leak Hash: 0x36959844, Count: 1, Total 24 bytes
-  Call Stack (TID 5480):
-    0x015BC260 (File and line number not available): MSVCR120D.dll!operator new
-    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\deathboard.cpp (26): Shurikenjutsu.exe!DeathBoard::Initialize + 0x7 bytes
-    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\playingstatetest.cpp (119): Shurikenjutsu.exe!PlayingStateTest::Initialize + 0xC bytes
-    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\playingstatetest.cpp (35): Shurikenjutsu.exe!PlayingStateTest::Initialize + 0x28 bytes
-    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\system.cpp (304): Shurikenjutsu.exe!System::Update + 0x14 bytes
-    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\system.cpp (245): Shurikenjutsu.exe!System::Run
-    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\main.cpp (12): Shurikenjutsu.exe!main
-    f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (626): Shurikenjutsu.exe!__tmainCRTStartup + 0x19 bytes
-    f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (466): Shurikenjutsu.exe!mainCRTStartup
-    0x751917AD (File and line number not available): KERNEL32.DLL!BaseThreadInitThunk + 0x12 bytes
-    0x773261BB (File and line number not available): ntdll.dll!RtlImpersonateSelfEx + 0x4CB bytes
-    0x77326189 (File and line number not available): ntdll.dll!RtlImpersonateSelfEx + 0x499 bytes
-  Data:
-    00 00 48 42    00 00 48 42    00 80 18 44    00 00 F1 43     ..HB..HB ...D...C
-    00 00 00 00    54 91 1C 07                                   ....T... ........
-
-
----------- Block 291560 at 0x0299E5B0: 24 bytes ----------
-  Leak Hash: 0x3E595224, Count: 1, Total 24 bytes
-  Call Stack (TID 5480):
-    0x015BC260 (File and line number not available): MSVCR120D.dll!operator new
+---------- Block 4760468 at 0x06F52410: 24 bytes ----------
+  Leak Hash: 0xD5EFB42F, Count: 1, Total 24 bytes
+  Call Stack (TID 4364):
+    0x011AC260 (File and line number not available): MSVCR120D.dll!operator new
     c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\deathboard.cpp (27): Shurikenjutsu.exe!DeathBoard::Initialize + 0x7 bytes
     c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\playingstatetest.cpp (119): Shurikenjutsu.exe!PlayingStateTest::Initialize + 0xC bytes
     c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\playingstatetest.cpp (35): Shurikenjutsu.exe!PlayingStateTest::Initialize + 0x28 bytes
@@ -42,10 +22,10 @@ WARNING: Visual Leak Detector detected memory leaks!
     00 00 00 00    00 00 00 00                                   ........ ........
 
 
----------- Block 291558 at 0x0B613BE0: 24 bytes ----------
-  Leak Hash: 0x6BEF7796, Count: 1, Total 24 bytes
-  Call Stack (TID 5480):
-    0x015BC260 (File and line number not available): MSVCR120D.dll!operator new
+---------- Block 4760466 at 0x06F526E0: 24 bytes ----------
+  Leak Hash: 0x8059919D, Count: 1, Total 24 bytes
+  Call Stack (TID 4364):
+    0x011AC260 (File and line number not available): MSVCR120D.dll!operator new
     c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\deathboard.cpp (25): Shurikenjutsu.exe!DeathBoard::Initialize + 0x7 bytes
     c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\playingstatetest.cpp (119): Shurikenjutsu.exe!PlayingStateTest::Initialize + 0xC bytes
     c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\playingstatetest.cpp (35): Shurikenjutsu.exe!PlayingStateTest::Initialize + 0x28 bytes
@@ -59,10 +39,30 @@ WARNING: Visual Leak Detector detected memory leaks!
     0x77326189 (File and line number not available): ntdll.dll!RtlImpersonateSelfEx + 0x499 bytes
   Data:
     00 00 48 42    00 00 48 42    00 00 FA 43    00 00 F1 43     ..HB..HB ...C...C
-    00 00 00 00    B4 74 1C 07                                   .....t.. ........
+    00 00 00 00    6C A4 A4 06                                   ....l... ........
+
+
+---------- Block 4760467 at 0x06F52728: 24 bytes ----------
+  Leak Hash: 0xDD237E4F, Count: 1, Total 24 bytes
+  Call Stack (TID 4364):
+    0x011AC260 (File and line number not available): MSVCR120D.dll!operator new
+    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\deathboard.cpp (26): Shurikenjutsu.exe!DeathBoard::Initialize + 0x7 bytes
+    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\playingstatetest.cpp (119): Shurikenjutsu.exe!PlayingStateTest::Initialize + 0xC bytes
+    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\playingstatetest.cpp (35): Shurikenjutsu.exe!PlayingStateTest::Initialize + 0x28 bytes
+    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\system.cpp (304): Shurikenjutsu.exe!System::Update + 0x14 bytes
+    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\system.cpp (245): Shurikenjutsu.exe!System::Run
+    c:\users\kalle\documents\github\stora-spelprojektet\shurikenjutsu\shurikenjutsu\main.cpp (12): Shurikenjutsu.exe!main
+    f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (626): Shurikenjutsu.exe!__tmainCRTStartup + 0x19 bytes
+    f:\dd\vctools\crt\crtw32\dllstuff\crtexe.c (466): Shurikenjutsu.exe!mainCRTStartup
+    0x751917AD (File and line number not available): KERNEL32.DLL!BaseThreadInitThunk + 0x12 bytes
+    0x773261BB (File and line number not available): ntdll.dll!RtlImpersonateSelfEx + 0x4CB bytes
+    0x77326189 (File and line number not available): ntdll.dll!RtlImpersonateSelfEx + 0x499 bytes
+  Data:
+    00 00 48 42    00 00 48 42    00 80 18 44    00 00 F1 43     ..HB..HB ...D...C
+    00 00 00 00    C4 CD A4 06                                   ........ ........
 
 
 Visual Leak Detector detected 3 memory leaks (180 bytes).
 Largest number used: 35206967 bytes.
-Total allocations: 239159827 bytes.
+Total allocations: 832755373 bytes.
 Visual Leak Detector is now exiting.
