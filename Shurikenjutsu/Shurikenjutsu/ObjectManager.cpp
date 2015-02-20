@@ -720,9 +720,12 @@ float ObjectManager::CheckStickyTrapYPosition()
 	float returnValue = 0.001f;
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
-		if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y >= returnValue)
+		if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y < 1.0f)
 		{
-			returnValue = m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y + 0.01f;
+			if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y >= returnValue)
+			{
+				returnValue = m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y + 0.01f;
+			}
 		}
 	}
 	return returnValue;

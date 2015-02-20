@@ -123,7 +123,7 @@ void KatanaNinja::RenderAttackLocations()
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThrowSphere(m_aimSphere, 7.0f);
+			m_ape->ThrowSphere(m_aimSphere,m_position, 7.0f, SMOKEBOMB_RANGE);
 			m_aimSphere->Render();
 		}
 		else

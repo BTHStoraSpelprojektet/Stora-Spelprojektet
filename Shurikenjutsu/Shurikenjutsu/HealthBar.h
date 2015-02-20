@@ -3,7 +3,8 @@
 
 #include <DirectXMath.h>
 
-class GUIElementColor;
+//class GUIElementColor;
+class GUIElement;
 class HealthBar
 {
 public:
@@ -18,9 +19,9 @@ private:
 
 	void CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
-	GUIElementColor* m_border;
-	GUIElementColor* m_background;
-	GUIElementColor* m_foreground;
+	GUIElement* m_border;
+	GUIElement* m_background;
+	GUIElement* m_foreground;
 
 };
 

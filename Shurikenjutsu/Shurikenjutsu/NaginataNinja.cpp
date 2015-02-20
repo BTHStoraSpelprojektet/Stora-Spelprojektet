@@ -108,7 +108,7 @@ void NaginataNinja::RenderAttackLocations()
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThrowSphere(m_aimSphere, 3.5f);
+			m_ape->ThrowSphere(m_aimSphere, m_position, 3.5f, VOLLEY_RANGE);
 			m_aimSphere->Render();
 		}
 		else
@@ -120,7 +120,7 @@ void NaginataNinja::RenderAttackLocations()
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThrowSphere(m_aimSphere, 7.0f);
+			m_ape->ThrowSphere(m_aimSphere, m_position, 7.0f, STICKY_TRAP_RANGE);
 			m_aimSphere->Render();
 		}
 		else
