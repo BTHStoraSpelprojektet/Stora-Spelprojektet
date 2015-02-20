@@ -753,7 +753,6 @@ void Network::ReceviePacket()
 			AddVolley(id, startX, startZ, endX, endZ, guid);
 			break;
 		}
-
 		default:
 		{
 			break;
@@ -1297,6 +1296,10 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 	{
 		m_myPlayer.currentHP = p_currentHP;
 		m_myPlayer.isAlive = p_isAlive;
+		if (!p_isAlive)
+		{
+			DeathBoard::GetInstance()->KillHappened(0, m_myPlayer.charNr, ABILITIES_MEGASHURIKEN);
+		}
 	}
 	else
 	{
@@ -1306,14 +1309,15 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 			{
 				m_enemyPlayers[i].currentHP = p_currentHP;
 				m_enemyPlayers[i].isAlive = p_isAlive;
+				if (!p_isAlive)
+				{
+					DeathBoard::GetInstance()->KillHappened(0, m_enemyPlayers[i].charNr, ABILITIES_MEGASHURIKEN);
+				}
 			}
 		}
 	}
 
-	if (!p_isAlive)
-	{
-		DeathBoard::GetInstance()->DeathEverywhere();
-	}
+	
 }
 
 void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive)
@@ -1510,6 +1514,7 @@ bool Network::CheckIfNaginataStabAttackIsPerformed()
 {
 	return m_NaginataStabPerformed;
 }
+
 void Network::ResetNaginataStabBoolean()
 {
 	m_NaginataStabPerformed = false;
@@ -1529,6 +1534,7 @@ int Network::GetMatchWinningTeam()
 {
 	return m_matchWinningTeam;
 }
+
 void Network::ClearListsAtNewRound()
 {
 	m_shurikensList.clear();
@@ -1536,7 +1542,6 @@ void Network::ClearListsAtNewRound()
 	m_spikeTrapList.clear();
 	m_stickyTrapList.clear();
 	m_fanList.clear();
-
 }
 
 int Network::GetLastPing()
