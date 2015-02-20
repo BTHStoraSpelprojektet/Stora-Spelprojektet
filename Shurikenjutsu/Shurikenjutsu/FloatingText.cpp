@@ -19,14 +19,11 @@ void FloatingText::Initialize()
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
 	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText, 1.0f, 6.0f);
-
 	CalculatePosition(p_position, p_view, p_projection, m_dealtDamageText, 2.0f, 0.0f);
-
 	CalculatePosition(p_position, p_view, p_projection, m_healingText, -1.0f, 6.0f);
-
 	CalculatePosition(p_position, p_view, p_projection, m_cantUseAbilityText, 0.0f, 2.0f);
 
-	for (unsigned int i = 0; i < 2; i++)
+	for (unsigned int i = 0; i < 3; i++)
 	{
 		DecreaseTextOpacity(m_receivedDamageText);
 		DecreaseTextOpacity(m_dealtDamageText);
@@ -98,8 +95,8 @@ void FloatingText::SetReceivedDamageText(float p_damage)
 	{
 		std::string temp = std::to_string(p_damage);
 		temp.resize(resize);
-		m_dealtDamageText->SetText(temp);
-		m_dealtDamageText->SetColor(0xff0000ff);
+		m_receivedDamageText->SetText(temp);
+		m_receivedDamageText->SetColor(0xff0000ff);
 	}
 }
 void FloatingText::SetDealtDamageText(float p_damage)
@@ -172,6 +169,6 @@ void FloatingText::SetcantUseAbilityText(int p_messageIndex)
 	}*/
 	
 	text = "Can't use that ability.";
-	m_healingText->SetText(text);
-	m_healingText->SetColor(0xff0000ff);
+	m_cantUseAbilityText->SetText(text);
+	m_cantUseAbilityText->SetColor(0xff0000ff);
 }
