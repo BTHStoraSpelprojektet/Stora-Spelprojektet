@@ -40,7 +40,7 @@ public:
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
-	void DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage);
+	void DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 
@@ -52,7 +52,7 @@ public:
 	void NaginataStabAttackPerformed(RakNet::RakNetGUID p_guid);
 
 	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager);
-	
+	void SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
@@ -74,6 +74,7 @@ private:
 
 	void SendPlayerPos();
 	void SendPlayerDir();
+	void SendPlayerPosAndDir();
 	double m_sendIntervall;
 	double m_lastTimeSent;
 	

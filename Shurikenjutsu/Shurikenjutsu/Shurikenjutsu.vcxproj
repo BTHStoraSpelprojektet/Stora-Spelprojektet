@@ -101,6 +101,7 @@
     <ClCompile Include="FoliageShader.cpp" />
     <ClCompile Include="GUIElementColor.cpp" />
     <ClCompile Include="GUIText.cpp" />
+    <ClCompile Include="InGameMenu.cpp" />
     <ClCompile Include="InstanceManager.cpp" />
     <ClCompile Include="KatanaNinja.cpp" />
     <ClCompile Include="KunaiAbility.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="FoliageShader.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
+    <ClInclude Include="InGameMenu.h" />
     <ClInclude Include="InstanceManager.h" />
     <ClInclude Include="KatanaNinja.h" />
     <ClInclude Include="KunaiAbility.h" />

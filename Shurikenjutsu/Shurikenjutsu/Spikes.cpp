@@ -5,13 +5,14 @@
 #include "GraphicsEngine.h"
 #include "Network.h"
 
-bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
+bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_spikeBombID, int p_team)
 {
 	m_spikeBag = new Object();
 	m_spikeBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
 
 	m_spikesTrap = new Object();
-	if (Network::GetInstance()->GetMyPlayer().team == 1)
+	std::cout << p_team << std::endl;
+	if (p_team == 1)
 	{
 		m_spikesTrap->Initialize("../Shurikenjutsu/Models/CaltropFieldTCRedShape.SSP", p_endPosition);
 	}
@@ -23,7 +24,7 @@ bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_e
 	m_startPosition = p_startPosition;
 	m_isThrowing = true;
 	m_spikeSphere = Sphere(p_endPosition, SPIKE_SIZE_X);
-	m_spikeId = p_smokeBombID;
+	m_spikeId = p_spikeBombID;
 
 	m_speed = SPIKE_SPEED;
 	float x = (p_endPosition.x - p_startPosition.x);

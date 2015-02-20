@@ -75,6 +75,7 @@ protected:
 	void CalculatePlayerCubeCollision(OBB p_collidingBoxes);
 	bool CheckSidesIfMultipleCollisions();
 	void SetOriginalSpeed(float p_speed);
+	void StillCDText();
 
 	float m_health; // Player health
 	float m_maxHealth; // Max player health

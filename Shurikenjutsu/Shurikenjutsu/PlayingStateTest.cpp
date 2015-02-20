@@ -16,6 +16,7 @@
 #include "ParticleEmitter.h"
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
+#include "InGameMenu.h"
 #include "DeathBoard.h"
 
 PlayingStateTest::PlayingStateTest(){}
@@ -35,6 +36,20 @@ bool PlayingStateTest::Initialize()
 	return Initialize(LEVEL_NAME);
 }
 
+void PlayingStateTest::EscapeIsPressed()
+{
+	if (m_inGameMenuIsActive)
+	{
+		//PostQuitMessage(0);
+		m_inGameMenuIsActive = false;
+		GLOBAL::GetInstance().CAMERA_MOVING = true;
+	}
+	else
+	{
+		m_inGameMenuIsActive = true;
+		GLOBAL::GetInstance().CAMERA_MOVING = false;
+	}
+}
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
 	// Initialize the camera.
@@ -116,6 +131,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_spectateIndex = -1;
 	m_spectateCountDown = 0.0f;
 
+	m_inGameMenuIsActive = false;
+	m_inGameMenu = new InGameMenu();
+	m_inGameMenu->Initialize();
 	if (!DeathBoard::GetInstance()->Initialize())
 	{
 		return false;
@@ -126,6 +144,12 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_inGameMenu != nullptr)
+	{
+		m_inGameMenu->Shutdown();
+		delete m_inGameMenu;
+		m_inGameMenu = nullptr;
+	}
 	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
@@ -328,10 +352,25 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
-
-	// Update the killingboard
-	DeathBoard::GetInstance()->Update();
 	
+	if (m_inGameMenuIsActive)
+	{
+		switch (m_inGameMenu->Update())
+		{
+		case IN_GAME_MENU_RESUME:
+			m_inGameMenuIsActive = false;
+			break;
+		case IN_GAME_MENU_TO_MAIN:
+			Network::GetInstance()->Disconnect();
+			return GAMESTATESWITCH_MENU;
+			break;
+		case IN_GAME_MENU_QUIT:
+			PostQuitMessage(0);
+			break;
+		default:
+			break;
+		}
+	}
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -372,7 +411,10 @@ void PlayingStateTest::Render()
 		GraphicsEngine::GetInstance()->SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
 	}
-
+	if (m_inGameMenuIsActive)
+	{
+		m_inGameMenu->Render();
+	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

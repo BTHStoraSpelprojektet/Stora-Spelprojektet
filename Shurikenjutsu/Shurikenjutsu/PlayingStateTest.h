@@ -12,6 +12,7 @@ class Camera;
 class Minimap;
 class TeamStatusBar;
 class Countdown;
+class InGameMenu;
 class DeathBoard;
 
 class PlayingStateTest : public GameState
@@ -34,6 +35,8 @@ public:
 	ObjectManager* GetObjectManager();
 
 	DirectX::XMFLOAT2 GetMousePosition();
+
+	void EscapeIsPressed();
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);
@@ -48,6 +51,7 @@ private:
 	TeamStatusBar* m_teamStatusBar;
 	DirectionalLight m_directionalLight;
 	Countdown* m_countdown;
+	InGameMenu *m_inGameMenu;
 
 	float twoPi = 6.28318530718f;
 
@@ -66,5 +70,6 @@ private:
 
 	int m_spectateIndex;
 	float m_spectateCountDown;
+	bool m_inGameMenuIsActive;
 };
 #endif PLAYINGSTATE

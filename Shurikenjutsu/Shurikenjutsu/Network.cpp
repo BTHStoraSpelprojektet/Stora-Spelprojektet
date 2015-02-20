@@ -65,7 +65,7 @@ bool Network::Initialize()
 
 	m_pingTimer = 5;
 	m_timeToPing = m_pingTimer;
-
+	m_dealtDamage = 0;
 	return true;
 }
 
@@ -529,6 +529,7 @@ void Network::ReceviePacket()
 			RakNet::RakNetGUID guid;
 			unsigned int spikeTrapId;
 			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
+			int team;
 			bitStream.Read(messageID);
 			bitStream.Read(spikeTrapId);
 			bitStream.Read(startPosX);
@@ -537,9 +538,10 @@ void Network::ReceviePacket()
 			bitStream.Read(endPosZ);
 			bitStream.Read(lifetime);
 			bitStream.Read(guid);
+			bitStream.Read(team);
 
 
-			UpdateSpikeTrap(guid, spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime);
+			UpdateSpikeTrap(guid, spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime, team);
 			break;
 		}
 		case ID_SPIKETRAP_REMOVE:
@@ -598,10 +600,8 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID guid;
-			float x, y, z;
-			float dirX, dirY, dirZ;
+			float x, z;
 			unsigned int id;
-			float speed;
 			int nrOfFans;
 
 			bitStream.Read(messageID);
@@ -611,24 +611,15 @@ void Network::ReceviePacket()
 			{
 				bitStream.Read(id);
 				bitStream.Read(x);
-				bitStream.Read(y);
 				bitStream.Read(z);
-				bitStream.Read(dirX);
-				bitStream.Read(dirY);
-				bitStream.Read(dirZ);
-				bitStream.Read(speed);
 
 				for (unsigned int j = 0; j < m_fanList.size(); j++)
 				{
-					if (id == m_fanList[j].id)
+					if (m_fanList[j].id == id)
 					{
-						m_fanList[j].dirX = dirX;
-						m_fanList[j].dirY = dirY;
-						m_fanList[j].dirZ = dirZ;
-						m_fanList[j].speed = speed;
 						m_fanList[j].x = x;
-						m_fanList[j].y = y;
 						m_fanList[j].z = z;
+						break;
 					}
 				}
 			}
@@ -751,6 +742,37 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 
 			AddVolley(id, startX, startZ, endX, endZ, guid);
+			break;
+		}
+		case ID_HAS_INFLICTED_DAMAGE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			float damage;
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			bitStream.Read(damage);
+
+			m_dealtDamage = damage;
+			break;
+		}		
+		case ID_PLAYER_MOVE_AND_ROTATE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float posX, posZ;
+			float dirX, dirZ;
+
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			bitStream.Read(posX);
+			bitStream.Read(posZ);
+			bitStream.Read(dirX);
+			bitStream.Read(dirZ);
+
+			UpdatePlayerPos(guid, posX, 0.0f, posZ);
+			UpdatePlayerDir(guid, dirX, 0.0f, dirZ);
 			break;
 		}
 		default:
@@ -974,7 +996,7 @@ void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, flo
 	}
 }
 
-void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
+void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team)
 {
 
 	bool addSpikeTrap = true;
@@ -986,6 +1008,7 @@ void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTra
 	temp.endZ = p_endPosZ;
 	temp.lifeTime = p_lifetime;
 	temp.guid = p_guid;
+	temp.team = p_team;
 
 	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
 	{
@@ -1299,7 +1322,7 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 		if (!p_isAlive)
 		{
 			DeathBoard::GetInstance()->KillHappened(0, m_myPlayer.charNr, ABILITIES_MEGASHURIKEN);
-		}
+	}
 	}
 	else
 	{
@@ -1547,4 +1570,11 @@ void Network::ClearListsAtNewRound()
 int Network::GetLastPing()
 {
 	return m_clientPeer->GetLastPing(RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT));
+}
+
+float Network::GetDealtDamage()
+{
+	float damage = m_dealtDamage;
+	m_dealtDamage = 0;
+	return damage;
 }

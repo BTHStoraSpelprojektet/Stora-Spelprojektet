@@ -51,6 +51,8 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_toolAbility->Initialize();
 
 	SetOriginalSpeed(GetSpeed());
+	SetHealth(CHARACTER_NAGINATA_HEALTH);
+	SetMaxHealth(CHARACTER_NAGINATA_HEALTH);
 
 	return true;
 }
@@ -70,6 +72,10 @@ void NaginataNinja::RenderAttackLocations()
 
 			m_aimFrustrum->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
@@ -80,6 +86,10 @@ void NaginataNinja::RenderAttackLocations()
 			m_aimPole->Render();
 			m_aimArrow->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 	{
@@ -89,21 +99,33 @@ void NaginataNinja::RenderAttackLocations()
 
 			m_aimPole->Render();
 		}
+		else
+		{
+			StillCDText();
+		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 	{
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThrowSphere(m_aimSphere, 3.5f);
+			m_ape->ThrowSphere(m_aimSphere, m_position, 3.5f, VOLLEY_RANGE);
 			m_aimSphere->Render();
+		}
+		else
+		{
+			StillCDText();
 		}
 	}
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
 	{
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThrowSphere(m_aimSphere, 7.0f);
+			m_ape->ThrowSphere(m_aimSphere, m_position, 7.0f, STICKY_TRAP_RANGE);
 			m_aimSphere->Render();
+		}
+		else
+		{
+			StillCDText();
 		}
 	}
 	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();

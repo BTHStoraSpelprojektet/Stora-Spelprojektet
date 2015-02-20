@@ -455,6 +455,9 @@
     <ClCompile Include="FloatingText.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="InGameMenu.cpp">
+      <Filter>Source Files\GUI\Menu</Filter>
+    </ClCompile>
     <ClCompile Include="DeathBoard.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
@@ -765,6 +768,9 @@
     </ClInclude>
     <ClInclude Include="FloatingText.h">
       <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameMenu.h">
+      <Filter>Header Files\GUI\Menu</Filter>
     </ClInclude>
     <ClInclude Include="DeathBoard.h">
       <Filter>Header Files\GUI</Filter>
