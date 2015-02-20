@@ -34,6 +34,9 @@ bool PlayingStateTest::Initialize()
 	return Initialize(LEVEL_NAME);
 }
 
+void PlayingStateTest::EscapeIsPressed()
+{
+}
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
 	// Initialize the camera.

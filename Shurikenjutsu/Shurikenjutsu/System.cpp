@@ -118,6 +118,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
+	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
+
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
@@ -288,7 +290,6 @@ void System::Update()
 			GLOBAL::GetInstance().CAMERA_MOVING = false;
 		}
 	}
-
 	switch (m_gameState->Update())
 	{
 	case GAMESTATESWITCH_CHOOSENINJA:
@@ -318,9 +319,22 @@ void System::Update()
 	Network::GetInstance()->Update();
 
 	// Quick escape.
-	if (GetAsyncKeyState(VK_ESCAPE))
+	if (InputManager::GetInstance()->IsKeyClicked(VK_ESCAPE))
 	{
-		PostQuitMessage(0);
+		if (m_gameState == m_menuState)
+		{
+			m_gameState->EscapeIsPressed();
+		}
+		if (m_gameState == m_chooseNinjaState)
+		{
+			//Back to menu
+			m_gameState = m_menuState;
+		}
+		if (m_gameState == m_playingState)
+		{
+			//In game menu
+			PostQuitMessage(0);
+		}
 	}
 }
 

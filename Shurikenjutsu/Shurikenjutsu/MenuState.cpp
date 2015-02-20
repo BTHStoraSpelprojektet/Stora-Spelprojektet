@@ -315,3 +315,13 @@ void MenuState::Render()
 	m_objectManager->Render();
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
+
+void MenuState::EscapeIsPressed()
+{
+	m_hideIpBox = true;
+	m_menues.pop();
+	if (m_menues.empty())
+	{
+		PostQuitMessage(0);
+	}
+}

@@ -33,6 +33,8 @@ public:
 	ObjectManager* GetObjectManager();
 
 	DirectX::XMFLOAT2 GetMousePosition();
+
+	void EscapeIsPressed();
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);

@@ -20,6 +20,7 @@ public:
 	void Render();
 	void NextNinja();
 	void PrevNinja();
+	void EscapeIsPressed();
 
 private:
 	Menu* m_chooseButton;
