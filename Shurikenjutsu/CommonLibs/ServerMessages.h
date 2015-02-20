@@ -15,6 +15,7 @@ struct PlayerNet
 	int charNr;
 	bool isAlive;
 	float gcd;
+	float dotDamage;
 };
 
 struct ShurikenNet
@@ -116,7 +117,8 @@ enum Messages
 	ID_STICKYTRAP_REMOVE,
 	ID_SEND_TEAM_SCORE,
 	ID_NAGINATA_STAB_HAS_OCCURED,
-	ID_HAS_INFLICTED_DAMAGE
+	ID_HAS_INFLICTED_DAMAGE,
+	ID_PLAYER_MOVE_AND_ROTATE
 };
 
 #endif

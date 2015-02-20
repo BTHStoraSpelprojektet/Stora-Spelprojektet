@@ -754,7 +754,26 @@ void Network::ReceviePacket()
 
 			m_dealtDamage = damage;
 			break;
-		}			
+		}		
+		case ID_PLAYER_MOVE_AND_ROTATE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID guid;
+			float posX, posZ;
+			float dirX, dirZ;
+
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			bitStream.Read(posX);
+			bitStream.Read(posZ);
+			bitStream.Read(dirX);
+			bitStream.Read(dirZ);
+
+			UpdatePlayerPos(guid, posX, 0.0f, posZ);
+			UpdatePlayerDir(guid, dirX, 0.0f, dirZ);
+			break;
+		}
 		default:
 		{
 			break;

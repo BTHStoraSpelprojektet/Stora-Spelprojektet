@@ -515,6 +515,10 @@ void Player::SetHealth(float p_health)
 	{
 		m_floatingText->SetReceivedDamageText(p_health-m_health);
 	}
+	else
+	{
+		m_floatingText->SetHealingText(p_health - m_health);
+	}
 
 	if (p_health < 0 )
 	{
