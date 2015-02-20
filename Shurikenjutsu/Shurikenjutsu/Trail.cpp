@@ -3,7 +3,7 @@
 
 bool Trail::Initialize(DirectX::XMFLOAT3 p_position)
 {
-
+	return true;
 }
 
 void Trail::Shutdown()
