@@ -661,14 +661,14 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
 					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 					{
-						if (playerList[j].spikeTrapDamage > 0.1f)
+						if (playerList[j].spikeTrapDamage > 1.0f)
 						{
-							//p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].spikeTrapDamage, owner.guid);
-							//p_playerManager->GetPlayer(playerList[j].guid).spikeTrapDamage = 0.0f;
+							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].spikeTrapDamage, owner.guid);
+							p_playerManager->SetPlayerSpikeTrapDamage(playerList[j].guid, 0.0f);
 						}
 						else
 						{
-							playerList[j].spikeTrapDamage += SPIKE_DAMAGE * m_deltaTime;
+							p_playerManager->SetPlayerSpikeTrapDamage(playerList[j].guid, playerList[j].spikeTrapDamage + (SPIKE_DAMAGE * m_deltaTime));						;
 						}
 						break;
 					}
