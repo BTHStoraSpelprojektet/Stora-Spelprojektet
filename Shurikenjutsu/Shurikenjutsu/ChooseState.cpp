@@ -121,3 +121,7 @@ void ChooseState::PrevNinja()
 		currentNinja = nrOfNinjas - 1;
 	}
 }
+
+void ChooseState::EscapeIsPressed()
+{
+}

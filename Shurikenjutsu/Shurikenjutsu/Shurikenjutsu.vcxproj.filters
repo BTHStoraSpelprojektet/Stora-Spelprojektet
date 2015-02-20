@@ -470,6 +470,9 @@
     <ClCompile Include="TrailRenderer.cpp">
       <Filter>Source Files\Graphics\Trails</Filter>
     </ClCompile>
+    <ClCompile Include="InGameMenu.cpp">
+      <Filter>Source Files\GUI\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -783,6 +786,9 @@
     </ClInclude>
     <ClInclude Include="TrailRenderer.h">
       <Filter>Header Files\Graphics\Trails</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameMenu.h">
+      <Filter>Header Files\GUI\Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -118,6 +118,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
+	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
+
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
@@ -166,11 +168,11 @@ void System::Shutdown()
 		m_sound = 0;
 	}
 
-	if (m_cursor != NULL)
+	if (m_cursor != nullptr)
 	{
 		m_cursor->Shutdown();
 		delete m_cursor;
-		m_cursor = NULL;
+		m_cursor = nullptr;
 	}
 
 	GUIManager::GetInstance()->Shutdown();
@@ -179,30 +181,30 @@ void System::Shutdown()
 	VisibilityComputer::GetInstance().Shutdown();
 
 	//Shutdown current state
-	if (m_menuState != NULL)
+	if (m_menuState != nullptr)
 	{
 		m_menuState->Shutdown();
 		delete m_menuState;
-		m_menuState = NULL;
+		m_menuState = nullptr;
 	}
-	if (m_playingState != NULL)
+	if (m_playingState != nullptr)
 	{
 		m_playingState->Shutdown();
 		delete m_playingState;
-		m_playingState = NULL;
+		m_playingState = nullptr;
 	}
-	if (m_chooseNinjaState != NULL)
+	if (m_chooseNinjaState != nullptr)
 	{
 		m_chooseNinjaState->Shutdown();
 		delete m_chooseNinjaState;
-		m_chooseNinjaState = NULL;
+		m_chooseNinjaState = nullptr;
 	}
 
 	if (m_timer)
 	{
 		m_timer->Shutdown();
 		delete m_timer;
-		m_timer = 0;
+		m_timer = nullptr;
 	}
 
 	ParticleRenderer::GetInstance()->Shutdown();
@@ -288,7 +290,6 @@ void System::Update()
 			GLOBAL::GetInstance().CAMERA_MOVING = false;
 		}
 	}
-
 	switch (m_gameState->Update())
 	{
 	case GAMESTATESWITCH_CHOOSENINJA:
@@ -307,6 +308,7 @@ void System::Update()
 		break;
 	case GAMESTATESWITCH_MENU:
 		m_gameState = m_menuState;
+		m_gameState->EscapeIsPressed();
 		m_cursor->LargeSize();
 		break;
 	}
@@ -318,9 +320,24 @@ void System::Update()
 	Network::GetInstance()->Update();
 
 	// Quick escape.
-	if (GetAsyncKeyState(VK_ESCAPE))
+	if (InputManager::GetInstance()->IsKeyClicked(VK_ESCAPE))
 	{
-		PostQuitMessage(0);
+		if (m_gameState == m_menuState)
+		{
+			m_gameState->EscapeIsPressed();
+		}
+		if (m_gameState == m_chooseNinjaState)
+		{
+			//Back to menu
+			Network::GetInstance()->Disconnect();
+			m_gameState = m_menuState;
+			m_gameState->EscapeIsPressed();
+		}
+		if (m_gameState == m_playingState)
+		{
+			//In game menum
+			m_gameState->EscapeIsPressed();
+		}
 	}
 }
 
