@@ -8,6 +8,7 @@
 #include "StickyTrapAbility.h"
 #include "VolleyAbility.h"
 #include "AttackPredictionEditor.h"
+#include "ParticleRenderer.h"
 
 
 NaginataNinja::NaginataNinja(){}
@@ -70,7 +71,7 @@ void NaginataNinja::RenderAttackLocations()
 		{
 			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, NAGINATA_RANGE);
 
-			m_aimFrustrum->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
 		}
 		else
 		{
@@ -83,8 +84,8 @@ void NaginataNinja::RenderAttackLocations()
 		{
 			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
 
-			m_aimPole->Render();
-			m_aimArrow->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
 		}
 		else
 		{
@@ -97,7 +98,7 @@ void NaginataNinja::RenderAttackLocations()
 		{
 			m_ape->ThickRectanglePrediction(m_aimPole, m_attackDir, m_position, NAGINATASTAB_RANGE * 2);
 
-			m_aimPole->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
 		}
 		else
 		{
@@ -109,7 +110,7 @@ void NaginataNinja::RenderAttackLocations()
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
 			m_ape->ThrowSphere(m_aimSphere, m_position, 3.5f, VOLLEY_RANGE);
-			m_aimSphere->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
 		}
 		else
 		{
@@ -121,7 +122,7 @@ void NaginataNinja::RenderAttackLocations()
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
 			m_ape->ThrowSphere(m_aimSphere, m_position, 7.0f, STICKY_TRAP_RANGE);
-			m_aimSphere->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
 		}
 		else
 		{
