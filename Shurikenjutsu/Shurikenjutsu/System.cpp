@@ -308,6 +308,7 @@ void System::Update()
 		break;
 	case GAMESTATESWITCH_MENU:
 		m_gameState = m_menuState;
+		m_gameState->EscapeIsPressed();
 		m_cursor->LargeSize();
 		break;
 	}
@@ -328,7 +329,9 @@ void System::Update()
 		if (m_gameState == m_chooseNinjaState)
 		{
 			//Back to menu
+			Network::GetInstance()->Disconnect();
 			m_gameState = m_menuState;
+			m_gameState->EscapeIsPressed();
 		}
 		if (m_gameState == m_playingState)
 		{

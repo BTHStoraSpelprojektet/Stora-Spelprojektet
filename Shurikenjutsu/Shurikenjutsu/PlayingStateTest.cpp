@@ -37,7 +37,6 @@ bool PlayingStateTest::Initialize()
 
 void PlayingStateTest::EscapeIsPressed()
 {
-	PostQuitMessage(0);
 	if (m_inGameMenuIsActive)
 	{
 		//PostQuitMessage(0);
@@ -350,7 +349,21 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	
 	if (m_inGameMenuIsActive)
 	{
-		m_inGameMenu->Update();
+		switch (m_inGameMenu->Update())
+		{
+		case IN_GAME_MENU_RESUME:
+			m_inGameMenuIsActive = false;
+			break;
+		case IN_GAME_MENU_TO_MAIN:
+			Network::GetInstance()->Disconnect();
+			return GAMESTATESWITCH_MENU;
+			break;
+		case IN_GAME_MENU_QUIT:
+			PostQuitMessage(0);
+			break;
+		default:
+			break;
+		}
 	}
 	return GAMESTATESWITCH_NONE;
 }
