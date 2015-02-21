@@ -79,7 +79,7 @@ void DeathBoard::Update()
 
 void DeathBoard::Render()
 {	
-	for (int i = 0; i < m_nrOfDeaths; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		if (m_deathTimer[i] > 0)
 		{
@@ -96,10 +96,6 @@ void DeathBoard::DeathEverywhere()
 	{
 		m_nrOfDeaths += 1;
 	}
-
-	/*if ( m_deathTimer > 0.0 )
-	{
-	}*/
 	
 	m_deathTimer[m_nrOfDeaths] = 5.0;
 }
@@ -109,25 +105,25 @@ void DeathBoard::KillHappened(int p_ninjaKilling, int p_ninjaKilled, ABILITIES p
 	DeathEverywhere();
 	
 	DirectX::XMFLOAT3 position = m_originalPos;
-	position.y += (55 * m_nrOfDeaths);
+	position.y -= (55 * m_nrOfDeaths);
 
-	m_killer[m_nrOfDeaths - 1].SetPosition(position);
+	m_killer[m_nrOfDeaths].SetPosition(position);
 	position.x += 55;
-	m_killAbility[m_nrOfDeaths - 1].SetPosition(position);
+	m_killAbility[m_nrOfDeaths].SetPosition(position);
 	position.x += 55;
-	m_deadGuy[m_nrOfDeaths - 1].SetPosition(position);
+	m_deadGuy[m_nrOfDeaths].SetPosition(position);
 	
 
 	switch (p_ninjaKilling)
 	{
 	case 0:
-		m_killer[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+		m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
 		break;
 	case 1:
-		m_killer[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
+		m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
 		break;
 	case 2:
-		m_killer[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
+		m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
 		break;
 	default:
 		break;
@@ -136,13 +132,13 @@ void DeathBoard::KillHappened(int p_ninjaKilling, int p_ninjaKilled, ABILITIES p
 	switch (p_ninjaKilled)
 	{
 	case 0:
-		m_deadGuy[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+		m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
 		break;
 	case 1:
-		m_deadGuy[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
+		m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
 		break;
 	case 2:
-		m_deadGuy[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
+		m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
 		break;
 	default:
 		break;
@@ -151,46 +147,46 @@ void DeathBoard::KillHappened(int p_ninjaKilling, int p_ninjaKilled, ABILITIES p
 	switch (p_abilityUsed)
 	{
 	case ABILITIES_SHURIKEN:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_DASH:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_MELEESWING:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_MEGASHURIKEN:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_SMOKEBOMB:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_SPIKETRAP:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_WHIP_PRIMARY:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_WHIP_SECONDARY:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_FANBOOMERANG:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_NAGINATASLASH:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_KUNAI:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_STICKY_TRAP:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_NAGAINATASTAB:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	case ABILITIES_VOLLEY:
-		m_killAbility[m_nrOfDeaths - 1].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	default:
 		break;
@@ -210,5 +206,7 @@ void DeathBoard::ChangeOrder(int p_index)
 		m_killer[i].SetTexture(m_killer[i + 1].GetTexture());
 		m_killAbility[i].SetTexture(m_killAbility[i + 1].GetTexture());
 		m_deadGuy[i].SetTexture(m_deadGuy[i + 1].GetTexture());
+
+		m_deathTimer[i] = m_deathTimer[i + 1];
 	}
 }
