@@ -3,8 +3,8 @@
 #include "ConsoleFunctions.h"
 #include "ObjectManager.h"
 #include "Globals.h"
-#include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "DeathBoard.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 Network* Network::m_instance;
 
