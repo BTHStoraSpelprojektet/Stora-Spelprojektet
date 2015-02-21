@@ -15,6 +15,7 @@ struct PlayerNet
 	int charNr;
 	bool isAlive;
 	float gcd;
+	float dotDamage;
 };
 
 struct ShurikenNet
@@ -110,6 +111,7 @@ enum Messages
 	ID_FAN_THROWN,
 	ID_FAN_REMOVE,
 	ID_FAN_UPDATE,
+	ID_FAN_DEAD_UPDATE,
 	ID_VOLLEY_THROWN,
 	ID_TIMER_SYNC,
 	ID_STICKYTRAP_THROW,

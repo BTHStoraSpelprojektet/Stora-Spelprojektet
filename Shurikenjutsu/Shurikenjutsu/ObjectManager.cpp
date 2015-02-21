@@ -436,7 +436,7 @@ void ObjectManager::Update()
 		{
 			if (!IsFanInList(tempNetFans[i].id))
 			{
-				AddFan(FANBOOMERANG_MODEL_NAME, DirectX::XMFLOAT3(tempNetFans[i].x, tempNetFans[i].y, tempNetFans[i].z), DirectX::XMFLOAT3(tempNetFans[i].dirX, tempNetFans[i].dirY, tempNetFans[i].dirZ), tempNetFans[i].speed, tempNetFans[i].id);
+				AddFan(FANBOOMERANG_MODEL_NAME, DirectX::XMFLOAT3(tempNetFans[i].x, tempNetFans[i].y, tempNetFans[i].z), DirectX::XMFLOAT3(tempNetFans[i].dirX, tempNetFans[i].dirY, tempNetFans[i].dirZ), tempNetFans[i].speed, tempNetFans[i].id, tempNetFans[i].guid);
 			}
 		}
 
@@ -455,17 +455,16 @@ void ObjectManager::Update()
 	}
 
 	// Update all the fans
-	for (unsigned int i = 0; i < tempNetFans.size(); i++)
+	for (unsigned int i = 0; i < m_fans.size(); i++)
 	{
-		for (unsigned int j = 0; j < m_fans.size(); j++)
+		for (unsigned int j = 0; j < tempNetFans.size(); j++)
 		{
-			if (tempNetFans[i].id == m_fans[j]->GetID())
+			if (m_fans[i]->GetID() == tempNetFans[j].id)
 			{
-				m_fans[j]->Update(tempNetFans[i].x, tempNetFans[i].y, tempNetFans[i].z, tempNetFans[i].dirX, tempNetFans[i].dirY, tempNetFans[i].dirZ, tempNetFans[i].speed);
+				m_fans[i]->Update(tempNetFans[j].lifeTime <= 0.0f);
 			}
 		}
-		
-		}
+	}
 		
 	// Update Volleys
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
@@ -735,11 +734,11 @@ void ObjectManager::AddStaticObject(Object p_object)
 	m_staticObjects.push_back(p_object);
 }
 
-void ObjectManager::AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id)
+void ObjectManager::AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_owner)
 {
 	FanBoomerang* temp;
 	temp = new FanBoomerang();
-	temp->Initialize(p_filepath, p_pos, p_dir, p_speed, p_id);
+	temp->Initialize(p_filepath, p_pos, p_dir, p_speed, p_id, p_owner);
 	temp->SetSpeed(p_speed);
 	m_fans.push_back(temp);
 }
