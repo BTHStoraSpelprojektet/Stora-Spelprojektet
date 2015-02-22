@@ -90,6 +90,7 @@
     <ClCompile Include="AttackPredictionEditor.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CharacterAbilityDescription.cpp" />
     <ClCompile Include="ChooseState.cpp" />
     <ClCompile Include="Countdown.cpp" />
     <ClCompile Include="Cursor.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="AttackPredictionEditor.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CharacterAbilityDescription.h" />
     <ClInclude Include="ChooseState.h" />
     <ClInclude Include="Countdown.h" />
     <ClInclude Include="Cursor.h" />
@@ -201,6 +203,7 @@
     <ClInclude Include="FoliageShader.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
+    <ClInclude Include="TextResource.h" />
     <ClInclude Include="InGameMenu.h" />
     <ClInclude Include="InstanceManager.h" />
     <ClInclude Include="KatanaNinja.h" />
