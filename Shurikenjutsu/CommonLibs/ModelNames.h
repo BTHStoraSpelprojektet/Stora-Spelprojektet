@@ -71,6 +71,20 @@
 #define DEATHBOARD_NINJA3 "../Shurikenjutsu/2DTextures/DeathBoardN3.png"
 
 #define DEATHBOARD_KILLARROW "../Shurikenjutsu/2DTextures/KillStatusDead.png"
+#define DEATHBOARD_N1MELEE "../Shurikenjutsu/2DTextures/n1melee.png"
+#define DEATHBOARD_N1ranged "../Shurikenjutsu/2DTextures/n1ranged.png"
+#define DEATHBOARD_N1Q "../Shurikenjutsu/2DTextures/n1q.png"
+//#define DEATHBOARD_N1E "../Shurikenjutsu/2DTextures/n1e.png"
+#define DEATHBOARD_N2MELEE "../Shurikenjutsu/2DTextures/n2melee.png"
+#define DEATHBOARD_N2RANGED "../Shurikenjutsu/2DTextures/n2ranged.png"
+#define DEATHBOARD_N2Q "../Shurikenjutsu/2DTextures/n2q.png"
+#define DEATHBOARD_N2E "../Shurikenjutsu/2DTextures/n2e.png"
+
+#define DEATHBOARD_N3MELEE "../Shurikenjutsu/2DTextures/n3melee.png"
+#define DEATHBOARD_N3RANGED "../Shurikenjutsu/2DTextures/n3ranged.png"
+#define DEATHBOARD_N3Q "../Shurikenjutsu/2DTextures/n3q.png"
+#define DEATHBOARD_N3E "../Shurikenjutsu/2DTextures/n3e.png"
+
 
 
 #endif

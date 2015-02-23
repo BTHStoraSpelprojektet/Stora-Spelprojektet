@@ -789,6 +789,22 @@ void Network::ReceviePacket()
 			UpdatePlayerDir(guid, dirX, 0.0f, dirZ);
 			break;
 		}
+		case ID_DEATHBOARDKILL:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int takerNinja, killerNinja;
+			ABILITIES murderWeapon;
+
+			bitStream.Read(messageID);
+			bitStream.Read(takerNinja);
+			bitStream.Read(killerNinja);
+			bitStream.Read(murderWeapon);
+
+			DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
+
+			break;
+		}
 		default:
 		{
 			break;
@@ -1334,10 +1350,6 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 	{
 		m_myPlayer.currentHP = p_currentHP;
 		m_myPlayer.isAlive = p_isAlive;
-		if (!p_isAlive)
-		{
-			DeathBoard::GetInstance()->KillHappened(0, m_myPlayer.charNr, ABILITIES_MEGASHURIKEN);
-	}
 	}
 	else
 	{
@@ -1347,10 +1359,6 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 			{
 				m_enemyPlayers[i].currentHP = p_currentHP;
 				m_enemyPlayers[i].isAlive = p_isAlive;
-				if (!p_isAlive)
-				{
-					DeathBoard::GetInstance()->KillHappened(0, m_enemyPlayers[i].charNr, ABILITIES_MEGASHURIKEN);
-				}
 			}
 		}
 	}
