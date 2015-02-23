@@ -7,7 +7,7 @@ class Object;
 class Spikes
 {
 public:
-	bool Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID);
+	bool Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID, int p_team);
 	void Update();
 	void Shutdown();
 	void Render();

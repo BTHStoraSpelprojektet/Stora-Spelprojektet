@@ -16,6 +16,8 @@
 #include "ParticleEmitter.h"
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
+#include "InGameMenu.h"
+#include "DeathBoard.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -34,6 +36,20 @@ bool PlayingStateTest::Initialize()
 	return Initialize(LEVEL_NAME);
 }
 
+void PlayingStateTest::EscapeIsPressed()
+{
+	if (m_inGameMenuIsActive)
+	{
+		//PostQuitMessage(0);
+		m_inGameMenuIsActive = false;
+		GLOBAL::GetInstance().CAMERA_MOVING = true;
+	}
+	else
+	{
+		m_inGameMenuIsActive = true;
+		GLOBAL::GetInstance().CAMERA_MOVING = false;
+	}
+}
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
 	// Initialize the camera.
@@ -112,11 +128,29 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	OnScreenResize();
 	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
 
+	m_spectateIndex = -1;
+	m_spectateCountDown = 0.0f;
+
+	m_inGameMenuIsActive = false;
+	m_inGameMenu = new InGameMenu();
+	m_inGameMenu->Initialize();
+
+	if (!DeathBoard::GetInstance()->Initialize())
+	{
+		return false;
+	}
+
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_inGameMenu != nullptr)
+	{
+		m_inGameMenu->Shutdown();
+		delete m_inGameMenu;
+		m_inGameMenu = nullptr;
+	}
 	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
@@ -189,21 +223,57 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	
 	CollisionManager::GetInstance()->Update(m_mouseX, m_mouseY);
 
+	// Get picking data.
 	BasicPicking();
 
 	m_playerManager->Update(m_objectManager->GetStickyTrapList());
+
+	
+	if (!m_playerManager->GetPlayerIsAlive())
+	{
+		if (!GLOBAL::GetInstance().CAMERA_SPECTATE)
+		{
+			m_spectateCountDown = 2.0f;
+		}
+		GLOBAL::GetInstance().CAMERA_SPECTATE = true;
+	}
+	else 
+	{
+		GLOBAL::GetInstance().CAMERA_SPECTATE = false;
+		m_spectateIndex = -1;
+	}
+
+	if (m_spectateCountDown > 0.0f)
+	{
+		m_spectateCountDown -= (float)deltaTime;
+	}
+
+	// Calculate new visibility polygon boundries.
+	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
 
 	// Handle camera input.
 	m_camera->HandleInput();
 
 	// The camera should follow the character if not flying.
-	if (!GLOBAL::GetInstance().CAMERA_FLYING)
+	if (GLOBAL::GetInstance().CAMERA_FLYING)
 	{
-		m_camera->FollowCharacter(m_playerManager->GetPlayerPosition());
+		// Handle camera input.
+		m_camera->HandleInput();
+	}
+	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
+	{
+		player = m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam());
+		m_camera->FollowCharacter(player);
+	}
+	else
+	{
+		m_camera->FollowCharacter(player);
 	}
 
-	// Get picking data.
-	BasicPicking();
+	if (InputManager::GetInstance()->IsLeftMouseClicked() && GLOBAL::GetInstance().CAMERA_SPECTATE)
+	{
+		m_spectateIndex += 1;
+	}
 
 	// Update every scene object.
 	m_objectManager->Update();
@@ -258,19 +328,18 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		resized = true;
 	} 
 
-	// Calculate new visibility polygon boundries.
-	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
+	
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
-	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
-
+	Point bottomRight = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
+	
 	// Keep the the visibility polygon boundries within the maps boundries.
 	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
 	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
-	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
-	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
+	bottomRight.x > 45.0f ? bottomRight.x = 45.0f : bottomRight.x;
+	bottomRight.y < -52.0f ? bottomRight.y = -52.0f : bottomRight.y;
 
 	// Update the visibility polygon boundries.
-	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
+	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomRight);
 
 	// Update the countdown.
 	m_countdown->Update();
@@ -278,7 +347,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	if (resized)
 	{
 		// Reupdate the polygon.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(player.x, player.z), GraphicsEngine::GetInstance()->GetDevice());
 	}
 
 	// Update smokebomb shadow shapes.
@@ -287,6 +356,26 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
+	DeathBoard::GetInstance()->Update();
+
+	if (m_inGameMenuIsActive)
+	{
+		switch (m_inGameMenu->Update())
+		{
+		case IN_GAME_MENU_RESUME:
+			m_inGameMenuIsActive = false;
+			break;
+		case IN_GAME_MENU_TO_MAIN:
+			Network::GetInstance()->Disconnect();
+			return GAMESTATESWITCH_MENU;
+			break;
+		case IN_GAME_MENU_QUIT:
+			PostQuitMessage(0);
+			break;
+		default:
+			break;
+		}
+	}
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -316,6 +405,7 @@ void PlayingStateTest::Render()
 	m_minimap->Render();
 	m_teamStatusBar->Render();
 	m_countdown->Render();
+	DeathBoard::GetInstance()->Render();
 
 	// Render character outlining.
 	if (m_renderOutlining)
@@ -326,7 +416,10 @@ void PlayingStateTest::Render()
 		GraphicsEngine::GetInstance()->SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
 	}
-
+	if (m_inGameMenuIsActive)
+	{
+		m_inGameMenu->Render();
+	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

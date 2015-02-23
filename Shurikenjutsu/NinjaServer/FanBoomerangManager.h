@@ -35,12 +35,16 @@ public:
 
 private:
 	void BroadcastDestoyed(unsigned int p_id);
+	void BroadcastLifetime(unsigned int p_id, float p_lifeTime);
 	unsigned int GetUniqueId();
 
 	RakNet::RakPeerInterface *m_serverPeer;
 
 	std::vector<FanNet> m_fans;
 	std::vector<Box> m_boundingBoxes;
+
+	double m_sendIntervall;
+	double m_lastTimeSent;
 };
 
 #endif

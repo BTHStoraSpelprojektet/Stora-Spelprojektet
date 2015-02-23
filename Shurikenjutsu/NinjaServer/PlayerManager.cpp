@@ -29,6 +29,9 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_tessenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(TESSEN_NINJA_MODEL_NAME)->GetBoundingBoxes();
 	m_naginataBoundingBoxes = ModelLibrary::GetInstance()->GetModel(NAGINATA_NINJA_MODEL_NAME)->GetBoundingBoxes();
 
+	m_sendIntervall = 0.03;
+	m_lastTimeSent = 0.0;
+
 	return true;
 }
 
@@ -36,25 +39,13 @@ void PlayerManager::Shutdown(){}
 
 void PlayerManager::Update(double p_deltaTime)
 {
-	/*for (unsigned int i = 0; i < m_players.size(); i++)
+	m_lastTimeSent -= p_deltaTime;
+	if (m_lastTimeSent < 0)
 	{
-		if (m_players[i].gcd > 0.0f)
-		{
-			m_players[i].gcd -= (float)p_deltaTime;
-		}
-		if (m_players[i].cooldownAbilites.shurikenCD > 0.0f)
-		{
-			m_players[i].cooldownAbilites.shurikenCD -= (float)p_deltaTime;
-		}
-		if (m_players[i].cooldownAbilites.dashCD > 0.0f)
-		{
-			m_players[i].cooldownAbilites.dashCD -= (float)p_deltaTime;
-		}
-		if (m_players[i].cooldownAbilites.meleeSwingCD > 0.0f)
-		{
-			m_players[i].cooldownAbilites.meleeSwingCD -= (float)p_deltaTime;
-		}
-	}*/
+		m_lastTimeSent = m_sendIntervall;
+		// Send position and direction of players
+		SendPlayerPosAndDir();
+	}
 }
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
@@ -92,6 +83,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 	player.maxHP = m_playerHealth;
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
+	player.dotDamage = 0.0f;
 	m_players.push_back(player);
 
 	std::cout << "Player added" << std::endl;
@@ -347,7 +339,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		{
 			spikeTrapDistance = SPIKE_RANGE;
 		}
-		p_spikeTrap.AddSpikeTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
+		p_spikeTrap.AddSpikeTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* spikeTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance, m_players[index].team);
 
 		break;
 	case ABILITIES_WHIP_PRIMARY:
@@ -376,7 +368,9 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		{
 			stickyTrapDistance = STICKY_TRAP_RANGE;
 		}
-		p_stickyTrapManager.AddStickyTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* stickyTrapDistance, m_players[index].z + m_players[index].dirZ * spikeTrapDistance);
+
+		p_stickyTrapManager.AddStickyTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* stickyTrapDistance, m_players[index].z + m_players[index].dirZ * stickyTrapDistance);
+
 		break;
 	case ABILITIES_NAGAINATASTAB:
 		abilityString = "stabboooostabby";
@@ -417,18 +411,19 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_guid, float p_damage)
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
-		if (m_players[i].guid == p_guid)
+		if (m_players[i].guid == p_defendingGuid)
 		{
 			m_players[i].currentHP -= p_damage;
 			if (m_players[i].currentHP <= 0)
 			{
 				m_players[i].isAlive = false;
 			}
-			UpdateHealth(p_guid, m_players[i].currentHP, m_players[i].isAlive);
+			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
+			SendDealtDamage(p_attackingGuid, p_damage);
 		}
 	}
 }
@@ -454,6 +449,7 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool
 		reliability = RELIABLE;
 	}
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, reliability, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
 }
 
 float PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
@@ -499,4 +495,70 @@ int PlayerManager::GetTeamForPlayer()
 	}
 
 	return team2 >= team1 ? 1 : 2;
+}
+
+void PlayerManager::SendPlayerPos()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		RakNet::BitStream wBitStream;
+		wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
+		wBitStream.Write(m_players[i].guid);
+		wBitStream.Write(m_players[i].x);
+		wBitStream.Write(m_players[i].y);
+		wBitStream.Write(m_players[i].z);
+
+		m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	}
+}
+
+void PlayerManager::SendPlayerDir()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		RakNet::BitStream wBitStream;
+		wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
+		wBitStream.Write(m_players[i].guid);
+		wBitStream.Write(m_players[i].dirX);
+		wBitStream.Write(m_players[i].dirY);
+		wBitStream.Write(m_players[i].dirZ);
+
+		m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	}
+}
+void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage)
+{
+	RakNet::BitStream bitStream2;
+	bitStream2.Write((RakNet::MessageID)ID_HAS_INFLICTED_DAMAGE);
+	bitStream2.Write(p_attackingPlayerGUID);
+	bitStream2.Write(p_damage);
+	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 2, p_attackingPlayerGUID, false);
+}
+
+void PlayerManager::SendPlayerPosAndDir()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		RakNet::BitStream bitStream;
+
+		bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVE_AND_ROTATE);
+		bitStream.Write(m_players[i].guid);
+		bitStream.Write(m_players[i].x);
+		bitStream.Write(m_players[i].z);
+		bitStream.Write(m_players[i].dirX);
+		bitStream.Write(m_players[i].dirZ);
+
+		m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	}
+}
+
+void PlayerManager::SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			m_players[i].dotDamage = p_damage;
+		}
+	}
 }

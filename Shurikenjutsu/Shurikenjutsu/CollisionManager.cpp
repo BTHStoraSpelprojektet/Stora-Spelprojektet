@@ -247,3 +247,100 @@ void CollisionManager::Update(float p_pickedx, float p_pickedZ)
 	m_pickedLocation.x = p_pickedx;
 	m_pickedLocation.y = p_pickedZ;
 }
+float CollisionManager::CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer)
+{
+	DirectX::XMFLOAT3 tempPlayerPos = p_playerPos;
+	float returnValue = p_lengthFromPlayer;
+	float test = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+
+	tempPlayerPos.x -= 0.5f;
+	float test1 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+
+	tempPlayerPos = p_playerPos;
+	tempPlayerPos.x += 0.5f;
+	float test2 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+
+	tempPlayerPos = p_playerPos;
+	tempPlayerPos.z -= 0.5f;
+	float test3 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+
+	tempPlayerPos = p_playerPos;
+	tempPlayerPos.z += 0.5f;
+	float test4 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+
+	if (returnValue > test)
+	{
+		returnValue = test;
+	}
+	if (returnValue > test1)
+	{
+		returnValue = test1;
+	}
+	if (returnValue > test2)
+	{
+		returnValue = test2;
+	}
+	if (returnValue > test3)
+	{
+		returnValue = test3;
+	}
+	if (returnValue > test4)
+	{
+		returnValue = test4;
+	}
+	if (returnValue <= 0)
+	{
+		returnValue = 0.0;
+	}
+
+	return returnValue;
+}
+float CollisionManager::AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer)
+{
+	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_direction.x, 0.1f, p_direction.z);
+	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(p_playerPos.x, 0.1f, p_playerPos.z);
+	Ray* ray = new Ray(rayPos, rayDirection);
+	std::vector<float> rayLengths;
+	float returnValue = p_lengthFromPlayer;
+
+	// Go through static boxes
+	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+	{
+		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+	// Go through static spheres
+	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	{
+		Sphere tmpSphere = m_staticSphereList[i];
+		tmpSphere.m_position.y = 0.1f;
+		if (Collisions::RaySphereCollision(ray, tmpSphere))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+
+	if (ray != nullptr)
+	{
+		delete ray;
+		ray = nullptr;
+	}
+
+	//Go through the shortest intersecting object
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
+	{
+		if (rayLengths[i] < returnValue)
+		{
+			returnValue = rayLengths[i];
+		}
+	}
+	return returnValue;
+}

@@ -15,6 +15,7 @@ struct PlayerNet
 	int charNr;
 	bool isAlive;
 	float gcd;
+	float dotDamage;
 };
 
 struct ShurikenNet
@@ -60,6 +61,7 @@ struct SpikeNet
 	unsigned int spikeId;
 	float startX, startZ, endX, endZ;
 	float lifeTime, timeToLand;
+	int team;
 	RakNet::RakNetGUID guid;
 };
 struct StickyTrapNet
@@ -68,6 +70,7 @@ struct StickyTrapNet
 	float startX, startZ, endX, endZ;
 	float lifeTime, timeToLand;
 	RakNet::RakNetGUID guid;
+	int team;
 };
 struct VolleyNet
 {
@@ -108,12 +111,15 @@ enum Messages
 	ID_FAN_THROWN,
 	ID_FAN_REMOVE,
 	ID_FAN_UPDATE,
+	ID_FAN_DEAD_UPDATE,
 	ID_VOLLEY_THROWN,
 	ID_TIMER_SYNC,
 	ID_STICKYTRAP_THROW,
 	ID_STICKYTRAP_REMOVE,
 	ID_SEND_TEAM_SCORE,
-	ID_NAGINATA_STAB_HAS_OCCURED
+	ID_NAGINATA_STAB_HAS_OCCURED,
+	ID_HAS_INFLICTED_DAMAGE,
+	ID_PLAYER_MOVE_AND_ROTATE
 };
 
 #endif

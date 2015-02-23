@@ -17,6 +17,8 @@
 #include "VisibilityComputer.h"
 #include "Cursor.h"
 #include "ParticleRenderer.h"
+#include "DeathBoard.h"
+//#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -44,6 +46,9 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}
+
+	GLOBAL::GetInstance().CAMERA_MOVING = true;
+	GLOBAL::GetInstance().CAMERA_SPECTATE = false;
 
 	ConsolePrintSuccess("Application initialized.");
 	ConsoleSkipLines(1);
@@ -110,10 +115,13 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('l'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('v'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('r'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('o'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
+	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
+
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
@@ -152,6 +160,8 @@ void System::Shutdown()
 	// Shutdown network
 	Network::GetInstance()->Shutdown();
 
+	
+
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
 
@@ -162,11 +172,11 @@ void System::Shutdown()
 		m_sound = 0;
 	}
 
-	if (m_cursor != NULL)
+	if (m_cursor != nullptr)
 	{
 		m_cursor->Shutdown();
 		delete m_cursor;
-		m_cursor = NULL;
+		m_cursor = nullptr;
 	}
 
 	GUIManager::GetInstance()->Shutdown();
@@ -175,30 +185,30 @@ void System::Shutdown()
 	VisibilityComputer::GetInstance().Shutdown();
 
 	//Shutdown current state
-	if (m_menuState != NULL)
+	if (m_menuState != nullptr)
 	{
 		m_menuState->Shutdown();
 		delete m_menuState;
-		m_menuState = NULL;
+		m_menuState = nullptr;
 	}
-	if (m_playingState != NULL)
+	if (m_playingState != nullptr)
 	{
 		m_playingState->Shutdown();
 		delete m_playingState;
-		m_playingState = NULL;
+		m_playingState = nullptr;
 	}
-	if (m_chooseNinjaState != NULL)
+	if (m_chooseNinjaState != nullptr)
 	{
 		m_chooseNinjaState->Shutdown();
 		delete m_chooseNinjaState;
-		m_chooseNinjaState = NULL;
+		m_chooseNinjaState = nullptr;
 	}
 
 	if (m_timer)
 	{
 		m_timer->Shutdown();
 		delete m_timer;
-		m_timer = 0;
+		m_timer = nullptr;
 	}
 
 	ParticleRenderer::GetInstance()->Shutdown();
@@ -208,6 +218,9 @@ void System::Shutdown()
 
 	// Shutdown graphics engine.
 	GraphicsEngine::GetInstance()->Shutdown();
+
+	DeathBoard::GetInstance()->Shutdown();
+
 }
 
 void System::Run()
@@ -273,6 +286,17 @@ void System::Update()
 		}
 	}
 
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('o')))
+	{
+		if (!GLOBAL::GetInstance().CAMERA_MOVING)
+		{
+			GLOBAL::GetInstance().CAMERA_MOVING = true;
+		}
+		else
+		{
+			GLOBAL::GetInstance().CAMERA_MOVING = false;
+		}
+	}
 	switch (m_gameState->Update())
 	{
 	case GAMESTATESWITCH_CHOOSENINJA:
@@ -291,6 +315,7 @@ void System::Update()
 		break;
 	case GAMESTATESWITCH_MENU:
 		m_gameState = m_menuState;
+		m_gameState->EscapeIsPressed();
 		m_cursor->LargeSize();
 		break;
 	}
@@ -302,9 +327,24 @@ void System::Update()
 	Network::GetInstance()->Update();
 
 	// Quick escape.
-	if (GetAsyncKeyState(VK_ESCAPE))
+	if (InputManager::GetInstance()->IsKeyClicked(VK_ESCAPE))
 	{
-		PostQuitMessage(0);
+		if (m_gameState == m_menuState)
+		{
+			m_gameState->EscapeIsPressed();
+		}
+		if (m_gameState == m_chooseNinjaState)
+		{
+			//Back to menu
+			Network::GetInstance()->Disconnect();
+			m_gameState = m_menuState;
+			m_gameState->EscapeIsPressed();
+		}
+		if (m_gameState == m_playingState)
+		{
+			//In game menum
+			m_gameState->EscapeIsPressed();
+		}
 	}
 }
 

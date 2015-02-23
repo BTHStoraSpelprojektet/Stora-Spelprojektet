@@ -1,8 +1,10 @@
 #include "ChooseState.h"
 #include "Menu.h"
 #include "MenuItem.h"
-#include "TextureLibrary.h"
 #include "Network.h"
+#include "GUIText.h"
+#include "CharacterAbilityDescription.h"
+#include "TextureLibrary.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -49,6 +51,13 @@ bool ChooseState::Initialize()
 	m_ninjas[2]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
 	//m_ninjas[3]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja4.png"));
 
+	m_abilityDescription[0] = new CharacterAbilityDescription();
+	m_abilityDescription[1] = new CharacterAbilityDescription();
+	m_abilityDescription[2] = new CharacterAbilityDescription();
+	m_abilityDescription[0]->Initialize(1);
+	m_abilityDescription[1]->Initialize(2);
+	m_abilityDescription[2]->Initialize(3);
+
 	return true;
 }
 
@@ -60,7 +69,7 @@ void ChooseState::Shutdown()
 		delete m_chooseButton;
 		m_chooseButton = nullptr;
 	}
-	
+
 	for (unsigned int i = 0; i < 4; i++)
 	{
 		if (m_ninjas[i] != nullptr)
@@ -69,7 +78,16 @@ void ChooseState::Shutdown()
 			delete m_ninjas[i];
 			m_ninjas[i] = nullptr;
 		}
-	}	
+	}
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		if (m_abilityDescription[i] != nullptr)
+		{
+			m_abilityDescription[i]->Shutdown();
+			delete m_abilityDescription[i];
+			m_abilityDescription[i] = nullptr;
+		}
+	}
 }
 
 GAMESTATESWITCH ChooseState::Update()
@@ -102,6 +120,7 @@ void ChooseState::Render()
 	m_chooseButton->Render();
 
 	m_ninjas[currentNinja]->Render();
+	m_abilityDescription[currentNinja]->Render();
 }
 
 void ChooseState::NextNinja()
@@ -120,4 +139,8 @@ void ChooseState::PrevNinja()
 	{
 		currentNinja = nrOfNinjas - 1;
 	}
+}
+
+void ChooseState::EscapeIsPressed()
+{
 }

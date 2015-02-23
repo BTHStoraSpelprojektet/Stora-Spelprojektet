@@ -210,6 +210,7 @@ void InputManager::Set3DMousePosition(float p_x, float p_z)
 	m_3DMouseX = p_x;
 	m_3DMouseZ = p_z;
 }
+
 float InputManager::Get3DMousePositionX()
 {
 	return m_3DMouseX;
