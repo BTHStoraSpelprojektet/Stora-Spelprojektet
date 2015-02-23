@@ -836,14 +836,14 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 					if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 					{
 						// Damage the player
-						if (playerList[j].dotDamage > 1.0f)
+						if (playerList[i].dotDamage > 1.0f)
 						{
-							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].dotDamage, attackingPlayer.guid);
-							p_playerManager->SetPlayerDotDamage(playerList[j].guid, 0.0f);
+							p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, attackingPlayer.guid);
+							p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
 						}
 						else
 						{
-							p_playerManager->SetPlayerDotDamage(playerList[j].guid, playerList[j].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));;
+							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));;
 						}
 					}
 				}

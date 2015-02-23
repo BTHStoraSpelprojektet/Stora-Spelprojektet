@@ -13,6 +13,7 @@ class Minimap;
 class TeamStatusBar;
 class Countdown;
 class InGameMenu;
+class DeathBoard;
 
 class PlayingStateTest : public GameState
 {
