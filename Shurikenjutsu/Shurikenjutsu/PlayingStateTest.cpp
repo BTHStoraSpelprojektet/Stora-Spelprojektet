@@ -137,6 +137,15 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		return false;
 	}
 
+	/*=============== TESTING*/ 
+	m_testTrail = new Trail();
+	if (!m_testTrail->Initialize(5.0f, 1.0f, 0.5f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
+	{
+		ConsolePrintErrorAndQuit("Test trail failed to initialize!");
+	}
+	TrailRenderer::GetInstance().SetProjectionMatrix(m_camera->GetProjectionMatrix());
+	/*=============== TESTING*/
+
 	return true;
 }
 
@@ -201,6 +210,13 @@ void PlayingStateTest::Shutdown()
 	{
 		CollisionManager::GetInstance()->Shutdown();
 	}
+
+	/*=============== TESTING*/ 
+	if (m_testTrail)
+	{
+		m_testTrail->Shutdown();
+	}
+	/*=============== TESTING*/
 }
 
 GAMESTATESWITCH PlayingStateTest::Update()
@@ -324,7 +340,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		OnScreenResize();
 		resized = true;
 	} 
-
 	
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
 	Point bottomRight = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
@@ -349,6 +364,13 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update smokebomb shadow shapes.
 	ShadowShapes::GetInstance().Update();
+
+	/*=============== TESTING*/ 
+	TrailRenderer::GetInstance().SetViewMatrix(m_camera->GetViewMatrix());
+	float angle = atan(m_playerManager->GetPlayerDirection().z / m_playerManager->GetPlayerDirection().x);
+	player.y = 2.0f;
+	m_testTrail->Update(player, angle - DirectX::XM_PI * 0.5f);
+	/*=============== TESTING*/ 
 
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
@@ -393,6 +415,12 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->RenderFoliage();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 
+	/*=============== TESTING*/ 
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	m_testTrail->Render();
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+	/*=============== TESTING*/
+
 	if (FLAG_DEBUG == 1)
 	{
 		ShadowShapes::GetInstance().DebugRender();	
@@ -413,10 +441,12 @@ void PlayingStateTest::Render()
 		GraphicsEngine::GetInstance()->SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
 	}
+
 	if (m_inGameMenuIsActive)
 	{
 		m_inGameMenu->Render();
 	}
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

@@ -5,6 +5,8 @@
 #include "GameState.h"
 #include "DebugDraw.h"
 
+/*=============== TESTING*/ #include "Trail.h"
+
 class PlayerManager;
 class ObjectManager;
 class Frustum;
@@ -71,5 +73,7 @@ private:
 	int m_spectateIndex;
 	float m_spectateCountDown;
 	bool m_inGameMenuIsActive;
+
+	/*=============== TESTING*/ Trail* m_testTrail;
 };
 #endif PLAYINGSTATE

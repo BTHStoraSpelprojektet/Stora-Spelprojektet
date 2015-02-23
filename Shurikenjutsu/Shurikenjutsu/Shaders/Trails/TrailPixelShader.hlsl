@@ -15,7 +15,8 @@ float4 main(PixelInput p_input) : SV_TARGET
 	float4 pixel = (m_texture.Sample(m_sampler, p_input.m_UV)) * p_input.m_color;
 
 	// Fade the trail by time lived.	
-	pixel.w *= (p_input.m_timeValues.x - p_input.m_timeValues.y) / p_input.m_timeValues.x;
+	// TESTING. fade inte än.
+	//pixel.w *= (p_input.m_timeValues.x - p_input.m_timeValues.y) / p_input.m_timeValues.x;
 
 	return pixel;
 }

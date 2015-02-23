@@ -25,9 +25,9 @@ bool TrailRenderer::Initialize(ID3D11Device* p_device)
 	ID3D10Blob* vertexShader = 0;
 
 	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Trails/Particle/TrailVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Trails/TrailVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Trails/Particle/TrailVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Trails/TrailVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile trail vertex shader from file.");
 			return false;
@@ -233,6 +233,7 @@ bool TrailRenderer::Initialize(ID3D11Device* p_device)
 	DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixIdentity());
 	UpdateMatrixes();
 
+	ConsoleSkipLines(1);
 	return true;
 }
 
@@ -292,7 +293,7 @@ void TrailRenderer::RenderTrail(ID3D11Buffer* p_vertexBuffer, unsigned int p_poi
 	context->GSSetConstantBuffers(0, 1, &m_matrixBuffer);
 
 	context->IASetVertexBuffers(0, 1, &p_vertexBuffer, &stride, &offset);
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	context->IASetInputLayout(m_layout);
 
 	// Render the polygons.
