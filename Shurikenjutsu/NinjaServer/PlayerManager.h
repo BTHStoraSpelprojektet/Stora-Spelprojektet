@@ -34,13 +34,14 @@ public:
 
 	std::vector<PlayerNet> GetPlayers();
 	std::vector<Box> GetBoundingBoxes(int p_index);
-	void AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr);
+	void AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr);
 	bool MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed);
 	bool RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
 	void DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility);
+	bool CanSendDotDamage();
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 
@@ -81,6 +82,11 @@ private:
 	void SendPlayerPosAndDir();
 	double m_sendIntervall;
 	double m_lastTimeSent;
+
+	bool m_canSendDotDamage;
+	bool m_haveSentDotDamage;
+	double m_dotIntervall;
+	double m_lastDotSent;
 	
 };
 

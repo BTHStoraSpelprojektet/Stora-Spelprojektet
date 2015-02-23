@@ -858,16 +858,18 @@ void Network::Disconnect()
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }
 
-void Network::ChooseChar(int p_charNr)
+void Network::ChooseChar(int p_charNr, int p_toolNr)
 {
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
 	bitStream.Write(p_charNr);
+	bitStream.Write(p_toolNr);
 
 	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 
 	m_myPlayer.charNr = p_charNr;
+	m_myPlayer.toolNr = p_toolNr;
 }
 
 bool Network::IsConnected()
