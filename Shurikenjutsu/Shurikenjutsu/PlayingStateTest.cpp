@@ -40,14 +40,11 @@ void PlayingStateTest::EscapeIsPressed()
 {
 	if (m_inGameMenuIsActive)
 	{
-		//PostQuitMessage(0);
 		m_inGameMenuIsActive = false;
-		GLOBAL::GetInstance().CAMERA_MOVING = true;
 	}
 	else
 	{
 		m_inGameMenuIsActive = true;
-		GLOBAL::GetInstance().CAMERA_MOVING = false;
 	}
 }
 bool PlayingStateTest::Initialize(std::string p_levelName)

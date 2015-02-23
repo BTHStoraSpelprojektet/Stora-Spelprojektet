@@ -122,9 +122,9 @@ void GameState::Update(double p_deltaTime)
 	
 }
 
-void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
+void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr)
 {
-	m_playerManager->AddPlayer(p_guid, p_charNr);
+	m_playerManager->AddPlayer(p_guid, p_charNr, p_toolNr);
 }
 
 void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)
