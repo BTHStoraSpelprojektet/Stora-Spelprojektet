@@ -47,8 +47,8 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_rangeSpecialAttack = new VolleyAbility();
 	m_rangeSpecialAttack->Initialize();
 
-	m_toolAbility = new StickyTrapAbility();
-	m_toolAbility->Initialize();
+	/*m_toolAbility = new StickyTrapAbility();
+	m_toolAbility->Initialize();*/
 
 	SetOriginalSpeed(GetSpeed());
 	SetHealth(CHARACTER_NAGINATA_HEALTH);
@@ -81,7 +81,7 @@ void NaginataNinja::RenderAttackLocations()
 	{
 		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
 		{
-			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
 			m_aimPole->Render();
 			m_aimArrow->Render();

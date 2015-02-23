@@ -247,26 +247,26 @@ void CollisionManager::Update(float p_pickedx, float p_pickedZ)
 	m_pickedLocation.x = p_pickedx;
 	m_pickedLocation.y = p_pickedZ;
 }
-float CollisionManager::CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer)
+float CollisionManager::CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer, bool p_throwStuff)
 {
 	DirectX::XMFLOAT3 tempPlayerPos = p_playerPos;
 	float returnValue = p_lengthFromPlayer;
-	float test = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+	float test = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer, p_throwStuff);
 
 	tempPlayerPos.x -= 0.5f;
-	float test1 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+	float test1 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer, p_throwStuff);
 
 	tempPlayerPos = p_playerPos;
 	tempPlayerPos.x += 0.5f;
-	float test2 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+	float test2 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer, p_throwStuff);
 
 	tempPlayerPos = p_playerPos;
 	tempPlayerPos.z -= 0.5f;
-	float test3 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+	float test3 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer, p_throwStuff);
 
 	tempPlayerPos = p_playerPos;
 	tempPlayerPos.z += 0.5f;
-	float test4 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer);
+	float test4 = AttackPredictionLengthCalculation(tempPlayerPos, p_direction, p_lengthFromPlayer, p_throwStuff);
 
 	if (returnValue > test)
 	{
@@ -295,10 +295,15 @@ float CollisionManager::CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playe
 
 	return returnValue;
 }
-float CollisionManager::AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer)
+float CollisionManager::AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer, bool p_throwStuff)
 {
-	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_direction.x, 0.1f, p_direction.z);
-	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(p_playerPos.x, 0.1f, p_playerPos.z);
+	float height = 0.03f;
+	if (p_throwStuff)
+	{
+		height = 1.0f;
+	}
+	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_direction.x, height, p_direction.z);
+	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(p_playerPos.x, height, p_playerPos.z);
 	Ray* ray = new Ray(rayPos, rayDirection);
 	std::vector<float> rayLengths;
 	float returnValue = p_lengthFromPlayer;

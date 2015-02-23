@@ -11,7 +11,6 @@ bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_e
 	m_spikeBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
 
 	m_spikesTrap = new Object();
-	std::cout << p_team << std::endl;
 	if (p_team == 1)
 	{
 		m_spikesTrap->Initialize("../Shurikenjutsu/Models/CaltropFieldTCRedShape.SSP", p_endPosition);
