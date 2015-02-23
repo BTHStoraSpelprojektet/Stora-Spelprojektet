@@ -177,7 +177,8 @@ std::string AbilityBar::GetAbility4Name()
 
 std::string AbilityBar::GetAbility5Name()
 {
-	switch (Network::GetInstance()->GetMyPlayer().charNr)
+	//ändra för toolnr istället
+	switch (Network::GetInstance()->GetMyPlayer().toolNr)
 	{
 	case 0:
 	{

@@ -1113,3 +1113,8 @@ void Player::StillCDText()
 	int temp = std::rand() % 5;
 	m_floatingText->SetcantUseAbilityText(temp);
 }
+
+void Player::ChooseTool()
+{
+
+}

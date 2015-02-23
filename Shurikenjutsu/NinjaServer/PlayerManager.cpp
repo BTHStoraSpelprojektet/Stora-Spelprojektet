@@ -53,7 +53,7 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 	return m_players;
 }
 
-void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
+void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr)
 {
 	if (p_charNr == 0)
 	{
@@ -84,6 +84,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr)
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
 	player.dotDamage = 0.0f;
+	player.toolNr = p_toolNr;
 	m_players.push_back(player);
 
 	std::cout << "Player added" << std::endl;
