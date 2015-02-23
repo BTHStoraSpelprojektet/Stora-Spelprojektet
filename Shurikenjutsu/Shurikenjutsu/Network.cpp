@@ -774,19 +774,38 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-			RakNet::RakNetGUID guid;
+			uint64_t guidg;
+			signed short mantissa1;
+			signed char mantissa2;
+			signed char exp;
 			float posX, posZ;
 			float dirX, dirZ;
 
 			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			bitStream.Read(posX);
-			bitStream.Read(posZ);
-			bitStream.Read(dirX);
-			bitStream.Read(dirZ);
+			bitStream.Read(guidg);
 
-			UpdatePlayerPos(guid, posX, 0.0f, posZ);
-			UpdatePlayerDir(guid, dirX, 0.0f, dirZ);
+			// pos x
+			bitStream.Read(mantissa1);
+			bitStream.Read(exp);
+			posX = ((float)mantissa1 / 10000.0f) * powf(2.0f, (float)exp);
+
+			// pos z
+			bitStream.Read(mantissa1);
+			bitStream.Read(exp);
+			posZ = ((float)mantissa1 / 10000.0f) * powf(2.0f, (float)exp);
+
+			// dir x
+			bitStream.Read(mantissa2);
+			bitStream.Read(exp);
+			dirX = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
+
+			// dir z
+			bitStream.Read(mantissa2);
+			bitStream.Read(exp);
+			dirZ = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
+
+			UpdatePlayerPos(guidg, posX, 0.0f, posZ);
+			UpdatePlayerDir(guidg, dirX, 0.0f, dirZ);
 			break;
 		}
 		default:
@@ -899,6 +918,30 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 	
 }
 
+void Network::UpdatePlayerPos(uint64_t p_owner, float p_x, float p_y, float p_z)
+{
+	if (p_owner == m_clientPeer->GetMyGUID().g)
+	{
+		m_myPlayer.x = p_x;
+		m_myPlayer.y = p_y;
+		m_myPlayer.z = p_z;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid.g == p_owner)
+			{
+				m_enemyPlayers[i].x = p_x;
+				m_enemyPlayers[i].y = p_y;
+				m_enemyPlayers[i].z = p_z;
+
+				break;
+			}
+		}
+	}
+}
+
 void Network::UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ)
 {
 	if (p_owner == m_clientPeer->GetMyGUID())
@@ -912,6 +955,29 @@ void Network::UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_
 		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 		{
 			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].dirX = p_dirX;
+				m_enemyPlayers[i].dirY = p_dirY;
+				m_enemyPlayers[i].dirZ = p_dirZ;
+				break;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerDir(uint64_t p_owner, float p_dirX, float p_dirY, float p_dirZ)
+{
+	if (p_owner == m_clientPeer->GetMyGUID().g)
+	{
+		m_myPlayer.dirX = p_dirX;
+		m_myPlayer.dirY = p_dirY;
+		m_myPlayer.dirZ = p_dirZ;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid.g == p_owner)
 			{
 				m_enemyPlayers[i].dirX = p_dirX;
 				m_enemyPlayers[i].dirY = p_dirY;

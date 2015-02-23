@@ -539,14 +539,33 @@ void PlayerManager::SendPlayerPosAndDir()
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
+		int exp;
+		float mantissa;
 		RakNet::BitStream bitStream;
 
 		bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVE_AND_ROTATE);
-		bitStream.Write(m_players[i].guid);
-		bitStream.Write(m_players[i].x);
-		bitStream.Write(m_players[i].z);
-		bitStream.Write(m_players[i].dirX);
-		bitStream.Write(m_players[i].dirZ);
+		bitStream.Write(m_players[i].guid.g);
+
+		// pos x
+		mantissa = frexpf(m_players[i].x, &exp);
+		bitStream.Write((signed short)(mantissa * 10000.0f));
+		bitStream.Write((signed char)exp);
+		
+		// pos z
+		mantissa = frexpf(m_players[i].z, &exp);
+		bitStream.Write((signed short)(mantissa * 10000.0f));
+		bitStream.Write((signed char)exp);
+		
+		// dir x
+		mantissa = frexpf(m_players[i].dirX, &exp);
+		bitStream.Write((signed char)(mantissa * 100.0f));
+		bitStream.Write((signed char)exp);
+
+		// dir z
+		mantissa = frexpf(m_players[i].dirZ, &exp);
+		bitStream.Write((signed char)(mantissa * 100.0f));
+		bitStream.Write((signed char)exp);
+
 
 		m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 	}
