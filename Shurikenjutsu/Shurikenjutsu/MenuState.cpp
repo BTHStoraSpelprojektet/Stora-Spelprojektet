@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Frustum.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "MenuItem.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -25,6 +26,11 @@ const float VSYNCHEIGHT = 59.0f;
 const float FULLSCREENWIDTH = 173.0f;
 const float FULLSCREENHEIGHT = 58.0f;
 
+// LOGO
+const float LOGOPOSX = 0.0f;
+const float LOGOPOSY = 250.0f;
+const float LOGOWIDTH = 900.0f;
+const float LOGOHEIGHT = 307.0f;
 
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
@@ -43,6 +49,10 @@ bool MenuState::Initialize()
 {
 	m_lastvsync = false;
 	m_lastfullscreen = false;
+
+	// Initialize logo
+	m_logo = new MenuItem();
+	m_logo->Initialize(LOGOPOSX, LOGOPOSY, LOGOWIDTH, LOGOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Logo_Shurikenjutsu.png"));
 
 	// Initialize options menu
 	m_options = new Menu();
@@ -69,7 +79,7 @@ bool MenuState::Initialize()
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);
-	m_play->AddButton(0.0f, -2.0f*BUTTONHEIGHT -3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	m_play->AddButton(0.0f, -2.0f*BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 	m_play->AddTexture(0.0f, 96.0f, 97.0f, 96.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ip_text.png"));
 	m_hideIpBox = true;
 
@@ -163,6 +173,13 @@ void MenuState::Shutdown()
 		m_frustum->Shutdown();
 		delete m_frustum;
 		m_frustum = nullptr;
+	}
+
+	if (m_logo != nullptr)
+	{
+		m_logo->Shutdown();
+		delete m_logo;
+		m_logo = nullptr;
 	}
 }
 
@@ -300,6 +317,8 @@ void MenuState::Render()
 			m_menues.top()->Render();
 		}
 	}
+
+	m_logo->Render();
 
 
 

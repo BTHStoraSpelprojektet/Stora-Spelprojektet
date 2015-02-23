@@ -442,7 +442,7 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid)
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -452,6 +452,17 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			if (m_players[i].currentHP <= 0)
 			{
 				m_players[i].isAlive = false;
+				
+				// Loop throu players to get ninja nr
+				for (unsigned int j = 0; j < m_players.size(); j++)
+				{
+					if (m_players[j].guid == p_attackingGuid)
+					{
+						// Send to deathboard
+						DeathBoard(m_players[i].charNr, m_players[j].charNr, p_usedAbility);
+						break;
+					}
+				}
 			}
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			SendDealtDamage(p_attackingGuid, p_damage);
@@ -481,6 +492,16 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool
 	}
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, reliability, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
+}
+
+void PlayerManager::DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility)
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_DEATHBOARDKILL);
+	bitStream.Write(p_TakerNinja);
+	bitStream.Write(p_AttackerNinja);
+	bitStream.Write(p_usedAbility);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 float PlayerManager::GetPlayerHealth(RakNet::RakNetGUID p_guid)
@@ -570,14 +591,33 @@ void PlayerManager::SendPlayerPosAndDir()
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
+		int exp;
+		float mantissa;
 		RakNet::BitStream bitStream;
 
 		bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVE_AND_ROTATE);
-		bitStream.Write(m_players[i].guid);
-		bitStream.Write(m_players[i].x);
-		bitStream.Write(m_players[i].z);
-		bitStream.Write(m_players[i].dirX);
-		bitStream.Write(m_players[i].dirZ);
+		bitStream.Write(m_players[i].guid.g);
+
+		// pos x
+		mantissa = frexpf(m_players[i].x, &exp);
+		bitStream.Write((signed short)(mantissa * 10000.0f));
+		bitStream.Write((signed char)exp);
+		
+		// pos z
+		mantissa = frexpf(m_players[i].z, &exp);
+		bitStream.Write((signed short)(mantissa * 10000.0f));
+		bitStream.Write((signed char)exp);
+		
+		// dir x
+		mantissa = frexpf(m_players[i].dirX, &exp);
+		bitStream.Write((signed char)(mantissa * 100.0f));
+		bitStream.Write((signed char)exp);
+
+		// dir z
+		mantissa = frexpf(m_players[i].dirZ, &exp);
+		bitStream.Write((signed char)(mantissa * 100.0f));
+		bitStream.Write((signed char)exp);
+
 
 		m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 	}

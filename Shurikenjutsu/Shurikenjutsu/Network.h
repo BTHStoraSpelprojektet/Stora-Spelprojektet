@@ -147,7 +147,10 @@ private:
 	void ReceviePacket();
 	void UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
 	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
+	void UpdatePlayerPos(uint64_t p_owner, float p_x, float p_y, float p_z);
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
+	void UpdatePlayerDir(uint64_t p_owner, float p_dirX, float p_dirY, float p_dirZ);
+
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive);
