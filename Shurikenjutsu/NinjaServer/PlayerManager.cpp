@@ -32,6 +32,11 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_sendIntervall = 0.03;
 	m_lastTimeSent = 0.0;
 
+	m_dotIntervall = 0.1;
+	m_lastDotSent = 0.0;
+	m_canSendDotDamage = true;
+	m_haveSentDotDamage = false;
+
 	return true;
 }
 
@@ -39,12 +44,26 @@ void PlayerManager::Shutdown(){}
 
 void PlayerManager::Update(double p_deltaTime)
 {
+	// Timer for sending position and direction
 	m_lastTimeSent -= p_deltaTime;
 	if (m_lastTimeSent < 0)
 	{
 		m_lastTimeSent = m_sendIntervall;
 		// Send position and direction of players
 		SendPlayerPosAndDir();
+	}
+
+	// Timer for dot damage
+	m_lastDotSent -= p_deltaTime;
+	if (m_haveSentDotDamage)
+	{
+		m_canSendDotDamage = false;
+		m_haveSentDotDamage = false;
+	}
+	if (m_lastDotSent < 0)
+	{
+		m_lastDotSent = m_dotIntervall;
+		m_canSendDotDamage = true;
 	}
 }
 
@@ -601,4 +620,10 @@ void PlayerManager::SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage
 			m_players[i].dotDamage = p_damage;
 		}
 	}
+}
+
+bool PlayerManager::CanSendDotDamage()
+{
+	m_haveSentDotDamage = true;
+	return m_canSendDotDamage;
 }

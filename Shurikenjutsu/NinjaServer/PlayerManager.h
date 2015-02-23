@@ -41,6 +41,7 @@ public:
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
 	void DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility);
+	bool CanSendDotDamage();
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
 
@@ -81,6 +82,11 @@ private:
 	void SendPlayerPosAndDir();
 	double m_sendIntervall;
 	double m_lastTimeSent;
+
+	bool m_canSendDotDamage;
+	bool m_haveSentDotDamage;
+	double m_dotIntervall;
+	double m_lastDotSent;
 	
 };
 
