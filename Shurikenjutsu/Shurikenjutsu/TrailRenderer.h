@@ -12,7 +12,7 @@ struct TrailPoint
 	float m_width;
 	DirectX::XMFLOAT2 m_timeValues;
 	DirectX::XMFLOAT4 m_color;
-	bool m_endpoint;
+	float m_endpoint;
 };
 
 class TrailRenderer
@@ -20,7 +20,7 @@ class TrailRenderer
 public:
 	static TrailRenderer& GetInstance();
 
-	bool Initialize();
+	bool Initialize(ID3D11Device* p_device);
 	void Shutdown();
 
 	void RenderTrail(ID3D11Buffer* p_vertexBuffer, unsigned int p_points, ID3D11ShaderResourceView* p_texture);

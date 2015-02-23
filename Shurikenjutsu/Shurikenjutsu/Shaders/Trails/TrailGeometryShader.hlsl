@@ -12,7 +12,7 @@ struct GeometryInput
 	float m_width : WIDTH;
 	float2 m_timeValues : TIMES;
 	float4 m_color : COLOR;
-	bool m_endpoint : BOOL;
+	float m_endpoint : BOOL;
 };
 
 struct GeometryOutput
@@ -71,7 +71,7 @@ void main(line GeometryInput p_input[2], inout TriangleStream<GeometryOutput> p_
 	float3 b2;
 
 	// Calculate corners for tile segments.
-	if (!p_input[1].m_endpoint)
+	if (p_input[1].m_endpoint == 0.0f)
 	{
 		t1 = float3(p_input[0].m_position.x - (cos(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z + (sin(p_input[0].m_angle) * p_input[0].m_width));
 		t2 = float3(p_input[0].m_position.x - (cos(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z - (sin(p_input[0].m_angle) * p_input[0].m_width));
@@ -117,7 +117,7 @@ void main(line GeometryInput p_input[2], inout TriangleStream<GeometryOutput> p_
 	uv[8] = float2(0.0f, 1.0f);
 
 	// If this is the end of the trail, remove one triangle.
-	if (!p_input[1].m_endpoint)
+	if (p_input[1].m_endpoint == 0.0f)
 	{
 		// Triangle 4, bottom right.
 		position[9] = float4(m2, 1.0f);
@@ -142,7 +142,7 @@ void main(line GeometryInput p_input[2], inout TriangleStream<GeometryOutput> p_
 		p_output.Append(output);
 	}
 
-	uint last = 12 - p_input[1].m_endpoint;
+	uint last = 12 - (int)p_input[1].m_endpoint;
 
 	[unroll] // Bottom quad.
 	for (uint j = 5; j < 12 - last; j++)

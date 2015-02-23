@@ -1,8 +1,6 @@
 #include "Trail.h"
 #include "TextureLibrary.h"
 #include "Globals.h"
-#include "GraphicsEngine.h"
-#include "ConsoleFunctions.h"
 
 Trail::Trail()
 {

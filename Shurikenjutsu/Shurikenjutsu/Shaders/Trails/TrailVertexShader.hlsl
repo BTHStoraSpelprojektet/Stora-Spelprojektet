@@ -5,7 +5,7 @@ struct TrailPoint
 	float m_width : WIDTH;
 	float2 m_timeValues : TIMES;
 	float4 m_color : COLOR;
-	bool m_endpoint : BOOL;
+	float m_endpoint : BOOL;
 };
 
 TrailPoint main(TrailPoint p_input)
