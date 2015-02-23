@@ -4,7 +4,7 @@
 #include "ProjectileManager.h"
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
-
+#include "../Shurikenjutsu/ConsoleFunctions.h"
 
 NormalState::NormalState(){}
 NormalState::~NormalState(){}
@@ -238,7 +238,17 @@ void NormalState::SendWinningTeam(int p_winningTeam)
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-	std::cout << "Team " << p_winningTeam << " won this round\n";
+	if (p_winningTeam == 1)
+	{
+		ConsolePrintText("The red team won this match!");
+		ConsoleSkipLines(1);
+	}
+
+	else
+	{
+		ConsolePrintText("The blue team won this match!");
+		ConsoleSkipLines(1);
+	}
 }
 
 void NormalState::SendRestartedRound()
@@ -258,7 +268,8 @@ void NormalState::SendRestartingRound()
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-	std::cout << "Restarting round in: \n";
+	ConsolePrintText("Next round starts in: ");
+	ConsoleSkipLines(1);
 }
 
 void NormalState::SendRestartingRoundTime(int p_time)
@@ -270,15 +281,17 @@ void NormalState::SendRestartingRoundTime(int p_time)
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_SEQUENCED, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-	std::cout << p_time << "\n";
+	ConsolePrintText(p_time + "...");
+	ConsoleSkipLines(1);
 }
 
 void NormalState::StartNewLevel()
 {
-	std::cout << "New level initializing\n";
 	Shutdown();
 	Initialize(LEVEL_NAME);
-	std::cout << "New level finished initializing\n";
+
+	ConsolePrintSuccess("New level initialized!");
+	ConsoleSkipLines(1);
 
 	RakNet::BitStream bitStream;
 

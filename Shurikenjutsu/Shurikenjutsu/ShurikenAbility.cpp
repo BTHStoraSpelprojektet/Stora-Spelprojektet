@@ -23,7 +23,7 @@ void ShurikenAbility::Update()
 	if (m_stacks < SHURIKEN_MAX_STACK && GetCooldown() <= 0.0)
 	{
 		m_stacks += 1;
-		//std::cout << "U gained a stack!" << std::endl;
+
 		if (m_stacks < SHURIKEN_MAX_STACK)
 		{
 			SetCooldown(SHURIKEN_COOLDOWN);

@@ -370,20 +370,6 @@ void Network::ReceviePacket()
 
 			break;
 		}
-		case ID_ABILITY:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			ABILITIES abilityEnum;
-			RakNet::RakString abilityString;
-			bitStream.Read(messageID);
-			bitStream.Read(abilityEnum);
-			bitStream.Read(abilityString);
-
-			std::cout << " " << abilityString << std::endl;
-
-			break;
-		}
 		case ID_ROUND_OVER:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -398,13 +384,19 @@ void Network::ReceviePacket()
 			if (winningTeam == 1)
 			{
 				m_redTeamScore++;
+
+				ConsolePrintText("The red team won this round!");
+				ConsoleSkipLines(1);
 			}
 			else if (winningTeam == 2)
 			{
 				m_blueTeamScore++;
+
+				ConsolePrintText("The blue team won this round!");
+				ConsoleSkipLines(1);
 			}
 			m_lastTeamWon = winningTeam;
-			std::cout << "Team " << winningTeam << " won this round\n";
+
 			break;
 		}
 		case ID_RESTARTED_ROUND:
@@ -417,7 +409,9 @@ void Network::ReceviePacket()
 			m_restartingRound = false;
 			m_timeRestarting = 0;
 			ClearListsAtNewRound();
-			std::cout << "New round has started\n";
+
+			ConsolePrintSuccess("A new round has started!");
+			ConsoleSkipLines(1);
 			break;
 
 		}
@@ -428,7 +422,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			m_restartingRound = true;
 			
-			std::cout << "Restarting round in:\n";
+			ConsolePrintText("Next round starts in: ");
+			ConsoleSkipLines(1);
 			break;
 		}
 		case ID_RESTARTING_ROUND_TIMER:
@@ -442,7 +437,8 @@ void Network::ReceviePacket()
 
 			m_timeRestarting = time;
 
-			std::cout << time << std::endl;
+			ConsolePrintText(time + "...");
+			ConsoleSkipLines(1);
 			break;
 		}
 		case ID_SMOKEBOMB_THROW:
@@ -485,7 +481,18 @@ void Network::ReceviePacket()
 			m_matchOver = true;
 			m_matchWinningTeam = winningTeam;
 
-			std::cout << "Team " << winningTeam << " won this match\n";
+			if (winningTeam == 1)
+			{
+				ConsolePrintText("The red team won this match!");
+				ConsoleSkipLines(1);
+			}
+
+			else
+			{
+				ConsolePrintText("The blue team won this match!");
+				ConsoleSkipLines(1);
+			}
+
 			break;
 		}
 		case ID_NEW_LEVEL:
@@ -505,7 +512,8 @@ void Network::ReceviePacket()
 			m_matchWinningTeam = 0;
 			m_restartingRound = false;
 
-			std::cout << "Starting new level\n";
+			ConsolePrintSuccess("Starting a new match.");
+			ConsoleSkipLines(1);
 			break;
 		}
 		case ID_PLAYER_ANIMATION_CHANGED:
@@ -519,7 +527,7 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 			bitStream.Read(state);
 
-			// Todo: Update local player animation
+			// TODO, update local player animation.
 			m_playerAnimations[guid] = state;
 			break;
 		}
@@ -799,14 +807,18 @@ void Network::ReceviePacket()
 
 void Network::Connect(std::string p_ip)
 {
-	std::cout << "Connecting to: " << p_ip << std::endl;
+	ConsolePrintText("Connecting to IP (v4): " + p_ip);
+	ConsoleSkipLines(1);
+
 	m_ip = p_ip;
 	m_clientPeer->Connect(m_ip.c_str(), SERVER_PORT, 0, 0);
 }
 
 void Network::Disconnect()
 {
-	std::cout << "Disconnecting from server" << std::endl;
+	ConsolePrintText("Disconnected from server");
+	ConsoleSkipLines(1);
+
 	m_clientPeer->Shutdown(300);
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }

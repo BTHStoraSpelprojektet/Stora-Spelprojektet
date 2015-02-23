@@ -256,7 +256,6 @@ void FoliageShader::ReadRawFile()
 		inFile.close();
 	}
 
-	int grass = 0;
 	FoliageVertex newVert;
 
 	float r1;
@@ -280,13 +279,10 @@ void FoliageShader::ReadRawFile()
 
 					newVert.m_offset = DirectX::XMFLOAT2(r1, r2);
 					m_vertices.push_back(newVert);
-					grass++;
 				}
 			}
 		}
 	}
-
-	std::cout << grass << std::endl;
 }
 
 void FoliageShader::Shutdown()
