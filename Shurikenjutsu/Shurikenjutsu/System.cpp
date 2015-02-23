@@ -135,6 +135,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	{
 		ConsolePrintSuccess("Sound initialized successfully.");
 		ConsoleSkipLines(1);
+		m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
+		m_playingState->SetSound(m_sound);
 	}
 
 	// Initialize the network.

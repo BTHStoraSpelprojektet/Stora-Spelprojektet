@@ -15,7 +15,13 @@ bool Sound::Initialize()
 	m_result = m_system->init(512, FMOD_INIT_NORMAL, 0);
 	FMODErrorCheck(m_result);
 
-	m_result = m_system->createStream("../Shurikenjutsu/Sound/257375__zagi2__slap-bass-brass-loop.wav", FMOD_DEFAULT, 0, &m_backgroundSound);
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/BG_music.wav", FMOD_DEFAULT, 0, &m_backgroundSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/KunaiHit.wav", FMOD_DEFAULT, 0, &m_kunaiHitSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/KunaiThrow.wav", FMOD_DEFAULT, 0, &m_kunaiThrowSound);
 	FMODErrorCheck(m_result);
 	
 	// EXTRA KOD FÖR EXTRA KOLLAR
@@ -77,6 +83,16 @@ void Sound::PlaySound(PLAYSOUND p_playSound)
 		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
 		m_backgroundSound->setLoopCount(1);
 		m_system->playSound(m_backgroundSound, 0, false, 0);
+		break;
+	case PLAYSOUND_KUNAI_THROW_SOUND:
+		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
+		m_backgroundSound->setLoopCount(1);
+		m_system->playSound(m_kunaiThrowSound, 0, false, 0);
+		break;
+	case PLAYSOUND_KUNAI_HIT_SOUND:
+		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
+		m_backgroundSound->setLoopCount(1);
+		m_system->playSound(m_kunaiHitSound, 0, false, 0);
 		break;
 	default:
 		break;

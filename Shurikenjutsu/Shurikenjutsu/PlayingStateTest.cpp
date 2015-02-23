@@ -70,6 +70,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initialize the object manager.
 	m_objectManager = new ObjectManager();
 	m_objectManager->Initialize(&level);
+	m_objectManager->SetSound(m_sound);
 
 	// Load and place arena walls.
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
@@ -560,4 +561,8 @@ void PlayingStateTest::OnScreenResize()
 
 	// Tell the graphics engine that changes have been handled.
 	GraphicsEngine::GetInstance()->ScreenChangeHandled();
+}
+
+void PlayingStateTest::SetSound(Sound* p_sound){
+	m_sound = p_sound;
 }

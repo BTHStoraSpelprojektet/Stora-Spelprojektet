@@ -679,6 +679,7 @@ void ObjectManager::RenderDepth()
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
 {
+	m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_THROW_SOUND);
 	Shuriken *tempShuriken;
 	tempShuriken = new Shuriken();
 	tempShuriken->Initialize(p_filepath, p_pos, p_dir, p_shurikenID);
@@ -971,3 +972,8 @@ void ObjectManager::ResetListSinceRoundRestarted()
 	}
 	m_volleys.clear();
 }
+
+void ObjectManager::SetSound(Sound* p_sound){
+	m_sound = p_sound;
+}
+

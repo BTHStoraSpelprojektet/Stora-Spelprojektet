@@ -5,7 +5,9 @@
 
 enum PLAYSOUND
 {
-	PLAYSOUND_BACKGROUND_SOUND
+	PLAYSOUND_BACKGROUND_SOUND,
+	PLAYSOUND_KUNAI_THROW_SOUND,
+	PLAYSOUND_KUNAI_HIT_SOUND
 };
 
 class Sound
@@ -32,6 +34,8 @@ private:
 
 
 	FMOD::Sound *m_backgroundSound;
+	FMOD::Sound *m_kunaiThrowSound;
+	FMOD::Sound *m_kunaiHitSound;
 	FMOD::Channel *m_channel;
 };
 #endif
