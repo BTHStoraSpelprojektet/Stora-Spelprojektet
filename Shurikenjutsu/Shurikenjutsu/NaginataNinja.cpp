@@ -81,7 +81,7 @@ void NaginataNinja::RenderAttackLocations()
 	{
 		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
 		{
-			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
 			m_aimPole->Render();
 			m_aimArrow->Render();
