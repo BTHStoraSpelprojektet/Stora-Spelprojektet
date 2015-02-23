@@ -7,6 +7,9 @@
 
 class Menu;
 class MenuItem;
+class GUIText;
+class CharacterAbilityDescription;
+
 
 class ChooseState : public GameState
 {
@@ -26,6 +29,7 @@ private:
 	Menu* m_chooseButton;
 
 	MenuItem *m_ninjas[4];
+	CharacterAbilityDescription *m_abilityDescription[4];
 
 	int currentNinja;
 	int nrOfNinjas;

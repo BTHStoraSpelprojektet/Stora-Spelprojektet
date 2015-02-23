@@ -461,6 +461,9 @@
     <ClCompile Include="DeathBoard.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="CharacterAbilityDescription.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -773,6 +776,12 @@
       <Filter>Header Files\GUI\Menu</Filter>
     </ClInclude>
     <ClInclude Include="DeathBoard.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextResource.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterAbilityDescription.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
