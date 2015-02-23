@@ -175,11 +175,11 @@ void MenuState::Shutdown()
 		m_frustum = nullptr;
 	}
 
-	if (m_logo != NULL)
+	if (m_logo != nullptr)
 	{
 		m_logo->Shutdown();
 		delete m_logo;
-		m_logo = NULL;
+		m_logo = nullptr;
 	}
 }
 
