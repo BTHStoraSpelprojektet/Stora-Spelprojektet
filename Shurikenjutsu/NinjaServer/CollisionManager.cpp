@@ -95,7 +95,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos))
 				{
 					// Damage the player
-					p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid);
+					p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid, p_ability);
 					break;
 				}
 			}
@@ -163,7 +163,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 					{
 						float damage = shurikenList[i].megaShuriken ? (float)MEGASHURIKEN_DAMAGE : (float)SHURIKEN_DAMAGE;
 						
-						p_playerManager->DamagePlayer(playerList[j].guid, damage, shurikenList[i].guid);
+						p_playerManager->DamagePlayer(playerList[j].guid, damage, shurikenList[i].guid, ABILITIES_SHURIKEN);
 
 						// Remove shuriken
 						p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
@@ -237,6 +237,7 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 
 void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectileManager, PlayerManager* p_playerManager)
 {
+	ABILITIES ability;
 	float radius = 1.0f;
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
 	std::vector<ProjectileNet> projectileList = p_projectileManager->GetProjectiles();
@@ -249,14 +250,17 @@ void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectile
 		if (projectileList[i].projType == 0)
 		{
 			//projectileBoundingBoxes = p_projectileManager->GetBoundingBoxes(i);
+			ability = ABILITIES_SHURIKEN;
 		}
 		else if (projectileList[i].projType == 1)
 		{
 			//projectileBoundingBoxes = p_projectileManager->GetMegaBoundingBoxes(i);
+			ability = ABILITIES_MEGASHURIKEN;
 		}
 		else //if (projectileList[i].projType == 2)
 		{
 			projectileBoundingBoxes = p_projectileManager->GetKunaiBoundingBoxes(i);
+			ability = ABILITIES_KUNAI;
 		}
 
 
@@ -295,7 +299,7 @@ void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectile
 					{
 						float damage = KUNAI_DAMAGE;//= projectileList[i].megaShuriken ? (float)MEGASHURIKEN_DAMAGE : (float)SHURIKEN_DAMAGE;
 
-						p_playerManager->DamagePlayer(playerList[j].guid, damage, projectileList[i].guid);
+						p_playerManager->DamagePlayer(playerList[j].guid, damage, projectileList[i].guid, ability);
 
 						// Remove shuriken
 						p_projectileManager->RemoveProjectile(projectileList[i].uniqueId);
@@ -455,7 +459,7 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 					{
 						float damage = FANBOOMERANG_DAMAGE*(float)p_deltaTime;
 
-						p_playerManager->DamagePlayer(playerList[j].guid, damage, fanList[i].guid);
+						p_playerManager->DamagePlayer(playerList[j].guid, damage, fanList[i].guid, ABILITIES_FANBOOMERANG);
 						collisionFound = true;
 						break;
 					}
@@ -663,7 +667,7 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 					{
 						if (playerList[j].dotDamage > 1.0f)
 						{
-							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].dotDamage, owner.guid);
+							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].dotDamage, owner.guid, ABILITIES_SPIKETRAP);
 							p_playerManager->SetPlayerDotDamage(playerList[j].guid, 0.0f);
 						}
 						else
@@ -715,7 +719,7 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 				if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 				{
 				// Damage the player
-				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE, attackingPlayer.guid);
+				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE, attackingPlayer.guid, ABILITIES_WHIP_PRIMARY);
 
 				if (whipRay != nullptr)
 				{
@@ -768,7 +772,7 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 			if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 			{
 			// Damage the player
-			p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE, attackingPlayer.guid);
+				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE, attackingPlayer.guid, ABILITIES_WHIP_SECONDARY);
 		}
 	}
 }
@@ -838,7 +842,7 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 						// Damage the player
 						if (playerList[i].dotDamage > 1.0f)
 						{
-							p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, attackingPlayer.guid);
+							p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, attackingPlayer.guid, ABILITIES_NAGAINATASTAB);
 							p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
 						}
 						else
@@ -998,7 +1002,7 @@ void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, Pla
 					if (SphereSphereTest(Sphere(volleyPos, VOLLEY_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 					{
 						float damage = VOLLEY_DAMAGE;
-						p_playerManager->DamagePlayer(playerList[j].guid, damage, owner.guid);
+						p_playerManager->DamagePlayer(playerList[j].guid, damage, owner.guid, ABILITIES_VOLLEY);
 						break;
 					}
 				}

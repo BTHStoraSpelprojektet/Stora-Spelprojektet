@@ -87,11 +87,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize model library.
 	ModelLibrary::GetInstance()->Initialize(new Model());
-	ConsolePrintSuccess("No more models to load.");
+	ConsolePrintSuccess("All models loaded.");
 	ConsoleSkipLines(1);
 
 	TextureLibrary::GetInstance()->Initialize();
-	ConsolePrintSuccess("No more textures to load.");
+	ConsolePrintSuccess("All textures loaded.");
 	ConsoleSkipLines(1);
 
 	// Initialize timer.

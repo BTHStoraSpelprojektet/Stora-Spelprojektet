@@ -370,20 +370,6 @@ void Network::ReceviePacket()
 
 			break;
 		}
-		case ID_ABILITY:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			ABILITIES abilityEnum;
-			RakNet::RakString abilityString;
-			bitStream.Read(messageID);
-			bitStream.Read(abilityEnum);
-			bitStream.Read(abilityString);
-
-			std::cout << " " << abilityString << std::endl;
-
-			break;
-		}
 		case ID_ROUND_OVER:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -398,13 +384,19 @@ void Network::ReceviePacket()
 			if (winningTeam == 1)
 			{
 				m_redTeamScore++;
+
+				ConsolePrintText("The red team won this round!");
+				ConsoleSkipLines(1);
 			}
 			else if (winningTeam == 2)
 			{
 				m_blueTeamScore++;
+
+				ConsolePrintText("The blue team won this round!");
+				ConsoleSkipLines(1);
 			}
 			m_lastTeamWon = winningTeam;
-			std::cout << "Team " << winningTeam << " won this round\n";
+
 			break;
 		}
 		case ID_RESTARTED_ROUND:
@@ -417,7 +409,9 @@ void Network::ReceviePacket()
 			m_restartingRound = false;
 			m_timeRestarting = 0;
 			ClearListsAtNewRound();
-			std::cout << "New round has started\n";
+
+			ConsolePrintSuccess("A new round has started!");
+			ConsoleSkipLines(1);
 			break;
 
 		}
@@ -428,7 +422,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			m_restartingRound = true;
 			
-			std::cout << "Restarting round in:\n";
+			ConsolePrintText("Next round starts in: ");
+			ConsoleSkipLines(1);
 			break;
 		}
 		case ID_RESTARTING_ROUND_TIMER:
@@ -442,7 +437,8 @@ void Network::ReceviePacket()
 
 			m_timeRestarting = time;
 
-			std::cout << time << std::endl;
+			ConsolePrintText(time + "...");
+			ConsoleSkipLines(1);
 			break;
 		}
 		case ID_SMOKEBOMB_THROW:
@@ -485,7 +481,18 @@ void Network::ReceviePacket()
 			m_matchOver = true;
 			m_matchWinningTeam = winningTeam;
 
-			std::cout << "Team " << winningTeam << " won this match\n";
+			if (winningTeam == 1)
+			{
+				ConsolePrintText("The red team won this match!");
+				ConsoleSkipLines(1);
+			}
+
+			else
+			{
+				ConsolePrintText("The blue team won this match!");
+				ConsoleSkipLines(1);
+			}
+
 			break;
 		}
 		case ID_NEW_LEVEL:
@@ -505,7 +512,8 @@ void Network::ReceviePacket()
 			m_matchWinningTeam = 0;
 			m_restartingRound = false;
 
-			std::cout << "Starting new level\n";
+			ConsolePrintSuccess("Starting a new match.");
+			ConsoleSkipLines(1);
 			break;
 		}
 		case ID_PLAYER_ANIMATION_CHANGED:
@@ -519,7 +527,7 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 			bitStream.Read(state);
 
-			// Todo: Update local player animation
+			// TODO, update local player animation.
 			m_playerAnimations[guid] = state;
 			break;
 		}
@@ -774,19 +782,54 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-			RakNet::RakNetGUID guid;
+			uint64_t guidg;
+			signed short mantissa1;
+			signed char mantissa2;
+			signed char exp;
 			float posX, posZ;
 			float dirX, dirZ;
 
 			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			bitStream.Read(posX);
-			bitStream.Read(posZ);
-			bitStream.Read(dirX);
-			bitStream.Read(dirZ);
+			bitStream.Read(guidg);
 
-			UpdatePlayerPos(guid, posX, 0.0f, posZ);
-			UpdatePlayerDir(guid, dirX, 0.0f, dirZ);
+			// pos x
+			bitStream.Read(mantissa1);
+			bitStream.Read(exp);
+			posX = ((float)mantissa1 / 10000.0f) * powf(2.0f, (float)exp);
+
+			// pos z
+			bitStream.Read(mantissa1);
+			bitStream.Read(exp);
+			posZ = ((float)mantissa1 / 10000.0f) * powf(2.0f, (float)exp);
+
+			// dir x
+			bitStream.Read(mantissa2);
+			bitStream.Read(exp);
+			dirX = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
+
+			// dir z
+			bitStream.Read(mantissa2);
+			bitStream.Read(exp);
+			dirZ = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
+
+			UpdatePlayerPos(guidg, posX, 0.0f, posZ);
+			UpdatePlayerDir(guidg, dirX, 0.0f, dirZ);
+			break;
+		}
+		case ID_DEATHBOARDKILL:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int takerNinja, killerNinja;
+			ABILITIES murderWeapon;
+
+			bitStream.Read(messageID);
+			bitStream.Read(takerNinja);
+			bitStream.Read(killerNinja);
+			bitStream.Read(murderWeapon);
+
+			DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
+
 			break;
 		}
 		default:
@@ -799,14 +842,18 @@ void Network::ReceviePacket()
 
 void Network::Connect(std::string p_ip)
 {
-	std::cout << "Connecting to: " << p_ip << std::endl;
+	ConsolePrintText("Connecting to IP (v4): " + p_ip);
+	ConsoleSkipLines(1);
+
 	m_ip = p_ip;
 	m_clientPeer->Connect(m_ip.c_str(), SERVER_PORT, 0, 0);
 }
 
 void Network::Disconnect()
 {
-	std::cout << "Disconnecting from server" << std::endl;
+	ConsolePrintText("Disconnected from server");
+	ConsoleSkipLines(1);
+
 	m_clientPeer->Shutdown(300);
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }
@@ -901,6 +948,30 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 	
 }
 
+void Network::UpdatePlayerPos(uint64_t p_owner, float p_x, float p_y, float p_z)
+{
+	if (p_owner == m_clientPeer->GetMyGUID().g)
+	{
+		m_myPlayer.x = p_x;
+		m_myPlayer.y = p_y;
+		m_myPlayer.z = p_z;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid.g == p_owner)
+			{
+				m_enemyPlayers[i].x = p_x;
+				m_enemyPlayers[i].y = p_y;
+				m_enemyPlayers[i].z = p_z;
+
+				break;
+			}
+		}
+	}
+}
+
 void Network::UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ)
 {
 	if (p_owner == m_clientPeer->GetMyGUID())
@@ -914,6 +985,29 @@ void Network::UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_
 		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 		{
 			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].dirX = p_dirX;
+				m_enemyPlayers[i].dirY = p_dirY;
+				m_enemyPlayers[i].dirZ = p_dirZ;
+				break;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerDir(uint64_t p_owner, float p_dirX, float p_dirY, float p_dirZ)
+{
+	if (p_owner == m_clientPeer->GetMyGUID().g)
+	{
+		m_myPlayer.dirX = p_dirX;
+		m_myPlayer.dirY = p_dirY;
+		m_myPlayer.dirZ = p_dirZ;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid.g == p_owner)
 			{
 				m_enemyPlayers[i].dirX = p_dirX;
 				m_enemyPlayers[i].dirY = p_dirY;
@@ -1336,10 +1430,6 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 	{
 		m_myPlayer.currentHP = p_currentHP;
 		m_myPlayer.isAlive = p_isAlive;
-		if (!p_isAlive)
-		{
-			DeathBoard::GetInstance()->KillHappened(0, m_myPlayer.charNr, ABILITIES_MEGASHURIKEN);
-	}
 	}
 	else
 	{
@@ -1349,10 +1439,6 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 			{
 				m_enemyPlayers[i].currentHP = p_currentHP;
 				m_enemyPlayers[i].isAlive = p_isAlive;
-				if (!p_isAlive)
-				{
-					DeathBoard::GetInstance()->KillHappened(0, m_enemyPlayers[i].charNr, ABILITIES_MEGASHURIKEN);
-				}
 			}
 		}
 	}

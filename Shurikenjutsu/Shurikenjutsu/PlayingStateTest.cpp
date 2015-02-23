@@ -40,14 +40,11 @@ void PlayingStateTest::EscapeIsPressed()
 {
 	if (m_inGameMenuIsActive)
 	{
-		//PostQuitMessage(0);
 		m_inGameMenuIsActive = false;
-		GLOBAL::GetInstance().CAMERA_MOVING = true;
 	}
 	else
 	{
 		m_inGameMenuIsActive = true;
-		GLOBAL::GetInstance().CAMERA_MOVING = false;
 	}
 }
 bool PlayingStateTest::Initialize(std::string p_levelName)
@@ -445,7 +442,7 @@ void PlayingStateTest::BasicPicking()
 	DirectX::XMFLOAT3 shurPos = Pick(Point(mousePosX, mousePosY));
 	DirectX::XMFLOAT3 shurDir = DirectX::XMFLOAT3(-(m_playerManager->GetPlayerPosition().x - shurPos.x), -(m_playerManager->GetPlayerPosition().y - shurPos.y), -(m_playerManager->GetPlayerPosition().z - shurPos.z));
 	
-	m_playerManager->SetAttackDirection(NormalizeFloat3(NormalizeFloat3(shurDir)));
+	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
 
 	m_mouseX = shurPos.x;
 	m_mouseY = shurPos.z;

@@ -27,7 +27,7 @@ bool NaginataSlash::Execute(float p_distance)
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_NAGINATASLASH, 0);
 		SetCooldown(NAGINATA_COOLDOWN);
-		std::cout << "MELEE" << std::endl;
+
 		return true;
 	}
 	return false;

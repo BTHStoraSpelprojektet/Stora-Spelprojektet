@@ -24,7 +24,7 @@ bool NaginataStab::Execute(float p_distance)
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_NAGAINATASTAB, 0);
 		SetCooldown(NAGINATASTAB_COOLDOWN);
-		std::cout << "Stabby stab" << std::endl;
+
 		return true;
 	}
 	return false;
