@@ -79,7 +79,7 @@ void TessenNinja::RenderAttackLocations()
 	}
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		if ((float)m_rangeAttack->GetCooldown() <= 0.0f)
 		{
 			m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
 
