@@ -48,7 +48,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_isDashing = false;
 
 	m_abilityBar = new AbilityBar();
-	m_abilityBar->Initialize(0.0f, -GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.5f + 40.5f, 5);
+	m_abilityBar->Initialize(0.0f, -GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f + 40.5f, 5);
 
 	m_directionUpdateTimer = 0.0f;
 
@@ -72,6 +72,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dashParticles2 = new ParticleEmitter();
 	m_dashParticles1->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
 	m_dashParticles2->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
+
+	m_bloodParticles = new ParticleEmitter();
+	m_bloodParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), m_position, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BLOODHIT);
 
 	m_aimSphere = new Object();
 	m_aimSphere->Initialize("../Shurikenjutsu/Models/Marker_CircleShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
@@ -198,6 +201,13 @@ void Player::Shutdown()
 		m_dashParticles2->Shutdown();
 		delete m_dashParticles2;
 		m_dashParticles2 = nullptr;
+	}
+
+	if (m_bloodParticles != nullptr)
+	{
+		m_bloodParticles->Shutdown();
+		delete m_bloodParticles;
+		m_bloodParticles = nullptr;
 	}
 }
 

@@ -10,6 +10,8 @@
 class ParticleEmitter
 {
 public:
+	ParticleEmitter();
+	~ParticleEmitter();
 	bool Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, DirectX::XMFLOAT2 p_size, PARTICLE_PATTERN p_pattern);
 	void Shutdown();
 

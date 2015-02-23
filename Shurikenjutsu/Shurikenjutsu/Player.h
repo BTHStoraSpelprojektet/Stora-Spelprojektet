@@ -119,6 +119,8 @@ protected:
 	ParticleEmitter* m_dashParticles1;
 	ParticleEmitter* m_dashParticles2;
 
+	ParticleEmitter* m_bloodParticles;
+
 	int m_ninjaType;
 
 	Object* m_aimSphere;

@@ -95,7 +95,7 @@ void KatanaNinja::RenderAttackLocations()
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThickArrowPrediction(m_aimArrow,m_aimPole, m_attackDir, m_position, 10.0f, false);
+			m_ape->ThickArrowPrediction(m_aimArrow,m_aimPole, m_attackDir, m_position, DASH_MAX_RANGE, false);
 
 			m_aimPole->Render();
 			m_aimArrow->Render();

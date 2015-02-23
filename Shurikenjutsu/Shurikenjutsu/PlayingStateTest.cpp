@@ -327,16 +327,21 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
-	Point bottomRight = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
+	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
 	
 	// Keep the the visibility polygon boundries within the maps boundries.
 	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
 	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
-	bottomRight.x > 45.0f ? bottomRight.x = 45.0f : bottomRight.x;
-	bottomRight.y < -52.0f ? bottomRight.y = -52.0f : bottomRight.y;
+	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
+	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
+
+	topLeft.x = -45.0f;
+	topLeft.y = 52.0f;
+	bottomLeft.x = 45.0f;
+	bottomLeft.y = -52.0f;
 
 	// Update the visibility polygon boundries.
-	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomRight);
+	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
 	// Update the countdown.
 	m_countdown->Update();

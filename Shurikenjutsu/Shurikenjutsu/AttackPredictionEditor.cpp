@@ -24,7 +24,7 @@ void AttackPredictionEditor::ThinArrowPrediction(Object *p_arrowHead, Object *p_
 	poleLength = CollisionManager::GetInstance()->CalculateAttackPredictionRange(p_playerPosition, p_attackDirection, poleLength, p_throwStuff);
 
 
-	p_arrowHead->SetPosition(DirectX::XMFLOAT3(p_playerPosition.x + vectorToMouseNorm.x * poleLength , 0.03f, p_playerPosition.z + vectorToMouseNorm.z * poleLength));
+	p_arrowHead->SetPosition(DirectX::XMFLOAT3(p_playerPosition.x + vectorToMouseNorm.x * poleLength, 0.03f, p_playerPosition.z + vectorToMouseNorm.z * poleLength));
 	p_arrowBody->SetPosition(DirectX::XMFLOAT3(p_playerPosition.x + vectorToMouseNorm.x * (poleLength * 0.5f), 0.03f, p_playerPosition.z + vectorToMouseNorm.z * (poleLength * 0.5f)));
 
 	p_arrowHead->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));

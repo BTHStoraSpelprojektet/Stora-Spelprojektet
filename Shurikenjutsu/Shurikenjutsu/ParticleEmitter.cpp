@@ -5,6 +5,9 @@
 #include "GraphicsEngine.h"
 #include "ParticleRenderer.h"
 
+ParticleEmitter::ParticleEmitter(){}
+ParticleEmitter::~ParticleEmitter(){}
+
 bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, DirectX::XMFLOAT2 p_size, PARTICLE_PATTERN p_pattern)
 {
 	m_pattern = p_pattern;
@@ -101,6 +104,11 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		{
 			initParticles(10.0f, 50, DirectX::XMFLOAT3(2.0f, 0.1f, 2.0f), 0.75f, 0.2f, 2.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/bubbleparticle2.png"));
 			
+			break;
+		}
+		case(PARTICLE_PATTERN_BLOODHIT) :
+		{
+			initParticles(20.0f, 20, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 2.0f, 1.0f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/BloodParticle.png"));
 			break;
 		}
 		default:
@@ -487,7 +495,20 @@ void ParticleEmitter::EmitParticles()
 
 					break;
 				}
+				case(PARTICLE_PATTERN_BLOODHIT) :
+				{
+					m_particleList[index].m_position = position;
+					m_particleList[index].m_direction = m_emitterDirection;
+					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = 0.0f;
+					m_particleList[index].m_opacity = 1.0f;
 
+					break;
+				}
 				default:
 				{
 					break;
@@ -559,7 +580,8 @@ void ParticleEmitter::UpdateParticles()
 		break;
 	}
 
-	case PARTICLE_PATTERN_WORLD_DUST:{
+	case PARTICLE_PATTERN_WORLD_DUST:
+	{
 		if (m_particleList != NULL){
 			for (unsigned int i = 0; i < m_currentParticles; i++)
 			{
@@ -716,10 +738,24 @@ void ParticleEmitter::UpdateParticles()
 				m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
 			}
 		}
-
 		break;
 	}
+	case(PARTICLE_PATTERN_BLOODHIT) :
+	{
+		if (m_particleList != NULL)
+		{
+			for (unsigned int i = 0; i < m_currentParticles; i++)
+			{
+				// Add time passed.
+				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
 
+				m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+			}
+		}
+		break;
+	}
 	default:
 	{
 		break;
