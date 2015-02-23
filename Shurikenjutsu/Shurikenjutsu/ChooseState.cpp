@@ -103,7 +103,7 @@ void ChooseState::Shutdown()
 	}
 
 	//needs fixin'
-	/*for (unsigned int i = 0; i < 4; i++)
+	for (unsigned int i = 0; i < 3; i++)
 	{
 		if (m_tools[i] != nullptr)
 		{
@@ -111,7 +111,7 @@ void ChooseState::Shutdown()
 			delete m_tools[i];
 			m_tools[i] = nullptr;
 		}
-	}*/
+	}
 
 	for (unsigned int i = 0; i < 4; i++)
 	{

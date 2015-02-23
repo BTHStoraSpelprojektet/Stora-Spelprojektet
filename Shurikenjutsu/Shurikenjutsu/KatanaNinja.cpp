@@ -46,8 +46,8 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_rangeSpecialAttack = new MegaShuriken();
 	m_rangeSpecialAttack->Initialize();
 
-	m_toolAbility = new SmokeBombAbility();
-	m_toolAbility->Initialize();
+	/*m_toolAbility = new SmokeBombAbility();
+	m_toolAbility->Initialize();*/
 
 	SetOriginalSpeed(GetSpeed());
 	SetHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);

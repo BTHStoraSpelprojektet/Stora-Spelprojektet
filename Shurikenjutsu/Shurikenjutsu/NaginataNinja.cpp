@@ -47,8 +47,8 @@ bool NaginataNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dire
 	m_rangeSpecialAttack = new VolleyAbility();
 	m_rangeSpecialAttack->Initialize();
 
-	m_toolAbility = new StickyTrapAbility();
-	m_toolAbility->Initialize();
+	/*m_toolAbility = new StickyTrapAbility();
+	m_toolAbility->Initialize();*/
 
 	SetOriginalSpeed(GetSpeed());
 	SetHealth(CHARACTER_NAGINATA_HEALTH);
