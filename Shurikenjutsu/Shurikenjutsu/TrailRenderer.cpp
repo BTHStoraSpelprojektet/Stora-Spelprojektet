@@ -227,7 +227,7 @@ bool TrailRenderer::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 
-	// STore identity matrices.
+	// Store identity matrices.
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&m_viewMatrix, DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&m_projectionMatrix, DirectX::XMMatrixIdentity());
@@ -277,10 +277,28 @@ void TrailRenderer::Shutdown()
 
 void TrailRenderer::RenderTrail(ID3D11Buffer* p_vertexBuffer, unsigned int p_points, ID3D11ShaderResourceView* p_texture)
 {
-	// TODO, render.
+	// Set vertex buffer stride and offset.
+	ID3D11DeviceContext* context = GraphicsEngine::GetInstance()->GetContext();
+	unsigned int stride = sizeof(TrailPoint);
+	unsigned int offset = 0;
 
-	// Dont forget. (moved from update matrix function.
-	//GraphicsEngine::GetInstance()->GetContext()->GSSetConstantBuffers(0, 1, &m_matrixBuffer);
+	// Set vertex, geometry and pixel shaders.
+	context->VSSetShader(m_vertexShader, NULL, 0);
+	context->GSSetShader(m_geometryShader, NULL, 0);
+	context->PSSetShader(m_pixelShader, NULL, 0);
+
+	context->PSSetShaderResources(0, 1, &p_texture);
+	context->PSSetSamplers(0, 1, &m_samplerState);
+	context->GSSetConstantBuffers(0, 1, &m_matrixBuffer);
+
+	context->IASetVertexBuffers(0, 1, &p_vertexBuffer, &stride, &offset);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	context->IASetInputLayout(m_layout);
+
+	// Render the polygons.
+	context->Draw(p_points, 0);
+
+	context->GSSetShader(NULL, NULL, 0);
 }
 
 void TrailRenderer::SetWorldMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)
