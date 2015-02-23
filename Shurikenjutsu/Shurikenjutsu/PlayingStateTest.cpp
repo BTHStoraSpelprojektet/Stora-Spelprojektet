@@ -445,7 +445,7 @@ void PlayingStateTest::BasicPicking()
 	DirectX::XMFLOAT3 shurPos = Pick(Point(mousePosX, mousePosY));
 	DirectX::XMFLOAT3 shurDir = DirectX::XMFLOAT3(-(m_playerManager->GetPlayerPosition().x - shurPos.x), -(m_playerManager->GetPlayerPosition().y - shurPos.y), -(m_playerManager->GetPlayerPosition().z - shurPos.z));
 	
-	m_playerManager->SetAttackDirection(NormalizeFloat3(NormalizeFloat3(shurDir)));
+	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
 
 	m_mouseX = shurPos.x;
 	m_mouseY = shurPos.z;

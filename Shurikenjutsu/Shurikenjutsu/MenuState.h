@@ -12,6 +12,7 @@ class MenuIpBox;
 class ObjectManager;
 class Frustum;
 class Camera;
+class MenuItem;
 
 class MenuState : public GameState
 {
@@ -52,6 +53,7 @@ private:
 	Camera* m_camera;
 	Frustum* m_frustum;
 	DirectionalLight m_directionalLight;
+	MenuItem* m_logo;
 };
 
 #endif
