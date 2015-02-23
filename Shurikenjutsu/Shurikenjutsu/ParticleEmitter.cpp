@@ -109,7 +109,6 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 	}
 
-
 	// Initialize the counters to 0.
 	m_currentParticles = 0;
 	m_time = 0.0f;
@@ -193,9 +192,9 @@ void ParticleEmitter::Shutdown()
 		delete m_mesh;
 		m_mesh = 0;
 	}
+
 	if (m_particleTexture != nullptr)
 	{
-		//m_particleTexture->Release();
 		m_particleTexture = nullptr;
 	}
 }
@@ -307,21 +306,13 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = angle;
-				m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 1.0f;
 
 					break;
 				}
-				case(PARTICLE_PATTERN_WORLD_MIST) : {
-					/*DirectX::XMFLOAT3 position2 = m_emitterPosition;
-					int posX2 = ((((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.x);
-					position2.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
-					int posZ2 = ((((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z);
-					position2.x = posX2;
 
-					//position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
-					position2.z = posZ2;*/
-
-
+				case(PARTICLE_PATTERN_WORLD_MIST) : 
+				{
 					// Set a random direction in xz.
 					float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
 					DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
@@ -341,21 +332,13 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = angle;
-				m_particleList[index].m_opacity = 0.0f;
+					m_particleList[index].m_opacity = 0.0f;
 
 					break;
 				}
-				case(PARTICLE_PATTERN_WORLD_DUST) : {
-					/*DirectX::XMFLOAT3 position2 = m_emitterPosition;
-					int posX2 = ((((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.x);
-					position2.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
-					int posZ2 = ((((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z);
-					position2.x = posX2;
 
-					//position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
-					position2.z = posZ2;*/
-
-
+				case(PARTICLE_PATTERN_WORLD_DUST) : 
+				{
 					// Set a random direction in xz.
 					float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
 					DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
@@ -373,13 +356,13 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_initPosition.x = -m_emitBorderLeft;
 
 					m_particleList[index].m_direction = direction;
-				m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
+					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
 					m_particleList[index].m_velocity = velocity;
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = angle;
-				m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 1.0f;
 
 					break;
 				}
@@ -394,7 +377,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = 0.0f;
-				m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 1.0f;
 
 					break;
 				}
@@ -404,13 +387,13 @@ void ParticleEmitter::EmitParticles()
 				{
 					m_particleList[index].m_direction = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
 					m_particleList[index].m_position = position;
-				m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x, m_color.y, m_color.z, 0.0f);
+					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x, m_color.y, m_color.z, 0.0f);
 					m_particleList[index].m_velocity = velocity;
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = 0.0f;
-				m_particleList[index].m_opacity = 0.0f;
+					m_particleList[index].m_opacity = 0.0f;
 
 					break;
 				}
@@ -425,7 +408,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = 0.0f;
-				m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 1.0f;
 
 					break;
 				}
@@ -440,7 +423,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = 0.0f;
-				m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 1.0f;
 
 					break;
 				}
@@ -455,7 +438,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = 0.0f;
-				m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 1.0f;
 
 					break;
 				}
@@ -485,7 +468,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = 0.0f;
-				m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 1.0f;
 
 					break;
 				}
@@ -504,12 +487,12 @@ void ParticleEmitter::EmitParticles()
 
 					break;
 				}
+
 				default:
 				{
 					break;
 				}
 			}
-			//m_mesh[index].m_color = DirectX::XMFLOAT4(m_particleList[index].m_color.x, m_particleList[index].m_color.y, m_particleList[index].m_color.z, m_particleList[index].m_color.w);
 		}
 	}
 }
@@ -606,7 +589,7 @@ void ParticleEmitter::UpdateParticles()
 		break;
 	}
 
-									  // Fire just moves right up, ignoring direction.
+	// Fire just moves right up, ignoring direction.
 	case(PARTICLE_PATTERN_FIRE) :
 	{
 		if (m_particleList != NULL){

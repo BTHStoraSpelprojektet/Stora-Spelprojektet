@@ -7,12 +7,6 @@
 #include <vector>
 #include "TrailRenderer.h"
 
-struct TrailSegment
-{
-	TrailPoint m_top;
-	TrailPoint m_bottom;
-};
-
 class Trail
 {
 public:
@@ -45,8 +39,7 @@ private:
 	DirectX::XMFLOAT4 m_color;
 	ID3D11ShaderResourceView* m_texture;
 
-	std::vector<TrailSegment> m_segments;
+	std::vector<TrailPoint> m_points;
 	ID3D11Buffer* m_vertexBuffer;
-	unsigned int m_vertices;
 };
 #endif

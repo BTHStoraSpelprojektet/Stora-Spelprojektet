@@ -1,6 +1,7 @@
 #include "Trail.h"
 #include "TextureLibrary.h"
 #include "Globals.h"
+#include "GraphicsEngine.h"
 #include "ConsoleFunctions.h"
 
 Trail::Trail()
@@ -18,9 +19,8 @@ Trail::Trail()
 	m_color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 	m_texture = nullptr;
 
-	m_segments.clear();
+	m_points.clear();
 	m_vertexBuffer = nullptr;
-	m_vertices = 0;
 }
 
 Trail::~Trail()
@@ -51,9 +51,32 @@ bool Trail::Initialize(float p_pointsPerSecond, float p_timeToLive, float p_trai
 	m_color = p_color;
 	m_texture = TextureLibrary::GetInstance()->GetTexture(p_texturePath);
 
-	m_segments.clear();
+	m_points.clear();
+
 	m_vertexBuffer = nullptr;
-	m_vertices = 0;
+	std::vector<TrailPoint> dummyData;
+
+	// Set up description for the dynamic vertex buffer.
+	D3D11_BUFFER_DESC vertexBufferDescription;
+	vertexBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+	vertexBufferDescription.ByteWidth = sizeof(TrailPoint);
+	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vertexBufferDescription.MiscFlags = 0;
+	vertexBufferDescription.StructureByteStride = 0;
+
+	// Get a pointer to the vertex data.
+	D3D11_SUBRESOURCE_DATA vertexBuffer;
+	vertexBuffer.pSysMem = &dummyData;
+	vertexBuffer.SysMemPitch = 0;
+	vertexBuffer.SysMemSlicePitch = 0;
+
+	// Create the vertex buffer.
+	if (FAILED(GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDescription, &vertexBuffer, &m_vertexBuffer)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create trail dynamic vertex buffer.");
+		return false;
+	}
 
 	return true;
 }
@@ -72,8 +95,7 @@ void Trail::Shutdown()
 		delete m_vertexBuffer;
 	}
 
-	m_segments.clear();
-	m_vertices = 0;
+	m_points.clear();
 	m_timeToEmit = false;
 	m_emiting = false;
 	m_listDead = true;
@@ -84,10 +106,9 @@ void Trail::Update(DirectX::XMFLOAT3 p_position, float p_angle)
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 
 	// Increase time for all points in the trail.
-	for (unsigned int i = 0; i < m_segments.size(); i++)
+	for (unsigned int i = 0; i < m_points.size(); i++)
 	{
-		m_segments[i].m_top.m_timeValues.y += (float)deltaTime;
-		m_segments[i].m_bottom.m_timeValues.y += (float)deltaTime;
+		m_points[i].m_timeValues.y += (float)deltaTime;
 	}
 
 	// Clear old points.
@@ -109,7 +130,14 @@ void Trail::Update(DirectX::XMFLOAT3 p_position, float p_angle)
 
 void Trail::Render()
 {
-	// TODO, call render.
+	// Update vertex buffer.
+	D3D11_MAPPED_SUBRESOURCE resource;
+	GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	memcpy(resource.pData, &m_points[0], sizeof(TrailPoint) * m_points.size());
+	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
+
+	// Call render.
+	TrailRenderer::GetInstance().RenderTrail(m_vertexBuffer, m_points.size(), m_texture);
 }
 
 void Trail::StopEmiting()
@@ -125,9 +153,8 @@ bool Trail::IsTrailDead()
 void Trail::EmitPoint(DirectX::XMFLOAT3 p_position, float p_angle)
 {
 	TrailPoint point;
-	TrailSegment segment;
 
-	if (m_segments.size() == 0)
+	if (m_points.size() == 0)
 	{
 		// First top point.
 		point.m_position = p_position;
@@ -136,7 +163,7 @@ void Trail::EmitPoint(DirectX::XMFLOAT3 p_position, float p_angle)
 		point.m_timeValues = DirectX::XMFLOAT2(m_TrailPointLifeTime, 0.0f);
 		point.m_color = m_color;
 		point.m_endpoint = false;
-		segment.m_top = point;
+		m_points.push_back(point);
 
 		// Bottom point, create one for the first point.
 		point.m_position = DirectX::XMFLOAT3(p_position.x - cos(p_angle) * m_trailWidth, p_position.y, p_position.z - sin(p_angle) * m_trailWidth);
@@ -145,7 +172,7 @@ void Trail::EmitPoint(DirectX::XMFLOAT3 p_position, float p_angle)
 		point.m_timeValues = DirectX::XMFLOAT2(m_TrailPointLifeTime, 0.0f);
 		point.m_color = m_color;
 		point.m_endpoint = true;
-		segment.m_bottom = m_segments[m_segments.size() - 1].m_top;
+		m_points.push_back(point);
 	}
 
 	else
@@ -157,41 +184,38 @@ void Trail::EmitPoint(DirectX::XMFLOAT3 p_position, float p_angle)
 		point.m_timeValues = DirectX::XMFLOAT2(m_TrailPointLifeTime, 0.0f);
 		point.m_color = m_color;
 		point.m_endpoint = false;
-		segment.m_top = point;
+		m_points.push_back(point);
 
 		// Bottom point, use previous top.
-		segment.m_bottom = m_segments[m_segments.size() - 1].m_top;
+		m_points.push_back(m_points[m_points.size() - 2]);
 	}
-
-	// Add segment to list.
-	m_segments.push_back(segment);
 }
 
 void Trail::ClearOldPoints()
 {
 	// Look for living points.
-	for (unsigned int i = 0; i < m_segments.size(); i++)
+	for (unsigned int i = 0; i < m_points.size(); i++)
 	{
-		if (m_segments[i].m_bottom.m_timeValues.y < m_segments[i].m_bottom.m_timeValues.x)
+		if (m_points[i].m_timeValues.y < m_points[i].m_timeValues.x)
 		{ 
-			// If the all points live, simply do nothing and return. 
+			// If all the points live, simply do nothing and return. 
 			if (i == 0)
 			{
 				return;
 			}
 
-			// Erase all elements that are old, and the move the end point bool.
+			// Erase the points that are old, and then move the end point bool.
 			else
 			{
-				m_segments.erase(m_segments.begin(), m_segments.begin() + i);
-				m_segments[0].m_bottom.m_endpoint = true;
+				m_points.erase(m_points.begin(), m_points.begin() + i);
+				m_points[1].m_endpoint = true;
 
 				return;
 			}
 		}
 	}
 
-	// Else, if the all points are old, clear everything. 
-	m_segments.clear();
+	// Else, if all the points are old, clear everything. 
+	m_points.clear();
 	m_listDead = true;
 }

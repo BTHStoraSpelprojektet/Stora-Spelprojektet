@@ -78,7 +78,6 @@ private:
 		DirectX::XMFLOAT4 m_color;
 		float m_opacity = 0.0f;
 
-
 		float m_velocity;
 		float m_rotation;
 		float m_velocityXZ = 1.0f;
@@ -90,6 +89,7 @@ private:
 		float m_timeToFadeInPassed = 0.0f;
 		float m_timeToScaleChange = 0.0f;
 	};
+
 	Particle* m_particleList;
 
 	struct ParticleVertex
@@ -98,6 +98,7 @@ private:
 		DirectX::XMFLOAT2 m_size;
 		DirectX::XMFLOAT4 m_color;
 	};
+
 	ParticleVertex* m_mesh;
 
 	ID3D11Buffer* m_vertexBuffer;
