@@ -485,7 +485,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 				}
 			}
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
-			SendDealtDamage(p_attackingGuid, p_damage);
+			SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
 		}
 	}
 }
@@ -598,12 +598,15 @@ void PlayerManager::SendPlayerDir()
 		m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 	}
 }
-void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage)
+void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage, float p_x, float p_y, float p_z)
 {
 	RakNet::BitStream bitStream2;
 	bitStream2.Write((RakNet::MessageID)ID_HAS_INFLICTED_DAMAGE);
 	bitStream2.Write(p_attackingPlayerGUID);
 	bitStream2.Write(p_damage);
+	bitStream2.Write(p_x);
+	bitStream2.Write(p_y);
+	bitStream2.Write(p_z);
 	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 2, p_attackingPlayerGUID, false);
 }
 
