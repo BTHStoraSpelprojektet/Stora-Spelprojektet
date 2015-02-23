@@ -150,12 +150,6 @@
     <Filter Include="Source Files\Core\Camera">
       <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics\SSAO">
-      <UniqueIdentifier>{55c310fd-8aaf-468b-97ec-ec2b928f7a15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Graphics\SSAO">
-      <UniqueIdentifier>{1325de63-30b6-438e-a9c2-674d859effcc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\SSAO">
       <UniqueIdentifier>{0c263ccc-4f79-4948-86d3-51db4e4dfb70}</UniqueIdentifier>
     </Filter>
@@ -463,9 +457,6 @@
     </ClCompile>
     <ClCompile Include="AttackPredictionEditor.cpp">
       <Filter>Source Files\Ninjas</Filter>
-    </ClCompile>
-    <ClCompile Include="SSAO.cpp">
-      <Filter>Source Files\Graphics\SSAO</Filter>
     </ClCompile>
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
@@ -778,9 +769,6 @@
     <ClInclude Include="AttackPredictionEditor.h">
       <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
-    <ClInclude Include="SSAO.h">
-      <Filter>Header Files\Graphics\SSAO</Filter>
-    </ClInclude>
     <ClInclude Include="ScreenSpace.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
@@ -867,13 +855,7 @@
     <FxCompile Include="Shaders\SSAO\SSAOBlurPixelShader.hlsl">
       <Filter>Shaders\SSAO</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SSAO\SSAOBlurVertexShader.hlsl">
-      <Filter>Shaders\SSAO</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\SSAO\SSAOPixelShader.hlsl">
-      <Filter>Shaders\SSAO</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SSAO\SSAOVertexShader.hlsl">
       <Filter>Shaders\SSAO</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\Composition\CompositionPixelShader.hlsl">

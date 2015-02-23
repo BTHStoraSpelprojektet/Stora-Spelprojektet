@@ -41,8 +41,6 @@ float4 main(Input p_input) : SV_Target
 
 	float2 screenPixelOffset = float2(2.0f, -2.0f) / textureDimensions; //
 	float2 positionScreen = (float2(p_input.m_position.xy) + 0.5f) * screenPixelOffset.xy + float2(-1.0f, 1.0f);  //
-	float2 positionScreenX = positionScreen + float2(screenPixelOffset.x, 0.0f); //
-	float2 positionScreenY = positionScreen + float2(0.0f, screenPixelOffset.y); //
 
 	float viewSpaceZ = m_projectionMatrix._43 / (zBuffer - m_projectionMatrix._33);
 	float3 positionView = ComputePositionViewFromZ(positionScreen, viewSpaceZ);

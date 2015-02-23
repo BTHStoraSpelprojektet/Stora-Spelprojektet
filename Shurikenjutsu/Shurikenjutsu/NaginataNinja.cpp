@@ -64,7 +64,6 @@ void NaginataNinja::Shutdown()
 }
 void NaginataNinja::RenderAttackLocations()
 {
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
@@ -129,5 +128,4 @@ void NaginataNinja::RenderAttackLocations()
 			StillCDText();
 		}
 	}
-	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }
