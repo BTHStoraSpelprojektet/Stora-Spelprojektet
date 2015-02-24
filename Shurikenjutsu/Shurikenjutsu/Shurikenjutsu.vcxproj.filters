@@ -150,11 +150,17 @@
     <Filter Include="Source Files\Core\Camera">
       <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Trail">
+      <UniqueIdentifier>{e70e4063-628a-4b59-b9c0-d9a393c5e931}</UniqueIdentifier>
+	</Filter> 
     <Filter Include="Source Files\Graphics\SSAO">
       <UniqueIdentifier>{55c310fd-8aaf-468b-97ec-ec2b928f7a15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Graphics\SSAO">
-      <UniqueIdentifier>{1325de63-30b6-438e-a9c2-674d859effcc}</UniqueIdentifier>
+    <Filter Include="Header Files\Graphics\Trails">
+      <UniqueIdentifier>{de5ef398-19ad-43f0-a3ad-4a72896ae95a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Trails">
+      <UniqueIdentifier>{d1182603-a101-4989-8baf-24532995970f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders\SSAO">
       <UniqueIdentifier>{0c263ccc-4f79-4948-86d3-51db4e4dfb70}</UniqueIdentifier>
@@ -473,6 +479,9 @@
     <ClCompile Include="AttackPredictionEditor.cpp">
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
+    <ClCompile Include="ScreenSpace.cpp">
+      <Filter>Source Files\Graphics\Shader Bridges</Filter>
+    </ClCompile>
     <ClCompile Include="FloatingText.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
@@ -494,9 +503,7 @@
     <ClCompile Include="TeamTable.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
-    <ClCompile Include="SSAO.cpp">
-      <Filter>Source Files\Graphics\SSAO</Filter>
-    </ClCompile>
+
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
@@ -805,9 +812,6 @@
     <ClInclude Include="AttackPredictionEditor.h">
       <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
-    <ClInclude Include="SSAO.h">
-      <Filter>Header Files\Graphics\SSAO</Filter>
-    </ClInclude>
     <ClInclude Include="ScreenSpace.h">
       <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
@@ -912,16 +916,19 @@
     <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
       <Filter>Shaders\ShadowShapes</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\Trails\TrailGeometryShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Trails\TrailPixelShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
+	</FxCompile>
     <FxCompile Include="Shaders\SSAO\SSAOBlurPixelShader.hlsl">
       <Filter>Shaders\SSAO</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SSAO\SSAOBlurVertexShader.hlsl">
-      <Filter>Shaders\SSAO</Filter>
+    <FxCompile Include="Shaders\Trails\TrailVertexShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SSAO\SSAOPixelShader.hlsl">
-      <Filter>Shaders\SSAO</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SSAO\SSAOVertexShader.hlsl">
       <Filter>Shaders\SSAO</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\Composition\CompositionPixelShader.hlsl">
@@ -930,12 +937,18 @@
     <FxCompile Include="Shaders\Composition\CompositionVertexShader.hlsl">
       <Filter>Shaders\Composition</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\Scene\PixelShaderForward.hlsl">
+      <Filter>Shaders\Scene</Filter>
+    </FxCompile>
     <FxCompile Include="Shaders\Trails\TrailGeometryShader.hlsl">
       <Filter>Shaders\Trail</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\Trails\TrailPixelShader.hlsl">
-      <Filter>Shaders\Trail</Filter>
+    <FxCompile Include="Shaders\SSAO\SSAOBlurHPixelShader.hlsl">
+      <Filter>Shaders\SSAO</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\SSAO\SSAOBlurVPixelShader.hlsl">
+      <Filter>Shaders\SSAO</Filter>
+	</FxCompile>
     <FxCompile Include="Shaders\Trails\TrailVertexShader.hlsl">
       <Filter>Shaders\Trail</Filter>
     </FxCompile>

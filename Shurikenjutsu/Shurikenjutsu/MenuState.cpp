@@ -188,7 +188,7 @@ void MenuState::Shutdown()
 		m_logo->Shutdown();
 		delete m_logo;
 		m_logo = NULL;
-}
+	}
 }
 
 GAMESTATESWITCH MenuState::Update()
@@ -329,21 +329,27 @@ void MenuState::Render()
 	m_logo->Render();
 
 
-
 	// Draw to the shadowmap.
 	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
+
 	GraphicsEngine::GetInstance()->SetShadowMap();
+
+	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
 	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 
+	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->RenderSSAO();
+
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenSpaceRenderTarget();
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

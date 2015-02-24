@@ -19,6 +19,7 @@ public:
 	virtual void Shutdown();
 	virtual void ShutdownGameExit();
 	virtual void Render();
+	virtual void RenderForward();
 	virtual void RenderDepth();
 	virtual void RenderDepthInstanced();
 	virtual void RenderInstanced();

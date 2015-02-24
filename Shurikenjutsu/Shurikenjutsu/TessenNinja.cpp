@@ -9,6 +9,7 @@
 #include "FanBoomerangAbility.h"
 #include "InputManager.h"
 #include "AttackPredictionEditor.h"
+#include "ParticleRenderer.h"
 
 TessenNinja::TessenNinja(){}
 TessenNinja::~TessenNinja(){}
@@ -63,14 +64,13 @@ void TessenNinja::Shutdown()
 }
 void TessenNinja::RenderAttackLocations()
 {
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
 		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
 		{
 			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
 
-			m_aimFrustrum->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
 		}
 		else
 		{
@@ -83,7 +83,7 @@ void TessenNinja::RenderAttackLocations()
 		{
 			m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
 
-			m_aimPole->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
 		}
 		else
 		{
@@ -96,8 +96,8 @@ void TessenNinja::RenderAttackLocations()
 		{
 			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
-			m_aimArrow->Render();
-			m_aimPole->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
 		}
 		else
 		{
@@ -109,7 +109,7 @@ void TessenNinja::RenderAttackLocations()
 		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
 		{
 			m_ape->SpinAttackBigSphere(m_aimSphere, m_position, 16.0f);
-			m_aimSphere->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
 		}
 		else
 		{
@@ -121,12 +121,11 @@ void TessenNinja::RenderAttackLocations()
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
 			m_ape->ThrowSphere(m_aimSphere,m_position, 5.0f, SPIKE_RANGE);
-			m_aimSphere->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
 		}
 		else
 		{
 			StillCDText();
 		}
 	}
-	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }

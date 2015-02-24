@@ -396,18 +396,20 @@ void PlayingStateTest::Render()
 	m_objectManager->Render();
 	m_playerManager->Render();
 	
+	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenSpaceRenderTarget();
-	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->Composition();
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GraphicsEngine::GetInstance()->RenderFoliage();
+	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
-
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 	if (FLAG_DEBUG == 1)
 	{
 		ShadowShapes::GetInstance().DebugRender();	
@@ -418,6 +420,8 @@ void PlayingStateTest::Render()
 	m_teamStatusBar->Render();
 	m_countdown->Render();
 	DeathBoard::GetInstance()->Render();
+
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 
 	// Render character outlining.
 	if (m_renderOutlining)

@@ -309,6 +309,11 @@ void GraphicsEngine::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, D
 	m_sceneShader->Render(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
 }
 
+void GraphicsEngine::RenderSceneForward(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
+{
+	m_sceneShader->RenderForward(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
+}
+
 void GraphicsEngine::RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture)
 {
 	m_sceneShader->RenderReversedShadows(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_visibilityMap, p_texture);
@@ -360,20 +365,12 @@ void GraphicsEngine::RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XM
 
 void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
-	TurnOnAlphaBlending();
-
 	m_particleShader->Render(m_directX.GetContext(), p_mesh, p_vertexCount, p_worldMatrix, p_texture);
-
-	TurnOffAlphaBlending();
 }
 
 void GraphicsEngine::RenderFoliage()
 {
-	TurnOnAlphaBlending();
-
 	m_foliageShader->Render(m_directX.GetContext(), m_shadowMap.GetRenderTarget());
-
-	TurnOffAlphaBlending();
 }
 
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
@@ -644,12 +641,12 @@ void GraphicsEngine::ScreenChangeHandled()
 
 ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture1()
 {
-	return m_directX.GetPostProcessingSRV1();
+	return m_directX.GetGBufferSRV1();
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture2()
 {
-	return m_directX.GetPostProcessingSRV2();
+	return m_directX.GetGBufferSRV2();
 }
 
 void GraphicsEngine::ClearRenderTargetsForGBuffers()
@@ -669,20 +666,41 @@ void GraphicsEngine::DoReportLiveObjects()
 
 void GraphicsEngine::Composition()
 {
-	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetPostProcessingSRV2(), m_directX.GetPostProcessingSRV1(), m_directX.GetDepthSRV());
+	m_directX.ScreenSpaceRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetGBufferSRV2(), m_directX.GetGBufferSRV1(), m_directX.GetDepthSRV(), m_directX.GetPPSRV1());
 }
 
 void GraphicsEngine::SetScreenSpaceRenderTarget()
 {
+
 	m_directX.ScreenSpaceRenderTarget();
 }
 
-void GraphicsEngine::TurnOnBackfaceCulling()
+void GraphicsEngine::RenderSSAO()
 {
-	m_sceneShader->TurnOnBackFaceCulling(m_directX.GetContext());
+	m_directX.SetRenderTargetsForPP1();
+	m_screenSpace->RenderSSAO(m_directX.GetContext(), m_directX.GetGBufferSRV2(), m_directX.GetDepthSRV());
+	for (int i = 0; i < 1; i++)
+	{
+		m_directX.SetRenderTargetsForPP2();
+		m_screenSpace->BlurImage(m_directX.GetContext(), m_directX.GetPPSRV1(), m_directX.GetDepthSRV(), m_directX.GetGBufferSRV2(), true);
+		m_directX.SetRenderTargetsForPP1();
+		m_screenSpace->BlurImage(m_directX.GetContext(), m_directX.GetPPSRV2(), m_directX.GetDepthSRV(), m_directX.GetGBufferSRV2(), false);
+	}
+}
+
+void GraphicsEngine::SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection)
+{
+	m_screenSpace->UpdateSSAOBuffer(m_directX.GetContext(), p_projection);
 }
 
 void GraphicsEngine::TurnOffBackfaceCulling()
 {
 	m_sceneShader->TurnOffBackFaceCulling(m_directX.GetContext());
+}
+
+void GraphicsEngine::TurnOnBackfaceCulling()
+{
+	m_sceneShader->TurnOnBackFaceCulling(m_directX.GetContext());
 }

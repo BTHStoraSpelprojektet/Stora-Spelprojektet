@@ -38,14 +38,21 @@ public:
 	void DoReportLiveObjects();
 	void SetDebugName(ID3D11DeviceChild* child, const std::string& name);
 
-	bool InitializePostProcessing();
-
+	// GBuffrar
+	bool InitializeGBuffer();
 	void SetRenderTargetsForGBuffers();
 	void ScreenSpaceRenderTarget();
 	void ClearRenderTargetsForGBuffers();
-	ID3D11ShaderResourceView* GetPostProcessingSRV1();
-	ID3D11ShaderResourceView* GetPostProcessingSRV2();
-	ID3D11ShaderResourceView* DirectXWrapper::GetDepthSRV();
+	ID3D11ShaderResourceView* GetGBufferSRV1();
+	ID3D11ShaderResourceView* GetGBufferSRV2();
+	ID3D11ShaderResourceView* GetDepthSRV();
+
+	// Post Processing
+	bool InitializePP();
+	void SetRenderTargetsForPP1();
+	void SetRenderTargetsForPP2();
+	ID3D11ShaderResourceView* GetPPSRV1();
+	ID3D11ShaderResourceView* GetPPSRV2();
 
 private:
 	ID3D11Device* m_device;
@@ -79,9 +86,13 @@ private:
 
 	int m_vsync;
 
-	// POST PROCESSING STUFF
-	ID3D11RenderTargetView* m_postProcessingRTV[2];
-	ID3D11ShaderResourceView* m_postProcessingSRV[2];
+	// Composition
+	ID3D11RenderTargetView* m_gBufferRTV[2];
+	ID3D11ShaderResourceView* m_gBufferSRV[2];
 	ID3D11ShaderResourceView* m_depthSRV;
+
+	// PP
+	ID3D11RenderTargetView* m_pPRTV[2];
+	ID3D11ShaderResourceView* m_pPSRV[2];
 };
 #endif;
