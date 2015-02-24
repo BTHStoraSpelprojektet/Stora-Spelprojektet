@@ -191,14 +191,15 @@ void Server::ReceviePacket()
 
 			int charNr;
 			int toolNr;
-
+			int team;
 			bitStream.Read(messageID);
 			bitStream.Read(charNr);
 			bitStream.Read(toolNr);
+			bitStream.Read(team);
 
 			if (m_gameState->GetPlayerIndex(m_packet->guid) == -1)
 			{
-				m_gameState->AddPlayer(m_packet->guid, charNr, toolNr);
+				m_gameState->AddPlayer(m_packet->guid, charNr, toolNr, team);
 			}
 			break;
 		}

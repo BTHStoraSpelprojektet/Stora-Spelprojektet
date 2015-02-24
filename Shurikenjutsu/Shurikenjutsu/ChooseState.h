@@ -35,7 +35,6 @@ private:
 	void InitializePickNinja();
 	void InitializePickTeam();
 	void UpdateTeams();
-	void RandomTeam();
 	void RandomNinja();
 
 	std::stack<Menu*> m_menues;
@@ -56,6 +55,10 @@ private:
 	int nrOfTools;
 	float m_screenHeight;
 	float m_screenWidth;
+
+	float m_portraitWidth;
+	float m_portraitHeight;
+	int m_myTeam;
 };
 
 
