@@ -1705,3 +1705,21 @@ void Network::UpdateFanLifeTime(unsigned int p_id, float p_lifeTime)
 		}
 	}
 }
+
+int Network::GetTeam(RakNet::RakNetGUID p_guid)
+{
+	if (m_myPlayer.guid == p_guid)
+	{
+		return m_myPlayer.team;
+	}
+
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (m_enemyPlayers[i].guid == p_guid)
+		{
+			return m_enemyPlayers[i].team;
+		}
+	}
+
+	return -1;
+}
