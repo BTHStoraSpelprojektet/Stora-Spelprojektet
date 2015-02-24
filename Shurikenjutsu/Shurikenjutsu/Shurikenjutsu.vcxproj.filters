@@ -152,9 +152,6 @@
     </Filter>
     <Filter Include="Shaders\Trail">
       <UniqueIdentifier>{e70e4063-628a-4b59-b9c0-d9a393c5e931}</UniqueIdentifier>
-	</Filter> 
-    <Filter Include="Source Files\Graphics\SSAO">
-      <UniqueIdentifier>{55c310fd-8aaf-468b-97ec-ec2b928f7a15}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\Graphics\Trails">
       <UniqueIdentifier>{de5ef398-19ad-43f0-a3ad-4a72896ae95a}</UniqueIdentifier>
@@ -503,7 +500,6 @@
     <ClCompile Include="TeamTable.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
-
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
@@ -921,9 +917,6 @@
     </FxCompile>
     <FxCompile Include="Shaders\Trails\TrailPixelShader.hlsl">
       <Filter>Shaders\Trail</Filter>
-	</FxCompile>
-    <FxCompile Include="Shaders\SSAO\SSAOBlurPixelShader.hlsl">
-      <Filter>Shaders\SSAO</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\Trails\TrailVertexShader.hlsl">
       <Filter>Shaders\Trail</Filter>
@@ -948,7 +941,7 @@
     </FxCompile>
     <FxCompile Include="Shaders\SSAO\SSAOBlurVPixelShader.hlsl">
       <Filter>Shaders\SSAO</Filter>
-	</FxCompile>
+    </FxCompile>
     <FxCompile Include="Shaders\Trails\TrailVertexShader.hlsl">
       <Filter>Shaders\Trail</Filter>
     </FxCompile>
