@@ -13,6 +13,7 @@
 #include "Volley.h"
 #include "ParticleEmitter.h"
 #include "ConsoleFunctions.h"
+#include "VolleyObject.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -83,51 +84,69 @@ bool ObjectManager::Initialize(Level* p_level)
 	{
 		ParticleEmitter* particleEmitter = new ParticleEmitter();
 
-		if (particleLevelEmitter[i].type == EmitterType::BrazierFire){
+		if (particleLevelEmitter[i].type == EmitterType::BrazierFire)
+		{
 		particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
 		}
-		else if (particleLevelEmitter[i].type == EmitterType::FireSpark){
+
+		else if (particleLevelEmitter[i].type == EmitterType::FireSpark)
+		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SPARK_SIZE_X, PARTICLE_FIRE_SPARK_SIZE_Y), PARTICLE_PATTERN_FIRE_SPARK);
 		}
-		else if (particleLevelEmitter[i].type == EmitterType::LeafSakura){
+
+		else if (particleLevelEmitter[i].type == EmitterType::LeafSakura)
+		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_PINKLEAF_SIZE_X, PARTICLE_PINKLEAF_SIZE_Y), PARTICLE_PATTERN_PINK_LEAVES);
 		}
-		else if (particleLevelEmitter[i].type == EmitterType::LeafTree){
+
+		else if (particleLevelEmitter[i].type == EmitterType::LeafTree)
+		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_GREEN_LEAVES);
 		}
-		else if (particleLevelEmitter[i].type == EmitterType::LeafAcerPalmatum){
+
+		else if (particleLevelEmitter[i].type == EmitterType::LeafAcerPalmatum)
+		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_ACERPALMATUM_LEAVES);
 		}
-		else if (particleLevelEmitter[i].type == EmitterType::WorldMist){
+
+		else if (particleLevelEmitter[i].type == EmitterType::WorldMist)
+		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDMIST_SIZE_X, PARTICLE_WORLDMIST_SIZE_Y), PARTICLE_PATTERN_WORLD_MIST);
 		}
-		else if (particleLevelEmitter[i].type == EmitterType::WorldDust){
+
+		else if (particleLevelEmitter[i].type == EmitterType::WorldDust)
+		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDDUST_SIZE_X, PARTICLE_WORLDDUST_SIZE_Y), PARTICLE_PATTERN_WORLD_DUST);
 		}
-		else if (particleLevelEmitter[i].type == EmitterType::Fireflies){
+
+		else if (particleLevelEmitter[i].type == EmitterType::Fireflies)
+		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_FIREFLIES_SIZE_X, PARTICLE_FIREFLIES_SIZE_Y), PARTICLE_PATTERN_FIREFLIES);
 		}
-		else{
+
+		else
+		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 		}
+
 		particleEmitter->SetEmitParticleState(true);
 		m_worldParticles.push_back(particleEmitter);
 	}
@@ -136,6 +155,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	m_shurikenTrails.clear();
 	m_fanTrails.clear();
 	m_kunaiTrails.clear();
+	m_volleyTrails.clear();
 
 	return true;
 }
@@ -218,6 +238,7 @@ void ObjectManager::Shutdown()
 		for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
 		{
 			m_shurikenTrails[i]->Shutdown();
+			delete m_shurikenTrails[i];
 		}
 
 		m_shurikenTrails.clear();
@@ -228,6 +249,7 @@ void ObjectManager::Shutdown()
 		for (unsigned int i = 0; i < m_fanTrails.size(); i++)
 		{
 			m_fanTrails[i]->Shutdown();
+			delete m_fanTrails[i];
 		}
 
 		m_fanTrails.clear();
@@ -238,9 +260,26 @@ void ObjectManager::Shutdown()
 		for (unsigned int i = 0; i < m_kunaiTrails.size(); i++)
 		{
 			m_kunaiTrails[i]->Shutdown();
+			delete m_kunaiTrails[i];
 		}
 
 		m_kunaiTrails.clear();
+	}
+
+	if (m_volleyTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
+		{
+			for (unsigned int j = 0; j < 9; j++)
+			{
+				m_volleyTrails[i][j]->Shutdown();
+				delete m_volleyTrails[i][j];
+			}
+
+			m_volleyTrails[i].clear();
+		}
+
+		m_volleyTrails.clear();
 	}
 }
 
@@ -315,6 +354,56 @@ void ObjectManager::ShutdownExit()
 		delete m_volleys[i];
 	}
 	m_volleys.clear();
+
+	// Trails.
+	if (m_shurikenTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
+		{
+			m_shurikenTrails[i]->Shutdown();
+			delete m_shurikenTrails[i];
+		}
+
+		m_shurikenTrails.clear();
+	}
+
+	if (m_fanTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_fanTrails.size(); i++)
+		{
+			m_fanTrails[i]->Shutdown();
+			delete m_fanTrails[i];
+		}
+
+		m_fanTrails.clear();
+	}
+
+	if (m_kunaiTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_kunaiTrails.size(); i++)
+		{
+			m_kunaiTrails[i]->Shutdown();
+			delete m_kunaiTrails[i];
+		}
+
+		m_kunaiTrails.clear();
+	}
+
+	if (m_volleyTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
+		{
+			for (unsigned int j = 0; j < 9; j++)
+			{
+				m_volleyTrails[i][j]->Shutdown();
+				delete m_volleyTrails[i][j];
+			}
+
+			m_volleyTrails[i].clear();
+		}
+
+		m_volleyTrails.clear();
+	}
 }
 
 void ObjectManager::Update()
@@ -480,7 +569,7 @@ void ObjectManager::Update()
 		{
 			if (!IsSpikeTrapInList(tempSpikeTrapList[i].spikeId))
 			{
-				// Add Smoke bomb
+				// Add spike trap
 				AddSpikeTrap(tempSpikeTrapList[i].startX, tempSpikeTrapList[i].startZ, tempSpikeTrapList[i].endX, tempSpikeTrapList[i].endZ, tempSpikeTrapList[i].spikeId, tempSpikeTrapList[i].team);
 			}
 		}
@@ -495,7 +584,7 @@ void ObjectManager::Update()
 		{
 			if (!IsStickyTrapInList(tempStickyTrapList[i].stickyTrapId))
 			{
-				// Add Smoke bomb
+				// Add sticky trap
 				AddStickyTrap(tempStickyTrapList[i].startX, tempStickyTrapList[i].startZ, tempStickyTrapList[i].endX, tempStickyTrapList[i].endZ, tempStickyTrapList[i].stickyTrapId, tempStickyTrapList[i].guid);
 			}
 		}
@@ -566,6 +655,14 @@ void ObjectManager::Update()
 			m_volleys[i]->Shutdown();
 			delete m_volleys[i];
 			m_volleys.erase(m_volleys.begin() + i);
+
+			for (unsigned int j = i; j < i + 9; j++)
+			{
+				m_volleyTrails[i][j]->Shutdown();
+				delete m_volleyTrails[i][j];
+			}
+			m_volleyTrails.erase(m_volleyTrails.begin() + i);
+
 			i--;
 		}
 	}
@@ -573,6 +670,13 @@ void ObjectManager::Update()
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
 		m_worldParticles[i]->Update();
+	}
+	for (unsigned int i = 0; i < m_volleyTrails.size(); i += 9)
+	{
+		for (unsigned int j = 0; j < 9; j++)
+		{
+			m_volleyTrails[i][j]->Update(m_volleys[i]->GetKunais()[j]->GetPosition(), DirectX::XM_PIDIV2);
+		}
 	}
 
 	UpdateRenderLists();
@@ -713,6 +817,13 @@ void ObjectManager::Render()
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
 		m_volleys[i]->Render();
+	}
+	for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
+	{
+		for (unsigned int j = 0; j < 9; j++)
+		{
+			m_volleyTrails[i][j]->Render();
+		}
 	}
 }
 
@@ -1061,6 +1172,26 @@ void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ,
 	DirectX::XMFLOAT3 end = DirectX::XMFLOAT3(p_endX, 0.0f, p_endZ);
 	temp->Initialize(start, end);
 	m_volleys.push_back(temp);
+
+	// Add trails.
+	DirectX::XMFLOAT4 color;
+	Network::GetInstance()->GetTeam(p_guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
+
+	std::vector<Trail*> vector;
+	vector.clear();
+
+	for (unsigned int i = 0; i < 9; i++)
+	{
+		Trail* trail = new Trail();
+		if (!trail->Initialize(50.0f, 0.5f, 0.05f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+		{
+			ConsolePrintErrorAndQuit("A volley trail failed to initialize!");
+		}
+
+		vector.push_back(trail);
+	}
+
+	m_volleyTrails.push_back(vector);
 }
 
 void ObjectManager::ResetListSinceRoundRestarted()
