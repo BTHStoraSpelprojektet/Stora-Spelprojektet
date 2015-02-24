@@ -389,7 +389,8 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			m_globalCooldown = m_maxGlobalCooldown;
 		}
 	}
-	m_floatingText->SetDealtDamageText(Network::GetInstance()->GetDealtDamage());
+	DealtDamageStruct temp = Network::GetInstance()->GetDealtDamage();
+	m_floatingText->SetDealtDamageText(temp.m_position ,temp.m_damage);
 	UpdateAbilityBar();
 }
 

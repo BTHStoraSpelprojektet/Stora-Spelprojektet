@@ -458,8 +458,16 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 					if (BoxBoxTest(playerBoundingBoxes[l], fanBoundingBoxes[k]))
 					{
 						float damage = FANBOOMERANG_DAMAGE*(float)p_deltaTime;
-
-						p_playerManager->DamagePlayer(playerList[j].guid, damage, fanList[i].guid, ABILITIES_FANBOOMERANG);
+						if (playerList[j].dotDamage > 1.0f && p_playerManager->CanSendDotDamage())
+						{
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, playerList[j].dotDamage + damage);
+							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].dotDamage, fanList[i].guid, ABILITIES_FANBOOMERANG);
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, 0.0f);
+						}
+						else
+						{
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, playerList[j].dotDamage + damage);
+						}
 						collisionFound = true;
 						break;
 					}
@@ -665,14 +673,15 @@ void CollisionManager::SpikeTrapCollisionChecks(SpikeManager* p_spikeManager, Pl
 					DirectX::XMFLOAT3 spikeTrapPos = DirectX::XMFLOAT3(spikeList[i].endX, playerBoundingBoxes[l].m_center.y, spikeList[i].endZ);
 					if (SphereSphereTest(Sphere(spikeTrapPos, SPIKE_RADIUS), Sphere(playerBoundingBoxes[l].m_center, playerBoundingBoxes[l].m_radius)))
 					{
-						if (playerList[j].dotDamage > 1.0f)
+						if (playerList[j].dotDamage > 1.0f && p_playerManager->CanSendDotDamage())
 						{
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, playerList[j].dotDamage + (SPIKE_DAMAGE * m_deltaTime));
 							p_playerManager->DamagePlayer(playerList[j].guid, playerList[j].dotDamage, owner.guid, ABILITIES_SPIKETRAP);
 							p_playerManager->SetPlayerDotDamage(playerList[j].guid, 0.0f);
 						}
 						else
 						{
-							p_playerManager->SetPlayerDotDamage(playerList[j].guid, playerList[j].dotDamage + (SPIKE_DAMAGE * m_deltaTime));;
+							p_playerManager->SetPlayerDotDamage(playerList[j].guid, playerList[j].dotDamage + (SPIKE_DAMAGE * m_deltaTime));
 						}
 						break;
 					}
@@ -840,14 +849,15 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 					if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
 					{
 						// Damage the player
-						if (playerList[i].dotDamage > 1.0f)
+						if (playerList[i].dotDamage > 1.0f && p_playerManager->CanSendDotDamage())
 						{
+							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));
 							p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, attackingPlayer.guid, ABILITIES_NAGAINATASTAB);
 							p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
 						}
 						else
 						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));;
+							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));
 						}
 					}
 				}

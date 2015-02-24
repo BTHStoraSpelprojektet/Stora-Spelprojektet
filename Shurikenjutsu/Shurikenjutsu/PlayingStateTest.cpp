@@ -358,6 +358,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	
 	DeathBoard::GetInstance()->Update();
 
+	BasicPicking();
 	if (m_inGameMenuIsActive)
 	{
 		switch (m_inGameMenu->Update())

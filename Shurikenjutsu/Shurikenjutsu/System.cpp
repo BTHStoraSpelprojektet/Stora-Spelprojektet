@@ -340,9 +340,12 @@ void System::Update()
 		if (m_gameState == m_chooseNinjaState)
 		{
 			//Back to menu
-			Network::GetInstance()->Disconnect();
-			m_gameState = m_menuState;
 			m_gameState->EscapeIsPressed();
+			if (m_chooseNinjaState->GetStackSize() == 0)
+			{
+				m_gameState = m_menuState;
+				m_gameState->EscapeIsPressed();
+			}
 		}
 		if (m_gameState == m_playingState)
 		{
