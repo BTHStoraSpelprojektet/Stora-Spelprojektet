@@ -47,8 +47,8 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_rangeSpecialAttack = new WhipSecondaryAttackAbility();
 	m_rangeSpecialAttack->Initialize();
 
-	m_toolAbility = new SpikeAbility();
-	m_toolAbility->Initialize();
+	/*m_toolAbility = new SpikeAbility();
+	m_toolAbility->Initialize();*/
 
 	SetOriginalSpeed(GetSpeed());
 	SetHealth(CHARACTER_TESSEN_HEALTH);

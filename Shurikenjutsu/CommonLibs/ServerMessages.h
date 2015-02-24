@@ -13,6 +13,7 @@ struct PlayerNet
 	float maxHP;
 	float currentHP;
 	int charNr;
+	int toolNr;
 	bool isAlive;
 	float gcd;
 	float dotDamage;

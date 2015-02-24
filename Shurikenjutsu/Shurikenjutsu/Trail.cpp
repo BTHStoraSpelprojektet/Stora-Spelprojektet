@@ -31,7 +31,7 @@ Trail::~Trail()
 bool Trail::Initialize(float p_pointsPerSecond, float p_timeToLive, float p_trailWidth, DirectX::XMFLOAT4 p_color, std::string p_texturePath)
 {
 	m_pointsPerSecond = p_pointsPerSecond;
-	m_timeSinceLastEmission = 0.0f;
+	m_timeSinceLastEmission = (1.0f / m_pointsPerSecond);
 	m_timeToEmit = true;
 	m_emiting = true;
 	m_listDead = false;
@@ -59,7 +59,7 @@ bool Trail::Initialize(float p_pointsPerSecond, float p_timeToLive, float p_trai
 	// Set up description for the dynamic vertex buffer.
 	D3D11_BUFFER_DESC vertexBufferDescription;
 	vertexBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDescription.ByteWidth = sizeof(TrailPoint);
+	vertexBufferDescription.ByteWidth = sizeof(TrailPoint) * 100;
 	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDescription.MiscFlags = 0;
@@ -85,14 +85,13 @@ void Trail::Shutdown()
 {
 	if (m_texture)
 	{
-		m_texture->Release();
-		delete m_texture;
+		m_texture = nullptr;
 	}
 
 	if (m_vertexBuffer)
 	{
 		m_vertexBuffer->Release();
-		delete m_vertexBuffer;
+		m_vertexBuffer = nullptr;
 	}
 
 	m_points.clear();
@@ -130,14 +129,21 @@ void Trail::Update(DirectX::XMFLOAT3 p_position, float p_angle)
 
 void Trail::Render()
 {
-	// Update vertex buffer.
-	D3D11_MAPPED_SUBRESOURCE resource;
-	GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	memcpy(resource.pData, &m_points[0], sizeof(TrailPoint) * m_points.size());
-	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
+	if (m_points.size() > 0)
+	{
+		GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+		
+		// Update vertex buffer.
+		D3D11_MAPPED_SUBRESOURCE resource;
+		GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		memcpy(resource.pData, m_points.data(), sizeof(TrailPoint) * m_points.size());
+		GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
 
-	// Call render.
-	TrailRenderer::GetInstance().RenderTrail(m_vertexBuffer, m_points.size(), m_texture);
+		// Call render.
+		TrailRenderer::GetInstance().RenderTrail(m_vertexBuffer, m_points.size(), m_texture);
+
+		GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+	}
 }
 
 void Trail::StopEmiting()
@@ -154,7 +160,7 @@ void Trail::EmitPoint(DirectX::XMFLOAT3 p_position, float p_angle)
 {
 	TrailPoint point;
 
-	if (m_points.size() == 0)
+	if (m_points.size() < 2)
 	{
 		// First top point.
 		point.m_position = p_position;
@@ -187,7 +193,13 @@ void Trail::EmitPoint(DirectX::XMFLOAT3 p_position, float p_angle)
 		m_points.push_back(point);
 
 		// Bottom point, use previous top.
-		m_points.push_back(m_points[m_points.size() - 2]);
+		point.m_position = m_points[m_points.size() - 3].m_position;
+		point.m_angle = m_points[m_points.size() - 3].m_angle;
+		point.m_width = m_trailWidth;
+		point.m_timeValues = DirectX::XMFLOAT2(m_TrailPointLifeTime, 0.0f);
+		point.m_color = m_color;
+		point.m_endpoint = false;
+		m_points.push_back(point);
 	}
 }
 
@@ -218,4 +230,9 @@ void Trail::ClearOldPoints()
 	// Else, if all the points are old, clear everything. 
 	m_points.clear();
 	m_listDead = true;
+}
+
+void Trail::ChangeColor(DirectX::XMFLOAT4 p_color)
+{
+	m_color = p_color;
 }

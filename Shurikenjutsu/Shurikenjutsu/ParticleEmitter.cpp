@@ -19,7 +19,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
 
 	// Load the texture.
-	m_mesh = 0;
+	m_mesh = nullptr;
 	m_particleTexture = 0;
 
 	// Set maximum number of particles, and the number of particles to emit per second.
@@ -183,22 +183,22 @@ void ParticleEmitter::initParticles(float particlesPerSecond, float maxParticles
 
 void ParticleEmitter::Shutdown()
 {
-	if (m_particleList)
+	if (m_particleList != nullptr)
 	{
 		delete[] m_particleList;
-		m_particleList = 0;
+		m_particleList = nullptr;
 	}
 
 	if (m_vertexBuffer)
 	{
 		m_vertexBuffer->Release();
-		m_vertexBuffer = 0;
+		m_vertexBuffer = nullptr;
 	}
 
-	if (m_mesh)
+	if (m_mesh != nullptr)
 	{
-		delete m_mesh;
-		m_mesh = 0;
+		delete[] m_mesh;
+		m_mesh = nullptr;
 	}
 
 	if (m_particleTexture != nullptr)
@@ -241,7 +241,7 @@ void ParticleEmitter::EmitParticles()
 		m_time = 0.0f;
 
 		// If there are particles to be emited, emit one per frame.
-		if ((emit == true) && (m_currentParticles < (m_maxParticles - 1)))
+		if ((emit == true) && ((unsigned int)m_currentParticles < (m_maxParticles - 1)))
 		{
 			// Increment counter.
 			m_currentParticles++;
@@ -530,8 +530,8 @@ void ParticleEmitter::UpdateParticles()
 		// Smoke moves outwards in a circle.
 	case(PARTICLE_PATTERN_SMOKE) :
 	{
-		if (m_particleList != NULL){
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+		if (m_particleList != nullptr){
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				float halfTime = m_particleList[i].m_timeToLive / 2.0f;
 				float angle = 30.0f * (float)3.14159265359 / 180;
@@ -553,8 +553,8 @@ void ParticleEmitter::UpdateParticles()
 
 	case(PARTICLE_PATTERN_WORLD_MIST) :
 	{
-		if (m_particleList != NULL){
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+		if (m_particleList != nullptr){
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				float halfTime = m_particleList[i].m_timeToLive / 2.0f;
 				float angle = 30.0f * (float)3.14159265359 / 180;
@@ -585,7 +585,7 @@ void ParticleEmitter::UpdateParticles()
 	case PARTICLE_PATTERN_WORLD_DUST:
 	{
 		if (m_particleList != NULL){
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				//float halfTime = m_particleList[i].m_timeToLive / 2.0f;
 				float angle = 30.0f * (float)3.14159265359 / 180;
@@ -616,8 +616,8 @@ void ParticleEmitter::UpdateParticles()
 	// Fire just moves right up, ignoring direction.
 	case(PARTICLE_PATTERN_FIRE) :
 	{
-		if (m_particleList != NULL){
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+		if (m_particleList != nullptr){
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
 				float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
@@ -648,8 +648,8 @@ void ParticleEmitter::UpdateParticles()
 
 	case(PARTICLE_PATTERN_FIREFLIES) :
 	{
-		if (m_particleList != NULL){
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+		if (m_particleList != nullptr){
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				m_particleList[i].m_position.x = m_particleList[i].m_position.x;
 
@@ -665,8 +665,8 @@ void ParticleEmitter::UpdateParticles()
 
 	case(PARTICLE_PATTERN_FIRE_SPARK) :
 	{
-		if (m_particleList != NULL){
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+		if (m_particleList != nullptr){
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				float timeToDirectionChange = m_particleList[i].m_timeToLive / 10.0f;
 				float xWindOffset = getWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
@@ -718,9 +718,9 @@ void ParticleEmitter::UpdateParticles()
 
 	case(PARTICLE_PATTERN_DASH_TRAIL) :
 	{
-		if (m_particleList != NULL)
+		if (m_particleList != nullptr)
 		{
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				// Add time passed.
 				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
@@ -731,9 +731,9 @@ void ParticleEmitter::UpdateParticles()
 	}
 	case(PARTICLE_PATTERN_BUBBLES) :
 	{
-		if (m_particleList != NULL)
+		if (m_particleList != nullptr)
 		{
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				// Add time passed.
 				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
@@ -746,7 +746,7 @@ void ParticleEmitter::UpdateParticles()
 	{
 		if (m_particleList != NULL)
 		{
-			for (unsigned int i = 0; i < m_currentParticles; i++)
+			for (int i = 0; i < m_currentParticles; i++)
 			{
 				// Add time passed.
 				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
@@ -767,8 +767,8 @@ void ParticleEmitter::UpdateParticles()
 
 void ParticleEmitter::fallingLeafUpdate()
 {
-	if (m_particleList != NULL){
-		for (unsigned int i = 0; i < m_currentParticles; i++)
+	if (m_particleList != nullptr){
+		for (int i = 0; i < m_currentParticles; i++)
 		{
 					if (m_particleList[i].m_position.y > 0.2f){
 				float angle = m_particleList[i].m_timePassed*2.5f;
@@ -839,7 +839,7 @@ void ParticleEmitter::ClearOldParticles()
 	// Kill all dying particles.
 	for (unsigned int i = 0; i < m_maxParticles; i++)
 	{
-		if (m_particleList != NULL)
+		if (m_particleList != nullptr)
 		{
 			if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive)
 			{
@@ -859,6 +859,7 @@ void ParticleEmitter::ClearOldParticles()
 					m_particleList[j].m_rotation = m_particleList[j + 1].m_rotation;
 					m_particleList[j].m_opacity = m_particleList[j + 1].m_opacity;
 				}
+				m_particleList[m_maxParticles - 1].m_alive = false;
 			}
 		}
 	}
@@ -875,7 +876,7 @@ void ParticleEmitter::UpdateBuffers()
 	//float opacity = 1.0f;
 
 	// Build the mesh using the particle list, every particle is made of two triangles.
-	for (unsigned int i = 0; i < m_currentParticles; i++)
+	for (int i = 0; i < m_currentParticles; i++)
 	{
 
 		m_mesh[i].m_position = m_particleList[i].m_position;

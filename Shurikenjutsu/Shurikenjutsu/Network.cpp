@@ -68,8 +68,6 @@ bool Network::Initialize()
 	m_timeToPing = m_pingTimer;
 	m_dealtDamage = 0;
 
-	m_updateBloodParticles = false;
-
 	return true;
 }
 
@@ -96,7 +94,6 @@ void Network::Shutdown()
 
 void Network::Update()
 {
-	m_updateBloodParticles = false;
 	m_prevConnected = m_connected;
 	ReceviePacket();
 	m_networkLogger.Update(GLOBAL::GetInstance().GetDeltaTime());
@@ -190,7 +187,7 @@ void Network::ReceviePacket()
 			float x, y, z;
 			float dirX, dirY, dirZ;
 			float maxHP, currentHP;
-			int team, charNr;;
+			int team, charNr,toolNr;
 			bool isAlive;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -211,13 +208,16 @@ void Network::ReceviePacket()
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
+				bitStream.Read(toolNr);
+
 
 				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
 				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
 				UpdatePlayerTeam(guid, team);
-				UpdatePlayerChar(guid, charNr);
+				UpdatePlayerChar(guid, charNr, toolNr);
+
 
 				playerGuids.push_back(guid);
 			}
@@ -773,13 +773,17 @@ void Network::ReceviePacket()
 		case ID_HAS_INFLICTED_DAMAGE:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			float damage;
+			float damage, x,y,z;
 			RakNet::RakNetGUID guid;
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			bitStream.Read(damage);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
 
 			m_dealtDamage = damage;
+			m_dealtDamagePosition = DirectX::XMFLOAT3(x, y, z);
 			break;
 		}		
 		case ID_PLAYER_MOVE_AND_ROTATE:
@@ -862,16 +866,19 @@ void Network::Disconnect()
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }
 
-void Network::ChooseChar(int p_charNr)
+void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 {
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
 	bitStream.Write(p_charNr);
+	bitStream.Write(p_toolNr);
+	bitStream.Write(p_team);
 
 	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 
 	m_myPlayer.charNr = p_charNr;
+	m_myPlayer.toolNr = p_toolNr;
 }
 
 bool Network::IsConnected()
@@ -1038,7 +1045,7 @@ void Network::UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team)
 	}
 }
 
-void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr)
+void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr, int p_toolNr)
 {
 	if (p_owner == m_clientPeer->GetMyGUID())
 	{
@@ -1051,6 +1058,7 @@ void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr)
 			if (m_enemyPlayers[i].guid == p_owner)
 			{
 				m_enemyPlayers[i].charNr = p_charNr;
+				m_enemyPlayers[i].toolNr = p_toolNr;
 			}
 		}
 	}
@@ -1442,7 +1450,7 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 				m_enemyPlayers[i].isAlive = p_isAlive;
 			}
 		}
-	}	
+	}
 }
 
 void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive)
@@ -1674,11 +1682,15 @@ int Network::GetLastPing()
 	return m_clientPeer->GetLastPing(RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT));
 }
 
-float Network::GetDealtDamage()
+DealtDamageStruct Network::GetDealtDamage()
 {
-	float damage = m_dealtDamage;
+	DealtDamageStruct temp;
+	temp.m_damage = m_dealtDamage;
+	temp.m_position = m_dealtDamagePosition;
+
 	m_dealtDamage = 0;
-	return damage;
+	m_dealtDamagePosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	return temp;
 }
 
 void Network::UpdateFanLifeTime(unsigned int p_id, float p_lifeTime)
@@ -1712,13 +1724,20 @@ void Network::SpawnBloodParticles(RakNet::RakNetGUID p_guid)
 	}
 }
 
-std::vector<DirectX::XMFLOAT3*> Network::BloodParticlesLocations()
+int Network::GetTeam(RakNet::RakNetGUID p_guid)
 {
-	if (m_updateBloodParticles)
+	if (m_myPlayer.guid == p_guid)
 	{
-		return m_bloodParticlesLocations;
+		return m_myPlayer.team;
 	}
 
-	m_bloodParticlesLocations.clear();
-	return m_bloodParticlesLocations;
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (m_enemyPlayers[i].guid == p_guid)
+		{
+			return m_enemyPlayers[i].team;
+		}
+	}
+
+	return -1;
 }

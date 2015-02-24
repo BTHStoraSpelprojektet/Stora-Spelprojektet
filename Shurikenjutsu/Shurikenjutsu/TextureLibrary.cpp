@@ -11,7 +11,7 @@ TextureLibrary::~TextureLibrary(){}
 
 void TextureLibrary::Initialize()
 {
-	// Load every model!
+	// Load every texture.
 	LoadTextureDirectory();
 }
 
@@ -74,8 +74,6 @@ void TextureLibrary::LoadTextureDirectory()
 		if ((std::string)ffd.cFileName != "Thumbs.db")
 		{
 			AddTexture("../Shurikenjutsu/2DTextures/" + (std::string)ffd.cFileName);
-
-			ConsolePrintText("Loading texture: " + (std::string)ffd.cFileName);
 		}
 	}
 

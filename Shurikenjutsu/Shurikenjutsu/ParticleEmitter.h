@@ -63,7 +63,7 @@ private:
 	float m_timeToLive;
 
 	unsigned int m_maxParticles;
-	unsigned int m_currentParticles;
+	int m_currentParticles;
 
 	float m_emitBorderLeft;
 

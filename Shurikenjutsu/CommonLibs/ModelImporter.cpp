@@ -18,7 +18,6 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 	inputFile.read((char*)data, fileSize);
 	inputFile.close();
 
-
 	int readPosition = 0;
 	readPosition += sizeof(int);
 	readPosition += 64;
@@ -47,6 +46,7 @@ bool ModelImporter::ImportModel(const char* p_filepath)
 			m_importedMesh.m_vertices.push_back(temp);
 		}
 	}
+
 	else
 	{
 		for (int i = 0; i < vertexVectorSize; i++)
