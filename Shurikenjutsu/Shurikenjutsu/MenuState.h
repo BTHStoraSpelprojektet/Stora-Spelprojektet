@@ -30,6 +30,8 @@ public:
 	void Render();
 
 	void EscapeIsPressed();
+
+	void setSound(Sound* p_sound);
 private:
 
 	std::stack<Menu*> m_menues;
@@ -54,6 +56,8 @@ private:
 	Frustum* m_frustum;
 	DirectionalLight m_directionalLight;
 	MenuItem* m_logo;
+
+	Sound* m_sound;
 };
 
 #endif

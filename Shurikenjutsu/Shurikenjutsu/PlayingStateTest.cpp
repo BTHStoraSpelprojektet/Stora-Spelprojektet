@@ -66,8 +66,8 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	// Initialize the object manager.
 	m_objectManager = new ObjectManager();
-	m_objectManager->Initialize(&level);
 	m_objectManager->SetSound(m_sound);
+	m_objectManager->Initialize(&level);
 
 	// Load and place arena walls.
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();

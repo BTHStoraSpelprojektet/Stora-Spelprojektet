@@ -102,6 +102,21 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
+	m_sound = new Sound();
+	if (!m_sound->Initialize())
+	{
+		ConsolePrintError("Sound Initialize failed.");
+		ConsoleSkipLines(1);
+	}
+	else
+	{
+		ConsolePrintSuccess("Sound initialized successfully.");
+		ConsoleSkipLines(1);
+		m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
+		m_playingState->SetSound(m_sound);
+		m_menuState->setSound(m_sound);
+	}
+
 	// Initialize current GameState
 	m_gameState->Initialize();
 
@@ -124,20 +139,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
-
-	m_sound = new Sound();
-	if (!m_sound->Initialize())
-	{
-		ConsolePrintError("Sound Initialize failed.");
-		ConsoleSkipLines(1);
-	}
-	else
-	{
-		ConsolePrintSuccess("Sound initialized successfully.");
-		ConsoleSkipLines(1);
-		m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
-		m_playingState->SetSound(m_sound);
-	}
 
 	// Initialize the network.
 	Network::GetInstance()->Initialize();

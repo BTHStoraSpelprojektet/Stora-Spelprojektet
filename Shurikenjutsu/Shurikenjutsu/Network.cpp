@@ -858,28 +858,54 @@ void Network::ReceviePacket()
 			bitStream.Read(z);
 
 			float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x) + (m_myPlayer.z - z)*(m_myPlayer.z - z)));
+			float soundDistanceGain = 4.0f;
 
 			//Hit sounds
 			switch (ability)
 			{
 			case ABILITIES::ABILITIES_SHURIKEN:
 			{
-				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / distance);
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
 				break;
 			}
 			case ABILITIES::ABILITIES_MEGASHURIKEN:
 			{
-				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / distance);
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
 				break;
 			}
 			case ABILITIES::ABILITIES_KUNAI:
 			{
-				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND, 1.0f / distance);
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
 				break;
 			}
 			case ABILITIES::ABILITIES_MELEESWING:
 			{
-				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, 1.0f / distance);
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+				break;
+			}
+			case ABILITIES::ABILITIES_WHIP_PRIMARY:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+				break;
+			}
+			case ABILITIES::ABILITIES_WHIP_SECONDARY:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+				break;
+			}
+			case ABILITIES::ABILITIES_NAGINATASLASH:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+				break;
+			}
+			case ABILITIES::ABILITIES_NAGAINATASTAB:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+				break;
+			}
+			case ABILITIES::ABILITIES_VOLLEY:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_VOLLEY_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
 				break;
 			}
 			default:
