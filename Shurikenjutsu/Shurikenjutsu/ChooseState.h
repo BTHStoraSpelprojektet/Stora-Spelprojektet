@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "GameState.h"
+#include <stack>
 
 class Menu;
 class MenuItem;
@@ -28,7 +29,11 @@ public:
 	void EscapeIsPressed();
 
 private:
-	Menu* m_chooseButton;
+	void InitializePickNinja();
+	void InitializePickTeam();
+	std::stack<Menu*> m_menues;
+	Menu* m_pickTeam;
+	Menu* m_chooseNinja;
 
 	MenuItem *m_ninjas[4];
 	MenuItem *m_tools[3];
