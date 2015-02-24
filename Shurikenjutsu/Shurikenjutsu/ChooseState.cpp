@@ -224,7 +224,7 @@ GAMESTATESWITCH ChooseState::Update()
 	case MENUACTION_PREVTOOL:
 		PrevTool();
 		break;
-	case MENUACTION_PICK_BLUE_TEAM://////////////////////////////////
+	case MENUACTION_PICK_BLUE_TEAM:
 		if (m_blueTeam->GetNumberOfPlayers() >= 4)
 		{
 			m_myTeam = 1;
@@ -235,7 +235,7 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		m_menues.push(m_chooseNinja);
 		break;
-	case MENUACTION_PICK_RED_TEAM:///////////////////////////////////
+	case MENUACTION_PICK_RED_TEAM:
 		if (m_redTeam->GetNumberOfPlayers() >= 4)
 		{
 			m_myTeam = 2;
@@ -246,7 +246,7 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		m_menues.push(m_chooseNinja);
 		break;
-	case MENUACTION_RANDOM_TEAM://////////////////////////////////
+	case MENUACTION_RANDOM_TEAM:
 		m_myTeam = 0;
 		m_menues.push(m_chooseNinja);
 		break;
@@ -345,10 +345,6 @@ int ChooseState::GetStackSize()
 	return m_menues.size();
 }
 
-void ChooseState::RandomTeam()
-{
-
-}
 void ChooseState::RandomNinja()
 {
 	std::srand((unsigned int)std::time(0));
