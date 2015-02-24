@@ -24,7 +24,7 @@ bool FanBoomerangAbility::Execute(float p_distance)
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_FANBOOMERANG, 0);
 		SetCooldown(1.0f);
-		std::cout << "FAN BOOMERANG" << std::endl;
+
 		return true;
 	}
 

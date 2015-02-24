@@ -23,10 +23,10 @@ public:
 	bool CalculateRayLength(Ray* p_ray, float p_rayDistance);
 	float CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos);
 	bool CheckCollisionWithAllStaticObjects(Sphere p_sphere);
-	float CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer);
+	float CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer, bool p_throwStuff);
 
 private:
-	float AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer);
+	float AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer, bool p_throwStuff);
 
 	CollisionManager();
 	~CollisionManager();

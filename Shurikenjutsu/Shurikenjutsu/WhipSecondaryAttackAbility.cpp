@@ -24,8 +24,9 @@ bool WhipSecondaryAttackAbility::Execute(float p_distance)
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_WHIP_SECONDARY, 0);
 		SetCooldown(WHIP_SP_COOLDOWN);
-		std::cout << "Spin that whip!!" << std::endl;
+
 		return true;
 	}
+
 	return false;
 }

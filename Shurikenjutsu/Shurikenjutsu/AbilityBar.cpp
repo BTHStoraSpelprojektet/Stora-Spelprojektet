@@ -177,23 +177,23 @@ std::string AbilityBar::GetAbility4Name()
 
 std::string AbilityBar::GetAbility5Name()
 {
-	switch (Network::GetInstance()->GetMyPlayer().charNr)
+	switch (Network::GetInstance()->GetMyPlayer().toolNr)
 	{
-	case 0:
-	{
-		return ABILITY_SMOKE_BOMB_TEXTURE;
-		break;
-	}
-	case 1:
-	{
-		return ABILITY_CALTROP_TEXTURE;
-		break;
-	}
-	case 2:
-	{
-		return ABILITY_STICKY_TRAP_TEXTURE;
-		break;
-	}
+		case 0:
+		{
+			return ABILITY_CALTROP_TEXTURE;
+			break;
+		}
+		case 1:
+		{
+			return ABILITY_SMOKE_BOMB_TEXTURE;
+			break;
+		}
+		case 2:
+		{
+			return ABILITY_STICKY_TRAP_TEXTURE;
+			break;
+		}
 	}
 
 	return ABILITY_CD_TEXTURE;

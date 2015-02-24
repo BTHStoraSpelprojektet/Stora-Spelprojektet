@@ -24,7 +24,7 @@ bool MeleeSwing::Execute(float p_distance)
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_MELEESWING,0);
 		SetCooldown(KATANA_COOLDOWN);
-		std::cout << "MELEE" << std::endl;
+
 		return true;
 	}
 	return false;

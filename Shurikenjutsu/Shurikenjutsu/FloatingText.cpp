@@ -18,10 +18,12 @@ void FloatingText::Initialize()
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
-	CalculatePosition(p_position, p_view, p_projection, m_receivedDamageText, 1.0f, 6.0f);
-	CalculatePosition(p_position, p_view, p_projection, m_dealtDamageText, 2.0f, 0.0f);
-	CalculatePosition(p_position, p_view, p_projection, m_healingText, -1.0f, 6.0f);
-	CalculatePosition(p_position, p_view, p_projection, m_cantUseAbilityText, 0.0f, 2.0f);
+	m_viewMatrix = p_view;
+	m_projectionMatrix = p_projection;
+	CalculatePosition(p_position, m_receivedDamageText, 1.0f, 6.0f);
+	//CalculatePosition(p_position, m_dealtDamageText, 2.0f, 0.0f);
+	CalculatePosition(p_position, m_healingText, -1.0f, 6.0f);
+	CalculatePosition(p_position, m_cantUseAbilityText, 0.0f, 2.0f);
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
@@ -99,7 +101,7 @@ void FloatingText::SetReceivedDamageText(float p_damage)
 		m_receivedDamageText->SetColor(0xff0000ff);
 	}
 }
-void FloatingText::SetDealtDamageText(float p_damage)
+void FloatingText::SetDealtDamageText(DirectX::XMFLOAT3 p_position, float p_damage)
 {
 	int resize = 2;
 	if (p_damage < 10 && p_damage > 0)
@@ -108,16 +110,17 @@ void FloatingText::SetDealtDamageText(float p_damage)
 	}
 	if (p_damage != 0)
 	{
+		CalculatePosition(p_position, m_dealtDamageText, 0.0f, 0.0f);
 		std::string temp = std::to_string(p_damage);
 		temp.resize(resize);
 		m_dealtDamageText->SetText(temp);
 		m_dealtDamageText->SetColor(0xff00ffff);
 	}
 }
-void FloatingText::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection, GUIText* p_text, float p_xOffset, float p_yOffset)
+void FloatingText::CalculatePosition(DirectX::XMFLOAT3 p_position, GUIText* p_text, float p_xOffset, float p_yOffset)
 {
 	DirectX::XMFLOAT4X4 vp;
-	DirectX::XMStoreFloat4x4(&vp, DirectX::XMLoadFloat4x4(&p_view) * DirectX::XMLoadFloat4x4(&p_projection));
+	DirectX::XMStoreFloat4x4(&vp, DirectX::XMLoadFloat4x4(&m_viewMatrix) * DirectX::XMLoadFloat4x4(&m_projectionMatrix));
 
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_position.x + p_xOffset, p_position.y + p_yOffset, p_position.z);
 	DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&vp)));

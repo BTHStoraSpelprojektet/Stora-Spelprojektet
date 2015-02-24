@@ -65,6 +65,8 @@ public:
 	bool IsVisible();
 	void SetIsVisible(bool p_visiblie);
 
+	void ChooseTool();
+
 	Sphere GetSphere();
 	OBB GetOBB();
 

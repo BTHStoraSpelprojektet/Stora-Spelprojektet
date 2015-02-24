@@ -13,6 +13,7 @@ struct PlayerNet
 	float maxHP;
 	float currentHP;
 	int charNr;
+	int toolNr;
 	bool isAlive;
 	float gcd;
 	float dotDamage;
@@ -119,7 +120,8 @@ enum Messages
 	ID_SEND_TEAM_SCORE,
 	ID_NAGINATA_STAB_HAS_OCCURED,
 	ID_HAS_INFLICTED_DAMAGE,
-	ID_PLAYER_MOVE_AND_ROTATE
+	ID_PLAYER_MOVE_AND_ROTATE,
+	ID_DEATHBOARDKILL
 };
 
 #endif

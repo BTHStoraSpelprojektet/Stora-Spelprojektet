@@ -3,9 +3,9 @@
 
 #include <string>
 const std::string KATANA_PRIMARY_ATTACK = 
-"Performs  a close range attack, in the characters facing \n direction,  by clicking the left Mouse Button.";
+"Performs a close range attack in the characters facing \n direction, by clicking the left Mouse Button.";
 const std::string KATANA_SECONDARY_ATTACK = 
-"Performs a dashof maximum 10 units in the characters \n facing direction. by pressing the Q button.";
+"Performs a dash in the characters \n facing direction. by pressing the Q button.";
 
 const std::string SHURIKEN_PRIMARY_ATTACK = 
 "Throws a shuriken in the characters facing direction by \n pressing the right Mouse Button. The character has a \n maximum of 3 stacks, that gets replenished over time.";

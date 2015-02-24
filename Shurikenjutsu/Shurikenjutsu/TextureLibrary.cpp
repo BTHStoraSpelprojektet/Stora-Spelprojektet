@@ -2,6 +2,7 @@
 #include <iostream>
 #include "GraphicsEngine.h"
 #include "WICTextureLoader.h"
+#include "ConsoleFunctions.h"
 
 TextureLibrary* TextureLibrary::m_instance;
 
@@ -73,7 +74,8 @@ void TextureLibrary::LoadTextureDirectory()
 		if ((std::string)ffd.cFileName != "Thumbs.db")
 		{
 			AddTexture("../Shurikenjutsu/2DTextures/" + (std::string)ffd.cFileName);
-			std::cout << "Loading texture: " + (std::string)ffd.cFileName << std::endl;
+
+			ConsolePrintText("Loading texture: " + (std::string)ffd.cFileName);
 		}
 	}
 
