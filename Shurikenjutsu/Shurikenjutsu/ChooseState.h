@@ -35,7 +35,6 @@ private:
 	void InitializePickNinja();
 	void InitializePickTeam();
 	void UpdateTeams();
-	void RandomTeam();
 	void RandomNinja();
 
 	std::stack<Menu*> m_menues;
