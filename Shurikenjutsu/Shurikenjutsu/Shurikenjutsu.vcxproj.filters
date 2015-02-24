@@ -480,7 +480,7 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="TeamTable.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -809,7 +809,7 @@
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="TeamTable.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

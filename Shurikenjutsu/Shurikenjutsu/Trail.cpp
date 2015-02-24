@@ -132,7 +132,8 @@ void Trail::Render()
 	if (m_points.size() > 0)
 	{
 		GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
-		
+		GraphicsEngine::GetInstance()->TurnOffBackfaceCulling();
+
 		// Update vertex buffer.
 		D3D11_MAPPED_SUBRESOURCE resource;
 		GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
@@ -142,6 +143,7 @@ void Trail::Render()
 		// Call render.
 		TrailRenderer::GetInstance().RenderTrail(m_vertexBuffer, m_points.size(), m_texture);
 
+		GraphicsEngine::GetInstance()->TurnOnBackfaceCulling();
 		GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 	}
 }

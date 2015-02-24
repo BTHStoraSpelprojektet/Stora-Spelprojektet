@@ -84,7 +84,10 @@ private:
 	bool IsStickyTrapInList(unsigned int p_stickyeTrapId);
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
-	
+
 	std::vector<Trail*> m_shurikenTrails;
+	std::vector<Trail*> m_fanTrails;
+	std::vector<Trail*> m_kunaiTrails;
+	std::vector<std::vector<Trail*>> m_volleyTrails;
 };
 #endif

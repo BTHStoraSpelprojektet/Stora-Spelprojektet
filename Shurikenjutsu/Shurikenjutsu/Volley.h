@@ -18,6 +18,8 @@ public:
 	void Render();
 	void RenderDepth();
 
+	std::vector<VolleyObject*> GetKunais();
+
 private:
 	void AddRandomProjectiles(int p_amount, DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition);
 	std::vector<VolleyObject*> m_projectiles;
