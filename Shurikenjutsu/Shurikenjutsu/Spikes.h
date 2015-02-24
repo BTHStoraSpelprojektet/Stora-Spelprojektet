@@ -2,6 +2,8 @@
 #define SPIKES_H
 
 #include "Structures.h"
+#include "Trail.h"
+
 class Object;
 
 class Spikes
@@ -35,7 +37,7 @@ private:
 	Sphere m_spikeSphere;
 	unsigned int m_spikeId;
 	float m_damage;
+
+	Trail* m_trail;
 };
-
-
 #endif

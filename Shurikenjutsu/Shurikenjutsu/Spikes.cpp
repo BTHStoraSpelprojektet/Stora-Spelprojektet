@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "GraphicsEngine.h"
-#include "Network.h"
+#include "ConsoleFunctions.h"
 
 bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_spikeBombID, int p_team)
 {
@@ -33,6 +33,15 @@ bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_e
 	m_percentZ = z / length;
 	m_angle = asinf((9.82f * length) / (m_speed * m_speed)) * 0.5f;
 
+	DirectX::XMFLOAT4 color;
+	p_team == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
+
+	m_trail = new Trail();
+	if (!m_trail->Initialize(50.0f, 0.2f, 0.2f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+	{
+		ConsolePrintErrorAndQuit("A spike trap trail failed to initialize!");
+	}
+
 	return true;
 }
 
@@ -48,8 +57,14 @@ void Spikes::Update()
 
 		m_spikeBag->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
 
+		m_trail->Update(m_spikeBag->GetPosition(), m_angle);
+
 		if (y < 0.0f)
 		{
+			m_trail->Shutdown();
+			delete m_trail;
+			m_trail = nullptr;
+
 			ResetTimer();
 			m_isThrowing = false;
 		}
@@ -71,6 +86,13 @@ void Spikes::Shutdown()
 		delete m_spikesTrap;
 		m_spikesTrap = nullptr;
 	}
+
+	if (m_trail)
+	{
+		m_trail->Shutdown();
+		delete m_trail;
+		m_trail = nullptr;
+	}
 }
 
 void Spikes::Render()
@@ -78,7 +100,13 @@ void Spikes::Render()
 	if (m_isThrowing)
 	{
 		m_spikeBag->Render();
+
+		if (m_trail)
+		{
+			m_trail->Render();
+		}
 	}
+
 	else
 	{
 		m_spikesTrap->Render();

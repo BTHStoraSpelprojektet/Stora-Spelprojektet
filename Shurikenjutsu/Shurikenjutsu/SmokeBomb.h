@@ -2,6 +2,7 @@
 #define SMOKEBOMB_H
 
 #include "Structures.h"
+#include "Trail.h"
 
 class ParticleEmitter;
 class Object;
@@ -21,7 +22,6 @@ public:
 	unsigned int GetID();
 	Object* GetBomb();
 
-
 private:
 	bool m_isThrowing;
 
@@ -36,6 +36,8 @@ private:
 	ParticleEmitter* m_particles;
 	float m_timer;
 	unsigned int m_smokeBombId;
+
+	Trail* m_trail;
 };
 
 #endif

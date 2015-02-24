@@ -931,6 +931,7 @@ void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_
 	tempStickyTrap->ResetTimer();
 	m_stickyTrapList.push_back(tempStickyTrap);
 }
+
 float ObjectManager::CheckStickyTrapYPosition()
 {
 	float returnValue = 0.001f;
@@ -1238,4 +1239,54 @@ void ObjectManager::ResetListSinceRoundRestarted()
 		delete m_volleys[i];
 	}
 	m_volleys.clear();
+
+	// Trails.
+	if (m_shurikenTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
+		{
+			m_shurikenTrails[i]->Shutdown();
+			delete m_shurikenTrails[i];
+		}
+
+		m_shurikenTrails.clear();
+	}
+
+	if (m_fanTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_fanTrails.size(); i++)
+		{
+			m_fanTrails[i]->Shutdown();
+			delete m_fanTrails[i];
+		}
+
+		m_fanTrails.clear();
+	}
+
+	if (m_kunaiTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_kunaiTrails.size(); i++)
+		{
+			m_kunaiTrails[i]->Shutdown();
+			delete m_kunaiTrails[i];
+		}
+
+		m_kunaiTrails.clear();
+	}
+
+	if (m_volleyTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
+		{
+			for (unsigned int j = 0; j < 9; j++)
+			{
+				m_volleyTrails[i][j]->Shutdown();
+				delete m_volleyTrails[i][j];
+			}
+
+			m_volleyTrails[i].clear();
+		}
+
+		m_volleyTrails.clear();
+	}
 }
