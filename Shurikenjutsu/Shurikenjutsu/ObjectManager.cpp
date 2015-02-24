@@ -382,8 +382,12 @@ void ObjectManager::Update()
 					{
 						color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 					}
+					else
+					{
+						color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+					}
 					
-					if (!trail->Initialize(60.0f, 0.25f, 0.60f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+					if (!trail->Initialize(100.0f, 0.50f, 0.60f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
 					}
@@ -406,8 +410,12 @@ void ObjectManager::Update()
 					{
 						color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
 					}
+					else
+					{
+						color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+					}
 
-					if(!trail->Initialize(40.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+					if(!trail->Initialize(50.0f, 0.25f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
 					}
