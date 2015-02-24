@@ -82,5 +82,7 @@ private:
 	bool IsFanInNetworkList(unsigned int p_fanId);
 	
 	std::vector<Trail*> m_shurikenTrails;
+	std::vector<Trail*> m_fanTrails;
+	std::vector<Trail*> m_kunaiTrails;
 };
 #endif
