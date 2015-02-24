@@ -73,9 +73,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dashParticles1->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
 	m_dashParticles2->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
 
-	m_bloodParticles = new ParticleEmitter();
-	m_bloodParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), m_position, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BLOODHIT);
-
 	m_aimSphere = new Object();
 	m_aimSphere->Initialize("../Shurikenjutsu/Models/Marker_CircleShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 
@@ -202,13 +199,6 @@ void Player::Shutdown()
 		delete m_dashParticles2;
 		m_dashParticles2 = nullptr;
 	}
-
-	if (m_bloodParticles != nullptr)
-	{
-		m_bloodParticles->Shutdown();
-		delete m_bloodParticles;
-		m_bloodParticles = nullptr;
-	}
 }
 
 void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
@@ -217,7 +207,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	m_dashParticles1->Update();
 	m_dashParticles2->UpdatePosition(m_position);
 	m_dashParticles2->Update();
-
+	
 	if (m_updateVisibility)
 	{
 		m_updateVisibility = false;
@@ -472,6 +462,9 @@ void Player::Update()
 	m_dashParticles1->Update();
 	m_dashParticles2->UpdatePosition(m_position);
 	m_dashParticles2->Update();
+	
+	//m_bloodParticles->UpdatePosition(m_position);
+	//m_bloodParticles->Update();
 
 	int state = Network::GetInstance()->AnimationChanged(m_guid);
 	if (state != -1)

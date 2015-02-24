@@ -131,6 +131,9 @@ public:
 
 	float GetDealtDamage();
 
+	void SpawnBloodParticles(RakNet::RakNetGUID p_guid);
+	std::vector<DirectX::XMFLOAT3*> BloodParticlesLocations();
+	bool IsBloodParticlesUpdated();
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
@@ -219,5 +222,8 @@ private:
 	double m_pingTimer;
 
 	float m_dealtDamage;
+
+	std::vector<DirectX::XMFLOAT3*> m_bloodParticlesLocations;
+	bool m_updateBloodParticles;
 };
 #endif

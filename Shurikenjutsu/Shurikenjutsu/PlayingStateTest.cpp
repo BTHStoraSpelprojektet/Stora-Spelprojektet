@@ -335,10 +335,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
 	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
-	topLeft.x = -45.0f;
-	topLeft.y = 52.0f;
-	bottomLeft.x = 45.0f;
-	bottomLeft.y = -52.0f;
 
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);

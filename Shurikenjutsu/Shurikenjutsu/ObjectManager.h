@@ -50,11 +50,15 @@ public:
 	std::vector<StickyTrap*> GetStickyTrapList();
 
 	void RemoveProjectile(unsigned int p_projId);
+
+	void AddBloodSpots(DirectX::XMFLOAT3 p_pos);
+
 private:
 	float CheckStickyTrapYPosition();
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
 	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
 	void ResetListSinceRoundRestarted();
+	
 
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
@@ -68,7 +72,7 @@ private:
 	std::vector<Object*> m_objectsToInstanceRender;
 	std::vector<Object*> m_objectsToSingleRender;
 	std::vector<Volley*> m_volleys;
-	
+	std::vector<ParticleEmitter*> m_bloodParticles;
 
 	Frustum* m_frustum;
 

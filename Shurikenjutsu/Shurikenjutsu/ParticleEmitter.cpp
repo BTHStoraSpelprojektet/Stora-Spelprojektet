@@ -108,7 +108,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_BLOODHIT) :
 		{
-			initParticles(20.0f, 20, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 2.0f, 1.0f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/BloodParticle.png"));
+			initParticles(200.0f, 1000, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.5f, 1.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/BloodParticle.png"));
 			break;
 		}
 		default:
@@ -497,8 +497,12 @@ void ParticleEmitter::EmitParticles()
 				}
 				case(PARTICLE_PATTERN_BLOODHIT) :
 				{
+					// Set a random direction in xz.
+					float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
+					DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
+
 					m_particleList[index].m_position = position;
-					m_particleList[index].m_direction = m_emitterDirection;
+					m_particleList[index].m_direction = direction;
 					m_particleList[index].m_color = m_color;
 					m_particleList[index].m_velocity = velocity;
 					m_particleList[index].m_alive = true;
@@ -520,8 +524,6 @@ void ParticleEmitter::EmitParticles()
 
 void ParticleEmitter::UpdateParticles()
 {
-	if (m_pattern > 10)
-		return;
 	// Update the particles to move upwards from their position.
 	switch (m_pattern)
 	{
@@ -749,9 +751,9 @@ void ParticleEmitter::UpdateParticles()
 				// Add time passed.
 				m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
 
-				m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
-				m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
-				m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_position.x = m_particleList[i].m_position.x + (m_particleList[i].m_direction.x * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_position.y = m_particleList[i].m_position.y + (m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_position.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
 			}
 		}
 		break;

@@ -23,6 +23,8 @@ bool ObjectManager::Initialize(Level* p_level)
 	std::vector<LevelImporter::AnimatedObject> animatedLevelObjects = p_level->GetAnimatedObjects();
 	std::vector<LevelImporter::ParticleEmitter> particleLevelEmitter = p_level->GetParticleEmitters();
 
+	m_bloodParticles = std::vector<ParticleEmitter*>();
+
 	m_projectiles = std::vector<Projectile*>();
 
 	//Stuff needed for the loop
@@ -205,6 +207,13 @@ void ObjectManager::Shutdown()
 		delete m_volleys[i];
 	}
 	m_volleys.clear();
+
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Shutdown();
+		delete m_bloodParticles[i];
+	}
+	m_bloodParticles.clear();
 }
 
 void ObjectManager::ShutdownExit()
@@ -482,6 +491,12 @@ void ObjectManager::Update()
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
 		m_worldParticles[i]->Update();
+	}
+
+	// Update blood
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Update();
 	}
 
 	UpdateRenderLists();
@@ -970,4 +985,12 @@ void ObjectManager::ResetListSinceRoundRestarted()
 		delete m_volleys[i];
 	}
 	m_volleys.clear();
+}
+
+void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
+{
+	ParticleEmitter* temp = new ParticleEmitter();
+	temp->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
+	temp->SetEmitParticleState(true);
+	m_bloodParticles.push_back(temp);
 }
