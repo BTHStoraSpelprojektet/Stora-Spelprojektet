@@ -852,9 +852,6 @@
     <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
       <Filter>Shaders\ShadowShapes</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SSAO\SSAOBlurPixelShader.hlsl">
-      <Filter>Shaders\SSAO</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\SSAO\SSAOPixelShader.hlsl">
       <Filter>Shaders\SSAO</Filter>
     </FxCompile>
@@ -866,6 +863,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\Scene\PixelShaderForward.hlsl">
       <Filter>Shaders\Scene</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SSAO\SSAOBlurHPixelShader.hlsl">
+      <Filter>Shaders\SSAO</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SSAO\SSAOBlurVPixelShader.hlsl">
+      <Filter>Shaders\SSAO</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

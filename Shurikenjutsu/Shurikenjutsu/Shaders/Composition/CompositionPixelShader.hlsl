@@ -6,7 +6,7 @@ cbuffer FrameBuffer : register(b0)
 	matrix m_projectionMatrix;
 };
 
-Texture2D m_textures[3] : register(t3);
+Texture2D m_textures[4] : register(t3);
 
 struct Input
 {
@@ -36,6 +36,8 @@ float4 main(Input p_input) : SV_Target
 
 	float zBuffer = m_textures[2].Load(load).x; //
 
+	float ssao = m_textures[3].Load(load * 0.5f).x; //
+
 	float2 textureDimensions; //
 	m_textures[0].GetDimensions(textureDimensions.x, textureDimensions.y); //
 
@@ -58,7 +60,7 @@ float4 main(Input p_input) : SV_Target
 
 	ComputeDirectionalLight(material, m_directionalLight, normal.xyz, toCamera, A, D, S);
 
-	albedo.xyz = albedo.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
+	albedo.xyz = albedo.xyz*((A.xyz*ssao + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
 	albedo.w = 1.0f;
 
 	return float4(albedo.xyz, 1.0f);

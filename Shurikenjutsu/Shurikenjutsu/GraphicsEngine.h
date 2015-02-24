@@ -116,6 +116,8 @@ public:
 
 	void SetScreenSpaceRenderTarget();
 
+	void RenderSSAO();
+	void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
 
 private:
 	static GraphicsEngine* m_instance;

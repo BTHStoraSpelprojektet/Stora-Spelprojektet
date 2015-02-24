@@ -641,12 +641,12 @@ void GraphicsEngine::ScreenChangeHandled()
 
 ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture1()
 {
-	return m_directX.GetPostProcessingSRV1();
+	return m_directX.GetGBufferSRV1();
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture2()
 {
-	return m_directX.GetPostProcessingSRV2();
+	return m_directX.GetGBufferSRV2();
 }
 
 void GraphicsEngine::ClearRenderTargetsForGBuffers()
@@ -666,10 +666,31 @@ void GraphicsEngine::DoReportLiveObjects()
 
 void GraphicsEngine::Composition()
 {
-	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetPostProcessingSRV2(), m_directX.GetPostProcessingSRV1(), m_directX.GetDepthSRV());
+	m_directX.ScreenSpaceRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetGBufferSRV2(), m_directX.GetGBufferSRV1(), m_directX.GetDepthSRV(), m_directX.GetPPSRV1());
 }
 
 void GraphicsEngine::SetScreenSpaceRenderTarget()
 {
+
 	m_directX.ScreenSpaceRenderTarget();
+}
+
+void GraphicsEngine::RenderSSAO()
+{
+	m_directX.SetRenderTargetsForPP1();
+	m_screenSpace->RenderSSAO(m_directX.GetContext(), m_directX.GetGBufferSRV2(), m_directX.GetDepthSRV());
+	for (int i = 0; i < 1; i++)
+	{
+		m_directX.SetRenderTargetsForPP2();
+		m_screenSpace->BlurImage(m_directX.GetContext(), m_directX.GetPPSRV1(), m_directX.GetDepthSRV(), m_directX.GetGBufferSRV2(), true);
+		m_directX.SetRenderTargetsForPP1();
+		m_screenSpace->BlurImage(m_directX.GetContext(), m_directX.GetPPSRV2(), m_directX.GetDepthSRV(), m_directX.GetGBufferSRV2(), false);
+	}
+}
+
+void GraphicsEngine::SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection)
+{
+	m_screenSpace->UpdateSSAOBuffer(m_directX.GetContext(), p_projection);
 }

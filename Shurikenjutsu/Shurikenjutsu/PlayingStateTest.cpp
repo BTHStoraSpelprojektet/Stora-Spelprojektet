@@ -344,10 +344,10 @@ void PlayingStateTest::Render()
 	m_objectManager->Render();
 	m_playerManager->Render();
 	
+	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenSpaceRenderTarget();
-	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->Composition();
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();

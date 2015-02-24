@@ -50,7 +50,7 @@ void main(Input p_input , out gBuffer p_output)
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
 	clip(textureColor.a - 0.15f);
 
-	float shadowSum = 0.0f;
+	float shadowSum = 1.0f;
 
 	// Set fog color.
 	float4 fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
