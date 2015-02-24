@@ -38,6 +38,15 @@ public:
 	void DoReportLiveObjects();
 	void SetDebugName(ID3D11DeviceChild* child, const std::string& name);
 
+	bool InitializePostProcessing();
+
+	void SetRenderTargetsForGBuffers();
+	void ScreenSpaceRenderTarget();
+	void ClearRenderTargetsForGBuffers();
+	ID3D11ShaderResourceView* GetPostProcessingSRV1();
+	ID3D11ShaderResourceView* GetPostProcessingSRV2();
+	ID3D11ShaderResourceView* DirectXWrapper::GetDepthSRV();
+
 private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_context;
@@ -69,7 +78,10 @@ private:
 	float m_clearColor[4];
 
 	int m_vsync;
-	
 
+	// POST PROCESSING STUFF
+	ID3D11RenderTargetView* m_postProcessingRTV[2];
+	ID3D11ShaderResourceView* m_postProcessingSRV[2];
+	ID3D11ShaderResourceView* m_depthSRV;
 };
 #endif;
