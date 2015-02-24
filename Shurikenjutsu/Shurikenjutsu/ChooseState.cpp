@@ -43,7 +43,7 @@ bool ChooseState::Initialize()
 
 	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight / 3.0f, 0xffff0000);
 	
-	m_menues.push(m_pickTeam);
+	m_menues.push(m_chooseNinja);
 	return true;
 }
 void ChooseState::InitializePickTeam()
