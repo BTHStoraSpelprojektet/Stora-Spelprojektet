@@ -26,6 +26,18 @@ const float OFFSET = 10.0f;
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
 
+
+
+/*TODO
+ - Random knapp i mitten
+ - Visualisera vilket lag man är med i
+ - Backgrund
+ - Popup text
+ - 
+
+
+
+*/
 bool ChooseState::Initialize()
 {
 	m_screenHeight = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
@@ -164,6 +176,8 @@ void ChooseState::Shutdown()
 
 GAMESTATESWITCH ChooseState::Update()
 {
+	//NextNinja();
+	//NextTool();
 	UpdateTeams();
 
 	m_redTeamScore->SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
