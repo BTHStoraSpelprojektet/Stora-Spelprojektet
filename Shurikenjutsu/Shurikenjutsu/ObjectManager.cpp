@@ -372,7 +372,17 @@ void ObjectManager::Update()
 					AddShuriken(MEGA_SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].speed, tempNetShurikens[i].shurikenId);
 
 					Trail* trail = new Trail();
-					DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+					DirectX::XMFLOAT4 color;
+
+					if (Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1)
+					{
+						color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+					}
+					else if (Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 2)
+					{
+						color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+					}
+					
 					if (!trail->Initialize(60.0f, 0.25f, 0.60f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
@@ -386,7 +396,17 @@ void ObjectManager::Update()
 					AddShuriken(SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].speed, tempNetShurikens[i].shurikenId);
 
 					Trail* trail = new Trail();
-					DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+					DirectX::XMFLOAT4 color;
+
+					if (Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1)
+					{
+						color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+					}
+					else if (Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 2)
+					{
+						color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+					}
+
 					if(!trail->Initialize(40.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
