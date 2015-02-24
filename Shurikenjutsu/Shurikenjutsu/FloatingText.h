@@ -12,18 +12,20 @@ public:
 	void Shutdown();
 	void Render();
 	void SetReceivedDamageText(float p_damage);
-	void SetDealtDamageText(float p_damage);
 	void SetHealingText(float p_healing);
 	void SetcantUseAbilityText(int p_messageIndex);
+	void SetDealtDamageText(DirectX::XMFLOAT3 p_position, float p_damage);
 private:
 	void RenderText(GUIText* p_text);
-	void CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection, GUIText* p_text,float p_xOffset, float p_yOffset);
+	void CalculatePosition(DirectX::XMFLOAT3 p_position, GUIText* p_text,float p_xOffset, float p_yOffset);
 	void DecreaseTextOpacity(GUIText* p_text);
 
 	GUIText* m_receivedDamageText;
 	GUIText* m_dealtDamageText;
 	GUIText* m_healingText;
 	GUIText* m_cantUseAbilityText;
+	DirectX::XMFLOAT4X4 m_viewMatrix;
+	DirectX::XMFLOAT4X4 m_projectionMatrix;
 };
 
 #endif

@@ -30,29 +30,41 @@ ChooseState::~ChooseState(){}
 
 bool ChooseState::Initialize()
 {
+	InitializePickTeam();
+	InitializePickNinja();
+	return true;
+}
+void ChooseState::InitializePickTeam()
+{
+	m_pickTeam = new Menu();
+
+}
+
+void ChooseState::InitializePickNinja()
+{
 	nrOfNinjas = 3;
 	currentNinja = 0;
 	nrOfTools = 3;
 	currentTool = 0;
-	m_chooseButton = new Menu();
+	m_chooseNinja = new Menu();
 
 	// Play
-	m_chooseButton->AddButton(0.0f, -OFFSET - 150.0f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
-	
+	m_chooseNinja->AddButton(0.0f, -OFFSET - 150.0f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
+
 	// Back
-	m_chooseButton->AddButton(0.0f, -BUTTONHEIGHT - 150.0f - 2.0f*OFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	m_chooseNinja->AddButton(0.0f, -BUTTONHEIGHT - 150.0f - 2.0f*OFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 
 	// Next ninja, right button
-	m_chooseButton->AddButton(BUTTONWIDTH*0.5f + NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
+	m_chooseNinja->AddButton(BUTTONWIDTH*0.5f + NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
 
 	// Prev ninja, left button
-	m_chooseButton->AddButton(-BUTTONWIDTH*0.5f - NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVNINJA);
+	m_chooseNinja->AddButton(-BUTTONWIDTH*0.5f - NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVNINJA);
 
 	//Prev tool, left button
-	m_chooseButton->AddButton(-70.0f, -10.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVTOOL);
-	
+	m_chooseNinja->AddButton(-70.0f, -10.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVTOOL);
+
 	//Next tool, right button
-	m_chooseButton->AddButton(70.0f, -10.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTTOOL);
+	m_chooseNinja->AddButton(70.0f, -10.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTTOOL);
 
 	//Test tool texture
 	//m_chooseButton->AddButton(0.0f, 0.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_Caltrops.png"), MENUACTION_PREVTOOL);
@@ -79,17 +91,21 @@ bool ChooseState::Initialize()
 	m_abilityDescription[0]->Initialize(1);
 	m_abilityDescription[1]->Initialize(2);
 	m_abilityDescription[2]->Initialize(3);
-
-	return true;
 }
-
 void ChooseState::Shutdown()
 {
-	if (m_chooseButton != nullptr)
+	if (m_pickTeam != nullptr)
 	{
-		m_chooseButton->Shutdown();
-		delete m_chooseButton;
-		m_chooseButton = nullptr;
+		m_pickTeam->Shutdown();
+		delete m_pickTeam;
+		m_pickTeam = nullptr;
+	}
+
+	if (m_chooseNinja != nullptr)
+	{
+		m_chooseNinja->Shutdown();
+		delete m_chooseNinja;
+		m_chooseNinja = nullptr;
 	}
 
 	for (unsigned int i = 0; i < 4; i++)
@@ -126,7 +142,7 @@ void ChooseState::Shutdown()
 
 GAMESTATESWITCH ChooseState::Update()
 {
-	MenuActionData action = m_chooseButton->Update();
+	MenuActionData action = m_chooseNinja->Update();
 	
 	switch (action.m_action)
 	{
@@ -157,7 +173,7 @@ GAMESTATESWITCH ChooseState::Update()
 
 void ChooseState::Render()
 {
-	m_chooseButton->Render();
+	m_chooseNinja->Render();
 
 	m_ninjas[currentNinja]->Render();
 	m_tools[currentTool]->Render();
