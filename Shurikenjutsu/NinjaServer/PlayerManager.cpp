@@ -73,7 +73,7 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 	return m_players;
 }
 
-void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr)
+void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team)
 {
 	if (p_charNr == 0)
 	{
@@ -90,7 +90,14 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 
 	PlayerNet player;
 	player.guid = p_guid;
-	player.team = GetTeamForPlayer();
+	if (p_team == 0)
+	{
+		player.team = GetTeamForPlayer();
+	}
+	else
+	{
+		player.team = p_team;
+	}
 	player.charNr = p_charNr;
 	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
 	player.x = spawnPoint.m_translationX;

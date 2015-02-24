@@ -16,10 +16,6 @@ const float BUTTONHEIGHT = 98.0f;
 const float NEXTWIDTH = 100.0f;
 const float NEXTHEIGHT = 98.0f;
 
-// PORTRAIT
-const float PORTRAITWIDTH = 200.0f;
-const float PORTRAITHEIGHT = 200.0f;
-
 // TOOL TEXTURE
 const float TOOLWIDTH = 50.0f;
 const float TOOLHEIGHT = 50.0f;
@@ -34,25 +30,28 @@ bool ChooseState::Initialize()
 {
 	m_screenHeight = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	m_screenWidth = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
+	m_portraitHeight = m_screenHeight / 5.12f;
+	m_portraitWidth = m_screenWidth / 6.4f;
 	InitializePickTeam();
 	InitializePickNinja();
 
 	m_redTeamScore = new GUIText();
 	m_blueTeamScore = new GUIText();
-	m_redTeamScore->Initialize("0", 50.0f, -m_screenWidth * 0.1f, m_screenHeight / 3.0f, 0xff0000ff);
+	m_redTeamScore->Initialize("0", 50.0f, -m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xff0000ff);
 
-	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight / 3.0f, 0xffff0000);
+	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xffff0000);
 	
 	m_menues.push(m_pickTeam);
+	m_myTeam = 0;
 	return true;
 }
 void ChooseState::InitializePickTeam()
 {
 	m_pickTeam = new Menu();	
 	
-	m_pickTeam->AddButton(-PORTRAITWIDTH * 2.0f, 0.0f, PORTRAITWIDTH * 2, PORTRAITHEIGHT * 4.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/redteam.png"), MENUACTION_PICK_RED_TEAM);
+	m_pickTeam->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/redteam.png"), MENUACTION_PICK_RED_TEAM);
 
-	m_pickTeam->AddButton(PORTRAITWIDTH * 2.0f, 0.0f, PORTRAITWIDTH * 2, PORTRAITHEIGHT * 4.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueteam.png"), MENUACTION_PICK_BLUE_TEAM);
+	m_pickTeam->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueteam.png"), MENUACTION_PICK_BLUE_TEAM);
 
 	m_pickTeam->AddButton(-m_screenWidth * 0.5f + BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 
@@ -60,8 +59,8 @@ void ChooseState::InitializePickTeam()
 	
 	m_blueTeam = new TeamTable();
 	m_redTeam = new TeamTable();
-	m_redTeam->Initialize(-m_screenWidth * 0.25f, m_screenHeight * 3.0f);
-	m_blueTeam->Initialize(m_screenWidth * 0.25f, m_screenHeight * 3.0f);
+	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f);
+	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f);
 }
 
 void ChooseState::InitializePickNinja()
@@ -97,9 +96,9 @@ void ChooseState::InitializePickNinja()
 	m_ninjas[1] = new MenuItem();
 	m_ninjas[2] = new MenuItem();
 	//m_ninjas[3] = new MenuItem();
-	m_ninjas[0]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
-	m_ninjas[1]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
-	m_ninjas[2]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
+	m_ninjas[0]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
+	m_ninjas[1]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
+	m_ninjas[2]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
 	//m_ninjas[3]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja4.png"));
 
 	m_tools[0] = new MenuItem();
@@ -199,7 +198,7 @@ GAMESTATESWITCH ChooseState::Update()
 	switch (action.m_action)
 	{
 	case MENUACTION_PLAY:
-		Network::GetInstance()->ChooseChar(currentNinja, currentTool);
+		Network::GetInstance()->ChooseChar(currentNinja, currentTool, m_myTeam);
 		return GAMESTATESWITCH_PLAY;
 		break;
 	case MENUACTION_BACK:
@@ -226,15 +225,33 @@ GAMESTATESWITCH ChooseState::Update()
 		PrevTool();
 		break;
 	case MENUACTION_PICK_BLUE_TEAM://////////////////////////////////
+		if (m_blueTeam->GetNumberOfPlayers() >= 4)
+		{
+			m_myTeam = 1;
+		}
+		else
+		{
+			m_myTeam = 2;
+		}
 		m_menues.push(m_chooseNinja);
 		break;
 	case MENUACTION_PICK_RED_TEAM:///////////////////////////////////
+		if (m_redTeam->GetNumberOfPlayers() >= 4)
+		{
+			m_myTeam = 2;
+		}
+		else
+		{
+			m_myTeam = 1;
+		}
 		m_menues.push(m_chooseNinja);
 		break;
-	case MENUACTION_RANDOM_TEAM:///////////////////////////////////
-
+	case MENUACTION_RANDOM_TEAM://////////////////////////////////
+		m_myTeam = 0;
+		m_menues.push(m_chooseNinja);
 		break;
 	case MENUACTION_RANDOM_NINJA:///////////////////////////////////
+
 		RandomNinja();
 		break;
 	}
@@ -251,11 +268,11 @@ void ChooseState::UpdateTeams()
 	{
 		if (tempPlayerList[i].team == 1)
 		{
-			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr);
+			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, 1);
 		}
 		else
 		{
-			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr);
+			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, 2);
 		}
 	}
 }
