@@ -673,6 +673,12 @@ void ObjectManager::Update()
 			i--;
 		}
 	}
+	
+	// Update blood
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Update();
+	}
 
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
@@ -684,12 +690,6 @@ void ObjectManager::Update()
 		{
 			m_volleyTrails[i][j]->Update(m_volleys[i]->GetKunais()[j]->GetPosition(), DirectX::XM_PIDIV2);
 		}
-	}
-
-	// Update blood
-	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
-	{
-		m_bloodParticles[i]->Update();
 	}
 
 	UpdateRenderLists();
@@ -823,7 +823,6 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
-		
 		m_worldParticles[i]->Render();
 	}
 
@@ -831,10 +830,17 @@ void ObjectManager::Render()
 	{
 		m_volleys[i]->Render();
 	}
+
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Render();
+	}
+
+
 	for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
 	{
 		for (unsigned int j = 0; j < 9; j++)
-	{
+		{
 			m_volleyTrails[i][j]->Render();
 		}
 	}
@@ -1245,6 +1251,12 @@ void ObjectManager::ResetListSinceRoundRestarted()
 		delete m_stickyTrapList[i];
 	}
 	m_stickyTrapList.clear();
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Shutdown();
+		delete m_bloodParticles[i];
+	}
+	m_bloodParticles.clear();
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
 		m_volleys[i]->Shutdown();
@@ -1256,7 +1268,8 @@ void ObjectManager::ResetListSinceRoundRestarted()
 void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 {
 	ParticleEmitter* temp = new ParticleEmitter();
-	temp->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
+	p_pos.y += 2;
+	temp->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
 	temp->SetEmitParticleState(true);
 	m_bloodParticles.push_back(temp);
 }
