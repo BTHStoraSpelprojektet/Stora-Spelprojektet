@@ -5,6 +5,8 @@
 
 #include "GameState.h"
 #include <stack>
+#include <vector>
+#include "TeamTable.h"
 
 class Menu;
 class MenuItem;
@@ -27,21 +29,34 @@ public:
 	void NextTool();
 	void PrevTool();
 	void EscapeIsPressed();
+	int GetStackSize();
 
 private:
 	void InitializePickNinja();
 	void InitializePickTeam();
+	void UpdateTeams();
+	void RandomTeam();
+	void RandomNinja();
+
 	std::stack<Menu*> m_menues;
 	Menu* m_pickTeam;
 	Menu* m_chooseNinja;
+	TeamTable* m_redTeam;
+	TeamTable* m_blueTeam;
+	
 
 	MenuItem *m_ninjas[4];
 	MenuItem *m_tools[3];
 	CharacterAbilityDescription *m_abilityDescription[4];
-
+	GUIText* m_redTeamScore;
+	GUIText* m_blueTeamScore;
 	int currentNinja;
 	int nrOfNinjas;
 	int currentTool;
 	int nrOfTools;
+	float m_screenHeight;
+	float m_screenWidth;
 };
+
+
 #endif // !CHOOSESTATE_H_
