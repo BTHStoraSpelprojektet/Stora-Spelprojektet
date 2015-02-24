@@ -9,6 +9,7 @@
 class Frustum;
 class AbilityBar;
 class Minimap;
+class Sound;
 
 class PlayerManager
 {
@@ -49,6 +50,8 @@ public:
 	bool GetPlayerIsAlive();
 	int GetNrOfPlayersInTeam(int p_team);
 
+	void PlayerManager::SetSound(Sound* p_sound);
+
 private:
 	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
 	void AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
@@ -68,6 +71,8 @@ private:
 	unsigned int m_enemyListSize;
 
 	Frustum* m_frustum;
+
+	Sound* m_sound;
 };
 
 #endif PLAYERMANAGER

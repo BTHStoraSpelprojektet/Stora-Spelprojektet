@@ -80,8 +80,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	// Initiate the player.
 	m_playerManager = new PlayerManager();
+	m_playerManager->SetSound(m_sound);
 	m_playerManager->Initialize();
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
+
 
 	// Initlialize the frustum.
 	m_frustum = new Frustum();

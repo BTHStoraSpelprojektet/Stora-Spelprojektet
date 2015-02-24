@@ -651,7 +651,7 @@ void ObjectManager::RenderDepth()
 		if (temp != NULL)
 		{
 			temp->RenderDepth();
-}
+		}
 	}
 
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
@@ -679,7 +679,6 @@ void ObjectManager::RenderDepth()
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
 {
-	m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_THROW_SOUND);
 	Shuriken *tempShuriken;
 	tempShuriken = new Shuriken();
 	tempShuriken->Initialize(p_filepath, p_pos, p_dir, p_shurikenID);

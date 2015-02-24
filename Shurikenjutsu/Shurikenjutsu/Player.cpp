@@ -43,6 +43,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
 	
 	m_noAbility = new Ability();
+	m_noAbility->setSound(m_sound);
 
 	m_healthbar = new HealthBar();
 	m_healthbar->Initialize(110.0f, 21.0f);
@@ -1145,4 +1146,8 @@ void Player::ChooseTool()
 		default:
 			break;
 	}
+}
+
+void Player::SetSound(Sound* p_sound){
+	m_sound = p_sound;
 }

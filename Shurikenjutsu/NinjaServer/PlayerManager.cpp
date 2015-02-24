@@ -467,6 +467,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			}
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			SendDealtDamage(p_attackingGuid, p_damage);
+			SendPlaySound(p_usedAbility);
 		}
 	}
 }
@@ -586,6 +587,15 @@ void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, fl
 	bitStream2.Write(p_attackingPlayerGUID);
 	bitStream2.Write(p_damage);
 	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 2, p_attackingPlayerGUID, false);
+}
+
+void PlayerManager::SendPlaySound(ABILITIES ability)
+{
+	RakNet::BitStream wBitStream;
+	wBitStream.Write((RakNet::MessageID)ID_PLAY_SOUND);
+	wBitStream.Write(ability);
+
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void PlayerManager::SendPlayerPosAndDir()

@@ -23,6 +23,21 @@ bool Sound::Initialize()
 
 	m_result = m_system->createStream("../Shurikenjutsu/Sound/KunaiThrow.wav", FMOD_DEFAULT, 0, &m_kunaiThrowSound);
 	FMODErrorCheck(m_result);
+
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/AirCut.wav", FMOD_DEFAULT, 0, &m_airCutSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/DashGrassSteps.wav", FMOD_DEFAULT, 0, &m_dashStepsSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/ShurikenThrow.wav", FMOD_DEFAULT, 0, &m_shurikenThrowSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/ShurikenHit.wav", FMOD_DEFAULT, 0, &m_shurikenHitSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/KatanaHit.wav", FMOD_DEFAULT, 0, &m_katanaHitSound);
+	FMODErrorCheck(m_result);
 	
 	// EXTRA KOD FÖR EXTRA KOLLAR
 
@@ -75,24 +90,57 @@ void Sound::FMODErrorCheck(FMOD_RESULT p_result)
 	}
 }
 
-void Sound::PlaySound(PLAYSOUND p_playSound)
+void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 {
 	switch (p_playSound)
 	{
 	case PLAYSOUND_BACKGROUND_SOUND:
 		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
+		m_backgroundSound->setMusicChannelVolume(0, volume);
 		m_backgroundSound->setLoopCount(1);
 		m_system->playSound(m_backgroundSound, 0, false, 0);
 		break;
 	case PLAYSOUND_KUNAI_THROW_SOUND:
-		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
-		m_backgroundSound->setLoopCount(1);
+		m_kunaiThrowSound->setMode(FMOD_LOOP_OFF);
+		m_kunaiThrowSound->setMusicChannelVolume(0, volume);
+		m_kunaiThrowSound->setLoopCount(1);
 		m_system->playSound(m_kunaiThrowSound, 0, false, 0);
 		break;
 	case PLAYSOUND_KUNAI_HIT_SOUND:
-		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
-		m_backgroundSound->setLoopCount(1);
+		m_kunaiHitSound->setMode(FMOD_LOOP_OFF);
+		m_kunaiHitSound->setMusicChannelVolume(0, volume);
+		m_kunaiHitSound->setLoopCount(1);
 		m_system->playSound(m_kunaiHitSound, 0, false, 0);
+		break;
+	case PLAYSOUND_AIR_CUT_SOUND:
+		m_airCutSound->setMode(FMOD_LOOP_OFF);
+		m_airCutSound->setMusicChannelVolume(0, volume);
+		m_airCutSound->setLoopCount(1);
+		m_system->playSound(m_airCutSound, 0, false, 0);
+		break;
+	case PLAYSOUND_KATANA_HIT_SOUND:
+		m_katanaHitSound->setMode(FMOD_LOOP_OFF);
+		m_katanaHitSound->setMusicChannelVolume(0, volume);
+		m_katanaHitSound->setLoopCount(1);
+		m_system->playSound(m_katanaHitSound, 0, false, 0);
+		break;
+	case PLAYSOUND_DASH_STEPS_SOUND:
+		m_dashStepsSound->setMode(FMOD_LOOP_OFF);
+		m_dashStepsSound->setMusicChannelVolume(0, volume);
+		m_dashStepsSound->setLoopCount(1);
+		m_system->playSound(m_dashStepsSound, 0, false, 0);
+		break;
+	case PLAYSOUND_SHURIKEN_THROW_SOUND:
+		m_shurikenThrowSound->setMode(FMOD_LOOP_OFF);
+		m_shurikenThrowSound->setMusicChannelVolume(0, volume);
+		m_shurikenThrowSound->setLoopCount(1);
+		m_system->playSound(m_shurikenThrowSound, 0, false, 0);
+		break;
+	case PLAYSOUND_SHURIKEN_HIT_SOUND:
+		m_shurikenHitSound->setMode(FMOD_LOOP_OFF);
+		m_shurikenHitSound->setMusicChannelVolume(0, volume);
+		m_shurikenHitSound->setLoopCount(1);
+		m_system->playSound(m_shurikenHitSound, 0, false, 0);
 		break;
 	default:
 		break;

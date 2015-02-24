@@ -306,6 +306,7 @@ void System::Update()
 		m_gameState->Initialize();
 		m_playingState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
+		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->LargeSize();
 		break;
 	case GAMESTATESWITCH_PLAY:
@@ -313,6 +314,7 @@ void System::Update()
 		m_playingState->Shutdown();
 		m_gameState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
+		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->SmallSize();
 		break;
 	case GAMESTATESWITCH_MENU:

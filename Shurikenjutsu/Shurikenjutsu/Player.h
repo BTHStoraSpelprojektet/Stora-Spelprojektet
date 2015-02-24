@@ -70,6 +70,8 @@ public:
 	Sphere GetSphere();
 	OBB GetOBB();
 
+	void SetSound(Sound* p_sound);
+
 protected:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
@@ -130,5 +132,7 @@ protected:
 	bool localPlayer;
 	AttackPredictionEditor *m_ape;
 	FloatingText* m_floatingText;
+
+	Sound* m_sound;
 };
 #endif PLAYER

@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "DeathBoard.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "Sound.h";
 
 Network* Network::m_instance;
 
@@ -73,6 +74,10 @@ bool Network::Initialize()
 void Network::SetObjectManager(ObjectManager* p_objectManager)
 {
 	m_objectManager = p_objectManager;
+}
+
+void Network::SetSound(Sound* p_sound){
+	m_sound = p_sound;
 }
 
 void Network::Shutdown()
@@ -829,6 +834,48 @@ void Network::ReceviePacket()
 			bitStream.Read(murderWeapon);
 
 			DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
+
+			break;
+		}
+		case ID_PLAY_SOUND:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			
+			ABILITIES ability;
+
+			bitStream.Read(messageID);
+			bitStream.Read(ability);
+
+			//Hit sounds
+			switch (ability)
+			{
+			case ABILITIES::ABILITIES_SHURIKEN:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND);
+				break;
+			}
+			case ABILITIES::ABILITIES_MEGASHURIKEN:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND);
+				break;
+			}
+			case ABILITIES::ABILITIES_KUNAI:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND);
+				break;
+			}
+			case ABILITIES::ABILITIES_MELEESWING:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND);
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+
+			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
 		}
