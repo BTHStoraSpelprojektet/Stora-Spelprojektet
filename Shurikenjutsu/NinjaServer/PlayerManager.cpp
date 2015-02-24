@@ -96,28 +96,28 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	}
 	else
 	{
-		player.team = p_team;
-		//int team1 = 0;
-		//int team2 = 0;
-		//for (unsigned int i = 0; i < m_players.size(); i++)
-		//{
-		//	if (m_players[i].team == 1)
-		//	{
-		//		team1++;
-		//	}
-		//	else if (m_players[i].team == 2)
-		//	{
-		//		team2++;
-		//	}
-		//}
-		//if (team1 < 4 && p_team == 1)
-		//{
-		//	player.team == 1;
-		//}
-		//else
-		//{
-		//	player.team == 2;
-		//}
+		//player.team = p_team;
+		int team1 = 0;
+		int team2 = 0;
+		for (unsigned int i = 0; i < m_players.size(); i++)
+		{
+			if (m_players[i].team == 1)
+			{
+				team1++;
+			}
+			else if (m_players[i].team == 2)
+			{
+				team2++;
+			}
+		}
+		if (team1 < 4 && p_team == 1)
+		{
+			player.team = 1;
+		}
+		else
+		{
+			player.team = 2;
+		}
 	}
 	player.charNr = p_charNr;
 	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
