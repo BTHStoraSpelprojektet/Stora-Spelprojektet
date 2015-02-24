@@ -137,6 +137,8 @@ public:
 
 	DealtDamageStruct GetDealtDamage();
 
+	int GetTeam(RakNet::RakNetGUID p_guid);
+
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
