@@ -2,6 +2,7 @@
 #define PARTICLERENDERER_H_
 #include <vector>
 class ParticleEmitter;
+class Object;
 class ParticleRenderer
 {
 public:
@@ -15,6 +16,7 @@ public:
 	void Shutdown();
 
 	void QueueRender(ParticleEmitter* p_particleEmitter);
+	void QueueRender(Object* p_object);
 	void Render();
 
 private:
@@ -23,6 +25,7 @@ private:
 	~ParticleRenderer();
 
 	std::vector<ParticleEmitter*> m_renderQueue;
+	std::vector<Object*> m_renderQueueObjects;
 };
 
 #endif
