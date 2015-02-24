@@ -29,7 +29,7 @@ const float FULLSCREENHEIGHT = 58.0f;
 // LOGO
 const float LOGOPOSX = 0.0f;
 const float LOGOPOSY = 250.0f;
-const float LOGOWIDTH = 906.0f;
+const float LOGOWIDTH = 900.0f;
 const float LOGOHEIGHT = 307.0f;
 
 MenuState::MenuState(){}
@@ -79,7 +79,7 @@ bool MenuState::Initialize()
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);
-	m_play->AddButton(0.0f, -2.0f*BUTTONHEIGHT -3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	m_play->AddButton(0.0f, -2.0f*BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 	m_play->AddTexture(0.0f, 96.0f, 97.0f, 96.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ip_text.png"));
 	m_hideIpBox = true;
 
@@ -119,61 +119,68 @@ bool MenuState::Initialize()
 
 void MenuState::Shutdown()
 {
-	if (m_main != NULL)
+	if (m_main != nullptr)
 	{
 		m_main->Shutdown();
 		delete m_main;
-		m_main = 0;
+		m_main = nullptr;
 	}
-	if (m_options != NULL)
+	if (m_options != nullptr)
 	{
 		m_options->Shutdown();
 		delete m_options;
-		m_options = 0;
+		m_options = nullptr;
 	}
-	if (m_play != NULL)
+	if (m_play != nullptr)
 	{
 		m_play->Shutdown();
 		delete m_play;
-		m_play = 0;
+		m_play = nullptr;
 	}
-	if (m_connecting != NULL)
+	if (m_connecting != nullptr)
 	{
 		m_connecting->Shutdown();
 		delete m_connecting;
-		m_connecting = 0;
+		m_connecting = nullptr;
 	}
-	if (m_ipbox != NULL)
+	if (m_ipbox != nullptr)
 	{
 		m_ipbox->Shutdown();
 		delete m_ipbox;
-		m_ipbox = 0;
+		m_ipbox = nullptr;
 	}
-	if (m_ipboxText != NULL)
+	if (m_ipboxText != nullptr)
 	{
 		m_ipboxText->Shutdown();
 		delete m_ipboxText;
-		m_ipboxText = 0;
+		m_ipboxText = nullptr;
 	}
 
-	if (m_camera != NULL)
+	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
 		delete m_camera;
-		m_camera = NULL;
+		m_camera = nullptr;
 	}
-	if (m_objectManager != NULL)
+	if (m_objectManager != nullptr)
 	{
 		m_objectManager->Shutdown();
 		delete m_objectManager;
-		m_objectManager = NULL;
+		m_objectManager = nullptr;
 	}
 	
-	if (m_frustum != NULL)
+	if (m_frustum != nullptr)
 	{
 		m_frustum->Shutdown();
 		delete m_frustum;
-		m_frustum = NULL;
+		m_frustum = nullptr;
+	}
+
+	if (m_logo != nullptr)
+	{
+		m_logo->Shutdown();
+		delete m_logo;
+		m_logo = nullptr;
 	}
 
 	if (m_logo != NULL)
@@ -321,6 +328,7 @@ void MenuState::Render()
 
 	m_logo->Render();
 
+
 	// Draw to the shadowmap.
 	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
@@ -343,4 +351,14 @@ void MenuState::Render()
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
+}
+
+void MenuState::EscapeIsPressed()
+{
+	m_hideIpBox = true;
+	m_menues.pop();
+	if (m_menues.empty())
+	{
+		PostQuitMessage(0);
+	}
 }

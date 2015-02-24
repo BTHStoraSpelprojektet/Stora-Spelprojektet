@@ -21,6 +21,7 @@ public:
 	virtual void Render();
 	virtual void RenderAlpha();
 	virtual void ToggleFullscreen(bool p_fullscreen);
+	virtual void EscapeIsPressed();
 };
 
 #endif // !GAMESTATE

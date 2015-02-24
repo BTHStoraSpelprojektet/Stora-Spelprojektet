@@ -48,8 +48,8 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	m_rangeSpecialAttack = new WhipSecondaryAttackAbility();
 	m_rangeSpecialAttack->Initialize();
 
-	m_toolAbility = new SpikeAbility();
-	m_toolAbility->Initialize();
+	/*m_toolAbility = new SpikeAbility();
+	m_toolAbility->Initialize();*/
 
 	SetOriginalSpeed(GetSpeed());
 	SetHealth(CHARACTER_TESSEN_HEALTH);
@@ -79,7 +79,7 @@ void TessenNinja::RenderAttackLocations()
 	}
 	if (InputManager::GetInstance()->IsRightMousePressed())
 	{
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		if ((float)m_rangeAttack->GetCooldown() <= 0.0f)
 		{
 			m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
 
@@ -94,7 +94,7 @@ void TessenNinja::RenderAttackLocations()
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position);
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
 			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
 			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);

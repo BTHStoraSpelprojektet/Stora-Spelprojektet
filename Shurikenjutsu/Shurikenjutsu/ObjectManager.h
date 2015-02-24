@@ -7,6 +7,7 @@
 #include "AnimatedObject.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
+#include "Trail.h"
 
 class Volley;
 class Frustum;
@@ -40,7 +41,7 @@ public:
 	std::vector<Object> GetStaticObjectList()const;
 	std::vector<AnimatedObject*> GetAnimatedObjectList()const;
 
-	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id);
+	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_owner);
 
 	void UpdateFrustum(Frustum* p_frustum);
 
@@ -79,7 +80,10 @@ private:
 	bool IsStickyTrapInList(unsigned int p_stickyeTrapId);
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
-	
 
+	std::vector<Trail*> m_shurikenTrails;
+	std::vector<Trail*> m_fanTrails;
+	std::vector<Trail*> m_kunaiTrails;
+	std::vector<std::vector<Trail*>> m_volleyTrails;
 };
 #endif

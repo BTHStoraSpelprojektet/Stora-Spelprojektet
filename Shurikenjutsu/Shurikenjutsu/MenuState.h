@@ -29,6 +29,7 @@ public:
 	GAMESTATESWITCH Update();
 	void Render();
 
+	void EscapeIsPressed();
 private:
 
 	std::stack<Menu*> m_menues;

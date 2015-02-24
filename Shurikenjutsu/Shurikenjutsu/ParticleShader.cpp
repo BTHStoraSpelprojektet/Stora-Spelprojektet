@@ -110,12 +110,12 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	// Create geometry shader from buffer.
 	if (FAILED(p_device->CreateGeometryShader(geometryShader->GetBufferPointer(), geometryShader->GetBufferSize(), NULL, &m_geometryShader)))
 	{
-		ConsolePrintErrorAndQuit("Failed to create geometry vertex shader.");
+		ConsolePrintErrorAndQuit("Failed to create particle geometry vertex shader.");
 		return false;
 	}
 
 	ConsolePrintSuccess("Particle geometry shader compiled successfully.");
-	ConsolePrintText("Particle version: PS " + m_GSVersion);
+	ConsolePrintText("Shader version: PS " + m_GSVersion);
 
 	// Release pixel shader since it is no longer required.
 	geometryShader->Release();
@@ -150,7 +150,7 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	}
 
 	ConsolePrintSuccess("Particle pixel shader compiled successfully.");
-	ConsolePrintText("Particle version: PS " + m_PSVersion);
+	ConsolePrintText("Shader version: PS " + m_PSVersion);
 
 	// Release pixel shader since it is no longer required.
 	pixelShader->Release();

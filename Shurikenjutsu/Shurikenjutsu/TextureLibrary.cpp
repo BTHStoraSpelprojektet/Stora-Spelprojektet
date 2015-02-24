@@ -2,6 +2,7 @@
 #include <iostream>
 #include "GraphicsEngine.h"
 #include "WICTextureLoader.h"
+#include "ConsoleFunctions.h"
 
 TextureLibrary* TextureLibrary::m_instance;
 
@@ -10,7 +11,7 @@ TextureLibrary::~TextureLibrary(){}
 
 void TextureLibrary::Initialize()
 {
-	// Load every model!
+	// Load every texture.
 	LoadTextureDirectory();
 }
 
@@ -19,7 +20,10 @@ void TextureLibrary::Shutdown()
 	// Shutdown texture using iterator to loop through the map
 	for (auto it = m_textures.begin(); it != m_textures.end(); it++)
 	{
-		it->second->Release();
+		if (it->second != nullptr)
+		{
+			it->second->Release();
+		}
 	}
 
 	if (m_instance)
@@ -70,7 +74,6 @@ void TextureLibrary::LoadTextureDirectory()
 		if ((std::string)ffd.cFileName != "Thumbs.db")
 		{
 			AddTexture("../Shurikenjutsu/2DTextures/" + (std::string)ffd.cFileName);
-			std::cout << "Loading texture: " + (std::string)ffd.cFileName << std::endl;
 		}
 	}
 

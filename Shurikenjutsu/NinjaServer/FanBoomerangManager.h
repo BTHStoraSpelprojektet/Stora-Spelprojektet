@@ -35,6 +35,7 @@ public:
 
 private:
 	void BroadcastDestoyed(unsigned int p_id);
+	void BroadcastLifetime(unsigned int p_id, float p_lifeTime);
 	unsigned int GetUniqueId();
 
 	RakNet::RakPeerInterface *m_serverPeer;

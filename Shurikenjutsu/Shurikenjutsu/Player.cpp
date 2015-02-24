@@ -13,6 +13,9 @@
 #include "AttackPredictionEditor.h"
 #include "FloatingText.h"
 #include "ParticleEmitter.h"
+#include "StickyTrapAbility.h"
+#include "SmokeBombAbility.h"
+#include "SpikeAbility.h"
 
 
 Player::Player(){}
@@ -88,6 +91,8 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_ape = new AttackPredictionEditor();
 	m_floatingText = new FloatingText();
 	m_floatingText->Initialize();
+
+	ChooseTool();
 	return true;
 }
 
@@ -383,7 +388,8 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			m_globalCooldown = m_maxGlobalCooldown;
 		}
 	}
-	m_floatingText->SetDealtDamageText(Network::GetInstance()->GetDealtDamage());
+	DealtDamageStruct temp = Network::GetInstance()->GetDealtDamage();
+	m_floatingText->SetDealtDamageText(temp.m_position ,temp.m_damage);
 	UpdateAbilityBar();
 }
 
@@ -514,6 +520,10 @@ void Player::SetHealth(float p_health)
 	if (m_health > p_health)
 	{
 		m_floatingText->SetReceivedDamageText(p_health-m_health);
+	}
+	else
+	{
+		m_floatingText->SetHealingText(p_health - m_health);
 	}
 
 	if (p_health < 0 )
@@ -1108,4 +1118,32 @@ void Player::StillCDText()
 {
 	int temp = std::rand() % 5;
 	m_floatingText->SetcantUseAbilityText(temp);
+}
+
+void Player::ChooseTool()
+{
+	int toolNr = Network::GetInstance()->GetMyPlayer().toolNr;
+	switch (toolNr)
+	{
+		case 0:
+		{
+			m_toolAbility = new SpikeAbility();
+			m_toolAbility->Initialize();
+			break;
+		}
+		case 1:
+		{
+			m_toolAbility = new SmokeBombAbility();
+			m_toolAbility->Initialize();
+			break;
+		}
+		case 2:
+		{
+			m_toolAbility = new StickyTrapAbility();
+			m_toolAbility->Initialize();
+			break;
+		}
+		default:
+			break;
+	}
 }

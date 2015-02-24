@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <iostream>
+#include "../Shurikenjutsu/ConsoleFunctions.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -13,9 +14,10 @@ bool Player::Initialize(std::string p_modelName, RakNet::RakNetGUID p_guid, int 
 	m_direction = p_direction;
 	m_gcd = 0.0f;
 
-	std::cout << "Player added" << std::endl;
+	ConsolePrintText("New player added.");
+	ConsoleSkipLines(1);
 
-	return false; // Todo change all this class
+	return false; // TODO, change all of this class.
 }
 
 void Player::Shutdown()

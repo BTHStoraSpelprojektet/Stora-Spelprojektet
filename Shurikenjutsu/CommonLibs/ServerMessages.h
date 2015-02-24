@@ -13,8 +13,10 @@ struct PlayerNet
 	float maxHP;
 	float currentHP;
 	int charNr;
+	int toolNr;
 	bool isAlive;
 	float gcd;
+	float dotDamage;
 };
 
 struct ShurikenNet
@@ -110,13 +112,16 @@ enum Messages
 	ID_FAN_THROWN,
 	ID_FAN_REMOVE,
 	ID_FAN_UPDATE,
+	ID_FAN_DEAD_UPDATE,
 	ID_VOLLEY_THROWN,
 	ID_TIMER_SYNC,
 	ID_STICKYTRAP_THROW,
 	ID_STICKYTRAP_REMOVE,
 	ID_SEND_TEAM_SCORE,
 	ID_NAGINATA_STAB_HAS_OCCURED,
-	ID_HAS_INFLICTED_DAMAGE
+	ID_HAS_INFLICTED_DAMAGE,
+	ID_PLAYER_MOVE_AND_ROTATE,
+	ID_DEATHBOARDKILL
 };
 
 #endif

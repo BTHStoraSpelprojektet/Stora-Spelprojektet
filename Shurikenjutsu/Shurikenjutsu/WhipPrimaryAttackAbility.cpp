@@ -24,8 +24,9 @@ bool WhipPrimaryAttackAbility::Execute(float p_distance)
 	{
 		Network::GetInstance()->SendAbility(ABILITIES_WHIP_PRIMARY, 0);
 		SetCooldown(WHIP_COOLDOWN);
-		std::cout << "Just whip it!" << std::endl;
+
 		return true;
 	}
+
 	return false;
 }

@@ -67,6 +67,9 @@ public:
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
 
+	void TurnOnBackfaceCulling();
+	void TurnOffBackfaceCulling();
+
 	bool ToggleFullscreen(bool p_fullscreen);
 
 	void AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position);

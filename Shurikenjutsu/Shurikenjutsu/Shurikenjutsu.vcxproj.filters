@@ -150,6 +150,15 @@
     <Filter Include="Source Files\Core\Camera">
       <UniqueIdentifier>{aa90d6a0-5cf3-4d34-a5b4-c9740a8847b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Trail">
+      <UniqueIdentifier>{e70e4063-628a-4b59-b9c0-d9a393c5e931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics\Trails">
+      <UniqueIdentifier>{de5ef398-19ad-43f0-a3ad-4a72896ae95a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics\Trails">
+      <UniqueIdentifier>{d1182603-a101-4989-8baf-24532995970f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Shaders\SSAO">
       <UniqueIdentifier>{0c263ccc-4f79-4948-86d3-51db4e4dfb70}</UniqueIdentifier>
     </Filter>
@@ -464,6 +473,24 @@
     <ClCompile Include="FloatingText.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="Trail.cpp">
+      <Filter>Source Files\Graphics\Trails</Filter>
+    </ClCompile>
+    <ClCompile Include="TrailRenderer.cpp">
+      <Filter>Source Files\Graphics\Trails</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameMenu.cpp">
+      <Filter>Source Files\GUI\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathBoard.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterAbilityDescription.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="TeamTable.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -775,6 +802,27 @@
     <ClInclude Include="FloatingText.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Trail.h">
+      <Filter>Header Files\Graphics\Trails</Filter>
+    </ClInclude>
+    <ClInclude Include="TrailRenderer.h">
+      <Filter>Header Files\Graphics\Trails</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameMenu.h">
+      <Filter>Header Files\GUI\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathBoard.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TextResource.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterAbilityDescription.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="TeamTable.h">
+      <Filter>Header Files\GameState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -851,6 +899,15 @@
     </FxCompile>
     <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
       <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Trails\TrailGeometryShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Trails\TrailPixelShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Trails\TrailVertexShader.hlsl">
+      <Filter>Shaders\Trail</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SSAO\SSAOPixelShader.hlsl">
       <Filter>Shaders\SSAO</Filter>

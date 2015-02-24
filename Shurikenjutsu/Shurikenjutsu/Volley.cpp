@@ -81,3 +81,8 @@ void Volley::AddRandomProjectiles(int p_amount, DirectX::XMFLOAT3 p_startPositio
 		m_projectiles.push_back(projectile);
 	}
 }
+
+std::vector<VolleyObject*> Volley::GetKunais()
+{
+	return m_projectiles;
+}

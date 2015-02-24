@@ -369,7 +369,7 @@ void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, Di
 }
 
 void GraphicsEngine::RenderFoliage()
-{	
+{
 	m_foliageShader->Render(m_directX.GetContext(), m_shadowMap.GetRenderTarget());
 }
 
@@ -693,4 +693,14 @@ void GraphicsEngine::RenderSSAO()
 void GraphicsEngine::SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection)
 {
 	m_screenSpace->UpdateSSAOBuffer(m_directX.GetContext(), p_projection);
+}
+
+void GraphicsEngine::TurnOffBackfaceCulling()
+{
+	m_sceneShader->TurnOffBackFaceCulling(m_directX.GetContext());
+}
+
+void GraphicsEngine::TurnOnBackfaceCulling()
+{
+	m_sceneShader->TurnOnBackFaceCulling(m_directX.GetContext());
 }

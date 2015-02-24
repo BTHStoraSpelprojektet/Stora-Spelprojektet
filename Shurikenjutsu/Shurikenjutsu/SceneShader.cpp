@@ -115,7 +115,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	{
 		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
 		{
-			ConsolePrintErrorAndQuit("Failed to compile OUTLINING vertex shader from file.");
+			ConsolePrintErrorAndQuit("Failed to compile outlining vertex shader from file.");
 			return false;
 		}
 		else
@@ -383,7 +383,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 		return false;
 	}
 
-	ConsolePrintSuccess("OUTLINING Scene vertex shader compiled successfully.");
+	ConsolePrintSuccess("Outlining vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
 	// Release useless local shaders.

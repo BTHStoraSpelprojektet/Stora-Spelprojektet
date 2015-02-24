@@ -116,22 +116,8 @@ void Server::ReceviePacket()
 			rBitStream.Read(z);
 
 			// Can player move?
-			bool canMove = m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
+			m_gameState->MovePlayer(m_packet->guid, x, y, z, m_nrOfConnections, false);
 
-			if (canMove)
-			{
-				// Get player pos
-				PlayerNet player = m_gameState->GetPlayer(m_packet->guid);
-
-				RakNet::BitStream wBitStream;
-				wBitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
-				wBitStream.Write(player.guid);
-				wBitStream.Write(player.x);
-				wBitStream.Write(player.y);
-				wBitStream.Write(player.z);
-
-				m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
-			}
 			break;
 		}
 		case ID_PLAYER_ROTATED:
@@ -204,13 +190,16 @@ void Server::ReceviePacket()
 			std::cout << "Connection " << m_packet->guid.ToString() << " have choosen a character\n";
 
 			int charNr;
-
+			int toolNr;
+			int team;
 			bitStream.Read(messageID);
 			bitStream.Read(charNr);
+			bitStream.Read(toolNr);
+			bitStream.Read(team);
 
 			if (m_gameState->GetPlayerIndex(m_packet->guid) == -1)
 			{
-				m_gameState->AddPlayer(m_packet->guid, charNr);
+				m_gameState->AddPlayer(m_packet->guid, charNr, toolNr, team);
 			}
 			break;
 		}
