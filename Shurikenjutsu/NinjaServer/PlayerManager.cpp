@@ -33,6 +33,11 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_sendIntervall = 0.03;
 	m_lastTimeSent = 0.0;
 
+	m_dotIntervall = 0.1;
+	m_lastDotSent = 0.0;
+	m_canSendDotDamage = true;
+	m_haveSentDotDamage = false;
+
 	return true;
 }
 
@@ -40,12 +45,26 @@ void PlayerManager::Shutdown(){}
 
 void PlayerManager::Update(double p_deltaTime)
 {
+	// Timer for sending position and direction
 	m_lastTimeSent -= p_deltaTime;
 	if (m_lastTimeSent < 0)
 	{
 		m_lastTimeSent = m_sendIntervall;
 		// Send position and direction of players
 		SendPlayerPosAndDir();
+	}
+
+	// Timer for dot damage
+	m_lastDotSent -= p_deltaTime;
+	if (m_haveSentDotDamage)
+	{
+		m_canSendDotDamage = false;
+		m_haveSentDotDamage = false;
+	}
+	if (m_lastDotSent < 0)
+	{
+		m_lastDotSent = m_dotIntervall;
+		m_canSendDotDamage = true;
 	}
 }
 
@@ -466,7 +485,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 				}
 			}
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
-			SendDealtDamage(p_attackingGuid, p_damage);
+			SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
 		}
 	}
 }
@@ -579,12 +598,15 @@ void PlayerManager::SendPlayerDir()
 		m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 	}
 }
-void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage)
+void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage, float p_x, float p_y, float p_z)
 {
 	RakNet::BitStream bitStream2;
 	bitStream2.Write((RakNet::MessageID)ID_HAS_INFLICTED_DAMAGE);
 	bitStream2.Write(p_attackingPlayerGUID);
 	bitStream2.Write(p_damage);
+	bitStream2.Write(p_x);
+	bitStream2.Write(p_y);
+	bitStream2.Write(p_z);
 	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 2, p_attackingPlayerGUID, false);
 }
 
@@ -633,4 +655,10 @@ void PlayerManager::SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage
 			m_players[i].dotDamage = p_damage;
 		}
 	}
+}
+
+bool PlayerManager::CanSendDotDamage()
+{
+	m_haveSentDotDamage = true;
+	return m_canSendDotDamage;
 }

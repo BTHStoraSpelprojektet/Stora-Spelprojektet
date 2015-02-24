@@ -33,6 +33,12 @@ enum NETWORKSTATUS
 
 class ObjectManager;
 
+struct DealtDamageStruct
+{
+	float m_damage;
+	DirectX::XMFLOAT3 m_position;
+};
+
 class Network
 {
 public:
@@ -129,7 +135,7 @@ public:
 
 	int GetLastPing();
 
-	float GetDealtDamage();
+	DealtDamageStruct GetDealtDamage();
 
 private:
 	void ClearListsAtNewRound();
@@ -219,5 +225,6 @@ private:
 	double m_pingTimer;
 
 	float m_dealtDamage;
+	DirectX::XMFLOAT3 m_dealtDamagePosition;
 };
 #endif
