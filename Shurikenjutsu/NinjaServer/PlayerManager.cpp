@@ -96,7 +96,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	}
 	else
 	{
-		player.team = p_team
+		player.team = p_team;
 		//int team1 = 0;
 		//int team2 = 0;
 		//for (unsigned int i = 0; i < m_players.size(); i++)
