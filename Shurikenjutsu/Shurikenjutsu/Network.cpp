@@ -186,7 +186,7 @@ void Network::ReceviePacket()
 			float x, y, z;
 			float dirX, dirY, dirZ;
 			float maxHP, currentHP;
-			int team, charNr;;
+			int team, charNr,toolNr;
 			bool isAlive;
 			RakNet::RakNetGUID guid;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -207,13 +207,16 @@ void Network::ReceviePacket()
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
+				bitStream.Read(toolNr);
+
 
 				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
 				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
 				UpdatePlayerTeam(guid, team);
-				UpdatePlayerChar(guid, charNr);
+				UpdatePlayerChar(guid, charNr, toolNr);
+
 
 				playerGuids.push_back(guid);
 			}
@@ -1040,7 +1043,7 @@ void Network::UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team)
 	}
 }
 
-void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr)
+void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr, int p_toolNr)
 {
 	if (p_owner == m_clientPeer->GetMyGUID())
 	{
@@ -1053,6 +1056,7 @@ void Network::UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr)
 			if (m_enemyPlayers[i].guid == p_owner)
 			{
 				m_enemyPlayers[i].charNr = p_charNr;
+				m_enemyPlayers[i].toolNr = p_toolNr;
 			}
 		}
 	}
