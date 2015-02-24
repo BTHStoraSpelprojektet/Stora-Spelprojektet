@@ -20,7 +20,7 @@ bool Sound::Initialize()
 	FMODErrorCheck(m_system->createChannelGroup(NULL, &channelAmbient));
 	FMODErrorCheck(m_system->createChannelGroup(NULL, &channelMusic));
 
-	m_result = m_system->createStream("../Shurikenjutsu/Sound/BG_music.wav", FMOD_DEFAULT, 0, &m_backgroundSound);
+	m_result = m_system->createStream("../Shurikenjutsu/Sound/BG_music2.wav", FMOD_DEFAULT, 0, &m_backgroundSound);
 	FMODErrorCheck(m_result);
 
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/KunaiHit.wav", FMOD_DEFAULT, 0, &m_kunaiHitSound);
@@ -150,7 +150,7 @@ void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 	{
 	case PLAYSOUND_BACKGROUND_SOUND:
 		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
-		m_backgroundSound->setLoopCount(1);
+		m_backgroundSound->setLoopCount(INT_MAX);
 		m_system->playSound(m_backgroundSound, channelMusic, true, &musicChannel);
 
 		musicChannel->setChannelGroup(channelMusic);
