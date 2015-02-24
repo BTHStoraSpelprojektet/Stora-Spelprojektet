@@ -74,9 +74,11 @@ Output main(Input p_input)
 
 	// Pass on tangent.
 	output.m_tangent = mul(float4(p_input.m_tangent, 0.0f), p_input.m_instancePosition).xyz;
+	output.m_tangent = mul(output.m_tangent, (float3x3)m_viewMatrix).xyz;
 
 	// Transform  the normals.
 	output.m_normal = mul(float4(p_input.m_normal, 0.0f), p_input.m_instancePosition).xyz;
+	output.m_normal = mul(output.m_normal, (float3x3)m_viewMatrix).xyz;
 
 	// Normalmap TBN matrix.
 	float3 N = output.m_normal;

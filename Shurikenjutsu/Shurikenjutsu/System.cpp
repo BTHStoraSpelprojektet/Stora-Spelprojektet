@@ -18,6 +18,7 @@
 #include "Cursor.h"
 #include "ParticleRenderer.h"
 #include "DeathBoard.h"
+#include "TrailRenderer.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
@@ -85,11 +86,16 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
+	// Initialize the trail renderer.
+	TrailRenderer::GetInstance().Initialize(GraphicsEngine::GetInstance()->GetDevice());
+
 	// Initialize model library.
+	ConsolePrintText("Loading all models...");
 	ModelLibrary::GetInstance()->Initialize(new Model());
 	ConsolePrintSuccess("All models loaded.");
 	ConsoleSkipLines(1);
 
+	ConsolePrintText("Loading all textures...");
 	TextureLibrary::GetInstance()->Initialize();
 	ConsolePrintSuccess("All textures loaded.");
 	ConsoleSkipLines(1);
@@ -121,6 +127,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_gameState->Initialize();
 
 	// Input: Register keys
+	ConsolePrintText("Registering all input keys...");
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('s'));
@@ -136,7 +143,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
 	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
-
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
@@ -162,8 +168,6 @@ void System::Shutdown()
 
 	// Shutdown network
 	Network::GetInstance()->Shutdown();
-
-	
 
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
@@ -224,6 +228,7 @@ void System::Shutdown()
 
 	DeathBoard::GetInstance()->Shutdown();
 
+	TrailRenderer::GetInstance().Shutdown();
 }
 
 void System::Run()
@@ -366,6 +371,7 @@ void System::Render()
 	m_gameState->Render();
 
 	// Render Particles
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	ParticleRenderer::GetInstance()->Render();
 
@@ -373,7 +379,6 @@ void System::Render()
 
 	//Render GUI
 	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	GUIManager::GetInstance()->Render();
 

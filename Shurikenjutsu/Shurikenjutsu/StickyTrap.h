@@ -3,6 +3,8 @@
 
 #include "Structures.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
+#include "Trail.h"
+
 class Object;
 class ParticleEmitter;
 class StickyTrap
@@ -20,6 +22,7 @@ public:
 	unsigned int GetID();
 	Object* GetStickyBag();
 	RakNet::RakNetGUID GetGUID();
+
 private:
 	bool m_isThrowing;
 	bool m_hasInflictedDamage;
@@ -38,6 +41,7 @@ private:
 	float m_decreasePercentage;
 	RakNet::RakNetGUID m_guid;
 	ParticleEmitter* m_stickyParticles;
-};
 
+	Trail* m_trail;
+};
 #endif

@@ -5,6 +5,8 @@
 #include "GameState.h"
 #include "DebugDraw.h"
 
+/*=============== TESTING*/ #include "Trail.h"
+
 class PlayerManager;
 class ObjectManager;
 class Frustum;

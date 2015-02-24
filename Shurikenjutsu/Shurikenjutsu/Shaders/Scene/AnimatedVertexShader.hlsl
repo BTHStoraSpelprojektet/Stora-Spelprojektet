@@ -91,7 +91,10 @@ Output main(Input p_input)
 
 	// Transform  the normals.
 	output.m_normal = mul(float4(normalAnimated, 0.0f), m_worldMatrix).xyz;
+	output.m_normal = mul(output.m_normal, (float3x3)m_viewMatrix).xyz;
+
 	output.m_tangent = mul(float4(tangentAnimated, 0.0f), m_worldMatrix).xyz;
+	output.m_tangent = mul(output.m_tangent, (float3x3)m_viewMatrix).xyz;
 
 	// Normalmap TBN matrix.
 	float3 N = output.m_normal;

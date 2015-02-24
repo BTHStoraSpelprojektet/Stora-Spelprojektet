@@ -6,6 +6,7 @@
 #include "Object.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "ShadowShapes.h"
+#include "ConsoleFunctions.h"
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {
@@ -31,6 +32,12 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 
 	m_percentZ = z / length;
 	m_angle = asinf((9.82f * length) / (m_speed * m_speed)) * 0.5f;
 	
+	m_trail = new Trail();
+	if (!m_trail->Initialize(50.0f, 0.2f, 0.2f, DirectX::XMFLOAT4(0.5f, 0.25f, 0.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
+	{
+		ConsolePrintErrorAndQuit("A smoke bomb trail failed to initialize!");
+	}
+
 	return true;
 }
 
@@ -46,8 +53,14 @@ void SmokeBomb::Update()
 
 		m_bomb->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
 
+		m_trail->Update(m_bomb->GetPosition(), m_angle);
+
 		if (y < 0.0f)
 		{
+			m_trail->Shutdown();
+			delete m_trail;
+			m_trail = nullptr;
+
 			ResetTimer();
 			m_isThrowing = false;
 			
@@ -79,11 +92,19 @@ void SmokeBomb::Shutdown()
 		delete m_bomb;
 		m_bomb = nullptr;
 	}
+
 	if (m_particles != nullptr)
 	{
 		m_particles->Shutdown();
 		delete m_particles;
 		m_particles = nullptr;
+	}
+
+	if (m_trail)
+	{
+		m_trail->Shutdown();
+		delete m_trail;
+		m_trail = nullptr;
 	}
 }
 
@@ -94,6 +115,14 @@ void SmokeBomb::Render()
 	if(!m_isThrowing)
 	{
 		m_particles->Render();
+	}
+
+	else
+	{
+		if (m_trail)
+		{
+			m_trail->Render();
+		}
 	}
 }
 

@@ -7,11 +7,6 @@
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include <vector>
 #include "InstanceManager.h"
-#include "DepthShader.h"
-#include "SceneShader.h"
-#include "GUIShader.h"
-#include "ParticleShader.h"
-#include "FoliageShader.h"
 #include "RenderTarget.h"
 
 class WICTextureLoader;
@@ -22,6 +17,7 @@ class ParticleShader;
 class SceneShader;
 class Object;
 class FoliageShader;
+class ScreenSpace;
 
 class GraphicsEngine
 {
@@ -45,6 +41,7 @@ public:
 	ID3D11ShaderResourceView* Create2DTexture(std::string p_filename);
 
 	void RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
+	void RenderSceneForward(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
 	void RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture);
 	void RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
 	void RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
@@ -69,6 +66,9 @@ public:
 
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
+
+	void TurnOnBackfaceCulling();
+	void TurnOffBackfaceCulling();
 
 	bool ToggleFullscreen(bool p_fullscreen);
 
@@ -108,6 +108,20 @@ public:
 
 	void DoReportLiveObjects();
 
+	ID3D11ShaderResourceView* GetPostProcessingTexture1();
+	ID3D11ShaderResourceView* GetPostProcessingTexture2();
+
+	void ClearRenderTargetsForGBuffers();
+	void SetRenderTargetsForGBuffers();
+
+	void Composition();
+	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection);
+
+	void SetScreenSpaceRenderTarget();
+
+	void RenderSSAO();
+	void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
+
 private:
 	static GraphicsEngine* m_instance;
 	GraphicsEngine(){};
@@ -117,11 +131,12 @@ private:
 
 	DirectXWrapper m_directX;
 
-	SceneShader m_sceneShader;
-	GUIShader m_GUIShader;
-	DepthShader m_depthShader;
-	ParticleShader m_particleShader;
-	FoliageShader m_foliageShader;
+	SceneShader* m_sceneShader;
+	GUIShader* m_GUIShader;
+	DepthShader* m_depthShader;
+	ParticleShader* m_particleShader;
+	FoliageShader* m_foliageShader;
+	ScreenSpace* m_screenSpace;
 
 	HWND m_windowHandle;
 

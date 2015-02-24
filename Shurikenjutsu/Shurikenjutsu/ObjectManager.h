@@ -8,6 +8,7 @@
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
 #include "Sound.h"
+#include "Trail.h"
 
 class Volley;
 class Frustum;
@@ -85,5 +86,9 @@ private:
 	bool IsFanInNetworkList(unsigned int p_fanId);
 	
 	Sound* m_sound;
+	std::vector<Trail*> m_shurikenTrails;
+	std::vector<Trail*> m_fanTrails;
+	std::vector<Trail*> m_kunaiTrails;
+	std::vector<std::vector<Trail*>> m_volleyTrails;
 };
 #endif

@@ -972,13 +972,14 @@ void Network::Disconnect()
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }
 
-void Network::ChooseChar(int p_charNr, int p_toolNr)
+void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 {
 	RakNet::BitStream bitStream;
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
 	bitStream.Write(p_charNr);
 	bitStream.Write(p_toolNr);
+	bitStream.Write(p_team);
 
 	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 
@@ -1811,4 +1812,22 @@ void Network::UpdateFanLifeTime(unsigned int p_id, float p_lifeTime)
 			break;
 		}
 	}
+}
+
+int Network::GetTeam(RakNet::RakNetGUID p_guid)
+{
+	if (m_myPlayer.guid == p_guid)
+	{
+		return m_myPlayer.team;
+	}
+
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (m_enemyPlayers[i].guid == p_guid)
+		{
+			return m_enemyPlayers[i].team;
+		}
+	}
+
+	return -1;
 }
