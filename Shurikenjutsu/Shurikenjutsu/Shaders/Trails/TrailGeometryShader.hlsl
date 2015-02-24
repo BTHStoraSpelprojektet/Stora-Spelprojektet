@@ -71,12 +71,12 @@ void main(line GeometryInput p_input[2], inout TriangleStream<GeometryOutput> p_
 	float3 b2;
 
 	// Calculate corners for tile segments.
-	t1 = float3(p_input[0].m_position.x - (cos(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z + (sin(p_input[0].m_angle) * p_input[0].m_width));
-	t2 = float3(p_input[0].m_position.x - (cos(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z - (sin(p_input[0].m_angle) * p_input[0].m_width));
-	m1 = float3(middlePoint.m_position.x - (cos(middlePoint.m_angle) * middlePoint.m_width), middlePoint.m_position.y, middlePoint.m_position.z + (sin(middlePoint.m_angle) * middlePoint.m_width));
-	m2 = float3(middlePoint.m_position.x + (cos(middlePoint.m_angle) * middlePoint.m_width), middlePoint.m_position.y, middlePoint.m_position.z - (sin(middlePoint.m_angle) * middlePoint.m_width));
-	b1 = float3(p_input[1].m_position.x - (cos(p_input[1].m_angle) * p_input[1].m_width), p_input[1].m_position.y, p_input[1].m_position.z + (sin(p_input[1].m_angle) * p_input[1].m_width));
-	b2 = float3(p_input[1].m_position.x + (cos(p_input[1].m_angle) * p_input[1].m_width), p_input[1].m_position.y, p_input[1].m_position.z - (sin(p_input[1].m_angle) * p_input[1].m_width));
+	t1 = float3(p_input[0].m_position.x - (sin(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z + (cos(p_input[0].m_angle) * p_input[0].m_width));
+	t2 = float3(p_input[0].m_position.x + (sin(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z - (cos(p_input[0].m_angle) * p_input[0].m_width));
+	m1 = float3(middlePoint.m_position.x - (sin(middlePoint.m_angle) * middlePoint.m_width), middlePoint.m_position.y, middlePoint.m_position.z + (cos(middlePoint.m_angle) * middlePoint.m_width));
+	m2 = float3(middlePoint.m_position.x + (sin(middlePoint.m_angle) * middlePoint.m_width), middlePoint.m_position.y, middlePoint.m_position.z - (cos(middlePoint.m_angle) * middlePoint.m_width));
+	b1 = float3(p_input[1].m_position.x - (sin(p_input[1].m_angle) * p_input[1].m_width), p_input[1].m_position.y, p_input[1].m_position.z + (cos(p_input[1].m_angle) * p_input[1].m_width));
+	b2 = float3(p_input[1].m_position.x + (sin(p_input[1].m_angle) * p_input[1].m_width), p_input[1].m_position.y, p_input[1].m_position.z - (cos(p_input[1].m_angle) * p_input[1].m_width));
 	
 	// Triangle 1, top left.
 	position[0] = float4(t1, 1.0f);
@@ -119,16 +119,7 @@ void main(line GeometryInput p_input[2], inout TriangleStream<GeometryOutput> p_
 		output.m_position = mul(output.m_position, m_projectionMatrix);
 		output.m_UV = uv[i];
 		output.m_timeValues = p_input[0].m_timeValues;
-
-		// TESTING. color last part blue.
-		if (p_input[1].m_endpoint == 1.0f)
-		{
-			output.m_color = float4(1.0f, 0.0f, 0.0f, 1.0f);
-		}
-		else
-		{
-			output.m_color = p_input[0].m_color;
-		}
+		output.m_color = p_input[0].m_color;
 
 		p_output.Append(output);
 	}
@@ -142,16 +133,7 @@ void main(line GeometryInput p_input[2], inout TriangleStream<GeometryOutput> p_
 		output.m_position = mul(output.m_position, m_projectionMatrix);
 		output.m_UV = uv[j];
 		output.m_timeValues = p_input[1].m_timeValues;
-
-		// TESTING. color last part blue.
-		if (p_input[1].m_endpoint == 1.0f)
-		{
-			output.m_color = float4(1.0f, 0.0f, 0.0f, 1.0f);
-		}
-		else
-		{
-			output.m_color = p_input[1].m_color;
-		}
+		output.m_color = p_input[1].m_color;
 
 		p_output.Append(output);
 	}

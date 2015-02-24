@@ -587,3 +587,13 @@ void GraphicsEngine::DoReportLiveObjects()
 {
 	m_directX.DoReportLiveObjects();
 }
+
+void GraphicsEngine::TurnOnBackfaceCulling()
+{
+	m_sceneShader.TurnOnBackFaceCulling(m_directX.GetContext());
+}
+
+void GraphicsEngine::TurnOffBackfaceCulling()
+{
+	m_sceneShader.TurnOffBackFaceCulling(m_directX.GetContext());
+}

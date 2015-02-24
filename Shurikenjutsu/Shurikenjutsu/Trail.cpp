@@ -131,6 +131,8 @@ void Trail::Render()
 {
 	if (m_points.size() > 0)
 	{
+		GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+		
 		// Update vertex buffer.
 		D3D11_MAPPED_SUBRESOURCE resource;
 		GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
@@ -139,6 +141,8 @@ void Trail::Render()
 
 		// Call render.
 		TrailRenderer::GetInstance().RenderTrail(m_vertexBuffer, m_points.size(), m_texture);
+
+		GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 	}
 }
 
@@ -226,4 +230,9 @@ void Trail::ClearOldPoints()
 	// Else, if all the points are old, clear everything. 
 	m_points.clear();
 	m_listDead = true;
+}
+
+void Trail::ChangeColor(DirectX::XMFLOAT4 p_color)
+{
+	m_color = p_color;
 }
