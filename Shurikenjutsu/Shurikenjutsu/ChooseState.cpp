@@ -32,50 +32,33 @@ bool ChooseState::Initialize()
 	m_screenWidth = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
 	m_portraitHeight = m_screenHeight / 5.12f;
 	m_portraitWidth = m_screenWidth / 6.4f;
-	InitializePickTeam();
-	InitializePickNinja();
 
 	m_redTeamScore = new GUIText();
 	m_blueTeamScore = new GUIText();
+
 	m_redTeamScore->Initialize("0", 50.0f, -m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xff0000ff);
-
 	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xffff0000);
-	
-	m_menues.push(m_pickTeam);
-	m_myTeam = 0;
-	return true;
-}
-void ChooseState::InitializePickTeam()
-{
-	m_pickTeam = new Menu();	
-	
-	m_pickTeam->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/redteam.png"), MENUACTION_PICK_RED_TEAM);
 
-	m_pickTeam->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueteam.png"), MENUACTION_PICK_BLUE_TEAM);
-
-	m_pickTeam->AddButton(-m_screenWidth * 0.5f + BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
-
-	m_pickTeam->AddButton(m_screenWidth * 0.5f - BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_RANDOM_TEAM);
-	
 	m_blueTeam = new TeamTable();
 	m_redTeam = new TeamTable();
 	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f);
 	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f);
-}
+	
+	m_myTeam = 0;
 
-void ChooseState::InitializePickNinja()
-{
 	nrOfNinjas = 3;
 	currentNinja = 0;
 	nrOfTools = 3;
 	currentTool = 0;
 	m_chooseNinja = new Menu();
 
-	// Play
-	m_chooseNinja->AddButton(0.0f, -OFFSET - 150.0f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
+	m_chooseNinja->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/redteam.png"), MENUACTION_PICK_RED_TEAM);
 
-	// Back
-	m_chooseNinja->AddButton(0.0f, -BUTTONHEIGHT - 150.0f - 2.0f*OFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	m_chooseNinja->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueteam.png"), MENUACTION_PICK_BLUE_TEAM);
+
+	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+
+	m_chooseNinja->AddButton(m_screenWidth * 0.5f - BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_RANDOM_TEAM);
 
 	// Next ninja, right button
 	m_chooseNinja->AddButton(BUTTONWIDTH*0.5f + NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
@@ -88,9 +71,6 @@ void ChooseState::InitializePickNinja()
 
 	//Next tool, right button
 	m_chooseNinja->AddButton(70.0f, -10.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTTOOL);
-
-	//Test tool texture
-	//m_chooseButton->AddButton(0.0f, 0.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_Caltrops.png"), MENUACTION_PREVTOOL);
 
 	m_ninjas[0] = new MenuItem();
 	m_ninjas[1] = new MenuItem();
@@ -114,7 +94,9 @@ void ChooseState::InitializePickNinja()
 	m_abilityDescription[0]->Initialize(1);
 	m_abilityDescription[1]->Initialize(2);
 	m_abilityDescription[2]->Initialize(3);
+	return true;
 }
+
 void ChooseState::Shutdown()
 {
 	if (m_redTeam != nullptr)
@@ -141,13 +123,6 @@ void ChooseState::Shutdown()
 		delete m_blueTeamScore;
 		m_blueTeamScore = nullptr;
 	}
-	if (m_pickTeam != nullptr)
-	{
-		m_pickTeam->Shutdown();
-		delete m_pickTeam;
-		m_pickTeam = nullptr;
-	}
-
 	if (m_chooseNinja != nullptr)
 	{
 		m_chooseNinja->Shutdown();
@@ -193,7 +168,7 @@ GAMESTATESWITCH ChooseState::Update()
 
 	m_redTeamScore->SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
 	m_blueTeamScore->SetText(std::to_string(Network::GetInstance()->GetBlueTeamScore()));
-	MenuActionData action = m_menues.top()->Update();
+	MenuActionData action = m_chooseNinja->Update();
 	
 	switch (action.m_action)
 	{
@@ -202,15 +177,8 @@ GAMESTATESWITCH ChooseState::Update()
 		return GAMESTATESWITCH_PLAY;
 		break;
 	case MENUACTION_BACK:
-		if (m_menues.top() == m_pickTeam)
-		{
-			Network::GetInstance()->Disconnect();
-			return GAMESTATESWITCH_MENU;
-		}
-		else
-		{
-			m_menues.pop();
-		}
+		Network::GetInstance()->Disconnect();
+		return GAMESTATESWITCH_MENU;
 		break;
 	case MENUACTION_NEXTNINJA:
 		NextNinja();
@@ -224,7 +192,7 @@ GAMESTATESWITCH ChooseState::Update()
 	case MENUACTION_PREVTOOL:
 		PrevTool();
 		break;
-	case MENUACTION_PICK_BLUE_TEAM:
+	case MENUACTION_PICK_BLUE_TEAM://////////////////////////////////
 		if (m_blueTeam->GetNumberOfPlayers() >= 4)
 		{
 			m_myTeam = 1;
@@ -233,9 +201,8 @@ GAMESTATESWITCH ChooseState::Update()
 		{
 			m_myTeam = 2;
 		}
-		m_menues.push(m_chooseNinja);
 		break;
-	case MENUACTION_PICK_RED_TEAM:
+	case MENUACTION_PICK_RED_TEAM:///////////////////////////////////
 		if (m_redTeam->GetNumberOfPlayers() >= 4)
 		{
 			m_myTeam = 2;
@@ -244,11 +211,9 @@ GAMESTATESWITCH ChooseState::Update()
 		{
 			m_myTeam = 1;
 		}
-		m_menues.push(m_chooseNinja);
 		break;
-	case MENUACTION_RANDOM_TEAM:
+	case MENUACTION_RANDOM_TEAM://////////////////////////////////
 		m_myTeam = 0;
-		m_menues.push(m_chooseNinja);
 		break;
 	case MENUACTION_RANDOM_NINJA:///////////////////////////////////
 
@@ -279,21 +244,15 @@ void ChooseState::UpdateTeams()
 
 void ChooseState::Render()
 {
-	m_menues.top()->Render();
+	m_chooseNinja->Render();
 
-	if (m_menues.top() == m_chooseNinja)
-	{
-		m_ninjas[currentNinja]->Render();
-		m_tools[currentTool]->Render();
-		m_abilityDescription[currentNinja]->Render();
-	}
-	else 
-	{
-		m_redTeamScore->Render();
-		m_blueTeamScore->Render();
-		m_redTeam->Render();
-		m_blueTeam->Render();
-	}
+	m_ninjas[currentNinja]->Render();
+	m_tools[currentTool]->Render();
+	m_abilityDescription[currentNinja]->Render();
+	m_redTeamScore->Render();
+	m_blueTeamScore->Render();
+	m_redTeam->Render();
+	m_blueTeam->Render();
 }
 
 void ChooseState::NextNinja()
@@ -334,15 +293,7 @@ void ChooseState::PrevTool()
 
 void ChooseState::EscapeIsPressed()
 {
-	m_menues.pop();
-	if (m_menues.empty())
-	{
-		Network::GetInstance()->Disconnect();
-	}
-}
-int ChooseState::GetStackSize()
-{
-	return m_menues.size();
+	Network::GetInstance()->Disconnect();
 }
 
 void ChooseState::RandomNinja()

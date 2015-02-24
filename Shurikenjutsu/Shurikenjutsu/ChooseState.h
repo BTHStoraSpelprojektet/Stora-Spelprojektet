@@ -29,16 +29,11 @@ public:
 	void NextTool();
 	void PrevTool();
 	void EscapeIsPressed();
-	int GetStackSize();
 
 private:
-	void InitializePickNinja();
-	void InitializePickTeam();
 	void UpdateTeams();
 	void RandomNinja();
 
-	std::stack<Menu*> m_menues;
-	Menu* m_pickTeam;
 	Menu* m_chooseNinja;
 	TeamTable* m_redTeam;
 	TeamTable* m_blueTeam;

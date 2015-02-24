@@ -11,7 +11,7 @@ CharacterAbilityDescription::~CharacterAbilityDescription(){}
 
 void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 {
-	float quarterHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 3.0f;
+	float quarterHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 4.0f;
 	float quarterWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.0f;
 
 	m_FirstText = new GUIText();
@@ -23,12 +23,12 @@ void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 	m_FourthText = new GUIText();
 	m_FourthPic = new MenuItem();
 
-	DirectX::XMFLOAT2 upRightCorner = DirectX::XMFLOAT2(quarterWidth, quarterHeight);
-	DirectX::XMFLOAT2 upLeftCorner = DirectX::XMFLOAT2(-quarterWidth, quarterHeight);
-	DirectX::XMFLOAT2 downRightCorner = DirectX::XMFLOAT2(quarterWidth, -quarterHeight);
-	DirectX::XMFLOAT2 downLeftCorner = DirectX::XMFLOAT2(-quarterWidth, -quarterHeight);
 	float size = 75.0f;
 	float textSize = 25.0f;
+	DirectX::XMFLOAT2 upLeftCorner = DirectX::XMFLOAT2(-size * 3, -quarterHeight);
+	DirectX::XMFLOAT2 downLeftCorner = DirectX::XMFLOAT2(-size, -quarterHeight);
+	DirectX::XMFLOAT2 upRightCorner = DirectX::XMFLOAT2(size, -quarterHeight);
+	DirectX::XMFLOAT2 downRightCorner = DirectX::XMFLOAT2(size * 3, -quarterHeight);
 	if (p_ninjaIndex == 1)
 	{
 		m_FirstText->Initialize(KATANA_PRIMARY_ATTACK, textSize, upLeftCorner.x/* - size*2*/, upLeftCorner.y - size, 0xffffffff);
@@ -126,10 +126,10 @@ void CharacterAbilityDescription::Shutdown()
 }
 void CharacterAbilityDescription::Render()
 {
-	m_FirstText->Render();
-	m_SecondText->Render();
-	m_ThirdText->Render();
-	m_FourthText->Render();
+	//m_FirstText->Render();
+	//m_SecondText->Render();
+	//m_ThirdText->Render();
+	//m_FourthText->Render();
 	m_FirstPic->Render();
 	m_SecondPic->Render();
 	m_ThirdPic->Render();
