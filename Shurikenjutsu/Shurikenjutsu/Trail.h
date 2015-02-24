@@ -22,6 +22,8 @@ public:
 	void StopEmiting();
 	bool IsTrailDead();
 
+	void ChangeColor(DirectX::XMFLOAT4 p_color);
+
 private:
 	void EmitPoint(DirectX::XMFLOAT3 p_position, float p_angle);
 	void ClearOldPoints();

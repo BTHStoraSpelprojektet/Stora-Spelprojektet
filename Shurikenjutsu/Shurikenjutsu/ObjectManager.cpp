@@ -12,6 +12,7 @@
 #include "StickyTrap.h"
 #include "Volley.h"
 #include "ParticleEmitter.h"
+#include "ConsoleFunctions.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -131,6 +132,8 @@ bool ObjectManager::Initialize(Level* p_level)
 		m_worldParticles.push_back(particleEmitter);
 	}
 
+	m_shurikenTrails.clear();
+
 	return true;
 }
 
@@ -205,6 +208,16 @@ void ObjectManager::Shutdown()
 		delete m_volleys[i];
 	}
 	m_volleys.clear();
+
+	if (m_shurikenTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
+		{
+			m_shurikenTrails[i]->Shutdown();
+		}
+
+		m_shurikenTrails.clear();
+	}
 }
 
 void ObjectManager::ShutdownExit()
@@ -357,11 +370,56 @@ void ObjectManager::Update()
 				{
 					// Add Mega shuriken
 					AddShuriken(MEGA_SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].speed, tempNetShurikens[i].shurikenId);
+
+					Trail* trail = new Trail();
+					DirectX::XMFLOAT4 color;
+
+					if (Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1)
+					{
+						color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+					}
+					else if (Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 2)
+					{
+						color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+					}
+					else
+					{
+						color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+					}
+					
+					if (!trail->Initialize(100.0f, 0.50f, 0.60f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+					{
+						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
+					}
+
+					m_shurikenTrails.push_back(trail);
 				}
 				else
 				{
 					// Add shuriken
 					AddShuriken(SHURIKEN_MODEL_NAME, DirectX::XMFLOAT3(tempNetShurikens[i].x, tempNetShurikens[i].y, tempNetShurikens[i].z), DirectX::XMFLOAT3(tempNetShurikens[i].dirX, tempNetShurikens[i].dirY, tempNetShurikens[i].dirZ), tempNetShurikens[i].speed, tempNetShurikens[i].shurikenId);
+
+					Trail* trail = new Trail();
+					DirectX::XMFLOAT4 color;
+
+					if (Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1)
+					{
+						color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+					}
+					else if (Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 2)
+					{
+						color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+					}
+					else
+					{
+						color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+					}
+
+					if(!trail->Initialize(50.0f, 0.25f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+					{
+						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
+					}
+					m_shurikenTrails.push_back(trail);
 				}
 			}
 		}
@@ -374,9 +432,15 @@ void ObjectManager::Update()
 				m_shurikens[i]->Shutdown();
 				delete m_shurikens[i];
 				m_shurikens.erase(m_shurikens.begin() + i);
+
+				m_shurikenTrails[i]->Shutdown();
+				delete m_shurikenTrails[i];
+				m_shurikenTrails.erase(m_shurikenTrails.begin() + i);
+
 				i--;
 			}
 		}
+
 		Network::GetInstance()->SetHaveUpdateShurikenList();
 	}
 
@@ -409,6 +473,7 @@ void ObjectManager::Update()
 		}
 		Network::GetInstance()->SetHaveUpdateSpikeTrapList();
 	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if (Network::GetInstance()->IsStickyTrapListUpdated())
 	{
@@ -485,7 +550,14 @@ void ObjectManager::Update()
 	}
 
 	UpdateRenderLists();
+	
+	for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
+	{
+		float angle = atan2(m_shurikens[i]->GetDirection().z, m_shurikens[i]->GetDirection().x);
+		m_shurikenTrails[i]->Update(m_shurikens[i]->GetPosition(), angle);
+	}
 }
+
 void ObjectManager::UpdateRenderLists()
 {
 	std::vector<Object*> tempList;
@@ -504,6 +576,7 @@ void ObjectManager::UpdateRenderLists()
 			tempList.push_back(&m_staticObjects[i]);
 		}
 	}
+
 	std::vector<Object*>  temp;
 	Object* prevObject = &m_staticObjects[m_staticObjects.size() - 1];
 	for (unsigned int i = 0; i < tempList.size(); i++)
@@ -527,6 +600,7 @@ void ObjectManager::UpdateRenderLists()
 		prevObject = temp[0];
 	}
 }
+
 void ObjectManager::Render()
 {
 	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
@@ -602,11 +676,16 @@ void ObjectManager::Render()
 	{
 		
 		m_worldParticles[i]->Render();
-}
+	}
 
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
 		m_volleys[i]->Render();
+	}
+
+	for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
+	{
+		m_shurikenTrails[i]->Render();
 	}
 }
 

@@ -273,6 +273,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	}
 
 	// Update every scene object.
+	TrailRenderer::GetInstance().SetViewMatrix(m_camera->GetViewMatrix());
+	TrailRenderer::GetInstance().SetProjectionMatrix(m_camera->GetProjectionMatrix());
 	m_objectManager->Update();
 
 	// Update health bars.
@@ -324,7 +326,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		OnScreenResize();
 		resized = true;
 	} 
-
 	
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
 	Point bottomRight = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
@@ -348,8 +349,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	}
 
 	// Update smokebomb shadow shapes.
-	ShadowShapes::GetInstance().Update();
-
+	ShadowShapes::GetInstance().Update(); 
+	
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
@@ -414,10 +415,12 @@ void PlayingStateTest::Render()
 		GraphicsEngine::GetInstance()->SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
 	}
+
 	if (m_inGameMenuIsActive)
 	{
 		m_inGameMenu->Render();
 	}
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

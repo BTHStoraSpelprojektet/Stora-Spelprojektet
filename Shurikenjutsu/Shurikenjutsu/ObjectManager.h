@@ -7,6 +7,7 @@
 #include "AnimatedObject.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
+#include "Trail.h"
 
 class Volley;
 class Frustum;
@@ -80,6 +81,6 @@ private:
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
 	
-
+	std::vector<Trail*> m_shurikenTrails;
 };
 #endif
