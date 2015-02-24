@@ -56,7 +56,7 @@ public:
 	void Connect(std::string p_ip);
 	void Disconnect();
 
-	void ChooseChar(int p_charNr, int p_toolNr);
+	void ChooseChar(int p_charNr, int p_toolNr, int p_team);
 
 	bool ConnectedNow();
 	bool IsConnected();

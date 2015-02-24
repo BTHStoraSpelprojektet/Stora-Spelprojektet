@@ -415,7 +415,6 @@ inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewe
 
 void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	if (!m_texture)
 	{
@@ -425,7 +424,6 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	// Render the quad to reverse project the polygon onto.
 	GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
 
-	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }
 
 void VisibilityComputer::UpdatePolygonMatrices(ID3D11DeviceContext* p_context)

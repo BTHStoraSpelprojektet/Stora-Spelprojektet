@@ -99,12 +99,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	{
 		return false;
 	}
-	
+
+
 	// Initialize the directional light.
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
-	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
+	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f);
+	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 
 	ConsolePrintSuccess("Light source initialized successfully.");
@@ -385,16 +387,29 @@ void PlayingStateTest::Render()
 	m_objectManager->RenderDepth();
 	m_playerManager->RenderDepth();
 	GraphicsEngine::GetInstance()->SetShadowMap();
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
 
 	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
+	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
+	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render();
-	GraphicsEngine::GetInstance()->RenderFoliage();
-	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
+	
+	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->RenderSSAO();
 
+	// Composition
+	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	GraphicsEngine::GetInstance()->RenderFoliage();
+	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
+	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 	if (FLAG_DEBUG == 1)
 	{
 		ShadowShapes::GetInstance().DebugRender();	
@@ -405,6 +420,8 @@ void PlayingStateTest::Render()
 	m_teamStatusBar->Render();
 	m_countdown->Render();
 	DeathBoard::GetInstance()->Render();
+
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 
 	// Render character outlining.
 	if (m_renderOutlining)
@@ -519,7 +536,7 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 {
 	for (unsigned int i = 0; i < 7; i++)
-	{
+		{
 		m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000, -1000, 0));
 
 		Player* player = m_playerManager->GetEnemyTeamMember(i);

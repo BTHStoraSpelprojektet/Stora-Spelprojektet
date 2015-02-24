@@ -1,6 +1,7 @@
 #include "ParticleRenderer.h"
 #include "ParticleEmitter.h"
 #include "GraphicsEngine.h"
+#include "Object.h"
 
 ParticleRenderer* ParticleRenderer::m_instance;
 
@@ -38,11 +39,23 @@ void ParticleRenderer::QueueRender(ParticleEmitter* p_particleEmitter)
 	m_renderQueue.push_back(p_particleEmitter);
 }
 
+void ParticleRenderer::QueueRender(Object* p_object)
+{
+	m_renderQueueObjects.push_back(p_object);
+}
+
 void ParticleRenderer::Render()
 {
+	for (unsigned int i = 0; i < m_renderQueueObjects.size(); i++)
+	{
+		m_renderQueueObjects[i]->RenderForward();
+	}
+	
 	for (unsigned int i = 0; i < m_renderQueue.size(); i++)
 	{
 		GraphicsEngine::GetInstance()->RenderParticles(m_renderQueue[i]->GetVertexBuffer(), m_renderQueue[i]->GetVertices(), m_renderQueue[i]->GetWorldMatrix(), m_renderQueue[i]->GetParticleTexture());
 	}
+
 	m_renderQueue.clear();
+	m_renderQueueObjects.clear();
 }

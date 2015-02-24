@@ -366,6 +366,7 @@ void System::Render()
 	m_gameState->Render();
 
 	// Render Particles
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	ParticleRenderer::GetInstance()->Render();
 
@@ -373,7 +374,6 @@ void System::Render()
 
 	//Render GUI
 	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	GUIManager::GetInstance()->Render();
 
