@@ -166,6 +166,12 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 						p_playerManager->DamagePlayer(playerList[j].guid, damage, shurikenList[i].guid, ABILITIES_SHURIKEN);
 
 						// Remove shuriken
+						if (shurikenList[i].megaShuriken){
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+						}
+						else{
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+						}
 						p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
 						shurikenList.erase(shurikenList.begin() + i);
 						i--;
@@ -195,6 +201,12 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				if (OBBOBBTest(m_staticBoxList[k], OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
 				{
 					// Remove shuriken
+					if (shurikenList[i].megaShuriken){
+						p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+					}
+					else{
+						p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+					}
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
 					shurikenList.erase(shurikenList.begin() + i);
 					i--;
@@ -219,6 +231,12 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				if (OBBSphereTest(OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
 				{
 					// Remove shuriken
+					if (shurikenList[i].megaShuriken){
+						p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+					}
+					else{
+						p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+					}
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
 					shurikenList.erase(shurikenList.begin() + i);
 					i--;

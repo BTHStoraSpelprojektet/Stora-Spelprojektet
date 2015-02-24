@@ -37,9 +37,9 @@ bool ShurikenAbility::Execute(float p_distance)
 	{
 		if (m_stacks > 0)
 		{
-			if (m_sound != nullptr){
+			/*if (m_sound != nullptr){
 				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND);
-			}
+			}*/
 			Network::GetInstance()->SendAbility(ABILITIES_SHURIKEN, 0);
 			if (m_stacks == SHURIKEN_MAX_STACK)
 			{

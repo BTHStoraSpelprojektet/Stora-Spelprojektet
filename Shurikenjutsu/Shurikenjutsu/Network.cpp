@@ -844,42 +844,76 @@ void Network::ReceviePacket()
 
 			break;
 		}
-		case ID_PLAY_SOUND:
+		case ID_PLAY_SOUND_ABILITY:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			
 			ABILITIES ability;
+			float x, y, z;
 
 			bitStream.Read(messageID);
-			bitStream.Read(ability);
+			bitStream.Read(ability); 
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+
+			float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x) + (m_myPlayer.z - z)*(m_myPlayer.z - z)));
 
 			//Hit sounds
 			switch (ability)
 			{
 			case ABILITIES::ABILITIES_SHURIKEN:
 			{
-				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND);
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / distance);
 				break;
 			}
 			case ABILITIES::ABILITIES_MEGASHURIKEN:
 			{
-				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND);
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / distance);
 				break;
 			}
 			case ABILITIES::ABILITIES_KUNAI:
 			{
-				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND);
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND, 1.0f / distance);
 				break;
 			}
 			case ABILITIES::ABILITIES_MELEESWING:
 			{
-				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND);
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, 1.0f / distance);
 				break;
 			}
 			default:
 			{
 				break;
 			}
+			}
+
+			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
+
+			break;
+		}
+		case ID_PLAY_SOUND:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			PLAYSOUND sound;
+			float x, y, z;
+
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+
+			float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x)) + ((m_myPlayer.z - z)*(m_myPlayer.z - z)));
+			float soundDistanceGain = 4.0f;
+			
+			//Hit sounds
+			if (distance == 0){
+				m_sound->PlaySound(sound, 1.0f);
+			}
+			else{
+				m_sound->PlaySound(sound, 1.0f / (distance / soundDistanceGain));
 			}
 
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);

@@ -327,6 +327,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	{
 		case ABILITIES_SHURIKEN:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_shurikenManager.AddShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 			break;
 		}
@@ -335,6 +336,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		{
 			//Calculate new location for the dashing player and inflict damage on enemies
 			player = GetPlayer(p_guid);
+			SendPlaySound(PLAYSOUND::PLAYSOUND_DASH_STEPS_SOUND, player.x, player.y, player.z);
 			float dashDistance = p_collisionManager.CalculateDashRange(p_guid, player, this) - 1.0f;
 
 			l_bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
@@ -347,23 +349,25 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 
 		case ABILITIES_MELEESWING:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_AIR_CUT_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_collisionManager.NormalMeleeAttack(p_guid, this, p_readAbility);
 			break;
 		}
 
 		case ABILITIES_MEGASHURIKEN:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 			break;
 		}
-
+			q
 		case ABILITIES_SMOKEBOMB:
 		{
 			if (smokeBombDistance > SMOKEBOMB_RANGE)
 			{
 				smokeBombDistance = SMOKEBOMB_RANGE;
 			}
-
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SMOKE_BOMB_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_smokebomb.AddSmokeBomb(m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
 			break;
 		}
@@ -487,7 +491,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			}
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
-			SendPlaySound(p_usedAbility);
+			SendPlaySound(p_usedAbility, m_players[i].x, m_players[i].y, m_players[i].z);
 		}
 	}
 }
@@ -612,11 +616,26 @@ void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, fl
 	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 2, p_attackingPlayerGUID, false);
 }
 
-void PlayerManager::SendPlaySound(ABILITIES ability)
+void PlayerManager::SendPlaySound(ABILITIES ability, float p_x, float p_y, float p_z)
+{
+	RakNet::BitStream wBitStream;
+	wBitStream.Write((RakNet::MessageID)ID_PLAY_SOUND_ABILITY);
+	wBitStream.Write(ability);
+	wBitStream.Write(p_x);
+	wBitStream.Write(p_y);
+	wBitStream.Write(p_z);
+
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void PlayerManager::SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p_z)
 {
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_PLAY_SOUND);
-	wBitStream.Write(ability);
+	wBitStream.Write(sound);
+	wBitStream.Write(p_x);
+	wBitStream.Write(p_y);
+	wBitStream.Write(p_z);
 
 	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

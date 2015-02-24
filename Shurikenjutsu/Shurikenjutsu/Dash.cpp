@@ -23,9 +23,9 @@ bool Dash::Execute(float p_distance)
 {
 	if (Ability::Execute(p_distance))
 	{
-		if (m_sound != nullptr){
+		/*if (m_sound != nullptr){
 			m_sound->PlaySound(PLAYSOUND::PLAYSOUND_DASH_STEPS_SOUND);
-		}
+		}*/
 		Network::GetInstance()->SendAbility(ABILITIES_DASH,0);
 		SetCooldown(DASH_COOLDOWN);
 		return true;

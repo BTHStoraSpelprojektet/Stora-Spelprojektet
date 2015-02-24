@@ -2,18 +2,7 @@
 #define SOUND_H_
 
 #include "fmod.hpp"
-
-enum PLAYSOUND
-{
-	PLAYSOUND_BACKGROUND_SOUND,
-	PLAYSOUND_KUNAI_THROW_SOUND,
-	PLAYSOUND_KUNAI_HIT_SOUND,
-	PLAYSOUND_AIR_CUT_SOUND,
-	PLAYSOUND_KATANA_HIT_SOUND,
-	PLAYSOUND_DASH_STEPS_SOUND,
-	PLAYSOUND_SHURIKEN_THROW_SOUND,
-	PLAYSOUND_SHURIKEN_HIT_SOUND,
-};
+#include "..\CommonLibs\CommonEnums.h"
 
 class Sound
 {
@@ -36,13 +25,25 @@ private:
 	FMOD_SPEAKERMODE m_speakerMode;
 	//FMOD_Caps caps;
 	char m_name[256];
+	float m_musicVolume = 0.3f;
 
+	FMOD::ChannelGroup *masterChannelGroup;
+
+	FMOD::ChannelGroup *channelEffects;
+	FMOD::Channel *effectChannel;
+
+	FMOD::ChannelGroup *channelMusic;
+	FMOD::Channel *musicChannel;
 
 	FMOD::Sound *m_backgroundSound;
 	FMOD::Sound *m_kunaiThrowSound;
 	FMOD::Sound *m_kunaiHitSound;
 	FMOD::Sound *m_shurikenThrowSound;
 	FMOD::Sound *m_shurikenHitSound;
+	FMOD::Sound *m_shurikenHitObjectsSound;
+	FMOD::Sound *m_megaShurikenHitSound;
+	FMOD::Sound *m_megaShurikenHitObjectsSound;
+	FMOD::Sound *m_smokeBombSound;
 	FMOD::Sound *m_airCutSound;
 	FMOD::Sound *m_katanaHitSound;
 	FMOD::Sound *m_dashStepsSound;
