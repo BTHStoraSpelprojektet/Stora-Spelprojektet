@@ -96,6 +96,9 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_trail->StopEmiting();
 
 	ChooseTool();
+
+	m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
+
 	return true;
 }
 
@@ -312,6 +315,15 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 		// If we moved, update shadow shapes.
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+
+		//Update sound (walking)
+		m_sound->StartAmbientSound(m_soundEmitter);
+		m_soundEmitter->m_x = position.x;
+		m_soundEmitter->m_y = position.y;
+		m_soundEmitter->m_z = position.z;
+	}
+	else{
+		m_sound->StopAmbientSound(m_soundEmitter);
 	}
 	m_playerSphere.m_position = m_position;
 	

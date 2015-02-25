@@ -93,9 +93,9 @@ void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
 			m_enemyList[i]->Update();
 
-			m_enemyList[i]->m_soundEmitter.m_x = enemyPlayers[i].x;
-			m_enemyList[i]->m_soundEmitter.m_y = enemyPlayers[i].y;
-			m_enemyList[i]->m_soundEmitter.m_z = enemyPlayers[i].z;
+			m_enemyList[i]->m_soundEmitter->m_x = enemyPlayers[i].x;
+			m_enemyList[i]->m_soundEmitter->m_y = enemyPlayers[i].y;
+			m_enemyList[i]->m_soundEmitter->m_z = enemyPlayers[i].z;
 		}
 	}
 	CheckPlayersVisible();
@@ -196,10 +196,11 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 		KatanaNinja *tempPlayer = new KatanaNinja();
 
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->m_soundEmitter.m_playSound = PLAYSOUND_STEPS_LEAVES_SOUND;
+		/*tempPlayer->m_soundEmitter.m_playSound = PLAYSOUND_STEPS_LEAVES_SOUND;
 		tempPlayer->m_soundEmitter.m_x = p_pos.x;
 		tempPlayer->m_soundEmitter.m_y = p_pos.y;
 		tempPlayer->m_soundEmitter.m_z = p_pos.z;
+		m_sound->PlayAmbientSound(&tempPlayer->m_soundEmitter);*/
 
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);
@@ -213,10 +214,6 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 		TessenNinja *tempPlayer = new TessenNinja();
 
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->m_soundEmitter.m_playSound = PLAYSOUND_STEPS_LEAVES_SOUND;
-		tempPlayer->m_soundEmitter.m_x = p_pos.x;
-		tempPlayer->m_soundEmitter.m_y = p_pos.y;
-		tempPlayer->m_soundEmitter.m_z = p_pos.z;
 
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);
@@ -231,10 +228,6 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 		NaginataNinja *tempPlayer = new NaginataNinja();
 
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->m_soundEmitter.m_playSound = PLAYSOUND_STEPS_LEAVES_SOUND;
-		tempPlayer->m_soundEmitter.m_x = p_pos.x;
-		tempPlayer->m_soundEmitter.m_y = p_pos.y;
-		tempPlayer->m_soundEmitter.m_z = p_pos.z;
 
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);

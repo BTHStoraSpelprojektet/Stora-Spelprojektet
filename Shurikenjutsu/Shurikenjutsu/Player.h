@@ -73,7 +73,7 @@ public:
 	OBB GetOBB();
 
 	void SetSound(Sound* p_sound);
-	Sound::SoundEmitter m_soundEmitter;
+	Sound::SoundEmitter* m_soundEmitter;
 
 protected:
 	void CheckForSpecialAttack();

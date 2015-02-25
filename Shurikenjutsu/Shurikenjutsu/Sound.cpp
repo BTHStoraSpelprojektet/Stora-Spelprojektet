@@ -311,30 +311,40 @@ void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 	effectChannel->setPaused(false);
 }
 
-void Sound::CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
+Sound::SoundEmitter* Sound::CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
 {
-	SoundEmitter soundEmitter;
-	soundEmitter.m_playSound = p_playSound;
-	soundEmitter.m_x = p_x;
-	soundEmitter.m_y = p_y;
-	soundEmitter.m_z = p_z;
+	SoundEmitter* soundEmitter = new SoundEmitter;
+	soundEmitter->m_playSound = p_playSound;
+	soundEmitter->m_x = p_x;
+	soundEmitter->m_y = p_y;
+	soundEmitter->m_z = p_z;
 
-	PlayAmbientSound(&soundEmitter);
+	PlayAmbientSound(soundEmitter);
 
 	soundEmitters.push_back(soundEmitter);
+
+	return soundEmitter;
 }
 
 void Sound::UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z)
 {
 	for (unsigned int i = 0; i < soundEmitters.size(); i++)
 	{
-		float distance = sqrtf(((p_player_x - soundEmitters[i].m_x)*(p_player_x - soundEmitters[i].m_x) + (p_player_z - soundEmitters[i].m_z)*(p_player_z - soundEmitters[i].m_z)));
+		float distance = sqrtf(((p_player_x - soundEmitters[i]->m_x)*(p_player_x - soundEmitters[i]->m_x) + (p_player_z - soundEmitters[i]->m_z)*(p_player_z - soundEmitters[i]->m_z)));
 		float soundDistanceGain = 1.0f;
 		float volume = 1.0f / (distance / soundDistanceGain);
 
-		setAmbientVolume(&soundEmitters[i], volume);
+		setAmbientVolume(soundEmitters[i], volume);
 		
 	}
+}
+
+void Sound::StopAmbientSound(SoundEmitter* p_soundEmitter){
+	p_soundEmitter->isPlaying = false;
+}
+
+void Sound::StartAmbientSound(SoundEmitter* p_soundEmitter){
+	p_soundEmitter->isPlaying = true;
 }
 
 void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume){
@@ -400,7 +410,14 @@ void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
 	else if (p_volume < 0.1f){
 		p_volume = 0.0f;
 	}
-	p_soundEmitter->m_ambientChannel->setPaused(true);
-	p_soundEmitter->m_ambientChannel->setVolume(p_volume);
-	p_soundEmitter->m_ambientChannel->setPaused(false);
+	if (p_soundEmitter->isPlaying){
+		p_soundEmitter->m_ambientChannel->setPaused(true);
+		p_soundEmitter->m_ambientChannel->setVolume(p_volume);
+		p_soundEmitter->m_ambientChannel->setPaused(false);
+	}
+	else{
+		p_soundEmitter->m_ambientChannel->setPaused(true);
+		p_soundEmitter->m_ambientChannel->setVolume(0.0f);
+		p_soundEmitter->m_ambientChannel->setPaused(false);
+	}
 }

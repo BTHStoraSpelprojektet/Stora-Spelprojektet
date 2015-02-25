@@ -17,6 +17,7 @@ public:
 		FMOD::Channel* m_ambientChannel;
 		float m_totalMSLength;
 		float m_timePassed;
+		bool isPlaying = true;
 	};
 
 	bool Initialize();
@@ -25,10 +26,10 @@ public:
 
 	void FMODErrorCheck(FMOD_RESULT p_result);
 	void PlaySound(PLAYSOUND p_playSound, float p_volume = 1.0f);
-	void CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
+	SoundEmitter* CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
 	void UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z);
-	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
-	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);
+	void StopAmbientSound(SoundEmitter* p_soundEmitter);
+	void StartAmbientSound(SoundEmitter* p_soundEmitter);
 
 	void StopMusic();
 	void StartMusic();
@@ -45,6 +46,9 @@ private:
 	float m_defaultAmbientVolume = 0.4f;
 	int music_sound_id = 0;
 
+	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
+	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);
+
 	FMOD::ChannelGroup *masterChannelGroup;
 
 	FMOD::ChannelGroup *channelEffects;
@@ -53,7 +57,7 @@ private:
 	FMOD::ChannelGroup *channelAmbient;
 	
 	//std::vector<FMOD::Channel*> ambientChannels;
-	std::vector<SoundEmitter> soundEmitters;
+	std::vector<SoundEmitter*> soundEmitters;
 
 	FMOD::ChannelGroup *channelMusic;
 	FMOD::Channel *musicChannel;
