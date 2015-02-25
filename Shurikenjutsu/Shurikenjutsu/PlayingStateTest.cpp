@@ -17,6 +17,7 @@
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
 #include "InGameMenu.h"
+#include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
 
 ParticleEmitter* TEST_POIemitter;
@@ -139,6 +140,12 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_inGameMenu = new InGameMenu();
 	m_inGameMenu->Initialize();
 
+	m_victoryMenu = new VictoryScreenMenu();
+	if (!m_victoryMenu->Initialize())
+	{
+		return false;
+	}
+
 	if (!DeathBoard::GetInstance()->Initialize())
 	{
 		return false;
@@ -153,6 +160,13 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_victoryMenu != nullptr)
+	{
+		m_victoryMenu->Shutdown();
+		delete m_victoryMenu;
+		m_victoryMenu = nullptr;
+	}
+
 	if (m_inGameMenu != nullptr)
 	{
 		m_inGameMenu->Shutdown();
@@ -271,6 +285,21 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	else if (Network::GetInstance()->GetMatchOver())
 	{
 		m_camera->MenuCameraRotation();
+
+		switch (m_victoryMenu->Update())
+		{
+			case IN_GAME_MENU_CONTINUE:
+			{
+				return GAMESTATESWITCH_CHOOSENINJA;
+				break;
+			}
+			case IN_GAME_MENU_TO_MAIN:
+			{
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
+			}
+		}
 	}
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
 	{
@@ -466,6 +495,11 @@ void PlayingStateTest::Render()
 	if (m_inGameMenuIsActive)
 	{
 		m_inGameMenu->Render();
+	}
+
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_victoryMenu->Render();
 	}
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();

@@ -13,6 +13,7 @@ class Minimap;
 class TeamStatusBar;
 class Countdown;
 class InGameMenu;
+class VictoryScreenMenu;
 class DeathBoard;
 class Sound;
 
@@ -56,6 +57,7 @@ private:
 	DirectionalLight m_directionalLight;
 	Countdown* m_countdown;
 	InGameMenu *m_inGameMenu;
+	VictoryScreenMenu* m_victoryMenu;
 
 	const float twoPi = DirectX::XM_PI * 2.0f;
 
