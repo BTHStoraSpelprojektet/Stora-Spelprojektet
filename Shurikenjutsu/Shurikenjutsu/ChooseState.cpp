@@ -9,14 +9,15 @@
 #include "Network.h"
 #include "ToolTipPopUp.h"
 #include "TextResource.h"
+#include "Camera.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
 
 /*TODO
  - Background
- - Texts
- - Textures
+ - Texts - orkar!!!!! INTE!!!!
+ - Textures  - på g
 */
 bool ChooseState::Initialize()
 {
@@ -113,6 +114,11 @@ bool ChooseState::Initialize()
 	m_abilityDescription[0]->Initialize(1);
 	m_abilityDescription[1]->Initialize(2);
 	m_abilityDescription[2]->Initialize(3);
+
+
+	m_camera = new Camera();
+	m_camera->Initialize();
+	m_camera->ResetCamera();
 
 	return true;
 }

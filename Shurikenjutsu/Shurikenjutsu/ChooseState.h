@@ -13,6 +13,7 @@ class MenuItem;
 class GUIText;
 class CharacterAbilityDescription;
 class ToolTipPopUp;
+class Camera;
 
 enum CurrentTeam
 {
@@ -59,6 +60,7 @@ private:
 	float m_screenWidth;
 	bool m_isRandoming;
 	CurrentTeam m_currentTeam;
+	Camera *m_camera;
 
 
 
