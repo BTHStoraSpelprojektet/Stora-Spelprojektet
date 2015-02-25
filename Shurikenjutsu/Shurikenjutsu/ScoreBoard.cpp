@@ -18,7 +18,7 @@ bool ScoreBoard::Initialize()
 	m_boardWidth = 514.0f;
 
 	m_background = new GUIElement();
-	m_background->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), m_boardWidth, m_boardWidth, TextureLibrary::GetInstance()->GetTexture(SCOREBOARD_BACKGROUND));
+	m_background->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), m_boardWidth, m_boardHeight, TextureLibrary::GetInstance()->GetTexture(SCOREBOARD_BACKGROUND));
 	return true;
 }
 
