@@ -361,8 +361,8 @@ Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segm
 	Point segmentDirection = Point(p_segment.b.x - p_segment.a.x, p_segment.b.y - p_segment.a.y);
 
 	// Calculate length of both lines.
-	float rayLength = sqrt(rayDirection.x * rayDirection.x + rayDirection.y * rayDirection.y);
-	float segmentLength = sqrt(segmentDirection.x * segmentDirection.x + segmentDirection.y * segmentDirection.y);
+	float rayLength = sqrtf(rayDirection.x * rayDirection.x + rayDirection.y * rayDirection.y);
+	float segmentLength = sqrtf(segmentDirection.x * segmentDirection.x + segmentDirection.y * segmentDirection.y);
 
 	// If the lines are parallel, there is no intersection.
 	if (rayDirection.x / rayLength == segmentDirection.x / segmentLength && rayDirection.y / rayLength == segmentDirection.y / segmentLength)

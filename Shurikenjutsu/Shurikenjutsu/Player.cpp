@@ -16,7 +16,7 @@
 #include "StickyTrapAbility.h"
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
-
+#include "ConsoleFunctions.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -72,11 +72,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_globalCooldown = 0.0f;
 	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
 
-	m_dashParticles1 = new ParticleEmitter();
-	m_dashParticles2 = new ParticleEmitter();
-	m_dashParticles1->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
-	m_dashParticles2->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
-
 	m_aimSphere = new Object();
 	m_aimSphere->Initialize("../Shurikenjutsu/Models/Marker_CircleShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 
@@ -92,6 +87,13 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_ape = new AttackPredictionEditor();
 	m_floatingText = new FloatingText();
 	m_floatingText->Initialize();
+
+	m_trail = new Trail();
+	if (!m_trail->Initialize(100.0f, 0.5f, 0.2f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
+	{
+		ConsolePrintErrorAndQuit("A dash trail failed to initialize!");
+	}
+	m_trail->StopEmiting();
 
 	ChooseTool();
 	return true;
@@ -192,27 +194,19 @@ void Player::Shutdown()
 		m_abilityBar = nullptr;
 	}
 
-	if (m_dashParticles1 != nullptr)
+	if (m_trail)
 	{
-		m_dashParticles1->Shutdown();
-		delete m_dashParticles1;
-		m_dashParticles1 = nullptr;
-	}
-
-	if (m_dashParticles2 != nullptr)
-	{
-		m_dashParticles2->Shutdown();
-		delete m_dashParticles2;
-		m_dashParticles2 = nullptr;
+		m_trail->Shutdown();
+		delete m_trail;
+		m_trail = nullptr;
 	}
 }
 
 void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 {
-	m_dashParticles1->UpdatePosition(m_position);
-	m_dashParticles1->Update();
-	m_dashParticles2->UpdatePosition(m_position);
-	m_dashParticles2->Update();
+	float angle = atan2(m_dashDirection.z, m_dashDirection.x);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
+	m_trail->Update(position, angle);
 
 	if (m_updateVisibility)
 	{
@@ -277,9 +271,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 		m_isDashing = true;
 
-		// Start sparkling.
-		m_dashParticles1->SetEmitParticleState(true);
-		m_dashParticles2->SetEmitParticleState(true);
+		m_trail->StartEmiting();
 	}
 
 	// Dash movement
@@ -293,28 +285,27 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
-		if (distance >= m_dashDistanceLeft)
-		{
-			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
-			m_dashDistanceLeft = 0.0f;
-			m_isDashing = false;
+			if (distance >= m_dashDistanceLeft)
+			{
+				m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+				m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+				m_dashDistanceLeft = 0.0f;
+				m_isDashing = false;
 
 				Network::GetInstance()->SendAnimationState(AnimationState::None);
 
-				m_dashParticles1->SetEmitParticleState(false);
-				m_dashParticles2->SetEmitParticleState(false);
-		}
+				m_trail->StopEmiting();
+			}
 
-		else
-		{
-			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-			m_dashDistanceLeft -= distance;
-		}
+			else
+			{
+				m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+				m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+				m_dashDistanceLeft -= distance;
+			}
 
-		// If we dashed, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+			// If we dashed, update shadow shapes.
+			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 		}
 
 		else
@@ -323,14 +314,13 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 			Network::GetInstance()->SendAnimationState(AnimationState::None);
 
-			m_dashParticles1->SetEmitParticleState(false);
-			m_dashParticles2->SetEmitParticleState(false);
+			m_trail->StopEmiting();
 		}
 
 		SendPosition(m_position);
 	}
 
-	// Move
+	// Move.
 	if ((CalculateDirection() || Network::GetInstance()->ConnectedNow()) && !m_isDashing)
 	{
 		SetCalculatePlayerPosition();
@@ -390,10 +380,9 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		}
 	}
 
-
 	// Count down cooldowns
 	UpdateAbilities();
-	throwDistance = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_position);//m_playerSphere.m_position);
+	throwDistance = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_position);
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
@@ -405,6 +394,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			m_globalCooldown = m_maxGlobalCooldown;
 		}
 	}
+
 	DealtDamageStruct temp = Network::GetInstance()->GetDealtDamage();
 	m_floatingText->SetDealtDamageText(temp.m_position ,temp.m_damage);
 	UpdateAbilityBar();
@@ -481,10 +471,9 @@ bool Player::CalculateDirection()
 
 void Player::Update()
 {
-	m_dashParticles1->UpdatePosition(m_position);
-	m_dashParticles1->Update();
-	m_dashParticles2->UpdatePosition(m_position);
-	m_dashParticles2->Update();
+	float angle = atan2(m_direction.z, m_direction.x);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
+	m_trail->Update(position, angle);
 
 	int state = Network::GetInstance()->AnimationChanged(m_guid);
 	if (state != -1)
@@ -493,14 +482,12 @@ void Player::Update()
 
 		if (state == 2 && m_ninjaType == 0)
 		{
-			m_dashParticles1->SetEmitParticleState(true);
-			m_dashParticles2->SetEmitParticleState(true);
+			m_trail->StartEmiting();
 		}
 
 		if (state == 5 && m_ninjaType == 0)
 		{
-			m_dashParticles1->SetEmitParticleState(false);
-			m_dashParticles2->SetEmitParticleState(false);
+			m_trail->StopEmiting();
 		}
 	}
 }
@@ -998,8 +985,7 @@ void Player::Render()
 		}
 	}
 
-	m_dashParticles1->Render();
-	m_dashParticles2->Render();
+	m_trail->Render();
 
 	AnimatedObject::RenderPlayer(m_team);
 }
@@ -1050,13 +1036,11 @@ void Player::SetTeam(int p_team)
 
 	if (m_team == 1)
 	{
-		m_dashParticles1->SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-		m_dashParticles2->SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
 	}
 	else
 	{
-		m_dashParticles1->SetColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
-		m_dashParticles2->SetColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
 	}
 }
 
