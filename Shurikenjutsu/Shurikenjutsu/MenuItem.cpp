@@ -41,3 +41,10 @@ void MenuItem::Shutdown()
 	delete m_background;
 	m_background = 0;
 }
+
+void MenuItem::SetPosition(float p_x, float p_y)
+{
+	m_x = p_x;
+	m_y = p_y;
+	m_background->SetPosition(DirectX::XMFLOAT3(m_x, m_y, 1.0f));
+}

@@ -29,6 +29,10 @@ public:
 	void UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z);
 	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
 	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);
+
+	void StopMusic();
+	void StartMusic();
+	void StartStopMusic();
 private:
 	FMOD::System *m_system;
 	FMOD_RESULT m_result;
@@ -37,8 +41,9 @@ private:
 	FMOD_SPEAKERMODE m_speakerMode;
 	//FMOD_Caps caps;
 	char m_name[256];
-	float m_musicVolume = 0.0f;
+	float m_musicVolume = 0.7f;
 	float m_defaultAmbientVolume = 0.4f;
+	int music_sound_id = 0;
 
 	FMOD::ChannelGroup *masterChannelGroup;
 
@@ -78,6 +83,8 @@ private:
 	FMOD::Sound *m_fireSound;
 	FMOD::Sound *m_windSound;
 	FMOD::Sound *m_birdSound;
-	FMOD::Channel *m_channel;
+	FMOD::Sound *m_stepsLeavesSound;
+
+	//FMOD::Channel *m_channel;
 };
 #endif

@@ -46,6 +46,7 @@ void PlayingStateTest::EscapeIsPressed()
 	{
 		m_inGameMenuIsActive = true;
 	}
+	m_sound->StartStopMusic();
 }
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
@@ -368,6 +369,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		{
 		case IN_GAME_MENU_RESUME:
 			m_inGameMenuIsActive = false;
+			m_sound->StopMusic();
 			break;
 		case IN_GAME_MENU_TO_MAIN:
 			Network::GetInstance()->Disconnect();

@@ -25,8 +25,8 @@ enum MENUACTION
 	MENUACTION_INGAME_QUIT,
 	MENUACTION_PICK_RED_TEAM,
 	MENUACTION_PICK_BLUE_TEAM,
-	MENUACTION_RANDOM_TEAM,
-	MENUACTION_RANDOM_NINJA
+	MENUACTION_RANDOM_NINJA,
+	MENUACTION_CLICKED_QUESTIONMARK
 
 };
 
@@ -42,6 +42,7 @@ public:
 	
 	void SetBackgroundTexture(ID3D11ShaderResourceView* p_texture);
 	virtual void Shutdown();
+	void SetPosition(float p_x,	float p_y);
 
 protected:
 

@@ -94,6 +94,9 @@ bool Sound::Initialize()
 
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/Bird.wav", FMOD_DEFAULT, 0, &m_birdSound);
 	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/StepsOnLeaves.wav", FMOD_DEFAULT, 0, &m_stepsLeavesSound);
+	FMODErrorCheck(m_result);
 	
 	// EXTRA KOD FÖR EXTRA KOLLAR
 
@@ -146,6 +149,36 @@ void Sound::FMODErrorCheck(FMOD_RESULT p_result)
 	}
 }
 
+void Sound::StopMusic(){
+	bool* isPLaying = new bool;
+	
+	musicChannel->isPlaying(isPLaying);
+	if (*isPLaying){
+		musicChannel->stop();
+	}
+}
+
+void Sound::StartMusic(){
+	bool* isPLaying = new bool;
+
+	musicChannel->isPlaying(isPLaying);
+	if (!*isPLaying){
+		PlaySound(PLAYSOUND_BACKGROUND_SOUND, m_musicVolume);
+	}
+}
+
+void Sound::StartStopMusic(){
+	bool* isPLaying = new bool;
+	musicChannel->isPlaying(isPLaying);
+
+	if (*isPLaying){
+		StopMusic();
+	}
+	else if (!*isPLaying){
+		StartMusic();
+	}
+}
+
 void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 {
 	switch (p_playSound)
@@ -153,7 +186,7 @@ void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 	case PLAYSOUND_BACKGROUND_SOUND:
 		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
 		m_backgroundSound->setLoopCount(INT_MAX);
-		m_system->playSound(m_backgroundSound, channelMusic, true, &musicChannel);
+		music_sound_id = m_system->playSound(m_backgroundSound, channelMusic, true, &musicChannel);
 
 		musicChannel->setChannelGroup(channelMusic);
 		musicChannel->setVolume(m_musicVolume);
@@ -308,22 +341,37 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 	switch (p_soundEmitter->m_playSound)
 	{
 	case PLAYSOUND_FIRE_SOUND:
+	{
 		m_fireSound->setMode(FMOD_LOOP_NORMAL);
 		m_fireSound->setLoopCount(INT_MAX);
 		m_system->playSound(m_fireSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
 		break;
+	}
 	case PLAYSOUND_BIRD_SOUND:
+	{
 		m_birdSound->setMode(FMOD_LOOP_NORMAL);
 		m_birdSound->setLoopCount(INT_MAX);
 		m_system->playSound(m_birdSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
 		break;
+	}
 	case PLAYSOUND_WIND_SOUND:
+	{
 		m_windSound->setMode(FMOD_LOOP_NORMAL);
 		m_windSound->setLoopCount(INT_MAX);
 		m_system->playSound(m_windSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
 		break;
-	default:
+	}
+	case PLAYSOUND_STEPS_LEAVES_SOUND:
+	{
+		m_stepsLeavesSound->setMode(FMOD_LOOP_NORMAL);
+		m_stepsLeavesSound->setLoopCount(INT_MAX);
+		m_system->playSound(m_stepsLeavesSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
 		break;
+	}
+	default:
+	{
+		break;
+	}
 	}
 
 	p_soundEmitter->m_ambientChannel->setChannelGroup(channelAmbient);

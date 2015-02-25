@@ -118,7 +118,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	{
 		ConsolePrintSuccess("Sound initialized successfully.");
 		ConsoleSkipLines(1);
-		m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
+		//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
+		m_sound->StartMusic();
 		m_playingState->SetSound(m_sound);
 		m_menuState->setSound(m_sound);
 	}
@@ -321,6 +322,7 @@ void System::Update()
 		m_gameState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
+		m_sound->StopMusic();
 		m_cursor->SmallSize();
 		break;
 	case GAMESTATESWITCH_MENU:
@@ -347,11 +349,8 @@ void System::Update()
 		{
 			//Back to menu
 			m_gameState->EscapeIsPressed();
-			if (m_chooseNinjaState->GetStackSize() == 0)
-			{
-				m_gameState = m_menuState;
-				m_gameState->EscapeIsPressed();
-			}
+			m_gameState = m_menuState;
+			m_gameState->EscapeIsPressed();
 		}
 		if (m_gameState == m_playingState)
 		{
