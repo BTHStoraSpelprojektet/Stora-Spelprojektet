@@ -49,7 +49,7 @@ bool NormalState::Initialize(std::string p_levelName)
 
 bool NormalState::Initialize()
 {
-	m_roundLimit = 1;
+	m_roundLimit = 5;
 	m_currentRound = 1;
 	m_roundTimer = 10.0f;
 	m_matchTimer = 20.0f;
