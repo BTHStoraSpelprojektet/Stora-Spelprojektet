@@ -5,6 +5,7 @@
 #include "ConsoleFunctions.h"
 #include <D3Dcompiler.h>
 #include "TextureLibrary.h"
+#include "Network.h"
 
 VisibilityComputer& VisibilityComputer::GetInstance()
 {
@@ -428,7 +429,11 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	}
 
 	// Render the quad to reverse project the polygon onto.
+	if (!Network::GetInstance()->GetMatchOver())
+	{
 	GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
+	}
+
 }
 
 void VisibilityComputer::UpdatePolygonMatrices(ID3D11DeviceContext* p_context)
@@ -582,24 +587,24 @@ void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
 
 	else
 	{
-		// Setup vertex buffer description.
-		D3D11_BUFFER_DESC vertexBuffer;
+	// Setup vertex buffer description.
+	D3D11_BUFFER_DESC vertexBuffer;
 		vertexBuffer.Usage = D3D11_USAGE_DYNAMIC;
-		vertexBuffer.ByteWidth = sizeof(Vertex) * 6;
-		vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBuffer.ByteWidth = sizeof(Vertex) * 6;
+	vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		vertexBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		vertexBuffer.MiscFlags = 0;
-		vertexBuffer.StructureByteStride = 0;
+	vertexBuffer.MiscFlags = 0;
+	vertexBuffer.StructureByteStride = 0;
 
-		// Setup vertex buffer data.
-		D3D11_SUBRESOURCE_DATA vertexData;
-		vertexData.pSysMem = mesh;
-		vertexData.SysMemPitch = 0;
-		vertexData.SysMemSlicePitch = 0;
+	// Setup vertex buffer data.
+	D3D11_SUBRESOURCE_DATA vertexData;
+	vertexData.pSysMem = mesh;
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
 
-		// Create the vertex buffer.
-		GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_quadMesh);
-	}
+	// Create the vertex buffer.
+	GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_quadMesh);
+}
 }
 
 void VisibilityComputer::SetWorldPolygonMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

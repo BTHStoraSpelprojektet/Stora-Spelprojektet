@@ -10,6 +10,8 @@
 class ParticleEmitter
 {
 public:
+	ParticleEmitter();
+	~ParticleEmitter();
 	bool Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_direction, DirectX::XMFLOAT2 p_size, PARTICLE_PATTERN p_pattern);
 	void Shutdown();
 
@@ -65,7 +67,6 @@ private:
 
 	float m_emitBorderLeft;
 
-	//float m_globalWindAngleDegree = 315;
 	float m_globalWindAngleDegree = 0;
 	float m_globalWindSpeed = 5.0f;
 
@@ -125,8 +126,8 @@ private:
 
 	float getWindOffsetX(float timePassed, float timeToLive);
 	float getWindOffsetZ(float timePassed, float timeToLive);
-	float fadeIn(ParticleVertex* mesh, Particle* particle, float timeToFade);
-	float fadeOut(ParticleVertex* mesh, Particle* particle, float timeToFade);
+	float fadeIn(Particle* particle, float timeToFade);
+	float fadeOut(Particle* particle, float timeToFade);
 
 	void initParticles(float particlesPerSecond, float maxParticles, DirectX::XMFLOAT3 emitionPositionOffset, float velocity, float velocityVariation, float timeToLive, ID3D11ShaderResourceView* particleTexture);
 	void ParticleEmitter::fallingLeafUpdate();

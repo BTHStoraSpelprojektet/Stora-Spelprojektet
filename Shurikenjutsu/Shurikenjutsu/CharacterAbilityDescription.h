@@ -22,7 +22,7 @@ private:
 	MenuItem* m_SecondPic;
 	MenuItem* m_ThirdPic;
 	MenuItem* m_FourthPic;
-
+	MenuItem *m_abilityBarBG;
 };
 
 #endif

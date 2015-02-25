@@ -41,6 +41,9 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	//
 	//=======================================================
 
+	float cosine = cos(p_input[0].m_rotation);
+	float sine = sin(p_input[0].m_rotation);
+
 	float3 t1 = float3(p_input[0].m_position.x - p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z + p_input[0].m_size.y);
 	float3 t2 = float3(p_input[0].m_position.x + p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z + p_input[0].m_size.y);
 	float3 b1 = float3(p_input[0].m_position.x - p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_size.y);
