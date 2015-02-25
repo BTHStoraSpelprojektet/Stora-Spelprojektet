@@ -503,6 +503,9 @@
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreBoard.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -834,6 +837,9 @@
     </ClInclude>
     <ClInclude Include="TeamTable.h">
       <Filter>Header Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreBoard.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

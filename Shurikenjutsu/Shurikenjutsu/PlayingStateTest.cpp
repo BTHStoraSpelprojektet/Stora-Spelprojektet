@@ -18,6 +18,7 @@
 #include "ConsoleFunctions.h"
 #include "InGameMenu.h"
 #include "DeathBoard.h"
+#include "ScoreBoard.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -95,6 +96,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initialize the minimap.
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
+
+	// Initialize the score board
+	m_scoreBoard = new ScoreBoard();
+	m_scoreBoard->Initialize();
 	
 	// Initialize the team status bar.
 	m_teamStatusBar = new TeamStatusBar();
@@ -361,6 +366,16 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	
 	DeathBoard::GetInstance()->Update();
 
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
+	{
+		m_scoreBoard->Update();
+		m_scoreBoardIsActive = true;
+	}
+	else
+	{
+		m_scoreBoardIsActive = false;
+	}
+
 	BasicPicking();
 	if (m_inGameMenuIsActive)
 	{
@@ -381,14 +396,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		}
 	}
 
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
-	{
-		m_scoreBoardIsActive = true;
-	}
-	else
-	{
-		m_scoreBoardIsActive = false;
-	}
+	
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -450,6 +458,10 @@ void PlayingStateTest::Render()
 		m_inGameMenu->Render();
 	}
 
+	if (m_scoreBoardIsActive)
+	{
+		m_scoreBoard->Render();
+	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

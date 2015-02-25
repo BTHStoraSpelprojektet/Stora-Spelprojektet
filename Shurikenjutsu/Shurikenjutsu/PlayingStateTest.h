@@ -15,6 +15,7 @@ class Countdown;
 class InGameMenu;
 class DeathBoard;
 class Sound;
+class ScoreBoard;
 
 class PlayingStateTest : public GameState
 {
@@ -55,6 +56,7 @@ private:
 	DirectionalLight m_directionalLight;
 	Countdown* m_countdown;
 	InGameMenu *m_inGameMenu;
+	ScoreBoard* m_scoreBoard;
 
 	float twoPi = 6.28318530718f;
 
