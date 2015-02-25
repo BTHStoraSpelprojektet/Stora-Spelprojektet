@@ -479,3 +479,8 @@ void ScreenSpace::BuildOffsetVectors()
 		//m_offsetVectors[i].z *= s;
 	}
 }
+
+void ScreenSpace::SetLightBuffer(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_lightSRV)
+{
+	p_context->PSSetShaderResources(7, 1, &p_lightSRV);
+}

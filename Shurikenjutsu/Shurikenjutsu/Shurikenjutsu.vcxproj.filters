@@ -506,6 +506,9 @@
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
+    <ClCompile Include="PointLights.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -840,6 +843,9 @@
     </ClInclude>
     <ClInclude Include="ToolTipPopUp.h">
       <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLights.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

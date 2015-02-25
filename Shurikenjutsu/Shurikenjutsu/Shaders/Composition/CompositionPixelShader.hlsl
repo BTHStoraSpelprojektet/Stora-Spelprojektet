@@ -8,6 +8,8 @@ cbuffer FrameBuffer : register(b0)
 
 Texture2D m_textures[4] : register(t3);
 
+StructuredBuffer<PointLight> m_pointLights : register(t7);
+
 struct Input
 {
 	float4 m_position: SV_POSITION;
@@ -59,6 +61,15 @@ float4 main(Input p_input) : SV_Target
 	float3 toCamera = normalize(-positionView);
 
 	ComputeDirectionalLight(material, m_directionalLight, normal.xyz, toCamera, A, D, S);
+
+	// PointLights //
+	uint totalLights, temp;
+	m_pointLights.GetDimensions(totalLights, temp);
+	for (uint lightIndex = 0; lightIndex < totalLights; lightIndex++)
+	{
+		ComputePointLight(material, m_pointLights[lightIndex], positionView, normal.xyz, toCamera, A, D, S);
+	}
+	////////////////
 
 	albedo.xyz = albedo.xyz*((A.xyz*ssao + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
 	albedo.w = 1.0f;

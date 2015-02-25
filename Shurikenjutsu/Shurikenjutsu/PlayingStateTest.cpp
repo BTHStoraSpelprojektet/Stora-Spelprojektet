@@ -19,6 +19,8 @@
 #include "InGameMenu.h"
 #include "DeathBoard.h"
 
+#include "PointLights.h"
+
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 
@@ -105,9 +107,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 
 	// Initialize the directional light.
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.4f, 0.4f, 1.125f, 1.0f); //m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(2.525f, 2.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f);
 	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
@@ -406,8 +408,23 @@ void PlayingStateTest::Render()
 
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+
+	PointLight newLight;
+	newLight.m_ambient = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
+	newLight.m_diffuse = DirectX::XMVectorSet(0.0f, 5.0f, 0.0f, 0.0f);
+	newLight.m_specular = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
+	newLight.m_position = DirectX::XMFLOAT3(0.0f, 2.0f, 0.0f);
+	newLight.m_range = 7.0f;
+
+	newLight.m_attenuation = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+	PointLights::GetInstance()->AddLight(newLight);
+	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
+
 	GraphicsEngine::GetInstance()->Composition();
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+	////
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();

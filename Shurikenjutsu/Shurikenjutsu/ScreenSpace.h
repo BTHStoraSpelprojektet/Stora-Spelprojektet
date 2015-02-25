@@ -12,7 +12,6 @@ public:
 	~ScreenSpace();
 
 	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
-	
 
 	void Shutdown();
 	void Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_normal, ID3D11ShaderResourceView* p_color, ID3D11ShaderResourceView* p_depth, ID3D11ShaderResourceView* p_ssao);
@@ -21,6 +20,7 @@ public:
 	
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight, DirectX::XMFLOAT4X4 p_projection);
 	void UpdateSSAOBuffer(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_projection);
+	void SetLightBuffer(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_lightSRV);
 
 private:
 	

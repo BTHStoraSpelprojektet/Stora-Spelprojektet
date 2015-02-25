@@ -412,6 +412,11 @@ void GraphicsEngine::SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOA
 	m_screenSpace->UpdateFrameBuffer(m_directX.GetContext(), p_dLight, p_projection);
 }
 
+void GraphicsEngine::SetLightBuffer(ID3D11ShaderResourceView* p_lightSRV)
+{
+	m_screenSpace->SetLightBuffer(m_directX.GetContext(), p_lightSRV);
+}
+
 void GraphicsEngine::Clear()
 {
 	m_directX.Clear();

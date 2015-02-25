@@ -49,7 +49,7 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	uv[1] = float2(1.0f, 1.0f);
 
 	// Triangle 1, bottom right.
-	position[2] = float4(p_input[0].m_position.x + 0.25f + m_rotation.x, (0.1f + p_input[0].m_offset.x) * p_input[0].m_position.y, (p_input[0].m_position.z + 0.5f), 1.0f); //x
+	position[2] = float4(p_input[0].m_position.x + 0.25f + m_rotation.x, (1.0f + p_input[0].m_offset.x) * p_input[0].m_position.y, (p_input[0].m_position.z + 0.5f), 1.0f); //x
 	uv[2] = float2(1.0f, 0.0f);
 
 	// Triangle 2, top left.
