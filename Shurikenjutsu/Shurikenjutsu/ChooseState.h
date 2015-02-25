@@ -12,6 +12,7 @@ class Menu;
 class MenuItem;
 class GUIText;
 class CharacterAbilityDescription;
+class ToolTipPopUp;
 
 enum CurrentTeam
 {
@@ -45,6 +46,7 @@ private:
 	
 	MenuItem *m_ninjas[4];
 	MenuItem *m_tools[3];
+	ToolTipPopUp* m_toolDescription[3];
 	MenuItem *m_questionMark;
 	CharacterAbilityDescription *m_abilityDescription[4];
 	GUIText* m_redTeamScore;

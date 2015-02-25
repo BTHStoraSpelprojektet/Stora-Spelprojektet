@@ -7,6 +7,8 @@
 #include "Globals.h"
 #include <ctime>
 #include "Network.h"
+#include "ToolTipPopUp.h"
+#include "TextResource.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -29,8 +31,10 @@ ChooseState::~ChooseState(){}
 
 
 /*TODO
- - Backgrund
- - hover text
+ - Background
+ - Texts
+ - Positions
+ - Textures
 */
 bool ChooseState::Initialize()
 {
@@ -108,6 +112,14 @@ bool ChooseState::Initialize()
 	m_abilityDescription[0]->Initialize(1);
 	m_abilityDescription[1]->Initialize(2);
 	m_abilityDescription[2]->Initialize(3);
+
+	m_toolDescription[0] = new ToolTipPopUp();
+	m_toolDescription[1] = new ToolTipPopUp();
+	m_toolDescription[2] = new ToolTipPopUp();
+
+	m_toolDescription[0]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, SPIKES_DESCRIPTION , TOOLHEIGHT);
+	m_toolDescription[1]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, SMOKEBOMB_DESCRIPTION, TOOLHEIGHT);
+	m_toolDescription[2]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, STICKY_DESCRIPTION, TOOLHEIGHT);
 	return true;
 }
 
@@ -154,6 +166,16 @@ void ChooseState::Shutdown()
 		}
 	}
 
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		if (m_toolDescription[i] != nullptr)
+		{
+			m_toolDescription[i]->Shutdown();
+			delete m_toolDescription[i];
+			m_toolDescription[i] = nullptr;
+		}
+	}
+
 	//needs fixin'
 	for (unsigned int i = 0; i < 3; i++)
 	{
@@ -183,6 +205,11 @@ GAMESTATESWITCH ChooseState::Update()
 		NextNinja();
 		PrevTool();
 	}
+	else
+	{
+		m_abilityDescription[currentNinja]->Update();
+		m_toolDescription[currentTool]->Update();
+	}
 	UpdateTeams();
 
 	if (m_currentTeam == CURRENTTEAM_RED)
@@ -209,6 +236,7 @@ GAMESTATESWITCH ChooseState::Update()
 
 	m_redTeamScore->SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
 	m_blueTeamScore->SetText(std::to_string(Network::GetInstance()->GetBlueTeamScore()));
+
 	MenuActionData action = m_chooseNinja->Update();
 	
 	switch (action.m_action)
@@ -317,6 +345,7 @@ void ChooseState::Render()
 	m_redTeam->Render();
 	m_blueTeam->Render();
 	m_questionMark->Render();
+	m_toolDescription[currentTool]->Render();
 }
 
 void ChooseState::NextNinja()
