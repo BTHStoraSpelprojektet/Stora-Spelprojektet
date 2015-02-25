@@ -445,8 +445,7 @@ void Network::ReceviePacket()
 
 			m_timeRestarting = time;
 
-			ConsolePrintText(time + "...");
-			ConsoleSkipLines(1);
+			ConsolePrintText(std::to_string(time) + "...");
 			break;
 		}
 		case ID_SMOKEBOMB_THROW:

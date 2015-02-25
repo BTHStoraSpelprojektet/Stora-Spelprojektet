@@ -235,8 +235,24 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 
 	// Don't update player if he is dead
-	if (!m_isAlive)
+	if (!m_isAlive || Network::GetInstance()->GetMatchOver())
 	{
+		m_ability = m_noAbility;
+		// Animation None
+		if (Network::GetInstance()->GetMatchOver())
+		{
+			//if (m_isAlive)
+			//{
+			//	AnimatedObject::ChangeAnimationState(AnimationState::Spawn);
+			//}
+			//else
+			//{
+			//	AnimatedObject::ChangeAnimationState(AnimationState::Death);
+			//}
+			//Network::GetInstance()->SendAnimationState(AnimationState::None);
+		}
+		UpdateAbilities();
+		UpdateAbilityBar();
 		return;
 	}
 
@@ -962,7 +978,7 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		m_healthbar->Render();
-		if (Network::GetInstance()->GetMyPlayer().guid == m_guid)
+		if (Network::GetInstance()->GetMyPlayer().guid == m_guid && !Network::GetInstance()->GetMatchOver())
 		{
 			RenderAttackLocations();
 			m_floatingText->Render();

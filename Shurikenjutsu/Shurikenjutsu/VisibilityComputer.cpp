@@ -5,6 +5,7 @@
 #include "ConsoleFunctions.h"
 #include <D3Dcompiler.h>
 #include "TextureLibrary.h"
+#include "Network.h"
 
 VisibilityComputer& VisibilityComputer::GetInstance()
 {
@@ -422,7 +423,10 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	}
 
 	// Render the quad to reverse project the polygon onto.
-	GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
+	if (!Network::GetInstance()->GetMatchOver())
+	{
+		GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
+	}
 
 }
 
