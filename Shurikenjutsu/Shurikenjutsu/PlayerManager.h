@@ -16,11 +16,11 @@ class PlayerManager
 public:
 	PlayerManager();
 	~PlayerManager();
-	bool Initialize();
+	bool Initialize(bool p_inMenu);
 	void Shutdown();
-	void Update(std::vector<StickyTrap*> p_stickyTrapList);
-	void Render();
-	void RenderDepth();
+	void Update(bool p_inMenu);
+	void Render(bool p_inMenu);
+	void RenderDepth(bool p_inMenu);
 	void RenderOutliningPassOne();
 	void RenderOutliningPassTwo();
 	DirectX::XMFLOAT3 GetPlayerPosition();
@@ -51,6 +51,7 @@ public:
 	int GetNrOfPlayersInTeam(int p_team);
 
 	void PlayerManager::SetSound(Sound* p_sound);
+	void SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList);
 
 private:
 	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);

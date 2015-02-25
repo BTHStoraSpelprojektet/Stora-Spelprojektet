@@ -11,8 +11,8 @@ CharacterAbilityDescription::~CharacterAbilityDescription(){}
 
 void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 {
-	float quarterHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 3.0f;
-	float quarterWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.0f;
+	float quarterHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 3.3f;
+	float quarterWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.3f;
 
 	m_FirstText = new ToolTipPopUp();
 	m_FirstPic = new MenuItem();
