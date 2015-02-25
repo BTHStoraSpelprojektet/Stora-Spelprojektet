@@ -117,9 +117,9 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 
 	// Compile the pixel shader.
 	ID3D10Blob*	pixelShader = 0;
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Foliage/FoliagePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Foliage/FoliagePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile foliage pixel shader from file.");
 			return false;
@@ -206,7 +206,8 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 	}
 	
 	m_texture = GraphicsEngine::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/grassFoil2.png");
-
+	m_normalMap = GraphicsEngine::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/blanknormalmap_50.png");
+	
 	ReadRawFile();
 
 	// Setup vertex buffer description.
@@ -346,6 +347,12 @@ void FoliageShader::Shutdown()
 		m_texture->Release();
 		m_texture = 0;
 	}
+
+	if (m_normalMap)
+	{
+		m_normalMap->Release();
+		m_normalMap = 0;
+	}
 }
 
 void FoliageShader::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* m_shadowMap)
@@ -358,6 +365,7 @@ void FoliageShader::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceV
 	UpdateAngleBuffer(p_context);
 
 	p_context->PSSetShaderResources(0, 1, &m_texture);
+	p_context->PSSetShaderResources(1, 1, &m_normalMap);
 	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 

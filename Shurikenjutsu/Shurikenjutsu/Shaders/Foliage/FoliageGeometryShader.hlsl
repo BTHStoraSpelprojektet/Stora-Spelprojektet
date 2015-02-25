@@ -22,8 +22,16 @@ struct GeometryInput
 struct GeometryOutput
 {
 	float4 m_position : SV_POSITION;
-	float2 m_uv : UVCOORD;
-	float4 m_lightPositionHomogenous : LIGHTPOS;
+	float4 m_positionWorld : POSITION;
+	float2 m_uv : TEXCOORD0;
+	float3 m_normal : NORMAL;
+	float3 m_tangent : TANGENT;
+
+	float3x3 m_tBN : TBN;
+
+	float m_fogFactor : FOG;
+
+	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
 [maxvertexcount(6)]
@@ -56,6 +64,24 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	position[5] = float4(p_input[0].m_position.x - 0.25f + m_rotation.x, 1.0f + p_input[0].m_offset.y, (p_input[0].m_position.z + 0.5f), 1.0f); //y
 	uv[5] = float2(0.0f, 0.0f);
 
+	float3 vec1 = position[1].xyz - position[0].xyz;
+	float3 vec2 = position[2].xyz - position[0].xyz;
+
+	float3 normal = cross(vec2, vec1);
+
+	float2 uvVec1 = uv[1] - uv[0];
+	float2 uvVec2 = uv[2] - uv[0];
+
+	float r = 1.0f / (uvVec1.x * uvVec2.y - uvVec1.y * uvVec2.x);
+	float3 tangent = (vec1 * uvVec2.y - vec2 * uvVec1.y)*r;
+
+	normal = mul(float4(normal, 0.0f), m_viewMatrix).xyz;
+	tangent = mul(float4(tangent, 0.0f), m_viewMatrix).xyz;
+
+	normal = normalize(normal);
+	float3 T = -normalize(tangent - dot(tangent, normal)*normal);
+	float3 B = cross(normal, T);	
+
 	GeometryOutput output;
 	[unroll]
 	for (uint i = 0; i < 6; i++)
@@ -63,10 +89,18 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 		output.m_position = mul(position[i], m_viewMatrix);
 		output.m_position = mul(output.m_position, m_projectionMatrix);
 
+		output.m_positionWorld = position[i];
+
 		output.m_lightPositionHomogenous = mul(position[i], m_lightViewMatrix);
 		output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
 		output.m_uv = uv[i];
+		output.m_normal = normal;
+		output.m_tangent = tangent;
+
+		output.m_tBN = float3x3(T, B, normal);
+
+		output.m_fogFactor = 0.0f;
 
 		p_output.Append(output);
 	}

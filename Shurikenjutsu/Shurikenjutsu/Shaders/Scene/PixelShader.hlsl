@@ -48,7 +48,7 @@ void main(Input p_input , out gBuffer p_output)
 {
 	// Sample texture using texture coordinates.
 	float4 textureColor = m_texture.Sample(m_sampler, p_input.m_textureCoordinate);
-	clip(textureColor.a - 0.15f);
+	clip(textureColor.a - 0.50f);
 
 	float shadowSum = 1.0f;
 

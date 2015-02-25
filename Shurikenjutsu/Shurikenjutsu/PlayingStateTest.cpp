@@ -398,6 +398,8 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render();
+
+	GraphicsEngine::GetInstance()->RenderFoliage();
 	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
@@ -409,7 +411,7 @@ void PlayingStateTest::Render()
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
-	GraphicsEngine::GetInstance()->RenderFoliage();
+
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
@@ -418,7 +420,7 @@ void PlayingStateTest::Render()
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
 
-	// Render the UI.
+	//// Render the UI.
 	m_minimap->Render();
 	m_teamStatusBar->Render();
 	m_countdown->Render();
