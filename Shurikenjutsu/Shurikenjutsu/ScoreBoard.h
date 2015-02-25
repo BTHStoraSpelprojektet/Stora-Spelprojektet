@@ -1,9 +1,13 @@
-#ifndef HEALTHBAR_H_
-#define HEALTHBAR_H_
+#ifndef SCOREBOARD_H_
+#define SCOREBOARD_H_
+
+#define WIN32_LEAN_AND_MEAN
 
 #include "GraphicsEngine.h"
 #include "TextureLibrary.h"
 #include "GUIElement.h"
+#include "Network.h"
+#include "GUIText.h"
 
 class ScoreBoard
 {
@@ -17,10 +21,20 @@ public:
 	void Render();
 
 private:
-	ID3D11ShaderResourceView* m_texture;
-	GUIElement* m_background;
+	GUIElement m_background;
+	GUIElement m_portrait;
+
 	float m_boardHeight;
 	float m_boardWidth;
+
+	float m_portraitHeight;
+	float m_portraitWidth;
+
+	GUIText m_playerName;
+	GUIText m_killNumber;
+	GUIText m_deathNumber;
+
+	std::string GetTextureName(int p_charNr);
 };
 
 #endif
