@@ -50,7 +50,7 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_stickyParticles->SetEmitParticleState(true);
 
 	m_trail = new Trail();
-	if (!m_trail->Initialize(50.0f, 0.2f, 0.2f, DirectX::XMFLOAT4(0.5f, 0.25f, 0.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
+	if (!m_trail->Initialize(50.0f, 0.2f, 0.2f, DirectX::XMFLOAT4(0.83f, 0.86f, 0.06f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A sticky trap trail failed to initialize!");
 	}
