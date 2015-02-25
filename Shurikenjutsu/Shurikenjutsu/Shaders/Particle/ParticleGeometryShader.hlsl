@@ -10,6 +10,7 @@ struct GeometryInput
 	float3 m_position : POSITION;
 	float2 m_size : SIZE;
 	float4 m_color : COLOR;
+	float m_rotation : ROTATION;
 };
 
 struct GeometryOutput
@@ -25,29 +26,41 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	float4 position[6];
 	float2 uv[6];
 
-	// Triangle 1, top left.
-	position[0] = float4(p_input[0].m_position.x - p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_size.y, 1.0f);
-	uv[0] = float2(0.0f, 1.0f);
+	//=======================================================
+	//
+	//    Particle geometry constructed from point M;
+	//    6 vertex points, 2 triangles.
+	//
+	//   (t1)-------(t2)
+	//    |         / |
+	//    |  1    /   |
+	//    |    (M)    |
+	//    |   /    2  |
+	//    | /         |
+	//   (b1)-------(b2)
+	//
+	//=======================================================
 
-	// Triangle 1, top right.
-	position[1] = float4(p_input[0].m_position.x + p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_size.y, 1.0f);
-	uv[1] = float2(1.0f, 1.0f);
+	float3 t1 = float3(p_input[0].m_position.x - p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z + p_input[0].m_size.y);
+	float3 t2 = float3(p_input[0].m_position.x + p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z + p_input[0].m_size.y);
+	float3 b1 = float3(p_input[0].m_position.x - p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_size.y);
+	float3 b2 = float3(p_input[0].m_position.x + p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_size.y);
 
-	// Triangle 1, bottom right.
-	position[2] = float4(p_input[0].m_position.x + p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z + p_input[0].m_size.y, 1.0f);
-	uv[2] = float2(1.0f, 0.0f);
+	// Triangle 1, left.
+	position[0] = float4(t1, 1.0f);
+	uv[0] = float2(0.0f, 0.0f);
+	position[1] = float4(t2, 1.0f);
+	uv[1] = float2(1.0f, 0.0f);
+	position[2] = float4(b1, 1.0f);
+	uv[2] = float2(0.0f, 1.0f);
 
-	// Triangle 2, top left.
-	position[3] = position[0];
-	uv[3] = uv[0];
-
-	// Triangle 2, bottom right.
-	position[4] = position[2];
-	uv[4] = uv[2];
-
-	// Triangle 2, bottom left.
-	position[5] = float4(p_input[0].m_position.x - p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z + p_input[0].m_size.y, 1.0f);
-	uv[5] = float2(0.0f, 0.0f);
+	// Triangle 2, right.
+	position[3] = float4(t2, 1.0f);
+	uv[3] = float2(1.0f, 0.0f);
+	position[4] = float4(b2, 1.0f);
+	uv[4] = float2(1.0f, 1.0f);
+	position[5] = float4(b1, 1.0f);
+	uv[5] = float2(0.0f, 1.0f);
 
 	GeometryOutput output;
 	[unroll]

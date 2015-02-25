@@ -19,6 +19,8 @@
 #include "InGameMenu.h"
 #include "DeathBoard.h"
 
+ParticleEmitter* TEST_POIemitter;
+
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
 
@@ -141,6 +143,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	{
 		return false;
 	}
+
+	TEST_POIemitter = new ParticleEmitter();
+	TEST_POIemitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.5f, 0.f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
+	TEST_POIemitter->SetEmitParticleState(true);
 
 	return true;
 }
@@ -355,6 +361,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update smokebomb shadow shapes.
 	ShadowShapes::GetInstance().Update(); 
+
+	TEST_POIemitter->Update();
 	
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
@@ -362,24 +370,37 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	DeathBoard::GetInstance()->Update();
 
 	BasicPicking();
+
 	if (m_inGameMenuIsActive)
 	{
 		switch (m_inGameMenu->Update())
 		{
-		case IN_GAME_MENU_RESUME:
-			m_inGameMenuIsActive = false;
-			break;
-		case IN_GAME_MENU_TO_MAIN:
-			Network::GetInstance()->Disconnect();
-			return GAMESTATESWITCH_MENU;
-			break;
-		case IN_GAME_MENU_QUIT:
-			PostQuitMessage(0);
-			break;
-		default:
-			break;
+			case IN_GAME_MENU_RESUME:
+			{
+				m_inGameMenuIsActive = false;
+				break;
+			}
+			
+			case IN_GAME_MENU_TO_MAIN:
+			{
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
+			}
+			
+			case IN_GAME_MENU_QUIT:
+			{
+				PostQuitMessage(0);
+				break;
+			}
+			
+			default:
+			{
+				break;
+			}
 		}
 	}
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -398,6 +419,8 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render();
+
+	TEST_POIemitter->Render();
 	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
@@ -583,6 +606,7 @@ void PlayingStateTest::OnScreenResize()
 	GraphicsEngine::GetInstance()->ScreenChangeHandled();
 }
 
-void PlayingStateTest::SetSound(Sound* p_sound){
+void PlayingStateTest::SetSound(Sound* p_sound)
+{
 	m_sound = p_sound;
 }

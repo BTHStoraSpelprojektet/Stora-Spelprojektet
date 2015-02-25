@@ -262,7 +262,6 @@ void Camera::HandleInput()
 	// Start moving the camera with the C key.
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && !GLOBAL::GetInstance().CAMERA_FLYING && FLAG_DEBUG == 1)
 	{
-		ShowCursor(false);
 		GLOBAL::GetInstance().CAMERA_FLYING = true;
 
 		POINT position;
@@ -324,7 +323,6 @@ void Camera::HandleInput()
 		// Reset the camera when BACKSPACE key is pressed.
 		if (GetAsyncKeyState(VK_BACK))
 		{
-			ShowCursor(true);
 			GLOBAL::GetInstance().CAMERA_FLYING = false;
 			ResetCamera();
 		}
