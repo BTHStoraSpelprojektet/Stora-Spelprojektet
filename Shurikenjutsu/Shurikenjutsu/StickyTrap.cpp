@@ -5,6 +5,7 @@
 #include "GraphicsEngine.h"
 #include "PlayerManager.h"
 #include "ParticleEmitter.h"
+#include "ConsoleFunctions.h"
 
 bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_stickyTrapID, RakNet::RakNetGUID p_guid)
 {
@@ -47,6 +48,13 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_stickyParticles = new ParticleEmitter();
 	m_stickyParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_endPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BUBBLES);
 	m_stickyParticles->SetEmitParticleState(true);
+
+	m_trail = new Trail();
+	if (!m_trail->Initialize(50.0f, 0.2f, 0.2f, DirectX::XMFLOAT4(0.5f, 0.25f, 0.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
+	{
+		ConsolePrintErrorAndQuit("A sticky trap trail failed to initialize!");
+	}
+
 	return true;
 }
 void StickyTrap::Update()
@@ -61,15 +69,22 @@ void StickyTrap::Update()
 
 		m_stickyTrapBag->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
 
+		m_trail->Update(m_stickyTrapBag->GetPosition(), m_angle);
+
 		if (y < 0.0f)
 		{
+			m_trail->Shutdown();
+			delete m_trail;
+			m_trail = nullptr;
+
 			ResetTimer();
 			m_isThrowing = false;
 		}
 	}
+
 	m_stickyParticles->Update();
-	
 }
+
 void StickyTrap::Shutdown()
 {
 	if (m_stickyParticles != nullptr)
@@ -92,13 +107,27 @@ void StickyTrap::Shutdown()
 		delete m_stickyTrap;
 		m_stickyTrap = nullptr;
 	}
+
+	if (m_trail)
+	{
+		m_trail->Shutdown();
+		delete m_trail;
+		m_trail = nullptr;
+	}
 }
+
 void StickyTrap::Render()
 {
 	if (m_isThrowing)
 	{
 		m_stickyTrapBag->Render();
+
+		if (m_trail)
+		{
+			m_trail->Render();
+		}
 	}
+
 	else
 	{
 		m_stickyTrap->Render();

@@ -89,6 +89,7 @@ bool ObjectManager::Initialize(Level* p_level)
 		particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
+			//m_sound->PlayAmbientSound(PLAYSOUND_FIRE_SOUND, 0.3f);
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::FireSpark)
@@ -280,7 +281,7 @@ void ObjectManager::Shutdown()
 		}
 
 		m_volleyTrails.clear();
-	}
+}
 }
 
 void ObjectManager::ShutdownExit()
@@ -397,7 +398,7 @@ void ObjectManager::ShutdownExit()
 			{
 				m_volleyTrails[i][j]->Shutdown();
 				delete m_volleyTrails[i][j];
-			}
+}
 
 			m_volleyTrails[i].clear();
 		}
@@ -519,10 +520,10 @@ void ObjectManager::Update()
 					if(!trail->Initialize(50.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
-					}
-					m_shurikenTrails.push_back(trail);
 				}
+					m_shurikenTrails.push_back(trail);
 			}
+		}
 		}
 
 		for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -639,7 +640,7 @@ void ObjectManager::Update()
 	{
 		DirectX::XMFLOAT3 fanPosition = m_fans[i]->GetPosition();
 		float rotation = m_fans[i]->GetRotation().y;
-
+		
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(fanPosition.x + sin(rotation) * 1.0f, fanPosition.y, fanPosition.z + cos(rotation) * 1.0f);
 
 		m_fanTrails[i]->Update(position, rotation);
@@ -812,7 +813,7 @@ void ObjectManager::Render()
 	{
 		
 		m_worldParticles[i]->Render();
-	}
+}
 
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
@@ -931,6 +932,7 @@ void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_
 	tempStickyTrap->ResetTimer();
 	m_stickyTrapList.push_back(tempStickyTrap);
 }
+
 float ObjectManager::CheckStickyTrapYPosition()
 {
 	float returnValue = 0.001f;
@@ -968,7 +970,7 @@ void ObjectManager::AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Dire
 	if (!trail->Initialize(100.0f, 0.5f, 0.2f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A fan trail failed to initialize!");
-	}
+}
 	m_fanTrails.push_back(trail);
 }
 
@@ -1136,7 +1138,7 @@ void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX,
 	if (!trail->Initialize(50.0f, 0.15f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A kunai trail failed to initialize!");
-	}
+}
 
 	m_kunaiTrails.push_back(trail);
 }
@@ -1186,7 +1188,7 @@ void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ,
 		if (!trail->Initialize(50.0f, 0.5f, 0.05f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 		{
 			ConsolePrintErrorAndQuit("A volley trail failed to initialize!");
-		}
+}
 
 		vector.push_back(trail);
 	}
@@ -1202,40 +1204,101 @@ void ObjectManager::ResetListSinceRoundRestarted()
 		delete m_shurikens[i];
 	}
 	m_shurikens.clear();
+
 	for (unsigned int i = 0; i < m_smokeBombList.size(); i++)
 	{
 		m_smokeBombList[i]->Shutdown();
 		delete m_smokeBombList[i];
 	}
 	m_smokeBombList.clear();
+
 	for (unsigned int i = 0; i < m_spikeTrapList.size(); i++)
 	{
 		m_spikeTrapList[i]->Shutdown();
 		delete m_spikeTrapList[i];
 	}
 	m_spikeTrapList.clear();
+
 	for (unsigned int i = 0; i < m_fans.size(); i++)
 	{
 		m_fans[i]->Shutdown();
 		delete m_fans[i];
 	}
 	m_fans.clear();
+
 	for (unsigned int i = 0; i < m_projectiles.size(); i++)
 	{
 		m_projectiles[i]->Shutdown();
 		delete m_projectiles[i];
 	}
 	m_projectiles.clear();
+
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
 		m_stickyTrapList[i]->Shutdown();
 		delete m_stickyTrapList[i];
 	}
 	m_stickyTrapList.clear();
+
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
 		m_volleys[i]->Shutdown();
 		delete m_volleys[i];
 	}
 	m_volleys.clear();
+
+	// Trails.
+	if (m_shurikenTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
+		{
+			m_shurikenTrails[i]->Shutdown();
+			delete m_shurikenTrails[i];
+		}
+
+		m_shurikenTrails.clear();
+	}
+
+	if (m_fanTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_fanTrails.size(); i++)
+		{
+			m_fanTrails[i]->Shutdown();
+			delete m_fanTrails[i];
+		}
+
+		m_fanTrails.clear();
+	}
+
+	if (m_kunaiTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_kunaiTrails.size(); i++)
+		{
+			m_kunaiTrails[i]->Shutdown();
+			delete m_kunaiTrails[i];
+		}
+
+		m_kunaiTrails.clear();
+	}
+
+	if (m_volleyTrails.size() > 0)
+	{
+		for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
+		{
+			for (unsigned int j = 0; j < 9; j++)
+			{
+				m_volleyTrails[i][j]->Shutdown();
+				delete m_volleyTrails[i][j];
+			}
+
+			m_volleyTrails[i].clear();
+		}
+
+		m_volleyTrails.clear();
+	}
 }
+
+void ObjectManager::SetSound(Sound* p_sound){
+	m_sound = p_sound;
+}
+

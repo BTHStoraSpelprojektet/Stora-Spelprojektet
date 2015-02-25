@@ -8,6 +8,7 @@
 #include "SmokeBombAbility.h"
 #include "InputManager.h"
 #include "AttackPredictionEditor.h"
+#include "ParticleRenderer.h"
 
 KatanaNinja::KatanaNinja(){}
 KatanaNinja::~KatanaNinja(){}
@@ -35,15 +36,19 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	SetSpeed(CHARACTER_KATANA_SHURIKEN_SPEED);
 
 	m_meleeAttack = new MeleeSwing();
+	m_meleeAttack->setSound(m_sound);
 	m_meleeAttack->Initialize();
 
 	m_meleeSpecialAttack = new Dash();
+	m_meleeSpecialAttack->setSound(m_sound);
 	m_meleeSpecialAttack->Initialize();
 
 	m_rangeAttack = new ShurikenAbility();
+	m_rangeAttack->setSound(m_sound);
 	m_rangeAttack->Initialize();
 
 	m_rangeSpecialAttack = new MegaShuriken();
+	m_rangeSpecialAttack->setSound(m_sound);
 	m_rangeSpecialAttack->Initialize();
 
 	/*m_toolAbility = new SmokeBombAbility();
@@ -70,7 +75,7 @@ void KatanaNinja::RenderAttackLocations()
 		{
 			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
 
-			m_aimFrustrum->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
 		}
 		else
 		{
@@ -83,8 +88,8 @@ void KatanaNinja::RenderAttackLocations()
 		{
 			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
-			m_aimPole->Render();
-			m_aimArrow->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
 		}
 		else
 		{
@@ -97,8 +102,8 @@ void KatanaNinja::RenderAttackLocations()
 		{
 			m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, DASH_MAX_RANGE, false);
 
-			m_aimPole->Render();
-			m_aimArrow->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
 		}
 		else
 		{
@@ -111,8 +116,8 @@ void KatanaNinja::RenderAttackLocations()
 		{
 			m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
-			m_aimPole->Render();
-			m_aimArrow->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);;
 		}
 		else
 		{
@@ -124,7 +129,8 @@ void KatanaNinja::RenderAttackLocations()
 		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
 		{
 			m_ape->ThrowSphere(m_aimSphere,m_position, 7.0f, SMOKEBOMB_RANGE);
-			m_aimSphere->Render();
+			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
+			
 		}
 		else
 		{

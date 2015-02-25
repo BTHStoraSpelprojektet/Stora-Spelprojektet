@@ -22,6 +22,9 @@ bool MegaShuriken::Execute(float p_distance)
 {
 	if (Ability::Execute(p_distance))
 	{
+		if (m_sound != nullptr){
+			m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_THROW_SOUND);
+		}
 		Network::GetInstance()->SendAbility(ABILITIES_MEGASHURIKEN,0);
 		SetCooldown(MEGASHURIKEN_COOLDOWN);
 

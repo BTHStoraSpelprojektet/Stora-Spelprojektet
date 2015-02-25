@@ -108,6 +108,21 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	ConsolePrintSuccess("Timer initialized successfully.");
 	ConsoleSkipLines(1);
 
+	m_sound = new Sound();
+	if (!m_sound->Initialize())
+	{
+		ConsolePrintError("Sound Initialize failed.");
+		ConsoleSkipLines(1);
+	}
+	else
+	{
+		ConsolePrintSuccess("Sound initialized successfully.");
+		ConsoleSkipLines(1);
+		m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
+		m_playingState->SetSound(m_sound);
+		m_menuState->setSound(m_sound);
+	}
+
 	// Initialize current GameState
 	m_gameState->Initialize();
 
@@ -130,18 +145,6 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
-
-	m_sound = new Sound();
-	if (!m_sound->Initialize())
-	{
-		ConsolePrintError("Sound Initialize failed.");
-		ConsoleSkipLines(1);
-	}
-	else
-	{
-		ConsolePrintSuccess("Sound initialized successfully.");
-		ConsoleSkipLines(1);
-	}
 
 	// Initialize the network.
 	Network::GetInstance()->Initialize();
@@ -309,6 +312,7 @@ void System::Update()
 		m_gameState->Initialize();
 		m_playingState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
+		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->LargeSize();
 		break;
 	case GAMESTATESWITCH_PLAY:
@@ -316,6 +320,7 @@ void System::Update()
 		m_playingState->Shutdown();
 		m_gameState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
+		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->SmallSize();
 		break;
 	case GAMESTATESWITCH_MENU:
@@ -363,6 +368,7 @@ void System::Render()
 	m_gameState->Render();
 
 	// Render Particles
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	ParticleRenderer::GetInstance()->Render();
 
@@ -370,7 +376,6 @@ void System::Render()
 
 	//Render GUI
 	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	GUIManager::GetInstance()->Render();
 
