@@ -14,6 +14,7 @@ class TeamStatusBar;
 class Countdown;
 class InGameMenu;
 class DeathBoard;
+class Sound;
 
 class PlayingStateTest : public GameState
 {
@@ -35,6 +36,8 @@ public:
 	ObjectManager* GetObjectManager();
 
 	DirectX::XMFLOAT2 GetMousePosition();
+
+	void SetSound(Sound* p_sound);
 
 	void EscapeIsPressed();
 private:
@@ -71,6 +74,8 @@ private:
 	int m_spectateIndex;
 	float m_spectateCountDown;
 	bool m_inGameMenuIsActive;
+
+	Sound* m_sound;
 
 	bool m_scoreBoardIsActive;
 };

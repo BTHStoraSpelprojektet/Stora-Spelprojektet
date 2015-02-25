@@ -61,7 +61,7 @@ private:
 	float m_timeToLive;
 
 	unsigned int m_maxParticles;
-	unsigned int m_currentParticles;
+	int m_currentParticles;
 
 	float m_emitBorderLeft;
 
@@ -88,6 +88,24 @@ private:
 		float m_timePassed;
 		float m_timeToFadeInPassed = 0.0f;
 		float m_timeToScaleChange = 0.0f;
+
+		Particle()
+		{
+			m_initPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			m_position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			m_direction = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+			m_color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+
+			m_opacity = 0.0f;
+			m_velocity = 0.0f;
+			m_rotation = 0.0f;
+			m_velocityXZ = 1.0f;
+			m_alive = false;
+			m_timeToLive = 1.0f;
+			m_timePassed = 0.0f;
+			m_timeToFadeInPassed = 0.0f;
+			m_timeToScaleChange = 0.0f;
+		}
 	};
 
 	Particle* m_particleList;

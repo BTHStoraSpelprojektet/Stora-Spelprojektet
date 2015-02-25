@@ -3,6 +3,7 @@
 
 #include "StatusEffect.h"
 #include "AnimatedObject.h"
+#include "Sound.h"
 
 Ability::Ability(){}
 Ability::~Ability(){}
@@ -89,4 +90,8 @@ float Ability::GetTotalCooldown()
 int Ability::GetStacks()
 {
 	return m_stacks;
+}
+
+void Ability::setSound(Sound* p_sound){
+	m_sound = p_sound;
 }

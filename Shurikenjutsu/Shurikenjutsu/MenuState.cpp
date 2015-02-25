@@ -99,6 +99,7 @@ bool MenuState::Initialize()
 
 	// Initialize the objectmanager.
 	m_objectManager = new ObjectManager();
+	m_objectManager->SetSound(m_sound);
 	m_objectManager->Initialize(&level);
 
 	// Frustum
@@ -111,6 +112,7 @@ bool MenuState::Initialize()
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
+	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 
 	return true;
@@ -181,6 +183,13 @@ void MenuState::Shutdown()
 		delete m_logo;
 		m_logo = nullptr;
 	}
+
+	if (m_logo != NULL)
+	{
+		m_logo->Shutdown();
+		delete m_logo;
+		m_logo = NULL;
+}
 }
 
 GAMESTATESWITCH MenuState::Update()
@@ -321,17 +330,27 @@ void MenuState::Render()
 	m_logo->Render();
 
 
-
 	// Draw to the shadowmap.
 	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
+
 	GraphicsEngine::GetInstance()->SetShadowMap();
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
 
 	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
 
-	// Draw to the scene.
+	// Render to the scene normally.
+	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
+	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
+
+	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->RenderSSAO();
+
+	// Composition
+	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
@@ -343,4 +362,8 @@ void MenuState::EscapeIsPressed()
 	{
 		PostQuitMessage(0);
 	}
+}
+
+void MenuState::setSound(Sound* p_sound){
+	m_sound = p_sound;
 }

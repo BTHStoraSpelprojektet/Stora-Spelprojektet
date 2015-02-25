@@ -18,7 +18,6 @@ public:
 	void SetPosition(DirectX::XMFLOAT3 p_pos);
 
 	void SetRotation(float p_angle);
-	float GetRotation() const;
 
 	void SetLifetime(float p_lifetime);
 	float GetLifetime() const;
