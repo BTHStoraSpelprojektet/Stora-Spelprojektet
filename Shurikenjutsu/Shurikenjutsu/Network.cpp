@@ -908,6 +908,11 @@ void Network::ReceviePacket()
 				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_VOLLEY_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
 				break;
 			}
+			case ABILITIES::ABILITIES_FANBOOMERANG:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+				break;
+			}
 			default:
 			{
 				break;

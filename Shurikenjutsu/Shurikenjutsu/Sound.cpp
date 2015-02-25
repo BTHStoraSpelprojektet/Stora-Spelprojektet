@@ -89,9 +89,11 @@ bool Sound::Initialize()
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/Fire.wav", FMOD_DEFAULT, 0, &m_fireSound);
 	FMODErrorCheck(m_result);
 
-	
-	
-	
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/Wind.wav", FMOD_DEFAULT, 0, &m_windSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/Bird.wav", FMOD_DEFAULT, 0, &m_birdSound);
+	FMODErrorCheck(m_result);
 	
 	// EXTRA KOD FÖR EXTRA KOLLAR
 
@@ -276,32 +278,81 @@ void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 	effectChannel->setPaused(false);
 }
 
-void Sound::PlayAmbientSound(PLAYSOUND p_playSound, float volume)
+void Sound::CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
 {
-	switch (p_playSound)
+	SoundEmitter soundEmitter;
+	soundEmitter.m_playSound = p_playSound;
+	soundEmitter.m_x = p_x;
+	soundEmitter.m_y = p_y;
+	soundEmitter.m_z = p_z;
+
+	PlayAmbientSound(&soundEmitter);
+
+	soundEmitters.push_back(soundEmitter);
+}
+
+void Sound::UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z)
+{
+	for (unsigned int i = 0; i < soundEmitters.size(); i++)
+	{
+		float distance = sqrtf(((p_player_x - soundEmitters[i].m_x)*(p_player_x - soundEmitters[i].m_x) + (p_player_z - soundEmitters[i].m_z)*(p_player_z - soundEmitters[i].m_z)));
+		float soundDistanceGain = 1.0f;
+		float volume = 1.0f / (distance / soundDistanceGain);
+
+		setAmbientVolume(&soundEmitters[i], volume);
+		
+	}
+}
+
+void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume){
+	switch (p_soundEmitter->m_playSound)
 	{
 	case PLAYSOUND_FIRE_SOUND:
 		m_fireSound->setMode(FMOD_LOOP_NORMAL);
 		m_fireSound->setLoopCount(INT_MAX);
-		m_system->playSound(m_fireSound, channelAmbient, true, &ambientChannel);
-
+		m_system->playSound(m_fireSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
+		break;
+	case PLAYSOUND_BIRD_SOUND:
+		m_birdSound->setMode(FMOD_LOOP_NORMAL);
+		m_birdSound->setLoopCount(INT_MAX);
+		m_system->playSound(m_birdSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
+		break;
+	case PLAYSOUND_WIND_SOUND:
+		m_windSound->setMode(FMOD_LOOP_NORMAL);
+		m_windSound->setLoopCount(INT_MAX);
+		m_system->playSound(m_windSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
 		break;
 	default:
 		break;
 	}
 
-	ambientChannel->setChannelGroup(channelAmbient);
+	p_soundEmitter->m_ambientChannel->setChannelGroup(channelAmbient);
 
 	//Reset volume if to loud
-	if (volume > 1.0f){
-		volume = 1.0f;
+	if (p_initialVolume > 1.0f){
+		p_initialVolume = 1.0f;
 	}
-	ambientChannel->setVolume(volume);
-	ambientChannel->setPaused(false);
+	p_soundEmitter->m_ambientChannel->setVolume(p_initialVolume);
+	p_soundEmitter->m_ambientChannel->setPaused(false);
 }
 
-void Sound::setAmbientVolume(float volume){
-	ambientChannel->setPaused(true);
-	ambientChannel->setVolume(volume);
-	ambientChannel->setPaused(false);
+void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
+
+	//If wind always same volume
+	if (p_soundEmitter->m_playSound == PLAYSOUND::PLAYSOUND_WIND_SOUND){
+		p_soundEmitter->m_ambientChannel->setPaused(true);
+		p_soundEmitter->m_ambientChannel->setVolume(m_defaultAmbientVolume);
+		p_soundEmitter->m_ambientChannel->setPaused(false);
+		return;
+	}
+
+	if (p_volume > 1.0f){
+		p_volume = 1.0f;
+	}
+	else if (p_volume < 0.1f){
+		p_volume = 0.0f;
+	}
+	p_soundEmitter->m_ambientChannel->setPaused(true);
+	p_soundEmitter->m_ambientChannel->setVolume(p_volume);
+	p_soundEmitter->m_ambientChannel->setPaused(false);
 }

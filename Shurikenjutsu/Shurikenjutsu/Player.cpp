@@ -209,6 +209,8 @@ void Player::Shutdown()
 
 void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 {
+	m_sound->UpdateAmbientSound(m_position.x, m_position.y, m_position.z);
+
 	m_dashParticles1->UpdatePosition(m_position);
 	m_dashParticles1->Update();
 	m_dashParticles2->UpdatePosition(m_position);
