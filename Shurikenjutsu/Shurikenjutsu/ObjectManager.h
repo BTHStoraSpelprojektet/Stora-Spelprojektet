@@ -74,6 +74,7 @@ private:
 	std::vector<Object*> m_objectsToSingleRender;
 	std::vector<Volley*> m_volleys;
 	std::vector<ParticleEmitter*> m_bloodParticles;
+	std::vector<float> m_bloodParticlesTimer;
 
 	Frustum* m_frustum;
 

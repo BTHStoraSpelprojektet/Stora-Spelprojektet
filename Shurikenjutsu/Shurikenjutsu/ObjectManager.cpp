@@ -26,6 +26,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	std::vector<LevelImporter::ParticleEmitter> particleLevelEmitter = p_level->GetParticleEmitters();
 
 	m_bloodParticles = std::vector<ParticleEmitter*>();
+	m_bloodParticlesTimer = std::vector<float>();
 
 	m_projectiles = std::vector<Projectile*>();
 
@@ -241,6 +242,7 @@ void ObjectManager::Shutdown()
 		delete m_bloodParticles[i];
 	}
 	m_bloodParticles.clear();
+	m_bloodParticlesTimer.clear();
 
 	if (m_shurikenTrails.size() > 0)
 	{
@@ -426,7 +428,7 @@ void ObjectManager::Update()
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		m_shurikens[i]->Update();
-	}	
+	}
 	for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
 	{
 		float angle = atan2(m_shurikens[i]->GetDirection().z, m_shurikens[i]->GetDirection().x);
@@ -505,7 +507,7 @@ void ObjectManager::Update()
 
 					DirectX::XMFLOAT4 color;
 					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
-					
+
 					if (!trail->Initialize(100.0f, 0.50f, 0.60f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
@@ -523,7 +525,7 @@ void ObjectManager::Update()
 					DirectX::XMFLOAT4 color;
 					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
 
-					if(!trail->Initialize(50.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+					if (!trail->Initialize(50.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
 					}
@@ -651,8 +653,8 @@ void ObjectManager::Update()
 
 		m_fanTrails[i]->Update(position, rotation);
 	}
-		
-		
+
+
 	// Update Volleys
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
@@ -673,7 +675,23 @@ void ObjectManager::Update()
 			i--;
 		}
 	}
-	
+
+	for (unsigned int i = 0; i < m_bloodParticlesTimer.size(); i++)
+	{
+		if (m_bloodParticlesTimer[i] > 0.0f)
+		{
+			m_bloodParticlesTimer[i] -= (float)GLOBAL::GetInstance().GetDeltaTime();
+		}
+		else
+		{
+			// If timer is 0 turn off emitiing
+			if (i < m_bloodParticles.size())
+			{
+				m_bloodParticles[i]->SetEmitParticleState(false);
+			}
+		}
+	}
+
 	// Update blood
 	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
 	{
@@ -1257,6 +1275,8 @@ void ObjectManager::ResetListSinceRoundRestarted()
 		delete m_bloodParticles[i];
 	}
 	m_bloodParticles.clear();
+	m_bloodParticlesTimer.clear();
+
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
 		m_volleys[i]->Shutdown();
@@ -1272,4 +1292,6 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 	temp->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
 	temp->SetEmitParticleState(true);
 	m_bloodParticles.push_back(temp);
+
+	m_bloodParticlesTimer.push_back(float(0.5f));
 }
