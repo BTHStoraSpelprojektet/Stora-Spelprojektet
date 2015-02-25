@@ -139,6 +139,8 @@ public:
 
 	int GetTeam(RakNet::RakNetGUID p_guid);
 
+	void SetSound(Sound* p_sound);
+
 	void SpawnBloodParticles(RakNet::RakNetGUID p_guid);
 	std::vector<DirectX::XMFLOAT3*> BloodParticlesLocations();
 	bool IsBloodParticlesUpdated();
@@ -225,6 +227,7 @@ private:
 	std::string m_ip;
 
 	ObjectManager* m_objectManager;
+	Sound* m_sound;
 
 	double m_timeToPing;
 	double m_pingTimer;

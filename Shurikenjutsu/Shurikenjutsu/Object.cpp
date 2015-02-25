@@ -60,6 +60,11 @@ void Object::Render()
 	GraphicsEngine::GetInstance()->RenderScene(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
 }
 
+void Object::RenderForward()
+{
+	GraphicsEngine::GetInstance()->RenderSceneForward(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+}
+
 void Object::RenderDepth()
 {
 	GraphicsEngine::GetInstance()->RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());

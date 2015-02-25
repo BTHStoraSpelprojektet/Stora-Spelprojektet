@@ -54,7 +54,6 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_FIRE) :
 		{
 			initParticles(100.0f, 100, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle_texture2.png"));
-
 			break;
 		}
 
@@ -125,7 +124,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	m_particleList = new Particle[m_maxParticles];
 	for (unsigned int i = 0; i < m_maxParticles; i++)
 	{
-		m_particleList[i].m_alive = false;
+		m_particleList[i] = Particle();
 	}
 
 	// Set size of particles.
@@ -842,7 +841,6 @@ void ParticleEmitter::ClearOldParticles()
 		{
 			if (m_particleList[i].m_timePassed > m_particleList[i].m_timeToLive)
 			{
-				m_particleList[i].m_alive = false;
 				m_currentParticles--;
 
 				// Now move all the live particles, to keep the array sorted.
@@ -859,6 +857,7 @@ void ParticleEmitter::ClearOldParticles()
 					m_particleList[j].m_opacity = m_particleList[j + 1].m_opacity;
 				}
 				m_particleList[m_maxParticles - 1].m_alive = false;
+				m_particleList[m_maxParticles - 1].m_timePassed = 0.0f;
 			}
 		}
 	}

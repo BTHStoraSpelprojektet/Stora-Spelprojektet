@@ -7,6 +7,7 @@
 #include "AnimatedObject.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
+#include "Sound.h"
 #include "Trail.h"
 
 class Volley;
@@ -17,6 +18,7 @@ class FanBoomerang;
 class Projectile;
 class StickyTrap;
 class ParticleEmitter;
+class Sound;
 
 class ObjectManager
 {
@@ -53,13 +55,14 @@ public:
 	void RemoveProjectile(unsigned int p_projId);
 
 	void AddBloodSpots(DirectX::XMFLOAT3 p_pos);
-
+	
+	void SetSound(Sound* p_sound);
 private:
 	float CheckStickyTrapYPosition();
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
 	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
 	void ResetListSinceRoundRestarted();
-	
+
 
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
@@ -86,6 +89,7 @@ private:
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
 
+	Sound* m_sound;
 	std::vector<Trail*> m_shurikenTrails;
 	std::vector<Trail*> m_fanTrails;
 	std::vector<Trail*> m_kunaiTrails;

@@ -166,6 +166,12 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 						p_playerManager->DamagePlayer(playerList[j].guid, damage, shurikenList[i].guid, ABILITIES_SHURIKEN);
 
 						// Remove shuriken
+						if (shurikenList[i].megaShuriken){
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+						}
+						else{
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+						}
 						p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
 						shurikenList.erase(shurikenList.begin() + i);
 						i--;
@@ -195,6 +201,12 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				if (OBBOBBTest(m_staticBoxList[k], OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
 				{
 					// Remove shuriken
+					if (shurikenList[i].megaShuriken){
+						p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+					}
+					else{
+						p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+					}
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
 					shurikenList.erase(shurikenList.begin() + i);
 					i--;
@@ -219,6 +231,12 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 				if (OBBSphereTest(OBB(shurikenBoundingBoxes[j].m_center, shurikenBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
 				{
 					// Remove shuriken
+					if (shurikenList[i].megaShuriken){
+						p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+					}
+					else{
+						p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, newPosX, newPosY, newPosZ);
+					}
 					p_shurikenManager->RemoveShuriken(shurikenList[i].shurikenId);
 					shurikenList.erase(shurikenList.begin() + i);
 					i--;
@@ -302,6 +320,18 @@ void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectile
 						p_playerManager->DamagePlayer(playerList[j].guid, damage, projectileList[i].guid, ability);
 
 						// Remove shuriken
+						if (j < projectileBoundingBoxes.size()){
+							if (ability == ABILITIES::ABILITIES_KUNAI){
+								p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+							}
+							else if (ability == ABILITIES::ABILITIES_SHURIKEN){
+								p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+							}
+							else if (ability == ABILITIES::ABILITIES_MEGASHURIKEN){
+								p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+							}
+						}
+
 						p_projectileManager->RemoveProjectile(projectileList[i].uniqueId);
 						projectileList.erase(projectileList.begin() + i);
 						i--;
@@ -331,6 +361,17 @@ void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectile
 				if (OBBOBBTest(m_staticBoxList[k], OBB(projectileBoundingBoxes[j].m_center, projectileBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f))))
 				{
 					// Remove shuriken
+					if (j < projectileBoundingBoxes.size()){
+						if (ability == ABILITIES::ABILITIES_KUNAI){
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+						}
+						else if (ability == ABILITIES::ABILITIES_SHURIKEN){
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+						}
+						else if (ability == ABILITIES::ABILITIES_MEGASHURIKEN){
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+						}
+					}
 					p_projectileManager->RemoveProjectile(projectileList[i].uniqueId);
 					projectileList.erase(projectileList.begin() + i);
 					i--;
@@ -355,6 +396,17 @@ void CollisionManager::ProjectileCollisionChecks(ProjectileManager* p_projectile
 				if (OBBSphereTest(OBB(projectileBoundingBoxes[j].m_center, projectileBoundingBoxes[j].m_extents, DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f)), sphere))
 				{
 					// Remove shuriken
+					if (j < projectileBoundingBoxes.size()){
+						if (ability == ABILITIES::ABILITIES_KUNAI){
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+						}
+						else if (ability == ABILITIES::ABILITIES_SHURIKEN){
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+						}
+						else if (ability == ABILITIES::ABILITIES_MEGASHURIKEN){
+							p_playerManager->SendPlaySound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND, projectileBoundingBoxes[j].m_center.x, projectileBoundingBoxes[j].m_center.y, projectileBoundingBoxes[j].m_center.z);
+						}
+					}
 					p_projectileManager->RemoveProjectile(projectileList[i].uniqueId);
 					projectileList.erase(projectileList.begin() + i);
 					i--;
@@ -1018,6 +1070,11 @@ void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, Pla
 				}
 				remove = true;
 			}
+		}
+
+		//Try to only play the sound once
+		if (volleyList[i].timeToLand <= 0.0f && volleyList[i].timeToLand > -0.1f){
+			p_playerManager->SendPlaySound(ABILITIES_VOLLEY, volleyList[i].endX, 0, volleyList[i].endZ);
 		}
 
 		// Remove dead volley
