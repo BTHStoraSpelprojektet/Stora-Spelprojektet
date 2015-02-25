@@ -99,9 +99,11 @@ void PlayerManager::Update(bool p_inMenu)
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
 			m_enemyList[i]->Update();
 
-			m_enemyList[i]->m_soundEmitter->m_x = enemyPlayers[i].x;
-			m_enemyList[i]->m_soundEmitter->m_y = enemyPlayers[i].y;
-			m_enemyList[i]->m_soundEmitter->m_z = enemyPlayers[i].z;
+			if (m_enemyList[i]->m_soundEmitter != NULL) {
+				m_enemyList[i]->m_soundEmitter->m_x = enemyPlayers[i].x;
+				m_enemyList[i]->m_soundEmitter->m_y = enemyPlayers[i].y;
+				m_enemyList[i]->m_soundEmitter->m_z = enemyPlayers[i].z;
+			}
 		}
 	}
 	CheckPlayersVisible();
