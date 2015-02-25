@@ -502,7 +502,5 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 	UpdateProjectionMatrix(false);
 	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(playerPosition.x, playerPosition.z), GraphicsEngine::GetInstance()->GetDevice());
-
 	m_oldPosition = position;
 }
