@@ -116,6 +116,7 @@ private:
 		DirectX::XMFLOAT3 m_position;
 		DirectX::XMFLOAT2 m_size;
 		DirectX::XMFLOAT4 m_color;
+		float m_rotation;
 	};
 
 	ParticleVertex* m_mesh;

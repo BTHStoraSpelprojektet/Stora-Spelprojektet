@@ -18,9 +18,6 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 {
 	m_lastPosition = Point(0.0f, 0.0f);
 
-	m_intersections.clear();
-	m_vertices.clear();
-
 	DirectX::XMStoreFloat4x4(&m_polygonWorldMatrix, DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&m_polygonViewMatrix, DirectX::XMMatrixIdentity());
 	DirectX::XMStoreFloat4x4(&m_polygonProjectionMatrix, DirectX::XMMatrixIdentity());
@@ -150,6 +147,28 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 	m_minimapTarget.Initialize(GraphicsEngine::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
+	// Setup vertex buffer description.
+	D3D11_BUFFER_DESC vertexBuffer;
+	vertexBuffer.Usage = D3D11_USAGE_DYNAMIC;
+	vertexBuffer.ByteWidth = sizeof(DirectX::XMFLOAT3) * 1500;
+	vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	vertexBuffer.MiscFlags = 0;
+	vertexBuffer.StructureByteStride = 0;
+
+	// Setup vertex buffer data.
+	D3D11_SUBRESOURCE_DATA vertexData;
+	m_vertices.push_back(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	vertexData.pSysMem = m_vertices.data();
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	// Create the vertex buffer.
+	p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_mesh);
+
+	m_intersections.clear();
+	m_vertices.clear();
+
 	ConsolePrintSuccess("Visibility computer initialized successfully.");
 	ConsoleSkipLines(1);
 
@@ -161,37 +180,43 @@ void VisibilityComputer::Shutdown()
 	if (m_vertexShader)
 	{
 		m_vertexShader->Release();
-		m_vertexShader = 0;
+		m_vertexShader = nullptr;
 	}
 
 	if (m_pixelShader)
 	{
 		m_pixelShader->Release();
-		m_pixelShader = 0;
+		m_pixelShader = nullptr;
 	}
 
 	if (m_layout)
 	{
 		m_layout->Release();
-		m_layout = 0;
+		m_layout = nullptr;
 	}
 
 	if (m_mesh)
 	{
 		m_mesh->Release();
-		m_mesh = 0;
+		m_mesh = nullptr;
+	}
+
+	if (m_quadMesh)
+	{
+		m_quadMesh->Release();
+		m_quadMesh = nullptr;
 	}
 
 	if (m_matrixBuffer)
 	{
 		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
+		m_matrixBuffer = nullptr;
 	}
 
 	if (m_texture)
 	{
 		m_texture->Release();
-		m_texture = 0;
+		m_texture = nullptr;
 	}
 
 	m_renderTarget.Shutdown();
@@ -283,29 +308,11 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 	m_vertices.push_back(DirectX::XMFLOAT3(m_intersections[m_intersections.size() - 1].x, 0.2f, m_intersections[m_intersections.size() - 1].y));
 	m_vertices.push_back(DirectX::XMFLOAT3(m_intersections[0].x, 0.2f, m_intersections[0].y));
 
-	if (m_mesh)
-	{ 
-		m_mesh->Release();
-		m_mesh = 0;
-	}
-		
-	// Setup vertex buffer description.
-	D3D11_BUFFER_DESC vertexBuffer;
-	vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
-	vertexBuffer.ByteWidth = sizeof(DirectX::XMFLOAT3) * m_vertices.size();
-	vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBuffer.CPUAccessFlags = 0;
-	vertexBuffer.MiscFlags = 0;
-	vertexBuffer.StructureByteStride = 0;
-
-	// Setup vertex buffer data.
-	D3D11_SUBRESOURCE_DATA vertexData;
-	vertexData.pSysMem = m_vertices.data();
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	// Create the vertex buffer.
-	p_device->CreateBuffer(&vertexBuffer, &vertexData, &m_mesh);
+	// Update the mesh.
+	D3D11_MAPPED_SUBRESOURCE resource;
+	GraphicsEngine::GetInstance()->GetContext()->Map(m_mesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	memcpy(resource.pData, m_vertices.data(), sizeof(DirectX::XMFLOAT3) * m_vertices.size());
+	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_mesh, 0);
 }
 
 void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context)
@@ -416,7 +423,6 @@ inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewe
 
 void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
-
 	if (!m_texture)
 	{
 		m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/shadowstuff.png");
@@ -425,7 +431,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	// Render the quad to reverse project the polygon onto.
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-		GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
+	GraphicsEngine::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
 	}
 
 }
@@ -560,13 +566,6 @@ void VisibilityComputer::UpdateTextureSize(int p_width, int p_height)
 
 void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
 {
-	// Reset the mesh.
-	if (m_quadMesh)
-	{
-		m_quadMesh->Release();
-		m_quadMesh = 0;
-	}
-
 	// Top triangle.
 	Vertex mesh[6];
 	mesh[0] = Vertex(DirectX::XMFLOAT3(p_topLeft.x, 0.1f, p_topLeft.y), DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
@@ -578,12 +577,22 @@ void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
 	mesh[4] = mesh[1];
 	mesh[5] = Vertex(DirectX::XMFLOAT3(p_bottomRight.x, 0.1f, p_bottomRight.y), DirectX::XMFLOAT2(1.0f, 1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
+	if (m_quadMesh)
+	{
+		D3D11_MAPPED_SUBRESOURCE resource;
+		GraphicsEngine::GetInstance()->GetContext()->Map(m_quadMesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		memcpy(resource.pData, mesh, sizeof(Vertex) * 6);
+		GraphicsEngine::GetInstance()->GetContext()->Unmap(m_quadMesh, 0);
+	}
+
+	else
+	{
 	// Setup vertex buffer description.
 	D3D11_BUFFER_DESC vertexBuffer;
-	vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
+		vertexBuffer.Usage = D3D11_USAGE_DYNAMIC;
 	vertexBuffer.ByteWidth = sizeof(Vertex) * 6;
 	vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBuffer.CPUAccessFlags = 0;
+		vertexBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBuffer.MiscFlags = 0;
 	vertexBuffer.StructureByteStride = 0;
 
@@ -595,6 +604,7 @@ void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
 
 	// Create the vertex buffer.
 	GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_quadMesh);
+}
 }
 
 void VisibilityComputer::SetWorldPolygonMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

@@ -17,7 +17,7 @@ bool PlayerManager::Initialize(bool p_inMenu)
 	m_enemyList = NULL;
 	if (!p_inMenu)
 	{
-		AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 	return true;
 }
@@ -121,7 +121,7 @@ void PlayerManager::Render(bool p_inMenu)
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i]->GetFrustumSphere(), 1.0f))
 		{
-			if (!p_inMenu)
+			if (!p_inMenu || !Network::GetInstance()->GetMatchOver())
 			{
 				if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 				{
@@ -144,19 +144,19 @@ void PlayerManager::RenderOutliningPassOne()
 void PlayerManager::RenderDepth(bool p_inMenu)
 {
 	if (!p_inMenu)
-	{
-		m_player->RenderDepth();
+{
+	m_player->RenderDepth();
 	}
 
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
 		if (!p_inMenu)
 		{
-			if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
-			{
-				m_enemyList[i]->RenderDepth();
-			}
+		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+		{
+			m_enemyList[i]->RenderDepth();
 		}
+	}
 		else
 		{
 			m_enemyList[i]->RenderDepth();

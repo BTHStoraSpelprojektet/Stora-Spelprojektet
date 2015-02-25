@@ -17,7 +17,10 @@
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
 #include "InGameMenu.h"
+#include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
+
+ParticleEmitter* TEST_POIemitter;
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -138,16 +141,33 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_inGameMenu = new InGameMenu();
 	m_inGameMenu->Initialize();
 
+	m_victoryMenu = new VictoryScreenMenu();
+	if (!m_victoryMenu->Initialize())
+	{
+		return false;
+	}
+
 	if (!DeathBoard::GetInstance()->Initialize())
 	{
 		return false;
 	}
+
+	TEST_POIemitter = new ParticleEmitter();
+	TEST_POIemitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.5f, 0.f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
+	TEST_POIemitter->SetEmitParticleState(true);
 
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_victoryMenu != nullptr)
+	{
+		m_victoryMenu->Shutdown();
+		delete m_victoryMenu;
+		m_victoryMenu = nullptr;
+	}
+
 	if (m_inGameMenu != nullptr)
 	{
 		m_inGameMenu->Shutdown();
@@ -266,6 +286,21 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	else if (Network::GetInstance()->GetMatchOver())
 	{
 		m_camera->MenuCameraRotation();
+
+		switch (m_victoryMenu->Update())
+		{
+			case IN_GAME_MENU_CONTINUE:
+			{
+				return GAMESTATESWITCH_CHOOSENINJA;
+				break;
+	}
+			case IN_GAME_MENU_TO_MAIN:
+			{
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
+			}
+		}
 	}
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
 	{
@@ -362,31 +397,46 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update smokebomb shadow shapes.
 	ShadowShapes::GetInstance().Update(); 
 	
+	TEST_POIemitter->Update();
+	
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
 	DeathBoard::GetInstance()->Update();
 
 	BasicPicking();
+
 	if (m_inGameMenuIsActive)
 	{
 		switch (m_inGameMenu->Update())
 		{
 		case IN_GAME_MENU_RESUME:
+			{
 			m_inGameMenuIsActive = false;
 			m_sound->StopMusic();
 			break;
+			}
+			
 		case IN_GAME_MENU_TO_MAIN:
+			{
 			Network::GetInstance()->Disconnect();
 			return GAMESTATESWITCH_MENU;
 			break;
+			}
+			
 		case IN_GAME_MENU_QUIT:
+			{
 			PostQuitMessage(0);
 			break;
+			}
+			
 		default:
+			{
 			break;
 		}
 	}
+	}
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -405,6 +455,7 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render(false);
+	TEST_POIemitter->Render();
 	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
@@ -446,6 +497,11 @@ void PlayingStateTest::Render()
 	if (m_inGameMenuIsActive)
 	{
 		m_inGameMenu->Render();
+	}
+
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_victoryMenu->Render();
 	}
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
@@ -593,6 +649,7 @@ void PlayingStateTest::OnScreenResize()
 	GraphicsEngine::GetInstance()->ScreenChangeHandled();
 }
 
-void PlayingStateTest::SetSound(Sound* p_sound){
+void PlayingStateTest::SetSound(Sound* p_sound)
+{
 	m_sound = p_sound;
 }

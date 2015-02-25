@@ -97,31 +97,31 @@ void RenderTarget::Shutdown()
 	if (m_resourceView)
 	{
 		m_resourceView->Release();
-		m_resourceView = 0;
+		m_resourceView = nullptr;
 	}
 
 	if (m_renderTargetView)
 	{
 		m_renderTargetView->Release();
-		m_renderTargetView = 0;
+		m_renderTargetView = nullptr;
 	}
 
 	if (m_renderTarget)
 	{
 		m_renderTarget->Release();
-		m_renderTarget = 0;
+		m_renderTarget = nullptr;
 	}
 
 	if (m_depthStencil)
 	{
 		m_depthStencil->Release();
-		m_depthStencil = 0;
+		m_depthStencil = nullptr;
 	}
 
 	if (m_depthStencilView)
 	{
 		m_depthStencilView->Release();
-		m_depthStencilView = 0;
+		m_depthStencilView = nullptr;
 	}
 }
 

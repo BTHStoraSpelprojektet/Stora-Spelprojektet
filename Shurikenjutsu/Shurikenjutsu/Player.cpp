@@ -244,19 +244,7 @@ void Player::UpdateMe()
 	if (!m_isAlive || Network::GetInstance()->GetMatchOver())
 	{
 		m_ability = m_noAbility;
-		// Animation None
-		if (Network::GetInstance()->GetMatchOver())
-		{
-			//if (m_isAlive)
-			//{
-			//	AnimatedObject::ChangeAnimationState(AnimationState::Spawn);
-			//}
-			//else
-			//{
-			//	AnimatedObject::ChangeAnimationState(AnimationState::Death);
-			//}
-			//Network::GetInstance()->SendAnimationState(AnimationState::None);
-		}
+		// Animation None ?
 		UpdateAbilities();
 		UpdateAbilityBar();
 		return;

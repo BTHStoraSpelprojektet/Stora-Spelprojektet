@@ -62,21 +62,22 @@ void main(line GeometryInput p_input[2], inout TriangleStream<GeometryOutput> p_
 	middlePoint.m_timeValues.y = (p_input[0].m_timeValues.y + p_input[1].m_timeValues.y) * 0.5f;
 	middlePoint.m_color = p_input[0].m_color;
 	middlePoint.m_endpoint = false;
-
-	float3 t1;
-	float3 t2;
-	float3 m1;
-	float3 m2;
-	float3 b1;
-	float3 b2;
+	
+	// Precalculate sine and cosines.
+	float tSine = sin(p_input[0].m_angle);
+	float tCosine = cos(p_input[0].m_angle);
+	float mSine = sin(middlePoint.m_angle);
+	float mCosine = cos(middlePoint.m_angle);
+	float bSine = sin(p_input[1].m_angle);
+	float bCosine = cos(p_input[1].m_angle);
 
 	// Calculate corners for tile segments.
-	t1 = float3(p_input[0].m_position.x - (sin(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z + (cos(p_input[0].m_angle) * p_input[0].m_width));
-	t2 = float3(p_input[0].m_position.x + (sin(p_input[0].m_angle) * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z - (cos(p_input[0].m_angle) * p_input[0].m_width));
-	m1 = float3(middlePoint.m_position.x - (sin(middlePoint.m_angle) * middlePoint.m_width), middlePoint.m_position.y, middlePoint.m_position.z + (cos(middlePoint.m_angle) * middlePoint.m_width));
-	m2 = float3(middlePoint.m_position.x + (sin(middlePoint.m_angle) * middlePoint.m_width), middlePoint.m_position.y, middlePoint.m_position.z - (cos(middlePoint.m_angle) * middlePoint.m_width));
-	b1 = float3(p_input[1].m_position.x - (sin(p_input[1].m_angle) * p_input[1].m_width), p_input[1].m_position.y, p_input[1].m_position.z + (cos(p_input[1].m_angle) * p_input[1].m_width));
-	b2 = float3(p_input[1].m_position.x + (sin(p_input[1].m_angle) * p_input[1].m_width), p_input[1].m_position.y, p_input[1].m_position.z - (cos(p_input[1].m_angle) * p_input[1].m_width));
+	float3 t1 = float3(p_input[0].m_position.x - (tSine * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z + (tCosine * p_input[0].m_width));
+	float3 t2 = float3(p_input[0].m_position.x + (tSine * p_input[0].m_width), p_input[0].m_position.y, p_input[0].m_position.z - (tCosine * p_input[0].m_width));
+	float3 m1 = float3(middlePoint.m_position.x - (mSine * middlePoint.m_width), middlePoint.m_position.y, middlePoint.m_position.z + (mCosine * middlePoint.m_width));
+	float3 m2 = float3(middlePoint.m_position.x + (mSine * middlePoint.m_width), middlePoint.m_position.y, middlePoint.m_position.z - (mCosine * middlePoint.m_width));
+	float3 b1 = float3(p_input[1].m_position.x - (bSine * p_input[1].m_width), p_input[1].m_position.y, p_input[1].m_position.z + (bCosine * p_input[1].m_width));
+	float3 b2 = float3(p_input[1].m_position.x + (bSine * p_input[1].m_width), p_input[1].m_position.y, p_input[1].m_position.z - (bCosine * p_input[1].m_width));
 	
 	// Triangle 1, top left.
 	position[0] = float4(t1, 1.0f);
