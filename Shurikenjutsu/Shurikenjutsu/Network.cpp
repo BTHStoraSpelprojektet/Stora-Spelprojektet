@@ -68,6 +68,7 @@ bool Network::Initialize()
 	m_pingTimer = 5;
 	m_timeToPing = m_pingTimer;
 	m_dealtDamage = 0;
+
 	return true;
 }
 
@@ -375,7 +376,7 @@ void Network::ReceviePacket()
 			bitStream.Read(isAlive);
 
 			UpdatePlayerHP(guid, currentHP, isAlive);
-
+			SpawnBloodParticles(guid);
 			break;
 		}
 		case ID_ROUND_OVER:
@@ -1196,7 +1197,6 @@ void Network::AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float 
 
 void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
 {
-
 	bool addSmokeBomb = true;
 	SmokeBombNet temp;
 	temp.smokeBombId = p_smokebombId;
@@ -1223,7 +1223,6 @@ void Network::UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, flo
 
 void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team)
 {
-
 	bool addSpikeTrap = true;
 	SpikeNet temp;
 	temp.spikeId = p_spikeTrapId;
@@ -1249,6 +1248,7 @@ void Network::UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTra
 		m_spikeTrapListUpdated = true;
 	}
 }
+
 void Network::UpdateStickyTrap(RakNet::RakNetGUID p_guid, unsigned int p_stickyTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime)
 {
 	bool addStickyTrap = true;
@@ -1557,8 +1557,6 @@ void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool 
 			}
 		}
 	}
-
-	
 }
 
 void Network::UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive)
@@ -1809,6 +1807,25 @@ void Network::UpdateFanLifeTime(unsigned int p_id, float p_lifeTime)
 		{
 			m_fanList[i].lifeTime = p_lifeTime;
 			break;
+		}
+	}
+}
+
+void Network::SpawnBloodParticles(RakNet::RakNetGUID p_guid)
+{
+	// Check if spawn blood on player or enemies
+	if (m_myPlayer.guid == p_guid)
+	{
+		m_objectManager->AddBloodSpots(DirectX::XMFLOAT3(m_myPlayer.x, m_myPlayer.y, m_myPlayer.z));
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				m_objectManager->AddBloodSpots(DirectX::XMFLOAT3(m_enemyPlayers[i].x, m_enemyPlayers[i].y, m_enemyPlayers[i].z));
+			} 
 		}
 	}
 }
