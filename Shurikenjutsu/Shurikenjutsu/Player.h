@@ -26,7 +26,7 @@ public:
 
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType);
 	void Shutdown();
-	void UpdateMe(std::vector<StickyTrap*> p_stickyTrapList);
+	void UpdateMe();
 	void Update();
 	void UpdateAbilities();
 	void Render();
@@ -73,6 +73,7 @@ public:
 	OBB GetOBB();
 
 	void SetSound(Sound* p_sound);
+	void SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList);
 
 protected:
 	void CheckForSpecialAttack();
@@ -135,5 +136,6 @@ protected:
 	Sound* m_sound;
 
 	Trail* m_trail;
+	std::vector<StickyTrap*> m_stickyTrapList;
 };
 #endif PLAYER

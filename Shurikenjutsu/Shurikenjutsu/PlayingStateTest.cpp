@@ -81,7 +81,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initiate the player.
 	m_playerManager = new PlayerManager();
 	m_playerManager->SetSound(m_sound);
-	m_playerManager->Initialize();
+	m_playerManager->Initialize(false);
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
 
 
@@ -227,8 +227,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Get picking data.
 	BasicPicking();
-
-	m_playerManager->Update(m_objectManager->GetStickyTrapList());
+	m_playerManager->SetStickyTrapList(m_objectManager->GetStickyTrapList());
+	m_playerManager->Update(false);
 
 	
 	if (!m_playerManager->GetPlayerIsAlive())
@@ -393,7 +393,7 @@ void PlayingStateTest::Render()
 	// Draw to the shadowmap.
 	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
-	m_playerManager->RenderDepth();
+	m_playerManager->RenderDepth(false);
 	GraphicsEngine::GetInstance()->SetShadowMap();
 
 	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
@@ -402,7 +402,7 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
-	m_playerManager->Render();
+	m_playerManager->Render(false);
 	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();

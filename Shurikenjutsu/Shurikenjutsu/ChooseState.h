@@ -7,6 +7,7 @@
 #include <stack>
 #include <vector>
 #include "TeamTable.h"
+#include "Structures.h"
 
 class Menu;
 class MenuItem;
@@ -14,6 +15,10 @@ class GUIText;
 class CharacterAbilityDescription;
 class ToolTipPopUp;
 class Camera;
+class ObjectManager;
+class Frustum;
+class Sound;
+class PlayerManager;
 
 enum CurrentTeam
 {
@@ -26,6 +31,9 @@ class ChooseState : public GameState
 public:
 	ChooseState();
 	~ChooseState();
+
+	void* operator new(size_t p_i);
+	void operator delete(void* p_p);
 
 	void Shutdown();
 	bool Initialize();
@@ -60,8 +68,13 @@ private:
 	float m_screenWidth;
 	bool m_isRandoming;
 	CurrentTeam m_currentTeam;
-	Camera *m_camera;
 
+	Camera *m_camera;
+	ObjectManager* m_objectManager;
+	Sound* m_sound;
+	Frustum* m_frustum;
+	DirectionalLight m_directionalLight;
+	PlayerManager *m_playerManager;
 
 
 	float m_portraitWidth;
@@ -72,7 +85,6 @@ private:
 	float m_nextHeight;
 	float m_toolWidth;
 	float m_toolHeight;
-
 };
 
 

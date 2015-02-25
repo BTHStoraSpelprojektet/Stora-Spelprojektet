@@ -906,7 +906,7 @@ void ObjectManager::RenderDepth()
 		if (temp != NULL)
 		{
 			temp->RenderDepth();
-}
+		}
 	}
 
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)

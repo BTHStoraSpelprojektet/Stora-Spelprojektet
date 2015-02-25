@@ -202,7 +202,7 @@ void Player::Shutdown()
 	}
 	}
 
-void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
+void Player::UpdateMe()
 {
 	float angle = atan2(m_dashDirection.z, m_dashDirection.x);
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
@@ -226,9 +226,9 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 	
 	SetSpeed(m_originalSpeed);
-	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
-		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+		if (Collisions::SphereSphereCollision(m_playerSphere, m_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
 			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
 		}
@@ -1154,4 +1154,9 @@ void Player::ChooseTool()
 
 void Player::SetSound(Sound* p_sound){
 	m_sound = p_sound;
+}
+
+void Player::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
+{
+	m_stickyTrapList = p_stickyTrapList;
 }
