@@ -106,7 +106,7 @@ void PlayerManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i]->GetFrustumSphere(), 1.0f))
 		{
-			if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)) || Network::GetInstance()->GetMatchOver())
 			{
 				m_enemyList[i]->Render();
 			}

@@ -101,12 +101,12 @@ void Countdown::Update()
 		if (Network::GetInstance()->GetMatchWinningTeam() == Network::GetInstance()->GetMyPlayer().team)
 		{
 			// Victory
-			text = "Victory!";
+			text = "You won the game!";
 		}
 		else
 		{
 			// Defeat
-			text = "Defeat!";
+			text = "You lost the game!";
 		}
 		m_cdText.SetColor(0xffffffff);
 		m_cdText.SetText(text);
