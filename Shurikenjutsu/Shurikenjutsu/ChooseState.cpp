@@ -9,32 +9,15 @@
 #include "Network.h"
 #include "ToolTipPopUp.h"
 #include "TextResource.h"
-
-// BUTTON
-const float BUTTONWIDTH = 301.0f;
-const float BUTTONHEIGHT = 98.0f;
-
-// LEFT / RIGHT
-const float NEXTWIDTH = 100.0f;
-const float NEXTHEIGHT = 98.0f;
-
-// TOOL TEXTURE
-const float TOOLWIDTH = 50.0f;
-const float TOOLHEIGHT = 50.0f;
-
-// OFFSET
-const float OFFSET = 10.0f;
+#include "Camera.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
 
-
-
 /*TODO
  - Background
- - Texts
- - Positions
- - Textures
+ - Texts - orkar!!!!! INTE!!!!
+ - Textures  - på g
 */
 bool ChooseState::Initialize()
 {
@@ -44,26 +27,38 @@ bool ChooseState::Initialize()
 	m_screenWidth = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
 	m_portraitHeight = m_screenHeight / 5.12f;
 	m_portraitWidth = m_screenWidth / 6.4f;
-
+	m_buttonWidth = m_screenWidth / 4.27f;
+	m_buttonHeight = m_screenHeight / 10.24f; 
+	m_nextWidth = m_screenWidth / 12.80f;
+	m_nextHeight = m_screenHeight / 10.24f;
+	m_toolWidth = m_nextWidth * 0.5f;
+	m_toolHeight = m_nextHeight * 0.5f;
+	nrOfNinjas = 3;
+	currentNinja = 0;
+	nrOfTools = 3;
+	currentTool = 0;
 	m_redTeamScore = new GUIText();
 	m_blueTeamScore = new GUIText();
-
 	m_redTeamScore->Initialize("0", 50.0f, -m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xff0000ff);
 	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xffff0000);
+
+
+	float offset = 30.0f;
+	float ninjaCycleHeight = -m_buttonHeight*0.5f + offset;
+	float toolCycleHeight = m_toolHeight*0.5f - m_buttonHeight*0.5f- 150.0f;
+	float portraitYPos = ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
+	float toolButtonSize = m_screenHeight / 20.48f;
+	float toolButtonXPos = m_screenHeight / 18.29f;
 
 	m_blueTeam = new TeamTable();
 	m_redTeam = new TeamTable();
 	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f, 1);
 	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f, 2);
 	
-	nrOfNinjas = 3;
-	currentNinja = 0;
-	nrOfTools = 3;
-	currentTool = 0;
 	m_chooseNinja = new Menu();
 	m_questionMark = new MenuItem();
 	//the questionmark
-	m_questionMark->Initialize(0.0f, 0.0f, 75.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fragetecknet.png"));
+	m_questionMark->Initialize(0.0f, 0.0f, m_screenHeight / 13.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fragetecknet.png"));
 
 	// pick red team
 	m_chooseNinja->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/redteam.png"), MENUACTION_PICK_RED_TEAM);
@@ -72,39 +67,46 @@ bool ChooseState::Initialize()
 	m_chooseNinja->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueteam.png"), MENUACTION_PICK_BLUE_TEAM);
 
 	// back button
-	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + m_buttonWidth * 0.5f + offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 
 	// Play button
-	m_chooseNinja->AddButton(m_screenWidth * 0.5f - BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
+	m_chooseNinja->AddButton(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
 
 	// Random Ninja button
-	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_RANDOM_NINJA);
+	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_RANDOM_NINJA);
 
 	// Next ninja, right button
-	m_chooseNinja->AddButton(BUTTONWIDTH*0.5f + NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
+	m_chooseNinja->AddButton(m_buttonWidth*0.5f + m_nextWidth*0.5f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
 
 	// Prev ninja, left button
-	m_chooseNinja->AddButton(-BUTTONWIDTH*0.5f - NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVNINJA);
+	m_chooseNinja->AddButton(-m_buttonWidth*0.5f - m_nextWidth*0.5f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVNINJA);
 
 	//Prev tool, left button
-	m_chooseNinja->AddButton(-70.0f, -10.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVTOOL);
+	m_chooseNinja->AddButton(-toolButtonXPos, toolCycleHeight, toolButtonSize, toolButtonSize, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/left.png"), MENUACTION_PREVTOOL);
 
 	//Next tool, right button
-	m_chooseNinja->AddButton(70.0f, -10.0f, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTTOOL);
+	m_chooseNinja->AddButton(toolButtonXPos, toolCycleHeight, toolButtonSize, toolButtonSize, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTTOOL);
 
 	m_ninjas[0] = new MenuItem();
 	m_ninjas[1] = new MenuItem();
 	m_ninjas[2] = new MenuItem();
-	m_ninjas[0]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
-	m_ninjas[1]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
-	m_ninjas[2]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
+	m_ninjas[0]->Initialize(0.0f, portraitYPos, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
+	m_ninjas[1]->Initialize(0.0f, portraitYPos, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
+	m_ninjas[2]->Initialize(0.0f, portraitYPos, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
 	
 	m_tools[0] = new MenuItem();
 	m_tools[1] = new MenuItem();
 	m_tools[2] = new MenuItem();
-	m_tools[0]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_Caltrops.png"));
-	m_tools[1]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"));
-	m_tools[2]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_StickyTARP.png"));
+	m_tools[0]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_Caltrops.png"));
+	m_tools[1]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"));
+	m_tools[2]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_StickyTARP.png"));
+
+	m_toolDescription[0] = new ToolTipPopUp();
+	m_toolDescription[1] = new ToolTipPopUp();
+	m_toolDescription[2] = new ToolTipPopUp();
+	m_toolDescription[0]->Initialize(0.0f, toolCycleHeight, SPIKES_DESCRIPTION, m_toolHeight);
+	m_toolDescription[1]->Initialize(0.0f, toolCycleHeight, SMOKEBOMB_DESCRIPTION, m_toolHeight);
+	m_toolDescription[2]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight);
 
 	m_abilityDescription[0] = new CharacterAbilityDescription();
 	m_abilityDescription[1] = new CharacterAbilityDescription();
@@ -113,13 +115,11 @@ bool ChooseState::Initialize()
 	m_abilityDescription[1]->Initialize(2);
 	m_abilityDescription[2]->Initialize(3);
 
-	m_toolDescription[0] = new ToolTipPopUp();
-	m_toolDescription[1] = new ToolTipPopUp();
-	m_toolDescription[2] = new ToolTipPopUp();
 
-	m_toolDescription[0]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, SPIKES_DESCRIPTION , TOOLHEIGHT);
-	m_toolDescription[1]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, SMOKEBOMB_DESCRIPTION, TOOLHEIGHT);
-	m_toolDescription[2]->Initialize(0.0f, TOOLHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET - 95.0f, STICKY_DESCRIPTION, TOOLHEIGHT);
+	m_camera = new Camera();
+	m_camera->Initialize();
+	m_camera->ResetCamera();
+
 	return true;
 }
 
