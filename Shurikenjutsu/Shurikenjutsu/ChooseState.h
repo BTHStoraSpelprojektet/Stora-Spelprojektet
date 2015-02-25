@@ -13,7 +13,12 @@ class MenuItem;
 class GUIText;
 class CharacterAbilityDescription;
 
-
+enum CurrentTeam
+{
+	CURRENTTEAM_RED,
+	CURRENTTEAM_BLUE,
+	CURRENTTEAM_NONE
+};
 class ChooseState : public GameState
 {
 public:
@@ -38,9 +43,9 @@ private:
 	TeamTable* m_redTeam;
 	TeamTable* m_blueTeam;
 	
-
 	MenuItem *m_ninjas[4];
 	MenuItem *m_tools[3];
+	MenuItem *m_questionMark;
 	CharacterAbilityDescription *m_abilityDescription[4];
 	GUIText* m_redTeamScore;
 	GUIText* m_blueTeamScore;
@@ -53,7 +58,8 @@ private:
 
 	float m_portraitWidth;
 	float m_portraitHeight;
-	int m_myTeam;
+	bool m_isRandoming;
+	CurrentTeam m_currentTeam;
 };
 
 

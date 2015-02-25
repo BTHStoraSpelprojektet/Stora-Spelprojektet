@@ -29,17 +29,13 @@ ChooseState::~ChooseState(){}
 
 
 /*TODO
- - Random knapp i mitten
- - Visualisera vilket lag man är med i
  - Backgrund
- - Popup text
- - 
-
-
-
+ - hover text
 */
 bool ChooseState::Initialize()
 {
+	m_currentTeam = CURRENTTEAM_NONE;
+	m_isRandoming = false;
 	m_screenHeight = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	m_screenWidth = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
 	m_portraitHeight = m_screenHeight / 5.12f;
@@ -53,24 +49,32 @@ bool ChooseState::Initialize()
 
 	m_blueTeam = new TeamTable();
 	m_redTeam = new TeamTable();
-	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f);
-	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f);
+	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f, 1);
+	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f, 2);
 	
-	m_myTeam = 0;
-
 	nrOfNinjas = 3;
 	currentNinja = 0;
 	nrOfTools = 3;
 	currentTool = 0;
 	m_chooseNinja = new Menu();
+	m_questionMark = new MenuItem();
+	//the questionmark
+	m_questionMark->Initialize(0.0f, 0.0f, 75.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fragetecknet.png"));
 
+	// pick red team
 	m_chooseNinja->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/redteam.png"), MENUACTION_PICK_RED_TEAM);
 
+	// pick blue team
 	m_chooseNinja->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueteam.png"), MENUACTION_PICK_BLUE_TEAM);
 
+	// back button
 	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 
-	m_chooseNinja->AddButton(m_screenWidth * 0.5f - BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_RANDOM_TEAM);
+	// Play button
+	m_chooseNinja->AddButton(m_screenWidth * 0.5f - BUTTONWIDTH * 0.5f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
+
+	// Random Ninja button
+	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + BUTTONHEIGHT*0.5f, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_RANDOM_NINJA);
 
 	// Next ninja, right button
 	m_chooseNinja->AddButton(BUTTONWIDTH*0.5f + NEXTWIDTH*0.5f, BUTTONHEIGHT + OFFSET, NEXTWIDTH, NEXTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
@@ -87,12 +91,10 @@ bool ChooseState::Initialize()
 	m_ninjas[0] = new MenuItem();
 	m_ninjas[1] = new MenuItem();
 	m_ninjas[2] = new MenuItem();
-	//m_ninjas[3] = new MenuItem();
 	m_ninjas[0]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
 	m_ninjas[1]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
 	m_ninjas[2]->Initialize(0.0f, m_portraitHeight*0.5f + BUTTONHEIGHT*0.5f + OFFSET, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
-	//m_ninjas[3]->Initialize(0.0f, PORTRAITHEIGHT*0.5f + BUTTONHEIGHT*0.5f + OFFSET, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja4.png"));
-
+	
 	m_tools[0] = new MenuItem();
 	m_tools[1] = new MenuItem();
 	m_tools[2] = new MenuItem();
@@ -176,9 +178,34 @@ void ChooseState::Shutdown()
 
 GAMESTATESWITCH ChooseState::Update()
 {
-	//NextNinja();
-	//NextTool();
+	if (m_isRandoming)
+	{
+		NextNinja();
+		PrevTool();
+	}
 	UpdateTeams();
+
+	if (m_currentTeam == CURRENTTEAM_RED)
+	{
+		m_questionMark->SetPosition(m_redTeam->GetXPos(), m_redTeam->GetNextYPos());
+		if (m_redTeam->GetNumberOfPlayers() == 4)
+		{
+			m_currentTeam = CURRENTTEAM_NONE;
+		}
+	}
+	if (m_currentTeam == CURRENTTEAM_BLUE)
+	{
+		m_questionMark->SetPosition(m_blueTeam->GetXPos(), m_blueTeam->GetNextYPos());
+		if (m_blueTeam->GetNumberOfPlayers() == 4)
+		{
+			m_currentTeam = CURRENTTEAM_NONE;
+		}
+	}
+	if (m_currentTeam == CURRENTTEAM_NONE)
+	{
+		m_questionMark->SetPosition(0, m_screenHeight * 0.33f);
+	}
+
 
 	m_redTeamScore->SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
 	m_blueTeamScore->SetText(std::to_string(Network::GetInstance()->GetBlueTeamScore()));
@@ -187,7 +214,18 @@ GAMESTATESWITCH ChooseState::Update()
 	switch (action.m_action)
 	{
 	case MENUACTION_PLAY:
-		Network::GetInstance()->ChooseChar(currentNinja, currentTool, m_myTeam);
+		if (m_currentTeam == CURRENTTEAM_RED)
+		{
+			Network::GetInstance()->ChooseChar(currentNinja, currentTool, 1);
+		}
+		else if (m_currentTeam == CURRENTTEAM_BLUE)
+		{
+			Network::GetInstance()->ChooseChar(currentNinja, currentTool, 2);
+		}
+		else
+		{
+			Network::GetInstance()->ChooseChar(currentNinja, currentTool, 0);
+		}
 		return GAMESTATESWITCH_PLAY;
 		break;
 	case MENUACTION_BACK:
@@ -195,46 +233,57 @@ GAMESTATESWITCH ChooseState::Update()
 		return GAMESTATESWITCH_MENU;
 		break;
 	case MENUACTION_NEXTNINJA:
+		m_isRandoming = false;
 		NextNinja();
 		break;
 	case MENUACTION_PREVNINJA:
+		m_isRandoming = false;
 		PrevNinja();
 		break;
 	case MENUACTION_NEXTTOOL:
+		m_isRandoming = false;
 		NextTool();
 		break;
 	case MENUACTION_PREVTOOL:
+		m_isRandoming = false;
 		PrevTool();
 		break;
-	case MENUACTION_PICK_BLUE_TEAM://////////////////////////////////
-		if (m_blueTeam->GetNumberOfPlayers() >= 4)
+	case MENUACTION_PICK_BLUE_TEAM:
+		if (m_currentTeam == CURRENTTEAM_BLUE)
 		{
-			m_myTeam = 1;
+			m_currentTeam = CURRENTTEAM_NONE;
+		}
+		else if (m_blueTeam->GetNumberOfPlayers() < 4)
+		{
+			m_currentTeam = CURRENTTEAM_BLUE;
+		}
+		break;
+	case MENUACTION_PICK_RED_TEAM:
+		if (m_currentTeam == CURRENTTEAM_RED)
+		{
+			m_currentTeam = CURRENTTEAM_NONE;
+		}
+		else if (m_redTeam->GetNumberOfPlayers() < 4)
+		{
+			m_currentTeam = CURRENTTEAM_RED;
+		}
+		break;
+	case MENUACTION_RANDOM_NINJA:
+		if (m_isRandoming)
+		{
+			m_isRandoming = false;
 		}
 		else
 		{
-			m_myTeam = 2;
+			m_isRandoming = true;
 		}
+		//RandomNinja();
 		break;
-	case MENUACTION_PICK_RED_TEAM:///////////////////////////////////
-		if (m_redTeam->GetNumberOfPlayers() >= 4)
-		{
-			m_myTeam = 2;
-		}
-		else
-		{
-			m_myTeam = 1;
-		}
-		break;
-	case MENUACTION_RANDOM_TEAM://////////////////////////////////
-		m_myTeam = 0;
-		break;
-	case MENUACTION_RANDOM_NINJA:///////////////////////////////////
-
-		RandomNinja();
+	case MENUACTION_CLICKED_QUESTIONMARK:
+		m_currentTeam = CURRENTTEAM_NONE;
 		break;
 	}
-
+	
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -247,11 +296,11 @@ void ChooseState::UpdateTeams()
 	{
 		if (tempPlayerList[i].team == 1)
 		{
-			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, 1);
+			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr);
 		}
 		else
 		{
-			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, 2);
+			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr);
 		}
 	}
 }
@@ -267,6 +316,7 @@ void ChooseState::Render()
 	m_blueTeamScore->Render();
 	m_redTeam->Render();
 	m_blueTeam->Render();
+	m_questionMark->Render();
 }
 
 void ChooseState::NextNinja()
@@ -313,6 +363,6 @@ void ChooseState::EscapeIsPressed()
 void ChooseState::RandomNinja()
 {
 	std::srand((unsigned int)std::time(0));
-	currentTool = std::rand() % 4 + 1;
-	currentNinja = std::rand() % 4 + 1;
+	currentTool = std::rand() % 3;
+	currentNinja = std::rand() % 3;
 }
