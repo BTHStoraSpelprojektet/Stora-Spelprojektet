@@ -41,15 +41,15 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	float2 uv[6];
 
 	// Triangle 1, top left.
-	position[0] = float4((p_input[0].m_position.x - 0.25f), p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_offset.y, 1.0f); //y
+	position[0] = float4((p_input[0].m_position.x - 0.25f), -0.01f, p_input[0].m_position.z - p_input[0].m_offset.y, 1.0f); //y
 	uv[0] = float2(0.0f, 1.0f);
 
 	// Triangle 1, top right.
-	position[1] = float4((p_input[0].m_position.x + 0.25f), p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_offset.x, 1.0f); //x
+	position[1] = float4((p_input[0].m_position.x + 0.25f), -0.01f, p_input[0].m_position.z - p_input[0].m_offset.x, 1.0f); //x
 	uv[1] = float2(1.0f, 1.0f);
 
 	// Triangle 1, bottom right.
-	position[2] = float4(p_input[0].m_position.x + 0.25f + m_rotation.x, 0.1f + p_input[0].m_offset.x, (p_input[0].m_position.z + 0.5f), 1.0f); //x
+	position[2] = float4(p_input[0].m_position.x + 0.25f + m_rotation.x, (0.1f + p_input[0].m_offset.x) * p_input[0].m_position.y, (p_input[0].m_position.z + 0.5f), 1.0f); //x
 	uv[2] = float2(1.0f, 0.0f);
 
 	// Triangle 2, top left.
@@ -61,7 +61,7 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	uv[4] = uv[2];
 
 	// Triangle 2, bottom left.
-	position[5] = float4(p_input[0].m_position.x - 0.25f + m_rotation.x, 1.0f + p_input[0].m_offset.y, (p_input[0].m_position.z + 0.5f), 1.0f); //y
+	position[5] = float4(p_input[0].m_position.x - 0.25f + m_rotation.x, (1.0f + p_input[0].m_offset.y) * p_input[0].m_position.y, (p_input[0].m_position.z + 0.5f), 1.0f); //y
 	uv[5] = float2(0.0f, 0.0f);
 
 	float3 vec1 = position[1].xyz - position[0].xyz;

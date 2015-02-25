@@ -117,9 +117,9 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 
 	// Compile the pixel shader.
 	ID3D10Blob*	pixelShader = 0;
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Foliage/FoliagePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Foliage/FoliagePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile foliage pixel shader from file.");
 			return false;
@@ -270,7 +270,7 @@ void FoliageShader::ReadRawFile()
 			{		
 				for (unsigned int k = 0; k < 3; k++)
 				{
-					newVert.m_position = DirectX::XMFLOAT3((j - (row * 0.5f)) * 0.5f, 0.0f, -(i - (row * 0.5f)) * 0.5f);
+					newVert.m_position = DirectX::XMFLOAT3((j - (row * 0.5f)) * 0.5f, (in[(row * i) + j] / 255.0f), -(i - (row * 0.5f)) * 0.5f);
 
 					r1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 					r2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
