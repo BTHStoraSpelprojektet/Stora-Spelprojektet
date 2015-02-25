@@ -154,6 +154,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayingStateTest.cpp" />
+    <ClCompile Include="PointOfInterest.cpp" />
+    <ClCompile Include="PointOfInterestManager.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="SceneShader.cpp" />
@@ -208,6 +210,8 @@
     <ClInclude Include="FoliageShader.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
+    <ClInclude Include="PointOfInterest.h" />
+    <ClInclude Include="PointOfInterestManager.h" />
     <ClInclude Include="TeamTable.h" />
     <ClInclude Include="TextResource.h" />
     <ClInclude Include="InGameMenu.h" />
