@@ -99,6 +99,7 @@ bool MenuState::Initialize()
 
 	// Initialize the objectmanager.
 	m_objectManager = new ObjectManager();
+	m_objectManager->SetSound(m_sound);
 	m_objectManager->Initialize(&level);
 
 	// Frustum
@@ -188,7 +189,7 @@ void MenuState::Shutdown()
 		m_logo->Shutdown();
 		delete m_logo;
 		m_logo = NULL;
-	}
+}
 }
 
 GAMESTATESWITCH MenuState::Update()
@@ -361,4 +362,8 @@ void MenuState::EscapeIsPressed()
 	{
 		PostQuitMessage(0);
 	}
+}
+
+void MenuState::setSound(Sound* p_sound){
+	m_sound = p_sound;
 }

@@ -2,6 +2,7 @@
 #define ABILITY_H_
 
 class StatusEffect;
+class Sound;
 
 class Ability
 {
@@ -25,6 +26,7 @@ public:
 	virtual StatusEffect* GetStatusEffect();
 	virtual void ResetCooldown();
 	virtual int GetStacks();
+	void Ability::setSound(Sound* p_sound);
 
 protected:
 	float m_damage;
@@ -33,8 +35,7 @@ protected:
 	float m_totalCooldown;
 	StatusEffect* m_statusEffect;
 	int m_stacks;
-
-
+	Sound* m_sound;
 
 };
 #endif // !ABILITY_H_

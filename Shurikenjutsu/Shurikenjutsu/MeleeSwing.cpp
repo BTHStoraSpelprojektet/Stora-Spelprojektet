@@ -22,6 +22,9 @@ bool MeleeSwing::Execute(float p_distance)
 {
 	if (Ability::Execute(p_distance))
 	{
+		/*if (m_sound != nullptr){
+			m_sound->PlaySound(PLAYSOUND::PLAYSOUND_AIR_CUT_SOUND);
+		}*/
 		Network::GetInstance()->SendAbility(ABILITIES_MELEESWING,0);
 		SetCooldown(KATANA_COOLDOWN);
 

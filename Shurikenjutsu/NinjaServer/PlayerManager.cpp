@@ -60,7 +60,7 @@ void PlayerManager::Update(double p_deltaTime)
 	{
 		m_canSendDotDamage = false;
 		m_haveSentDotDamage = false;
-	}
+}
 	if (m_lastDotSent < 0)
 	{
 		m_lastDotSent = m_dotIntervall;
@@ -355,6 +355,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 	{
 		case ABILITIES_SHURIKEN:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_shurikenManager.AddShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 			break;
 		}
@@ -363,6 +364,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		{
 			//Calculate new location for the dashing player and inflict damage on enemies
 			player = GetPlayer(p_guid);
+			SendPlaySound(PLAYSOUND::PLAYSOUND_DASH_STEPS_SOUND, player.x, player.y, player.z);
 			float dashDistance = p_collisionManager.CalculateDashRange(p_guid, player, this) - 1.0f;
 
 			l_bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
@@ -375,29 +377,33 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 
 		case ABILITIES_MELEESWING:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_AIR_CUT_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_collisionManager.NormalMeleeAttack(p_guid, this, p_readAbility);
 			break;
 		}
 
 		case ABILITIES_MEGASHURIKEN:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 			break;
 		}
 
 		case ABILITIES_SMOKEBOMB:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			if (smokeBombDistance > SMOKEBOMB_RANGE)
 			{
 				smokeBombDistance = SMOKEBOMB_RANGE;
 			}
-
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SMOKE_BOMB_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_smokebomb.AddSmokeBomb(m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* smokeBombDistance, m_players[index].z + m_players[index].dirZ * smokeBombDistance);
 			break;
 		}
 
 		case ABILITIES_SPIKETRAP:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			if (spikeTrapDistance > SPIKE_RANGE)
 			{
 				spikeTrapDistance = SPIKE_RANGE;
@@ -409,47 +415,55 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 
 		case ABILITIES_WHIP_PRIMARY:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_WHIP_AIR_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_collisionManager.WhipPrimaryAttack(p_guid, this);
 			break;
 		}
 
 		case ABILITIES_WHIP_SECONDARY:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_WHIP_ROTATE_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_collisionManager.WhipSecondaryAttack(p_guid, this);
 			break;
 		}
 
 		case ABILITIES_FANBOOMERANG:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_fanBoomerang.Add(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 			break;
 		}
 
 		case ABILITIES_NAGINATASLASH:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_NAGINATA_AIR_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_collisionManager.NormalMeleeAttack(p_guid, this, p_readAbility);
 			break;
 		}
 
 		case ABILITIES_KUNAI:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_KUNAI_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_projectileManager.AddProjectile(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ, 2);
 			break;
 		}
 
 		case ABILITIES_STICKY_TRAP:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			if (stickyTrapDistance > STICKY_TRAP_RANGE)
 			{
 				stickyTrapDistance = STICKY_TRAP_RANGE;
 			}
 
+			SendPlaySound(PLAYSOUND::PLAYSOUND_BUBLE_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_stickyTrapManager.AddStickyTrap(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX* stickyTrapDistance, m_players[index].z + m_players[index].dirZ * stickyTrapDistance);
 			break;
 		}
 
 		case ABILITIES_NAGAINATASTAB:
 		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_NAGINATA_STAB_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_collisionManager.NaginataStabAttack(p_guid, this);
 			break;
 		}
@@ -461,6 +475,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 				volleyDistance = VOLLEY_RANGE;
 			}
 
+			SendPlaySound(PLAYSOUND::PLAYSOUND_VOLLEY_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_volleyManager.Add(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX * volleyDistance, m_players[index].z + m_players[index].dirZ * volleyDistance);
 			break;
 		}
@@ -515,6 +530,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			}
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
+			SendPlaySound(p_usedAbility, m_players[i].x, m_players[i].y, m_players[i].z);
 		}
 	}
 }
@@ -637,6 +653,30 @@ void PlayerManager::SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, fl
 	bitStream2.Write(p_y);
 	bitStream2.Write(p_z);
 	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 2, p_attackingPlayerGUID, false);
+}
+
+void PlayerManager::SendPlaySound(ABILITIES ability, float p_x, float p_y, float p_z)
+{
+	RakNet::BitStream wBitStream;
+	wBitStream.Write((RakNet::MessageID)ID_PLAY_SOUND_ABILITY);
+	wBitStream.Write(ability);
+	wBitStream.Write(p_x);
+	wBitStream.Write(p_y);
+	wBitStream.Write(p_z);
+
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void PlayerManager::SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p_z)
+{
+	RakNet::BitStream wBitStream;
+	wBitStream.Write((RakNet::MessageID)ID_PLAY_SOUND);
+	wBitStream.Write(sound);
+	wBitStream.Write(p_x);
+	wBitStream.Write(p_y);
+	wBitStream.Write(p_z);
+
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void PlayerManager::SendPlayerPosAndDir()

@@ -66,6 +66,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	// Initialize the object manager.
 	m_objectManager = new ObjectManager();
+	m_objectManager->SetSound(m_sound);
 	m_objectManager->Initialize(&level);
 
 	// Load and place arena walls.
@@ -79,8 +80,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	// Initiate the player.
 	m_playerManager = new PlayerManager();
+	m_playerManager->SetSound(m_sound);
 	m_playerManager->Initialize();
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
+
 
 	// Initlialize the frustum.
 	m_frustum = new Frustum();
@@ -578,4 +581,8 @@ void PlayingStateTest::OnScreenResize()
 
 	// Tell the graphics engine that changes have been handled.
 	GraphicsEngine::GetInstance()->ScreenChangeHandled();
+}
+
+void PlayingStateTest::SetSound(Sound* p_sound){
+	m_sound = p_sound;
 }

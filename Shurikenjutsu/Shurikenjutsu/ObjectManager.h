@@ -7,6 +7,7 @@
 #include "AnimatedObject.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
+#include "Sound.h"
 #include "Trail.h"
 
 class Volley;
@@ -17,6 +18,7 @@ class FanBoomerang;
 class Projectile;
 class StickyTrap;
 class ParticleEmitter;
+class Sound;
 
 class ObjectManager
 {
@@ -51,6 +53,8 @@ public:
 	std::vector<StickyTrap*> GetStickyTrapList();
 
 	void RemoveProjectile(unsigned int p_projId);
+	
+	void SetSound(Sound* p_sound);
 private:
 	float CheckStickyTrapYPosition();
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
@@ -80,7 +84,8 @@ private:
 	bool IsStickyTrapInList(unsigned int p_stickyeTrapId);
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
-
+	
+	Sound* m_sound;
 	std::vector<Trail*> m_shurikenTrails;
 	std::vector<Trail*> m_fanTrails;
 	std::vector<Trail*> m_kunaiTrails;
