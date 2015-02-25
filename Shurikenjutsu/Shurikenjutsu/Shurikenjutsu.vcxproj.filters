@@ -500,13 +500,11 @@
     <ClCompile Include="TeamTable.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
-<<<<<<< HEAD
     <ClCompile Include="ToolTipPopUp.cpp">
       <Filter>Source Files\GUI</Filter>
-=======
+    </ClCompile>
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
->>>>>>> origin/master
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
