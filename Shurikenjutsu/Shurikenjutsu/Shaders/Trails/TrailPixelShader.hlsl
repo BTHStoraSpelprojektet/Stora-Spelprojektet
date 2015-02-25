@@ -17,5 +17,7 @@ float4 main(PixelInput p_input) : SV_TARGET
 	// Fade the trail by time lived.	
 	pixel.w *= (p_input.m_timeValues.x - p_input.m_timeValues.y) / p_input.m_timeValues.x;
 
+	clip(pixel.w - 0.15f);
+
 	return pixel;
 }

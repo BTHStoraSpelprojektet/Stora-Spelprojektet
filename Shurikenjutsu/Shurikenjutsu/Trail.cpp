@@ -148,6 +148,11 @@ void Trail::Render()
 	}
 }
 
+void Trail::StartEmiting()
+{
+	m_emiting = true;
+}
+
 void Trail::StopEmiting()
 {
 	m_emiting = false;

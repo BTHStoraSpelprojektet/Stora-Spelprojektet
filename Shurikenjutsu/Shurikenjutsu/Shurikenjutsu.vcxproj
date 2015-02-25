@@ -178,6 +178,7 @@
     <ClCompile Include="TessenNinja.cpp" />
     <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="ToolTipPopUp.cpp" />
     <ClCompile Include="Trail.cpp" />
     <ClCompile Include="TrailRenderer.cpp" />
     <ClCompile Include="VisibilityComputer.cpp" />
@@ -288,6 +289,7 @@
     <ClInclude Include="TessenNinja.h" />
     <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="ToolTipPopUp.h" />
     <ClInclude Include="Trail.h" />
     <ClInclude Include="TrailRenderer.h" />
     <ClInclude Include="VisibilityComputer.h" />

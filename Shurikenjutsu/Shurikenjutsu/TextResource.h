@@ -32,4 +32,12 @@ const std::string KUNAI_PRIMARY_ATTACK =
 const std::string KUNAI_SECONDARY_ATTACK = 
 "Throw them in the air";
 
+
+const std::string SMOKEBOMB_DESCRIPTION =
+"CANCER";
+
+const std::string SPIKES_DESCRIPTION =
+"POINTY STUFF";
+const std::string STICKY_DESCRIPTION =
+"GLUE";
 #endif

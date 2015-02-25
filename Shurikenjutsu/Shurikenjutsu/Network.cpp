@@ -5,7 +5,7 @@
 #include "Globals.h"
 #include "DeathBoard.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
-#include "Sound.h";
+#include "Sound.h"
 
 Network* Network::m_instance;
 

@@ -19,6 +19,7 @@ public:
 	void Update(DirectX::XMFLOAT3 p_position, float p_angle);
 	void Render();
 
+	void StartEmiting();
 	void StopEmiting();
 	bool IsTrailDead();
 
