@@ -71,5 +71,7 @@ private:
 	int m_spectateIndex;
 	float m_spectateCountDown;
 	bool m_inGameMenuIsActive;
+
+	bool m_scoreBoardIsActive;
 };
 #endif PLAYINGSTATE

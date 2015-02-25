@@ -118,7 +118,6 @@ void ChooseState::Shutdown()
 		}
 	}
 
-	//needs fixin'
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		if (m_tools[i] != nullptr)

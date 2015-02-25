@@ -374,6 +374,15 @@ GAMESTATESWITCH PlayingStateTest::Update()
 			break;
 		}
 	}
+
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
+	{
+		m_scoreBoardIsActive = true;
+	}
+	else
+	{
+		m_scoreBoardIsActive = false;
+	}
 	return GAMESTATESWITCH_NONE;
 }
 
