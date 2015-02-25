@@ -55,6 +55,7 @@ private:
 	
 	MenuItem *m_ninjas[4];
 	MenuItem *m_tools[3];
+	MenuItem *m_title;
 	ToolTipPopUp* m_toolDescription[3];
 	MenuItem *m_questionMark;
 	CharacterAbilityDescription *m_abilityDescription[4];
