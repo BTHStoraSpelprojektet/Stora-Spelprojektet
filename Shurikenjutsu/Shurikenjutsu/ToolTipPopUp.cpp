@@ -3,6 +3,7 @@
 #include "InputManager.h"
 #include "GUIText.h"
 #include "Globals.h"
+#include "MenuItem.h"
 
 
 ToolTipPopUp::ToolTipPopUp(){}
@@ -10,9 +11,9 @@ ToolTipPopUp::~ToolTipPopUp(){}
 void ToolTipPopUp::Initialize(float p_xPos, float p_yPos, std::string p_text , float p_size)
 {
 	m_text = new GUIText();
-	m_text->Initialize(p_text,25.0f,p_xPos, p_yPos + p_size, 0xffffffff);
+	m_text->Initialize(p_text,25.0f,p_xPos, p_yPos + p_size, 0xff000000);
 	m_visible = false;
-
+	
 
 	m_xMin = p_xPos - (p_size * 0.5f);
 	m_xMax = p_xPos + (p_size * 0.5f);
@@ -22,12 +23,16 @@ void ToolTipPopUp::Initialize(float p_xPos, float p_yPos, std::string p_text , f
 	m_halfScreenX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - GLOBAL::GetInstance().BORDER_SIZE;
 	m_halfScreenY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - (GLOBAL::GetInstance().BORDER_SIZE + GLOBAL::GetInstance().TITLE_BORDER_SIZE) * 0.5f;
 
+	m_toolTipBG = new MenuItem();
+	m_toolTipBG->Initialize(p_xPos, p_yPos + 75.0f, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 2.84f, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH/6.83f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/textBox.png"));
+	
 
 }
 void ToolTipPopUp::Render()
 {
 	if (m_visible)
 	{
+		m_toolTipBG->Render();
 		m_text->Render();
 	}
 }
@@ -55,6 +60,12 @@ void ToolTipPopUp::Update()
 }
 void ToolTipPopUp::Shutdown()
 {
+	if (m_toolTipBG != nullptr)
+	{
+		m_toolTipBG->Shutdown();
+		delete m_toolTipBG;
+		m_toolTipBG = nullptr;
+	}
 	if (m_text != nullptr)
 	{
 		m_text->Shutdown();

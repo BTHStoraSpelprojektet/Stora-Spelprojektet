@@ -4,7 +4,7 @@
 #include <string>
 
 class GUIText;
-
+class MenuItem;
 
 class ToolTipPopUp
 {
@@ -23,6 +23,7 @@ private:
 	float m_yMin, m_yMax;
 	float m_halfScreenX;
 	float m_halfScreenY;
+	MenuItem *m_toolTipBG;
 
 };
 

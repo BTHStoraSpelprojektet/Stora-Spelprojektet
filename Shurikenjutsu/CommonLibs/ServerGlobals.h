@@ -16,6 +16,9 @@ public:
 
 	static bool IS_SERVER;
 
+	static int BYTES_IN;
+	static int BYTES_OUT;
+
 };
 
 #endif

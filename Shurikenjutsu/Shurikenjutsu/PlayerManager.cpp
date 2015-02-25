@@ -11,12 +11,14 @@
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
-bool PlayerManager::Initialize()
+bool PlayerManager::Initialize(bool p_inMenu)
 {
 	m_enemyListSize = 0;
 	m_enemyList = NULL;
-	AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-
+	if (!p_inMenu)
+	{
+		AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+	}
 	return true;
 }
 
@@ -37,10 +39,14 @@ void PlayerManager::Shutdown()
 	m_enemyListSize = 0;
 }
 
-void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
+void PlayerManager::Update(bool p_inMenu)
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	m_player->UpdateMe(p_stickyTrapList);
+
+	if (!p_inMenu)
+	{
+		m_player->UpdateMe();
+	}
 
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -101,16 +107,26 @@ void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
 	CheckPlayersVisible();
 }
 
-void PlayerManager::Render()
+void PlayerManager::Render(bool p_inMenu)
 {
-	m_player->Render();
-	m_player->RenderAbilityBar();
+	if (!p_inMenu)
+	{
+		m_player->Render();
+		m_player->RenderAbilityBar();
+	}
 
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i]->GetFrustumSphere(), 1.0f))
 		{
-			if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			if (!p_inMenu)
+			{
+				if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+				{
+					m_enemyList[i]->Render();
+				}
+			}
+			else
 			{
 				m_enemyList[i]->Render();
 			}
@@ -123,13 +139,23 @@ void PlayerManager::RenderOutliningPassOne()
 	m_player->Render();
 }
 
-void PlayerManager::RenderDepth()
+void PlayerManager::RenderDepth(bool p_inMenu)
 {
-	m_player->RenderDepth();
+	if (!p_inMenu)
+	{
+		m_player->RenderDepth();
+	}
 
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
-		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+		if (!p_inMenu)
+		{
+			if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			{
+				m_enemyList[i]->RenderDepth();
+			}
+		}
+		else
 		{
 			m_enemyList[i]->RenderDepth();
 		}
@@ -471,4 +497,8 @@ int PlayerManager::GetNrOfPlayersInTeam(int p_team)
 
 void PlayerManager::SetSound(Sound* p_sound){
 	m_sound = p_sound;
+}
+void PlayerManager::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
+{
+	m_player->SetStickyTrapList(p_stickyTrapList);
 }
