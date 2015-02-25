@@ -1,8 +1,8 @@
 #ifndef CHARACHTERABILITYDESCRIPTION_H_
 #define CHARACHTERABILITYDESCRIPTION_H_
 
-class GUIText;
 class MenuItem;
+class ToolTipPopUp;
 class CharacterAbilityDescription
 {
 public:
@@ -10,13 +10,14 @@ public:
 	~CharacterAbilityDescription();
 
 	void Initialize(int p_ninjaIndex);
+	void Update();
 	void Shutdown();
 	void Render();
 private:
-	GUIText* m_FirstText;
-	GUIText* m_SecondText;
-	GUIText* m_ThirdText;
-	GUIText* m_FourthText;
+	ToolTipPopUp* m_FirstText;
+	ToolTipPopUp* m_SecondText;
+	ToolTipPopUp* m_ThirdText;
+	ToolTipPopUp* m_FourthText;
 	MenuItem* m_FirstPic;
 	MenuItem* m_SecondPic;
 	MenuItem* m_ThirdPic;

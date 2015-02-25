@@ -12,8 +12,14 @@ class Menu;
 class MenuItem;
 class GUIText;
 class CharacterAbilityDescription;
+class ToolTipPopUp;
 
-
+enum CurrentTeam
+{
+	CURRENTTEAM_RED,
+	CURRENTTEAM_BLUE,
+	CURRENTTEAM_NONE
+};
 class ChooseState : public GameState
 {
 public:
@@ -29,23 +35,19 @@ public:
 	void NextTool();
 	void PrevTool();
 	void EscapeIsPressed();
-	int GetStackSize();
 
 private:
-	void InitializePickNinja();
-	void InitializePickTeam();
 	void UpdateTeams();
 	void RandomNinja();
 
-	std::stack<Menu*> m_menues;
-	Menu* m_pickTeam;
 	Menu* m_chooseNinja;
 	TeamTable* m_redTeam;
 	TeamTable* m_blueTeam;
 	
-
 	MenuItem *m_ninjas[4];
 	MenuItem *m_tools[3];
+	ToolTipPopUp* m_toolDescription[3];
+	MenuItem *m_questionMark;
 	CharacterAbilityDescription *m_abilityDescription[4];
 	GUIText* m_redTeamScore;
 	GUIText* m_blueTeamScore;
@@ -58,7 +60,8 @@ private:
 
 	float m_portraitWidth;
 	float m_portraitHeight;
-	int m_myTeam;
+	bool m_isRandoming;
+	CurrentTeam m_currentTeam;
 };
 
 
