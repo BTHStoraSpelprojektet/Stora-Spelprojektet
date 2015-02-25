@@ -262,6 +262,10 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		// Handle camera input.
 		m_camera->HandleInput();
 	}
+	else if (Network::GetInstance()->GetMatchOver())
+	{
+		m_camera->MenuCameraRotation();
+	}
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
 	{
 		player = m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam());
@@ -466,7 +470,10 @@ void PlayingStateTest::BasicPicking()
 	DirectX::XMFLOAT3 shurPos = Pick(Point(mousePosX, mousePosY));
 	DirectX::XMFLOAT3 shurDir = DirectX::XMFLOAT3(-(m_playerManager->GetPlayerPosition().x - shurPos.x), -(m_playerManager->GetPlayerPosition().y - shurPos.y), -(m_playerManager->GetPlayerPosition().z - shurPos.z));
 	
-	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+	if (!Network::GetInstance()->GetMatchOver())
+	{
+		m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+	}
 
 	m_mouseX = shurPos.x;
 	m_mouseY = shurPos.z;
