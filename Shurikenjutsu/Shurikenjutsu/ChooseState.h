@@ -57,11 +57,20 @@ private:
 	int nrOfTools;
 	float m_screenHeight;
 	float m_screenWidth;
+	bool m_isRandoming;
+	CurrentTeam m_currentTeam;
+
+
 
 	float m_portraitWidth;
 	float m_portraitHeight;
-	bool m_isRandoming;
-	CurrentTeam m_currentTeam;
+	float m_buttonWidth;
+	float m_buttonHeight;
+	float m_nextWidth;
+	float m_nextHeight;
+	float m_toolWidth;
+	float m_toolHeight;
+
 };
 
 
