@@ -516,6 +516,12 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			if (m_players[i].currentHP <= 0)
 			{
 				m_players[i].isAlive = false;
+				if (m_players[i].charNr == 1){
+					SendPlaySound(PLAYSOUND_FEMALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+				}
+				else{
+					SendPlaySound(PLAYSOUND_MALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+				}
 				
 				// Loop throu players to get ninja nr
 				for (unsigned int j = 0; j < m_players.size(); j++)

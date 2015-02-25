@@ -88,6 +88,8 @@ private:
 	FMOD::Sound *m_windSound;
 	FMOD::Sound *m_birdSound;
 	FMOD::Sound *m_stepsLeavesSound;
+	FMOD::Sound *m_maleDeathSound;
+	FMOD::Sound *m_femaleDeathSound;
 
 	//FMOD::Channel *m_channel;
 };

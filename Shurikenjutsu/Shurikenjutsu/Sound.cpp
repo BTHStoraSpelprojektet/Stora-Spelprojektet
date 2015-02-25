@@ -97,6 +97,12 @@ bool Sound::Initialize()
 
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/StepsOnLeaves.wav", FMOD_DEFAULT, 0, &m_stepsLeavesSound);
 	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/DeathMale.wav", FMOD_DEFAULT, 0, &m_maleDeathSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/DeathFemale.wav", FMOD_DEFAULT, 0, &m_femaleDeathSound);
+	FMODErrorCheck(m_result);
 	
 	// EXTRA KOD FÖR EXTRA KOLLAR
 
@@ -296,6 +302,16 @@ void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 		m_bubleSound->setMode(FMOD_LOOP_OFF);
 		m_bubleSound->setLoopCount(1);
 		m_system->playSound(m_bubleSound, channelEffects, true, &effectChannel);
+		break;
+	case PLAYSOUND_MALE_DEATH_SOUND:
+		m_maleDeathSound->setMode(FMOD_LOOP_OFF);
+		m_maleDeathSound->setLoopCount(1);
+		m_system->playSound(m_maleDeathSound, channelEffects, true, &effectChannel);
+		break;
+	case PLAYSOUND_FEMALE_DEATH_SOUND:
+		m_femaleDeathSound->setMode(FMOD_LOOP_OFF);
+		m_femaleDeathSound->setLoopCount(1);
+		m_system->playSound(m_femaleDeathSound, channelEffects, true, &effectChannel);
 		break;
 	default:
 		break;
