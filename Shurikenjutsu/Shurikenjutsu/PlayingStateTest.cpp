@@ -39,6 +39,7 @@ bool PlayingStateTest::Initialize()
 
 void PlayingStateTest::EscapeIsPressed()
 {
+
 	if (m_inGameMenuIsActive)
 	{
 		m_inGameMenuIsActive = false;
@@ -47,6 +48,11 @@ void PlayingStateTest::EscapeIsPressed()
 	{
 		m_inGameMenuIsActive = true;
 	}
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_inGameMenuIsActive = false;
+	}
+
 	m_sound->StartStopMusic();
 }
 
@@ -419,7 +425,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	BasicPicking();
 
-	if (m_inGameMenuIsActive)
+	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
 		switch (m_inGameMenu->Update())
 		{
@@ -489,6 +495,11 @@ void PlayingStateTest::Render()
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
 
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_victoryMenu->Render();
+	}
+
 	// Render the UI.
 	m_minimap->Render();
 	m_teamStatusBar->Render();
@@ -507,15 +518,12 @@ void PlayingStateTest::Render()
 		m_playerManager->RenderOutliningPassTwo();
 	}
 
-	if (m_inGameMenuIsActive)
+	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
 		m_inGameMenu->Render();
 	}
 
-	if (Network::GetInstance()->GetMatchOver())
-	{
-		m_victoryMenu->Render();
-	}
+
 
 	if (m_scoreBoardIsActive)
 	{

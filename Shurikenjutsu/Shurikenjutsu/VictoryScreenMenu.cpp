@@ -1,6 +1,7 @@
 #include "VictoryScreenMenu.h"
 #include "TextureLibrary.h"
-
+#include "GUIElement.h"
+#include "Globals.h"
 
 VictoryScreenMenu::VictoryScreenMenu(){}
 VictoryScreenMenu::~VictoryScreenMenu(){}
@@ -14,6 +15,10 @@ bool VictoryScreenMenu::Initialize()
 	// Main menu button
 	m_menu->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/main_menu.png"), MENUACTION_INGAME_TO_MAIN);
 
+	m_background = new GUIElement();
+	m_background->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, 
+		TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/bgTint.png"));
+
 	return true;
 }
 
@@ -24,6 +29,12 @@ void VictoryScreenMenu::Shutdown()
 		m_menu->Shutdown();
 		delete m_menu;
 		m_menu = nullptr;
+	}
+
+	if (m_background != nullptr)
+	{
+		delete m_background;
+		m_background = nullptr;
 	}
 }
 
@@ -52,5 +63,6 @@ IN_GAME_MENU_ACTION VictoryScreenMenu::Update()
 
 void VictoryScreenMenu::Render()
 {
+	m_background->QueueRender();
 	m_menu->Render();
 }
