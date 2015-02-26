@@ -193,7 +193,7 @@ void Sound::PlayBackgroundSound(PLAYSOUND p_playSound){
 	{
 	case PLAYSOUND_BACKGROUND_SOUND:
 		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
-		m_backgroundSound->setLoopCount(INT_MAX);
+		m_backgroundSound->setLoopCount(-1);
 		music_sound_id = m_system->playSound(m_backgroundSound, channelMusic, true, &musicChannel);
 
 		musicChannel->setChannelGroup(channelMusic);
