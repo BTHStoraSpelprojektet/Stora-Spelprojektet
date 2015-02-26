@@ -537,6 +537,12 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
 			SendPlaySound(p_usedAbility, m_players[i].x, m_players[i].y, m_players[i].z);
+			if (m_players[i].charNr == 1){
+				SendPlaySound(PLAYSOUND_FEMALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
+			else{
+				SendPlaySound(PLAYSOUND_MALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
 		}
 	}
 }

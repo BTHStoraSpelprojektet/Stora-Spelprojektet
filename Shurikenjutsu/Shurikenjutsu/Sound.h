@@ -94,6 +94,8 @@ private:
 	FMOD::Sound *m_stepsLeavesSound;
 	FMOD::Sound *m_maleDeathSound;
 	FMOD::Sound *m_femaleDeathSound;
+	FMOD::Sound *m_maleHurtSound;
+	FMOD::Sound *m_femaleHurtSound;
 
 	//FMOD::Channel *m_channel;
 };

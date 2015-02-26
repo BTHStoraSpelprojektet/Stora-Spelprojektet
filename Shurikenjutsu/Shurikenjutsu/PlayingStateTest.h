@@ -16,6 +16,7 @@ class InGameMenu;
 class VictoryScreenMenu;
 class DeathBoard;
 class Sound;
+class ScoreBoard;
 
 class PlayingStateTest : public GameState
 {
@@ -58,6 +59,7 @@ private:
 	Countdown* m_countdown;
 	InGameMenu *m_inGameMenu;
 	VictoryScreenMenu* m_victoryMenu;
+	ScoreBoard* m_scoreBoard;
 
 	const float twoPi = DirectX::XM_PI * 2.0f;
 
@@ -77,7 +79,9 @@ private:
 	int m_spectateIndex;
 	float m_spectateCountDown;
 	bool m_inGameMenuIsActive;
-	
+
 	Sound* m_sound;
+
+	bool m_scoreBoardIsActive;
 };
 #endif PLAYINGSTATE

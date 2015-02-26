@@ -144,6 +144,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
 	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
+	InputManager::GetInstance()->RegisterKey(VK_TAB);
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 

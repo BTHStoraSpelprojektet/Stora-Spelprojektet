@@ -506,8 +506,11 @@
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreBoard.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
     <ClCompile Include="VictoryScreenMenu.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\GUI\Menu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -845,7 +848,10 @@
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
     <ClInclude Include="VictoryScreenMenu.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\GUI\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreBoard.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
