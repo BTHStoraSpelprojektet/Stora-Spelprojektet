@@ -495,6 +495,11 @@ void PlayingStateTest::Render()
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
 
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_victoryMenu->Render();
+	}
+
 	// Render the UI.
 	m_minimap->Render();
 	m_teamStatusBar->Render();
@@ -518,10 +523,7 @@ void PlayingStateTest::Render()
 		m_inGameMenu->Render();
 	}
 
-	if (Network::GetInstance()->GetMatchOver())
-	{
-		m_victoryMenu->Render();
-	}
+
 
 	if (m_scoreBoardIsActive)
 	{

@@ -16,8 +16,8 @@ bool VictoryScreenMenu::Initialize()
 	m_menu->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/main_menu.png"), MENUACTION_INGAME_TO_MAIN);
 
 	m_background = new GUIElement();
-	m_background->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, 
-		TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/shadowStuff.png"));
+	m_background->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, 
+		TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/bgTint.png"));
 
 	return true;
 }
