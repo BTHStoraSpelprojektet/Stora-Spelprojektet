@@ -19,7 +19,6 @@ public:
 
 	ID3D11ShaderResourceView* TextureLibrary::GetTexture(std::string p_path);
 
-
 private:
 	void AddTexture(std::string p_path);
 	void LoadTextureDirectory();

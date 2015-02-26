@@ -89,9 +89,20 @@ bool Sound::Initialize()
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/Fire.wav", FMOD_DEFAULT, 0, &m_fireSound);
 	FMODErrorCheck(m_result);
 
-	
-	
-	
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/Wind.wav", FMOD_DEFAULT, 0, &m_windSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/Bird.wav", FMOD_DEFAULT, 0, &m_birdSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/StepsOnLeaves.wav", FMOD_DEFAULT, 0, &m_stepsLeavesSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/DeathMale.wav", FMOD_DEFAULT, 0, &m_maleDeathSound);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/DeathFemale.wav", FMOD_DEFAULT, 0, &m_femaleDeathSound);
+	FMODErrorCheck(m_result);
 	
 	// EXTRA KOD FÖR EXTRA KOLLAR
 
@@ -144,6 +155,36 @@ void Sound::FMODErrorCheck(FMOD_RESULT p_result)
 	}
 }
 
+void Sound::StopMusic(){
+	bool* isPLaying = new bool;
+	
+	musicChannel->isPlaying(isPLaying);
+	if (*isPLaying){
+		musicChannel->stop();
+	}
+}
+
+void Sound::StartMusic(){
+	bool* isPLaying = new bool;
+
+	musicChannel->isPlaying(isPLaying);
+	if (!*isPLaying){
+		PlaySound(PLAYSOUND_BACKGROUND_SOUND, m_musicVolume);
+	}
+}
+
+void Sound::StartStopMusic(){
+	bool* isPLaying = new bool;
+	musicChannel->isPlaying(isPLaying);
+
+	if (*isPLaying){
+		StopMusic();
+	}
+	else if (!*isPLaying){
+		StartMusic();
+	}
+}
+
 void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 {
 	switch (p_playSound)
@@ -151,7 +192,7 @@ void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 	case PLAYSOUND_BACKGROUND_SOUND:
 		m_backgroundSound->setMode(FMOD_LOOP_NORMAL);
 		m_backgroundSound->setLoopCount(INT_MAX);
-		m_system->playSound(m_backgroundSound, channelMusic, true, &musicChannel);
+		music_sound_id = m_system->playSound(m_backgroundSound, channelMusic, true, &musicChannel);
 
 		musicChannel->setChannelGroup(channelMusic);
 		musicChannel->setVolume(m_musicVolume);
@@ -262,6 +303,16 @@ void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 		m_bubleSound->setLoopCount(1);
 		m_system->playSound(m_bubleSound, channelEffects, true, &effectChannel);
 		break;
+	case PLAYSOUND_MALE_DEATH_SOUND:
+		m_maleDeathSound->setMode(FMOD_LOOP_OFF);
+		m_maleDeathSound->setLoopCount(1);
+		m_system->playSound(m_maleDeathSound, channelEffects, true, &effectChannel);
+		break;
+	case PLAYSOUND_FEMALE_DEATH_SOUND:
+		m_femaleDeathSound->setMode(FMOD_LOOP_OFF);
+		m_femaleDeathSound->setLoopCount(1);
+		m_system->playSound(m_femaleDeathSound, channelEffects, true, &effectChannel);
+		break;
 	default:
 		break;
 	}
@@ -276,32 +327,113 @@ void Sound::PlaySound(PLAYSOUND p_playSound, float volume)
 	effectChannel->setPaused(false);
 }
 
-void Sound::PlayAmbientSound(PLAYSOUND p_playSound, float volume)
+Sound::SoundEmitter* Sound::CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
 {
-	switch (p_playSound)
-	{
-	case PLAYSOUND_FIRE_SOUND:
-		m_fireSound->setMode(FMOD_LOOP_NORMAL);
-		m_fireSound->setLoopCount(INT_MAX);
-		m_system->playSound(m_fireSound, channelAmbient, true, &ambientChannel);
+	SoundEmitter* soundEmitter = new SoundEmitter;
+	soundEmitter->m_playSound = p_playSound;
+	soundEmitter->m_x = p_x;
+	soundEmitter->m_y = p_y;
+	soundEmitter->m_z = p_z;
 
-		break;
-	default:
-		break;
-	}
+	PlayAmbientSound(soundEmitter);
 
-	ambientChannel->setChannelGroup(channelAmbient);
+	soundEmitters.push_back(soundEmitter);
 
-	//Reset volume if to loud
-	if (volume > 1.0f){
-		volume = 1.0f;
-	}
-	ambientChannel->setVolume(volume);
-	ambientChannel->setPaused(false);
+	return soundEmitter;
 }
 
-void Sound::setAmbientVolume(float volume){
-	ambientChannel->setPaused(true);
-	ambientChannel->setVolume(volume);
-	ambientChannel->setPaused(false);
+void Sound::UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z)
+{
+	for (unsigned int i = 0; i < soundEmitters.size(); i++)
+	{
+		float distance = sqrtf(((p_player_x - soundEmitters[i]->m_x)*(p_player_x - soundEmitters[i]->m_x) + (p_player_z - soundEmitters[i]->m_z)*(p_player_z - soundEmitters[i]->m_z)));
+		float soundDistanceGain = 1.0f;
+		float volume = 1.0f / (distance / soundDistanceGain);
+
+		setAmbientVolume(soundEmitters[i], volume);
+		
+	}
+}
+
+void Sound::StopAmbientSound(SoundEmitter* p_soundEmitter){
+	p_soundEmitter->isPlaying = false;
+}
+
+void Sound::StartAmbientSound(SoundEmitter* p_soundEmitter){
+	p_soundEmitter->isPlaying = true;
+}
+
+void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume){
+	switch (p_soundEmitter->m_playSound)
+	{
+	case PLAYSOUND_FIRE_SOUND:
+	{
+		m_fireSound->setMode(FMOD_LOOP_NORMAL);
+		m_fireSound->setLoopCount(INT_MAX);
+		m_system->playSound(m_fireSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
+		break;
+	}
+	case PLAYSOUND_BIRD_SOUND:
+	{
+		m_birdSound->setMode(FMOD_LOOP_NORMAL);
+		m_birdSound->setLoopCount(INT_MAX);
+		m_system->playSound(m_birdSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
+		break;
+	}
+	case PLAYSOUND_WIND_SOUND:
+	{
+		m_windSound->setMode(FMOD_LOOP_NORMAL);
+		m_windSound->setLoopCount(INT_MAX);
+		m_system->playSound(m_windSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
+		break;
+	}
+	case PLAYSOUND_STEPS_LEAVES_SOUND:
+	{
+		m_stepsLeavesSound->setMode(FMOD_LOOP_NORMAL);
+		m_stepsLeavesSound->setLoopCount(INT_MAX);
+		m_system->playSound(m_stepsLeavesSound, channelAmbient, true, &p_soundEmitter->m_ambientChannel);
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+
+	p_soundEmitter->m_ambientChannel->setChannelGroup(channelAmbient);
+
+	//Reset volume if to loud
+	if (p_initialVolume > 1.0f){
+		p_initialVolume = 1.0f;
+	}
+	p_soundEmitter->m_ambientChannel->setVolume(p_initialVolume);
+	p_soundEmitter->m_ambientChannel->setPaused(false);
+}
+
+void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
+
+	//If wind always same volume
+	if (p_soundEmitter->m_playSound == PLAYSOUND::PLAYSOUND_WIND_SOUND){
+		p_soundEmitter->m_ambientChannel->setPaused(true);
+		p_soundEmitter->m_ambientChannel->setVolume(m_defaultAmbientVolume);
+		p_soundEmitter->m_ambientChannel->setPaused(false);
+		return;
+	}
+
+	if (p_volume > 1.0f){
+		p_volume = 1.0f;
+	}
+	else if (p_volume < 0.1f){
+		p_volume = 0.0f;
+	}
+	if (p_soundEmitter->isPlaying){
+		p_soundEmitter->m_ambientChannel->setPaused(true);
+		p_soundEmitter->m_ambientChannel->setVolume(p_volume);
+		p_soundEmitter->m_ambientChannel->setPaused(false);
+	}
+	else{
+		p_soundEmitter->m_ambientChannel->setPaused(true);
+		p_soundEmitter->m_ambientChannel->setVolume(0.0f);
+		p_soundEmitter->m_ambientChannel->setPaused(false);
+	}
 }

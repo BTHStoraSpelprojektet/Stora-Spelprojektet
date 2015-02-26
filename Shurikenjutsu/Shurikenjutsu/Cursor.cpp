@@ -5,6 +5,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "Globals.h"
 #include "InputManager.h"
+#include "Flags.h"
 
 Cursor::Cursor(){}
 Cursor::~Cursor(){}
@@ -15,7 +16,11 @@ bool Cursor::Initialize()
 	m_renderCursor = true;
 	m_largeSize = 100.0f;
 	m_smallSize = 62.5f;
-	ShowCursor(!m_useCustomCursor && m_renderCursor);
+
+	if (FLAG_DEBUG != 1)
+	{
+		ShowCursor(!m_useCustomCursor && m_renderCursor);
+	}
 
 	m_cursor = new GUIElement();
 	if (!m_cursor->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f), m_largeSize, m_largeSize, TextureLibrary::GetInstance()->GetTexture(CURSOR_TEXTURE)))
@@ -62,13 +67,21 @@ void Cursor::Render()
 void Cursor::SetCustomCursor(bool p_useCustom)
 {
 	m_useCustomCursor = p_useCustom;
-	ShowCursor(!m_useCustomCursor && m_renderCursor);
+
+	if (FLAG_DEBUG != 1)
+	{
+		ShowCursor(!m_useCustomCursor && m_renderCursor);
+	}
 }
 
 void Cursor::SetRenderCursor(bool p_render)
 {
 	m_renderCursor = p_render;
-	ShowCursor(!m_useCustomCursor && m_renderCursor);
+
+	if (FLAG_DEBUG != 1)
+	{
+		ShowCursor(!m_useCustomCursor && m_renderCursor);
+	}
 }
 
 void Cursor::LargeSize()

@@ -10,15 +10,28 @@
 #include "ToolTipPopUp.h"
 #include "TextResource.h"
 #include "Camera.h"
+#include "ObjectManager.h"
+#include "..\CommonLibs\ModelNames.h"
+#include "Frustum.h"
+#include "Sound.h"
+#include "PlayerManager.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
 
 /*TODO
- - Background
  - Texts - orkar!!!!! INTE!!!!
- - Textures  - på g
-*/
+ */
+void* ChooseState::operator new(size_t p_i)
+{
+	return _mm_malloc(p_i, 16);
+}
+
+void ChooseState::operator delete(void* p_p)
+{
+	_mm_free(p_p);
+}
+
 bool ChooseState::Initialize()
 {
 	m_currentTeam = CURRENTTEAM_NONE;
@@ -54,17 +67,18 @@ bool ChooseState::Initialize()
 	m_redTeam = new TeamTable();
 	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f, 1);
 	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f, 2);
-	
+	m_title = new MenuItem();
 	m_chooseNinja = new Menu();
 	m_questionMark = new MenuItem();
+	m_title->Initialize(0.0f, m_screenHeight / 2.0f - m_buttonHeight * 0.5f, m_buttonWidth * 2.0f, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/chooseButton.png"));
 	//the questionmark
-	m_questionMark->Initialize(0.0f, 0.0f, m_screenHeight / 13.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fragetecknet.png"));
+	m_questionMark->Initialize(0.0f, 0.0f, m_screenHeight / 13.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/pickChara.png"));
 
 	// pick red team
-	m_chooseNinja->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/redteam.png"), MENUACTION_PICK_RED_TEAM);
+	m_chooseNinja->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/redTeamLobby.png"), MENUACTION_PICK_RED_TEAM);
 
 	// pick blue team
-	m_chooseNinja->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueteam.png"), MENUACTION_PICK_BLUE_TEAM);
+	m_chooseNinja->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueTeamLobby.png"), MENUACTION_PICK_BLUE_TEAM);
 
 	// back button
 	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + m_buttonWidth * 0.5f + offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
@@ -73,7 +87,7 @@ bool ChooseState::Initialize()
 	m_chooseNinja->AddButton(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
 
 	// Random Ninja button
-	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_RANDOM_NINJA);
+	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/randomButton.png"), MENUACTION_RANDOM_NINJA);
 
 	// Next ninja, right button
 	m_chooseNinja->AddButton(m_buttonWidth*0.5f + m_nextWidth*0.5f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/right.png"), MENUACTION_NEXTNINJA);
@@ -120,11 +134,66 @@ bool ChooseState::Initialize()
 	m_camera->Initialize();
 	m_camera->ResetCamera();
 
+
+	// Load the level.
+	Level level(LEVEL_NAME);
+
+	m_objectManager = new ObjectManager();
+	m_objectManager->SetSound(m_sound);
+	m_objectManager->Initialize(&level);
+
+	// Initialize directional light
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
+	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
+	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
+	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
+
+	m_frustum = new Frustum();
+	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
+	m_objectManager->UpdateFrustum(m_frustum);
+
+	m_playerManager = new PlayerManager();
+	m_playerManager->Initialize(true);
+	m_playerManager->UpdateFrustum(m_frustum);
+
 	return true;
 }
 
 void ChooseState::Shutdown()
 {
+	
+	if (m_title != nullptr)
+	{
+		m_title->Shutdown();
+		delete m_title;
+		m_title = nullptr;
+	}
+	if (m_playerManager != nullptr)
+	{
+		m_playerManager->Shutdown();
+		delete m_playerManager;
+		m_playerManager = nullptr;
+	}
+	if (m_frustum != nullptr)
+	{
+		m_frustum->Shutdown();
+		delete m_frustum;
+		m_frustum = nullptr;
+	}
+	if (m_objectManager != nullptr)
+	{
+		m_objectManager->Shutdown();
+		delete m_objectManager;
+		m_objectManager = nullptr;
+	}
+	if (m_camera != nullptr)
+	{
+		m_camera->Shutdown();
+		delete m_camera;
+		m_camera = nullptr;
+	}
 	if (m_redTeam != nullptr)
 	{
 		m_redTeam->Shutdown();
@@ -200,6 +269,17 @@ void ChooseState::Shutdown()
 
 GAMESTATESWITCH ChooseState::Update()
 {
+	// Update Camera position
+	m_camera->MenuCameraRotation();
+
+	// Update Directional Light's camera position
+	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
+	m_playerManager->Update(true);
+
+	// Update every object.
+	m_objectManager->Update();
+
+
 	if (m_isRandoming)
 	{
 		NextNinja();
@@ -335,6 +415,28 @@ void ChooseState::UpdateTeams()
 
 void ChooseState::Render()
 {
+	// Draw to the shadowmap.
+	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
+	m_objectManager->RenderDepth();
+	m_playerManager->RenderDepth(true);
+	GraphicsEngine::GetInstance()->SetShadowMap();
+
+	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
+
+	// Render to the scene normally.
+	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
+	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
+	m_objectManager->Render();
+	m_playerManager->Render(true);
+	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->RenderSSAO();
+
+	// Composition
+	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	m_chooseNinja->Render();
 
 	m_ninjas[currentNinja]->Render();
@@ -346,6 +448,7 @@ void ChooseState::Render()
 	m_blueTeam->Render();
 	m_questionMark->Render();
 	m_toolDescription[currentTool]->Render();
+	m_title->Render();
 }
 
 void ChooseState::NextNinja()

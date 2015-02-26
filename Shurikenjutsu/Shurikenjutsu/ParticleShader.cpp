@@ -44,7 +44,7 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	}
 
 	// Create the vertex input layout description.
-	D3D11_INPUT_ELEMENT_DESC layout[3];
+	D3D11_INPUT_ELEMENT_DESC layout[4];
 	layout[0].SemanticName = "POSITION";
 	layout[0].SemanticIndex = 0;
 	layout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -68,6 +68,14 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	layout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
 	layout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	layout[2].InstanceDataStepRate = 0;
+
+	layout[3].SemanticName = "ROTATION";
+	layout[3].SemanticIndex = 0;
+	layout[3].Format = DXGI_FORMAT_R32_FLOAT;
+	layout[3].InputSlot = 0;
+	layout[3].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+	layout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	layout[3].InstanceDataStepRate = 0;
 
 	// Get number of elements in the layout.
 	unsigned int numberOfElements = sizeof(layout) / sizeof(layout[0]);

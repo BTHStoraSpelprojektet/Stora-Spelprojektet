@@ -3,6 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "GUIText.h"
+#include "GUIElement.h"
 
 class Countdown
 {
@@ -20,6 +21,7 @@ private:
 	bool m_renderCd;
 	GUIText m_roundTeamText;
 	bool m_renderRoundTeam;
+	GUIElement m_victDefTexture;
 
 	float m_minSize;
 	float m_maxSize;

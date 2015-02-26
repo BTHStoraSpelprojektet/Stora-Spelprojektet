@@ -511,6 +511,9 @@
     </ClCompile>
     <ClCompile Include="PointOfInterestManager.cpp">
       <Filter>Source Files\Object</Filter>
+	</ClCompile>
+    <ClCompile Include="VictoryScreenMenu.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -852,6 +855,9 @@
     </ClInclude>
     <ClInclude Include="PointOfInterestManager.h">
       <Filter>Header Files\Object</Filter>
+	</ClInclude>
+    <ClInclude Include="VictoryScreenMenu.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

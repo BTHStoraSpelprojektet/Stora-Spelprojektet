@@ -520,6 +520,11 @@ void Network::ReceviePacket()
 			m_matchWinningTeam = 0;
 			m_restartingRound = false;
 
+			RakNet::BitStream wBitStream;
+			wBitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
+			m_clientPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 0, m_packet->guid, false);
+
+
 			ConsolePrintSuccess("Starting a new match.");
 			ConsoleSkipLines(1);
 			break;
@@ -906,6 +911,11 @@ void Network::ReceviePacket()
 			case ABILITIES::ABILITIES_VOLLEY:
 			{
 				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_VOLLEY_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+				break;
+			}
+			case ABILITIES::ABILITIES_FANBOOMERANG:
+			{
+				m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
 				break;
 			}
 			default:

@@ -44,6 +44,8 @@ bool ObjectManager::Initialize(Level* p_level)
 	AddStaticObject(object);
 	
 	
+	
+
 	numberOfSameModel++;//Räknar antaler modeller...
 	modelPositions.push_back(m_staticObjects[0].GetWorldMatrix());//Pushbackar antalet positioner
 	for (unsigned int i = 1; i < levelObjects.size(); i++)
@@ -80,6 +82,12 @@ bool ObjectManager::Initialize(Level* p_level)
 			DirectX::XMFLOAT3(animatedLevelObjects[i].m_rotationX, animatedLevelObjects[i].m_rotationY, animatedLevelObjects[i].m_rotationZ),
 			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
+		if (strcmp(animatedLevelObjects[i].m_filePath.c_str(), "../Shurikenjutsu/Models/BigBirdShape.SSP") == 0){
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(PLAYSOUND_BIRD_SOUND, animatedLevelObjects[i].m_translationX, animatedLevelObjects[i].m_translationY, animatedLevelObjects[i].m_translationZ);
+			}
+		}
+
 		m_animatedObjects.push_back(animObject);
 	}
 
@@ -89,10 +97,13 @@ bool ObjectManager::Initialize(Level* p_level)
 
 		if (particleLevelEmitter[i].type == EmitterType::BrazierFire)
 		{
-		particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
 			//m_sound->PlayAmbientSound(PLAYSOUND_FIRE_SOUND, 0.3f);
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(PLAYSOUND_FIRE_SOUND, particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ);
+			}
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::FireSpark)
@@ -135,6 +146,9 @@ bool ObjectManager::Initialize(Level* p_level)
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDDUST_SIZE_X, PARTICLE_WORLDDUST_SIZE_Y), PARTICLE_PATTERN_WORLD_DUST);
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(PLAYSOUND_WIND_SOUND, particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ);
+			}
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::Fireflies)
@@ -906,7 +920,7 @@ void ObjectManager::RenderDepth()
 		if (temp != NULL)
 		{
 			temp->RenderDepth();
-}
+		}
 	}
 
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)

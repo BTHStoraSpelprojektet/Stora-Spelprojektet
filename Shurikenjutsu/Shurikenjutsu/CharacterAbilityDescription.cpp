@@ -22,16 +22,19 @@ void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 	m_ThirdPic = new MenuItem();
 	m_FourthText = new ToolTipPopUp();
 	m_FourthPic = new MenuItem();
-
 	float size = 75.0f;
+	m_abilityBarBG = new MenuItem();
+	m_abilityBarBG->Initialize(0.0f, -quarterHeight, size*8.0f, size* 1.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/abilitybarLobby.png"));
+
 	DirectX::XMFLOAT2 ability1 = DirectX::XMFLOAT2(-size * 3, -quarterHeight);
 	DirectX::XMFLOAT2 ability2 = DirectX::XMFLOAT2(-size, -quarterHeight);
 	DirectX::XMFLOAT2 ability3 = DirectX::XMFLOAT2(size, -quarterHeight);
 	DirectX::XMFLOAT2 ability4 = DirectX::XMFLOAT2(size * 3, -quarterHeight);
 
+
 	if (p_ninjaIndex == 1)
 	{
-		m_FirstText->Initialize(ability1.x , ability1.y, KATANA_PRIMARY_ATTACK, size);
+		m_FirstText->Initialize(ability1.x , ability1.y, KATANA_PRIMARY_ATTACK, size );
 		m_FirstPic->Initialize(ability1.x, ability1.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Melee.png"));
 
 		m_SecondText->Initialize(ability2.x, ability2.y, KATANA_SECONDARY_ATTACK, size);
@@ -83,6 +86,12 @@ void CharacterAbilityDescription::Update()
 }
 void CharacterAbilityDescription::Shutdown()
 {
+	if (m_abilityBarBG != nullptr)
+	{
+		m_abilityBarBG->Shutdown();
+		delete m_abilityBarBG;
+		m_abilityBarBG = nullptr;
+	}
 	if (m_FirstText != nullptr)
 	{
 		m_FirstText->Shutdown();
@@ -134,12 +143,13 @@ void CharacterAbilityDescription::Shutdown()
 }
 void CharacterAbilityDescription::Render()
 {
-	m_FirstText->Render();
-	m_SecondText->Render();
-	m_ThirdText->Render();
-	m_FourthText->Render();
+	m_abilityBarBG->Render();
 	m_FirstPic->Render();
 	m_SecondPic->Render();
 	m_ThirdPic->Render();
 	m_FourthPic->Render();
+	m_FirstText->Render();
+	m_SecondText->Render();
+	m_ThirdText->Render();
+	m_FourthText->Render();
 }
