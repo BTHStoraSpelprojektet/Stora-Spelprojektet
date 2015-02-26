@@ -67,9 +67,11 @@ bool ChooseState::Initialize()
 	m_redTeam = new TeamTable();
 	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f, 1);
 	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f, 2);
-	m_title = new MenuItem();
+	m_title = new MenuItem(); 
+	m_tintedBackground = new MenuItem();
 	m_chooseNinja = new Menu();
 	m_questionMark = new MenuItem();
+	m_tintedBackground->Initialize(0.0f, 0.0f, m_screenWidth, m_screenHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/bgTint.png"));
 	m_title->Initialize(0.0f, m_screenHeight / 2.0f - m_buttonHeight * 0.5f, m_buttonWidth * 2.0f, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/chooseButton.png"));
 	//the questionmark
 	m_questionMark->Initialize(0.0f, 0.0f, m_screenHeight / 13.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/pickChara.png"));
@@ -163,7 +165,13 @@ bool ChooseState::Initialize()
 
 void ChooseState::Shutdown()
 {
-	
+
+	if (m_tintedBackground != nullptr)
+	{
+		m_tintedBackground->Shutdown();
+		delete m_tintedBackground;
+		m_tintedBackground = nullptr;
+	}
 	if (m_title != nullptr)
 	{
 		m_title->Shutdown();
@@ -437,15 +445,17 @@ void ChooseState::Render()
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
+
+	m_tintedBackground->Render();
 	m_chooseNinja->Render();
 
-		m_ninjas[currentNinja]->Render();
-		m_tools[currentTool]->Render();
-		m_abilityDescription[currentNinja]->Render();
-		m_redTeamScore->Render();
-		m_blueTeamScore->Render();
-		m_redTeam->Render();
-		m_blueTeam->Render();
+	m_ninjas[currentNinja]->Render();
+	m_tools[currentTool]->Render();
+	m_abilityDescription[currentNinja]->Render();
+	m_redTeamScore->Render();
+	m_blueTeamScore->Render();
+	m_redTeam->Render();
+	m_blueTeam->Render();
 	m_questionMark->Render();
 	m_toolDescription[currentTool]->Render();
 	m_title->Render();

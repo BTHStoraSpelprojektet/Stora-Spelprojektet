@@ -114,7 +114,7 @@ void NormalState::Update(double p_deltaTime)
 		m_currentRound++;
 
 		// See if the round limit has been reached else restart a new round
-		if (m_currentRound > m_roundLimit)
+		if (m_currentRound > m_roundLimit || TeamScoreOverHalfPoints())
 		{
 			SendMatchOver(GetTotalWinningTeam());
 			m_currentTimer = m_matchTimer;
@@ -281,7 +281,7 @@ void NormalState::SendRestartingRoundTime(int p_time)
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_SEQUENCED, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-	ConsolePrintText(p_time + "...");
+	ConsolePrintText(std::to_string(p_time) + "...");
 	ConsoleSkipLines(1);
 }
 
@@ -320,4 +320,16 @@ void NormalState::ClearAllListAtRoundRestart()
 	m_projectileManager->ResetLists();
 	m_stickyTrapManager->ResetLists();
 	m_volleyManager->ResetLists();
+}
+
+bool NormalState::TeamScoreOverHalfPoints()
+{
+	for (std::map<int, int>::iterator it = m_winningTeams.begin(); it != m_winningTeams.end(); it++)
+	{
+		if (it->second > m_roundLimit / 2)
+		{
+			return true;
+		}
+	}
+	return false;
 }
