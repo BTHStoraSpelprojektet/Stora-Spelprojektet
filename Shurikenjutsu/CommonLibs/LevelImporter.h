@@ -21,6 +21,13 @@ public:
 		float m_rotationZ;
 	};
 
+	struct POI
+	{
+		float m_translationX;
+		float m_translationY;
+		float m_translationZ;
+	};
+
 	struct ParticleEmitter{
 		float m_translationX;
 		float m_translationY;
@@ -71,6 +78,7 @@ public:
 	void loadLevelFile();
 	bool readData();
 	std::vector<SpawnPoint> GetSpawnPoints();
+	std::vector<POI> GetPOIPoints();
 	std::vector<Line> LevelImporter::GetShadowsShapes();
 	std::vector<ParticleEmitter> LevelImporter::GetParticleEmitters();
 	std::vector<LevelBoundingBox> getLevelBoundingBoxes();
@@ -83,6 +91,7 @@ protected:
 	
 	std::vector<Line> m_shadowShapes;
 	std::vector<SpawnPoint> m_spawnPoints;
+	std::vector<POI> m_POIPoints;
 	std::vector<ParticleEmitter> m_particleEmitter;
 	std::vector<LevelBoundingBox> m_levelBoundingBoxes;
 	std::vector<CommonObject> m_objects;
