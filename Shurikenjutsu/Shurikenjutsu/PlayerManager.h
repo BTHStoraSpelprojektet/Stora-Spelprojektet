@@ -74,6 +74,8 @@ private:
 	Frustum* m_frustum;
 
 	Sound* m_sound;
+
+	//std::vector < Sound::SoundEmitter > soundPlayerEmitter;
 };
 
 #endif PLAYERMANAGER

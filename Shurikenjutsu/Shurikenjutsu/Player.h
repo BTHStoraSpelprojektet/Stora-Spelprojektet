@@ -74,6 +74,7 @@ public:
 
 	void SetSound(Sound* p_sound);
 	void SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList);
+	Sound::SoundEmitter* m_soundEmitter;
 
 protected:
 	void CheckForSpecialAttack();
