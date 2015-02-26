@@ -97,6 +97,15 @@ private:
 	FMOD::Sound *m_maleHurtSound;
 	FMOD::Sound *m_femaleHurtSound;
 	FMOD::Sound *m_countdownBeep;
+	FMOD::Sound *m_runeInvisibility;
+	FMOD::Sound *m_runeInvisibilitySpawn;
+	FMOD::Sound *m_runeInvisibilityPickup;
+	FMOD::Sound *m_runeHeal;
+	FMOD::Sound *m_runeHealSpawn;
+	FMOD::Sound *m_runeHealPickup;
+	FMOD::Sound *m_runeShield;
+	FMOD::Sound *m_runeShieldSpawn;
+	FMOD::Sound *m_runeShieldPickup;
 
 	//FMOD::Channel *m_channel;
 };

@@ -115,7 +115,34 @@ bool Sound::Initialize()
 	FMODErrorCheck(m_result);
 	
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/CountdownBeep.wav", FMOD_2D, 0, &m_countdownBeep);
-	FMODErrorCheck(m_result); 
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneInvisibility.wav", FMOD_MODE, 0, &m_runeInvisibility);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneInvisibilitySpawn.wav", FMOD_MODE, 0, &m_runeInvisibilitySpawn);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneInvisibilityPickup.wav", FMOD_MODE, 0, &m_runeInvisibilityPickup);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneHeal.wav", FMOD_MODE, 0, &m_runeHeal);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneHealSpawn.wav", FMOD_MODE, 0, &m_runeHealSpawn);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneHealPickup.wav", FMOD_MODE, 0, &m_runeHealPickup);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneShield.wav", FMOD_MODE, 0, &m_runeShield);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneShieldSpawn.wav", FMOD_MODE, 0, &m_runeShieldSpawn);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneShieldPickup.wav", FMOD_MODE, 0, &m_runeShieldPickup);
+	FMODErrorCheck(m_result);
 
 	// EXTRA KOD FÖR EXTRA KOLLAR
 
