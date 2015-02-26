@@ -5,7 +5,6 @@
 #include "PlayerManager.h"
 #include "ShurikenManager.h"
 #include "..\CommonLibs\ModelNames.h"
-#include "FanBoomerangManager.h"
 #include <map>
 
 class MapManager;
@@ -14,6 +13,7 @@ class SpikeManager;
 class ProjectileManager;
 class VolleyManager;
 class StickyTrapManager;
+class FanBoomerangManager;
 
 class GameState
 {
@@ -39,6 +39,7 @@ public:
 	void SyncTime(RakNet::RakNetGUID p_guid);
 	void SendCurrentTeamScore(RakNet::RakNetGUID p_guid);
 	void UserConnected(RakNet::RakNetGUID p_guid);
+
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();

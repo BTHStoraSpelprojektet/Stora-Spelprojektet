@@ -1024,6 +1024,7 @@ float ObjectManager::CheckStickyTrapYPosition()
 	}
 	return returnValue;
 }
+
 void ObjectManager::AddStaticObject(Object p_object)
 {
 	m_staticObjects.push_back(p_object);

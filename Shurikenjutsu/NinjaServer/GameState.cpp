@@ -6,6 +6,7 @@
 #include "ProjectileManager.h"
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
+#include "FanBoomerangManager.h"
 
 GameState::GameState(){}
 GameState::~GameState(){}
