@@ -18,6 +18,7 @@
 #include "InGameMenu.h"
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
+#include "ScoreBoard.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -96,6 +97,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initialize the minimap.
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
+	
+	// Initialize the score board
+	m_scoreBoard = new ScoreBoard();
+	m_scoreBoard->Initialize();
 	
 	// Initialize the team status bar.
 	m_teamStatusBar = new TeamStatusBar();
@@ -395,36 +400,47 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	
 	DeathBoard::GetInstance()->Update();
 
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
+	{
+		m_scoreBoard->Update();
+		m_scoreBoardIsActive = true;
+	}
+	else
+	{
+		m_scoreBoardIsActive = false;
+	}
+
 	BasicPicking();
 
 	if (m_inGameMenuIsActive)
 	{
 		switch (m_inGameMenu->Update())
 		{
-		case IN_GAME_MENU_RESUME:
+			case IN_GAME_MENU_RESUME:
 			{
-			m_inGameMenuIsActive = false;
-			m_sound->StopMusic();
-			break;
+				m_inGameMenuIsActive = false;
+				m_sound->StopMusic();
+
+				break;
 			}
 			
 		case IN_GAME_MENU_TO_MAIN:
 			{
-			Network::GetInstance()->Disconnect();
-			return GAMESTATESWITCH_MENU;
-			break;
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
 			}
 			
 		case IN_GAME_MENU_QUIT:
 			{
-			PostQuitMessage(0);
-			break;
+				PostQuitMessage(0);
+				break;
 			}
 			
 		default:
 			{
-			break;
-		}
+				break;
+			}
 	}
 	}
 
@@ -494,6 +510,11 @@ void PlayingStateTest::Render()
 		m_victoryMenu->Render();
 	}
 
+	if (m_scoreBoardIsActive)
+	{
+		m_scoreBoard->Render();
+	}
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
@@ -521,7 +542,7 @@ void PlayingStateTest::BasicPicking()
 	
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-		m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
 	}
 
 	m_mouseX = shurPos.x;
