@@ -308,7 +308,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
-					m_particleList[index].m_rotation = rotation;
+					m_particleList[index].m_rotation = 0.0f;
 					m_particleList[index].m_opacity = 1.0f;
 
 					break;
