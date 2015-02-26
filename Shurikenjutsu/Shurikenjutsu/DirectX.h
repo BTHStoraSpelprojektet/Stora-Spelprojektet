@@ -47,12 +47,23 @@ public:
 	ID3D11ShaderResourceView* GetGBufferSRV2();
 	ID3D11ShaderResourceView* GetDepthSRV();
 
-	// Post Processing
+	// Post Processing (SSAO)
 	bool InitializePP();
 	void SetRenderTargetsForPP1();
 	void SetRenderTargetsForPP2();
 	ID3D11ShaderResourceView* GetPPSRV1();
 	ID3D11ShaderResourceView* GetPPSRV2();
+
+	// Composition
+	bool InitializeComposition();
+	void SetRenderTargetForComposition();
+	ID3D11ShaderResourceView* GetCompositionTexture();
+
+	// Forward render
+	void SetRenderTargetForForwardRendering();
+
+	// Dof
+	void SetRenderTargetForDOF();
 
 private:
 	ID3D11Device* m_device;
@@ -86,13 +97,20 @@ private:
 
 	int m_vsync;
 
-	// Composition
+	// GBuffers
 	ID3D11RenderTargetView* m_gBufferRTV[2];
 	ID3D11ShaderResourceView* m_gBufferSRV[2];
+
+	//Depth
 	ID3D11ShaderResourceView* m_depthSRV;
 
-	// PP
+	// PP (SSAO)
 	ID3D11RenderTargetView* m_pPRTV[2];
 	ID3D11ShaderResourceView* m_pPSRV[2];
+
+	// Composition
+	ID3D11RenderTargetView* m_compositionRTV;
+	ID3D11ShaderResourceView* m_compositionSRV;
+
 };
 #endif;

@@ -405,11 +405,12 @@ void PlayingStateTest::Render()
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->SetForwardRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GraphicsEngine::GetInstance()->RenderFoliage();
+	GraphicsEngine::GetInstance()->ApplyDOF();
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();

@@ -100,6 +100,8 @@ bool ScreenSpace::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	InitializeSSAO(p_device, p_context);
 
+	InitializeDOF(p_device, p_context);
+
 	return true;
 }
 
@@ -259,6 +261,68 @@ bool ScreenSpace::InitializeSSAO(ID3D11Device* p_device, ID3D11DeviceContext* p_
 	return true;
 }
 
+bool ScreenSpace::InitializeDOF(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
+{
+	ID3D10Blob*	pixelShader = 0;
+	ID3D10Blob* errorMessage = 0;
+
+	// Compile the pixel shader.
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/DOF/DOFBlurHPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/DOF/DOFBlurHPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile DOF Blur H pixel shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_PSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_PSVersion = "5.0";
+	}
+
+	// Create the pixel shader.
+	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderDOFBlurH)))
+	{
+		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create DOF Blur H pixel shader");
+		return false;
+	}
+
+	// Compile the pixel shader.
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/DOF/DOFBlurVPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/DOF/DOFBlurVPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile DOF Blur V pixel shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_PSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_PSVersion = "5.0";
+	}
+
+	// Create the pixel shader.
+	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderDOFBlurV)))
+	{
+		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create DOF Blur V pixel shader");
+		return false;
+	}
+
+	return true;
+}
+
 void ScreenSpace::Shutdown()
 {
 #if defined(_DEBUG) || defined(PROFILE)
@@ -336,6 +400,32 @@ void ScreenSpace::BlurImage(ID3D11DeviceContext* p_context, ID3D11ShaderResource
 	else
 	{
 		p_context->PSSetShader(m_pixelShaderSSAOBlurV, 0, 0);
+	}
+
+	p_context->Draw(3, 0);
+}
+
+void ScreenSpace::DOF(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_depth, bool p_horizontal)
+{
+	// Set parameters and then render.
+	ID3D11ShaderResourceView* textures[3];
+	textures[0] = p_texture;
+	textures[1] = p_depth;
+
+	p_context->PSSetShaderResources(3, 2, &textures[0]);
+	p_context->PSSetSamplers(0, 1, &m_samplerBlur);
+	p_context->IASetVertexBuffers(0, 0, 0, 0, 0);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetInputLayout(0);
+	p_context->VSSetShader(m_vertexShader, 0, 0);
+
+	if (p_horizontal)
+	{
+		p_context->PSSetShader(m_pixelShaderDOFBlurH, 0, 0);
+	}
+	else
+	{
+		p_context->PSSetShader(m_pixelShaderDOFBlurV, 0, 0);
 	}
 
 	p_context->Draw(3, 0);

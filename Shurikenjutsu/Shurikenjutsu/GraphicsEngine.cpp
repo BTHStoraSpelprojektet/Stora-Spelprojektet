@@ -641,7 +641,7 @@ void GraphicsEngine::ScreenChangeHandled()
 
 ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture1()
 {
-	return m_directX.GetGBufferSRV1();
+	return m_directX.GetCompositionTexture();
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture2()
@@ -666,15 +666,13 @@ void GraphicsEngine::DoReportLiveObjects()
 
 void GraphicsEngine::Composition()
 {
-	m_directX.ScreenSpaceRenderTarget();
-	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+	m_directX.SetRenderTargetForComposition();
 	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetGBufferSRV2(), m_directX.GetGBufferSRV1(), m_directX.GetDepthSRV(), m_directX.GetPPSRV1());
 }
 
-void GraphicsEngine::SetScreenSpaceRenderTarget()
+void GraphicsEngine::SetForwardRenderTarget()
 {
-
-	m_directX.ScreenSpaceRenderTarget();
+	m_directX.SetRenderTargetForForwardRendering();
 }
 
 void GraphicsEngine::RenderSSAO()
@@ -693,6 +691,14 @@ void GraphicsEngine::RenderSSAO()
 void GraphicsEngine::SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection)
 {
 	m_screenSpace->UpdateSSAOBuffer(m_directX.GetContext(), p_projection);
+}
+
+void GraphicsEngine::ApplyDOF()
+{
+	m_directX.SetRenderTargetForDOF();
+	m_directX.TurnOffDepthStencil();
+	m_screenSpace->DOF(m_directX.GetContext(), m_directX.GetCompositionTexture(), m_directX.GetDepthSRV(), true);
+	m_directX.TurnOnDepthStencil();
 }
 
 void GraphicsEngine::TurnOffBackfaceCulling()
