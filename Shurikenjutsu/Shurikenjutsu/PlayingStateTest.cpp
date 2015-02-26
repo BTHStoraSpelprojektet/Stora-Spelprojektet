@@ -50,6 +50,7 @@ void PlayingStateTest::EscapeIsPressed()
 	{
 		m_inGameMenuIsActive = true;
 	}
+	m_sound->StartStopMusic();
 }
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
@@ -297,7 +298,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 			{
 				return GAMESTATESWITCH_CHOOSENINJA;
 				break;
-			}
+	}
 			case IN_GAME_MENU_TO_MAIN:
 			{
 				Network::GetInstance()->Disconnect();
@@ -424,29 +425,31 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		switch (m_inGameMenu->Update())
 		{
-		case IN_GAME_MENU_RESUME:
+			case IN_GAME_MENU_RESUME:
 			{
-			m_inGameMenuIsActive = false;
-			break;
+				m_inGameMenuIsActive = false;
+				m_sound->StopMusic();
+
+				break;
 			}
 			
 		case IN_GAME_MENU_TO_MAIN:
 			{
-			Network::GetInstance()->Disconnect();
-			return GAMESTATESWITCH_MENU;
-			break;
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
 			}
 			
 		case IN_GAME_MENU_QUIT:
 			{
-			PostQuitMessage(0);
-			break;
+				PostQuitMessage(0);
+				break;
 			}
 			
 		default:
 			{
-			break;
-		}
+				break;
+			}
 	}
 	}
 
