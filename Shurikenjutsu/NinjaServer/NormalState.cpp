@@ -281,7 +281,7 @@ void NormalState::SendRestartingRoundTime(int p_time)
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE_SEQUENCED, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
-	ConsolePrintText(p_time + "...");
+	ConsolePrintText(std::to_string(p_time) + "...");
 	ConsoleSkipLines(1);
 }
 

@@ -34,6 +34,7 @@ void VolleyManager::Add(RakNet::RakNetGUID p_guid, float p_startPosX, float p_st
 	temp.id = GetUniqueId();
 	temp.guid = p_guid;
 	temp.timeToLand = timeToLand;
+	temp.playedLandSound = false;
 	m_volleys.push_back(temp);
 	RakNet::BitStream wBitStream;
 	wBitStream.Write((RakNet::MessageID)ID_VOLLEY_THROWN);
@@ -93,4 +94,15 @@ void VolleyManager::SetCurrentDistanceFromPlayer(float p_distance)
 void VolleyManager::ResetLists()
 {
 	m_volleys.clear();
+}
+void VolleyManager::PlayedSound(int p_id)
+{
+	for (unsigned int i = 0; i < m_volleys.size(); i++)
+	{
+		if (m_volleys[i].id == p_id)
+		{
+			m_volleys[i].playedLandSound = true;
+			break;
+		}
+	}
 }
