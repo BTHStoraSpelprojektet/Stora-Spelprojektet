@@ -32,6 +32,7 @@ private:
 	void SendMatchOver(int p_winningTeam);
 
 	void StartNewLevel();
+	bool TeamScoreOverHalfPoints();
 
 	float m_roundTimer;
 	float m_currentTimer;
