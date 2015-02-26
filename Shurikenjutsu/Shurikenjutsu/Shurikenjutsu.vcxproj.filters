@@ -512,6 +512,9 @@
     <ClCompile Include="VictoryScreenMenu.cpp">
       <Filter>Source Files\GUI\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="FFAGameState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -852,6 +855,9 @@
     </ClInclude>
     <ClInclude Include="ScoreBoard.h">
       <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="FFAGameState.h">
+      <Filter>Header Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
