@@ -483,6 +483,7 @@ void ParticleEmitter::EmitParticles()
 
 					break;
 				}
+
 				case(PARTICLE_PATTERN_BLOODHIT) :
 				{
 					// Set a random direction in xz.
