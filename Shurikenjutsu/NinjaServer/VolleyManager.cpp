@@ -95,7 +95,7 @@ void VolleyManager::ResetLists()
 {
 	m_volleys.clear();
 }
-void VolleyManager::PlayedSound(int p_id)
+void VolleyManager::PlayedSound(unsigned int p_id)
 {
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{

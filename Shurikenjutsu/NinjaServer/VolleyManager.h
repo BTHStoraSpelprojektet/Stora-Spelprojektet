@@ -26,7 +26,7 @@ public:
 	float GetCurrentDistanceFromPlayer();
 	void SetCurrentDistanceFromPlayer(float p_distance);
 	void ResetLists();
-	void PlayedSound(int p_id);
+	void PlayedSound(unsigned int p_id);
 
 private:
 	RakNet::RakPeerInterface *m_serverPeer;
