@@ -17,9 +17,13 @@
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
 #include "InGameMenu.h"
+#include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
+#include "ScoreBoard.h"
 
 #include "PointLights.h"
+
+ParticleEmitter* TEST_POIemitter;
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -48,6 +52,7 @@ void PlayingStateTest::EscapeIsPressed()
 	{
 		m_inGameMenuIsActive = true;
 	}
+	m_sound->StartStopMusic();
 }
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
@@ -83,7 +88,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initiate the player.
 	m_playerManager = new PlayerManager();
 	m_playerManager->SetSound(m_sound);
-	m_playerManager->Initialize();
+	m_playerManager->Initialize(false);
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
 
 
@@ -97,6 +102,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initialize the minimap.
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
+	
+	// Initialize the score board
+	m_scoreBoard = new ScoreBoard();
+	m_scoreBoard->Initialize();
 	
 	// Initialize the team status bar.
 	m_teamStatusBar = new TeamStatusBar();
@@ -139,16 +148,33 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_inGameMenu = new InGameMenu();
 	m_inGameMenu->Initialize();
 
+	m_victoryMenu = new VictoryScreenMenu();
+	if (!m_victoryMenu->Initialize())
+	{
+		return false;
+	}
+
 	if (!DeathBoard::GetInstance()->Initialize())
 	{
 		return false;
 	}
+
+	TEST_POIemitter = new ParticleEmitter();
+	TEST_POIemitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.5f, 0.f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
+	TEST_POIemitter->SetEmitParticleState(true);
 
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_victoryMenu != nullptr)
+	{
+		m_victoryMenu->Shutdown();
+		delete m_victoryMenu;
+		m_victoryMenu = nullptr;
+	}
+
 	if (m_inGameMenu != nullptr)
 	{
 		m_inGameMenu->Shutdown();
@@ -229,10 +255,10 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Get picking data.
 	BasicPicking();
+	m_playerManager->SetStickyTrapList(m_objectManager->GetStickyTrapList());
+	m_playerManager->Update(false);
 
-	m_playerManager->Update(m_objectManager->GetStickyTrapList());
 
-	
 	if (!m_playerManager->GetPlayerIsAlive())
 	{
 		if (!GLOBAL::GetInstance().CAMERA_SPECTATE)
@@ -263,6 +289,25 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		// Handle camera input.
 		m_camera->HandleInput();
+	}
+	else if (Network::GetInstance()->GetMatchOver())
+	{
+		m_camera->MenuCameraRotation();
+
+		switch (m_victoryMenu->Update())
+		{
+			case IN_GAME_MENU_CONTINUE:
+			{
+				return GAMESTATESWITCH_CHOOSENINJA;
+				break;
+	}
+			case IN_GAME_MENU_TO_MAIN:
+			{
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
+			}
+		}
 	}
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
 	{
@@ -335,16 +380,17 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	} 
 	
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
-	Point bottomRight = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
+	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
 	
 	// Keep the the visibility polygon boundries within the maps boundries.
 	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
 	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
-	bottomRight.x > 45.0f ? bottomRight.x = 45.0f : bottomRight.x;
-	bottomRight.y < -52.0f ? bottomRight.y = -52.0f : bottomRight.y;
+	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
+	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
+
 
 	// Update the visibility polygon boundries.
-	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomRight);
+	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
 	// Update the countdown.
 	m_countdown->Update();
@@ -358,30 +404,57 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update smokebomb shadow shapes.
 	ShadowShapes::GetInstance().Update(); 
 	
+	TEST_POIemitter->Update();
+	
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
 	DeathBoard::GetInstance()->Update();
 
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
+	{
+		m_scoreBoard->Update();
+		m_scoreBoardIsActive = true;
+	}
+	else
+	{
+		m_scoreBoardIsActive = false;
+	}
+
 	BasicPicking();
+
 	if (m_inGameMenuIsActive)
 	{
 		switch (m_inGameMenu->Update())
 		{
 		case IN_GAME_MENU_RESUME:
+			{
 			m_inGameMenuIsActive = false;
+				m_sound->StopMusic();
+
 			break;
+			}
+			
 		case IN_GAME_MENU_TO_MAIN:
+			{
 			Network::GetInstance()->Disconnect();
 			return GAMESTATESWITCH_MENU;
 			break;
+			}
+			
 		case IN_GAME_MENU_QUIT:
+			{
 			PostQuitMessage(0);
 			break;
+			}
+			
 		default:
+			{
 			break;
 		}
 	}
+	}
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -390,7 +463,7 @@ void PlayingStateTest::Render()
 	// Draw to the shadowmap.
 	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
-	m_playerManager->RenderDepth();
+	m_playerManager->RenderDepth(false);
 	GraphicsEngine::GetInstance()->SetShadowMap();
 
 	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
@@ -399,8 +472,9 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
-	m_playerManager->Render();
-
+	m_playerManager->Render(false);
+	TEST_POIemitter->Render();
+	
 	GraphicsEngine::GetInstance()->RenderFoliage();
 	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
@@ -457,6 +531,16 @@ void PlayingStateTest::Render()
 		m_inGameMenu->Render();
 	}
 
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_victoryMenu->Render();
+	}
+
+	if (m_scoreBoardIsActive)
+	{
+		m_scoreBoard->Render();
+	}
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
@@ -482,7 +566,10 @@ void PlayingStateTest::BasicPicking()
 	DirectX::XMFLOAT3 shurPos = Pick(Point(mousePosX, mousePosY));
 	DirectX::XMFLOAT3 shurDir = DirectX::XMFLOAT3(-(m_playerManager->GetPlayerPosition().x - shurPos.x), -(m_playerManager->GetPlayerPosition().y - shurPos.y), -(m_playerManager->GetPlayerPosition().z - shurPos.z));
 	
+	if (!Network::GetInstance()->GetMatchOver())
+	{
 	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+	}
 
 	m_mouseX = shurPos.x;
 	m_mouseY = shurPos.z;
@@ -599,6 +686,7 @@ void PlayingStateTest::OnScreenResize()
 	GraphicsEngine::GetInstance()->ScreenChangeHandled();
 }
 
-void PlayingStateTest::SetSound(Sound* p_sound){
+void PlayingStateTest::SetSound(Sound* p_sound)
+{
 	m_sound = p_sound;
 }

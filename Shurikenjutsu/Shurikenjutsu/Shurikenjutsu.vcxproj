@@ -159,6 +159,7 @@
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="SceneShader.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="ScreenSpace.cpp" />
     <ClCompile Include="ShadowShapes.cpp" />
     <ClCompile Include="Shuriken.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="ToolTipPopUp.cpp" />
     <ClCompile Include="Trail.cpp" />
     <ClCompile Include="TrailRenderer.cpp" />
+    <ClCompile Include="VictoryScreenMenu.cpp" />
     <ClCompile Include="VisibilityComputer.cpp" />
     <ClCompile Include="Volley.cpp" />
     <ClCompile Include="VolleyAbility.cpp" />
@@ -210,6 +212,7 @@
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="PointLights.h" />
+    <ClInclude Include="ScoreBoard.h" />
     <ClInclude Include="TeamTable.h" />
     <ClInclude Include="TextResource.h" />
     <ClInclude Include="InGameMenu.h" />
@@ -294,6 +297,7 @@
     <ClInclude Include="ToolTipPopUp.h" />
     <ClInclude Include="Trail.h" />
     <ClInclude Include="TrailRenderer.h" />
+    <ClInclude Include="VictoryScreenMenu.h" />
     <ClInclude Include="VisibilityComputer.h" />
     <ClInclude Include="Volley.h" />
     <ClInclude Include="VolleyAbility.h" />

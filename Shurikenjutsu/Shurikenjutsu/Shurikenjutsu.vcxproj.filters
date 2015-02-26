@@ -508,6 +508,12 @@
     </ClCompile>
     <ClCompile Include="PointLights.cpp">
       <Filter>Source Files\Graphics</Filter>
+	</ClCompile>
+    <ClCompile Include="ScoreBoard.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="VictoryScreenMenu.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -846,6 +852,12 @@
     </ClInclude>
     <ClInclude Include="PointLights.h">
       <Filter>Header Files\Graphics</Filter>
+	</ClInclude>
+    <ClInclude Include="VictoryScreenMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreBoard.h">
+      <Filter>Header Files\GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

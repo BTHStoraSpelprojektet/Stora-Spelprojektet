@@ -1,5 +1,6 @@
 #include "NetworkLogger.h"
 #include "..\CommonLibs\ServerMessages.h"
+#include "..\CommonLibs\ServerGlobals.h"
 
 NetworkLogger::NetworkLogger() : PacketLogger() {}
 NetworkLogger::~NetworkLogger(){}
@@ -9,6 +10,8 @@ void NetworkLogger::Initialize()
 	m_frameBitsIn = 0;
 	m_frameBitsOut = 0;
 	m_time = 0;
+	ServerGlobals::BYTES_IN = 0;
+	ServerGlobals::BYTES_OUT = 0;
 }
 
 void NetworkLogger::Update(double p_deltaTime)
@@ -16,9 +19,14 @@ void NetworkLogger::Update(double p_deltaTime)
 	m_time += p_deltaTime;
 	if (m_time > 5)
 	{
-		double bytePerSecIn = (m_frameBitsIn / 8) / m_time;
-		double bytePerSecOut = (m_frameBitsOut / 8) / m_time;
-		std::cout << "In: " << (int)bytePerSecIn << "  Out: " << (int)bytePerSecOut << std::endl;
+		double bytesPerSecIn = (m_frameBitsIn / 8) / m_time;
+		double bytesPerSecOut = (m_frameBitsOut / 8) / m_time;
+		if (ServerGlobals::IS_SERVER)
+		{
+			std::cout << "In: " << (int)bytesPerSecIn << "  Out: " << (int)bytesPerSecOut << std::endl;
+		}
+		ServerGlobals::BYTES_IN = (int)bytesPerSecIn;
+		ServerGlobals::BYTES_OUT = (int)bytesPerSecOut;
 		m_time = 0;
 		m_frameBitsIn = 0;
 		m_frameBitsOut = 0;

@@ -25,6 +25,9 @@ bool ObjectManager::Initialize(Level* p_level)
 	std::vector<LevelImporter::AnimatedObject> animatedLevelObjects = p_level->GetAnimatedObjects();
 	std::vector<LevelImporter::ParticleEmitter> particleLevelEmitter = p_level->GetParticleEmitters();
 
+	m_bloodParticles = std::vector<ParticleEmitter*>();
+	m_bloodParticlesTimer = std::vector<float>();
+
 	m_projectiles = std::vector<Projectile*>();
 
 	//Stuff needed for the loop
@@ -41,6 +44,8 @@ bool ObjectManager::Initialize(Level* p_level)
 	AddStaticObject(object);
 	
 	
+	
+
 	numberOfSameModel++;//Räknar antaler modeller...
 	modelPositions.push_back(m_staticObjects[0].GetWorldMatrix());//Pushbackar antalet positioner
 	for (unsigned int i = 1; i < levelObjects.size(); i++)
@@ -77,6 +82,12 @@ bool ObjectManager::Initialize(Level* p_level)
 			DirectX::XMFLOAT3(animatedLevelObjects[i].m_rotationX, animatedLevelObjects[i].m_rotationY, animatedLevelObjects[i].m_rotationZ),
 			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
+		if (strcmp(animatedLevelObjects[i].m_filePath.c_str(), "../Shurikenjutsu/Models/BigBirdShape.SSP") == 0){
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(PLAYSOUND_BIRD_SOUND, animatedLevelObjects[i].m_translationX, animatedLevelObjects[i].m_translationY, animatedLevelObjects[i].m_translationZ);
+			}
+		}
+
 		m_animatedObjects.push_back(animObject);
 	}
 
@@ -86,10 +97,13 @@ bool ObjectManager::Initialize(Level* p_level)
 
 		if (particleLevelEmitter[i].type == EmitterType::BrazierFire)
 		{
-		particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
 			//m_sound->PlayAmbientSound(PLAYSOUND_FIRE_SOUND, 0.3f);
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(PLAYSOUND_FIRE_SOUND, particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ);
+			}
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::FireSpark)
@@ -132,6 +146,9 @@ bool ObjectManager::Initialize(Level* p_level)
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDDUST_SIZE_X, PARTICLE_WORLDDUST_SIZE_Y), PARTICLE_PATTERN_WORLD_DUST);
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(PLAYSOUND_WIND_SOUND, particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ);
+			}
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::Fireflies)
@@ -234,6 +251,14 @@ void ObjectManager::Shutdown()
 	m_volleys.clear();
 
 	// Trails.
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Shutdown();
+		delete m_bloodParticles[i];
+	}
+	m_bloodParticles.clear();
+	m_bloodParticlesTimer.clear();
+
 	if (m_shurikenTrails.size() > 0)
 	{
 		for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
@@ -241,11 +266,10 @@ void ObjectManager::Shutdown()
 			m_shurikenTrails[i]->Shutdown();
 			delete m_shurikenTrails[i];
 		}
-
-		m_shurikenTrails.clear();
 	}
+	m_shurikenTrails.clear();
 
-	if (m_fanTrails.size() > 0)
+	if(m_fanTrails.size() > 0)
 	{
 		for (unsigned int i = 0; i < m_fanTrails.size(); i++)
 		{
@@ -279,9 +303,8 @@ void ObjectManager::Shutdown()
 
 			m_volleyTrails[i].clear();
 		}
-
 		m_volleyTrails.clear();
-}
+	}
 }
 
 void ObjectManager::ShutdownExit()
@@ -398,7 +421,7 @@ void ObjectManager::ShutdownExit()
 			{
 				m_volleyTrails[i][j]->Shutdown();
 				delete m_volleyTrails[i][j];
-}
+			}
 
 			m_volleyTrails[i].clear();
 		}
@@ -517,13 +540,13 @@ void ObjectManager::Update()
 					DirectX::XMFLOAT4 color;
 					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
 
-					if(!trail->Initialize(50.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+					if (!trail->Initialize(50.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
-				}
+					}
 					m_shurikenTrails.push_back(trail);
+				}
 			}
-		}
 		}
 
 		for (unsigned int i = 0; i < m_shurikens.size(); i++)
@@ -640,7 +663,7 @@ void ObjectManager::Update()
 	{
 		DirectX::XMFLOAT3 fanPosition = m_fans[i]->GetPosition();
 		float rotation = m_fans[i]->GetRotation().y;
-		
+
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(fanPosition.x + sin(rotation) * 1.0f, fanPosition.y, fanPosition.z + cos(rotation) * 1.0f);
 
 		m_fanTrails[i]->Update(position, rotation);
@@ -666,6 +689,28 @@ void ObjectManager::Update()
 
 			i--;
 		}
+	}
+
+	for (unsigned int i = 0; i < m_bloodParticlesTimer.size(); i++)
+	{
+		if (m_bloodParticlesTimer[i] > 0.0f)
+		{
+			m_bloodParticlesTimer[i] -= (float)GLOBAL::GetInstance().GetDeltaTime();
+		}
+		else
+		{
+			// If timer is 0 turn off emitiing
+			if (i < m_bloodParticles.size())
+			{
+				m_bloodParticles[i]->SetEmitParticleState(false);
+			}
+		}
+	}
+
+	// Update blood
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Update();
 	}
 
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
@@ -811,14 +856,20 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
-		
 		m_worldParticles[i]->Render();
-}
+	}
 
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
 		m_volleys[i]->Render();
 	}
+
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Render();
+	}
+
+
 	for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
 	{
 		for (unsigned int j = 0; j < 9; j++)
@@ -869,7 +920,7 @@ void ObjectManager::RenderDepth()
 		if (temp != NULL)
 		{
 			temp->RenderDepth();
-}
+		}
 	}
 
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
@@ -970,7 +1021,7 @@ void ObjectManager::AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Dire
 	if (!trail->Initialize(100.0f, 0.5f, 0.2f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A fan trail failed to initialize!");
-}
+	}
 	m_fanTrails.push_back(trail);
 }
 
@@ -1138,7 +1189,7 @@ void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX,
 	if (!trail->Initialize(50.0f, 0.15f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A kunai trail failed to initialize!");
-}
+	}
 
 	m_kunaiTrails.push_back(trail);
 }
@@ -1188,7 +1239,7 @@ void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ,
 		if (!trail->Initialize(50.0f, 0.5f, 0.05f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
 		{
 			ConsolePrintErrorAndQuit("A volley trail failed to initialize!");
-}
+		}
 
 		vector.push_back(trail);
 	}
@@ -1239,6 +1290,13 @@ void ObjectManager::ResetListSinceRoundRestarted()
 		delete m_stickyTrapList[i];
 	}
 	m_stickyTrapList.clear();
+	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
+	{
+		m_bloodParticles[i]->Shutdown();
+		delete m_bloodParticles[i];
+	}
+	m_bloodParticles.clear();
+	m_bloodParticlesTimer.clear();
 
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
@@ -1254,7 +1312,7 @@ void ObjectManager::ResetListSinceRoundRestarted()
 		{
 			m_shurikenTrails[i]->Shutdown();
 			delete m_shurikenTrails[i];
-		}
+}
 
 		m_shurikenTrails.clear();
 	}
@@ -1302,3 +1360,14 @@ void ObjectManager::SetSound(Sound* p_sound){
 	m_sound = p_sound;
 }
 
+
+void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
+{
+	ParticleEmitter* temp = new ParticleEmitter();
+	p_pos.y += 2;
+	temp->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
+	temp->SetEmitParticleState(true);
+	m_bloodParticles.push_back(temp);
+
+	m_bloodParticlesTimer.push_back(float(0.5f));
+}

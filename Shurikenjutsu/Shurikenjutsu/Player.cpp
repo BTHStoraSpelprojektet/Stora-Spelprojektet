@@ -52,7 +52,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_isDashing = false;
 
 	m_abilityBar = new AbilityBar();
-	m_abilityBar->Initialize(0.0f, -GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.5f + 40.5f, 5);
+	m_abilityBar->Initialize(0.0f, -GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f + 40.5f, 5);
 
 	m_directionUpdateTimer = 0.0f;
 
@@ -96,6 +96,11 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_trail->StopEmiting();
 
 	ChooseTool();
+
+	if (m_sound != NULL){
+		m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
+	}
+
 	return true;
 }
 
@@ -200,13 +205,14 @@ void Player::Shutdown()
 		delete m_trail;
 		m_trail = nullptr;
 	}
-}
+	}
 
-void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
+void Player::UpdateMe()
 {
 	float angle = atan2(m_dashDirection.z, m_dashDirection.x);
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
 	m_trail->Update(position, angle);
+	m_sound->UpdateAmbientSound(m_position.x, m_position.y, m_position.z);
 
 	if (m_updateVisibility)
 	{
@@ -226,17 +232,21 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 	
 	SetSpeed(m_originalSpeed);
-	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
-		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+		if (Collisions::SphereSphereCollision(m_playerSphere, m_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
 			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
 		}
 	}
 
 	// Don't update player if he is dead
-	if (!m_isAlive)
+	if (!m_isAlive || Network::GetInstance()->GetMatchOver())
 	{
+		m_ability = m_noAbility;
+		// Animation None ?
+		UpdateAbilities();
+		UpdateAbilityBar();
 		return;
 	}
 
@@ -269,27 +279,27 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
-			if (distance >= m_dashDistanceLeft)
-			{
-				m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-				m_position.z += m_dashDistanceLeft * m_dashDirection.z;
-				m_dashDistanceLeft = 0.0f;
-				m_isDashing = false;
+		if (distance >= m_dashDistanceLeft)
+		{
+			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+			m_dashDistanceLeft = 0.0f;
+			m_isDashing = false;
 
 				Network::GetInstance()->SendAnimationState(AnimationState::None);
 
 				m_trail->StopEmiting();
-			}
+		}
 
-			else
-			{
-				m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-				m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-				m_dashDistanceLeft -= distance;
-			}
+		else
+		{
+			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+			m_dashDistanceLeft -= distance;
+		}
 
-			// If we dashed, update shadow shapes.
-			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+		// If we dashed, update shadow shapes.
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 		}
 
 		else
@@ -311,6 +321,15 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 		// If we moved, update shadow shapes.
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+
+		//Update sound (walking)
+		m_sound->StartAmbientSound(m_soundEmitter);
+		m_soundEmitter->m_x = position.x;
+		m_soundEmitter->m_y = position.y;
+		m_soundEmitter->m_z = position.z;
+	}
+	else{
+		m_sound->StopAmbientSound(m_soundEmitter);
 	}
 	m_playerSphere.m_position = m_position;
 	
@@ -458,6 +477,9 @@ void Player::Update()
 	float angle = atan2(m_direction.z, m_direction.x);
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
 	m_trail->Update(position, angle);
+
+	//m_bloodParticles->UpdatePosition(m_position);
+	//m_bloodParticles->Update();
 
 	int state = Network::GetInstance()->AnimationChanged(m_guid);
 	if (state != -1)
@@ -962,7 +984,7 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		m_healthbar->Render();
-		if (Network::GetInstance()->GetMyPlayer().guid == m_guid)
+		if (Network::GetInstance()->GetMyPlayer().guid == m_guid && !Network::GetInstance()->GetMatchOver())
 		{
 			RenderAttackLocations();
 			m_floatingText->Render();
@@ -1135,4 +1157,9 @@ void Player::ChooseTool()
 
 void Player::SetSound(Sound* p_sound){
 	m_sound = p_sound;
+}
+
+void Player::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
+{
+	m_stickyTrapList = p_stickyTrapList;
 }
