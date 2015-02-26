@@ -91,6 +91,9 @@
 #define RUNE_SHIELD "../Shurikenjutsu/Models/shield_Shape.SSP"
 #define RUNE_INVIS "../Shurikenjutsu/Models/invisScroll_Shape.SSP"
 #define RUNE_HOT "../Shurikenjutsu/Models/lotus_Shape.SSP"
+// Scoreboard
+#define SCOREBOARD_BACKGROUND "../Shurikenjutsu/2DTextures/scoreboard_bg.png"
+
 
 
 #endif
