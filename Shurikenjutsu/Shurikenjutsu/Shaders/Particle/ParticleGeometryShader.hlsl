@@ -41,13 +41,11 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	//
 	//=======================================================
 
-	float cosine = cos(p_input[0].m_rotation);
-	float sine = sin(p_input[0].m_rotation);
-
-	float3 t1 = float3(p_input[0].m_position.x - p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z + p_input[0].m_size.y);
-	float3 t2 = float3(p_input[0].m_position.x + p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z + p_input[0].m_size.y);
-	float3 b1 = float3(p_input[0].m_position.x - p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_size.y);
-	float3 b2 = float3(p_input[0].m_position.x + p_input[0].m_size.x, p_input[0].m_position.y, p_input[0].m_position.z - p_input[0].m_size.y);
+	// Corners of the quad.
+	float3 t1 = float3(- p_input[0].m_size.x, 0.0f, p_input[0].m_size.y);
+	float3 t2 = float3(p_input[0].m_size.x, 0.0f, p_input[0].m_size.y);
+	float3 b1 = float3(-p_input[0].m_size.x, 0.0f, - p_input[0].m_size.y);
+	float3 b2 = float3(+p_input[0].m_size.x, 0.0f, - p_input[0].m_size.y);
 
 	// Triangle 1, left.
 	position[0] = float4(t1, 1.0f);
@@ -65,11 +63,24 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	position[5] = float4(b1, 1.0f);
 	uv[5] = float2(0.0f, 1.0f);
 
+	// Precalculate sine and cosine.
+	float cosine = cos(p_input[0].m_rotation);
+	float sine = sin(p_input[0].m_rotation);
+	float3 translation = p_input[0].m_position;
+
+	// Rotation and translation matrix.
+	matrix M;
+	M._11 =		cosine;		M._12 =		0.0f;		M._13 =		sine;		M._14 = 0.0f;
+	M._21 =		0.0f;		M._22 =		1.0f;		M._23 =		0.0f;		M._24 = 0.0f;
+	M._31 =		-sine;		M._32 =		0.0f;		M._33 =		cosine;		M._34 = 0.0f;
+	M._41 = translation.x;	M._42 = translation.y;	M._43 = translation.z;	M._44 = 1.0f;
+
+	// OUtput geometry.
 	GeometryOutput output;
 	[unroll]
 	for (uint i = 0; i < 6; i++)
 	{
-		output.m_position = mul(position[i], m_worldMatrix);
+		output.m_position = mul(position[i], M);
 		output.m_position = mul(output.m_position, m_viewMatrix);
 		output.m_position = mul(output.m_position, m_projectionMatrix);
 
