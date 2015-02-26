@@ -49,6 +49,7 @@ void PlayingStateTest::EscapeIsPressed()
 	}
 	m_sound->StartStopMusic();
 }
+
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
 	// Initialize the camera.
@@ -86,7 +87,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_playerManager->Initialize(false);
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
 
-
 	// Initlialize the frustum.
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
@@ -108,7 +108,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	{
 		return false;
 	}
-
 
 	// Initialize the directional light.
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
@@ -172,6 +171,7 @@ void PlayingStateTest::Shutdown()
 		delete m_inGameMenu;
 		m_inGameMenu = nullptr;
 	}
+
 	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
@@ -256,8 +256,10 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		{
 			m_spectateCountDown = 2.0f;
 		}
+
 		GLOBAL::GetInstance().CAMERA_SPECTATE = true;
 	}
+
 	else 
 	{
 		GLOBAL::GetInstance().CAMERA_SPECTATE = false;
@@ -290,21 +292,26 @@ GAMESTATESWITCH PlayingStateTest::Update()
 			case IN_GAME_MENU_CONTINUE:
 			{
 				return GAMESTATESWITCH_CHOOSENINJA;
+
 				break;
-	}
+			}
+
 			case IN_GAME_MENU_TO_MAIN:
 			{
 				Network::GetInstance()->Disconnect();
 				return GAMESTATESWITCH_MENU;
+
 				break;
 			}
 		}
 	}
+
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
 	{
 		player = m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam());
 		m_camera->FollowCharacter(player);
 	}
+
 	else
 	{
 		m_camera->FollowCharacter(player);
@@ -379,7 +386,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
 	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
-
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
@@ -405,6 +411,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		m_scoreBoard->Update();
 		m_scoreBoardIsActive = true;
 	}
+
 	else
 	{
 		m_scoreBoardIsActive = false;
@@ -424,24 +431,24 @@ GAMESTATESWITCH PlayingStateTest::Update()
 				break;
 			}
 			
-		case IN_GAME_MENU_TO_MAIN:
+			case IN_GAME_MENU_TO_MAIN:
 			{
 				Network::GetInstance()->Disconnect();
 				return GAMESTATESWITCH_MENU;
 				break;
 			}
 			
-		case IN_GAME_MENU_QUIT:
+			case IN_GAME_MENU_QUIT:
 			{
 				PostQuitMessage(0);
 				break;
 			}
 			
-		default:
+			default:
 			{
 				break;
 			}
-	}
+		}
 	}
 
 	return GAMESTATESWITCH_NONE;
@@ -542,7 +549,7 @@ void PlayingStateTest::BasicPicking()
 	
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+		m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
 	}
 
 	m_mouseX = shurPos.x;
@@ -582,7 +589,6 @@ void PlayingStateTest::OutliningRays()
 	float rayDist = 0;
 	float collisionDist = 0;
 
-
 	rayPos = m_camera->GetPosition();
 	rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
 	Ray* rayTest = new Ray(rayPos, rayDir);
@@ -599,6 +605,7 @@ void PlayingStateTest::OutliningRays()
 	{
 		m_renderOutlining = true;
 	}
+
 	else
 	{
 		m_renderOutlining = false;
@@ -616,7 +623,7 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 {
 	for (unsigned int i = 0; i < 7; i++)
-		{
+	{
 		m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000, -1000, 0));
 
 		Player* player = m_playerManager->GetEnemyTeamMember(i);
