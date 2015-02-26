@@ -19,6 +19,7 @@
 #include "ParticleRenderer.h"
 #include "DeathBoard.h"
 #include "TrailRenderer.h"
+#include "MemoryChecker.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
@@ -160,6 +161,13 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		return false;
 	}
 
+	// Initialize memory checker
+	m_memoryCheker = new MemoryChecker();
+	if (!m_memoryCheker->Initialize())
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -231,6 +239,13 @@ void System::Shutdown()
 	DeathBoard::GetInstance()->Shutdown();
 
 	TrailRenderer::GetInstance().Shutdown();
+
+	if (m_memoryCheker != nullptr)
+	{
+		m_memoryCheker->Shutdown();
+		delete m_memoryCheker;
+		m_memoryCheker = nullptr;
+	}
 }
 
 void System::Run()
@@ -361,6 +376,8 @@ void System::Update()
 			m_gameState->EscapeIsPressed();
 		}
 	}
+
+	m_memoryCheker->Update();
 }
 
 // Render game scene here.
