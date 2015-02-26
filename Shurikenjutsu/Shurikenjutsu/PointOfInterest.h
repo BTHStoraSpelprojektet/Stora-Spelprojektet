@@ -15,6 +15,7 @@ public:
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed);
 	void Shutdown();
 	void Update();
+	void Render();
 
 	void SparkleState(bool p_stateOn);
 	bool IsActive();

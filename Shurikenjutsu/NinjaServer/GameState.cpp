@@ -54,7 +54,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_timeSec = 0;
 
 	m_roundRestarting = false;
-	
+	m_runesSpawned = false;
 
 	return true;
 }
@@ -174,6 +174,15 @@ void GameState::UpdateTime(double p_deltaTime)
 		m_timeSec -= 60;
 		m_timeMin++;
 	}
+
+	if ((m_timeSec >= 20 && m_timeSec <= 21) && m_timeMin == 0)
+	{
+		if (!m_runesSpawned)
+		{
+			SpawnRunes();
+			m_runesSpawned = true;
+		}
+	}
 }
 
 void GameState::ResetTime()
@@ -218,4 +227,11 @@ void GameState::UserConnected(RakNet::RakNetGUID p_guid)
 		bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND);
 		m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, p_guid, false);
 	}
+}
+
+void GameState::SpawnRunes()
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_SPAWN_RUNES);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

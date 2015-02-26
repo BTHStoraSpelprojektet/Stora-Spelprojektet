@@ -144,6 +144,9 @@ public:
 	void SpawnBloodParticles(RakNet::RakNetGUID p_guid);
 	std::vector<DirectX::XMFLOAT3*> BloodParticlesLocations();
 	bool IsBloodParticlesUpdated();
+
+	void SpawnRunes();
+
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);

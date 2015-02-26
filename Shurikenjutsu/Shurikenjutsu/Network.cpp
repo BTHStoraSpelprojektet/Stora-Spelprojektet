@@ -956,6 +956,11 @@ void Network::ReceviePacket()
 
 			break;
 		}
+		case ID_SPAWN_RUNES:
+		{
+			SpawnRunes();
+			break;
+		}
 		default:
 		{
 			break;
@@ -1856,4 +1861,9 @@ int Network::GetTeam(RakNet::RakNetGUID p_guid)
 	}
 
 	return -1;
+}
+
+void Network::SpawnRunes()
+{
+	m_objectManager->SpawnRunes();
 }

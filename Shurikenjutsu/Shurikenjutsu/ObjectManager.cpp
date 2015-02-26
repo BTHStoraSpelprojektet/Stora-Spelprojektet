@@ -1403,3 +1403,8 @@ void ObjectManager::CheckRunePickUp(OBB p_OBB)
 {
 	m_POIManager->PickUpRunes(p_OBB);
 }
+
+void ObjectManager::SpawnRunes()
+{
+	m_POIManager->SpawnRunes();
+}

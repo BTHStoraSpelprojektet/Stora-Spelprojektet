@@ -12,7 +12,7 @@ bool PointOfInterest::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos
 	m_sparkles = new ParticleEmitter();
 	m_sparkles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), m_position, m_direction, DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
 	SparkleState(true);
-	m_active = true;
+	m_active = false;
 	return true;
 }
 
@@ -25,6 +25,8 @@ void PointOfInterest::Shutdown()
 		m_sparkles = nullptr;
 	}
 
+	MovingObject::Shutdown();
+
 	return;
 }
 
@@ -33,12 +35,19 @@ void PointOfInterest::Update()
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	
 	// Rotate rune
-	m_rotation.y += (float)(2.0f * deltaTime); // Rotation speed
+	m_rotation.y += (float)(1.0f * deltaTime); // Rotation speed
 
 	// Update particle emitter
 	Sparkle();
 	
 	return;
+}
+
+void PointOfInterest::Render()
+{
+	MovingObject::Render();
+
+	m_sparkles->Render();
 }
 
 void PointOfInterest::Sparkle()

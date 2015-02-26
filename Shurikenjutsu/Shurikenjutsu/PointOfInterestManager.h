@@ -20,9 +20,9 @@ public:
 
 	void RoundRestart();
 	void PickUpRunes(OBB p_OBB);
+	void SpawnRunes();
 
 private:
-	void SpawnRunes();
 
 	int m_nrOfRunes;
 	std::vector<PointOfInterest> m_runes;

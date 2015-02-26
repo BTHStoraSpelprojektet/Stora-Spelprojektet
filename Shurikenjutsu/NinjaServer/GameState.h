@@ -42,6 +42,7 @@ public:
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();
+	void SpawnRunes();
 
 	RakNet::RakPeerInterface* m_serverPeer;
 	PlayerManager* m_playerManager;
@@ -59,6 +60,7 @@ protected:
 	double m_timeMin;
 	double m_timeSec;
 	bool m_roundRestarting;
+	bool m_runesSpawned;
 	
 };
 
