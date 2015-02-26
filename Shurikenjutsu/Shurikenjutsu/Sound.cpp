@@ -114,6 +114,8 @@ bool Sound::Initialize()
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/FemaleHurt.wav", FMOD_MODE, 0, &m_femaleHurtSound);
 	FMODErrorCheck(m_result);
 	
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/CountdownBeep.wav", FMOD_2D, 0, &m_countdownBeep);
+	FMODErrorCheck(m_result); 
 
 	// EXTRA KOD FÖR EXTRA KOLLAR
 
@@ -338,10 +340,15 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 		m_maleHurtSound->setLoopCount(1);
 		m_system->playSound(m_maleHurtSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
-		case PLAYSOUND_FEMALE_HURT_SOUND:
+	case PLAYSOUND_FEMALE_HURT_SOUND:
 		m_femaleHurtSound->setMode(FMOD_LOOP_OFF);
 		m_femaleHurtSound->setLoopCount(1);
 		m_system->playSound(m_femaleHurtSound, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	case PLAYSOUND_COUNTDOWN_BEEP_SOUND:
+		m_countdownBeep->setMode(FMOD_LOOP_OFF);
+		m_countdownBeep->setLoopCount(1);
+		m_system->playSound(m_countdownBeep, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	default:
 		break;
@@ -359,7 +366,7 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 	//if (p_initialVolume > 1.0f){
 //		p_initialVolume = 1.0f;
 	//}
-	//p_soundEmitter->m_channel->setVolume(p_initialVolume);
+	p_soundEmitter->m_channel->setVolume(1.0f);
 	p_soundEmitter->m_channel->setPaused(false);
 	p_soundEmitter->m_channel->set3DAttributes(pos, NULL, NULL);
 }
@@ -462,13 +469,13 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 	}
 
 	p_soundEmitter->m_channel->setChannelGroup(channelAmbient);
-	p_soundEmitter->m_channel->set3DMinMaxDistance(0, 15);
+	p_soundEmitter->m_channel->set3DMinMaxDistance(0, 25);
 
 	//Reset volume if to loud
 	if (p_initialVolume > 1.0f){
 		p_initialVolume = 1.0f;
 	}
-	p_soundEmitter->m_channel->setVolume(p_initialVolume);
+	p_soundEmitter->m_channel->setVolume(0.0f);
 	p_soundEmitter->m_channel->setPaused(false);
 }
 
