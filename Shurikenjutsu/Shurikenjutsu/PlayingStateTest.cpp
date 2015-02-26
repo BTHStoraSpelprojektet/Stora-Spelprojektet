@@ -436,6 +436,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		}
 	}
 	}
+	
+	m_camera->Update3DSound(m_sound, player.x, player.y, player.z);
 
 	return GAMESTATESWITCH_NONE;
 }
