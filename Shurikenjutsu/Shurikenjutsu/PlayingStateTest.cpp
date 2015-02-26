@@ -13,14 +13,11 @@
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
-#include "ParticleEmitter.h"
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
 #include "InGameMenu.h"
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
-
-ParticleEmitter* TEST_POIemitter;
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -151,10 +148,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	{
 		return false;
 	}
-
-	TEST_POIemitter = new ParticleEmitter();
-	TEST_POIemitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.5f, 0.f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
-	TEST_POIemitter->SetEmitParticleState(true);
 
 	return true;
 }
@@ -397,8 +390,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update smokebomb shadow shapes.
 	ShadowShapes::GetInstance().Update(); 
 	
-	TEST_POIemitter->Update();
-	
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
@@ -455,7 +446,6 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render(false);
-	TEST_POIemitter->Render();
 	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
