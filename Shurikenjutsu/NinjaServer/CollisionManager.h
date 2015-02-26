@@ -41,6 +41,7 @@ public:
 	void SetDeltaTime(float p_deltaTime);
 
 	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
+	void SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList);
 
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);

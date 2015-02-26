@@ -173,6 +173,7 @@
     <ClCompile Include="StatusEffect.cpp" />
     <ClCompile Include="StickyTrap.cpp" />
     <ClCompile Include="StickyTrapAbility.cpp" />
+    <ClCompile Include="SuddenDeathState.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="TeamStatusBar.cpp" />
     <ClCompile Include="TeamTable.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="ScoreBoard.h" />
+    <ClInclude Include="SuddenDeathState.h" />
     <ClInclude Include="TeamTable.h" />
     <ClInclude Include="TextResource.h" />
     <ClInclude Include="InGameMenu.h" />

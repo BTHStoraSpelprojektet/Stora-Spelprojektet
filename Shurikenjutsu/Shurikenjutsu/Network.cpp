@@ -48,6 +48,7 @@ bool Network::Initialize()
 	m_lastTeamWon = 0;
 	m_matchOver = false;
 	m_matchWinningTeam = 0;
+	m_suddenDeath = false;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();	
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
@@ -433,6 +434,7 @@ void Network::ReceviePacket()
 			
 			ConsolePrintText("Next round starts in: ");
 			ConsoleSkipLines(1);
+			m_suddenDeath = false;
 			break;
 		}
 		case ID_RESTARTING_ROUND_TIMER:
@@ -943,7 +945,7 @@ void Network::ReceviePacket()
 
 			float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x)) + ((m_myPlayer.z - z)*(m_myPlayer.z - z)));
 			float soundDistanceGain = 4.0f;
-			
+
 			//Hit sounds
 			if (distance == 0){
 				m_sound->PlaySound(sound, 1.0f);
@@ -956,6 +958,16 @@ void Network::ReceviePacket()
 
 			break;
 		}
+		case ID_START_SUDDEN_DEATH:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			
+			bitStream.Read(messageID);
+			m_suddenDeath = true;
+
+			break;
+		}
+			
 		default:
 		{
 			break;
@@ -1856,4 +1868,9 @@ int Network::GetTeam(RakNet::RakNetGUID p_guid)
 	}
 
 	return -1;
+}
+
+bool Network::IsSuddenDeath()
+{
+	return m_suddenDeath;
 }

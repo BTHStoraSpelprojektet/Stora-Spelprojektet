@@ -46,7 +46,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			float hight = 3.0f;
 			float topBottomSpawnLimit = 45.0f;
 
-			initParticles(1000.0f, 1000, DirectX::XMFLOAT3(topBottomSpawnLimit, hight, m_emitBorderLeft), 1.0f, 0.1f, FLT_MAX, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldDustParticle2.png"));
+			initParticles(500.0f, 2000, DirectX::XMFLOAT3(topBottomSpawnLimit, hight, m_emitBorderLeft), 2.0f, 0.1f, FLT_MAX, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldDustParticle2.png"));
 
 			break;
 		}

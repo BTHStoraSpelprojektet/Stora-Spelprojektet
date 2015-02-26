@@ -39,6 +39,7 @@ public:
 	void SyncTime(RakNet::RakNetGUID p_guid);
 	void SendCurrentTeamScore(RakNet::RakNetGUID p_guid);
 	void UserConnected(RakNet::RakNetGUID p_guid);
+	void SendSuddenDeathMessage();
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();
@@ -59,7 +60,8 @@ protected:
 	double m_timeMin;
 	double m_timeSec;
 	bool m_roundRestarting;
-	
+	bool m_isSuddenDeath;
+	std::vector<Box> m_suddenDeathWalls;
 };
 
 #endif

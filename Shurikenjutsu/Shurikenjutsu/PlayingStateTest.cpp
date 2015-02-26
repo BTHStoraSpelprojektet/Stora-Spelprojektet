@@ -19,6 +19,7 @@
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
 #include "ScoreBoard.h"
+#include "SuddenDeathState.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -159,11 +160,20 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		return false;
 	}
 
+	m_suddenDeath = new SuddenDeathState();
+	m_suddenDeath->Initialize(wallList);
+
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_suddenDeath != nullptr)
+	{
+		m_suddenDeath->Shutdown();
+		delete m_suddenDeath;
+		m_suddenDeath = nullptr;
+	}
 	if (m_victoryMenu != nullptr)
 	{
 		m_victoryMenu->Shutdown();
@@ -235,6 +245,10 @@ void PlayingStateTest::Shutdown()
 
 GAMESTATESWITCH PlayingStateTest::Update()
 {
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Update();
+	}
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -530,6 +544,10 @@ void PlayingStateTest::Render()
 		m_scoreBoard->Render();
 	}
 
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Render();
+	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

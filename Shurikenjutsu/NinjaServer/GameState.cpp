@@ -6,6 +6,7 @@
 #include "ProjectileManager.h"
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
+#include "..\CommonLibs\GameplayGlobalVariables.h"
 
 GameState::GameState(){}
 GameState::~GameState(){}
@@ -16,7 +17,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 
 	// Initiate playerrs
 	m_playerManager = new PlayerManager();
-	m_playerManager->Initialize(m_serverPeer, LEVEL_NAME);
+	m_playerManager->Initialize(m_serverPeer, p_levelName);
 
 	// Initiate shurikens
 	m_shurikenManager = new ShurikenManager();
@@ -24,7 +25,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 
 	// Initiate map
 	m_mapManager = new MapManager();
-	m_mapManager->Initialize(LEVEL_NAME);
+	m_mapManager->Initialize(p_levelName);
 
 	// Initiate collision manager
 	m_collisionManager = new CollisionManager();
@@ -54,8 +55,15 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_timeSec = 0;
 
 	m_roundRestarting = false;
-	
 
+	Level level(p_levelName);
+	for each(LevelImporter::LevelBoundingBox levelBoundingBox in level.getLevelBoundingBoxes())
+	{
+		Box boundingBox = Box(levelBoundingBox.m_translationX, levelBoundingBox.m_translationY, levelBoundingBox.m_translationZ, 
+			levelBoundingBox.m_halfDepth, levelBoundingBox.m_halfHeight, levelBoundingBox.m_halfWidth);
+		m_suddenDeathWalls.push_back(boundingBox);
+	}
+	m_isSuddenDeath = false;
 	return true;
 }
 
@@ -119,7 +127,57 @@ void GameState::Update(double p_deltaTime)
 
 	m_collisionManager->NaginataStbDot(m_playerManager);
 	UpdateTime(p_deltaTime);
-	
+
+	if (m_isSuddenDeath)
+	{
+		m_collisionManager->SuddenDeathDot((float)p_deltaTime, m_playerManager, m_suddenDeathWalls);
+		for (unsigned int i = 0; i < m_suddenDeathWalls.size(); i++)
+		{
+			if (m_suddenDeathWalls[i].m_center.x == 0.0f)
+			{
+				if (m_suddenDeathWalls[i].m_center.z > 0.0f)
+				{
+					if (m_suddenDeathWalls[i].m_center.z > 10.0f)
+					{
+						m_suddenDeathWalls[i].m_center.z += (float)p_deltaTime;
+					}
+				}
+				else
+				{
+					if (m_suddenDeathWalls[i].m_center.z < -10.0f)
+					{
+						m_suddenDeathWalls[i].m_center.z += (float)p_deltaTime;
+					}
+				}
+			}
+			else
+			{
+				if (m_suddenDeathWalls[i].m_center.x > 0.0f)
+				{
+					if (m_suddenDeathWalls[i].m_center.x > 10.0f)
+					{
+						m_suddenDeathWalls[i].m_center.x += (float)p_deltaTime;
+					}
+				}
+				else
+				{
+					if (m_suddenDeathWalls[i].m_center.x > 10.0f)
+					{
+						m_suddenDeathWalls[i].m_center.x += (float)p_deltaTime;
+					}
+				}
+			}
+		}
+	}	
+
+	//RakNet::BitStream wBitStream;
+	//wBitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
+	//wBitStream.Write(m_players[i].guid);
+	//wBitStream.Write(m_players[i].dirX);
+	//wBitStream.Write(m_players[i].dirY);
+	//wBitStream.Write(m_players[i].dirZ);
+
+	//m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team)
@@ -168,14 +226,52 @@ void GameState::BroadcastPlayers()
 
 void GameState::UpdateTime(double p_deltaTime)
 {
+	std::vector<PlayerNet> playerList =	m_playerManager->GetPlayers();
+	float redTeam = 0;
+	float bluTeam = 0;
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		if (playerList[i].team == 1)
+		{
+			redTeam++;
+		}
+		else
+		{
+			bluTeam++;
+		}
+	}
+
 	m_timeSec += p_deltaTime;
 	if (m_timeSec >= 60)
 	{
 		m_timeSec -= 60;
 		m_timeMin++;
 	}
+
+	//if (m_timeSec > 0.9f &&( redTeam == 0|| bluTeam == 0))
+	//{
+	//	m_timeSec = 0.0f;
+	//	m_timeMin = 0.0f;
+	//	for (unsigned int i = 0; i < playerList.size(); i++)
+	//	{
+	//		SyncTime(playerList[i].guid);
+	//	}
+	//}
+	if (m_timeSec >= ROUND_TIME_LIMIT)
+	{
+		m_isSuddenDeath = true;
+		SendSuddenDeathMessage();
+	}
 }
 
+void GameState::SendSuddenDeathMessage()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_START_SUDDEN_DEATH);
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
 void GameState::ResetTime()
 {
 	m_timeSec = 0;

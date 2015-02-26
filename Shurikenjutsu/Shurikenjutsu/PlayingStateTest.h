@@ -17,6 +17,7 @@ class VictoryScreenMenu;
 class DeathBoard;
 class Sound;
 class ScoreBoard;
+class SuddenDeathState;
 
 class PlayingStateTest : public GameState
 {
@@ -60,6 +61,7 @@ private:
 	InGameMenu *m_inGameMenu;
 	VictoryScreenMenu* m_victoryMenu;
 	ScoreBoard* m_scoreBoard;
+	SuddenDeathState* m_suddenDeath;
 
 	const float twoPi = DirectX::XM_PI * 2.0f;
 

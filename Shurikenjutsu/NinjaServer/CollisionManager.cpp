@@ -927,7 +927,34 @@ void CollisionManager::SetDeltaTime(float p_deltaTime)
 {
 	m_deltaTime = p_deltaTime;
 }
-
+void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList)
+{
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		Sphere playerSphere = Sphere(playerList[i].x, playerList[i].y, playerList[i].z, CHARACTER_ENEMY_BOUNDINGSPHERE);
+		
+		std::vector<Box> damageBox = p_boxList;
+		for (unsigned int j = 0; j < damageBox.size(); j++)
+		{
+			if (IntersectionTests::Intersections::SphereBoxCollision(playerSphere.m_position, playerSphere.m_radius, damageBox[j].m_center, damageBox[j].m_extents))
+			{
+				// Damage the player
+				if (playerList[i].dotDamage > 1.0f && p_playerManager->CanSendDotDamage())
+				{
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (0.5f * m_deltaTime));
+					p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, playerList[i].guid, ABILITIES_SMOKEBOMB);
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
+				}
+				else
+				{
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (0.5f * m_deltaTime));
+				}
+				break;
+			}
+		}
+	}
+}
 //Private
 bool CollisionManager::OBBOBBTest(OBB p_OBB1, OBB p_OBB2)
 {
