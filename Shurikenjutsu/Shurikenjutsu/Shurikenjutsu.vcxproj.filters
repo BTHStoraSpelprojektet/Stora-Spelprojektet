@@ -508,7 +508,7 @@
     </ClCompile>
     <ClCompile Include="PointLights.cpp">
       <Filter>Source Files\Graphics</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="ScoreBoard.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
@@ -852,7 +852,7 @@
     </ClInclude>
     <ClInclude Include="PointLights.h">
       <Filter>Header Files\Graphics</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="VictoryScreenMenu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -968,6 +968,15 @@
     </FxCompile>
     <FxCompile Include="Shaders\Trails\TrailVertexShader.hlsl">
       <Filter>Shaders\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Composition\PointLightQuadCullingGS.hlsl">
+      <Filter>Shaders\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Composition\PointLightQuadCullingVS.hlsl">
+      <Filter>Shaders\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Composition\PointLightQuadCullingPS.hlsl">
+      <Filter>Shaders\Composition</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

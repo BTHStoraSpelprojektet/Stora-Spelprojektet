@@ -3,7 +3,7 @@
 #include <DirectXMath.h>
 #include <Windows.h>
 #include <D3Dcompiler.h>
-
+#include "PointLights.h"
 
 ScreenSpace::ScreenSpace(){}
 ScreenSpace::~ScreenSpace(){}
@@ -13,6 +13,7 @@ bool ScreenSpace::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
+	ID3D10Blob*	quadVertexShader = 0;
 	ID3D10Blob*	errorMessage = 0;
 
 	// Compile the vertex shader.
@@ -44,9 +45,73 @@ bool ScreenSpace::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("ScreenSpace.cpp: Vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
+	// Compile the vertex shader.
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingVS.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &quadVertexShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingVS.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &quadVertexShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile quadCulling vertex shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_VSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_VSVersion = "5.0";
+	}
+
+	// Create vertex shader from buffer.
+	if (FAILED(p_device->CreateVertexShader(quadVertexShader->GetBufferPointer(), quadVertexShader->GetBufferSize(), NULL, &m_quadVertexShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create quadCulling vertex shader.");
+		return false;
+	}
+
 	// Release useless local shaders.
 	vertexShader->Release();
 	vertexShader = 0;
+	quadVertexShader->Release();
+	quadVertexShader = 0;
+
+	// Compile the geometry shader.
+	ID3D10Blob* geometryShader = 0;
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingGS.hlsl", NULL, NULL, "main", "gs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geometryShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingGS.hlsl", NULL, NULL, "main", "gs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geometryShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile quadCulling geometry shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_GSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_GSVersion = "5.0";
+	}
+
+	// Create geometry shader from buffer.
+	if (FAILED(p_device->CreateGeometryShader(geometryShader->GetBufferPointer(), geometryShader->GetBufferSize(), NULL, &m_quadGeometryShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create quadCulling geometry vertex shader.");
+		return false;
+	}
+
+	ConsolePrintSuccess("ScreenSpace.cpp: QuadCulling geometry shader compiled successfully.");
+	ConsolePrintText("Shader version: PS " + m_GSVersion);
+
+	// Release pixel shader since it is no longer required.
+	geometryShader->Release();
+	geometryShader = 0;
 
 	// Set variables to initial values.
 	ID3D10Blob*	pixelShader = 0;
@@ -81,6 +146,37 @@ bool ScreenSpace::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	pixelShader->Release();
 	pixelShader = 0;
+
+	ID3D10Blob*	quadPixelShader = 0;
+	// Compile the pixel shader.
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingPS.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &quadPixelShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingPS.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &quadPixelShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile quadCulling pixel shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_PSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_PSVersion = "5.0";
+	}
+
+	// Create the pixel shader.
+	if (FAILED(p_device->CreatePixelShader(quadPixelShader->GetBufferPointer(), quadPixelShader->GetBufferSize(), NULL, &m_quadPixelShader)))
+	{
+		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create quadCulling pixel shader");
+		return false;
+	}
+
+	quadPixelShader->Release();
+	quadPixelShader = 0;
 
 	// Create the cbuffer where "every frame" data is stored
 	D3D11_BUFFER_DESC frameBuffer;
@@ -272,11 +368,17 @@ void ScreenSpace::Shutdown()
 	m_pixelShader->Release();
 
 	m_frameBuffer->Release();
+
+	m_quadVertexShader->Release();
+	m_quadGeometryShader->Release();
+	m_quadPixelShader->Release();
 }
 
 void ScreenSpace::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_normal, ID3D11ShaderResourceView* p_color, ID3D11ShaderResourceView* p_depth, ID3D11ShaderResourceView* p_ssao)
 {
 	// Set parameters and then render.
+
+	// Render fullscreen triangle
 	ID3D11ShaderResourceView* textures[4];
 	textures[0] = p_normal;
 	textures[1] = p_color;
@@ -288,10 +390,24 @@ void ScreenSpace::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceVie
 	p_context->IASetVertexBuffers(0, 0, 0, 0, 0);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	p_context->IASetInputLayout(0);
+
 	p_context->VSSetShader(m_vertexShader, 0, 0);
 	p_context->PSSetShader(m_pixelShader, 0, 0);
 
 	p_context->Draw(3, 0);
+
+	// Render lights
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	p_context->VSSetShader(m_quadVertexShader, 0, 0);
+	p_context->GSSetShader(m_quadGeometryShader, 0, 0);
+	p_context->PSSetShader(m_quadPixelShader, 0, 0);
+
+	int activeLights = PointLights::GetInstance()->GetLightCount();
+	p_context->Draw(activeLights, 0);
+	PointLights::GetInstance()->ClearLights();
+
+	p_context->GSSetShader(0, 0, 0);
 }
 
 void ScreenSpace::RenderSSAO(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_normal, ID3D11ShaderResourceView* p_depth)
@@ -362,6 +478,7 @@ void ScreenSpace::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 	p_context->Unmap(m_frameBuffer, 0);
 
 	// Set the position of the frame constant buffer in the vertex shader.
+	p_context->VSSetConstantBuffers(7, 1, &m_frameBuffer);
 	p_context->PSSetConstantBuffers(0, 1, &m_frameBuffer);
 	
 }
@@ -482,5 +599,6 @@ void ScreenSpace::BuildOffsetVectors()
 
 void ScreenSpace::SetLightBuffer(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_lightSRV)
 {
+	p_context->VSSetShaderResources(7, 1, &p_lightSRV);
 	p_context->PSSetShaderResources(7, 1, &p_lightSRV);
 }

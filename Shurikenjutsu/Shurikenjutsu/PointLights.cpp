@@ -23,8 +23,13 @@ PointLights* PointLights::GetInstance()
 
 bool PointLights::Initialize()
 {
+	if (m_lightSRV)
+	{
+		m_lightSRV->Release();
+	}
+
 	D3D11_BUFFER_DESC lightBufferDesc;
-	lightBufferDesc.ByteWidth = sizeof(PointLight) * m_pointLights.size();
+	lightBufferDesc.ByteWidth = sizeof(PointLight) * max(m_pointLights.size(), 1);
 	lightBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 	lightBufferDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	lightBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -48,6 +53,7 @@ void PointLights::Shutdown()
 
 	if (m_lightSRV)
 	{
+		m_lightSRV->Release();
 		delete m_lightSRV;
 		m_lightSRV = nullptr;
 	}
@@ -55,11 +61,32 @@ void PointLights::Shutdown()
 
 void PointLights::AddLight(PointLight& p_newLight)
 {
-	m_pointLights.push_back(p_newLight);
+	for (int x = 0; x < 10; x++)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			PointLight newLight = p_newLight;
+			newLight.m_position.x = -50.0f + (float)(x * 10);
+			newLight.m_position.z = -50.0f + (float)(i * 10);
+			m_pointLights.push_back(newLight);
+		}		
+	}
 }
 
 void PointLights::SetLightBuffer(DirectX::XMFLOAT4X4 p_viewMatrix)
 {
+	for (unsigned int i = 0; i < (unsigned int)m_pointLights.size(); i++)
+	{
+		m_pointLights[i].m_position = TransformPosition(m_pointLights[i].m_position, p_viewMatrix);
+
+		if (m_pointLights[i].m_position.x > 30.0f || m_pointLights[i].m_position.x < -30.0f ||
+			m_pointLights[i].m_position.y > 20.0f || m_pointLights[i].m_position.y < -20.0f)
+		{
+			m_pointLights.erase(m_pointLights.begin() + i);
+			i--;
+		}
+	}
+
 	Initialize();
 
 	if (m_pointLights.size() > 0)
@@ -67,18 +94,12 @@ void PointLights::SetLightBuffer(DirectX::XMFLOAT4X4 p_viewMatrix)
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		GraphicsEngine::GetInstance()->GetContext()->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
-		for (unsigned int i = 0; i < (unsigned int)m_pointLights.size(); i++)
-		{
-			m_pointLights[i].m_position = TransformPosition(m_pointLights[i].m_position, p_viewMatrix);
-		}
-
 		memcpy(mappedResource.pData, &m_pointLights[0], sizeof(PointLight)* m_pointLights.size());
 
 		GraphicsEngine::GetInstance()->GetContext()->Unmap(m_lightBuffer, 0);
 	}
 
 	GraphicsEngine::GetInstance()->SetLightBuffer(m_lightSRV);
-	m_pointLights.clear();
 }
 
 DirectX::XMFLOAT3 PointLights::TransformPosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_viewMatrix)
@@ -98,4 +119,14 @@ DirectX::XMFLOAT3 PointLights::TransformPosition(DirectX::XMFLOAT3 p_position, D
 	}
 	
 	return DirectX::XMFLOAT3(returnPosition.m128_f32[0], returnPosition.m128_f32[1], returnPosition.m128_f32[2]);
+}
+
+int PointLights::GetLightCount()
+{
+	return m_pointLights.size();
+}
+
+void PointLights::ClearLights()
+{
+	m_pointLights.clear();
 }

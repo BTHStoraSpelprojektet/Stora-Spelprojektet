@@ -13,6 +13,7 @@ StructuredBuffer<PointLight> m_pointLights : register(t7);
 struct Input
 {
 	float4 m_position: SV_POSITION;
+	nointerpolation uint4 lightIndex : lightIndex;
 };
 
 float3 ComputePositionViewFromZ(float2 positionScreen, float viewSpaceZ)
@@ -34,11 +35,10 @@ float4 main(Input p_input) : SV_Target
 	normal.xyz = (normal.xyz * 2.0f) - 1.0f; //
 	float shadowSum = normal.w;
 
-	float4 albedo = m_textures[1].Load(load).xyzw; //
+	float3 albedo = m_textures[1].Load(load).xyz; //
+	float specularPower = m_textures[1].Load(load).w; //
 
 	float zBuffer = m_textures[2].Load(load).x; //
-
-	float ssao = m_textures[3].Load(load * 0.5f).x; //
 
 	float2 textureDimensions; //
 	m_textures[0].GetDimensions(textureDimensions.x, textureDimensions.y); //
@@ -52,7 +52,7 @@ float4 main(Input p_input) : SV_Target
 	Material material;
 	material.m_ambient = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.m_specular = float4(albedo.a, albedo.a, albedo.a, albedo.a * 255.0f);
+	material.m_specular = float4(specularPower, specularPower, specularPower, specularPower * 255.0f);
 
 	float4 A = 0.0f;
 	float4 D = 0.0f;
@@ -60,10 +60,11 @@ float4 main(Input p_input) : SV_Target
 
 	float3 toCamera = normalize(-positionView);
 
-	ComputeDirectionalLight(material, m_directionalLight, normal.xyz, toCamera, A, D, S);
+	ComputePointLight(material, m_pointLights[p_input.lightIndex.x], positionView, normal.xyz, toCamera, D, S);
 
-	albedo.xyz = albedo.xyz*((A.xyz*ssao + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
-	albedo.w = 1.0f;
+	float4 light;
+	light.xyz = albedo.xyz*((D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
+	light.w = D.w;
 
-	return float4(albedo.xyz, 1.0f);
+	return light;
 }

@@ -31,7 +31,12 @@ private:
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
 
+	ID3D11VertexShader* m_quadVertexShader;
+	ID3D11GeometryShader* m_quadGeometryShader;
+	ID3D11PixelShader* m_quadPixelShader;
+
 	std::string m_VSVersion;
+	std::string m_GSVersion;
 	std::string m_PSVersion;
 
 	ID3D11Buffer* m_frameBuffer;

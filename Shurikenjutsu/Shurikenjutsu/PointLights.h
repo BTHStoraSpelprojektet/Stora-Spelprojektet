@@ -15,6 +15,8 @@ public:
 
 	void AddLight(PointLight& p_newLight);
 	void SetLightBuffer(DirectX::XMFLOAT4X4 p_viewMatrix);
+	int GetLightCount();
+	void ClearLights();
 
 private:
 	PointLights();
