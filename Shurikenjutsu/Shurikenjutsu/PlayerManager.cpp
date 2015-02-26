@@ -98,6 +98,12 @@ void PlayerManager::Update(bool p_inMenu)
 			m_enemyList[i]->SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
 			m_enemyList[i]->Update();
+
+			if (m_enemyList[i]->m_soundEmitter != NULL) {
+				m_enemyList[i]->m_soundEmitter->m_x = enemyPlayers[i].x;
+				m_enemyList[i]->m_soundEmitter->m_y = enemyPlayers[i].y;
+				m_enemyList[i]->m_soundEmitter->m_z = enemyPlayers[i].z;
+			}
 		}
 	}
 	CheckPlayersVisible();
@@ -216,7 +222,14 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 	case 0:
 	{
 		KatanaNinja *tempPlayer = new KatanaNinja();
+
 		tempPlayer->SetSound(m_sound);
+		/*tempPlayer->m_soundEmitter.m_playSound = PLAYSOUND_STEPS_LEAVES_SOUND;
+		tempPlayer->m_soundEmitter.m_x = p_pos.x;
+		tempPlayer->m_soundEmitter.m_y = p_pos.y;
+		tempPlayer->m_soundEmitter.m_z = p_pos.z;
+		m_sound->PlayAmbientSound(&tempPlayer->m_soundEmitter);*/
+
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
@@ -227,7 +240,9 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 	case 1:
 	{
 		TessenNinja *tempPlayer = new TessenNinja();
+
 		tempPlayer->SetSound(m_sound);
+
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_TESSEN_HEALTH);
@@ -239,7 +254,9 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 	{
 		// Todo change to ninja 3
 		NaginataNinja *tempPlayer = new NaginataNinja();
+
 		tempPlayer->SetSound(m_sound);
+
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_NAGINATA_HEALTH);

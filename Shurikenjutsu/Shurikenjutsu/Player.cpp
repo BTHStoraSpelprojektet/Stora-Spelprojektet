@@ -96,6 +96,11 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_trail->StopEmiting();
 
 	ChooseTool();
+
+	if (m_sound != NULL){
+		m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
+	}
+
 	return true;
 }
 
@@ -207,6 +212,7 @@ void Player::UpdateMe()
 	float angle = atan2(m_dashDirection.z, m_dashDirection.x);
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
 	m_trail->Update(position, angle);
+	m_sound->UpdateAmbientSound(m_position.x, m_position.y, m_position.z);
 
 	if (m_updateVisibility)
 	{
@@ -315,6 +321,15 @@ void Player::UpdateMe()
 
 		// If we moved, update shadow shapes.
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+
+		//Update sound (walking)
+		m_sound->StartAmbientSound(m_soundEmitter);
+		m_soundEmitter->m_x = position.x;
+		m_soundEmitter->m_y = position.y;
+		m_soundEmitter->m_z = position.z;
+	}
+	else{
+		m_sound->StopAmbientSound(m_soundEmitter);
 	}
 	m_playerSphere.m_position = m_position;
 	

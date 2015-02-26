@@ -3,6 +3,7 @@
 
 #include "fmod.hpp"
 #include "..\CommonLibs\CommonEnums.h"
+#include <vector>
 
 class Sound
 {
@@ -10,15 +11,29 @@ public:
 	Sound();
 	~Sound();
 
+	struct SoundEmitter{
+		float m_x, m_y, m_z;
+		PLAYSOUND m_playSound;
+		FMOD::Channel* m_ambientChannel;
+		float m_totalMSLength;
+		float m_timePassed;
+		bool isPlaying = true;
+	};
+
 	bool Initialize();
 	void Shutdown();
 	void Update();
 
 	void FMODErrorCheck(FMOD_RESULT p_result);
-	void PlaySound(PLAYSOUND p_playSound, float volume = 1.0f);
-	void PlayAmbientSound(PLAYSOUND p_playSound, float volume = 1.0f);
-	void Sound::setAmbientVolume(float volume);
+	void PlaySound(PLAYSOUND p_playSound, float p_volume = 1.0f);
+	SoundEmitter* CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
+	void UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z);
+	void StopAmbientSound(SoundEmitter* p_soundEmitter);
+	void StartAmbientSound(SoundEmitter* p_soundEmitter);
 
+	void StopMusic();
+	void StartMusic();
+	void StartStopMusic();
 private:
 	FMOD::System *m_system;
 	FMOD_RESULT m_result;
@@ -27,7 +42,12 @@ private:
 	FMOD_SPEAKERMODE m_speakerMode;
 	//FMOD_Caps caps;
 	char m_name[256];
-	float m_musicVolume = 0.3f;
+	float m_musicVolume = 0.7f;
+	float m_defaultAmbientVolume = 0.4f;
+	int music_sound_id = 0;
+
+	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
+	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);
 
 	FMOD::ChannelGroup *masterChannelGroup;
 
@@ -35,7 +55,9 @@ private:
 	FMOD::Channel *effectChannel;
 
 	FMOD::ChannelGroup *channelAmbient;
-	FMOD::Channel *ambientChannel;
+	
+	//std::vector<FMOD::Channel*> ambientChannels;
+	std::vector<SoundEmitter*> soundEmitters;
 
 	FMOD::ChannelGroup *channelMusic;
 	FMOD::Channel *musicChannel;
@@ -63,6 +85,12 @@ private:
 	FMOD::Sound *m_volleyHitSound;
 	FMOD::Sound *m_bubleSound;
 	FMOD::Sound *m_fireSound;
-	FMOD::Channel *m_channel;
+	FMOD::Sound *m_windSound;
+	FMOD::Sound *m_birdSound;
+	FMOD::Sound *m_stepsLeavesSound;
+	FMOD::Sound *m_maleDeathSound;
+	FMOD::Sound *m_femaleDeathSound;
+
+	//FMOD::Channel *m_channel;
 };
 #endif
