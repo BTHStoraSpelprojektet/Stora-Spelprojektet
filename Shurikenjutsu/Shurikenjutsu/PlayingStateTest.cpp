@@ -410,14 +410,11 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
 
 	PointLight newLight;
-	newLight.m_ambient = DirectX::XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f);
 	newLight.m_diffuse = DirectX::XMVectorSet(0.0f, 5.0f, 0.0f, 0.0f);
 	newLight.m_specular = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 
 	newLight.m_position = DirectX::XMFLOAT3(0.0f, 2.0f, 0.0f);
-	newLight.m_range = 7.0f;
-
-	newLight.m_attenuation = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+	newLight.m_range = 20.0f;
 
 	PointLights::GetInstance()->AddLight(newLight);
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());

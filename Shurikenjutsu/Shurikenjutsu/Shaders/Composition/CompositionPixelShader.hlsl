@@ -54,7 +54,7 @@ float4 main(Input p_input) : SV_Target
 	material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.m_specular = float4(albedo.a, albedo.a, albedo.a, albedo.a * 255.0f);
 
-	float4 A = m_directionalLight.m_ambient;
+	float4 A = 0.0f;
 	float4 D = 0.0f;
 	float4 S = 0.0f;
 
@@ -67,7 +67,7 @@ float4 main(Input p_input) : SV_Target
 	m_pointLights.GetDimensions(totalLights, temp);
 	for (uint lightIndex = 0; lightIndex < totalLights; lightIndex++)
 	{
-		ComputePointLight(material, m_pointLights[lightIndex], positionView, normal.xyz, toCamera, A, D, S);
+		ComputePointLight(material, m_pointLights[lightIndex], positionView, normal.xyz, toCamera, D, S);
 	}
 	////////////////
 
