@@ -12,7 +12,7 @@ bool PointOfInterest::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos
 	m_sparkles = new ParticleEmitter();
 	m_sparkles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), m_position, m_direction, DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
 	SparkleState(true);
-	m_active = false;
+	m_active = true;
 	return true;
 }
 
@@ -60,4 +60,11 @@ void PointOfInterest::SetActive(bool p_active)
 bool PointOfInterest::IsActive()
 {
 	return m_active;
+}
+
+void PointOfInterest::PickedUp()
+{
+	// Fix, input effect here, send to network!
+
+	return;
 }

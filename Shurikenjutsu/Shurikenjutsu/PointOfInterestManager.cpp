@@ -2,6 +2,7 @@
 #include "PointOfInterest.h"
 #include <DirectXMath.h>
 #include "../CommonLibs/ModelNames.h"
+#include "Collisions.h"
 
 PointOfInterestManager::PointOfInterestManager()
 {
@@ -63,6 +64,17 @@ void PointOfInterestManager::Render()
 	}
 }
 
+void PointOfInterestManager::RenderDepth()
+{
+	for (unsigned int i = 0; i < m_runes.size(); i++)
+	{
+		if (m_runes[i].IsActive())
+		{
+			m_runes[i].RenderDepth();
+		}
+	}
+}
+
 void PointOfInterestManager::SpawnRunes()
 {
 	for (unsigned int i = 0; i < m_runes.size(); i++)
@@ -71,7 +83,26 @@ void PointOfInterestManager::SpawnRunes()
 	}
 }
 
-void PointOfInterestManager::PickUprunes()
+void PointOfInterestManager::PickUpRunes(Sphere p_sphere)
 {
+	std::vector<OBB> boundingBox;
 
+	for (unsigned int i = 0; i < m_runes.size(); i++)
+	{
+		boundingBox = m_runes[i].GetBoundingBoxes();
+		for (unsigned int j = 0; j < boundingBox.size(); j++)
+		{
+			if (Collisions::OBBSphereCollision(boundingBox[j], p_sphere))
+			{
+				m_runes[i].SetActive(false);
+				m_runes[i].PickedUp();
+			}
+		}
+	}
+}
+
+void PointOfInterestManager::RoundRestart()
+{
+	Shutdown();
+	Initialize();
 }

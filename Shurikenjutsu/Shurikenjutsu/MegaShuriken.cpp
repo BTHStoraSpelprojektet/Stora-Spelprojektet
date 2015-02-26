@@ -3,6 +3,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "StatusEffect.h"
 #include <iostream>
+#include "Sound.h"
 
 MegaShuriken::MegaShuriken(){}
 MegaShuriken::~MegaShuriken(){}

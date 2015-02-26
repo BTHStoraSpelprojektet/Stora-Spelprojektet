@@ -19,6 +19,7 @@ public:
 	void SparkleState(bool p_stateOn);
 	bool IsActive();
 	void SetActive(bool p_active);
+	void PickedUp();
 private:
 	void Sparkle();
 

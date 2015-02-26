@@ -2,7 +2,7 @@
 #define POINTOFINTERESTMANAGER_H_
 
 #include <vector>
-//#include "PointOfInterest.h"
+#include "../CommonLibs/CommonStructures.h"
 
 class PointOfInterest;
 
@@ -16,11 +16,13 @@ public:
 	void Shutdown();
 	void Update();
 	void Render();
+	void RenderDepth();
 
+	void RoundRestart();
+	void PickUpRunes(Sphere p_sphere);
 
 private:
 	void SpawnRunes();
-	void PickUprunes();
 
 	int m_nrOfRunes;
 	std::vector<PointOfInterest> m_runes;

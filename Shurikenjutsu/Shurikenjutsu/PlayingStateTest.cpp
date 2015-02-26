@@ -19,6 +19,7 @@
 #include "InGameMenu.h"
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
+#include "Sound.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -49,8 +50,10 @@ void PlayingStateTest::EscapeIsPressed()
 	{
 		m_inGameMenuIsActive = true;
 	}
+
 	m_sound->StartStopMusic();
 }
+
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
 	// Initialize the camera.
@@ -106,7 +109,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	{
 		return false;
 	}
-
 
 	// Initialize the directional light.
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
@@ -251,7 +253,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager->SetStickyTrapList(m_objectManager->GetStickyTrapList());
 	m_playerManager->Update(false);
 
-	
 	if (!m_playerManager->GetPlayerIsAlive())
 	{
 		if (!GLOBAL::GetInstance().CAMERA_SPECTATE)
@@ -321,6 +322,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	TrailRenderer::GetInstance().SetViewMatrix(m_camera->GetViewMatrix());
 	TrailRenderer::GetInstance().SetProjectionMatrix(m_camera->GetProjectionMatrix());
 	m_objectManager->Update();
+	Sphere playerSphere = m_playerManager->GetPlayerSphere();
+	m_objectManager->CheckRunePickUp(playerSphere);
 
 	// Update health bars.
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
@@ -411,30 +414,27 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		switch (m_inGameMenu->Update())
 		{
 		case IN_GAME_MENU_RESUME:
-			{
+		{
 			m_inGameMenuIsActive = false;
 			m_sound->StopMusic();
 			break;
-			}
-			
+		}
 		case IN_GAME_MENU_TO_MAIN:
-			{
+		{
 			Network::GetInstance()->Disconnect();
 			return GAMESTATESWITCH_MENU;
 			break;
-			}
-			
+		}
 		case IN_GAME_MENU_QUIT:
-			{
+		{
 			PostQuitMessage(0);
 			break;
-			}
-			
+		}
 		default:
-			{
+		{
 			break;
 		}
-	}
+		}
 	}
 
 	return GAMESTATESWITCH_NONE;

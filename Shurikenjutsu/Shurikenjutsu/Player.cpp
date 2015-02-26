@@ -808,6 +808,7 @@ bool Player::CheckSidesIfMultipleCollisions()
 
 	return true;
 }
+
 void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 {
 	float speedXDeltaTime = m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
