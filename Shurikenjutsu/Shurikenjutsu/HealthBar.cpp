@@ -3,6 +3,7 @@
 #include "GUIElementColor.h"
 #include "TextureLibrary.h"
 #include "Globals.h"
+#include "Network.h"
 
 HealthBar::HealthBar(){}
 HealthBar::~HealthBar(){}
@@ -62,9 +63,12 @@ void HealthBar::Update(DirectX::XMFLOAT3 p_position, int p_health, int p_maxHeal
 
 void HealthBar::Render()
 {
-	m_background->QueueRender();
-	m_foreground->QueueRender();
-	m_border->QueueRender();
+	if (!Network::GetInstance()->GetMatchOver())
+	{
+		m_background->QueueRender();
+		m_foreground->QueueRender();
+		m_border->QueueRender();
+	}
 }
 
 void HealthBar::CalculatePosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)

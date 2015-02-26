@@ -1,6 +1,8 @@
 #ifndef VISIBILITYCOMPUTER
 #define VISIBILITYCOMPUTER
 
+#define WIN32_LEAN_AND_MEAN
+
 #include "ShadowShapes.h"
 #include "RenderTarget.h"
 

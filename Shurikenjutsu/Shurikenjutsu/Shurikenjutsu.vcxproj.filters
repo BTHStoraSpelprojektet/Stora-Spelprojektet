@@ -500,11 +500,17 @@
     <ClCompile Include="TeamTable.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
+    <ClCompile Include="ToolTipPopUp.cpp">
+      <Filter>Source Files\GUI</Filter>
+    </ClCompile>
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="ScoreBoard.cpp">
       <Filter>Source Files\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="VictoryScreenMenu.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -837,6 +843,12 @@
     </ClInclude>
     <ClInclude Include="TeamTable.h">
       <Filter>Header Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolTipPopUp.h">
+      <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="VictoryScreenMenu.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScoreBoard.h">
       <Filter>Header Files\GUI</Filter>

@@ -59,7 +59,7 @@ bool Trail::Initialize(float p_pointsPerSecond, float p_timeToLive, float p_trai
 	// Set up description for the dynamic vertex buffer.
 	D3D11_BUFFER_DESC vertexBufferDescription;
 	vertexBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBufferDescription.ByteWidth = sizeof(TrailPoint) * 100;
+	vertexBufferDescription.ByteWidth = sizeof(TrailPoint) * (int)p_pointsPerSecond;
 	vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBufferDescription.MiscFlags = 0;
@@ -146,6 +146,11 @@ void Trail::Render()
 		GraphicsEngine::GetInstance()->TurnOnBackfaceCulling();
 		GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 	}
+}
+
+void Trail::StartEmiting()
+{
+	m_emiting = true;
 }
 
 void Trail::StopEmiting()
