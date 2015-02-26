@@ -42,6 +42,7 @@ bool PlayingStateTest::Initialize()
 
 void PlayingStateTest::EscapeIsPressed()
 {
+
 	if (m_inGameMenuIsActive)
 	{
 		m_inGameMenuIsActive = false;
@@ -50,6 +51,11 @@ void PlayingStateTest::EscapeIsPressed()
 	{
 		m_inGameMenuIsActive = true;
 	}
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_inGameMenuIsActive = false;
+	}
+
 	m_sound->StartStopMusic();
 }
 bool PlayingStateTest::Initialize(std::string p_levelName)
@@ -421,7 +427,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	BasicPicking();
 
-	if (m_inGameMenuIsActive)
+	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
 		switch (m_inGameMenu->Update())
 		{
@@ -510,7 +516,7 @@ void PlayingStateTest::Render()
 		m_playerManager->RenderOutliningPassTwo();
 	}
 
-	if (m_inGameMenuIsActive)
+	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
 		m_inGameMenu->Render();
 	}
