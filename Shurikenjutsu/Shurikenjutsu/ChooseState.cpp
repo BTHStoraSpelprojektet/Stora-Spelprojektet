@@ -54,8 +54,8 @@ bool ChooseState::Initialize()
 	m_blueTeamScore = new GUIText();
 	m_redTeamScore->Initialize("0", 50.0f, -m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xff0000ff);
 	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xffff0000);
-
-
+	
+	
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f + offset;
 	float toolCycleHeight = m_toolHeight*0.5f - m_buttonHeight*0.5f- 150.0f;
@@ -79,7 +79,7 @@ bool ChooseState::Initialize()
 
 	// pick blue team
 	m_chooseNinja->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/blueTeamLobby.png"), MENUACTION_PICK_BLUE_TEAM);
-
+	
 	// back button
 	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + m_buttonWidth * 0.5f + offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 
@@ -107,7 +107,7 @@ bool ChooseState::Initialize()
 	m_ninjas[0]->Initialize(0.0f, portraitYPos, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
 	m_ninjas[1]->Initialize(0.0f, portraitYPos, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
 	m_ninjas[2]->Initialize(0.0f, portraitYPos, m_portraitWidth, m_portraitHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
-	
+
 	m_tools[0] = new MenuItem();
 	m_tools[1] = new MenuItem();
 	m_tools[2] = new MenuItem();
@@ -316,7 +316,7 @@ GAMESTATESWITCH ChooseState::Update()
 
 	m_redTeamScore->SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
 	m_blueTeamScore->SetText(std::to_string(Network::GetInstance()->GetBlueTeamScore()));
-
+	
 	MenuActionData action = m_chooseNinja->Update();
 	
 	switch (action.m_action)
@@ -337,8 +337,8 @@ GAMESTATESWITCH ChooseState::Update()
 		return GAMESTATESWITCH_PLAY;
 		break;
 	case MENUACTION_BACK:
-		Network::GetInstance()->Disconnect();
-		return GAMESTATESWITCH_MENU;
+			Network::GetInstance()->Disconnect();
+			return GAMESTATESWITCH_MENU;
 		break;
 	case MENUACTION_NEXTNINJA:
 		m_isRandoming = false;
@@ -391,7 +391,7 @@ GAMESTATESWITCH ChooseState::Update()
 		m_currentTeam = CURRENTTEAM_NONE;
 		break;
 	}
-	
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -439,13 +439,13 @@ void ChooseState::Render()
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	m_chooseNinja->Render();
 
-	m_ninjas[currentNinja]->Render();
-	m_tools[currentTool]->Render();
-	m_abilityDescription[currentNinja]->Render();
-	m_redTeamScore->Render();
-	m_blueTeamScore->Render();
-	m_redTeam->Render();
-	m_blueTeam->Render();
+		m_ninjas[currentNinja]->Render();
+		m_tools[currentTool]->Render();
+		m_abilityDescription[currentNinja]->Render();
+		m_redTeamScore->Render();
+		m_blueTeamScore->Render();
+		m_redTeam->Render();
+		m_blueTeam->Render();
 	m_questionMark->Render();
 	m_toolDescription[currentTool]->Render();
 	m_title->Render();
@@ -489,8 +489,8 @@ void ChooseState::PrevTool()
 
 void ChooseState::EscapeIsPressed()
 {
-	Network::GetInstance()->Disconnect();
-}
+		Network::GetInstance()->Disconnect();
+	}
 
 void ChooseState::RandomNinja()
 {
