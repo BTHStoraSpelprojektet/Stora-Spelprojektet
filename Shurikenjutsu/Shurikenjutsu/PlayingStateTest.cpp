@@ -322,8 +322,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	TrailRenderer::GetInstance().SetViewMatrix(m_camera->GetViewMatrix());
 	TrailRenderer::GetInstance().SetProjectionMatrix(m_camera->GetProjectionMatrix());
 	m_objectManager->Update();
-	Sphere playerSphere = m_playerManager->GetPlayerSphere();
-	m_objectManager->CheckRunePickUp(playerSphere);
+	OBB playerOBB = m_playerManager->GetPlayerBoundingBox();
+	m_objectManager->CheckRunePickUp(playerOBB);
 
 	// Update health bars.
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());

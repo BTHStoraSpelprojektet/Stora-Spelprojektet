@@ -1399,7 +1399,7 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 	m_bloodParticlesTimer.push_back(float(0.5f));
 }
 
-void ObjectManager::CheckRunePickUp(Sphere p_sphere)
+void ObjectManager::CheckRunePickUp(OBB p_OBB)
 {
-	m_POIManager->PickUpRunes(p_sphere);
+	m_POIManager->PickUpRunes(p_OBB);
 }

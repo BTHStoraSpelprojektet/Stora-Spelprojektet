@@ -19,7 +19,7 @@ public:
 	void RenderDepth();
 
 	void RoundRestart();
-	void PickUpRunes(Sphere p_sphere);
+	void PickUpRunes(OBB p_OBB);
 
 private:
 	void SpawnRunes();

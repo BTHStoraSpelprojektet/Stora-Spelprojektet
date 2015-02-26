@@ -83,7 +83,7 @@ void PointOfInterestManager::SpawnRunes()
 	}
 }
 
-void PointOfInterestManager::PickUpRunes(Sphere p_sphere)
+void PointOfInterestManager::PickUpRunes(OBB p_OBB)
 {
 	std::vector<OBB> boundingBox;
 
@@ -92,7 +92,7 @@ void PointOfInterestManager::PickUpRunes(Sphere p_sphere)
 		boundingBox = m_runes[i].GetBoundingBoxes();
 		for (unsigned int j = 0; j < boundingBox.size(); j++)
 		{
-			if (Collisions::OBBSphereCollision(boundingBox[j], p_sphere))
+			if (Collisions::OBBOBBCollision(boundingBox[j], p_OBB))
 			{
 				m_runes[i].SetActive(false);
 				m_runes[i].PickedUp();

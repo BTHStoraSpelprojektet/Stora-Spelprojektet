@@ -57,7 +57,7 @@ public:
 	
 	void SetSound(Sound* p_sound);
 
-	void CheckRunePickUp(Sphere p_sphere);
+	void CheckRunePickUp(OBB p_OBB);
 
 private:
 	float CheckStickyTrapYPosition();
