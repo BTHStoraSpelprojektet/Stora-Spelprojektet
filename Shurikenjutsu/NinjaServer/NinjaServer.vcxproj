@@ -81,6 +81,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shurikenjutsu\PointOfInterest.cpp" />
+    <ClCompile Include="..\Shurikenjutsu\PointOfInterestManager.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="DebugState.cpp" />
@@ -101,6 +103,8 @@
     <ClCompile Include="VolleyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shurikenjutsu\PointOfInterest.h" />
+    <ClInclude Include="..\Shurikenjutsu\PointOfInterestManager.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="DebugState.h" />
