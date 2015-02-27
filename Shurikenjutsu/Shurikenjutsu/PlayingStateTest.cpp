@@ -300,7 +300,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 				return GAMESTATESWITCH_CHOOSENINJA;
 
 				break;
-			}
+	}
 
 			case IN_GAME_MENU_TO_MAIN:
 			{
@@ -429,33 +429,35 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		switch (m_inGameMenu->Update())
 		{
-			case IN_GAME_MENU_RESUME:
+		case IN_GAME_MENU_RESUME:
 			{
-				m_inGameMenuIsActive = false;
-				m_sound->StopMusic();
+			m_inGameMenuIsActive = false;
+			m_sound->StopMusic();
 
-				break;
+			break;
 			}
 			
-			case IN_GAME_MENU_TO_MAIN:
+		case IN_GAME_MENU_TO_MAIN:
 			{
-				Network::GetInstance()->Disconnect();
-				return GAMESTATESWITCH_MENU;
-				break;
+			Network::GetInstance()->Disconnect();
+			return GAMESTATESWITCH_MENU;
+			break;
 			}
 			
-			case IN_GAME_MENU_QUIT:
+		case IN_GAME_MENU_QUIT:
 			{
-				PostQuitMessage(0);
-				break;
+			PostQuitMessage(0);
+			break;
 			}
 			
-			default:
+		default:
 			{
-				break;
-			}
+			break;
 		}
 	}
+	}
+
+	m_camera->Update3DSound(m_sound, player.x, player.y, player.z);
 
 	return GAMESTATESWITCH_NONE;
 }
@@ -631,7 +633,7 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 {
 	for (unsigned int i = 0; i < 7; i++)
-	{
+		{
 		m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000, -1000, 0));
 
 		Player* player = m_playerManager->GetEnemyTeamMember(i);

@@ -2,6 +2,7 @@
 #define CAMERA
 
 #include "GraphicsEngine.h"
+#include "Sound.h"
 
 class Camera
 {
@@ -42,6 +43,9 @@ public:
 	void MenuCameraRotation();
 
 	void MovingCamera(DirectX::XMFLOAT3 p_playerPos);
+
+	//void Update3DSound(Sound* p_sound);
+	void Update3DSound(Sound* p_sound, float p_x, float p_y, float p_z);
 
 private:
 	DirectX::XMFLOAT3 m_position;
