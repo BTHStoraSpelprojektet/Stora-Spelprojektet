@@ -45,7 +45,7 @@ private:
 	//FMOD_Caps caps;
 	char m_name[256];
 	float m_musicVolume = 0.7f;
-	float m_defaultAmbientVolume = 0.2f;
+	float m_defaultWindVolume = 0.2f;
 	int music_sound_id = 0;
 
 	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);

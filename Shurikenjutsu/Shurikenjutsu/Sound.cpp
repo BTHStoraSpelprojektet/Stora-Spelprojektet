@@ -248,137 +248,233 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 	switch (p_soundEmitter->m_playSound)
 	{
 	case PLAYSOUND_KUNAI_THROW_SOUND:
+	{
 		m_kunaiThrowSound->setMode(FMOD_LOOP_OFF);
 		m_kunaiThrowSound->setLoopCount(1);
 		m_system->playSound(m_kunaiThrowSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_KUNAI_HIT_SOUND:
+	{
 		m_kunaiHitSound->setMode(FMOD_LOOP_OFF);
 		m_kunaiHitSound->setLoopCount(1);
 		m_system->playSound(m_kunaiHitSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_KUNAI_HIT_OBJECTS_SOUND:
+	{
 		m_kunaiHitOBjectsSound->setMode(FMOD_LOOP_OFF);
 		m_kunaiHitOBjectsSound->setLoopCount(1);
 		m_system->playSound(m_kunaiHitOBjectsSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_AIR_CUT_SOUND:
+	{
 		m_airCutSound->setMode(FMOD_LOOP_OFF);
 		m_airCutSound->setLoopCount(1);
 		m_system->playSound(m_airCutSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_KATANA_HIT_SOUND:
+	{
 		m_katanaHitSound->setMode(FMOD_LOOP_OFF);
 		m_katanaHitSound->setLoopCount(1);
 		m_system->playSound(m_katanaHitSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_DASH_STEPS_SOUND:
+	{
 		m_dashStepsSound->setMode(FMOD_LOOP_OFF);
 		m_dashStepsSound->setLoopCount(1);
 		m_system->playSound(m_dashStepsSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_SHURIKEN_THROW_SOUND:
+	{
 		m_shurikenThrowSound->setMode(FMOD_LOOP_OFF);
 		m_shurikenThrowSound->setLoopCount(1);
 		m_system->playSound(m_shurikenThrowSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_SHURIKEN_HIT_SOUND:
+	{
 		m_shurikenHitSound->setMode(FMOD_LOOP_OFF);
 		m_shurikenHitSound->setLoopCount(1);
 		m_system->playSound(m_shurikenHitSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_SHURIKEN_HIT_OBJECTS_SOUND:
+	{
 		m_shurikenHitObjectsSound->setMode(FMOD_LOOP_OFF);
 		m_shurikenHitObjectsSound->setLoopCount(1);
 		m_system->playSound(m_shurikenHitObjectsSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_MEGA_SHURIKEN_HIT_SOUND:
+	{
 		m_megaShurikenHitSound->setMode(FMOD_LOOP_OFF);
 		m_megaShurikenHitSound->setLoopCount(1);
 		m_system->playSound(m_megaShurikenHitSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_MEGA_SHURIKEN_HIT_OBJECTS_SOUND:
+	{
 		m_megaShurikenHitObjectsSound->setMode(FMOD_LOOP_OFF);
 		m_megaShurikenHitObjectsSound->setLoopCount(1);
 		m_system->playSound(m_megaShurikenHitObjectsSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_SMOKE_BOMB_SOUND:
+	{
 		m_smokeBombSound->setMode(FMOD_LOOP_OFF);
 		m_smokeBombSound->setLoopCount(1);
 		m_system->playSound(m_smokeBombSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_WHIP_AIR_SOUND:
+	{
 		m_whipAirSound->setMode(FMOD_LOOP_OFF);
 		m_whipAirSound->setLoopCount(1);
 		m_system->playSound(m_whipAirSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_WHIP_ROTATE_SOUND:
+	{
 		m_whipRotateSound->setMode(FMOD_LOOP_OFF);
 		m_whipRotateSound->setLoopCount(1);
 		m_system->playSound(m_whipRotateSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_WHIP_HIT_SOUND:
+	{
 		m_whipHitSound->setMode(FMOD_LOOP_OFF);
 		m_whipHitSound->setLoopCount(1);
 		m_system->playSound(m_whipHitSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_NAGINATA_AIR_SOUND:
+	{
 		m_naginataAirSound->setMode(FMOD_LOOP_OFF);
 		m_naginataAirSound->setLoopCount(1);
 		m_system->playSound(m_naginataAirSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_NAGINATA_STAB_SOUND:
+	{
 		m_naginataAirStabSound->setMode(FMOD_LOOP_OFF);
 		m_naginataAirStabSound->setLoopCount(1);
 		m_system->playSound(m_naginataAirStabSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_NAGINATA_HIT_SOUND:
+	{
 		m_naginataHitSound->setMode(FMOD_LOOP_OFF);
 		m_naginataHitSound->setLoopCount(1);
 		m_system->playSound(m_naginataHitSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_VOLLEY_THROW_SOUND:
+	{
 		m_volleyThrowSound->setMode(FMOD_LOOP_OFF);
 		m_volleyThrowSound->setLoopCount(1);
 		m_system->playSound(m_volleyThrowSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_VOLLEY_HIT_SOUND:
+	{
 		m_volleyHitSound->setMode(FMOD_LOOP_OFF);
 		m_volleyHitSound->setLoopCount(1);
 		m_system->playSound(m_volleyHitSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_BUBLE_SOUND:
+	{
 		m_bubleSound->setMode(FMOD_LOOP_OFF);
 		m_bubleSound->setLoopCount(1);
 		m_system->playSound(m_bubleSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_MALE_DEATH_SOUND:
+	{
 		m_maleDeathSound->setMode(FMOD_LOOP_OFF);
 		m_maleDeathSound->setLoopCount(1);
 		m_system->playSound(m_maleDeathSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_FEMALE_DEATH_SOUND:
+	{
 		m_femaleDeathSound->setMode(FMOD_LOOP_OFF);
 		m_femaleDeathSound->setLoopCount(1);
 		m_system->playSound(m_femaleDeathSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
-		case PLAYSOUND_MALE_HURT_SOUND:
+	}
+	case PLAYSOUND_MALE_HURT_SOUND:
+	{
 		m_maleHurtSound->setMode(FMOD_LOOP_OFF);
 		m_maleHurtSound->setLoopCount(1);
 		m_system->playSound(m_maleHurtSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_FEMALE_HURT_SOUND:
+	{
 		m_femaleHurtSound->setMode(FMOD_LOOP_OFF);
 		m_femaleHurtSound->setLoopCount(1);
 		m_system->playSound(m_femaleHurtSound, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
 	case PLAYSOUND_COUNTDOWN_BEEP_SOUND:
+	{
 		m_countdownBeep->setMode(FMOD_LOOP_OFF);
 		m_countdownBeep->setLoopCount(1);
 		m_system->playSound(m_countdownBeep, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
-	default:
+	}
+	case PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND:
+	{
+		m_runeInvisibilitySpawn->setMode(FMOD_LOOP_OFF);
+		m_runeInvisibilitySpawn->setLoopCount(1);
+		m_system->playSound(m_runeInvisibilitySpawn, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
+	}
+	case PLAYSOUND_RUNE_INVISIBLE_PICKUP_SOUND:
+	{
+		m_runeInvisibilityPickup->setMode(FMOD_LOOP_OFF);
+		m_runeInvisibilityPickup->setLoopCount(1);
+		m_system->playSound(m_runeInvisibilityPickup, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_HEAL_SPAWN_SOUND:
+	{
+		m_runeHealSpawn->setMode(FMOD_LOOP_OFF);
+		m_runeHealSpawn->setLoopCount(1);
+		m_system->playSound(m_runeHealSpawn, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_HEAL_PICKUP_SOUND:
+	{
+		m_runeHealPickup->setMode(FMOD_LOOP_OFF);
+		m_runeHealPickup->setLoopCount(1);
+		m_system->playSound(m_runeHealPickup, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND:
+	{
+		m_runeShieldSpawn->setMode(FMOD_LOOP_OFF);
+		m_runeShieldSpawn->setLoopCount(1);
+		m_system->playSound(m_runeShieldSpawn, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_SHIELD_PICKUP_SOUND:
+	{
+		m_runeShieldPickup->setMode(FMOD_LOOP_OFF);
+		m_runeShieldPickup->setLoopCount(1);
+		m_system->playSound(m_runeShieldPickup, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	default:
+	{
+		break;
+	}
 	}
 	
 	p_soundEmitter->m_channel->setChannelGroup(channelEffects);
@@ -489,6 +585,27 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 		m_system->playSound(m_stepsLeavesSound, channelAmbient, true, &p_soundEmitter->m_channel);
 		break;
 	}
+	case PLAYSOUND_RUNE_SHIELD_SOUND:
+	{
+		m_runeShield->setMode(FMOD_LOOP_OFF);
+		m_runeShield->setLoopCount(1);
+		m_system->playSound(m_runeShield, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_HEAL_SOUND:
+	{
+		m_runeHeal->setMode(FMOD_LOOP_OFF);
+		m_runeHeal->setLoopCount(1);
+		m_system->playSound(m_runeHeal, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_INVISIBLE_SOUND:
+	{
+		m_runeInvisibility->setMode(FMOD_LOOP_OFF);
+		m_runeInvisibility->setLoopCount(1);
+		m_system->playSound(m_runeInvisibility, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
 	default:
 	{
 		break;
@@ -511,7 +628,7 @@ void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
 	//If wind always same volume
 	if (p_soundEmitter->m_playSound == PLAYSOUND::PLAYSOUND_WIND_SOUND){
 		p_soundEmitter->m_channel->setPaused(true);
-		p_soundEmitter->m_channel->setVolume(m_defaultAmbientVolume);
+		p_soundEmitter->m_channel->setVolume(m_defaultWindVolume);
 		p_soundEmitter->m_channel->setPaused(false);
 		return;
 	}
