@@ -368,6 +368,12 @@ void DirectXWrapper::Shutdown()
 		m_alphaEnabled->Release();
 		m_alphaEnabled = nullptr;
 	}
+	
+	if (m_pointLightsAlphaEnabled != nullptr)
+	{
+		m_pointLightsAlphaEnabled->Release();
+		m_pointLightsAlphaEnabled = nullptr;
+	}
 
 	if (m_gBufferSRV[0])
 	{

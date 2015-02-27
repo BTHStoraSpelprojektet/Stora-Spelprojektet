@@ -26,6 +26,7 @@ public:
 	virtual bool Initialize();
 	virtual bool Initialize(std::string p_levelName);
 	void Shutdown();
+	void ShutdownExit();
 	GAMESTATESWITCH Update();
 	void Render();
 	void ToggleFullscreen(bool p_fullscreen);

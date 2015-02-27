@@ -217,18 +217,21 @@ void System::Shutdown()
 	//Shutdown current state
 	if (m_menuState != nullptr)
 	{
+		m_menuState->ShutdownExit();
 		m_menuState->Shutdown();
 		delete m_menuState;
 		m_menuState = nullptr;
 	}
 	if (m_playingState != nullptr)
 	{
+		m_playingState->ShutdownExit();
 		m_playingState->Shutdown();
 		delete m_playingState;
 		m_playingState = nullptr;
 	}
 	if (m_chooseNinjaState != nullptr)
 	{
+		m_chooseNinjaState->ShutdownExit();
 		m_chooseNinjaState->Shutdown();
 		delete m_chooseNinjaState;
 		m_chooseNinjaState = nullptr;

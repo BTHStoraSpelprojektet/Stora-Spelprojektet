@@ -243,6 +243,14 @@ void PlayingStateTest::Shutdown()
 	}
 }
 
+void PlayingStateTest::ShutdownExit()
+{
+	if (m_objectManager != nullptr)
+	{
+		m_objectManager->ShutdownExit();
+	}
+}
+
 GAMESTATESWITCH PlayingStateTest::Update()
 {
 	// Check if a new level have started.

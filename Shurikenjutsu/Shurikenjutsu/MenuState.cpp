@@ -193,6 +193,14 @@ void MenuState::Shutdown()
 }
 }
 
+void MenuState::ShutdownExit()
+{
+	if (m_objectManager != nullptr)
+	{
+		m_objectManager->ShutdownExit();
+	}
+}
+
 GAMESTATESWITCH MenuState::Update()
 {
 	MenuActionData action = m_menues.top()->Update();

@@ -25,6 +25,7 @@ public:
 
 	bool Initialize();
 	void Shutdown();
+	void ShutdownExit();
 
 	GAMESTATESWITCH Update();
 	void Render();
