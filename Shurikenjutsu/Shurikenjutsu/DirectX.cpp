@@ -427,6 +427,18 @@ void DirectXWrapper::Shutdown()
 	m_device = nullptr;	
 	m_swapChain->Release();
 
+	if (m_pointLightsAlphaEnabled)
+	{
+		m_pointLightsAlphaEnabled->Release();
+		m_pointLightsAlphaEnabled = nullptr;
+	}
+
+	if (m_depthSRV)
+	{
+		m_depthSRV->Release();
+		m_depthSRV = nullptr;
+	}
+
 #ifdef _DEBUG
 	d3dDebug->ReportLiveDeviceObjects(D3D11_RLDO_SUMMARY | D3D11_RLDO_DETAIL);
 	d3dDebug->Release();
