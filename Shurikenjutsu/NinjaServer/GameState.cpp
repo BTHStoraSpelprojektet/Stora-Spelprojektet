@@ -277,15 +277,15 @@ void GameState::UpdateTime(double p_deltaTime)
 		m_timeMin++;
 	}
 
-	//if (m_timeSec > 0.9f &&( redTeam == 0|| bluTeam == 0))
-	//{
-	//	m_timeSec = 0.0f;
-	//	m_timeMin = 0.0f;
-	//	for (unsigned int i = 0; i < playerList.size(); i++)
-	//	{
-	//		SyncTime(playerList[i].guid);
-	//	}
-	//}
+	if (m_timeSec > 0.9f &&( redTeam == 0|| bluTeam == 0))
+	{
+		m_timeSec = 0.0f;
+		m_timeMin = 0.0f;
+		for (unsigned int i = 0; i < playerList.size(); i++)
+		{
+			SyncTime(playerList[i].guid);
+		}
+	}
 	if (m_timeSec >= ROUND_TIME_LIMIT && !m_isSuddenDeath)
 	{
 		m_isSuddenDeath = true;
