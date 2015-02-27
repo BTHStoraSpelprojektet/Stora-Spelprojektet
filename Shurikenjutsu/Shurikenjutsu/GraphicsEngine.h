@@ -2,7 +2,7 @@
 #define GRAPHICSENGINE_H_
 
 #include "DirectX.h"
-#include "DirectXTex\DirectXTex.h"
+#include "DirectXTex\DirectXTex\DirectXTex.h"
 #include "Structures.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include <vector>

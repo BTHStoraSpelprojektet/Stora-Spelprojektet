@@ -58,7 +58,7 @@ public:
 	void SetSound(Sound* p_sound);
 
 	void CheckRunePickUp(OBB p_OBB);
-	void SpawnRunes();
+	void SpawnRunes(int p_index, float p_x, float p_y, float p_z);
 
 private:
 	float CheckStickyTrapYPosition();

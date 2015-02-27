@@ -145,7 +145,7 @@ public:
 	std::vector<DirectX::XMFLOAT3*> BloodParticlesLocations();
 	bool IsBloodParticlesUpdated();
 
-	void SpawnRunes();
+	void SpawnRunes(int p_index, float p_x, float p_y, float p_z);
 
 private:
 	void ClearListsAtNewRound();

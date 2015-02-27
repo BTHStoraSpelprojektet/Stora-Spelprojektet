@@ -1,5 +1,4 @@
 #include "PointOfInterestManager.h"
-#include "PointOfInterest.h"
 #include <DirectXMath.h>
 #include "../CommonLibs/ModelNames.h"
 #include "Collisions.h"
@@ -18,22 +17,6 @@ bool PointOfInterestManager::Initialize()
 {
 	m_nrOfRunes = 3;
 
-	DirectX::XMFLOAT3 spawnPoints[3];
-	spawnPoints[0] = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-	spawnPoints[1] = DirectX::XMFLOAT3(0.0f, 1.0f, -10.0f);
-	spawnPoints[2] = DirectX::XMFLOAT3(0.0f, 1.0f, 10.0f);
-
-	PointOfInterest temp;
-
-	temp.Initialize(RUNE_HOT, spawnPoints[0], DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
-	m_runes.push_back(temp);
-
-	temp.Initialize(RUNE_INVIS, spawnPoints[1], DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
-	m_runes.push_back(temp);
-
-	temp.Initialize(RUNE_SHIELD, spawnPoints[2], DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
-	m_runes.push_back(temp);
-
 	return true;
 }
 
@@ -42,7 +25,7 @@ void PointOfInterestManager::Shutdown()
 	m_runes.clear();
 }
 
-void PointOfInterestManager::Update()
+void PointOfInterestManager::Update(double p_deltaTime)
 {
 	for (unsigned int i = 0; i < m_runes.size(); i++)
 	{
@@ -75,30 +58,44 @@ void PointOfInterestManager::RenderDepth()
 	}
 }
 
-void PointOfInterestManager::SpawnRunes()
+void PointOfInterestManager::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
 {
-	for (unsigned int i = 0; i < m_runes.size(); i++)
+	PointOfInterest temp;
+	
+	switch (p_index)
 	{
-		m_runes[i].SetActive(true);
+	case 0:
+	{
+		temp.Initialize(RUNE_LOTUS, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
+		temp.SetActive(true);
+		m_runes.push_back(temp);
+
+		break;
+	}
+	case 1:
+	{
+		temp.Initialize(RUNE_INVIS, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
+		temp.SetActive(true);
+		m_runes.push_back(temp);
+	
+		break;
+	}
+	case 2:
+	{
+		temp.Initialize(RUNE_SHIELD, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
+		temp.SetActive(true);
+		m_runes.push_back(temp);
+
+		break;
+	}
+	default:
+		break;
 	}
 }
 
 void PointOfInterestManager::PickUpRunes(OBB p_OBB)
 {
-	std::vector<OBB> boundingBox;
 
-	for (unsigned int i = 0; i < m_runes.size(); i++)
-	{
-		boundingBox = m_runes[i].GetBoundingBoxes();
-		for (unsigned int j = 0; j < boundingBox.size(); j++)
-		{
-			if (Collisions::OBBOBBCollision(boundingBox[j], p_OBB))
-			{
-				m_runes[i].SetActive(false);
-				m_runes[i].PickedUp();
-			}
-		}
-	}
 }
 
 void PointOfInterestManager::RoundRestart()

@@ -1,5 +1,4 @@
 #include "GameState.h"
-
 #include "MapManager.h"
 #include "CollisionManager.h"
 #include "SpikeManager.h"
@@ -7,6 +6,7 @@
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
 #include "FanBoomerangManager.h"
+#include "PointOfInterestManager.h"
 
 GameState::GameState(){}
 GameState::~GameState(){}
@@ -48,6 +48,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_volleyManager = new VolleyManager();
 	m_volleyManager->Initialize(m_serverPeer);
 
+	m_POIManager = new PointOfInterestManager();
+	m_POIManager->Initialize(m_serverPeer);
+	
 	m_winningTeams = std::map<int, int>();
 
 	// Time
@@ -111,16 +114,26 @@ void GameState::Update(double p_deltaTime)
 	m_fanBoomerangManager->Update(p_deltaTime, m_playerManager);
 	m_projectileManager->Update(p_deltaTime);
 	m_volleyManager->Update(p_deltaTime);
+	m_POIManager->Update(p_deltaTime);
 
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
 	m_collisionManager->ProjectileCollisionChecks(m_projectileManager, m_playerManager);
 	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager);
 	m_collisionManager->FanCollisionChecks(p_deltaTime, m_fanBoomerangManager, m_playerManager);
 	m_collisionManager->VolleyCollisionChecks(m_volleyManager, m_playerManager);
-
+	m_collisionManager->POICollisionChecks(m_POIManager, m_playerManager);
 	m_collisionManager->NaginataStbDot(m_playerManager);
+
 	UpdateTime(p_deltaTime);
-	
+
+	if ((m_timeSec >= 20 && m_timeSec <= 21) && m_timeMin == 0)
+	{
+		if (!m_runesSpawned)
+		{
+			m_POIManager->SpawnRunes();
+			m_runesSpawned = true;
+		}
+	}
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team)
@@ -175,15 +188,6 @@ void GameState::UpdateTime(double p_deltaTime)
 		m_timeSec -= 60;
 		m_timeMin++;
 	}
-
-	if ((m_timeSec >= 20 && m_timeSec <= 21) && m_timeMin == 0)
-	{
-		if (!m_runesSpawned)
-		{
-			SpawnRunes();
-			m_runesSpawned = true;
-		}
-	}
 }
 
 void GameState::ResetTime()
@@ -228,11 +232,4 @@ void GameState::UserConnected(RakNet::RakNetGUID p_guid)
 		bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND);
 		m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, p_guid, false);
 	}
-}
-
-void GameState::SpawnRunes()
-{
-	RakNet::BitStream bitStream;
-	bitStream.Write((RakNet::MessageID)ID_SPAWN_RUNES);
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

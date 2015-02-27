@@ -20,6 +20,8 @@ bool Level::loadLevel(std::string p_level){
 
 	m_spawnPoints = levelImporter.GetSpawnPoints();
 
+	m_POIPoints = levelImporter.GetPOIPoints();
+
 	m_shadowShapes = levelImporter.GetShadowsShapes();
 
 	m_particleEmitter = levelImporter.GetParticleEmitters();

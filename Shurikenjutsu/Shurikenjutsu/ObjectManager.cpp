@@ -743,7 +743,7 @@ void ObjectManager::Update()
 		}
 	}
 
-	m_POIManager->Update();
+	m_POIManager->Update(deltaTime);
 
 	UpdateRenderLists();
 }
@@ -1405,7 +1405,7 @@ void ObjectManager::CheckRunePickUp(OBB p_OBB)
 	m_POIManager->PickUpRunes(p_OBB);
 }
 
-void ObjectManager::SpawnRunes()
+void ObjectManager::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
 {
-	m_POIManager->SpawnRunes();
+	m_POIManager->SpawnRunes(p_index, p_x, p_y, p_z);
 }

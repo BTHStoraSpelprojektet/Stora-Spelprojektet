@@ -23,9 +23,13 @@ public:
 
 	struct POI
 	{
+		std::string m_filePath;
 		float m_translationX;
 		float m_translationY;
 		float m_translationZ;
+		float m_rotationX;
+		float m_rotationY;
+		float m_rotationZ;
 	};
 
 	struct ParticleEmitter{

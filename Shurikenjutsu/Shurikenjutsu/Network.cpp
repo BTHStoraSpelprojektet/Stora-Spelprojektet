@@ -958,7 +958,64 @@ void Network::ReceviePacket()
 		}
 		case ID_SPAWN_RUNES:
 		{
-			SpawnRunes();
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			int index;
+			float x, y, z;
+			bitStream.Read(messageID);
+			for (int i = 0; i < 3; i++)
+			{
+				bitStream.Read(index);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+				SpawnRunes(index, x, y, z);
+			}
+
+			break;
+		}
+		case ID_RUNE_PICKED_UP:
+		{
+			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);*/
+			break;
+		}
+		case ID_LOTUS_PICKED_UP:
+		{
+			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);*/
+			break;
+		}
+		case ID_SHIELD_PICKED_UP:
+		{
+			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);*/
+			break;
+		}
+		case ID_INVIS_PICKED_UP:
+		{
+			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);*/
 			break;
 		}
 		default:
@@ -1863,7 +1920,7 @@ int Network::GetTeam(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void Network::SpawnRunes()
+void Network::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
 {
-	m_objectManager->SpawnRunes();
+	m_objectManager->SpawnRunes(p_index, p_x, p_y, p_z);
 }

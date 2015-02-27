@@ -3,8 +3,7 @@
 
 #include <vector>
 #include "../CommonLibs/CommonStructures.h"
-
-class PointOfInterest;
+#include "PointOfInterest.h"
 
 class PointOfInterestManager
 {
@@ -14,19 +13,18 @@ public:
 
 	bool Initialize();
 	void Shutdown();
-	void Update();
+	void Update(double p_deltaTime);
 	void Render();
 	void RenderDepth();
 
 	void RoundRestart();
 	void PickUpRunes(OBB p_OBB);
-	void SpawnRunes();
-
+	void SpawnRunes(int p_index, float p_x, float p_y, float p_z);
+	void CollisionCheck();
 private:
 
 	int m_nrOfRunes;
 	std::vector<PointOfInterest> m_runes;
-
 
 };
 #endif // !POINTOFINTERESTMANAGER_H_
