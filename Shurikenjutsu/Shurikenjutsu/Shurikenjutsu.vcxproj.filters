@@ -524,6 +524,9 @@
     <ClCompile Include="DebugText.cpp">
       <Filter>Source Files\Utility\DebugDraw</Filter>
     </ClCompile>
+    <ClCompile Include="SuddenDeathState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -873,6 +876,9 @@
     </ClInclude>
     <ClInclude Include="DebugText.h">
       <Filter>Header Files\Utility\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="SuddenDeathState.h">
+      <Filter>Header Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,7 @@
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
 #include "ScoreBoard.h"
-
+#include "SuddenDeathState.h"
 #include "PointLights.h"
 
 PlayingStateTest::PlayingStateTest(){}
@@ -53,7 +53,7 @@ void PlayingStateTest::EscapeIsPressed()
 	if (Network::GetInstance()->GetMatchOver())
 	{
 		m_inGameMenuIsActive = false;
-}
+	}
 
 	m_sound->StartStopMusic();
 }
@@ -161,11 +161,20 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		return false;
 	}
 
+	m_suddenDeath = new SuddenDeathState();
+	m_suddenDeath->Initialize(wallList);
+
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_suddenDeath != nullptr)
+	{
+		m_suddenDeath->Shutdown();
+		delete m_suddenDeath;
+		m_suddenDeath = nullptr;
+	}
 	if (m_scoreBoard != nullptr)
 	{
 		m_scoreBoard->Shutdown();
@@ -245,6 +254,15 @@ void PlayingStateTest::Shutdown()
 
 GAMESTATESWITCH PlayingStateTest::Update()
 {
+	int tempSuddenDeathBoxIndex = Network::GetInstance()->GetSuddenDeathBoxIndex();
+	if (tempSuddenDeathBoxIndex != 99)
+	{
+		m_suddenDeath->StartEmittingParticles(tempSuddenDeathBoxIndex);
+	}
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Update();
+	}
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -265,7 +283,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager->SetStickyTrapList(m_objectManager->GetStickyTrapList());
 	m_playerManager->Update(false);
 
-
+	
 	if (!m_playerManager->GetPlayerIsAlive())
 	{
 		if (!GLOBAL::GetInstance().CAMERA_SPECTATE)
@@ -439,31 +457,31 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		switch (m_inGameMenu->Update())
 		{
-		case IN_GAME_MENU_RESUME:
+			case IN_GAME_MENU_RESUME:
 			{
-			m_inGameMenuIsActive = false;
+				m_inGameMenuIsActive = false;
 				m_sound->StopMusic();
 
-			break;
+				break;
 			}
 			
 		case IN_GAME_MENU_TO_MAIN:
 			{
-			Network::GetInstance()->Disconnect();
-			return GAMESTATESWITCH_MENU;
-			break;
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
 			}
 			
 		case IN_GAME_MENU_QUIT:
 			{
-			PostQuitMessage(0);
-			break;
+				PostQuitMessage(0);
+				break;
 			}
 			
 		default:
 			{
-			break;
-		}
+				break;
+			}
 	}
 	}
 
@@ -502,7 +520,7 @@ void PlayingStateTest::Render()
 
 	GraphicsEngine::GetInstance()->SetForwardRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
-	
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
@@ -548,6 +566,10 @@ void PlayingStateTest::Render()
 		m_scoreBoard->Render();
 	}
 
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Render();
+	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

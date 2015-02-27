@@ -506,7 +506,7 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility)
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility, bool p_suddenDeathDamage)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -535,7 +535,10 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 				}
 			}
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
-			SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
+			if (!p_suddenDeathDamage)
+			{
+				SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
 			SendPlaySound(p_usedAbility, m_players[i].x, m_players[i].y, m_players[i].z);
 			if (m_players[i].charNr == 1){
 				SendPlaySound(PLAYSOUND_FEMALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
