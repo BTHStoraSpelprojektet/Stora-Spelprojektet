@@ -21,7 +21,8 @@
 #include "TrailRenderer.h"
 #include "MemoryChecker.h"
 #include "DebugText.h"
-#include <vld.h>
+#include "PointLights.h"
+//#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
@@ -191,6 +192,8 @@ void System::Shutdown()
 
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
+
+	PointLights::GetInstance()->Shutdown();
 
 	if (m_sound)
 	{
