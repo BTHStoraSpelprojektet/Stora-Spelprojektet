@@ -43,6 +43,7 @@ private:
 
 	ID3D11Buffer* m_vertexBuffer;
 	ID3D11ShaderResourceView* m_texture;
+	ID3D11ShaderResourceView* m_normalMap;
 
 	DirectX::XMFLOAT4X4 m_lightViewMatrix;
 	DirectX::XMFLOAT4X4 m_lightProjectionMatrix;

@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include "ParticleRenderer.h"
+#include "PointLights.h"
 
 ParticleEmitter::ParticleEmitter(){}
 ParticleEmitter::~ParticleEmitter(){}
@@ -595,8 +596,17 @@ void ParticleEmitter::UpdateParticles()
 		// Fire just moves right up, ignoring direction.
 		case(PARTICLE_PATTERN_FIRE) :
 		{
-				if (m_particleList != nullptr)
-				{
+			if (m_particleList != nullptr)
+			{
+				PointLight fireLight;
+				fireLight.m_diffuse = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
+				fireLight.m_specular = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+
+				fireLight.m_position = DirectX::XMFLOAT3(m_emitterPosition.x, m_emitterPosition.y + 0.2f, m_emitterPosition.z);
+				fireLight.m_range = 5.0f;
+				
+				PointLights::GetInstance()->AddLight(fireLight);
+
 				for (int i = 0; i < m_currentParticles; i++)
 				{
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;

@@ -6,6 +6,7 @@
 #include "Network.h"
 #include "Window.h"
 
+class MemoryChecker;
 class Sound;
 class Timer;
 class Debug;
@@ -40,5 +41,7 @@ private:
 	Cursor *m_cursor;
 
 	Sound* m_sound;
+
+	MemoryChecker* m_memoryCheker;
 };
 #endif
