@@ -110,6 +110,11 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			initParticles(200.0f, 1000, DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f), 0.5f, 1.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/BloodParticle.png"));
 			break;
 		}
+		case(PARTICLE_PATTERN_SUDDENDEATH) :
+		{
+			initParticles(50.0f, 500, DirectX::XMFLOAT3(13.0f,0.0f,13.0f), 1.0f, 0.1f, 7.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/BloodParticle.png"));
+			break;
+		}
 		default:
 		{
 			return false;
@@ -501,7 +506,24 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_opacity = 0.0f;
 					break;
 				}
+				case(PARTICLE_PATTERN_SUDDENDEATH) :
+				{
+					// Set a random direction in xz.
+					float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
+					DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), sin(angle), sin(angle));
 
+					m_particleList[index].m_position = position;
+					m_particleList[index].m_direction = direction;
+					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = 0.0f;
+					m_particleList[index].m_opacity = 0.0f;
+					break;
+				}
+												
 				default:
 				{
 					break;
@@ -742,7 +764,23 @@ void ParticleEmitter::UpdateParticles()
 			}
 			break;
 		}
+		case(PARTICLE_PATTERN_SUDDENDEATH) :
+		{
+			if (m_particleList != nullptr)
+			{
+				for (int i = 0; i < m_currentParticles; i++)
+				{
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
 
+					m_particleList[i].m_position.x = m_particleList[i].m_position.x + (m_particleList[i].m_direction.x * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+					m_particleList[i].m_position.y = m_particleList[i].m_position.y + (m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
+			}
+			break;
+		}
+										
 		default:
 		{
 			break;
@@ -949,6 +987,12 @@ void ParticleEmitter::UpdateBuffers()
 			}
 
 			case PARTICLE_PATTERN_BLOODHIT:
+			{
+				m_particleList[i].m_opacity = fadeIn(&m_particleList[i], 0.01f);
+				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+			}
+
+			case PARTICLE_PATTERN_SUDDENDEATH:
 			{
 				m_particleList[i].m_opacity = fadeIn(&m_particleList[i], 0.01f);
 				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);

@@ -49,6 +49,7 @@ bool Network::Initialize()
 	m_matchOver = false;
 	m_matchWinningTeam = 0;
 	m_suddenDeath = false;
+	m_suddenDeathBoxIndex = 99;
 
 	m_clientPeer = RakNet::RakPeerInterface::GetInstance();	
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
@@ -961,10 +962,19 @@ void Network::ReceviePacket()
 		case ID_START_SUDDEN_DEATH:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			
+
 			bitStream.Read(messageID);
 			m_suddenDeath = true;
 
+			break;
+		}
+		case ID_INITIATE_SUDDEN_DEATH_BOX:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			int index;
+			bitStream.Read(messageID);
+			bitStream.Read(index);
+			m_suddenDeathBoxIndex = index;
 			break;
 		}
 			
@@ -1873,4 +1883,11 @@ int Network::GetTeam(RakNet::RakNetGUID p_guid)
 bool Network::IsSuddenDeath()
 {
 	return m_suddenDeath;
+}
+
+int Network::GetSuddenDeathBoxIndex()
+{
+	int temp = m_suddenDeathBoxIndex;
+	m_suddenDeathBoxIndex = 99;
+	return temp;
 }

@@ -18,11 +18,11 @@ public:
 	void Shutdown();
 	void Render();
 
-
+	void StartEmittingParticles(int p_index);
 private:
 
 	GUIText* m_title;
-	ParticleEmitter* m_gasParticle[4];
+	ParticleEmitter* m_gasParticle[8];
 	std::vector<Box> m_walls;
 };
 

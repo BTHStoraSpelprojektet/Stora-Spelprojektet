@@ -245,6 +245,11 @@ void PlayingStateTest::Shutdown()
 
 GAMESTATESWITCH PlayingStateTest::Update()
 {
+	int tempSuddenDeathBoxIndex = Network::GetInstance()->GetSuddenDeathBoxIndex();
+	if (tempSuddenDeathBoxIndex != 99)
+	{
+		m_suddenDeath->StartEmittingParticles(tempSuddenDeathBoxIndex);
+	}
 	if (Network::GetInstance()->IsSuddenDeath())
 	{
 		m_suddenDeath->Update();

@@ -5,63 +5,75 @@
 #include "ParticleEmitter.h"
 #include "GraphicsEngine.h"
 
-
 SuddenDeathState::SuddenDeathState(){}
 SuddenDeathState::~SuddenDeathState(){}
 void SuddenDeathState::Initialize(std::vector<Box> p_walls)
 {
 	m_title = new GUIText();
 	m_title->Initialize("SUDDEN FUCKING DEATH", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.25f, 0xffffffff);
-
-	m_gasParticle[0] = new ParticleEmitter();
-	m_gasParticle[1] = new ParticleEmitter();
-	m_gasParticle[2] = new ParticleEmitter();
-	m_gasParticle[3] = new ParticleEmitter();
 	m_walls = p_walls;
-	
-	//m_gasParticle[0]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f,0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(50.0f, 50.0f), PARTICLE_PATTERN_SMOKE);
-	m_gasParticle[0]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(m_walls[0].m_center.x, m_walls[0].m_center.y, m_walls[0].m_center.z), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(25.0f, 25.0f), PARTICLE_PATTERN_WORLD_MIST);
-	m_gasParticle[1]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(m_walls[1].m_center.x, m_walls[1].m_center.y, m_walls[1].m_center.z), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(25.0f, 25.0f), PARTICLE_PATTERN_WORLD_MIST);
-	m_gasParticle[2]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(m_walls[2].m_center.x, m_walls[2].m_center.y, m_walls[2].m_center.z), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(25.0f, 25.0f), PARTICLE_PATTERN_WORLD_MIST);
-	m_gasParticle[3]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(m_walls[3].m_center.x, m_walls[3].m_center.y, m_walls[3].m_center.z), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(25.0f, 25.0f), PARTICLE_PATTERN_WORLD_MIST);
+	float xMax = 0, xMin = 0;
+	float zMax = 0, zMin = 0;
+	for (unsigned int i = 0; i < m_walls.size(); i++)
+	{
+		if (m_walls[i].m_center.x > 0.0f)
+		{
+			xMax = m_walls[i].m_center.x;
+		}
+		if (m_walls[i].m_center.x < 0.0f)
+		{
+			xMin = m_walls[i].m_center.x;
+		}
+		if (m_walls[i].m_center.z > 0.0f)
+		{
+			zMax = m_walls[i].m_center.z;
+		}
+		if (m_walls[i].m_center.z < 0.0f)
+		{
+			zMin = m_walls[i].m_center.z;
+		}
+	}
 
-	m_gasParticle[0]->SetEmitParticleState(true);
-	m_gasParticle[1]->SetEmitParticleState(true);
-	m_gasParticle[2]->SetEmitParticleState(true);
-	m_gasParticle[3]->SetEmitParticleState(true);
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		m_gasParticle[i] = new ParticleEmitter();
+	}
+	float xLength = xMax - xMin;
+	float zLength = zMax - zMin;
+	std::vector<DirectX::XMFLOAT3> positions;
+	positions.push_back(DirectX::XMFLOAT3(-xLength / 4.0f, 0.0f, zLength / 4.0f));
+	positions.push_back(DirectX::XMFLOAT3(0.0f, 0.0f, zLength / 4.0f));
+	positions.push_back(DirectX::XMFLOAT3(xLength / 4.0f, 0.0f, zLength / 4.0f));
+	positions.push_back(DirectX::XMFLOAT3(-xLength / 4.0f, 0.0f, 0.0f));
+	positions.push_back(DirectX::XMFLOAT3(xLength / 4.0f, 0.0f, 0.0f));
+	positions.push_back(DirectX::XMFLOAT3(-xLength / 4.0f, 0.0f, -zLength / 4.0f));
+	positions.push_back(DirectX::XMFLOAT3(0.0f, 0.0f, -zLength / 4.0f));
+	positions.push_back(DirectX::XMFLOAT3(xLength / 4.0f, 0.0f, -zLength / 4.0f));
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		m_gasParticle[i]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), positions[i], DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f), PARTICLE_PATTERN_SUDDENDEATH);
+	}
 }
 void SuddenDeathState::Update()
 {
-	m_gasParticle[0]->Update();
-	m_gasParticle[1]->Update();
-	m_gasParticle[2]->Update();
-	m_gasParticle[3]->Update();
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		if (m_gasParticle[i] != nullptr)
+		{
+			m_gasParticle[i]->Update();
+		}
+	}
 }
 void SuddenDeathState::Shutdown()
 {
-	if (m_gasParticle[0] != nullptr)
+	for (unsigned int i = 0; i < 8; i++)
 	{
-		m_gasParticle[0]->Shutdown();
-		delete m_gasParticle[0];
-		m_gasParticle[0] = nullptr;
-	}
-	if (m_gasParticle[1] != nullptr)
-	{
-		m_gasParticle[1]->Shutdown();
-		delete m_gasParticle[1];
-		m_gasParticle[1] = nullptr;
-	}
-	if (m_gasParticle[2] != nullptr)
-	{
-		m_gasParticle[2]->Shutdown();
-		delete m_gasParticle[2];
-		m_gasParticle[2] = nullptr;
-	}
-	if (m_gasParticle[3] != nullptr)
-	{
-		m_gasParticle[3]->Shutdown();
-		delete m_gasParticle[3];
-		m_gasParticle[3] = nullptr;
+		if (m_gasParticle[i] != nullptr)
+		{
+			m_gasParticle[i]->Shutdown();
+			delete m_gasParticle[i];
+			m_gasParticle[i] = nullptr;
+		}
 	}
 	if (m_title != nullptr)
 	{
@@ -73,8 +85,16 @@ void SuddenDeathState::Shutdown()
 void SuddenDeathState::Render()
 {
 	m_title->Render();
-	m_gasParticle[0]->Render();
-	m_gasParticle[1]->Render();
-	m_gasParticle[2]->Render();
-	m_gasParticle[3]->Render();
+
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		if (m_gasParticle[i] != nullptr)
+		{
+			m_gasParticle[i]->Render();
+		}
+	}
+}
+void SuddenDeathState::StartEmittingParticles(int p_index)
+{
+	m_gasParticle[p_index]->SetEmitParticleState(true);
 }
