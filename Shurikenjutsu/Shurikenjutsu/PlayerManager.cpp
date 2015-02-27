@@ -100,9 +100,9 @@ void PlayerManager::Update(bool p_inMenu)
 			m_enemyList[i]->Update();
 
 			if (m_enemyList[i]->m_soundEmitter != NULL) {
-				m_enemyList[i]->m_soundEmitter->m_x = enemyPlayers[i].x;
-				m_enemyList[i]->m_soundEmitter->m_y = enemyPlayers[i].y;
-				m_enemyList[i]->m_soundEmitter->m_z = enemyPlayers[i].z;
+				m_enemyList[i]->m_soundEmitter->m_pos.x = enemyPlayers[i].x;
+				m_enemyList[i]->m_soundEmitter->m_pos.y = enemyPlayers[i].y;
+				m_enemyList[i]->m_soundEmitter->m_pos.z = enemyPlayers[i].z;
 			}
 		}
 	}
