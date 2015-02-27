@@ -19,7 +19,7 @@
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
 #include "ScoreBoard.h"
-
+#include "SuddenDeathState.h"
 #include "PointLights.h"
 
 PlayingStateTest::PlayingStateTest(){}
@@ -161,11 +161,20 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		return false;
 	}
 
+	m_suddenDeath = new SuddenDeathState();
+	m_suddenDeath->Initialize(wallList);
+
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_suddenDeath != nullptr)
+	{
+		m_suddenDeath->Shutdown();
+		delete m_suddenDeath;
+		m_suddenDeath = nullptr;
+	}
 	if (m_scoreBoard != nullptr)
 	{
 		m_scoreBoard->Shutdown();
@@ -253,6 +262,15 @@ void PlayingStateTest::ShutdownExit()
 
 GAMESTATESWITCH PlayingStateTest::Update()
 {
+	int tempSuddenDeathBoxIndex = Network::GetInstance()->GetSuddenDeathBoxIndex();
+	if (tempSuddenDeathBoxIndex != 99)
+	{
+		m_suddenDeath->StartEmittingParticles(tempSuddenDeathBoxIndex);
+	}
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Update();
+	}
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -506,12 +524,12 @@ void PlayingStateTest::Render()
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
-	////
+	GraphicsEngine::GetInstance()->ApplyDOF();
 
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->SetForwardRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
@@ -556,6 +574,10 @@ void PlayingStateTest::Render()
 		m_scoreBoard->Render();
 	}
 
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Render();
+	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 

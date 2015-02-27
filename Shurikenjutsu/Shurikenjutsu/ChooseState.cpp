@@ -39,8 +39,8 @@ bool ChooseState::Initialize()
 	m_isRandoming = false;
 	m_screenHeight = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	m_screenWidth = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
-	m_portraitHeight = m_screenHeight / 5.12f;
-	m_portraitWidth = m_screenWidth / 6.4f;
+	m_portraitHeight = 200.0f;
+	m_portraitWidth = 200.0f;
 	m_buttonWidth = m_screenWidth / 4.27f;
 	m_buttonHeight = m_screenHeight / 10.24f; 
 	m_nextWidth = m_screenWidth / 12.80f;
@@ -462,6 +462,8 @@ void ChooseState::Render()
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->ApplyDOF();
+
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();

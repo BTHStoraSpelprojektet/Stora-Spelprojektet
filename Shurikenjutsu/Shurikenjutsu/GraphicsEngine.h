@@ -119,10 +119,12 @@ public:
 	void Composition();
 	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection);
 
-	void SetScreenSpaceRenderTarget();
+	void SetForwardRenderTarget();
 
 	void RenderSSAO();
 	void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
+
+	void ApplyDOF();
 
 private:
 	static GraphicsEngine* m_instance;

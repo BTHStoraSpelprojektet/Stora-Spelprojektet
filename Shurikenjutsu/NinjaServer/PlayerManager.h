@@ -40,7 +40,7 @@ public:
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
-	void DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility);
+	void DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility, bool p_suddenDeathDamage);
 	bool CanSendDotDamage();
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
