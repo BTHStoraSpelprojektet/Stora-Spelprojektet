@@ -20,7 +20,6 @@
 #include "DeathBoard.h"
 #include "ScoreBoard.h"
 #include "SuddenDeathState.h"
-
 #include "PointLights.h"
 
 PlayingStateTest::PlayingStateTest(){}
@@ -329,7 +328,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 				return GAMESTATESWITCH_CHOOSENINJA;
 
 				break;
-			}
+	}
 
 			case IN_GAME_MENU_TO_MAIN:
 			{
@@ -466,24 +465,24 @@ GAMESTATESWITCH PlayingStateTest::Update()
 				break;
 			}
 			
-			case IN_GAME_MENU_TO_MAIN:
+		case IN_GAME_MENU_TO_MAIN:
 			{
 				Network::GetInstance()->Disconnect();
 				return GAMESTATESWITCH_MENU;
 				break;
 			}
 			
-			case IN_GAME_MENU_QUIT:
+		case IN_GAME_MENU_QUIT:
 			{
 				PostQuitMessage(0);
 				break;
 			}
 			
-			default:
+		default:
 			{
 				break;
 			}
-		}
+	}
 	}
 
 	m_camera->Update3DSound(m_sound, player.x, player.y, player.z);
@@ -517,12 +516,12 @@ void PlayingStateTest::Render()
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
-	////
+	GraphicsEngine::GetInstance()->ApplyDOF();
 
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->SetForwardRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
@@ -598,7 +597,7 @@ void PlayingStateTest::BasicPicking()
 	
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-		m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
 	}
 
 	m_mouseX = shurPos.x;
@@ -672,7 +671,7 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 {
 	for (unsigned int i = 0; i < 7; i++)
-	{
+		{
 		m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000, -1000, 0));
 
 		Player* player = m_playerManager->GetEnemyTeamMember(i);

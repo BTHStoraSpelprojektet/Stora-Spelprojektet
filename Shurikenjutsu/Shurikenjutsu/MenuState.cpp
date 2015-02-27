@@ -357,9 +357,9 @@ void MenuState::Render()
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
-
+	GraphicsEngine::GetInstance()->ApplyDOF();
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 }
 
 void MenuState::EscapeIsPressed()

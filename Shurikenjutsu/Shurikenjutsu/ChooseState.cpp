@@ -454,6 +454,8 @@ void ChooseState::Render()
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->ApplyDOF();
+
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();

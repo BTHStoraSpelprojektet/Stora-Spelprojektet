@@ -286,6 +286,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 
 	InitializeGBuffer();
 	InitializePP();
+	InitializeComposition();
 
 	// Clear the render target.
 	Clear();
@@ -417,6 +418,18 @@ void DirectXWrapper::Shutdown()
 		m_pPRTV[1] = 0;
 	}
 
+	if (m_compositionSRV)
+	{
+		m_compositionSRV->Release();
+		m_compositionSRV = 0;
+	}
+
+	if (m_compositionRTV)
+	{
+		m_compositionRTV->Release();
+		m_compositionRTV = 0;
+	}
+
 	m_context->ClearState();
 	m_context->Flush();
 
@@ -437,6 +450,7 @@ void DirectXWrapper::Clear()
 {
 	// Clear render target.
 	m_context->ClearRenderTargetView(m_renderTarget, m_clearColor);
+	m_context->ClearRenderTargetView(m_compositionRTV, m_clearColor);
 	m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
@@ -936,4 +950,121 @@ void DirectXWrapper::SetDebugName(ID3D11DeviceChild* child, const std::string& n
 {
 	//if (child != nullptr)
 	//child->SetPrivateData(WKPDID_D3DDebugObjectName, name.size(), name.c_str());
+}
+
+bool DirectXWrapper::InitializeComposition()
+{
+	HRESULT result;
+	D3D11_TEXTURE2D_DESC textureDesc;
+	D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc;
+
+	ID3D11Texture2D* compositionTexture;
+
+	// Initialize the post processing target texture
+	ZeroMemory(&textureDesc, sizeof(textureDesc));
+	textureDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	textureDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	textureDesc.MipLevels = 1;
+	textureDesc.ArraySize = 1;
+	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	textureDesc.SampleDesc.Count = 1;
+	textureDesc.SampleDesc.Quality = 0;
+	textureDesc.Usage = D3D11_USAGE_DEFAULT;
+	textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	textureDesc.CPUAccessFlags = 0;
+	textureDesc.MiscFlags = 0;
+
+	// Create the render target texture.
+	result = m_device->CreateTexture2D(&textureDesc, NULL, &compositionTexture);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Setup the description of the render target view.
+	renderTargetViewDesc.Format = textureDesc.Format;
+	renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	renderTargetViewDesc.Texture2D.MipSlice = 0;
+
+	// Create the render target view.
+	result = m_device->CreateRenderTargetView(compositionTexture, &renderTargetViewDesc, &m_compositionRTV);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Setup the description of the shader resource view.
+	shaderResourceViewDesc.Format = textureDesc.Format;
+	shaderResourceViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shaderResourceViewDesc.Texture2D.MostDetailedMip = 0;
+	shaderResourceViewDesc.Texture2D.MipLevels = 1;
+
+	// Create the shader resource view.
+	result = m_device->CreateShaderResourceView(compositionTexture, &shaderResourceViewDesc, &m_compositionSRV);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Release Texture
+	if (compositionTexture)
+	{
+		compositionTexture->Release();
+		compositionTexture = 0;
+	}
+	return true;
+}
+
+void DirectXWrapper::SetRenderTargetForComposition()
+{
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_context->PSSetShaderResources(3, 1, &nullPointer);
+	m_context->PSSetShaderResources(4, 1, &nullPointer);
+	m_context->PSSetShaderResources(5, 1, &nullPointer);
+	m_context->PSSetShaderResources(6, 1, &nullPointer);
+
+	m_context->OMSetRenderTargets(0, 0, 0);
+	m_context->OMSetRenderTargets(1, &m_compositionRTV, NULL);
+}
+
+void DirectXWrapper::SetRenderTargetForForwardRendering()
+{
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_context->PSSetShaderResources(3, 1, &nullPointer);
+	m_context->PSSetShaderResources(4, 1, &nullPointer);
+	m_context->PSSetShaderResources(5, 1, &nullPointer);
+	m_context->PSSetShaderResources(6, 1, &nullPointer);
+
+	m_context->OMSetRenderTargets(0, 0, 0);
+	m_context->OMSetRenderTargets(1, &m_compositionRTV, m_depthStencilView);
+}
+
+ID3D11ShaderResourceView* DirectXWrapper::GetCompositionTexture()
+{
+	return m_compositionSRV;
+}
+
+void DirectXWrapper::SetRenderTargetForDOF()
+{
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_context->PSSetShaderResources(3, 1, &nullPointer);
+	m_context->PSSetShaderResources(4, 1, &nullPointer);
+	m_context->PSSetShaderResources(5, 1, &nullPointer);
+	m_context->PSSetShaderResources(6, 1, &nullPointer);
+
+	m_context->OMSetRenderTargets(0, 0, 0);
+	m_context->OMSetRenderTargets(1, &m_gBufferRTV[1], NULL);
+}
+
+void DirectXWrapper::SetRenderTargetForDOF2()
+{
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_context->PSSetShaderResources(3, 1, &nullPointer);
+	m_context->PSSetShaderResources(4, 1, &nullPointer);
+	m_context->PSSetShaderResources(5, 1, &nullPointer);
+	m_context->PSSetShaderResources(6, 1, &nullPointer);
+
+	m_context->OMSetRenderTargets(0, 0, 0);
+	m_context->OMSetRenderTargets(1, &m_renderTarget, NULL);
 }

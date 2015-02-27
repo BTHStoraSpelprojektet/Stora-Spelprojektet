@@ -183,6 +183,9 @@
     <Filter Include="Source Files\Graphics\Trails">
       <UniqueIdentifier>{d1182603-a101-4989-8baf-24532995970f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\DOF">
+      <UniqueIdentifier>{16953032-c664-4717-91bd-0002a799348f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -522,7 +525,7 @@
       <Filter>Source Files\Utility\DebugDraw</Filter>
     </ClCompile>
     <ClCompile Include="SuddenDeathState.cpp">
-      <Filter>Header Files\GameState</Filter>
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -875,7 +878,7 @@
       <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="SuddenDeathState.h">
-      <Filter>Source Files\GameState</Filter>
+      <Filter>Header Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -995,6 +998,15 @@
     </FxCompile>
     <FxCompile Include="Shaders\Composition\PointLightQuadCullingPS.hlsl">
       <Filter>Shaders\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DOF\DOFPixelShader.hlsl">
+      <Filter>Shaders\DOF</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DOF\DOFBlurHPixelShader.hlsl">
+      <Filter>Shaders\DOF</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DOF\DOFBlurVPixelShader.hlsl">
+      <Filter>Shaders\DOF</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
