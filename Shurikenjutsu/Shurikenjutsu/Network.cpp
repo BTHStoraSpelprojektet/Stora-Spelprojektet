@@ -446,6 +446,7 @@ void Network::ReceviePacket()
 
 			m_timeRestarting = time;
 
+			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_BEEP_SOUND,0,0,0);
 			ConsolePrintText(std::to_string(time) + "...");
 			break;
 		}

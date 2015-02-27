@@ -158,8 +158,8 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 
 	// Setup vertex buffer data.
 	D3D11_SUBRESOURCE_DATA vertexData;
-	m_vertices.push_back(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	vertexData.pSysMem = m_vertices.data();
+	m_vertices.resize(1500);
+	vertexData.pSysMem = &m_vertices[0];
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 

@@ -59,6 +59,7 @@ public:
 	void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
 	void SetSceneDirectionalLight(DirectionalLight& p_dLight);
+	void SetLightBuffer(ID3D11ShaderResourceView* p_lightSRV);
 
 	void UpdateInstanceBuffers(std::vector<Object*> p_ObjectList);
 
