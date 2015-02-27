@@ -1001,6 +1001,11 @@ void Player::RenderDepth()
 	AnimatedObject::RenderDepth();
 }
 
+void Player::RenderDepthOutlining()
+{
+	AnimatedObject::RenderDepthOutlining();
+}
+
 void Player::RenderOutlining()
 {
 	if (m_isAlive)

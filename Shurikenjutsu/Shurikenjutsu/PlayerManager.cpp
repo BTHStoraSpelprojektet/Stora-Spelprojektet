@@ -138,7 +138,7 @@ void PlayerManager::Render(bool p_inMenu)
 
 void PlayerManager::RenderOutliningPassOne()
 {
-	m_player->Render();
+	m_player->RenderDepthOutlining();
 }
 
 void PlayerManager::RenderDepth(bool p_inMenu)
