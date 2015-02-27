@@ -56,8 +56,8 @@ float4 main(Input p_input) : SV_Target
 
 	float asd = (p_input.m_position.y - textureDimensions.y*0.5f) / textureDimensions.y;
 	
-	float b = 24.0f - asd*24.0f*0.5f;
-	float a = 30.0f - asd*b*0.5f;
+	float b = 16.0f - asd*16.0f*0.5f;
+	float a = 26.0f - asd*b*0.5f;
 	
 
 	float x = 1 / (a - b);

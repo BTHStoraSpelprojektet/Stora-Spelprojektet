@@ -331,11 +331,62 @@ void ScreenSpace::Shutdown()
 	m_pixelShader->SetPrivateData(WKPDID_D3DDebugObjectName,
 		sizeof(c_szName) - 1, c_szName);
 #endif
-	m_vertexShader->Release();
 
-	m_pixelShader->Release();
+	if (m_vertexShader)
+	{
+		m_vertexShader->Release();
+	}
+	
+	if (m_pixelShader)
+	{
+		m_pixelShader->Release();
+	}
 
-	m_frameBuffer->Release();
+	if (m_frameBuffer)
+	{
+		m_frameBuffer->Release();
+	}
+	if (m_pixelShaderSSAO)
+	{
+		m_pixelShaderSSAO->Release();
+	}
+	if (m_pixelShaderSSAOBlurH)
+	{
+		m_pixelShaderSSAOBlurH->Release();
+	}
+	if (m_pixelShaderSSAOBlurV)
+	{
+		m_pixelShaderSSAOBlurV->Release();
+	}
+	if (m_ssaoBuffer)
+	{
+		m_ssaoBuffer->Release();
+	}
+	if (m_randomVectors)
+	{
+		m_randomVectors->Release();
+	}
+	if (m_samplerDepth)
+	{
+		m_samplerDepth->Release();
+	}
+	if (m_samplerRandom)
+	{
+		m_samplerRandom->Release();
+	}
+	if (m_samplerBlur)
+	{
+		m_samplerBlur->Release();
+	}
+	if (m_pixelShaderDOFBlurH)
+	{
+		m_pixelShaderDOFBlurH->Release();
+	}
+	if (m_pixelShaderDOFBlurV)
+	{
+		m_pixelShaderDOFBlurV->Release();
+
+	}
 }
 
 void ScreenSpace::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_normal, ID3D11ShaderResourceView* p_color, ID3D11ShaderResourceView* p_depth, ID3D11ShaderResourceView* p_ssao)
