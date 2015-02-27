@@ -31,37 +31,41 @@ float4 main(Input p_input) : SV_Target
 	load.x = p_input.m_position.x / textureDimensions.x;
 	load.y = p_input.m_position.y / textureDimensions.y;
 
-	float4 color = float4(0,0,0,0);
-	float totalWeight = 0;
+	float totalWeight = 0.0;
 
-	float dof = (1.0f - 0.9f) * 50.0f;
-	float depth = m_textures[1].Sample(m_sampler, load).x;
+	float4 color = float4(0, 0, 0, 0);
+	float depth = m_textures[1].Sample(m_sampler, load);
 
-	if (depth.x > 0.9963f)
-		return float4(1.0f, 1.0f, 1.0f, 1.0f);
-	
-	//float3 normal = m_textures[2].Sample(m_sampler, load).xyz;
-	//normal = (normal * 2.0f) - 1.0f;
-
-	for (float i = -m_blurRadius; i <= m_blurRadius; ++i)
+	[unroll]
+	for (int i = -m_blurRadius; i <= m_blurRadius; ++i)
 	{
 		float2 tex = load + i*texOffset;
 
 		float4 c = m_textures[0].Sample(m_sampler, tex);
-		float neighborDepth = m_textures[1].Sample(m_sampler, tex).x;
-		//float3 neighborNormal = m_textures[2].Sample(m_sampler, tex).xyz;
-		//neighborNormal = (neighborNormal * 2.0f) - 1.0f;
 
-		//if (dot(neighborNormal, normal) >= 0.8f && abs(neighborDepth - depth) <= 0.2f)
-
-		float ddiff = neighborDepth - depth;
-		float w = exp(-i*i*m_falloff - ddiff*ddiff);
+		float w = m_weights[m_blurRadius + i];
 
 		color += w*c;
 
 		totalWeight += w;
 	}
+	color /= totalWeight;
 
+	float z_n = 2.0 * depth - 1.0;
+	float z_e = 2.0 * 0.1f * 1000.0f / (1000.0f + 0.1f - z_n * (1000.0f - 0.1f));
+
+	float asd = (p_input.m_position.y - textureDimensions.y*0.5f) / textureDimensions.y;
 	
-	return color / totalWeight;
+	float b = 24.0f - asd*24.0f*0.5f;
+	float a = 30.0f - asd*b*0.5f;
+	
+
+	float x = 1 / (a - b);
+	float y = a / (a - b);
+
+	float coc = -1 * (z_e*x - y);
+
+	color.a = saturate(coc);
+
+	return color;
 }

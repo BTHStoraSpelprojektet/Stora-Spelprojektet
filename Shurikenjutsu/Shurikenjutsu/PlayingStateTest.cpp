@@ -405,11 +405,12 @@ void PlayingStateTest::Render()
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->ApplyDOF();
 
 	GraphicsEngine::GetInstance()->SetForwardRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GraphicsEngine::GetInstance()->RenderFoliage();
-	GraphicsEngine::GetInstance()->ApplyDOF();
+	
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
@@ -442,7 +443,7 @@ void PlayingStateTest::Render()
 		m_inGameMenu->Render();
 	}
 
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	//GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)

@@ -698,6 +698,8 @@ void GraphicsEngine::ApplyDOF()
 	m_directX.SetRenderTargetForDOF();
 	m_directX.TurnOffDepthStencil();
 	m_screenSpace->DOF(m_directX.GetContext(), m_directX.GetCompositionTexture(), m_directX.GetDepthSRV(), true);
+	m_directX.SetRenderTargetForDOF2();
+	m_screenSpace->DOF(m_directX.GetContext(), m_directX.GetCompositionTexture(), m_directX.GetGBufferSRV1(), false);
 	m_directX.TurnOnDepthStencil();
 }
 

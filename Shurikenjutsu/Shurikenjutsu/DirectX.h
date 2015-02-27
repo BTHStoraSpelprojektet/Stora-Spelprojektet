@@ -64,6 +64,7 @@ public:
 
 	// Dof
 	void SetRenderTargetForDOF();
+	void DirectXWrapper::SetRenderTargetForDOF2();
 
 private:
 	ID3D11Device* m_device;

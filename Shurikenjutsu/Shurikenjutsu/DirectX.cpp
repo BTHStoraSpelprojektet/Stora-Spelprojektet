@@ -1027,5 +1027,17 @@ void DirectXWrapper::SetRenderTargetForDOF()
 	m_context->PSSetShaderResources(6, 1, &nullPointer);
 
 	m_context->OMSetRenderTargets(0, 0, 0);
+	m_context->OMSetRenderTargets(1, &m_gBufferRTV[0], NULL);
+}
+
+void DirectXWrapper::SetRenderTargetForDOF2()
+{
+	ID3D11ShaderResourceView* nullPointer = NULL;
+	m_context->PSSetShaderResources(3, 1, &nullPointer);
+	m_context->PSSetShaderResources(4, 1, &nullPointer);
+	m_context->PSSetShaderResources(5, 1, &nullPointer);
+	m_context->PSSetShaderResources(6, 1, &nullPointer);
+
+	m_context->OMSetRenderTargets(0, 0, 0);
 	m_context->OMSetRenderTargets(1, &m_renderTarget, NULL);
 }

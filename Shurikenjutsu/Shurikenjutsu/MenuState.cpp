@@ -347,11 +347,12 @@ void MenuState::Render()
 	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
-
+	GraphicsEngine::GetInstance()->ApplyDOF();
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 }
 
 void MenuState::EscapeIsPressed()
