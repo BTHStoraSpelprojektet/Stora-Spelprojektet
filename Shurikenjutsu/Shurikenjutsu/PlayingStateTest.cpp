@@ -20,7 +20,6 @@
 #include "DeathBoard.h"
 #include "ScoreBoard.h"
 #include "SuddenDeathState.h"
-
 #include "PointLights.h"
 
 PlayingStateTest::PlayingStateTest(){}
