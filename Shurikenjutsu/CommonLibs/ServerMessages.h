@@ -9,6 +9,7 @@ struct PlayerNet
 	float x, y, z;
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
+	int id;
 	int team;
 	float maxHP;
 	float currentHP;

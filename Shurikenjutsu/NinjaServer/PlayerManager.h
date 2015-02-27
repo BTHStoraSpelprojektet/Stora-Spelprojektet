@@ -67,6 +67,7 @@ private:
 	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable);
 	
 	int GetTeamForPlayer();
+	int GetIdForPlayer();
 
 	RakNet::RakPeerInterface *m_serverPeer;
 
