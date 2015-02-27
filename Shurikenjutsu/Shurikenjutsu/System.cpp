@@ -21,7 +21,7 @@
 #include "TrailRenderer.h"
 #include "MemoryChecker.h"
 #include "DebugText.h"
-//#include <vld.h>
+#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {

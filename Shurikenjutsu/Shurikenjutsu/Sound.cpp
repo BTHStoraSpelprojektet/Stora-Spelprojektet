@@ -532,15 +532,14 @@ void Sound::GarbageCollectOldSounds(){
 	int elementToEarse = -1;
 	for (unsigned int i = 0; i < defaultSoundEmitters.size(); i++)
 	{
-		bool* isPlaying = new bool;
-		defaultSoundEmitters[i]->m_channel->isPlaying(isPlaying);
-		if (!*isPlaying){
+		bool isPlaying;
+		defaultSoundEmitters[i]->m_channel->isPlaying(&isPlaying);
+		if (!isPlaying){
 			delete defaultSoundEmitters[i];
 			elementToEarse = i;
 			//Only delete one sound per loop
 			break;
 		}
-		delete isPlaying;
 	}
 	if (elementToEarse != -1){
 		defaultSoundEmitters.erase(defaultSoundEmitters.begin() + elementToEarse);
