@@ -34,7 +34,7 @@ float4 main(Input p_input) : SV_Target
 	float totalWeight = 0.0;
 
 	float4 color = float4(0, 0, 0, 0);
-	float depth = m_textures[1].Sample(m_sampler, load);
+	float depth = m_textures[1].Sample(m_sampler, load).x;
 
 	[unroll]
 	for (int i = -m_blurRadius; i <= m_blurRadius; ++i)
