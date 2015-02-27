@@ -52,24 +52,22 @@ bool PointLights::Initialize()
 
 void PointLights::Shutdown()
 {
-	if (m_instance)
-	{
-		delete m_instance;
-		m_instance = nullptr;
-	}
-
 	if (m_lightSRV)
 	{
 		m_lightSRV->Release();
-		delete m_lightSRV;
 		m_lightSRV = nullptr;
 	}
 
 	if (m_lightBuffer)
 	{
 		m_lightBuffer->Release();
-		delete m_lightBuffer;
 		m_lightBuffer = nullptr;
+	}
+
+	if (m_instance)
+	{
+		delete m_instance;
+		m_instance = nullptr;
 	}
 }
 
