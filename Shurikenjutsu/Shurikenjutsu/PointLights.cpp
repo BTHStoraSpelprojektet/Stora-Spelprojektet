@@ -23,6 +23,12 @@ PointLights* PointLights::GetInstance()
 
 bool PointLights::Initialize()
 {
+	if (m_lightBuffer)
+	{
+		m_lightBuffer->Release();
+		m_lightBuffer = 0;
+	}
+
 	if (m_lightSRV)
 	{
 		m_lightSRV->Release();
@@ -57,6 +63,13 @@ void PointLights::Shutdown()
 		m_lightSRV->Release();
 		delete m_lightSRV;
 		m_lightSRV = nullptr;
+	}
+
+	if (m_lightBuffer)
+	{
+		m_lightBuffer->Release();
+		delete m_lightBuffer;
+		m_lightBuffer = nullptr;
 	}
 }
 
