@@ -26,6 +26,7 @@ bool PointLights::Initialize()
 	if (m_lightSRV)
 	{
 		m_lightSRV->Release();
+		m_lightSRV = 0;
 	}
 
 	D3D11_BUFFER_DESC lightBufferDesc;
@@ -61,31 +62,22 @@ void PointLights::Shutdown()
 
 void PointLights::AddLight(PointLight& p_newLight)
 {
-	for (int x = 0; x < 10; x++)
-	{
-		for (int i = 0; i < 10; i++)
-		{
-			PointLight newLight = p_newLight;
-			newLight.m_position.x = -50.0f + (float)(x * 10);
-			newLight.m_position.z = -50.0f + (float)(i * 10);
-			m_pointLights.push_back(newLight);
-		}		
-	}
+	m_newPointLights.push_back(p_newLight);
 }
 
 void PointLights::SetLightBuffer(DirectX::XMFLOAT4X4 p_viewMatrix)
 {
-	for (unsigned int i = 0; i < (unsigned int)m_pointLights.size(); i++)
+	for (unsigned int i = 0; i < m_newPointLights.size(); i++)
 	{
-		m_pointLights[i].m_position = TransformPosition(m_pointLights[i].m_position, p_viewMatrix);
+		m_newPointLights[i].m_position = TransformPosition(m_newPointLights[i].m_position, p_viewMatrix);
 
-		if (m_pointLights[i].m_position.x > 30.0f || m_pointLights[i].m_position.x < -30.0f ||
-			m_pointLights[i].m_position.y > 20.0f || m_pointLights[i].m_position.y < -20.0f)
+		if (m_newPointLights[i].m_position.x < 30.0f || m_newPointLights[i].m_position.x > -30.0f ||
+			m_newPointLights[i].m_position.y < 20.0f || m_newPointLights[i].m_position.y > -20.0f)
 		{
-			m_pointLights.erase(m_pointLights.begin() + i);
-			i--;
+			m_pointLights.push_back(m_newPointLights[i]);
 		}
 	}
+	m_newPointLights.clear();
 
 	Initialize();
 

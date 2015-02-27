@@ -29,6 +29,7 @@ private:
 	ID3D11Buffer* m_lightBuffer;
 	ID3D11ShaderResourceView* m_lightSRV;
 
+	std::vector<PointLight> m_newPointLights;
 	std::vector<PointLight> m_pointLights;
 };
 

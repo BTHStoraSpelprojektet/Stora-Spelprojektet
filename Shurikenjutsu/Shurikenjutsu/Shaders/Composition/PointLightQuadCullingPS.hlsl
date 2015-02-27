@@ -63,7 +63,7 @@ float4 main(Input p_input) : SV_Target
 	ComputePointLight(material, m_pointLights[p_input.lightIndex.x], positionView, normal.xyz, toCamera, D, S);
 
 	float4 light;
-	light.xyz = albedo.xyz*((D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
+	light.xyz = ((D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
 	light.w = D.w;
 
 	return light;

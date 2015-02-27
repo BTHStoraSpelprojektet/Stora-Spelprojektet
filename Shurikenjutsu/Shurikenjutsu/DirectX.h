@@ -20,6 +20,7 @@ public:
 
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
+	void TurnOnPointLightAlphaBlending();
 
 	void TurnOnDepthStencil();
 	void TurnOffDepthStencil();
@@ -70,6 +71,7 @@ private:
 
 	ID3D11BlendState* m_alphaEnabled;
 	ID3D11BlendState* m_alphaDisabled;
+	ID3D11BlendState* m_pointLightsAlphaEnabled;
 
 	ID3D11DepthStencilState* m_depthEnabled;
 	ID3D11DepthStencilState* m_depthDisabled;

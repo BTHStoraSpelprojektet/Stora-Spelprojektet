@@ -674,7 +674,7 @@ void GraphicsEngine::Composition()
 	m_directX.ScreenSpaceRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
 
-	TurnOnAlphaBlending();
+	m_directX.TurnOnPointLightAlphaBlending();
 	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetGBufferSRV2(), m_directX.GetGBufferSRV1(), m_directX.GetDepthSRV(), m_directX.GetPPSRV1());
 	TurnOffAlphaBlending();
 }

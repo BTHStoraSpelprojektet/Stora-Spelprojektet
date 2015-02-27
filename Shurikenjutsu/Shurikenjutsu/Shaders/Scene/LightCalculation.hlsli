@@ -47,7 +47,7 @@ void ComputePointLight(Material p_material, PointLight p_light, float3 p_positio
 			diffuse.a = 1.0f;
 		}
 
-		float att = 1.0f / (d*d);
+		float att = 1.0f - smoothstep(0, p_light.m_range, d);// 1.0f / (d*d);
 
 		p_diffuse += diffuse * att;
 		p_specular += specular * att;
