@@ -4,6 +4,9 @@
 const float ALL_AROUND_GLOBAL_COOLDOWN = 0.4f;
 
 
+const float ROUND_TIME_LIMIT = 10.0f;
+const float TIME_UNTIL_NEXT_SUDDEN_DEATH_BOX = 10.0f;
+
 ////////////////////////////////////////////////////////////////Ranged Attacks
 //Shuriken
 const float SHURIKEN_DAMAGE = 20.0f;
