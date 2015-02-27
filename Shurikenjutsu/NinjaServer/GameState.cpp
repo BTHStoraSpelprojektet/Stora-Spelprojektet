@@ -286,7 +286,7 @@ void GameState::UpdateTime(double p_deltaTime)
 			SyncTime(playerList[i].guid);
 		}
 	}
-	if (m_timeSec >= ROUND_TIME_LIMIT && !m_isSuddenDeath)
+	if (m_timeMin >= ROUND_TIME_LIMIT_MINUTS && !m_isSuddenDeath)
 	{
 		m_isSuddenDeath = true;
 		
