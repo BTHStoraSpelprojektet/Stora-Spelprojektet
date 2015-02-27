@@ -166,6 +166,14 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_scoreBoard != nullptr)
+	{
+		m_scoreBoard->Shutdown();
+		delete m_scoreBoard;
+		m_scoreBoard = nullptr;
+	}
+
+
 	if (m_victoryMenu != nullptr)
 	{
 		m_victoryMenu->Shutdown();

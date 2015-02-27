@@ -274,6 +274,13 @@ void ChooseState::Shutdown()
 			m_abilityDescription[i] = nullptr;
 		}
 	}
+
+	if (m_questionMark != nullptr)
+	{
+		m_questionMark->Shutdown();
+		delete m_questionMark;
+		m_questionMark = nullptr;
+	}
 }
 
 GAMESTATESWITCH ChooseState::Update()
