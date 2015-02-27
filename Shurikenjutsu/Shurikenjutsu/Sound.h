@@ -12,9 +12,10 @@ public:
 	~Sound();
 
 	struct SoundEmitter{
-		float m_x, m_y, m_z;
+		//float m_x, m_y, m_z;
 		PLAYSOUND m_playSound;
 		FMOD::Channel* m_channel;
+		FMOD_VECTOR m_pos;
 		float m_totalMSLength;
 		float m_timePassed;
 		bool isPlaying = true;
@@ -32,6 +33,7 @@ public:
 	void StopAmbientSound(SoundEmitter* p_soundEmitter);
 	void StartAmbientSound(SoundEmitter* p_soundEmitter);
 	void CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
+	void ClearAmbientSounds();
 
 	void StopMusic();
 	void StartMusic();
@@ -52,6 +54,7 @@ private:
 	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);
 	void PlayDefaultSound(SoundEmitter* p_soundEmitter);
 	void PlayBackgroundSound(PLAYSOUND p_playSound);
+	void GarbageCollectOldSounds();
 
 	FMOD::ChannelGroup *masterChannelGroup;
 
@@ -61,7 +64,8 @@ private:
 	FMOD::ChannelGroup *channelAmbient;
 	
 	//std::vector<FMOD::Channel*> ambientChannels;
-	std::vector<SoundEmitter*> soundEmitters;
+	std::vector<SoundEmitter*> defaultSoundEmitters;
+	std::vector<SoundEmitter*> ambientSoundEmitters;
 
 	FMOD::ChannelGroup *channelMusic;
 	FMOD::Channel *musicChannel;

@@ -20,6 +20,11 @@ ObjectManager::~ObjectManager(){}
 
 bool ObjectManager::Initialize(Level* p_level)
 {	
+	//Reset ambient sounds for new level
+	if (m_sound != NULL){
+		m_sound->ClearAmbientSounds();
+	}
+
 	// Load objects on the level
 	std::vector<LevelImporter::CommonObject> levelObjects = p_level->GetObjects();
 	std::vector<LevelImporter::AnimatedObject> animatedLevelObjects = p_level->GetAnimatedObjects();

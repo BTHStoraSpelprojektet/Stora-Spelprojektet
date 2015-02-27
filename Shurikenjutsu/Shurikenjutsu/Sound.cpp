@@ -178,10 +178,27 @@ bool Sound::Initialize()
 
 void Sound::Shutdown()
 {
+	for (unsigned int i = 0; i < ambientSoundEmitters.size(); i++)
+	{
+		ambientSoundEmitters[i]->isPlaying = false;
+		ambientSoundEmitters[i]->m_channel->stop();
+		delete ambientSoundEmitters[i];
+	}
+	ambientSoundEmitters.clear();
+
+	for (unsigned int i = 0; i < defaultSoundEmitters.size(); i++)
+	{
+		defaultSoundEmitters[i]->isPlaying = false;
+		defaultSoundEmitters[i]->m_channel->stop();
+		delete defaultSoundEmitters[i];
+	}
+	defaultSoundEmitters.clear();
+
 	m_system->release();
 }
 
 void Sound::Update(){
+	GarbageCollectOldSounds();
 	m_system->update();
 }
 
@@ -206,6 +223,8 @@ void Sound::StopMusic(){
 	if (*isPLaying){
 		musicChannel->stop();
 	}
+
+	delete isPLaying;
 }
 
 void Sound::StartMusic(){
@@ -215,6 +234,8 @@ void Sound::StartMusic(){
 	if (!*isPLaying){
 		PlayBackgroundSound(PLAYSOUND_BACKGROUND_SOUND);
 	}
+
+	delete isPLaying;
 }
 
 void Sound::PlayBackgroundSound(PLAYSOUND p_playSound){
@@ -242,6 +263,7 @@ void Sound::StartStopMusic(){
 	else if (!*isPLaying){
 		StartMusic();
 	}
+	delete isPLaying;
 }
 
 void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
@@ -480,68 +502,93 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 	p_soundEmitter->m_channel->setChannelGroup(channelEffects);
 	p_soundEmitter->m_channel->set3DMinMaxDistance(0, 30);
 
-	FMOD_VECTOR* pos = new FMOD_VECTOR;
-	pos->x = p_soundEmitter->m_x;
-	pos->y = p_soundEmitter->m_y;
-	pos->z = p_soundEmitter->m_z;
-
 	//Reset volume if to loud
 	//if (p_initialVolume > 1.0f){
 //		p_initialVolume = 1.0f;
 	//}
 	p_soundEmitter->m_channel->setVolume(1.0f);
 	p_soundEmitter->m_channel->setPaused(false);
-	p_soundEmitter->m_channel->set3DAttributes(pos, NULL, NULL);
+	p_soundEmitter->m_channel->set3DAttributes(&p_soundEmitter->m_pos, NULL, NULL);
 }
 
 void Sound::CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
 {
 	SoundEmitter* soundEmitter = new SoundEmitter;
 	soundEmitter->m_playSound = p_playSound;
-	soundEmitter->m_x = p_x;
-	soundEmitter->m_y = p_y;
-	soundEmitter->m_z = p_z;
+	soundEmitter->m_pos.x = p_x;
+	soundEmitter->m_pos.y = p_y;
+	soundEmitter->m_pos.z = p_z;
 
 	//float distance = sqrtf(((p_x - soundEmitter->m_x)*(p_x - soundEmitter->m_x) + (p_z - soundEmitter->m_z)*(p_z - soundEmitter->m_z)));
 	//float soundDistanceGain = 4.0f;
 	//float volume = 1.0f / (distance / soundDistanceGain);
 
+	defaultSoundEmitters.push_back(soundEmitter);
 	PlayDefaultSound(soundEmitter);
 
+}
+
+void Sound::GarbageCollectOldSounds(){
+	int elementToEarse = -1;
+	for (unsigned int i = 0; i < defaultSoundEmitters.size(); i++)
+	{
+		bool* isPlaying = new bool;
+		defaultSoundEmitters[i]->m_channel->isPlaying(isPlaying);
+		if (!*isPlaying){
+			delete defaultSoundEmitters[i];
+			elementToEarse = i;
+			//Only delete one sound per loop
+			break;
+		}
+		delete isPlaying;
+	}
+	if (elementToEarse != -1){
+		defaultSoundEmitters.erase(defaultSoundEmitters.begin() + elementToEarse);
+	}
+}
+
+void Sound::ClearAmbientSounds(){
+	for (unsigned int i = 0; i < ambientSoundEmitters.size(); i++)
+	{
+		ambientSoundEmitters[i]->isPlaying = false;
+		ambientSoundEmitters[i]->m_channel->stop();
+		delete ambientSoundEmitters[i];
+	}
+	ambientSoundEmitters.clear();
 }
 
 Sound::SoundEmitter* Sound::CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
 {
 	SoundEmitter* soundEmitter = new SoundEmitter;
 	soundEmitter->m_playSound = p_playSound;
-	soundEmitter->m_x = p_x;
-	soundEmitter->m_y = p_y;
-	soundEmitter->m_z = p_z;
+	soundEmitter->m_pos.x = p_x;
+	soundEmitter->m_pos.y = p_y;
+	soundEmitter->m_pos.z = p_z;
 
 	PlayAmbientSound(soundEmitter);
 
-	soundEmitters.push_back(soundEmitter);
+	ambientSoundEmitters.push_back(soundEmitter);
 
 	return soundEmitter;
 }
 
 void Sound::UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z)
 {
-	for (unsigned int i = 0; i < soundEmitters.size(); i++)
+	for (unsigned int i = 0; i < ambientSoundEmitters.size(); i++)
 	{
-		FMOD_VECTOR* pos = new FMOD_VECTOR;
-		pos->x = soundEmitters[i]->m_x;
-		pos->y = soundEmitters[i]->m_y;
-		pos->z = soundEmitters[i]->m_z;
-		soundEmitters[i]->m_channel->set3DAttributes(pos, NULL, NULL);
+		/*FMOD_VECTOR* pos = new FMOD_VECTOR;
+		pos->x = ambientSoundEmitters[i]->m_pos->x;
+		pos->y = ambientSoundEmitters[i]->m_y;
+		pos->z = ambientSoundEmitters[i]->m_z;*/
 
-		//Not necessary for 3D sound
+		ambientSoundEmitters[i]->m_channel->set3DAttributes(&ambientSoundEmitters[i]->m_pos, NULL, NULL);
+		////Not necessary for 3D sound
 		//float distance = sqrtf(((p_player_x - soundEmitters[i]->m_x)*(p_player_x - soundEmitters[i]->m_x) + (p_player_z - soundEmitters[i]->m_z)*(p_player_z - soundEmitters[i]->m_z)));
 		//float soundDistanceGain = 1.0f;
 		//float volume = 1.0f / (distance / soundDistanceGain);
 		//setAmbientVolume(soundEmitters[i], volume);
-		//Set sound volume to 1 instead
-		setAmbientVolume(soundEmitters[i], 1.0f);
+		////Set sound volume to 1 instead
+		setAmbientVolume(ambientSoundEmitters[i], 1.0f);
 		
 	}
 }
