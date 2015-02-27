@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 486
+Number of objects: 484
 Number of bounding boxes: 4
 LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_12 58.349 0 0 0 0 0 60 8.5 15
@@ -9,8 +9,6 @@ AcerPalmatum_1 29.8317 0 46.0169 0 1.705 0
 AcerPalmatum_2 20.91 0 -40.807 0 -1.43659 0
 AcerPalmatum_3 -20.9098 0 40.8066 0 1.705 0
 BigBird_Animated_3 -4.81501 7.9076 33.0306 0 1.5708 0
-BigBird_Animated_3 -4.81501 7.9076 33.0306 0 1.5708 0
-BigBird_Animated_4 4.80109 7.9186 -33.032 0 4.71239 0
 BigBird_Animated_4 4.80109 7.9186 -33.032 0 4.71239 0
 Brazier_1 -5.35181 0 5.042 0 0 0
 Brazier_5 -30.812 0 -37.7466 0 2.35619 0
