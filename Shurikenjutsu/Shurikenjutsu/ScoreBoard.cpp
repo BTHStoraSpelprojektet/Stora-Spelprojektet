@@ -175,7 +175,7 @@ void ScoreBoard::Render()
 		it->second.portrait.QueueRender();
 		GUIText testText = GUIText();
 		//testText.Initialize(/*std::to_string(it->second.kill) +*/ "hej goddammit" /*+ std::to_string(it->second.death)*/, 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * m_blueColorPlayers.size()), 0xff000000);
-		textst.Initialize(std::to_string(it->second.kill) + "/" + std::to_string(it->second.death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * m_blueColorPlayers.size()), 0xff000000);
+		textst.Initialize(std::to_string(it->second.kill) + "/" + std::to_string(it->second.death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * (m_blueColorPlayers.size()- 1)), 0xff000000);
 		textst.Render();
 	}
 
