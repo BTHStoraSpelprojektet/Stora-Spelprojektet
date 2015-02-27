@@ -524,7 +524,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_opacity = 0.0f;
 					break;
 				}
-												
+
 				default:
 				{
 					break;
@@ -1000,6 +1000,27 @@ void ParticleEmitter::UpdateBuffers()
 			{
 				m_particleList[i].m_opacity = fadeIn(&m_particleList[i], 0.01f);
 				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+			}
+
+			case(PARTICLE_PATTERN_GREEN_LEAVES) :
+			{
+				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+
+				break;
+			}
+
+			case(PARTICLE_PATTERN_PINK_LEAVES) :
+			{
+				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+
+				break;
+			}
+
+			case(PARTICLE_PATTERN_ACERPALMATUM_LEAVES) :
+			{
+				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+
+				break;
 			}
 
 			case PARTICLE_PATTERN_SUDDENDEATH:
