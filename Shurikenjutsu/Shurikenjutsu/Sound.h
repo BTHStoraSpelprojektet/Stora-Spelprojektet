@@ -12,9 +12,10 @@ public:
 	~Sound();
 
 	struct SoundEmitter{
-		float m_x, m_y, m_z;
+		//float m_x, m_y, m_z;
 		PLAYSOUND m_playSound;
-		FMOD::Channel* m_ambientChannel;
+		FMOD::Channel* m_channel;
+		FMOD_VECTOR m_pos;
 		float m_totalMSLength;
 		float m_timePassed;
 		bool isPlaying = true;
@@ -23,13 +24,16 @@ public:
 	bool Initialize();
 	void Shutdown();
 	void Update();
+	void UpdateListenerPos(FMOD_VECTOR listener_pos, FMOD_VECTOR listener_forward, FMOD_VECTOR listener_up);
 
 	void FMODErrorCheck(FMOD_RESULT p_result);
-	void PlaySound(PLAYSOUND p_playSound, float p_volume = 1.0f);
+	//void PlaySound(PLAYSOUND p_playSound, float p_volume = 1.0f);
 	SoundEmitter* CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
 	void UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z);
 	void StopAmbientSound(SoundEmitter* p_soundEmitter);
 	void StartAmbientSound(SoundEmitter* p_soundEmitter);
+	void CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
+	void ClearAmbientSounds();
 
 	void StopMusic();
 	void StartMusic();
@@ -43,11 +47,14 @@ private:
 	//FMOD_Caps caps;
 	char m_name[256];
 	float m_musicVolume = 0.7f;
-	float m_defaultAmbientVolume = 0.4f;
+	float m_defaultWindVolume = 0.2f;
 	int music_sound_id = 0;
 
 	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
 	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);
+	void PlayDefaultSound(SoundEmitter* p_soundEmitter);
+	void PlayBackgroundSound(PLAYSOUND p_playSound);
+	void GarbageCollectOldSounds();
 
 	FMOD::ChannelGroup *masterChannelGroup;
 
@@ -57,7 +64,8 @@ private:
 	FMOD::ChannelGroup *channelAmbient;
 	
 	//std::vector<FMOD::Channel*> ambientChannels;
-	std::vector<SoundEmitter*> soundEmitters;
+	std::vector<SoundEmitter*> defaultSoundEmitters;
+	std::vector<SoundEmitter*> ambientSoundEmitters;
 
 	FMOD::ChannelGroup *channelMusic;
 	FMOD::Channel *musicChannel;
@@ -90,6 +98,18 @@ private:
 	FMOD::Sound *m_stepsLeavesSound;
 	FMOD::Sound *m_maleDeathSound;
 	FMOD::Sound *m_femaleDeathSound;
+	FMOD::Sound *m_maleHurtSound;
+	FMOD::Sound *m_femaleHurtSound;
+	FMOD::Sound *m_countdownBeep;
+	FMOD::Sound *m_runeInvisibility;
+	FMOD::Sound *m_runeInvisibilitySpawn;
+	FMOD::Sound *m_runeInvisibilityPickup;
+	FMOD::Sound *m_runeHeal;
+	FMOD::Sound *m_runeHealSpawn;
+	FMOD::Sound *m_runeHealPickup;
+	FMOD::Sound *m_runeShield;
+	FMOD::Sound *m_runeShieldSpawn;
+	FMOD::Sound *m_runeShieldPickup;
 
 	//FMOD::Channel *m_channel;
 };

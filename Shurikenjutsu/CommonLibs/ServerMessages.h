@@ -79,6 +79,7 @@ struct VolleyNet
 	float startX, startZ, endX, endZ;
 	float timeToLand;
 	float speed;
+	bool playedLandSound;
 	RakNet::RakNetGUID guid;
 };
 enum Messages

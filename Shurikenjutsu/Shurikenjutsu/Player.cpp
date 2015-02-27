@@ -324,9 +324,9 @@ void Player::UpdateMe()
 
 		//Update sound (walking)
 		m_sound->StartAmbientSound(m_soundEmitter);
-		m_soundEmitter->m_x = position.x;
-		m_soundEmitter->m_y = position.y;
-		m_soundEmitter->m_z = position.z;
+		m_soundEmitter->m_pos.x = position.x;
+		m_soundEmitter->m_pos.y = position.y;
+		m_soundEmitter->m_pos.z = position.z;
 	}
 	else{
 		m_sound->StopAmbientSound(m_soundEmitter);
@@ -999,6 +999,11 @@ void Player::Render()
 void Player::RenderDepth()
 {
 	AnimatedObject::RenderDepth();
+}
+
+void Player::RenderDepthOutlining()
+{
+	AnimatedObject::RenderDepthOutlining();
 }
 
 void Player::RenderOutlining()

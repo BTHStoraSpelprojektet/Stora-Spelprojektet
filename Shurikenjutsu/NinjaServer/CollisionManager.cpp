@@ -1118,7 +1118,9 @@ void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, Pla
 		}
 
 		//Try to only play the sound once
-		if (volleyList[i].timeToLand <= 0.0f && volleyList[i].timeToLand > -0.1f){
+		if (volleyList[i].timeToLand <= 0.0f && !volleyList[i].playedLandSound){
+			volleyList[i].playedLandSound = true;
+			p_volleyManager->PlayedSound(volleyList[i].id);
 			p_playerManager->SendPlaySound(ABILITIES_VOLLEY, volleyList[i].endX, 0, volleyList[i].endZ);
 		}
 

@@ -275,17 +275,71 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 void DepthShader::Shutdown()
 {
-	m_vertexShader->Release();
-	m_pixelShader->Release();
-	m_instanceShader->Release();
-	m_layout->Release();
-	m_instanceLayout->Release();
-	m_rasterizer->Release();
-	m_samplerState->Release();
-	m_animatedVertexShader->Release();
-	m_animatedLayout->Release();
-	m_animationMatrixBuffer->Release();
-	m_matrixBuffer->Release();
+	if (m_vertexShader)
+	{
+		m_vertexShader->Release();
+		m_vertexShader = 0;
+	}
+
+	if (m_pixelShader)
+	{
+		m_pixelShader->Release();
+		m_pixelShader = 0;
+	}
+
+	if (m_instanceShader)
+	{
+		m_instanceShader->Release();
+		m_instanceShader = 0;
+	}
+
+	if (m_layout)
+	{
+		m_layout->Release();
+		m_layout = 0;
+	}
+
+	if (m_instanceLayout)
+	{
+		m_instanceLayout->Release();
+		m_instanceLayout = 0;
+	}
+
+	if (m_rasterizer)
+	{
+		m_rasterizer->Release();
+		m_instanceLayout = 0;
+	}
+
+	if (m_samplerState)
+	{
+		m_samplerState->Release();
+		m_samplerState = 0;
+	}
+
+	if (m_animatedVertexShader)
+	{
+		m_animatedVertexShader->Release();
+		m_animatedVertexShader = 0;
+	}
+
+	if (m_animatedLayout)
+	{
+		m_animatedLayout->Release();
+		m_animatedLayout = 0;
+	}
+
+	if (m_animationMatrixBuffer)
+	{
+		m_animationMatrixBuffer->Release();
+		m_animationMatrixBuffer = 0;
+	}
+
+	if (m_matrixBuffer)
+	{
+		m_matrixBuffer->Release();
+		m_matrixBuffer = 0;
+	}
 }
 
 void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
