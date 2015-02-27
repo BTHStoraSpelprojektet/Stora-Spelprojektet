@@ -19,6 +19,8 @@
 #include "ParticleRenderer.h"
 #include "DeathBoard.h"
 #include "TrailRenderer.h"
+#include "MemoryChecker.h"
+#include "DebugText.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
@@ -145,6 +147,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
 	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
 	InputManager::GetInstance()->RegisterKey(VK_TAB);
+	InputManager::GetInstance()->RegisterKey(VK_F1);
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
@@ -157,6 +160,21 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_cursor = new Cursor();
 	if (!m_cursor->Initialize())
 	{
+		return false;
+	}
+
+	// Initialize memory checker
+	m_memoryCheker = new MemoryChecker();
+	if (!m_memoryCheker->Initialize())
+	{
+		return false;
+	}
+
+	// Initialize debug text
+	if (!DebugText::GetInstance()->Initialize())
+	{
+		ConsolePrintError("Debug text Initialize failed.");
+		ConsoleSkipLines(1);
 		return false;
 	}
 
@@ -231,6 +249,15 @@ void System::Shutdown()
 	DeathBoard::GetInstance()->Shutdown();
 
 	TrailRenderer::GetInstance().Shutdown();
+
+	if (m_memoryCheker != nullptr)
+	{
+		m_memoryCheker->Shutdown();
+		delete m_memoryCheker;
+		m_memoryCheker = nullptr;
+	}
+
+	DebugText::GetInstance()->Shutdown();
 }
 
 void System::Run()
@@ -361,6 +388,9 @@ void System::Update()
 			m_gameState->EscapeIsPressed();
 		}
 	}
+
+	m_memoryCheker->Update();
+	DebugText::GetInstance()->Update();
 }
 
 // Render game scene here.
@@ -381,6 +411,8 @@ void System::Render()
 
 	//Render GUI
 	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+
+	DebugText::GetInstance()->Render();
 
 	GUIManager::GetInstance()->Render();
 
