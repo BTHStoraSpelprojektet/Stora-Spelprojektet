@@ -980,6 +980,25 @@ void SceneShader::RenderAnimatedOutlining(ID3D11DeviceContext* p_context, ID3D11
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
+void SceneShader::RenderAnimatedOutliningDepth(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+{
+	// Set parameters and then render.
+	unsigned int stride = sizeof(VertexAnimated);
+	const unsigned int offset = 0;
+
+	UpdateWorldMatrix(p_context, p_worldMatrix);
+	UpdateAnimatedBuffer(p_context, p_boneTransforms);
+
+	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetInputLayout(m_animatedLayout);
+
+	p_context->VSSetShader(m_animatedVertexShader, NULL, 0);
+	p_context->PSSetShader(0, 0, 0);
+
+	p_context->Draw(p_numberOfVertices, 0);
+}
+
 void SceneShader::RenderLine(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix)
 {
 	// Set parameters and then render.

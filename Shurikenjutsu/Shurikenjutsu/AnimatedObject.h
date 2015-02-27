@@ -24,6 +24,7 @@ public:
 	void RenderPlayer(int p_team);
 	void Render();
 	void RenderDepth();
+	void RenderDepthOutlining();
 	void RenderOutlining();
 	void ChangeAnimationState(AnimationState p_newState);
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
