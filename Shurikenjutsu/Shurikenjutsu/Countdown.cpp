@@ -22,7 +22,7 @@ bool Countdown::Initialize()
 	m_roundTeamText.Initialize("", 50.0f, 0.0f, -(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f), 0xffffffff);
 
 	m_victDefTexture = GUIElement();
-	m_victDefTexture.Initialize(DirectX::XMFLOAT3(0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 1.0f), 310.0f, 125.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/victory.png"));
+	m_victDefTexture.Initialize(DirectX::XMFLOAT3(0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0.0f), 310.0f, 125.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/victory.png"));
 
 	m_renderCd = true;
 	m_renderRoundTeam = false;

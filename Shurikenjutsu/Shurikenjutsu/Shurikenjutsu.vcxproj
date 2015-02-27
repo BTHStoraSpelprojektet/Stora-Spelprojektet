@@ -95,6 +95,7 @@
     <ClCompile Include="Countdown.cpp" />
     <ClCompile Include="Cursor.cpp" />
     <ClCompile Include="DeathBoard.cpp" />
+    <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp" />
     <ClCompile Include="FanBoomerang.cpp" />
     <ClCompile Include="FanBoomerangAbility.cpp" />
@@ -106,6 +107,7 @@
     <ClCompile Include="InstanceManager.cpp" />
     <ClCompile Include="KatanaNinja.cpp" />
     <ClCompile Include="KunaiAbility.cpp" />
+    <ClCompile Include="MemoryChecker.cpp" />
     <ClCompile Include="MenuCheckbox.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Collisions.cpp" />
@@ -204,6 +206,7 @@
     <ClInclude Include="Countdown.h" />
     <ClInclude Include="Cursor.h" />
     <ClInclude Include="DeathBoard.h" />
+    <ClInclude Include="DebugText.h" />
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h" />
     <ClInclude Include="FanBoomerang.h" />
     <ClInclude Include="FanBoomerangAbility.h" />
@@ -212,6 +215,7 @@
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="PointLights.h" />
+    <ClInclude Include="MemoryChecker.h" />
     <ClInclude Include="ScoreBoard.h" />
     <ClInclude Include="TeamTable.h" />
     <ClInclude Include="TextResource.h" />

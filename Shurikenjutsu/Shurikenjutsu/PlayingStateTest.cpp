@@ -13,7 +13,6 @@
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
-#include "ParticleEmitter.h"
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
 #include "InGameMenu.h"
@@ -22,8 +21,6 @@
 #include "ScoreBoard.h"
 
 #include "PointLights.h"
-
-ParticleEmitter* TEST_POIemitter;
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -44,6 +41,7 @@ bool PlayingStateTest::Initialize()
 
 void PlayingStateTest::EscapeIsPressed()
 {
+
 	if (m_inGameMenuIsActive)
 	{
 		m_inGameMenuIsActive = false;
@@ -52,8 +50,14 @@ void PlayingStateTest::EscapeIsPressed()
 	{
 		m_inGameMenuIsActive = true;
 	}
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_inGameMenuIsActive = false;
+	}
+
 	m_sound->StartStopMusic();
 }
+
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
 	// Initialize the camera.
@@ -91,7 +95,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_playerManager->Initialize(false);
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
 
-
 	// Initlialize the frustum.
 	m_frustum = new Frustum();
 	m_updateFrustum = true;
@@ -113,7 +116,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	{
 		return false;
 	}
-
 
 	// Initialize the directional light.
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
@@ -159,10 +161,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		return false;
 	}
 
-	TEST_POIemitter = new ParticleEmitter();
-	TEST_POIemitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.5f, 0.f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
-	TEST_POIemitter->SetEmitParticleState(true);
-
 	return true;
 }
 
@@ -181,6 +179,7 @@ void PlayingStateTest::Shutdown()
 		delete m_inGameMenu;
 		m_inGameMenu = nullptr;
 	}
+
 	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
@@ -258,15 +257,17 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager->SetStickyTrapList(m_objectManager->GetStickyTrapList());
 	m_playerManager->Update(false);
 
-
+	
 	if (!m_playerManager->GetPlayerIsAlive())
 	{
 		if (!GLOBAL::GetInstance().CAMERA_SPECTATE)
 		{
 			m_spectateCountDown = 2.0f;
 		}
+
 		GLOBAL::GetInstance().CAMERA_SPECTATE = true;
 	}
+
 	else 
 	{
 		GLOBAL::GetInstance().CAMERA_SPECTATE = false;
@@ -299,21 +300,26 @@ GAMESTATESWITCH PlayingStateTest::Update()
 			case IN_GAME_MENU_CONTINUE:
 			{
 				return GAMESTATESWITCH_CHOOSENINJA;
+
 				break;
 	}
+
 			case IN_GAME_MENU_TO_MAIN:
 			{
 				Network::GetInstance()->Disconnect();
 				return GAMESTATESWITCH_MENU;
+
 				break;
 			}
 		}
 	}
+
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
 	{
 		player = m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam());
 		m_camera->FollowCharacter(player);
 	}
+
 	else
 	{
 		m_camera->FollowCharacter(player);
@@ -388,7 +394,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
 	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
-
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
@@ -404,8 +409,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	// Update smokebomb shadow shapes.
 	ShadowShapes::GetInstance().Update(); 
 	
-	TEST_POIemitter->Update();
-	
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
 	
@@ -416,6 +419,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		m_scoreBoard->Update();
 		m_scoreBoardIsActive = true;
 	}
+
 	else
 	{
 		m_scoreBoardIsActive = false;
@@ -423,37 +427,39 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	BasicPicking();
 
-	if (m_inGameMenuIsActive)
+	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
 		switch (m_inGameMenu->Update())
 		{
-		case IN_GAME_MENU_RESUME:
+			case IN_GAME_MENU_RESUME:
 			{
-			m_inGameMenuIsActive = false;
+				m_inGameMenuIsActive = false;
 				m_sound->StopMusic();
 
-			break;
+				break;
 			}
 			
 		case IN_GAME_MENU_TO_MAIN:
 			{
-			Network::GetInstance()->Disconnect();
-			return GAMESTATESWITCH_MENU;
-			break;
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
 			}
 			
 		case IN_GAME_MENU_QUIT:
 			{
-			PostQuitMessage(0);
-			break;
+				PostQuitMessage(0);
+				break;
 			}
 			
 		default:
 			{
-			break;
-		}
+				break;
+			}
 	}
 	}
+
+	m_camera->Update3DSound(m_sound, player.x, player.y, player.z);
 
 	return GAMESTATESWITCH_NONE;
 }
@@ -473,7 +479,6 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render(false);
-	TEST_POIemitter->Render();
 	
 	GraphicsEngine::GetInstance()->RenderFoliage();
 	
@@ -501,6 +506,12 @@ void PlayingStateTest::Render()
 	}	
 
 	//// Render the UI.
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_victoryMenu->Render();
+	}
+
+	// Render the UI.
 	m_minimap->Render();
 	m_teamStatusBar->Render();
 	m_countdown->Render();
@@ -518,15 +529,12 @@ void PlayingStateTest::Render()
 		m_playerManager->RenderOutliningPassTwo();
 	}
 
-	if (m_inGameMenuIsActive)
+	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
 		m_inGameMenu->Render();
 	}
 
-	if (Network::GetInstance()->GetMatchOver())
-	{
-		m_victoryMenu->Render();
-	}
+
 
 	if (m_scoreBoardIsActive)
 	{
@@ -600,7 +608,6 @@ void PlayingStateTest::OutliningRays()
 	float rayDist = 0;
 	float collisionDist = 0;
 
-
 	rayPos = m_camera->GetPosition();
 	rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
 	Ray* rayTest = new Ray(rayPos, rayDir);
@@ -617,6 +624,7 @@ void PlayingStateTest::OutliningRays()
 	{
 		m_renderOutlining = true;
 	}
+
 	else
 	{
 		m_renderOutlining = false;

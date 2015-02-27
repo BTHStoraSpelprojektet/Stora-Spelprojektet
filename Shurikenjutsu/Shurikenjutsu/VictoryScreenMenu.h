@@ -4,6 +4,7 @@
 #include "Menu.h"
 #include "InGameMenu.h"
 
+
 class VictoryScreenMenu
 {
 public:
@@ -17,6 +18,7 @@ public:
 	void Render();
 private:
 	Menu* m_menu;
+	GUIElement* m_background;
 };
 
 #endif
