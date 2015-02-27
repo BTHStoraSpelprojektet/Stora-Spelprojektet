@@ -199,23 +199,71 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 
 void GUIShader::Shutdown()
 {
-	m_vertexShader->Release();
-	m_pixelShader->Release();
+	if (m_vertexShader)
+	{
+		m_vertexShader->Release();
+		m_vertexShader = 0;
+	}
 
-	m_layout->Release();
-	m_samplerState->Release();
+	if (m_pixelShader)
+	{
+		m_pixelShader->Release();
+		m_pixelShader = 0;
+	}
 
-	m_matrixBuffer->Release();
+	if (m_layout)
+	{
+		m_layout->Release();
+		m_layout = 0;
+	}
 
-	m_quadBuffer->Release();
+	if (m_samplerState)
+	{
+		m_samplerState->Release();
+		m_samplerState = 0;
+	}
 
-	m_colorVertexShader->Release();
-	m_colorPixelShader->Release();
-	m_colorLayout->Release();
+	if (m_matrixBuffer)
+	{
+		m_matrixBuffer->Release();
+		m_matrixBuffer = 0;
+	}
 
-	m_colorQuadBuffer->Release();
+	if (m_quadBuffer)
+	{
+		m_quadBuffer->Release();
+		m_quadBuffer = 0;
+	}
 
-	m_colorBuffer->Release();
+	if (m_colorVertexShader)
+	{
+		m_colorVertexShader->Release();
+		m_colorVertexShader = 0;
+	}
+
+	if (m_colorPixelShader)
+	{
+		m_colorPixelShader->Release();
+		m_colorPixelShader = 0;
+	}
+
+	if (m_colorLayout)
+	{
+		m_colorLayout->Release();
+		m_colorLayout = 0;
+	}
+
+	if (m_colorQuadBuffer)
+	{
+		m_colorQuadBuffer->Release();
+		m_colorQuadBuffer = 0;
+	}
+
+	if (m_colorBuffer)
+	{
+		m_colorBuffer->Release();
+		m_colorBuffer = 0;
+	}
 }
 
 void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)

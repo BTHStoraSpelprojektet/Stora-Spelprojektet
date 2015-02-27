@@ -707,34 +707,161 @@ void SceneShader::Shutdown()
 	m_pixelShader->SetPrivateData(WKPDID_D3DDebugObjectName,
 		sizeof(c_szName) - 1, c_szName);
 #endif
-	m_vertexShader->Release();
-	m_instanceShader->Release();
-	m_animatedVertexShader->Release();
-	m_pixelShader->Release();
-	m_reversedShadowPixelShader->Release();
-	m_lineVertexShader->Release();
-	m_linePixelShader->Release();
-	m_vertexShaderOutlining->Release();
-	m_pixelShaderOutlining->Release();
-	m_layoutOutlining->Release();
-	m_layout->Release();
-	m_instanceLayout->Release();
-	m_animatedLayout->Release();
-	m_lineLayout->Release();
-	m_samplerState->Release();
-	m_samplerShadowMapState->Release();
-	m_rasterizerStateBackCulled->Release();
-	m_rasterizerStateNoneCulled->Release();
+	if (m_vertexShader)
+	{
+		m_vertexShader->Release();
+		m_vertexShader = 0;
+	}
+
+	if (m_instanceShader)
+	{
+		m_instanceShader->Release();
+		m_instanceShader = 0;
+	}
+
+	if (m_animatedVertexShader)
+	{
+		m_animatedVertexShader->Release();
+		m_animatedVertexShader = 0;
+	}
+
+	if (m_pixelShader)
+	{
+		m_pixelShader->Release();
+		m_pixelShader = 0;
+	}
+
+	if (m_pixelShaderForward)
+	{
+		m_pixelShaderForward->Release();
+		m_pixelShaderForward = 0;
+	}
+
+	if (m_reversedShadowPixelShader)
+	{
+		m_reversedShadowPixelShader->Release();
+		m_reversedShadowPixelShader = 0;
+	}
+
+	if (m_lineVertexShader)
+	{
+		m_lineVertexShader->Release();
+		m_lineVertexShader = 0;
+	}
+
+	if (m_linePixelShader)
+	{
+		m_linePixelShader->Release();
+		m_linePixelShader = 0;
+	}
+
+	if (m_vertexShaderOutlining)
+	{
+		m_vertexShaderOutlining->Release();
+		m_vertexShaderOutlining = 0;
+	}
+
+	if (m_pixelShaderOutlining)
+	{
+		m_pixelShaderOutlining->Release();
+		m_pixelShaderOutlining = 0;
+	}
+
+	if (m_layoutOutlining)
+	{
+		m_layoutOutlining->Release();
+		m_layoutOutlining = 0;
+	}
+
+	if (m_layout)
+	{
+		m_layout->Release();
+		m_layout = 0;
+	}
+
+	if (m_instanceLayout)
+	{
+		m_instanceLayout->Release();
+		m_instanceLayout = 0;
+	}
+
+	if (m_animatedLayout)
+	{
+		m_animatedLayout->Release();
+		m_animatedLayout = 0;
+	}
+
+	if (m_lineLayout)
+	{
+		m_lineLayout->Release();
+		m_lineLayout = 0;
+	}
+
+	if (m_samplerState)
+	{
+		m_samplerState->Release();
+		m_samplerState = 0;
+	}
+
+	if (m_samplerShadowMapState)
+	{
+		m_samplerShadowMapState->Release();
+		m_samplerShadowMapState = 0;
+	}
+
+	if (m_rasterizerStateBackCulled)
+	{
+		m_rasterizerStateBackCulled->Release();
+		m_rasterizerStateBackCulled = 0;
+	}
+
+	if (m_rasterizerStateNoneCulled)
+	{
+		m_rasterizerStateNoneCulled->Release();
+		m_rasterizerStateNoneCulled = 0;
+	}
+
 	if (m_shadowMap != nullptr)
 	{
 		m_shadowMap->Release();
+		m_shadowMap = nullptr;
 	}
-	m_matrixBuffer->Release();
-	m_matrixBufferOutlining->Release();
-	m_fogBuffer->Release();
-	m_animationMatrixBuffer->Release();
-	m_frameBuffer->Release();
-	m_colorBuffer->Release();
+
+	if (m_matrixBuffer)
+	{
+		m_matrixBuffer->Release();
+		m_matrixBuffer = 0;
+	}
+
+	if (m_matrixBufferOutlining)
+	{
+		m_matrixBufferOutlining->Release();
+		m_matrixBufferOutlining = 0;
+	}
+
+	if (m_fogBuffer)
+	{
+		m_fogBuffer->Release();
+		m_fogBuffer = 0;
+	}
+
+	if (m_animationMatrixBuffer)
+	{
+		m_animationMatrixBuffer->Release();
+		m_animationMatrixBuffer = 0;
+	}
+
+	if (m_frameBuffer)
+	{
+		m_frameBuffer->Release();
+		m_frameBuffer = 0;
+	}
+
+	if (m_colorBuffer)
+	{
+		m_colorBuffer->Release();
+		m_colorBuffer = 0;
+	}
 }
 
 void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
