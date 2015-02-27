@@ -341,9 +341,9 @@ void System::Update()
 	{
 	case GAMESTATESWITCH_CHOOSENINJA:
 		m_gameState = m_chooseNinjaState;
+		m_gameState->Shutdown();
 		m_gameState->Initialize();
 		m_playingState->SetSound(m_sound);
-		m_playingState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->LargeSize();
