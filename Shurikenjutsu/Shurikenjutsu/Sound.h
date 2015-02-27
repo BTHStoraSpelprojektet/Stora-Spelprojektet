@@ -3,6 +3,7 @@
 
 #include "fmod.hpp"
 #include "..\CommonLibs\CommonEnums.h"
+#include <vector>
 
 class Sound
 {
@@ -10,15 +11,33 @@ public:
 	Sound();
 	~Sound();
 
+	struct SoundEmitter{
+		//float m_x, m_y, m_z;
+		PLAYSOUND m_playSound;
+		FMOD::Channel* m_channel;
+		FMOD_VECTOR m_pos;
+		float m_totalMSLength;
+		float m_timePassed;
+		bool isPlaying = true;
+	};
+
 	bool Initialize();
 	void Shutdown();
 	void Update();
+	void UpdateListenerPos(FMOD_VECTOR listener_pos, FMOD_VECTOR listener_forward, FMOD_VECTOR listener_up);
 
 	void FMODErrorCheck(FMOD_RESULT p_result);
-	void PlaySound(PLAYSOUND p_playSound, float volume = 1.0f);
-	void PlayAmbientSound(PLAYSOUND p_playSound, float volume = 1.0f);
-	void Sound::setAmbientVolume(float volume);
+	//void PlaySound(PLAYSOUND p_playSound, float p_volume = 1.0f);
+	SoundEmitter* CreateAmbientSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
+	void UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z);
+	void StopAmbientSound(SoundEmitter* p_soundEmitter);
+	void StartAmbientSound(SoundEmitter* p_soundEmitter);
+	void CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
+	void ClearAmbientSounds();
 
+	void StopMusic();
+	void StartMusic();
+	void StartStopMusic();
 private:
 	FMOD::System *m_system;
 	FMOD_RESULT m_result;
@@ -27,7 +46,15 @@ private:
 	FMOD_SPEAKERMODE m_speakerMode;
 	//FMOD_Caps caps;
 	char m_name[256];
-	float m_musicVolume = 0.3f;
+	float m_musicVolume = 0.7f;
+	float m_defaultWindVolume = 0.2f;
+	int music_sound_id = 0;
+
+	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
+	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);
+	void PlayDefaultSound(SoundEmitter* p_soundEmitter);
+	void PlayBackgroundSound(PLAYSOUND p_playSound);
+	void GarbageCollectOldSounds();
 
 	FMOD::ChannelGroup *masterChannelGroup;
 
@@ -35,7 +62,10 @@ private:
 	FMOD::Channel *effectChannel;
 
 	FMOD::ChannelGroup *channelAmbient;
-	FMOD::Channel *ambientChannel;
+	
+	//std::vector<FMOD::Channel*> ambientChannels;
+	std::vector<SoundEmitter*> defaultSoundEmitters;
+	std::vector<SoundEmitter*> ambientSoundEmitters;
 
 	FMOD::ChannelGroup *channelMusic;
 	FMOD::Channel *musicChannel;
@@ -63,6 +93,24 @@ private:
 	FMOD::Sound *m_volleyHitSound;
 	FMOD::Sound *m_bubleSound;
 	FMOD::Sound *m_fireSound;
-	FMOD::Channel *m_channel;
+	FMOD::Sound *m_windSound;
+	FMOD::Sound *m_birdSound;
+	FMOD::Sound *m_stepsLeavesSound;
+	FMOD::Sound *m_maleDeathSound;
+	FMOD::Sound *m_femaleDeathSound;
+	FMOD::Sound *m_maleHurtSound;
+	FMOD::Sound *m_femaleHurtSound;
+	FMOD::Sound *m_countdownBeep;
+	FMOD::Sound *m_runeInvisibility;
+	FMOD::Sound *m_runeInvisibilitySpawn;
+	FMOD::Sound *m_runeInvisibilityPickup;
+	FMOD::Sound *m_runeHeal;
+	FMOD::Sound *m_runeHealSpawn;
+	FMOD::Sound *m_runeHealPickup;
+	FMOD::Sound *m_runeShield;
+	FMOD::Sound *m_runeShieldSpawn;
+	FMOD::Sound *m_runeShieldPickup;
+
+	//FMOD::Channel *m_channel;
 };
 #endif

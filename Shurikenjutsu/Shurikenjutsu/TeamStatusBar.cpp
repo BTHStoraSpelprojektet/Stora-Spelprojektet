@@ -4,6 +4,7 @@
 #include "TextureLibrary.h"
 #include "InputManager.h"
 #include <stdio.h>
+#include "..\CommonLibs\ServerGlobals.h"
 
 TeamStatusBar::TeamStatusBar()
 {
@@ -54,17 +55,7 @@ bool TeamStatusBar::Initialize()
 
 	// Send so we are synced with the server
 	Network::GetInstance()->SyncTimer();
-	Network::GetInstance()->SyncTeamScore(); 
-	char arrayX[100];
-	std::sprintf(arrayX, "%f", InputManager::GetInstance()->Get3DMousePositionX());
-	char arrayY[100];
-	sprintf(arrayY, "%f", InputManager::GetInstance()->Get3DMousePositionZ());
-
-	m_fpsTimer.Initialize(GLOBAL::GetInstance().FPS, 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f) * 0.5f, m_originPos.y + 18.0f, 0xffffffff);
-	m_3DMouseX.Initialize(arrayX, 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f) * 0.5f, m_originPos.y - 45.0f, 0xffffffff);
-	m_3DMouseY.Initialize(arrayY, 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f) * 0.5f, m_originPos.y - 70.0f, 0xffffffff);
-	m_pingText.Initialize("0", 25.0f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH - 50.0f) * 0.5f, m_originPos.y - 10.0f, 0xffffffff);
-
+	Network::GetInstance()->SyncTeamScore();
 	return true;
 }
 
@@ -78,10 +69,6 @@ void TeamStatusBar::Shutdown()
 	m_redScore.Shutdown();
 	m_blueScore.Shutdown(); 
 	m_timerText.Shutdown();
-	m_fpsTimer.Shutdown();
-	m_pingText.Shutdown();
-	m_3DMouseX.Shutdown();
-	m_3DMouseY.Shutdown();
 }
 
 void TeamStatusBar::Update()
@@ -305,18 +292,6 @@ void TeamStatusBar::Update()
 		m_timeMin = min;
 		m_timeSec = sec;
 	}
-
-	m_fpsTimer.SetText(GLOBAL::GetInstance().FPS);
-	m_pingText.SetText(std::to_string(Network::GetInstance()->GetLastPing()));
-
-
-	char arrayX[100];
-	std::sprintf(arrayX, "%f", InputManager::GetInstance()->Get3DMousePositionX());
-	char arrayY[100];
-	std::sprintf(arrayY, "%f", InputManager::GetInstance()->Get3DMousePositionZ());
-
-	m_3DMouseX.SetText(arrayX);
-	m_3DMouseY.SetText(arrayY);
 }
 
 void TeamStatusBar::Render()
@@ -357,11 +332,6 @@ void TeamStatusBar::Render()
 
 	// Timer
 	m_timerText.Render();
-	m_fpsTimer.Render();
-	m_pingText.Render();
-
-	m_3DMouseX.Render(); 
-	m_3DMouseY.Render();
 }
 
 void TeamStatusBar::ResizeRedColorList()

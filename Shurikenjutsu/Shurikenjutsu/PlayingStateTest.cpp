@@ -13,11 +13,14 @@
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
-#include "ParticleEmitter.h"
 #include "Countdown.h"
 #include "ConsoleFunctions.h"
 #include "InGameMenu.h"
+#include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
+#include "ScoreBoard.h"
+
+#include "PointLights.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -38,6 +41,7 @@ bool PlayingStateTest::Initialize()
 
 void PlayingStateTest::EscapeIsPressed()
 {
+
 	if (m_inGameMenuIsActive)
 	{
 		m_inGameMenuIsActive = false;
@@ -46,7 +50,14 @@ void PlayingStateTest::EscapeIsPressed()
 	{
 		m_inGameMenuIsActive = true;
 	}
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_inGameMenuIsActive = false;
 }
+
+	m_sound->StartStopMusic();
+}
+
 bool PlayingStateTest::Initialize(std::string p_levelName)
 {
 	// Initialize the camera.
@@ -81,9 +92,8 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	// Initiate the player.
 	m_playerManager = new PlayerManager();
 	m_playerManager->SetSound(m_sound);
-	m_playerManager->Initialize();
+	m_playerManager->Initialize(false);
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
-
 
 	// Initlialize the frustum.
 	m_frustum = new Frustum();
@@ -96,6 +106,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
+	// Initialize the score board
+	m_scoreBoard = new ScoreBoard();
+	m_scoreBoard->Initialize();
+	
 	// Initialize the team status bar.
 	m_teamStatusBar = new TeamStatusBar();
 	if (!m_teamStatusBar->Initialize())
@@ -103,11 +117,10 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		return false;
 	}
 
-
 	// Initialize the directional light.
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.4f, 0.4f, 1.125f, 1.0f); //m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(2.525f, 2.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f);
 	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
@@ -137,6 +150,12 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_inGameMenu = new InGameMenu();
 	m_inGameMenu->Initialize();
 
+	m_victoryMenu = new VictoryScreenMenu();
+	if (!m_victoryMenu->Initialize())
+	{
+		return false;
+	}
+
 	if (!DeathBoard::GetInstance()->Initialize())
 	{
 		return false;
@@ -147,12 +166,28 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_scoreBoard != nullptr)
+	{
+		m_scoreBoard->Shutdown();
+		delete m_scoreBoard;
+		m_scoreBoard = nullptr;
+	}
+
+
+	if (m_victoryMenu != nullptr)
+	{
+		m_victoryMenu->Shutdown();
+		delete m_victoryMenu;
+		m_victoryMenu = nullptr;
+	}
+
 	if (m_inGameMenu != nullptr)
 	{
 		m_inGameMenu->Shutdown();
 		delete m_inGameMenu;
 		m_inGameMenu = nullptr;
 	}
+
 	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
@@ -227,18 +262,20 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Get picking data.
 	BasicPicking();
+	m_playerManager->SetStickyTrapList(m_objectManager->GetStickyTrapList());
+	m_playerManager->Update(false);
 
-	m_playerManager->Update(m_objectManager->GetStickyTrapList());
 
-	
 	if (!m_playerManager->GetPlayerIsAlive())
 	{
 		if (!GLOBAL::GetInstance().CAMERA_SPECTATE)
 		{
 			m_spectateCountDown = 2.0f;
 		}
+
 		GLOBAL::GetInstance().CAMERA_SPECTATE = true;
 	}
+
 	else 
 	{
 		GLOBAL::GetInstance().CAMERA_SPECTATE = false;
@@ -262,11 +299,35 @@ GAMESTATESWITCH PlayingStateTest::Update()
 		// Handle camera input.
 		m_camera->HandleInput();
 	}
+	else if (Network::GetInstance()->GetMatchOver())
+	{
+		m_camera->MenuCameraRotation();
+
+		switch (m_victoryMenu->Update())
+		{
+			case IN_GAME_MENU_CONTINUE:
+			{
+				return GAMESTATESWITCH_CHOOSENINJA;
+
+				break;
+	}
+
+			case IN_GAME_MENU_TO_MAIN:
+			{
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+
+				break;
+			}
+		}
+	}
+
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
 	{
 		player = m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam());
 		m_camera->FollowCharacter(player);
 	}
+
 	else
 	{
 		m_camera->FollowCharacter(player);
@@ -333,16 +394,16 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	} 
 	
 	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
-	Point bottomRight = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
+	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
 	
 	// Keep the the visibility polygon boundries within the maps boundries.
 	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
 	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
-	bottomRight.x > 45.0f ? bottomRight.x = 45.0f : bottomRight.x;
-	bottomRight.y < -52.0f ? bottomRight.y = -52.0f : bottomRight.y;
+	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
+	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
 	// Update the visibility polygon boundries.
-	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomRight);
+	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 
 	// Update the countdown.
 	m_countdown->Update();
@@ -361,25 +422,53 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	
 	DeathBoard::GetInstance()->Update();
 
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
+	{
+		m_scoreBoard->Update();
+		m_scoreBoardIsActive = true;
+	}
+
+	else
+	{
+		m_scoreBoardIsActive = false;
+	}
+
 	BasicPicking();
-	if (m_inGameMenuIsActive)
+
+	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
 		switch (m_inGameMenu->Update())
 		{
 		case IN_GAME_MENU_RESUME:
+			{
 			m_inGameMenuIsActive = false;
+				m_sound->StopMusic();
+
 			break;
+			}
+			
 		case IN_GAME_MENU_TO_MAIN:
+			{
 			Network::GetInstance()->Disconnect();
 			return GAMESTATESWITCH_MENU;
 			break;
+			}
+			
 		case IN_GAME_MENU_QUIT:
+			{
 			PostQuitMessage(0);
 			break;
+			}
+			
 		default:
+			{
 			break;
 		}
 	}
+	}
+
+	m_camera->Update3DSound(m_sound, player.x, player.y, player.z);
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -388,7 +477,7 @@ void PlayingStateTest::Render()
 	// Draw to the shadowmap.
 	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
-	m_playerManager->RenderDepth();
+	m_playerManager->RenderDepth(false);
 	GraphicsEngine::GetInstance()->SetShadowMap();
 
 	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
@@ -397,19 +486,22 @@ void PlayingStateTest::Render()
 	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
-	m_playerManager->Render();
+	m_playerManager->Render(false);
+	
+	GraphicsEngine::GetInstance()->RenderFoliage();
 	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
+
 	GraphicsEngine::GetInstance()->Composition();
 	GraphicsEngine::GetInstance()->ApplyDOF();
 
 	GraphicsEngine::GetInstance()->SetForwardRenderTarget();
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
-	GraphicsEngine::GetInstance()->RenderFoliage();
 	
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
@@ -419,6 +511,12 @@ void PlayingStateTest::Render()
 	{
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
+
+	//// Render the UI.
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_victoryMenu->Render();
+	}
 
 	// Render the UI.
 	m_minimap->Render();
@@ -438,12 +536,19 @@ void PlayingStateTest::Render()
 		m_playerManager->RenderOutliningPassTwo();
 	}
 
-	if (m_inGameMenuIsActive)
+	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
 		m_inGameMenu->Render();
 	}
 
-	//GraphicsEngine::GetInstance()->ResetRenderTarget();
+
+
+	if (m_scoreBoardIsActive)
+	{
+		m_scoreBoard->Render();
+	}
+
+	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
 void PlayingStateTest::ToggleFullscreen(bool p_fullscreen)
@@ -468,7 +573,10 @@ void PlayingStateTest::BasicPicking()
 	DirectX::XMFLOAT3 shurPos = Pick(Point(mousePosX, mousePosY));
 	DirectX::XMFLOAT3 shurDir = DirectX::XMFLOAT3(-(m_playerManager->GetPlayerPosition().x - shurPos.x), -(m_playerManager->GetPlayerPosition().y - shurPos.y), -(m_playerManager->GetPlayerPosition().z - shurPos.z));
 	
+	if (!Network::GetInstance()->GetMatchOver())
+	{
 	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+	}
 
 	m_mouseX = shurPos.x;
 	m_mouseY = shurPos.z;
@@ -507,7 +615,6 @@ void PlayingStateTest::OutliningRays()
 	float rayDist = 0;
 	float collisionDist = 0;
 
-
 	rayPos = m_camera->GetPosition();
 	rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
 	Ray* rayTest = new Ray(rayPos, rayDir);
@@ -524,6 +631,7 @@ void PlayingStateTest::OutliningRays()
 	{
 		m_renderOutlining = true;
 	}
+
 	else
 	{
 		m_renderOutlining = false;
@@ -585,6 +693,7 @@ void PlayingStateTest::OnScreenResize()
 	GraphicsEngine::GetInstance()->ScreenChangeHandled();
 }
 
-void PlayingStateTest::SetSound(Sound* p_sound){
+void PlayingStateTest::SetSound(Sound* p_sound)
+{
 	m_sound = p_sound;
 }

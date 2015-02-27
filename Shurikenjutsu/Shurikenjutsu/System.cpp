@@ -19,6 +19,9 @@
 #include "ParticleRenderer.h"
 #include "DeathBoard.h"
 #include "TrailRenderer.h"
+#include "MemoryChecker.h"
+#include "DebugText.h"
+#include "PointLights.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
@@ -118,7 +121,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	{
 		ConsolePrintSuccess("Sound initialized successfully.");
 		ConsoleSkipLines(1);
-		m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
+		//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
+		m_sound->StartMusic();
 		m_playingState->SetSound(m_sound);
 		m_menuState->setSound(m_sound);
 	}
@@ -143,6 +147,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
 	InputManager::GetInstance()->RegisterKey(VK_RIGHT);
 	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
+	InputManager::GetInstance()->RegisterKey(VK_TAB);
+	InputManager::GetInstance()->RegisterKey(VK_F1);
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
@@ -155,6 +161,21 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_cursor = new Cursor();
 	if (!m_cursor->Initialize())
 	{
+		return false;
+	}
+
+	// Initialize memory checker
+	m_memoryCheker = new MemoryChecker();
+	if (!m_memoryCheker->Initialize())
+	{
+		return false;
+	}
+
+	// Initialize debug text
+	if (!DebugText::GetInstance()->Initialize())
+	{
+		ConsolePrintError("Debug text Initialize failed.");
+		ConsoleSkipLines(1);
 		return false;
 	}
 
@@ -171,6 +192,8 @@ void System::Shutdown()
 
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
+
+	PointLights::GetInstance()->Shutdown();
 
 	if (m_sound)
 	{
@@ -229,6 +252,15 @@ void System::Shutdown()
 	DeathBoard::GetInstance()->Shutdown();
 
 	TrailRenderer::GetInstance().Shutdown();
+
+	if (m_memoryCheker != nullptr)
+	{
+		m_memoryCheker->Shutdown();
+		delete m_memoryCheker;
+		m_memoryCheker = nullptr;
+	}
+
+	DebugText::GetInstance()->Shutdown();
 }
 
 void System::Run()
@@ -309,18 +341,21 @@ void System::Update()
 	{
 	case GAMESTATESWITCH_CHOOSENINJA:
 		m_gameState = m_chooseNinjaState;
+		m_gameState->Shutdown();
 		m_gameState->Initialize();
-		m_playingState->Initialize();
+		m_playingState->SetSound(m_sound);
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->LargeSize();
 		break;
 	case GAMESTATESWITCH_PLAY:
 		m_gameState = m_playingState;
+		m_playingState->SetSound(m_sound);
 		m_playingState->Shutdown();
 		m_gameState->Initialize();
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
+		m_sound->StopMusic();
 		m_cursor->SmallSize();
 		break;
 	case GAMESTATESWITCH_MENU:
@@ -347,11 +382,8 @@ void System::Update()
 		{
 			//Back to menu
 			m_gameState->EscapeIsPressed();
-			if (m_chooseNinjaState->GetStackSize() == 0)
-			{
-				m_gameState = m_menuState;
-				m_gameState->EscapeIsPressed();
-			}
+			m_gameState = m_menuState;
+			m_gameState->EscapeIsPressed();
 		}
 		if (m_gameState == m_playingState)
 		{
@@ -359,6 +391,9 @@ void System::Update()
 			m_gameState->EscapeIsPressed();
 		}
 	}
+
+	m_memoryCheker->Update();
+	DebugText::GetInstance()->Update();
 }
 
 // Render game scene here.
@@ -379,6 +414,8 @@ void System::Render()
 
 	//Render GUI
 	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+
+	DebugText::GetInstance()->Render();
 
 	GUIManager::GetInstance()->Render();
 

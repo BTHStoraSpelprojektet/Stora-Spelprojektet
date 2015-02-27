@@ -16,7 +16,7 @@
 #include "StickyTrapAbility.h"
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
-
+#include "ConsoleFunctions.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -52,7 +52,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_isDashing = false;
 
 	m_abilityBar = new AbilityBar();
-	m_abilityBar->Initialize(0.0f, -GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.5f + 40.5f, 5);
+	m_abilityBar->Initialize(0.0f, -GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f + 40.5f, 5);
 
 	m_directionUpdateTimer = 0.0f;
 
@@ -72,11 +72,6 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_globalCooldown = 0.0f;
 	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
 
-	m_dashParticles1 = new ParticleEmitter();
-	m_dashParticles2 = new ParticleEmitter();
-	m_dashParticles1->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
-	m_dashParticles2->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_DASH_TRAIL);
-
 	m_aimSphere = new Object();
 	m_aimSphere->Initialize("../Shurikenjutsu/Models/Marker_CircleShape.SSP", DirectX::XMFLOAT3(0.0f, 0.03f, 0.0f));
 
@@ -93,7 +88,19 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_floatingText = new FloatingText();
 	m_floatingText->Initialize();
 
+	m_trail = new Trail();
+	if (!m_trail->Initialize(100.0f, 0.5f, 0.2f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
+	{
+		ConsolePrintErrorAndQuit("A dash trail failed to initialize!");
+	}
+	m_trail->StopEmiting();
+
 	ChooseTool();
+
+	if (m_sound != NULL){
+		m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
+	}
+
 	return true;
 }
 
@@ -192,27 +199,20 @@ void Player::Shutdown()
 		m_abilityBar = nullptr;
 	}
 
-	if (m_dashParticles1 != nullptr)
+	if (m_trail)
 	{
-		m_dashParticles1->Shutdown();
-		delete m_dashParticles1;
-		m_dashParticles1 = nullptr;
+		m_trail->Shutdown();
+		delete m_trail;
+		m_trail = nullptr;
+	}
 	}
 
-	if (m_dashParticles2 != nullptr)
-	{
-		m_dashParticles2->Shutdown();
-		delete m_dashParticles2;
-		m_dashParticles2 = nullptr;
-	}
-}
-
-void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
+void Player::UpdateMe()
 {
-	m_dashParticles1->UpdatePosition(m_position);
-	m_dashParticles1->Update();
-	m_dashParticles2->UpdatePosition(m_position);
-	m_dashParticles2->Update();
+	float angle = atan2(m_dashDirection.z, m_dashDirection.x);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
+	m_trail->Update(position, angle);
+	m_sound->UpdateAmbientSound(m_position.x, m_position.y, m_position.z);
 
 	if (m_updateVisibility)
 	{
@@ -232,17 +232,21 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 	}
 	
 	SetSpeed(m_originalSpeed);
-	for (unsigned int i = 0; i < p_stickyTrapList.size(); i++)
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
-		if (Collisions::SphereSphereCollision(m_playerSphere, p_stickyTrapList[i]->GetStickyTrapSphere()))
+		if (Collisions::SphereSphereCollision(m_playerSphere, m_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
 			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
 		}
 	}
 
 	// Don't update player if he is dead
-	if (!m_isAlive)
+	if (!m_isAlive || Network::GetInstance()->GetMatchOver())
 	{
+		m_ability = m_noAbility;
+		// Animation None ?
+		UpdateAbilities();
+		UpdateAbilityBar();
 		return;
 	}
 
@@ -261,9 +265,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 		m_isDashing = true;
 
-		// Start sparkling.
-		m_dashParticles1->SetEmitParticleState(true);
-		m_dashParticles2->SetEmitParticleState(true);
+		m_trail->StartEmiting();
 	}
 
 	// Dash movement
@@ -286,8 +288,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 				Network::GetInstance()->SendAnimationState(AnimationState::None);
 
-				m_dashParticles1->SetEmitParticleState(false);
-				m_dashParticles2->SetEmitParticleState(false);
+				m_trail->StopEmiting();
 		}
 
 		else
@@ -307,20 +308,28 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 
 			Network::GetInstance()->SendAnimationState(AnimationState::None);
 
-			m_dashParticles1->SetEmitParticleState(false);
-			m_dashParticles2->SetEmitParticleState(false);
+			m_trail->StopEmiting();
 		}
 
 		SendPosition(m_position);
 	}
 
-	// Move
+	// Move.
 	if ((CalculateDirection() || Network::GetInstance()->ConnectedNow()) && !m_isDashing)
 	{
 		SetCalculatePlayerPosition();
 
 		// If we moved, update shadow shapes.
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+
+		//Update sound (walking)
+		m_sound->StartAmbientSound(m_soundEmitter);
+		m_soundEmitter->m_pos.x = position.x;
+		m_soundEmitter->m_pos.y = position.y;
+		m_soundEmitter->m_pos.z = position.z;
+	}
+	else{
+		m_sound->StopAmbientSound(m_soundEmitter);
 	}
 	m_playerSphere.m_position = m_position;
 	
@@ -374,10 +383,9 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 		}
 	}
 
-
 	// Count down cooldowns
 	UpdateAbilities();
-	throwDistance = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_position);//m_playerSphere.m_position);
+	throwDistance = CollisionManager::GetInstance()->CalculateMouseDistanceFromPlayer(m_position);
 	if (m_ability != m_noAbility && m_globalCooldown <= 0.0f)
 	{
 		if (m_ability->Execute(throwDistance))
@@ -389,6 +397,7 @@ void Player::UpdateMe(std::vector<StickyTrap*> p_stickyTrapList)
 			m_globalCooldown = m_maxGlobalCooldown;
 		}
 	}
+
 	DealtDamageStruct temp = Network::GetInstance()->GetDealtDamage();
 	m_floatingText->SetDealtDamageText(temp.m_position ,temp.m_damage);
 	UpdateAbilityBar();
@@ -465,10 +474,12 @@ bool Player::CalculateDirection()
 
 void Player::Update()
 {
-	m_dashParticles1->UpdatePosition(m_position);
-	m_dashParticles1->Update();
-	m_dashParticles2->UpdatePosition(m_position);
-	m_dashParticles2->Update();
+	float angle = atan2(m_direction.z, m_direction.x);
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
+	m_trail->Update(position, angle);
+
+	//m_bloodParticles->UpdatePosition(m_position);
+	//m_bloodParticles->Update();
 
 	int state = Network::GetInstance()->AnimationChanged(m_guid);
 	if (state != -1)
@@ -477,14 +488,12 @@ void Player::Update()
 
 		if (state == 2 && m_ninjaType == 0)
 		{
-			m_dashParticles1->SetEmitParticleState(true);
-			m_dashParticles2->SetEmitParticleState(true);
+			m_trail->StartEmiting();
 		}
 
 		if (state == 5 && m_ninjaType == 0)
 		{
-			m_dashParticles1->SetEmitParticleState(false);
-			m_dashParticles2->SetEmitParticleState(false);
+			m_trail->StopEmiting();
 		}
 	}
 }
@@ -975,15 +984,14 @@ void Player::Render()
 	if (m_isAlive)
 	{
 		m_healthbar->Render();
-		if (Network::GetInstance()->GetMyPlayer().guid == m_guid)
+		if (Network::GetInstance()->GetMyPlayer().guid == m_guid && !Network::GetInstance()->GetMatchOver())
 		{
 			RenderAttackLocations();
 			m_floatingText->Render();
 		}
 	}
 
-	m_dashParticles1->Render();
-	m_dashParticles2->Render();
+	m_trail->Render();
 
 	AnimatedObject::RenderPlayer(m_team);
 }
@@ -991,6 +999,11 @@ void Player::Render()
 void Player::RenderDepth()
 {
 	AnimatedObject::RenderDepth();
+}
+
+void Player::RenderDepthOutlining()
+{
+	AnimatedObject::RenderDepthOutlining();
 }
 
 void Player::RenderOutlining()
@@ -1034,13 +1047,11 @@ void Player::SetTeam(int p_team)
 
 	if (m_team == 1)
 	{
-		m_dashParticles1->SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
-		m_dashParticles2->SetColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
 	}
 	else
 	{
-		m_dashParticles1->SetColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
-		m_dashParticles2->SetColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
 	}
 }
 
@@ -1151,4 +1162,9 @@ void Player::ChooseTool()
 
 void Player::SetSound(Sound* p_sound){
 	m_sound = p_sound;
+}
+
+void Player::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
+{
+	m_stickyTrapList = p_stickyTrapList;
 }

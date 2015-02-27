@@ -23,6 +23,7 @@ void TextureLibrary::Shutdown()
 		if (it->second != nullptr)
 		{
 			it->second->Release();
+			it->second = nullptr;
 		}
 	}
 
@@ -56,7 +57,6 @@ void TextureLibrary::AddTexture(std::string p_path)
 
 void TextureLibrary::LoadTextureDirectory()
 {
-
 	WIN32_FIND_DATA ffd;
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	DWORD dwError = 0;

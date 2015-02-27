@@ -1,9 +1,11 @@
 #ifndef PLAYER
 #define PLAYER
-
 #define WIN32_LEAN_AND_MEAN
+
 #include "AnimatedObject.h"
 #include "Network.h"
+#include "Trail.h"
+
 class Ability;
 class InputManager;
 class HealthBar;
@@ -24,12 +26,13 @@ public:
 
 	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType);
 	void Shutdown();
-	void UpdateMe(std::vector<StickyTrap*> p_stickyTrapList);
+	void UpdateMe();
 	void Update();
 	void UpdateAbilities();
 	void Render();
 	virtual void RenderAttackLocations();
 	void RenderDepth();
+	void RenderDepthOutlining();
 	void RenderOutlining();
 	void RenderAbilityBar();
 	//void SetDamage(float p_damage);
@@ -71,6 +74,8 @@ public:
 	OBB GetOBB();
 
 	void SetSound(Sound* p_sound);
+	void SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList);
+	Sound::SoundEmitter* m_soundEmitter;
 
 protected:
 	void CheckForSpecialAttack();
@@ -120,9 +125,6 @@ protected:
 
 	bool m_updateVisibility;
 
-	ParticleEmitter* m_dashParticles1;
-	ParticleEmitter* m_dashParticles2;
-
 	int m_ninjaType;
 
 	Object* m_aimSphere;
@@ -134,5 +136,8 @@ protected:
 	FloatingText* m_floatingText;
 
 	Sound* m_sound;
+
+	Trail* m_trail;
+	std::vector<StickyTrap*> m_stickyTrapList;
 };
 #endif PLAYER

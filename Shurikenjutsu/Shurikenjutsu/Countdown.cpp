@@ -1,6 +1,7 @@
 #include "Countdown.h"
 #include "Network.h"
 #include "Globals.h"
+#include "TextureLibrary.h"
 
 Countdown::Countdown(){}
 Countdown::~Countdown(){}
@@ -19,6 +20,9 @@ bool Countdown::Initialize()
 
 	m_roundTeamText = GUIText();
 	m_roundTeamText.Initialize("", 50.0f, 0.0f, -(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f), 0xffffffff);
+
+	m_victDefTexture = GUIElement();
+	m_victDefTexture.Initialize(DirectX::XMFLOAT3(0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0.0f), 310.0f, 125.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/victory.png"));
 
 	m_renderCd = true;
 	m_renderRoundTeam = false;
@@ -97,21 +101,19 @@ void Countdown::Update()
 	// Check if a match is over
 	else if (Network::GetInstance()->GetMatchOver())
 	{
-		std::string text = "";
+		m_renderCd = false;
 		if (Network::GetInstance()->GetMatchWinningTeam() == Network::GetInstance()->GetMyPlayer().team)
 		{
 			// Victory
-			text = "Victory!";
+			m_victDefTexture.SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/victory.png"));
+			m_victDefTexture.SetSize(DirectX::XMFLOAT2(310.0f, 125.0f));
 		}
 		else
 		{
 			// Defeat
-			text = "Defeat!";
+			m_victDefTexture.SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/defeat.png"));
+			m_victDefTexture.SetSize(DirectX::XMFLOAT2(244.0f, 125.0f));
 		}
-		m_cdText.SetColor(0xffffffff);
-		m_cdText.SetText(text);
-		m_cdText.SetSize(0.5f * m_maxSize);
-		m_renderCd = true;
 	}
 	else
 	{
@@ -130,5 +132,10 @@ void Countdown::Render()
 	if (m_renderRoundTeam)
 	{
 		m_roundTeamText.Render();
+	}
+
+	if (Network::GetInstance()->GetMatchOver())
+	{
+		m_victDefTexture.QueueRender();
 	}
 }

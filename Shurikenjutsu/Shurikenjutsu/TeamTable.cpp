@@ -19,13 +19,22 @@ const float BUTTONHEIGHT = 98.0f;
 // OFFSET
 const float OFFSET = 10.0f;
 
-void TeamTable::Initialize(float p_startXPos, float p_startYPos)
+void TeamTable::Initialize(float p_startXPos, float p_startYPos, int p_team)
 {
 	m_startXPos = p_startXPos;
 	m_startYPos = p_startYPos;
 	m_initialStartXPos = p_startXPos;
 	m_initialStartYPos = p_startYPos;
-
+	m_portraitOffset = PORTRAITWIDTH * 2.0f;
+	if (p_team == 2)
+	{
+		m_portraitOffset *= -1;
+	}
+	m_toolOffset = PORTRAITWIDTH * 2.0f;
+	if (p_team == 2)
+	{
+		m_toolOffset *= -1;
+	}
 }
 void TeamTable::Shutdown()
 {
@@ -47,45 +56,36 @@ void TeamTable::Render()
 		m_teamList[i].m_tool->Render();
 	}
 }
-void TeamTable::AddTeamMate(int p_ninja, int p_tool, int p_team)
+void TeamTable::AddTeamMate(int p_ninja, int p_tool)
 {
 	CharacterToolWrapper temp;
 	temp.m_tool = new MenuItem();
 	temp.m_ninja = new MenuItem();
-	float offset = PORTRAITWIDTH * 2.0f;
-	if (p_team == 2)
-	{
-		offset *= -1;
-	}
 
-	float toolOffset = PORTRAITWIDTH * 2.0f;
-	if (p_team == 2)
-	{
-		toolOffset *= -1;
-	}
+
 	if (p_ninja == 0)
 	{
-		temp.m_ninja->Initialize(m_startXPos + offset , m_startYPos, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
+		temp.m_ninja->Initialize(m_startXPos + m_portraitOffset, m_startYPos, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja1.png"));
 	}
 	else if (p_ninja == 1)
 	{
-		temp.m_ninja->Initialize(m_startXPos + offset , m_startYPos, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
+		temp.m_ninja->Initialize(m_startXPos + m_portraitOffset, m_startYPos, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja2.png"));
 	}
 	else
 	{
-		temp.m_ninja->Initialize(m_startXPos + offset, m_startYPos, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
+		temp.m_ninja->Initialize(m_startXPos + m_portraitOffset, m_startYPos, PORTRAITWIDTH, PORTRAITHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ninja3.png"));
 	}
 	if (p_tool == 0)
 	{
-		temp.m_tool->Initialize(m_startXPos + offset + toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_Caltrops.png"));
+		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_Caltrops.png"));
 	}
 	else if (p_tool == 1)
 	{
-		temp.m_tool->Initialize(m_startXPos + offset + toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"));
+		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_SmokeBomb.png"));
 	}
 	else
 	{
-		temp.m_tool->Initialize(m_startXPos + offset + toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_StickyTARP.png"));
+		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_StickyTARP.png"));
 	}
 
 	m_startYPos -= PORTRAITHEIGHT * 1.1f;
@@ -111,4 +111,14 @@ void TeamTable::ClearList()
 int TeamTable::GetNumberOfPlayers()
 {
 	return m_teamList.size();
+}
+float TeamTable::GetXPos()
+{
+	return m_startXPos + m_portraitOffset;
+}
+float TeamTable::GetNextYPos()
+{
+	float temp = m_startYPos;
+	m_startYPos -= PORTRAITHEIGHT * 1.1f;
+	return temp;
 }

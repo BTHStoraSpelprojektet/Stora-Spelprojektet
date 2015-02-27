@@ -262,7 +262,6 @@ void Camera::HandleInput()
 	// Start moving the camera with the C key.
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('l')) && !GLOBAL::GetInstance().CAMERA_FLYING && FLAG_DEBUG == 1)
 	{
-		ShowCursor(false);
 		GLOBAL::GetInstance().CAMERA_FLYING = true;
 
 		POINT position;
@@ -324,7 +323,6 @@ void Camera::HandleInput()
 		// Reset the camera when BACKSPACE key is pressed.
 		if (GetAsyncKeyState(VK_BACK))
 		{
-			ShowCursor(true);
 			GLOBAL::GetInstance().CAMERA_FLYING = false;
 			ResetCamera();
 		}
@@ -502,7 +500,27 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 	UpdateProjectionMatrix(false);
 	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(playerPosition.x, playerPosition.z), GraphicsEngine::GetInstance()->GetDevice());
-
 	m_oldPosition = position;
+}
+
+void Camera::Update3DSound(Sound* p_sound, float p_x, float p_y, float p_z)
+{
+	FMOD_VECTOR pos, forward, up;
+	//3D sound follow camera
+	//pos.x = m_target.x;
+	//pos.y = 0;
+	//pos.z = m_target.z;
+
+	//3D sound follow player
+	pos.x = p_x;
+	pos.y = p_y;
+	pos.z = p_z;
+
+	forward.x = 0;//m_right.x;
+	forward.y = 0;//m_right.y;
+	forward.z = 1;//m_right.z;
+	up.x = 0; //m_upVector.x;
+	up.y = 1; //m_upVector.y;
+	up.z = 0; //m_upVector.z;
+	p_sound->UpdateListenerPos(pos, forward, up);
 }

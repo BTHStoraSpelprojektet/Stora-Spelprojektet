@@ -516,6 +516,12 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			if (m_players[i].currentHP <= 0)
 			{
 				m_players[i].isAlive = false;
+				if (m_players[i].charNr == 1){
+					SendPlaySound(PLAYSOUND_FEMALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+				}
+				else{
+					SendPlaySound(PLAYSOUND_MALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+				}
 				
 				// Loop throu players to get ninja nr
 				for (unsigned int j = 0; j < m_players.size(); j++)
@@ -531,6 +537,12 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
 			SendPlaySound(p_usedAbility, m_players[i].x, m_players[i].y, m_players[i].z);
+			if (m_players[i].charNr == 1){
+				SendPlaySound(PLAYSOUND_FEMALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
+			else{
+				SendPlaySound(PLAYSOUND_MALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
 		}
 	}
 }
@@ -664,7 +676,7 @@ void PlayerManager::SendPlaySound(ABILITIES ability, float p_x, float p_y, float
 	wBitStream.Write(p_y);
 	wBitStream.Write(p_z);
 
-	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void PlayerManager::SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p_z)
@@ -676,7 +688,7 @@ void PlayerManager::SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p
 	wBitStream.Write(p_y);
 	wBitStream.Write(p_z);
 
-	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void PlayerManager::SendPlayerPosAndDir()

@@ -11,12 +11,14 @@
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
-bool PlayerManager::Initialize()
+bool PlayerManager::Initialize(bool p_inMenu)
 {
 	m_enemyListSize = 0;
 	m_enemyList = NULL;
+	if (!p_inMenu)
+	{
 	AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-
+	}
 	return true;
 }
 
@@ -37,10 +39,14 @@ void PlayerManager::Shutdown()
 	m_enemyListSize = 0;
 }
 
-void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
+void PlayerManager::Update(bool p_inMenu)
 {
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
-	m_player->UpdateMe(p_stickyTrapList);
+
+	if (!p_inMenu)
+	{
+		m_player->UpdateMe();
+	}
 
 	if (Network::GetInstance()->IsConnected())
 	{
@@ -92,21 +98,37 @@ void PlayerManager::Update(std::vector<StickyTrap*> p_stickyTrapList)
 			m_enemyList[i]->SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
 			m_enemyList[i]->Update();
+
+			if (m_enemyList[i]->m_soundEmitter != NULL) {
+				m_enemyList[i]->m_soundEmitter->m_pos.x = enemyPlayers[i].x;
+				m_enemyList[i]->m_soundEmitter->m_pos.y = enemyPlayers[i].y;
+				m_enemyList[i]->m_soundEmitter->m_pos.z = enemyPlayers[i].z;
+			}
 		}
 	}
 	CheckPlayersVisible();
 }
 
-void PlayerManager::Render()
+void PlayerManager::Render(bool p_inMenu)
 {
-	m_player->Render();
-	m_player->RenderAbilityBar();
+	if (!p_inMenu)
+	{
+		m_player->Render();
+		m_player->RenderAbilityBar();
+	}
 
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i]->GetFrustumSphere(), 1.0f))
 		{
-			if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			if (!p_inMenu || !Network::GetInstance()->GetMatchOver())
+			{
+				if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+				{
+					m_enemyList[i]->Render();
+				}
+			}
+			else
 			{
 				m_enemyList[i]->Render();
 			}
@@ -116,16 +138,26 @@ void PlayerManager::Render()
 
 void PlayerManager::RenderOutliningPassOne()
 {
-	m_player->Render();
+	m_player->RenderDepthOutlining();
 }
 
-void PlayerManager::RenderDepth()
+void PlayerManager::RenderDepth(bool p_inMenu)
+{
+	if (!p_inMenu)
 {
 	m_player->RenderDepth();
+	}
 
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
+		if (!p_inMenu)
+		{
 		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+		{
+			m_enemyList[i]->RenderDepth();
+		}
+	}
+		else
 		{
 			m_enemyList[i]->RenderDepth();
 		}
@@ -190,7 +222,14 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 	case 0:
 	{
 		KatanaNinja *tempPlayer = new KatanaNinja();
+
 		tempPlayer->SetSound(m_sound);
+		/*tempPlayer->m_soundEmitter.m_playSound = PLAYSOUND_STEPS_LEAVES_SOUND;
+		tempPlayer->m_soundEmitter.m_x = p_pos.x;
+		tempPlayer->m_soundEmitter.m_y = p_pos.y;
+		tempPlayer->m_soundEmitter.m_z = p_pos.z;
+		m_sound->PlayAmbientSound(&tempPlayer->m_soundEmitter);*/
+
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
@@ -201,7 +240,9 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 	case 1:
 	{
 		TessenNinja *tempPlayer = new TessenNinja();
+
 		tempPlayer->SetSound(m_sound);
+
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_TESSEN_HEALTH);
@@ -213,7 +254,9 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 	{
 		// Todo change to ninja 3
 		NaginataNinja *tempPlayer = new NaginataNinja();
+
 		tempPlayer->SetSound(m_sound);
+
 		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_NAGINATA_HEALTH);
@@ -456,4 +499,8 @@ int PlayerManager::GetNrOfPlayersInTeam(int p_team)
 
 void PlayerManager::SetSound(Sound* p_sound){
 	m_sound = p_sound;
+}
+void PlayerManager::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
+{
+	m_player->SetStickyTrapList(p_stickyTrapList);
 }

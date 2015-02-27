@@ -87,6 +87,9 @@
 
 #define DEATHBOARD_CALPTROPS "../Shurikenjutsu/2DTextures/TB_Caltrops.png"
 
+// Scoreboard
+#define SCOREBOARD_BACKGROUND "../Shurikenjutsu/2DTextures/scoreboard_bg.png"
+
 
 
 #endif

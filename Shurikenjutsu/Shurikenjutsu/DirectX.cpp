@@ -319,6 +319,20 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 		return false;
 	}
 
+	blendState.RenderTarget[0].BlendEnable = TRUE;
+	blendState.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blendState.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	blendState.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendState.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendState.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	blendState.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+
+	if (FAILED(m_device->CreateBlendState(&blendState, &m_pointLightsAlphaEnabled)))
+	{
+		ConsolePrintErrorAndQuit("DirectX point light alpha blend state failed to create.");
+		return false;
+	}
+
 	InitializeOutlinging();
 
 	DoReportLiveObjects();
@@ -436,6 +450,7 @@ void DirectXWrapper::Clear()
 {
 	// Clear render target.
 	m_context->ClearRenderTargetView(m_renderTarget, m_clearColor);
+	m_context->ClearRenderTargetView(m_compositionRTV, m_clearColor);
 	m_context->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
@@ -499,6 +514,18 @@ void DirectXWrapper::TurnOffAlphaBlending()
 	blendFactor[3] = 0.0f;
 
 	m_context->OMSetBlendState(m_alphaDisabled, blendFactor, 0xffffffff);
+}
+
+void DirectXWrapper::TurnOnPointLightAlphaBlending()
+{
+	float blendFactor[4];
+
+	blendFactor[0] = 0.0f;
+	blendFactor[1] = 0.0f;
+	blendFactor[2] = 0.0f;
+	blendFactor[3] = 0.0f;
+
+	m_context->OMSetBlendState(m_pointLightsAlphaEnabled, blendFactor, 0xffffffff);
 }
 
 void DirectXWrapper::ResetRenderTarget()
@@ -1027,7 +1054,7 @@ void DirectXWrapper::SetRenderTargetForDOF()
 	m_context->PSSetShaderResources(6, 1, &nullPointer);
 
 	m_context->OMSetRenderTargets(0, 0, 0);
-	m_context->OMSetRenderTargets(1, &m_gBufferRTV[0], NULL);
+	m_context->OMSetRenderTargets(1, &m_gBufferRTV[1], NULL);
 }
 
 void DirectXWrapper::SetRenderTargetForDOF2()

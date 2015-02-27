@@ -52,6 +52,6 @@ float4 main(Input p_input) : SV_Target
 	}
 	color /= totalWeight;
 
-	//return float4(a.xxx, 1.0f);
-	return float4(comp.xyz * (1.0f - a) + color.rgb*(a), 1.0f);
+	return float4(comp.xyz, 1.0f);
+	return float4(comp.xyz * (1.0f - a) + color.rgb*a, 1.0f);
 }
