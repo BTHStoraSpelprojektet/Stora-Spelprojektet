@@ -989,13 +989,13 @@ void Network::ReceviePacket()
 			}*/
 
 			if (m_sound != NULL){
-				m_sound->CreateDefaultSound(sound, x, y, z);
+			m_sound->CreateDefaultSound(sound, x, y, z);
 			}
 
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
-		}
+			}
 
 		case ID_SCOREBOARDKILL:
 		{
@@ -1021,6 +1021,17 @@ void Network::ReceviePacket()
 
 			break;
 		}
+		case ID_INITIATE_SUDDEN_DEATH_BOX:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int boxIndex = 0;
+			bitStream.Read(messageID);
+			bitStream.Read(boxIndex);
+			m_suddenDeathBoxIndex = boxIndex;
+
+			break;
+		}
 		case ID_SPAWN_RUNES:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -1028,14 +1039,14 @@ void Network::ReceviePacket()
 			int index;
 			float x, y, z;
 			bitStream.Read(messageID);
-			for (int i = -1; i < 2; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				bitStream.Read(index);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
-				//SpawnRunes(index, x, y, z);
-				SpawnRunes(0, 0, 0, 10 * i);
+				SpawnRunes(index, x, y, z);
+				//SpawnRunes(0, 0, 0, 10 * i);
 			}
 
 			break;
@@ -1053,35 +1064,32 @@ void Network::ReceviePacket()
 		}
 		case ID_LOTUS_PICKED_UP:
 		{
-			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			RakNet::RakNetGUID guid;
 			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);*/
-			break;
-		}
-		case ID_SHIELD_PICKED_UP:
-		{
-			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);*/
+			bitStream.Read(guid);
+			//bitStream.Read(sound); Add sound
+			RunePickedUp(0, guid);
 			break;
 		}
 		case ID_INVIS_PICKED_UP:
 		{
-			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			RakNet::RakNetGUID guid;
 			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);*/
+			bitStream.Read(guid);
+			//bitStream.Read(sound); Add sound
+			RunePickedUp(1, guid);
+			break;
+		}
+		case ID_SHIELD_PICKED_UP:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			//bitStream.Read(sound); Add sound
+			RunePickedUp(2, guid);
 			break;
 		}
 		default:
@@ -2035,4 +2043,9 @@ void Network::SendLatestDir()
 void Network::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
 {
 	m_objectManager->SpawnRunes(p_index, p_x, p_y, p_z);
+}
+
+void Network::RunePickedUp(int p_index, RakNet::RakNetGUID p_guid)
+{
+	m_objectManager->RunePickedUp(p_index, p_guid);
 }

@@ -19,6 +19,7 @@ class PlayerManager;
 class SpikeManager;
 class ProjectileManager;
 class VolleyManager;
+class PointOfInterestManager;
 
 class CollisionManager
 {
@@ -42,6 +43,7 @@ public:
 
 	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
 	void SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList, std::vector<int> p_inactiveBoxIndexes);
+	void POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager);
 
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);
