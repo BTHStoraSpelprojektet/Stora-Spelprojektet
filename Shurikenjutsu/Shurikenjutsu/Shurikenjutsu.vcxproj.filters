@@ -518,14 +518,12 @@
     <ClCompile Include="VictoryScreenMenu.cpp">
       <Filter>Source Files\GUI\Menu</Filter>
     </ClCompile>
-    <ClCompile Include="FFAGameState.cpp">
-	</ClCompile>
     <ClCompile Include="PointOfInterest.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="PointOfInterestManager.cpp">
       <Filter>Source Files\Object</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="MemoryChecker.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
@@ -533,6 +531,9 @@
       <Filter>Source Files\Utility\DebugDraw</Filter>
     </ClCompile>
     <ClCompile Include="SuddenDeathState.cpp">
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="FFAGameState.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
   </ItemGroup>
@@ -879,14 +880,12 @@
     <ClInclude Include="ScoreBoard.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="FFAGameState.h">
-    </ClInclude>
     <ClInclude Include="PointOfInterest.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
     <ClInclude Include="PointOfInterestManager.h">
       <Filter>Header Files\Object</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="MemoryChecker.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -894,6 +893,9 @@
       <Filter>Header Files\Utility\DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="SuddenDeathState.h">
+      <Filter>Header Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="FFAGameState.h">
       <Filter>Header Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
