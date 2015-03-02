@@ -104,7 +104,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_SUDDENDEATH) :
 		{
-			InitParticles(1000.0f, 1000.0f, DirectX::XMFLOAT3(12.0f,0.0f,14.0f), 5.0f, 0.1f, 10.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/toxicSmoke.png"));
+			InitParticles(1000.0f, 1000.0f, DirectX::XMFLOAT3(17.0f,0.0f,17.0f), 1.0f, 0.1f, 10.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/toxicSmoke.png"));
 			break;
 		}
 		default:
@@ -781,19 +781,19 @@ void ParticleEmitter::UpdateParticles()
 				nextPosition.y = m_particleList[i].m_position.y + (m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
 				nextPosition.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
 
-				if (position.x <  m_SDxMax && nextPosition.x > m_SDxMax)
+				if (position.x <=  m_SDxMax && nextPosition.x >= m_SDxMax)
 				{
 					m_particleList[i].m_direction.x *= -1;
 				}
-				if (position.x >  m_SDxMin && nextPosition.x < m_SDxMin)
+				if (position.x >=  m_SDxMin && nextPosition.x <= m_SDxMin)
 				{
 					m_particleList[i].m_direction.x *= -1;
 				}
-				if (position.z <  m_SDzMax && nextPosition.z > m_SDzMax)
+				if (position.z <=  m_SDzMax && nextPosition.z >= m_SDzMax)
 				{
 					m_particleList[i].m_direction.z *= -1;
 				}
-				if (position.z >  m_SDzMin && nextPosition.z < m_SDzMin)
+				if (position.z >=  m_SDzMin && nextPosition.z <= m_SDzMin)
 				{
 					m_particleList[i].m_direction.z *= -1;
 				}
