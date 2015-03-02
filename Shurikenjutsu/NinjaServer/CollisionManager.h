@@ -19,6 +19,7 @@ class PlayerManager;
 class SpikeManager;
 class ProjectileManager;
 class VolleyManager;
+class PointOfInterestManager;
 
 class CollisionManager
 {
@@ -38,9 +39,9 @@ public:
 	void WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
 	void NaginataStabAttack(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
-	void SetDeltaTime(float p_deltaTime);
-
 	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
+	void POICollisionChecks(PointOfInterestManager* p_volleymanager, PlayerManager* p_playerManager);
+	void SetDeltaTime(float p_deltaTime);
 	void SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList, std::vector<int> p_inactiveBoxIndexes);
 
 private:

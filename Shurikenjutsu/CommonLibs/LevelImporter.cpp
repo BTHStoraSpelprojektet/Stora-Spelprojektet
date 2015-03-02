@@ -188,9 +188,6 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 	else if (currentWordTemp == 6){
 		rotateZ = (float)atof(tmpStr.c_str());
 
-		//TODO: Read rotation from file
-		//DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.0f, 3.141592f / 2.0f, 0.0f);
-
 		if (isSpawnPoint){
 			SpawnPoint spawnPoint;
 			spawnPoint.m_team = currentTeam;
@@ -375,6 +372,11 @@ bool LevelImporter::readData(){
 
 std::vector<LevelImporter::SpawnPoint> LevelImporter::GetSpawnPoints(){
 	return m_spawnPoints;
+}
+
+std::vector<LevelImporter::POI> LevelImporter::GetPOIPoints()
+{
+	return m_POIPoints;
 }
 
 std::vector<Line> LevelImporter::GetShadowsShapes(){

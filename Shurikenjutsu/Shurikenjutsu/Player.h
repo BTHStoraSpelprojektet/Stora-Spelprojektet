@@ -5,6 +5,7 @@
 #include "AnimatedObject.h"
 #include "Network.h"
 #include "Trail.h"
+#include "Sound.h"
 
 class Ability;
 class InputManager;

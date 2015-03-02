@@ -11,6 +11,7 @@ Level::Level(std::string p_level){
 Level::~Level(){}
 
 bool Level::loadLevel(std::string p_level){
+
 	LevelImporter levelImporter(p_level);
 
 	levelImporter.loadLevelFile();
@@ -18,6 +19,8 @@ bool Level::loadLevel(std::string p_level){
 	bool loaded = levelImporter.readData();
 
 	m_spawnPoints = levelImporter.GetSpawnPoints();
+
+	m_POIPoints = levelImporter.GetPOIPoints();
 
 	m_shadowShapes = levelImporter.GetShadowsShapes();
 
@@ -34,6 +37,11 @@ bool Level::loadLevel(std::string p_level){
 
 std::vector<LevelImporter::SpawnPoint> Level::GetSpawnPoints(){
 	return m_spawnPoints;
+}
+
+std::vector<LevelImporter::POI> Level::GetPOIPoints()
+{
+	return m_POIPoints;
 }
 
 std::vector<Line> Level::GetShadowsShapes(){

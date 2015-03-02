@@ -67,9 +67,12 @@ bool Network::Initialize()
 
 	m_networkStatus = NETWORKSTATUS_NONE;
 
-	m_pingTimer = 5;
+	m_pingTimer = 5.0;
 	m_timeToPing = m_pingTimer;
 	m_dealtDamage = 0;
+
+	m_posTimer = 0.01;
+	m_timeToSendPos = 0.0;
 
 	return true;
 }
@@ -107,10 +110,26 @@ void Network::Update()
 
 	// Ping
 	m_timeToPing -= GLOBAL::GetInstance().GetDeltaTime();
-	if (m_timeToPing < 0)
+	if (m_timeToPing < 0.0)
 	{
 		m_clientPeer->Ping(RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT));
 		m_timeToPing = m_pingTimer;
+	}
+
+	// Pos and dir
+	m_timeToSendPos -= GLOBAL::GetInstance().GetDeltaTime();
+	if (m_timeToSendPos < 0.0)
+	{
+		if (m_sendPos)
+		{
+			SendLatestPos();
+}
+
+		if (m_sendDir)
+		{
+			SendLatestDir();
+		}
+		m_timeToSendPos = m_posTimer;
 	}
 }
 
@@ -197,6 +216,7 @@ void Network::ReceviePacket()
 			int team, charNr,toolNr;
 			bool isAlive;
 			RakNet::RakNetGUID guid;
+			int id;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
 			bitStream.Read(messageID);
 			bitStream.Read(nrOfPlayers);
@@ -204,6 +224,7 @@ void Network::ReceviePacket()
 			for (int i = 0; i < nrOfPlayers; i++)
 			{
 				bitStream.Read(guid);
+				bitStream.Read(id);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
@@ -224,6 +245,7 @@ void Network::ReceviePacket()
 				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
 				UpdatePlayerTeam(guid, team);
 				UpdatePlayerChar(guid, charNr, toolNr);
+				UpdatePlayerID(guid, id);
 
 
 				playerGuids.push_back(guid);
@@ -803,7 +825,7 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-			uint64_t guidg;
+			unsigned char id;
 			signed short mantissa1;
 			signed char mantissa2;
 			signed char exp;
@@ -811,7 +833,7 @@ void Network::ReceviePacket()
 			float dirX, dirZ;
 
 			bitStream.Read(messageID);
-			bitStream.Read(guidg);
+			bitStream.Read(id);
 
 			// pos x
 			bitStream.Read(mantissa1);
@@ -833,8 +855,8 @@ void Network::ReceviePacket()
 			bitStream.Read(exp);
 			dirZ = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
 
-			UpdatePlayerPos(guidg, posX, 0.0f, posZ);
-			UpdatePlayerDir(guidg, dirX, 0.0f, dirZ);
+			UpdatePlayerPos((int)id, posX, 0.0f, posZ);
+			UpdatePlayerDir((int)id, dirX, 0.0f, dirZ);
 			break;
 		}
 		case ID_DEATHBOARDKILL:
@@ -956,7 +978,7 @@ void Network::ReceviePacket()
 
 			/*float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x)) + ((m_myPlayer.z - z)*(m_myPlayer.z - z)));
 			float soundDistanceGain = 4.0f;
-
+			
 			//Hit sounds
 			if (distance == 0){
 				m_sound->PlaySound(sound, 1.0f);
@@ -970,7 +992,7 @@ void Network::ReceviePacket()
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
-		}
+			}
 		case ID_START_SUDDEN_DEATH:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -980,16 +1002,69 @@ void Network::ReceviePacket()
 
 			break;
 		}
-		case ID_INITIATE_SUDDEN_DEATH_BOX:
+		case ID_SPAWN_RUNES:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
 			int index;
+			float x, y, z;
 			bitStream.Read(messageID);
-			bitStream.Read(index);
-			m_suddenDeathBoxIndex = index;
+			for (int i = -1; i < 2; i++)
+			{
+				bitStream.Read(index);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+				//SpawnRunes(index, x, y, z);
+				SpawnRunes(0, 0, 0, 10 * i);
+			}
+
 			break;
 		}
-			
+		case ID_RUNE_PICKED_UP:
+		{
+			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);*/
+			break;
+		}
+		case ID_LOTUS_PICKED_UP:
+		{
+			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);*/
+			break;
+		}
+		case ID_SHIELD_PICKED_UP:
+		{
+			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);*/
+			break;
+		}
+		case ID_INVIS_PICKED_UP:
+		{
+			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);*/
+			break;
+		}
 		default:
 		{
 			break;
@@ -1043,26 +1118,18 @@ bool Network::ConnectedNow()
 
 void Network::SendPlayerPos(float p_x, float p_y, float p_z)
 {
-	RakNet::BitStream bitStream;
-
-	bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
-	bitStream.Write(p_x);
-	bitStream.Write(p_y);
-	bitStream.Write(p_z);
-
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_latestPos.x = p_x;
+	m_latestPos.y = p_y;
+	m_latestPos.z = p_z;
+	m_sendPos = true;
 }
 
 void Network::SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ)
 {
-	RakNet::BitStream bitStream;
-
-	bitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
-	bitStream.Write(p_dirX);
-	bitStream.Write(p_dirY);
-	bitStream.Write(p_dirZ);
-
-	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 2, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+	m_latestDir.x = p_dirX;
+	m_latestDir.y = p_dirY;
+	m_latestDir.z = p_dirZ;
+	m_sendDir = true;
 }
 
 void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z)
@@ -1107,9 +1174,9 @@ void Network::UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, 
 	
 }
 
-void Network::UpdatePlayerPos(uint64_t p_owner, float p_x, float p_y, float p_z)
+void Network::UpdatePlayerPos(int p_id, float p_x, float p_y, float p_z)
 {
-	if (p_owner == m_clientPeer->GetMyGUID().g)
+	if (p_id == m_myPlayer.id)
 	{
 		m_myPlayer.x = p_x;
 		m_myPlayer.y = p_y;
@@ -1119,7 +1186,7 @@ void Network::UpdatePlayerPos(uint64_t p_owner, float p_x, float p_y, float p_z)
 	{
 		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 		{
-			if (m_enemyPlayers[i].guid.g == p_owner)
+			if (m_enemyPlayers[i].id == p_id)
 			{
 				m_enemyPlayers[i].x = p_x;
 				m_enemyPlayers[i].y = p_y;
@@ -1154,9 +1221,9 @@ void Network::UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_
 	}
 }
 
-void Network::UpdatePlayerDir(uint64_t p_owner, float p_dirX, float p_dirY, float p_dirZ)
+void Network::UpdatePlayerDir(int p_id, float p_dirX, float p_dirY, float p_dirZ)
 {
-	if (p_owner == m_clientPeer->GetMyGUID().g)
+	if (p_id == m_myPlayer.id)
 	{
 		m_myPlayer.dirX = p_dirX;
 		m_myPlayer.dirY = p_dirY;
@@ -1166,12 +1233,30 @@ void Network::UpdatePlayerDir(uint64_t p_owner, float p_dirX, float p_dirY, floa
 	{
 		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 		{
-			if (m_enemyPlayers[i].guid.g == p_owner)
+			if (m_enemyPlayers[i].id == p_id)
 			{
 				m_enemyPlayers[i].dirX = p_dirX;
 				m_enemyPlayers[i].dirY = p_dirY;
 				m_enemyPlayers[i].dirZ = p_dirZ;
 				break;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerID(RakNet::RakNetGUID p_owner, int p_id)
+{
+	if (p_owner == m_clientPeer->GetMyGUID())
+	{
+		m_myPlayer.id = p_id;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].id = p_id;
 			}
 		}
 	}
@@ -1902,4 +1987,33 @@ int Network::GetSuddenDeathBoxIndex()
 	int temp = m_suddenDeathBoxIndex;
 	m_suddenDeathBoxIndex = 99;
 	return temp;
+}
+
+void Network::SendLatestPos()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVED);
+	bitStream.Write(m_latestPos.x);
+	bitStream.Write(m_latestPos.y);
+	bitStream.Write(m_latestPos.z);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE_SEQUENCED, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+void Network::SendLatestDir()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_PLAYER_ROTATED);
+	bitStream.Write(m_latestDir.x);
+	bitStream.Write(m_latestDir.y);
+	bitStream.Write(m_latestDir.z);
+
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 2, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+void Network::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
+{
+	m_objectManager->SpawnRunes(p_index, p_x, p_y, p_z);
 }

@@ -518,6 +518,12 @@
     <ClCompile Include="VictoryScreenMenu.cpp">
       <Filter>Source Files\GUI\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="PointOfInterest.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="PointOfInterestManager.cpp">
+      <Filter>Source Files\Object</Filter>
+	</ClCompile>
     <ClCompile Include="MemoryChecker.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
@@ -871,6 +877,12 @@
     <ClInclude Include="ScoreBoard.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="PointOfInterest.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="PointOfInterestManager.h">
+      <Filter>Header Files\Object</Filter>
+	</ClInclude>
     <ClInclude Include="MemoryChecker.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>

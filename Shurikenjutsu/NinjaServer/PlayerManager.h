@@ -2,12 +2,10 @@
 #define PLAYERMANAGERSERVER_H_
 
 #include <iostream>
-
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
-#include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonEnums.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "CollisionManager.h"
@@ -67,6 +65,7 @@ private:
 	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable);
 	
 	int GetTeamForPlayer();
+	int GetIdForPlayer();
 
 	RakNet::RakPeerInterface *m_serverPeer;
 

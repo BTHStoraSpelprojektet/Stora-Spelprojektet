@@ -9,6 +9,7 @@ struct PlayerNet
 	float x, y, z;
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
+	int id;
 	int team;
 	float maxHP;
 	float currentHP;
@@ -126,7 +127,12 @@ enum Messages
 	ID_PLAY_SOUND_ABILITY,
 	ID_PLAY_SOUND,
 	ID_START_SUDDEN_DEATH,
-	ID_INITIATE_SUDDEN_DEATH_BOX
+	ID_INITIATE_SUDDEN_DEATH_BOX,
+	ID_SPAWN_RUNES,
+	ID_RUNE_PICKED_UP,
+	ID_LOTUS_PICKED_UP,
+	ID_SHIELD_PICKED_UP,
+	ID_INVIS_PICKED_UP
 };
 
 #endif
