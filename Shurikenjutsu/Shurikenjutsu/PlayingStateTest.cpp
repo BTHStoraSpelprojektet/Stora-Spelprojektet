@@ -84,7 +84,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_objectManager->Initialize(&level);
 
 	// Load and place arena walls.
-	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
+	std::vector<LevelImporter::LevelBoundingBox> temp = level.GetLevelBoundingBoxes();
 	std::vector<Box> wallList;
 	for (unsigned int i = 0; i < temp.size(); i++)
 	{
@@ -121,9 +121,11 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	}
 
 	// Initialize the directional light.
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.4f, 0.4f, 1.125f, 1.0f); //m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(2.525f, 2.525f, 5.525f, 1.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.18f*0.25, 0.34f*0.25, 0.48f*0.25, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.18f, 0.34f, 0.48f, 1.0f);
+	//m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.4f, 0.4f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(0.77f, 0.94f, 0.94f, 1.0f);
+	//m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f*0.5f, 5.525f*0.5f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f);
 	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
@@ -155,11 +157,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	m_victoryMenu = new VictoryScreenMenu();
 	if (!m_victoryMenu->Initialize())
-	{
-		return false;
-	}
-
-	if (!DeathBoard::GetInstance()->Initialize())
 	{
 		return false;
 	}
@@ -437,6 +434,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update the countdown.
 	m_countdown->Update();
+
+	// Update scoreboard
+	m_scoreBoard->Update();
 	
 	if (resized)
 	{
@@ -454,7 +454,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
 	{
-		m_scoreBoard->Update();
+		m_scoreBoard->Render();
 		m_scoreBoardIsActive = true;
 	}
 

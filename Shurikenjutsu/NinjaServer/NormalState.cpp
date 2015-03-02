@@ -4,7 +4,6 @@
 #include "ProjectileManager.h"
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
-#include "FanBoomerangManager.h"
 #include "../Shurikenjutsu/ConsoleFunctions.h"
 
 NormalState::NormalState(){}

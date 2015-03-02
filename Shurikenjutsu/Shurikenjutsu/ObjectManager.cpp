@@ -102,7 +102,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	{
 		ParticleEmitter* particleEmitter = new ParticleEmitter();
 
-		if (particleLevelEmitter[i].type == EmitterType::BrazierFire)
+		if (particleLevelEmitter[i].type == EmitterType::EmitterType_BrazierFire)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
@@ -113,42 +113,42 @@ bool ObjectManager::Initialize(Level* p_level)
 			}
 		}
 
-		else if (particleLevelEmitter[i].type == EmitterType::FireSpark)
+		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_FireSpark)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SPARK_SIZE_X, PARTICLE_FIRE_SPARK_SIZE_Y), PARTICLE_PATTERN_FIRE_SPARK);
 		}
 
-		else if (particleLevelEmitter[i].type == EmitterType::LeafSakura)
+		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_LeafSakura)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_PINKLEAF_SIZE_X, PARTICLE_PINKLEAF_SIZE_Y), PARTICLE_PATTERN_PINK_LEAVES);
 		}
 
-		else if (particleLevelEmitter[i].type == EmitterType::LeafTree)
+		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_LeafTree)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_GREEN_LEAVES);
 		}
 
-		else if (particleLevelEmitter[i].type == EmitterType::LeafAcerPalmatum)
+		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_LeafAcerPalmatum)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_ACERPALMATUM_LEAVES);
 		}
 
-		else if (particleLevelEmitter[i].type == EmitterType::WorldMist)
+		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_WorldMist)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDMIST_SIZE_X, PARTICLE_WORLDMIST_SIZE_Y), PARTICLE_PATTERN_WORLD_MIST);
 		}
 
-		else if (particleLevelEmitter[i].type == EmitterType::WorldDust)
+		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_WorldDust)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
@@ -158,7 +158,7 @@ bool ObjectManager::Initialize(Level* p_level)
 			}
 		}
 
-		else if (particleLevelEmitter[i].type == EmitterType::Fireflies)
+		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_Fireflies)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
