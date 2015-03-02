@@ -31,6 +31,24 @@ void BaseModel::Shutdown()
 
 void BaseModel::ServerShutdown()
 {
+	if (m_mesh != NULL)
+	{
+		m_mesh->Release();
+		m_mesh = 0;
+	}
+
+	if (m_texture != NULL)
+	{
+		m_texture->Release();
+		m_texture = 0;
+	}
+
+	if (m_normalMap != NULL)
+	{
+		m_normalMap->Release();
+		m_normalMap = 0;
+	}
+
 	if (m_importer != nullptr)
 	{
 		delete m_importer;
