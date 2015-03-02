@@ -86,4 +86,10 @@ enum EmitterType{
 	WorldDust
 };
 
+enum PointOfInterestType{
+	Heal,
+	Invisible,
+	Shield
+};
+
 #endif // !COMMONENUMS_H_
