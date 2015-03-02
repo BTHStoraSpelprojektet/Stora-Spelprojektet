@@ -51,7 +51,19 @@ void SuddenDeathState::Initialize(std::vector<Box> p_walls)
 	positions.push_back(DirectX::XMFLOAT3(xLength / 4.0f, 0.0f, -zLength / 4.0f));
 	for (unsigned int i = 0; i < 8; i++)
 	{
-		m_gasParticle[i]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), positions[i], DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f), PARTICLE_PATTERN_SUDDENDEATH);
+		m_gasParticle[i]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), positions[i], DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(3.0f, 3.0f), PARTICLE_PATTERN_SUDDENDEATH);
+	}
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		float sdXMax = positions[i].x + (xLength / 7.0f) - 1.0f;
+		float sdXMin = positions[i].x - (xLength / 7.0f) + 1.0f;
+		float sdZMax = positions[i].z + (zLength / 7.0f) - 1.0f;
+		float sdZMin = positions[i].z - (zLength / 7.0f) + 1.0f;
+		m_gasParticle[i]->SetSuddenDeathBoxLimits(sdXMax, sdXMin, sdZMax, sdZMin);
+	}
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		m_gasParticle[i]->SetEmitParticleState(true);
 	}
 }
 void SuddenDeathState::Update()
@@ -85,7 +97,7 @@ void SuddenDeathState::Shutdown()
 void SuddenDeathState::Render()
 {
 	m_title->Render();
-
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	for (unsigned int i = 0; i < 8; i++)
 	{
 		if (m_gasParticle[i] != nullptr)
@@ -93,6 +105,7 @@ void SuddenDeathState::Render()
 			m_gasParticle[i]->Render();
 		}
 	}
+	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }
 void SuddenDeathState::StartEmittingParticles(int p_index)
 {

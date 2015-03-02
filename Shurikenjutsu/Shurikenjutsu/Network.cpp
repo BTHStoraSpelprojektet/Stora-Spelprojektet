@@ -989,13 +989,13 @@ void Network::ReceviePacket()
 			}*/
 
 			if (m_sound != NULL){
-				m_sound->CreateDefaultSound(sound, x, y, z);
+			m_sound->CreateDefaultSound(sound, x, y, z);
 			}
 
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
-		}
+			}
 
 		case ID_SCOREBOARDKILL:
 		{
@@ -1021,21 +1021,32 @@ void Network::ReceviePacket()
 
 			break;
 		}
+		case ID_INITIATE_SUDDEN_DEATH_BOX:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int boxIndex = 0;
+			bitStream.Read(messageID);
+			bitStream.Read(boxIndex);
+			m_suddenDeathBoxIndex = boxIndex;
+
+			break;
+		}
 		case ID_SPAWN_RUNES:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			RakNet::RakNetGUID guid;
-			int index;
+			PointOfInterestType poi_type;
 			float x, y, z;
 			bitStream.Read(messageID);
-			for (int i = -1; i < 2; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				bitStream.Read(index);
+				bitStream.Read(poi_type);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
-				//SpawnRunes(index, x, y, z);
-				SpawnRunes(0, 0, 0, 10 * i);
+				SpawnRunes(poi_type, x, y, z);
+				//SpawnRunes(0, 0, 0, 10 * i);
 			}
 
 			break;
@@ -1053,35 +1064,32 @@ void Network::ReceviePacket()
 		}
 		case ID_LOTUS_PICKED_UP:
 		{
-			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			RakNet::RakNetGUID guid;
 			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);*/
-			break;
-		}
-		case ID_SHIELD_PICKED_UP:
-		{
-			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);*/
+			bitStream.Read(guid);
+			//bitStream.Read(sound); Add sound
+			RunePickedUp(PointOfInterestType_Heal, guid);
 			break;
 		}
 		case ID_INVIS_PICKED_UP:
 		{
-			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			RakNet::RakNetGUID guid;
 			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);*/
+			bitStream.Read(guid);
+			//bitStream.Read(sound); Add sound
+			RunePickedUp(PointOfInterestType_Invisible, guid);
+			break;
+		}
+		case ID_SHIELD_PICKED_UP:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			RakNet::RakNetGUID guid;
+			bitStream.Read(messageID);
+			bitStream.Read(guid);
+			//bitStream.Read(sound); Add sound
+			RunePickedUp(PointOfInterestType_Shield, guid);
 			break;
 		}
 		default:
@@ -2032,7 +2040,12 @@ void Network::SendLatestDir()
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 2, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
-void Network::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
+void Network::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z)
 {
-	m_objectManager->SpawnRunes(p_index, p_x, p_y, p_z);
+	m_objectManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
+}
+
+void Network::RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
+{
+	m_objectManager->RunePickedUp(p_poiType, p_guid);
 }

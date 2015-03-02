@@ -18,8 +18,8 @@ public:
 	void RenderDepth();
 
 	void RoundRestart();
-	void PickUpRunes(OBB p_OBB);
-	void SpawnRunes(int p_index, float p_x, float p_y, float p_z);
+	void RunePickedUp(PointOfInterestType p_poiType);
+	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
 	void CollisionCheck();
 private:
 

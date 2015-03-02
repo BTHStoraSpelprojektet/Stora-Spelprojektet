@@ -20,9 +20,10 @@ public:
 	void Update(double p_deltaTime);
 
 	void RoundRestart();
-	void PickUpRunes(int p_index, RakNet::RakNetGUID p_guid);
+	void PickUpRunes(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
 	void SpawnRunes();
-	std::vector<Box> GetBoundingBoxes(int p_index);
+	bool IsRuneActive(int p_index);
+	std::vector<Box> GetBoundingBoxes(PointOfInterestType p_poiType);
 
 private:
 	RakNet::RakPeerInterface *m_serverPeer;
@@ -32,6 +33,10 @@ private:
 	std::vector<Box> m_lotusBoundingBoxes;
 	std::vector<Box> m_shieldBoundingBoxes;
 	std::vector<Box> m_invisBoundingBoxes;
+
+	bool m_lotusActive;
+	bool m_shieldActive;
+	bool m_invisActive;
 
 };
 #endif // !POINTOFINTERESTMANAGER_H_

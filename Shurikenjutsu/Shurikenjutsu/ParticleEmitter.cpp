@@ -56,7 +56,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_FIRE_SPARK) :
 		{
-			InitParticles(0.5f, 5, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 2.5f, 2.0f, 2.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireSparkParticle.png"));
+			InitParticles(3.0f, 10, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 2.5f, 2.0f, 2.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireSparkParticle.png"));
 
 			break;
 		}
@@ -104,7 +104,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_SUDDENDEATH) :
 		{
-			InitParticles(50.0f, 500, DirectX::XMFLOAT3(13.0f,0.0f,13.0f), 1.0f, 0.1f, 7.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/BloodParticle.png"));
+			InitParticles(1000.0f, 1000.0f, DirectX::XMFLOAT3(17.0f,0.0f,17.0f), 1.0f, 0.1f, 10.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/toxicSmoke.png"));
 			break;
 		}
 		default:
@@ -355,7 +355,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
-					m_particleList[index].m_rotation = 0.0f;
+					m_particleList[index].m_rotation = rotation;
 					m_particleList[index].m_opacity = 1.0f;
 
 					break;
@@ -415,7 +415,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
-					m_particleList[index].m_rotation = 0.0f;
+					m_particleList[index].m_rotation = rotation;
 					m_particleList[index].m_opacity = 1.0f;
 
 					break;
@@ -430,7 +430,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
-					m_particleList[index].m_rotation = 0.0f;
+					m_particleList[index].m_rotation = rotation;
 					m_particleList[index].m_opacity = 1.0f;
 
 					break;
@@ -445,7 +445,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
-					m_particleList[index].m_rotation = 0.0f;
+					m_particleList[index].m_rotation = rotation;
 					m_particleList[index].m_opacity = 1.0f;
 
 					break;
@@ -506,13 +506,13 @@ void ParticleEmitter::EmitParticles()
 
 					m_particleList[index].m_position = position;
 					m_particleList[index].m_direction = direction;
-					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_color = DirectX::XMFLOAT4(0.0f,1.0f,0.0f,0.0f);
 					m_particleList[index].m_velocity = velocity;
 					m_particleList[index].m_alive = true;
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
-					m_particleList[index].m_rotation = 0.0f;
-					m_particleList[index].m_opacity = 0.0f;
+					m_particleList[index].m_rotation = 1.0f;
+					m_particleList[index].m_opacity = 1.0f;
 					break;
 				}
 
@@ -590,7 +590,7 @@ void ParticleEmitter::UpdateParticles()
 					float angle = 30.0f * (float)3.14159265359 / 180;
 					float height = 3.0f;
 
-					m_particleList[i].m_position.y = m_particleList[i].m_position.y;
+				m_particleList[i].m_position.y = m_particleList[i].m_position.y + (0.01f * sin(m_particleList[i].m_timePassed));
 
 					float xWindOffset = GetWindOffsetX(m_particleList[i].m_timePassed, 100);
 					float zWindOffset = GetWindOffsetZ(m_particleList[i].m_timePassed, 100);
@@ -775,9 +775,35 @@ void ParticleEmitter::UpdateParticles()
 					// Add time passed.
 					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
 
+				DirectX::XMFLOAT3 position = m_particleList[i].m_position;
+				DirectX::XMFLOAT3 nextPosition;
+
+				nextPosition.x = m_particleList[i].m_position.x + (m_particleList[i].m_direction.x * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				nextPosition.y = m_particleList[i].m_position.y + (m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				nextPosition.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+
+				if (position.x <=  m_SDxMax && nextPosition.x >= m_SDxMax)
+				{
+					m_particleList[i].m_direction.x *= -1;
+				}
+				if (position.x >=  m_SDxMin && nextPosition.x <= m_SDxMin)
+				{
+					m_particleList[i].m_direction.x *= -1;
+				}
+				if (position.z <=  m_SDzMax && nextPosition.z >= m_SDzMax)
+				{
+					m_particleList[i].m_direction.z *= -1;
+				}
+				if (position.z >=  m_SDzMin && nextPosition.z <= m_SDzMin)
+				{
+					m_particleList[i].m_direction.z *= -1;
+				}
+
+				//m_particleList[i].m_position = nextPosition;
 					m_particleList[i].m_position.x = m_particleList[i].m_position.x + (m_particleList[i].m_direction.x * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
-					m_particleList[i].m_position.y = m_particleList[i].m_position.y + (m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_position.y = m_particleList[i].m_position.y + ((m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime()*0.3f);
 					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+
 				}
 			}
 			break;
@@ -1155,4 +1181,12 @@ ID3D11ShaderResourceView* ParticleEmitter::GetParticleTexture()
 void ParticleEmitter::SetColor(DirectX::XMFLOAT4 p_color)
 {
 	m_color = p_color;
+}
+
+void ParticleEmitter::SetSuddenDeathBoxLimits(float p_xMax, float p_xMin, float p_zMax, float p_zMin)
+{
+	m_SDxMax = p_xMax;
+	m_SDxMin = p_xMin;
+	m_SDzMax = p_zMax;
+	m_SDzMin = p_zMin;
 }

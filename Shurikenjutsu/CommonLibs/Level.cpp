@@ -30,6 +30,8 @@ bool Level::LoadLevel(std::string p_level){
 
 	m_animatedObjects = levelImporter.GetAnimatedObjects();
 
+	m_POIPoints = levelImporter.GetPOIPoints();
+
 	return loaded;
 }
 
@@ -57,5 +59,10 @@ std::vector<LevelImporter::CommonObject> Level::GetObjects()
 std::vector<LevelImporter::AnimatedObject> Level::GetAnimatedObjects()
 {
 	return m_animatedObjects;
+}
+
+std::vector<LevelImporter::POI> Level::GetPOIPoints()
+{
+	return m_POIPoints;
 }
 
