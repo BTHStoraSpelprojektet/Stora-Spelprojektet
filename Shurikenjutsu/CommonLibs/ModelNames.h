@@ -13,7 +13,7 @@
 
 // Shurikens
 #define SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/shurikenShape.SSP"
-#define MEGA_SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/MegaShurikenShape.SSP"
+#define MEGA_SHURIKEN_MODEL_NAME "../Shurikenjutsu/Models/MegaShuriken_Shape.SSP"
 
 // Kunai
 #define KUNAI_MODEL_NAME "../Shurikenjutsu/Models/KunaiShape.SSP"
@@ -87,11 +87,12 @@
 
 #define DEATHBOARD_CALPTROPS "../Shurikenjutsu/2DTextures/TB_Caltrops.png"
 
-// Scoreboard
-#define SCOREBOARD_BACKGROUND "../Shurikenjutsu/2DTextures/scoreboard_bg.png"
-#define RUNE_LOTUS "../Shurikenjutsu/Models/lotus_Shape.SSP"
+// Runes
 #define RUNE_SHIELD "../Shurikenjutsu/Models/shield_Shape.SSP"
 #define RUNE_INVIS "../Shurikenjutsu/Models/invisScroll_Shape.SSP"
+#define RUNE_LOTUS "../Shurikenjutsu/Models/lotus_Shape.SSP"
+// Scoreboard
+#define SCOREBOARD_BACKGROUND "../Shurikenjutsu/2DTextures/scoreboard_bg.png"
 
 
 #endif

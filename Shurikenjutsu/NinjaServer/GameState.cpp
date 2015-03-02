@@ -55,11 +55,11 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_timeSec = 0;
 
 	m_roundRestarting = false;
-
+	
 	Level level(p_levelName);
 	float xMax = 0, xMin = 0;
 	float zMax = 0, zMin = 0;
-	for each(LevelImporter::LevelBoundingBox levelBoundingBox in level.getLevelBoundingBoxes())
+	for each(LevelImporter::LevelBoundingBox levelBoundingBox in level.GetLevelBoundingBoxes())
 	{
 		Box boundingBox = Box(levelBoundingBox.m_translationX, levelBoundingBox.m_translationY, levelBoundingBox.m_translationZ, levelBoundingBox.m_halfDepth, levelBoundingBox.m_halfHeight, levelBoundingBox.m_halfWidth);
 		if (boundingBox.m_center.x > 0.0f)
@@ -168,7 +168,7 @@ void GameState::Update(double p_deltaTime)
 
 	m_collisionManager->NaginataStbDot(m_playerManager);
 	UpdateTime(p_deltaTime);
-
+	
 	if (m_isSuddenDeath)
 	{
 		m_suddenDeathTimer += (float)p_deltaTime;

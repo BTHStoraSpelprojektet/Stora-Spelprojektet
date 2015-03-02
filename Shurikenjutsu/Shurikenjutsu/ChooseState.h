@@ -38,6 +38,7 @@ public:
 	void Shutdown();
 	void ShutdownExit();
 	bool Initialize();
+	ObjectManager* GetObjectManager();
 	GAMESTATESWITCH Update();
 	void Render();
 	void NextNinja();
