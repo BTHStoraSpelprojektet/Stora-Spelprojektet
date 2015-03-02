@@ -286,12 +286,19 @@ void GameState::UpdateTime(double p_deltaTime)
 			SyncTime(playerList[i].guid);
 		}
 	}
+
 	if (m_timeMin >= ROUND_TIME_LIMIT_MINUTS && !m_isSuddenDeath)
 	{
 		m_isSuddenDeath = true;
-		
+
 		SendSuddenDeathMessage();
 	}
+	//if (m_timeSec >= ROUND_TIME_LIMIT_SECONDS && !m_isSuddenDeath)
+	//{
+	//	m_isSuddenDeath = true;
+	//	
+	//	SendSuddenDeathMessage();
+	//}
 }
 
 void GameState::SendSuddenDeathMessage()

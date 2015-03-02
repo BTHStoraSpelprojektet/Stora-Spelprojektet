@@ -80,5 +80,5 @@ float4 main(Input p_input) : SV_Target
 	}
 
 	// Return shaded pixel.
-	return float4(textureColor.x, textureColor.y, textureColor.z, 0.75f - shadowSum);
+	return float4(textureColor.x, textureColor.y, textureColor.z, 0.8f - shadowSum);
 }
