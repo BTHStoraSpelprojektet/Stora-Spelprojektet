@@ -115,7 +115,7 @@ void LevelImporter::readBoundingBox(std::string &tmpStr, int currentWordTemp, fl
 
 }
 
-void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isAnimatedObject, bool &isParticleEmitter, std::string &particleEmitterType, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
+void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isPointOfInterest, std::string &pointOfInterestType, bool &isAnimatedObject, bool &isParticleEmitter, std::string &particleEmitterType, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ){
 
 
 	if (currentWordTemp == 0){
@@ -151,6 +151,10 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 		else if (objectName.find("ParticleEmitter") != std::string::npos){
 			isParticleEmitter = true;
 			particleEmitterType = tmpStr.substr(16, tmpStr.size());
+		}
+		else if (objectName.find("POI") != std::string::npos){
+			isPointOfInterest = true;
+			particleEmitterType = tmpStr.substr(4, tmpStr.size());
 		}
 		else
 		{
@@ -266,6 +270,28 @@ void LevelImporter::readLevelObject(std::string &tmpStr, int currentWordTemp, bo
 
 			m_particleEmitter.push_back(particleEmitter);
 		}
+		else if (isPointOfInterest){
+			POI poi;
+
+			poi.m_translationX = x;
+			poi.m_translationY = y;
+			poi.m_translationZ = -z;
+			poi.m_rotationX = rotateX;
+			poi.m_rotationY = -rotateY;
+			poi.m_rotationZ = rotateZ;
+
+			if (particleEmitterType.find("Heal") != std::string::npos){
+				poi.type = PointOfInterestType::Heal;
+			}
+			else if (particleEmitterType.find("Invisible") != std::string::npos){
+				poi.type = PointOfInterestType::Invisible;
+			}
+			else if (particleEmitterType.find("Shield") != std::string::npos){
+				poi.type = PointOfInterestType::Shield;
+			}
+
+			m_POIPoints.push_back(poi);
+		}
 		else{
 			if (isAnimatedObject){
 				AnimatedObject animatedObject;
@@ -326,10 +352,12 @@ bool LevelImporter::readData(){
 		bool isSpawnPoint = false;
 		bool isShadowShape = false;
 		bool isParticleEmitter = false;
+		bool isPointOfInterest = false;
 		bool isAnimatedObject = false;
 		int currentTeam = 0;
 		std::string currentShadowShape = "";
 		std::string particleEmitterType = "";
+		std::string pointOfinterestType = "";
 		for (unsigned int currentWordTemp = 0; currentWordTemp < temp.size(); currentWordTemp++)
 		{
 			std::string tmpStr = temp.at(currentWordTemp);
@@ -356,7 +384,7 @@ bool LevelImporter::readData(){
 
 			else if (currentLineTemp >(unsigned int)(headerSize + numberOfBoundingBoxesToSkip) && currentLineTemp < (unsigned int)(numberOfObjects + headerSize + numberOfBoundingBoxesToSkip))
 			{
-				readLevelObject(tmpStr, currentWordTemp, isAnimatedObject, isParticleEmitter, particleEmitterType, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
+				readLevelObject(tmpStr, currentWordTemp, isPointOfInterest, pointOfinterestType, isAnimatedObject, isParticleEmitter, particleEmitterType, isSpawnPoint, currentTeam, isShadowShape, currentShadowShape, filePathToModel, x, y, z, rotateX, rotateY, rotateZ);
 			}
 		}
 
