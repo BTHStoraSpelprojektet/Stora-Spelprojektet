@@ -298,10 +298,10 @@ float CollisionManager::CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playe
 float CollisionManager::AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer, bool p_throwStuff)
 {
 	float height = 0.03f;
-	if (p_throwStuff)
-	{
-		height = 1.0f;
-	}
+	//if (p_throwStuff)
+	//{
+	//	height = 1.0f;
+	//}
 	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_direction.x, height, p_direction.z);
 	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(p_playerPos.x, height, p_playerPos.z);
 	Ray* ray = new Ray(rayPos, rayDirection);
