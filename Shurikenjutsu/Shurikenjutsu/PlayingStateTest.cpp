@@ -433,6 +433,9 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	// Update the countdown.
 	m_countdown->Update();
+
+	// Update scoreboard
+	m_scoreBoard->Update();
 	
 	if (resized)
 	{
@@ -450,7 +453,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
 	{
-		m_scoreBoard->Update();
+		m_scoreBoard->Render();
 		m_scoreBoardIsActive = true;
 	}
 

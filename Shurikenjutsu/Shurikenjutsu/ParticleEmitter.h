@@ -34,6 +34,7 @@ public:
 	unsigned int GetVertices();
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 	ID3D11ShaderResourceView* GetParticleTexture();
+	void SetSuddenDeathBoxLimits(float p_xMax, float p_xMin, float p_zMax, float p_zMin);
 
 private:
 
@@ -132,5 +133,12 @@ private:
 
 	void InitParticles(float p_particlesPerSecond, float p_maxParticles, DirectX::XMFLOAT3 p_emitionPositionOffset, float p_velocity, float p_velocityVariation, float p_timeToLive, ID3D11ShaderResourceView* p_particleTexture);
 	void FallingLeafUpdate();
+	
+
+
+	float m_SDxMax;
+	float m_SDxMin;
+	float m_SDzMax;
+	float m_SDzMin;
 };
 #endif
