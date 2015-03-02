@@ -12,6 +12,9 @@ public:
 	bool CreateNewStack(AnimationStack p_newStack);
 	std::vector<DirectX::XMFLOAT4X4> UpdateAnimation();
 
+	bool IsLight();
+	DirectX::XMFLOAT3 GetLightPosition();
+
 	bool IsAnimated();
 	void SetIkDirection(DirectX::XMFLOAT3 p_direction);
 	void ChangeAnimationState(AnimationState p_newState);
@@ -20,7 +23,7 @@ public:
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 
 	void FindAndReferenceLayers();
-	void AnimatedObjectLayers(DirectX::XMFLOAT3 p_worldPos);
+	void AnimatedObjectLayers();
 
 	void Shutdown();
 
@@ -68,7 +71,8 @@ private:
 	bool m_isAlive;
 	bool m_stopAnimation;
 
-	DirectX::XMFLOAT3 m_worldPos;
+	bool m_light;
+	DirectX::XMFLOAT3 m_lightPos;
 };
 
 #endif;

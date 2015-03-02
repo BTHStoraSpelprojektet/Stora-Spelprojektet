@@ -2,6 +2,7 @@
 #include "TextureLibrary.h"
 #include "Model.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "PointLights.h"
 
 AnimatedObject::AnimatedObject(){}
 AnimatedObject::~AnimatedObject(){}
@@ -27,7 +28,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	LoadTexture(p_filepath);
 
 	SetDirection(p_dir);
-
+	
 	for (unsigned int i = 0; i < m_model->GetAnimationStacks().size(); i++)
 	{
 		m_animationController.CreateNewStack(m_model->GetAnimationStacks()[i]);
@@ -51,7 +52,8 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	m_animationController.CreateNewStack(m_model->GetAnimationStacks()[0]);
 	m_animationController.CreateNewStack(m_model->GetAnimationStacks()[1]);
 
-	m_animationController.AnimatedObjectLayers(p_pos);
+	m_animationController.AnimatedObjectLayers();
+	GetWorldMatrix();
 
 	return true;
 }
@@ -97,6 +99,24 @@ void AnimatedObject::RenderPlayer(int p_team)
 void AnimatedObject::Render()
 {
 	GraphicsEngine::GetInstance()->RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
+	
+	if (m_animationController.IsLight())
+	{
+		PointLight newLight;
+		newLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+		newLight.m_diffuse = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
+		newLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
+
+		DirectX::XMVECTOR newPos = DirectX::XMVectorSet(m_animationController.GetLightPosition().x, m_animationController.GetLightPosition().y, m_animationController.GetLightPosition().z, 1.0f);
+		newPos = DirectX::XMVector3TransformCoord(newPos, DirectX::XMLoadFloat4x4(&GetWorldMatrix()));
+		newLight.m_position.x = newPos.m128_f32[0];
+		newLight.m_position.y = newPos.m128_f32[1];
+		newLight.m_position.z = newPos.m128_f32[2];
+
+		newLight.m_range = 5.0f;
+
+		PointLights::GetInstance()->AddLight(newLight);
+	}
 }
 
 void AnimatedObject::RenderDepth()
