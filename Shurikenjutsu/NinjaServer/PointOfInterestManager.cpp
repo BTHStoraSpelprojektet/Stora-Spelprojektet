@@ -117,12 +117,12 @@ std::vector<Box> PointOfInterestManager::GetBoundingBoxes(int p_index)
 	}
 	case 1:
 	{
-		return m_shieldBoundingBoxes;
+		return m_invisBoundingBoxes;
 		break;
 	}
 	case 2:
 	{
-		return m_invisBoundingBoxes;
+		return m_shieldBoundingBoxes;
 		break;
 	}
 	default:
