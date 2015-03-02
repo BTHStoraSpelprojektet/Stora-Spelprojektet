@@ -84,7 +84,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_objectManager->Initialize(&level);
 
 	// Load and place arena walls.
-	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
+	std::vector<LevelImporter::LevelBoundingBox> temp = level.GetLevelBoundingBoxes();
 	std::vector<Box> wallList;
 	for (unsigned int i = 0; i < temp.size(); i++)
 	{
@@ -157,11 +157,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 
 	m_victoryMenu = new VictoryScreenMenu();
 	if (!m_victoryMenu->Initialize())
-	{
-		return false;
-	}
-
-	if (!DeathBoard::GetInstance()->Initialize())
 	{
 		return false;
 	}

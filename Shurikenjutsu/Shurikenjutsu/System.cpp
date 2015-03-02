@@ -179,6 +179,11 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		return false;
 	}
 
+	if (!DeathBoard::GetInstance()->Initialize())
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -346,8 +351,7 @@ void System::Update()
 		m_gameState = m_chooseNinjaState;
 		m_gameState->Shutdown();
 		m_gameState->Initialize();
-		m_playingState->SetSound(m_sound);
-		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
+		Network::GetInstance()->SetObjectManager(m_chooseNinjaState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->LargeSize();
 		break;

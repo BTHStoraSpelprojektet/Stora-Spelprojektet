@@ -11,7 +11,7 @@ bool MapManager::Initialize(std::string p_levelName)
 	m_boundingSpheres = std::vector<Sphere>();
 	m_mapObjects = level.GetObjects();
 	m_mapAnimatedObjects = level.GetAnimatedObjects();
-	m_levelBoundingBoxes = level.getLevelBoundingBoxes();
+	m_levelBoundingBoxes = level.GetLevelBoundingBoxes();
 
 	for each (LevelImporter::CommonObject mapObject in m_mapObjects)
 	{

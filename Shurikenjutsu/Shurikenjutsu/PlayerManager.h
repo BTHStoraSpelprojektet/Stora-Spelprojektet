@@ -37,7 +37,7 @@ public:
 
 	void UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
-	void ResetCooldowns();
+	void ResetCooldowns(bool p_inMenu);
 
 	void UpdateFrustum(Frustum* p_frustum);
 	void MinimapUpdatePos(Minimap *p_minimap);

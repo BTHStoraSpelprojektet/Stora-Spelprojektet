@@ -15,12 +15,25 @@ public:
 	ScoreBoard();
 	~ScoreBoard();
 
+	struct Ninja
+	{
+		GUIElement portrait;
+		int kill;
+		int death;
+	};
+
+	static ScoreBoard* GetInstance();
+
 	bool Initialize();
 	void Shutdown();
 	void Update();
 	void Render();
+	GUIText textst;
+	void KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNetGUID p_ninjaKilled);
 
 private:
+	static ScoreBoard* m_instance;
+
 	GUIElement m_background;
 	GUIElement m_portrait;
 
@@ -38,8 +51,13 @@ private:
 	void ResizeRedColorList();
 	void ResizeBlueColorList();
 
-	std::map<RakNet::RakNetGUID, GUIElement> m_redColorPlayers;
-	std::map<RakNet::RakNetGUID, GUIElement> m_blueColorPlayers;
+	int killerNinja;
+	int takerNinja;
+
+	//std::map<RakNet::RakNetGUID, GUIElement> m_redColorPlayers;
+	//std::map<RakNet::RakNetGUID, GUIElement> m_blueColorPlayers;
+	std::map<RakNet::RakNetGUID, Ninja> m_redColorPlayers;
+	std::map<RakNet::RakNetGUID, Ninja> m_blueColorPlayers;
 
 	std::vector<GUIText> m_text;
 
