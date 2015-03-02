@@ -992,13 +992,24 @@ void Network::ReceviePacket()
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
-			}
+		}
 		case ID_START_SUDDEN_DEATH:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			bitStream.Read(messageID);
 			m_suddenDeath = true;
+
+			break;
+		}
+		case ID_INITIATE_SUDDEN_DEATH_BOX:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int boxIndex = 0;
+			bitStream.Read(messageID);
+			bitStream.Read(boxIndex);
+			m_suddenDeathBoxIndex = boxIndex;
 
 			break;
 		}

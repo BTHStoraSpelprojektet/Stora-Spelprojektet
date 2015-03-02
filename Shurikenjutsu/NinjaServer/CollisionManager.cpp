@@ -948,13 +948,13 @@ void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_player
 						// Damage the player
 						if (playerList[i].dotDamage > 2.0f && p_playerManager->CanSendDotDamage())
 						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (5.0f * m_deltaTime));
+							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
 							p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, playerList[i].guid, ABILITIES_SMOKEBOMB, true);
 							p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
 						}
 						else
 						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (5.0f * m_deltaTime));
+							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
 						}
 						break;
 					}
