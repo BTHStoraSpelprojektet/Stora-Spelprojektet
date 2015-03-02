@@ -87,7 +87,8 @@ public:
 	std::vector<LevelBoundingBox> GetLevelBoundingBoxes();
 	std::vector<CommonObject> GetObjects();
 	std::vector<AnimatedObject> GetAnimatedObjects();
-	
+	std::vector<LevelImporter::POI> LevelImporter::GetPOIPoints();
+
 protected:
 	std::string m_level;
 	std::vector<std::vector<std::string>> levelData;

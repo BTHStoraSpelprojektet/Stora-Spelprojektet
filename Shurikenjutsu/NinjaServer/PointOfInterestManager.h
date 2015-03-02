@@ -22,6 +22,7 @@ public:
 	void RoundRestart();
 	void PickUpRunes(int p_index, RakNet::RakNetGUID p_guid);
 	void SpawnRunes();
+	bool IsRuneActive(int p_index);
 	std::vector<Box> GetBoundingBoxes(int p_index);
 
 private:
@@ -32,6 +33,10 @@ private:
 	std::vector<Box> m_lotusBoundingBoxes;
 	std::vector<Box> m_shieldBoundingBoxes;
 	std::vector<Box> m_invisBoundingBoxes;
+
+	bool m_lotusActive;
+	bool m_shieldActive;
+	bool m_invisActive;
 
 };
 #endif // !POINTOFINTERESTMANAGER_H_

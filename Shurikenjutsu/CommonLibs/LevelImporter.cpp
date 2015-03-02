@@ -428,3 +428,8 @@ std::vector<LevelImporter::AnimatedObject> LevelImporter::GetAnimatedObjects()
 LevelImporter::~LevelImporter(){
 
 }
+
+std::vector<LevelImporter::POI> LevelImporter::GetPOIPoints()
+{
+	return m_POIPoints;
+}

@@ -150,6 +150,7 @@ public:
 	int GetSuddenDeathBoxIndex();
 
 	void SpawnRunes(int p_index, float p_x, float p_y, float p_z);
+	void RunePickedUp(int p_index, RakNet::RakNetGUID p_guid);
 
 private:
 	void ClearListsAtNewRound();

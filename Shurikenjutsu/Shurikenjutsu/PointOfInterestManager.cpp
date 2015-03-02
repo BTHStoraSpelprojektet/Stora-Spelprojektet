@@ -93,9 +93,12 @@ void PointOfInterestManager::SpawnRunes(int p_index, float p_x, float p_y, float
 	}
 }
 
-void PointOfInterestManager::PickUpRunes(OBB p_OBB)
+void PointOfInterestManager::RunePickedUp(int p_index)
 {
-
+	if (p_index >= 0 && p_index < m_runes.size())
+	{
+		m_runes[p_index].SetActive(false);
+	}
 }
 
 void PointOfInterestManager::RoundRestart()

@@ -5,6 +5,7 @@
 #include "ProjectileManager.h"
 #include "FanBoomerangManager.h"
 #include "VolleyManager.h"
+#include "PointOfInterestManager.h"
 
 void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
 {
@@ -1202,4 +1203,70 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 		}
 	}
 	return dashLength;
+}
+
+void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager)
+{
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	std::vector<Box> lotusBBox = p_POIManager->GetBoundingBoxes(0);
+	std::vector<Box> shieldBBox = p_POIManager->GetBoundingBoxes(1);
+	std::vector<Box> invisBBox = p_POIManager->GetBoundingBoxes(2);
+
+	// Go through player list
+	for (unsigned int j = 0; j < playerList.size(); j++)
+	{
+		// Check so the player aren't already dead
+		if (!playerList[j].isAlive)
+		{
+			continue;
+		}
+
+		// Get the players bounding boxes
+		std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(j);
+
+		// Make collision test
+		for (unsigned int k = 0; k < lotusBBox.size(); k++)
+		{
+			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+			{
+				if (p_POIManager->IsRuneActive(0))
+				{
+					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
+					{
+						p_POIManager->PickUpRunes(0, playerList[j].guid);
+					}
+				}
+			}
+		}
+
+		// Make collision test
+		for (unsigned int k = 0; k < invisBBox.size(); k++)
+		{
+			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+			{
+				if (p_POIManager->IsRuneActive(1))
+				{
+					if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
+					{
+						p_POIManager->PickUpRunes(1, playerList[j].guid);
+					}
+				}
+			}
+		}
+
+		// Make collision test
+		for (unsigned int k = 0; k < shieldBBox.size(); k++)
+		{
+			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+			{
+				if (p_POIManager->IsRuneActive(2))
+				{
+					if (BoxBoxTest(playerBoundingBoxes[l], shieldBBox[k]))
+					{
+						p_POIManager->PickUpRunes(2, playerList[j].guid);
+					}
+				}
+			}
+		}
+	}
 }
