@@ -987,7 +987,9 @@ void Network::ReceviePacket()
 				m_sound->PlaySound(sound, 1.0f / (distance / soundDistanceGain));
 			}*/
 
-			m_sound->CreateDefaultSound(sound, x, y, z);
+			if (m_sound != NULL){
+				m_sound->CreateDefaultSound(sound, x, y, z);
+			}
 
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 

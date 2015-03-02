@@ -75,21 +75,21 @@ enum AnimationState {
 };
 
 enum EmitterType{
-	BrazierFire,
-	Fireflies,
-	FireSpark,
-	Smoke,
-	LeafTree,
-	LeafSakura,
-	LeafAcerPalmatum,
-	WorldMist,
-	WorldDust
+	EmitterType_BrazierFire,
+	EmitterType_Fireflies,
+	EmitterType_FireSpark,
+	EmitterType_Smoke,
+	EmitterType_LeafTree,
+	EmitterType_LeafSakura,
+	EmitterType_LeafAcerPalmatum,
+	EmitterType_WorldMist,
+	EmitterType_WorldDust
 };
 
 enum PointOfInterestType{
-	Heal,
-	Invisible,
-	Shield
+	PointOfInterestType_Heal,
+	PointOfInterestType_Invisible,
+	PointOfInterestType_Shield
 };
 
 #endif // !COMMONENUMS_H_

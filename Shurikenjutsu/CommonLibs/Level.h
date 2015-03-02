@@ -10,12 +10,12 @@ public:
 	Level::Level(std::string level);
 	~Level();
 
-	bool loadLevel(std::string p_level);
+	bool LoadLevel(std::string p_level);
 	std::vector<LevelImporter::SpawnPoint> GetSpawnPoints();
 	std::vector<LevelImporter::POI> GetPOIPoints();
 	std::vector<Line> Level::GetShadowsShapes();
 	std::vector<LevelImporter::ParticleEmitter> Level::GetParticleEmitters();
-	std::vector<LevelImporter::LevelBoundingBox> getLevelBoundingBoxes();
+	std::vector<LevelImporter::LevelBoundingBox> GetLevelBoundingBoxes();
 	std::vector<LevelImporter::CommonObject> GetObjects();
 	std::vector<LevelImporter::AnimatedObject> GetAnimatedObjects();
 protected:
