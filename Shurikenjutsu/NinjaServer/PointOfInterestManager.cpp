@@ -23,7 +23,9 @@ bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 
 	Level level(LEVEL_NAME);
 	m_POISpawnPoints = level.GetPOIPoints();
-
+	m_lotusActive = false;
+	m_shieldActive = false;
+	m_invisActive = false;
 	m_nrOfRunes = 3;
 
 	/*DirectX::XMFLOAT3 spawnPoints[3];
@@ -50,22 +52,33 @@ void PointOfInterestManager::Update(double p_deltaTime)
 
 void PointOfInterestManager::SpawnRunes()
 {
+	m_lotusActive = true;
+	m_shieldActive = true;
+	m_invisActive = true;
 	// Todo add runes
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_SPAWN_RUNES);
+	for (int i = 0; i < 3; i++)
+	{
+		bitStream.Write(m_POISpawnPoints[i].type);
+		bitStream.Write(m_POISpawnPoints[i].m_translationX);
+		bitStream.Write(m_POISpawnPoints[i].m_translationY);
+		bitStream.Write(m_POISpawnPoints[i].m_translationZ);
+
+	}
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void PointOfInterestManager::PickUpRunes(int p_index, RakNet::RakNetGUID p_guid)
 {
 	RakNet::BitStream bitStream;
-
 	
 	switch (p_index)
 	{
 	case 0:
 	{
 		bitStream.Write((RakNet::MessageID)ID_LOTUS_PICKED_UP);
+		// Add sound
 		break;
 	}
 	case 1:
@@ -79,7 +92,7 @@ void PointOfInterestManager::PickUpRunes(int p_index, RakNet::RakNetGUID p_guid)
 		break;
 	}
 	default:
-		bitStream.Write((RakNet::MessageID)ID_LOTUS_PICKED_UP);
+		bitStream.Write((RakNet::MessageID)ID_RUNE_PICKED_UP);
 		break;
 	}
 	bitStream.Write(p_guid);
@@ -117,4 +130,24 @@ std::vector<Box> PointOfInterestManager::GetBoundingBoxes(int p_index)
 	}
 
 	return m_lotusBoundingBoxes;
+}
+
+bool PointOfInterestManager::IsRuneActive(int p_index)
+{
+	switch (p_index)
+	{
+	case 0:
+		return m_lotusActive;
+		break;
+	case 1:
+		return m_invisActive;
+		break;
+	case 2:
+		return m_shieldActive;
+		break;
+	default:
+		return false;
+		break;
+	}
+	return false;
 }

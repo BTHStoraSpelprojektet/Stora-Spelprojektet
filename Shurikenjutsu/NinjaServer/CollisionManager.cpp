@@ -1230,9 +1230,27 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 		{
 			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 			{
-				if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
+				if (p_POIManager->IsRuneActive(0))
 				{
-					p_POIManager->PickUpRunes(0, playerList[j].guid);
+					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
+					{
+						p_POIManager->PickUpRunes(0, playerList[j].guid);
+					}
+				}
+			}
+		}
+		
+		// Make collision test
+		for (unsigned int k = 0; k < invisBBox.size(); k++)
+		{
+			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
+			{
+				if (p_POIManager->IsRuneActive(1))
+				{
+					if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
+					{
+						p_POIManager->PickUpRunes(1, playerList[j].guid);
+					}
 				}
 			}
 		}
@@ -1242,23 +1260,15 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 		{
 			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 			{
-				if (BoxBoxTest(playerBoundingBoxes[l], shieldBBox[k]))
+				if (p_POIManager->IsRuneActive(2))
 				{
-					p_POIManager->PickUpRunes(1, playerList[j].guid);
+					if (BoxBoxTest(playerBoundingBoxes[l], shieldBBox[k]))
+					{
+						p_POIManager->PickUpRunes(2, playerList[j].guid);
+					}
 				}
 			}
 		}
 
-		// Make collision test
-		for (unsigned int k = 0; k < invisBBox.size(); k++)
-		{
-			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
-			{
-				if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
-				{
-					p_POIManager->PickUpRunes(2, playerList[j].guid);
-				}
-			}
-		}
 	}
 }
