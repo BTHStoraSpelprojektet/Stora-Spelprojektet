@@ -5,7 +5,7 @@
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
 #include "..\Shurikenjutsu\ConsoleFunctions.h"
-#include "..\CommonLibs\ModelLibrary.h"
+
 #include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
@@ -532,6 +532,8 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 					{
 						// Send to deathboard
 						DeathBoard(m_players[i].charNr, m_players[j].charNr, p_usedAbility);
+						// Send to scoreboard
+						ScoreBoard(m_players[i].guid, m_players[j].guid);
 						break;
 					}
 				}
@@ -583,6 +585,15 @@ void PlayerManager::DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES 
 	bitStream.Write(p_TakerNinja);
 	bitStream.Write(p_AttackerNinja);
 	bitStream.Write(p_usedAbility);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void PlayerManager::ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID)
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_SCOREBOARDKILL);
+	bitStream.Write(p_deadID);
+	bitStream.Write(p_killerID);
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 

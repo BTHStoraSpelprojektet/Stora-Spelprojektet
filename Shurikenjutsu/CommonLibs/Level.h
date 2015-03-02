@@ -12,7 +12,6 @@ public:
 
 	bool LoadLevel(std::string p_level);
 	std::vector<LevelImporter::SpawnPoint> GetSpawnPoints();
-	std::vector<LevelImporter::POI> GetPOIPoints();
 	std::vector<Line> Level::GetShadowsShapes();
 	std::vector<LevelImporter::ParticleEmitter> Level::GetParticleEmitters();
 	std::vector<LevelImporter::LevelBoundingBox> GetLevelBoundingBoxes();
@@ -22,7 +21,6 @@ protected:
 	int m_mapsizeX;
 	int m_mapsizeY;
 	std::vector<LevelImporter::SpawnPoint> m_spawnPoints;
-	std::vector<LevelImporter::POI> m_POIPoints;
 	std::vector<Line> m_shadowShapes;
 	std::vector<LevelImporter::ParticleEmitter> m_particleEmitter;
 	std::vector<LevelImporter::LevelBoundingBox> m_levelBoundingBoxes;

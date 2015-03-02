@@ -402,11 +402,6 @@ std::vector<LevelImporter::SpawnPoint> LevelImporter::GetSpawnPoints(){
 	return m_spawnPoints;
 }
 
-std::vector<LevelImporter::POI> LevelImporter::GetPOIPoints()
-{
-	return m_POIPoints;
-}
-
 std::vector<Line> LevelImporter::GetShadowsShapes(){
 	return m_shadowShapes;
 }

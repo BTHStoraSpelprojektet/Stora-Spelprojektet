@@ -95,5 +95,4 @@
 #define SCOREBOARD_BACKGROUND "../Shurikenjutsu/2DTextures/scoreboard_bg.png"
 
 
-
 #endif

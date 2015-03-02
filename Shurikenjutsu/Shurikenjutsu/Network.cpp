@@ -6,6 +6,7 @@
 #include "DeathBoard.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "Sound.h"
+#include "ScoreBoard.h"
 
 Network* Network::m_instance;
 
@@ -994,7 +995,23 @@ void Network::ReceviePacket()
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
-			}
+		}
+
+		case ID_SCOREBOARDKILL:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakNetGUID takerNinja, killerNinja;
+
+			bitStream.Read(messageID);
+			bitStream.Read(takerNinja);
+			bitStream.Read(killerNinja);
+
+			ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja);
+
+			break;
+		}
+
 		case ID_START_SUDDEN_DEATH:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);

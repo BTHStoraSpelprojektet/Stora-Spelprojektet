@@ -82,7 +82,6 @@ public:
 	void LoadLevelFile();
 	bool ReadData();
 	std::vector<SpawnPoint> GetSpawnPoints();
-	std::vector<POI> GetPOIPoints();
 	std::vector<Line> LevelImporter::GetShadowsShapes();
 	std::vector<ParticleEmitter> LevelImporter::GetParticleEmitters();
 	std::vector<LevelBoundingBox> GetLevelBoundingBoxes();
@@ -95,8 +94,8 @@ protected:
 	
 	std::vector<Line> m_shadowShapes;
 	std::vector<SpawnPoint> m_spawnPoints;
-	std::vector<POI> m_POIPoints;
 	std::vector<ParticleEmitter> m_particleEmitter;
+	std::vector<POI> m_POIPoints;
 	std::vector<LevelBoundingBox> m_levelBoundingBoxes;
 	std::vector<CommonObject> m_objects;
 	std::vector<AnimatedObject> m_animatedObjects;
