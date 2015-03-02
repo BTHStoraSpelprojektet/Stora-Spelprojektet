@@ -1,5 +1,4 @@
 #include "GameState.h"
-
 #include "MapManager.h"
 #include "CollisionManager.h"
 #include "SpikeManager.h"
@@ -7,6 +6,8 @@
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "FanBoomerangManager.h"
+#include "PointOfInterestManager.h"
 
 GameState::GameState(){}
 GameState::~GameState(){}
@@ -48,6 +49,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_volleyManager = new VolleyManager();
 	m_volleyManager->Initialize(m_serverPeer);
 
+	m_POIManager = new PointOfInterestManager();
+	m_POIManager->Initialize(m_serverPeer);
+	
 	m_winningTeams = std::map<int, int>();
 
 	// Time
@@ -55,7 +59,8 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_timeSec = 0;
 
 	m_roundRestarting = false;
-
+	m_runesSpawned = false;
+	
 	Level level(p_levelName);
 	float xMax = 0, xMin = 0;
 	float zMax = 0, zMin = 0;
@@ -159,16 +164,18 @@ void GameState::Update(double p_deltaTime)
 	m_fanBoomerangManager->Update(p_deltaTime, m_playerManager);
 	m_projectileManager->Update(p_deltaTime);
 	m_volleyManager->Update(p_deltaTime);
+	m_POIManager->Update(p_deltaTime);
 
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
 	m_collisionManager->ProjectileCollisionChecks(m_projectileManager, m_playerManager);
 	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager);
 	m_collisionManager->FanCollisionChecks(p_deltaTime, m_fanBoomerangManager, m_playerManager);
 	m_collisionManager->VolleyCollisionChecks(m_volleyManager, m_playerManager);
-
+	m_collisionManager->POICollisionChecks(m_POIManager, m_playerManager);
 	m_collisionManager->NaginataStbDot(m_playerManager);
-	UpdateTime(p_deltaTime);
 
+	UpdateTime(p_deltaTime);
+	
 	if (m_isSuddenDeath)
 	{
 		m_suddenDeathTimer += (float)p_deltaTime;
@@ -192,7 +199,16 @@ void GameState::Update(double p_deltaTime)
 		m_suddenDeathTimer = 0.0f;
 	}
 
+	if ((m_timeSec >= 20 && m_timeSec <= 21) && m_timeMin == 0)
+	{
+		if (!m_runesSpawned)
+		{
+			m_POIManager->SpawnRunes();
+			m_runesSpawned = true;
+		}
+	}
 }
+
 void GameState::SendSuddenDeathBoxActivation(int p_boxIndex)
 {
 	RakNet::BitStream bitStream;
@@ -271,6 +287,7 @@ void GameState::UpdateTime(double p_deltaTime)
 	}
 
 	m_timeSec += p_deltaTime;
+
 	if (m_timeSec >= 60)
 	{
 		m_timeSec -= 60;
@@ -286,6 +303,7 @@ void GameState::UpdateTime(double p_deltaTime)
 			SyncTime(playerList[i].guid);
 		}
 	}
+
 	if (m_timeMin >= ROUND_TIME_LIMIT_MINUTS && !m_isSuddenDeath)
 	{
 		m_isSuddenDeath = true;

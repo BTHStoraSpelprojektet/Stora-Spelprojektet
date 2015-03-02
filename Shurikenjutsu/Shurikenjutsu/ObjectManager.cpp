@@ -14,6 +14,8 @@
 #include "ParticleEmitter.h"
 #include "ConsoleFunctions.h"
 #include "VolleyObject.h"
+#include "Sound.h"
+#include "PointOfInterestManager.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -51,8 +53,8 @@ bool ObjectManager::Initialize(Level* p_level)
 	
 	
 
-	numberOfSameModel++;//Räknar antaler modeller...
-	modelPositions.push_back(m_staticObjects[0].GetWorldMatrix());//Pushbackar antalet positioner
+	numberOfSameModel++;	//Räknar antaler modeller...
+	modelPositions.push_back(m_staticObjects[0].GetWorldMatrix());		//Pushbackar antalet positioner
 	for (unsigned int i = 1; i < levelObjects.size(); i++)
 	{		
 		if (prevModelFileName != levelObjects[i].m_filePath)
@@ -179,6 +181,12 @@ bool ObjectManager::Initialize(Level* p_level)
 	m_fanTrails.clear();
 	m_kunaiTrails.clear();
 	m_volleyTrails.clear();
+
+	m_POIManager = new PointOfInterestManager();
+	if (!m_POIManager->Initialize())
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -309,6 +317,13 @@ void ObjectManager::Shutdown()
 			m_volleyTrails[i].clear();
 		}
 		m_volleyTrails.clear();
+	}
+
+	if (m_POIManager != nullptr)
+	{
+		m_POIManager->Shutdown();
+		delete m_POIManager;
+		m_POIManager = nullptr;
 	}
 }
 
@@ -449,6 +464,7 @@ void ObjectManager::Update()
 	{
 		m_shurikens[i]->Update();
 	}	
+
 	for (unsigned int i = 0; i < m_shurikenTrails.size(); i++)
 	{
 		float angle = atan2(m_shurikens[i]->GetDirection().z, m_shurikens[i]->GetDirection().x);
@@ -460,6 +476,7 @@ void ObjectManager::Update()
 	{
 		m_projectiles[i]->Update();
 	}
+
 	for (unsigned int i = 0; i < m_kunaiTrails.size(); i++)
 	{
 		float angle = atan2(m_projectiles[i]->GetDirection().z, m_projectiles[i]->GetDirection().x);
@@ -722,6 +739,7 @@ void ObjectManager::Update()
 	{
 		m_worldParticles[i]->Update();
 	}
+
 	for (unsigned int i = 0; i < m_volleyTrails.size(); i += 9)
 	{
 		for (unsigned int j = 0; j < 9; j++)
@@ -729,6 +747,8 @@ void ObjectManager::Update()
 			m_volleyTrails[i][j]->Update(m_volleys[i]->GetKunais()[j]->GetPosition(), DirectX::XM_PIDIV2);
 		}
 	}
+
+	m_POIManager->Update(deltaTime);
 
 	UpdateRenderLists();
 }
@@ -871,6 +891,7 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
 	{
+
 		m_bloodParticles[i]->Render();
 	}
 
@@ -882,6 +903,8 @@ void ObjectManager::Render()
 			m_volleyTrails[i][j]->Render();
 		}
 	}
+
+	m_POIManager->Render();
 }
 
 void ObjectManager::RenderDepth()
@@ -949,6 +972,8 @@ void ObjectManager::RenderDepth()
 		m_volleys[i]->RenderDepth();
 	}
 
+	m_POIManager->RenderDepth();
+
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)
@@ -1004,6 +1029,7 @@ float ObjectManager::CheckStickyTrapYPosition()
 	}
 	return returnValue;
 }
+
 void ObjectManager::AddStaticObject(Object p_object)
 {
 	m_staticObjects.push_back(p_object);
@@ -1203,6 +1229,7 @@ std::vector<StickyTrap*> ObjectManager::GetStickyTrapList()
 {
 	return m_stickyTrapList;
 }
+
 void ObjectManager::RemoveProjectile(unsigned int p_projId)
 {
 	for (unsigned int i = 0; i < m_projectiles.size(); i++)
@@ -1359,12 +1386,13 @@ void ObjectManager::ResetListSinceRoundRestarted()
 
 		m_volleyTrails.clear();
 	}
+
+	m_POIManager->RoundRestart();
 }
 
 void ObjectManager::SetSound(Sound* p_sound){
 	m_sound = p_sound;
 }
-
 
 void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 {
@@ -1375,4 +1403,14 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 	m_bloodParticles.push_back(temp);
 
 	m_bloodParticlesTimer.push_back(float(0.5f));
+}
+
+void ObjectManager::CheckRunePickUp(OBB p_OBB)
+{
+	m_POIManager->PickUpRunes(p_OBB);
+}
+
+void ObjectManager::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
+{
+	m_POIManager->SpawnRunes(p_index, p_x, p_y, p_z);
 }
