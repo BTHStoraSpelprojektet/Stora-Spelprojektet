@@ -20,10 +20,10 @@ public:
 	void Update(double p_deltaTime);
 
 	void RoundRestart();
-	void PickUpRunes(int p_index, RakNet::RakNetGUID p_guid);
+	void PickUpRunes(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
 	void SpawnRunes();
 	bool IsRuneActive(int p_index);
-	std::vector<Box> GetBoundingBoxes(int p_index);
+	std::vector<Box> GetBoundingBoxes(PointOfInterestType p_poiType);
 
 private:
 	RakNet::RakPeerInterface *m_serverPeer;
