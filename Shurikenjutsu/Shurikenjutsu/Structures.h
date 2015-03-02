@@ -41,6 +41,7 @@ struct DirectionalLight
 
 struct PointLight
 {
+	DirectX::XMVECTOR m_ambient;
 	DirectX::XMVECTOR m_diffuse;
 	DirectX::XMVECTOR m_specular;
 

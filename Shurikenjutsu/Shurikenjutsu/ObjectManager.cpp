@@ -1300,12 +1300,13 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 	m_bloodParticlesTimer.push_back(float(0.5f));
 }
 
-void ObjectManager::CheckRunePickUp(OBB p_OBB)
+void ObjectManager::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z)
 {
-	m_POIManager->PickUpRunes(p_OBB);
+	m_POIManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
 }
 
-void ObjectManager::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
+void ObjectManager::RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
 {
-	m_POIManager->SpawnRunes(p_index, p_x, p_y, p_z);
+	m_POIManager->RunePickedUp(p_poiType);
+	// ADD method for adding pick up effect
 }

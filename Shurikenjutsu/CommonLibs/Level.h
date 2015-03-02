@@ -17,6 +17,7 @@ public:
 	std::vector<LevelImporter::LevelBoundingBox> GetLevelBoundingBoxes();
 	std::vector<LevelImporter::CommonObject> GetObjects();
 	std::vector<LevelImporter::AnimatedObject> GetAnimatedObjects();
+	std::vector<LevelImporter::POI> GetPOIPoints();
 protected:
 	int m_mapsizeX;
 	int m_mapsizeY;
@@ -26,6 +27,7 @@ protected:
 	std::vector<LevelImporter::LevelBoundingBox> m_levelBoundingBoxes;
 	std::vector<LevelImporter::CommonObject> m_objects;
 	std::vector<LevelImporter::AnimatedObject> m_animatedObjects;
+	std::vector<LevelImporter::POI> m_POIPoints;
 };
 
 #endif LEVEL_H_

@@ -1,5 +1,6 @@
 struct PointLight
 {
+	float4 m_ambient;
 	float4 m_diffuse;
 	float4 m_specular;
 

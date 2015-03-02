@@ -20,6 +20,7 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_stopAnimation = false;
 
 	m_state = AnimationState::None;
+	m_light = false;
 
 	return true;
 }
@@ -151,6 +152,12 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 	quaternion = DirectX::XMQuaternionMultiply(quaternion, p_parentQuaternion);
 
 	jointTranslation = DirectX::XMVector4Transform(jointTranslation, parentMatrix);
+
+	if (strcmp(p_jointArms->m_name, "lightEmitter") == 0)
+	{
+		m_light = true;
+		m_lightPos = DirectX::XMFLOAT3(jointTranslation.m128_f32[0], jointTranslation.m128_f32[1], jointTranslation.m128_f32[2]);
+	}
 
 	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixRotationQuaternion(quaternion);
 	transformMatrix.r[3].m128_f32[0] = jointTranslation.m128_f32[0];
@@ -455,8 +462,8 @@ void AnimationControl::AnimatedObjectLayers()
 		m_animationStacksArray[i] = m_animationStacks[i];
 	}
 
-	m_currentArms = &m_animationStacksArray[0];
-	m_currentLegs = &m_animationStacksArray[1];
+	m_currentArms = &m_animationStacksArray[1];
+	m_currentLegs = &m_animationStacksArray[0];
 
 	m_blendWeightArms = 0.0f;
 	m_blendWeightLegs = 0.0f;
@@ -526,4 +533,14 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 std::vector<DirectX::XMFLOAT4X4> AnimationControl::GetBoneTransforms()
 {
 	return m_boneTransforms;
+}
+
+bool AnimationControl::IsLight()
+{
+	return m_light;
+}
+
+DirectX::XMFLOAT3 AnimationControl::GetLightPosition()
+{
+	return m_lightPos;
 }
