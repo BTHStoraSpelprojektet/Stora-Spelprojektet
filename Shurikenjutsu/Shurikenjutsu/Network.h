@@ -148,6 +148,9 @@ public:
 	bool IsBloodParticlesUpdated();
 	bool IsSuddenDeath();
 	int GetSuddenDeathBoxIndex();
+
+	void SpawnRunes(int p_index, float p_x, float p_y, float p_z);
+
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
