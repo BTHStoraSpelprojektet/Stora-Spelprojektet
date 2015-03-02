@@ -1208,9 +1208,9 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager)
 {
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
-	std::vector<Box> lotusBBox = p_POIManager->GetBoundingBoxes(0);
-	std::vector<Box> shieldBBox = p_POIManager->GetBoundingBoxes(1);
-	std::vector<Box> invisBBox = p_POIManager->GetBoundingBoxes(2);
+	std::vector<Box> lotusBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Heal);
+	std::vector<Box> shieldBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Shield);
+	std::vector<Box> invisBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Invisible);
 
 	// Go through player list
 	for (unsigned int j = 0; j < playerList.size(); j++)
@@ -1233,7 +1233,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
 					{
-						p_POIManager->PickUpRunes(0, playerList[j].guid);
+						p_POIManager->PickUpRunes(PointOfInterestType_Heal, playerList[j].guid);
 					}
 				}
 			}
@@ -1248,7 +1248,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
 					{
-						p_POIManager->PickUpRunes(1, playerList[j].guid);
+						p_POIManager->PickUpRunes(PointOfInterestType_Invisible, playerList[j].guid);
 					}
 				}
 			}
@@ -1263,7 +1263,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shieldBBox[k]))
 					{
-						p_POIManager->PickUpRunes(2, playerList[j].guid);
+						p_POIManager->PickUpRunes(PointOfInterestType_Shield, playerList[j].guid);
 					}
 				}
 			}

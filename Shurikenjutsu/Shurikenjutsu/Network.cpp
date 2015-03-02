@@ -1036,16 +1036,16 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			RakNet::RakNetGUID guid;
-			int index;
+			PointOfInterestType poi_type;
 			float x, y, z;
 			bitStream.Read(messageID);
 			for (int i = 0; i < 3; i++)
 			{
-				bitStream.Read(index);
+				bitStream.Read(poi_type);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
-				SpawnRunes(index, x, y, z);
+				SpawnRunes(poi_type, x, y, z);
 				//SpawnRunes(0, 0, 0, 10 * i);
 			}
 
@@ -1069,7 +1069,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(0, guid);
+			RunePickedUp(PointOfInterestType_Heal, guid);
 			break;
 		}
 		case ID_INVIS_PICKED_UP:
@@ -1079,7 +1079,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(1, guid);
+			RunePickedUp(PointOfInterestType_Invisible, guid);
 			break;
 		}
 		case ID_SHIELD_PICKED_UP:
@@ -1089,7 +1089,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(2, guid);
+			RunePickedUp(PointOfInterestType_Shield, guid);
 			break;
 		}
 		default:
@@ -2040,12 +2040,12 @@ void Network::SendLatestDir()
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 2, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
-void Network::SpawnRunes(int p_index, float p_x, float p_y, float p_z)
+void Network::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z)
 {
-	m_objectManager->SpawnRunes(p_index, p_x, p_y, p_z);
+	m_objectManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
 }
 
-void Network::RunePickedUp(int p_index, RakNet::RakNetGUID p_guid)
+void Network::RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
 {
-	m_objectManager->RunePickedUp(p_index, p_guid);
+	m_objectManager->RunePickedUp(p_poiType, p_guid);
 }

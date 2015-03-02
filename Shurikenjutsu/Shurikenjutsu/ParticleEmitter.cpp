@@ -104,7 +104,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_SUDDENDEATH) :
 		{
-			InitParticles(1000.0f, 1000.0f, DirectX::XMFLOAT3(12.0f,0.0f,14.0f), 5.0f, 0.1f, 10.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/tox.png"));
+			InitParticles(1000.0f, 1000.0f, DirectX::XMFLOAT3(17.0f,0.0f,17.0f), 1.0f, 0.1f, 10.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/toxicSmoke.png"));
 			break;
 		}
 		default:
@@ -246,6 +246,7 @@ void ParticleEmitter::EmitParticles()
 			position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
 			position.z += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z;
 
+
 			float velocity = m_velocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_velocityVariation;
 			float rotation = ((float)rand() - (float)rand() / RAND_MAX) * (DirectX::XM_PI * 2);
 
@@ -273,6 +274,7 @@ void ParticleEmitter::EmitParticles()
 			{
 				// Copy data.
 				m_particleList[i].m_position = m_particleList[j].m_position;
+				m_particleList[i].m_initPosition = m_particleList[j].m_initPosition;
 				m_particleList[i].m_direction = m_particleList[j].m_direction;
 				m_particleList[i].m_color = m_particleList[j].m_color;
 				m_particleList[i].m_velocity = m_particleList[j].m_velocity;
@@ -343,6 +345,13 @@ void ParticleEmitter::EmitParticles()
 					// Randomize a color.
 					float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.05f;
 
+					if (position.x == 0 && position.z == 0){
+						std::cout << "Fail";
+						position.x += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.x;
+						position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
+						position.z += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z;
+					}
+
 					m_particleList[index].m_position = position;
 					m_particleList[index].m_initPosition = position;
 
@@ -356,7 +365,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = rotation;
-					m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 0.0f;
 
 					break;
 				}
@@ -590,7 +599,7 @@ void ParticleEmitter::UpdateParticles()
 					float angle = 30.0f * (float)3.14159265359 / 180;
 					float height = 3.0f;
 
-					m_particleList[i].m_position.y = m_particleList[i].m_position.y + (0.01f * sin(m_particleList[i].m_timePassed));
+				m_particleList[i].m_position.y = m_particleList[i].m_position.y + (0.01f * sin(m_particleList[i].m_timePassed));
 
 					float xWindOffset = GetWindOffsetX(m_particleList[i].m_timePassed, 100);
 					float zWindOffset = GetWindOffsetZ(m_particleList[i].m_timePassed, 100);
@@ -612,8 +621,9 @@ void ParticleEmitter::UpdateParticles()
 				if (m_particleList != nullptr)
 				{
 				PointLight fireLight;
-				fireLight.m_diffuse = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
-				fireLight.m_specular = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+				fireLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+				fireLight.m_diffuse = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
+				fireLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
 
 				fireLight.m_position = DirectX::XMFLOAT3(m_emitterPosition.x, m_emitterPosition.y + 0.2f, m_emitterPosition.z);
 				fireLight.m_range = 5.0f;
@@ -765,7 +775,7 @@ void ParticleEmitter::UpdateParticles()
 			}
 			break;
 		}
-		case(PARTICLE_PATTERN_SUDDENDEATH):
+		case(PARTICLE_PATTERN_SUDDENDEATH) :
 		{
 			if (m_particleList != nullptr)
 			{
@@ -774,35 +784,35 @@ void ParticleEmitter::UpdateParticles()
 					// Add time passed.
 					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
 
-					DirectX::XMFLOAT3 position = m_particleList[i].m_position;
-					DirectX::XMFLOAT3 nextPosition;
+				DirectX::XMFLOAT3 position = m_particleList[i].m_position;
+				DirectX::XMFLOAT3 nextPosition;
 
-					nextPosition.x = m_particleList[i].m_position.x + (m_particleList[i].m_direction.x * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
-					nextPosition.y = m_particleList[i].m_position.y + (m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
-					nextPosition.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				nextPosition.x = m_particleList[i].m_position.x + (m_particleList[i].m_direction.x * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				nextPosition.y = m_particleList[i].m_position.y + (m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
+				nextPosition.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
 
-					if (position.x <  m_SDxMax && nextPosition.x > m_SDxMax)
-					{
-						m_particleList[i].m_direction.x *= -1;
-					}
-					if (position.x >  m_SDxMin && nextPosition.x < m_SDxMin)
-					{
-						m_particleList[i].m_direction.x *= -1;
-					}
-					if (position.z <  m_SDzMax && nextPosition.z > m_SDzMax)
-					{
-						m_particleList[i].m_direction.z *= -1;
-					}
-					if (position.z >  m_SDzMin && nextPosition.z < m_SDzMin)
-					{
-						m_particleList[i].m_direction.z *= -1;
-					}
-					
-					//m_particleList[i].m_position = nextPosition;
+				if (position.x <=  m_SDxMax && nextPosition.x >= m_SDxMax)
+				{
+					m_particleList[i].m_direction.x *= -1;
+				}
+				if (position.x >=  m_SDxMin && nextPosition.x <= m_SDxMin)
+				{
+					m_particleList[i].m_direction.x *= -1;
+				}
+				if (position.z <=  m_SDzMax && nextPosition.z >= m_SDzMax)
+				{
+					m_particleList[i].m_direction.z *= -1;
+				}
+				if (position.z >=  m_SDzMin && nextPosition.z <= m_SDzMin)
+				{
+					m_particleList[i].m_direction.z *= -1;
+				}
+
+				//m_particleList[i].m_position = nextPosition;
 					m_particleList[i].m_position.x = m_particleList[i].m_position.x + (m_particleList[i].m_direction.x * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
-					m_particleList[i].m_position.y = m_particleList[i].m_position.y + ((m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime()*0.3f);
+				m_particleList[i].m_position.y = m_particleList[i].m_position.y + ((m_particleList[i].m_direction.y * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime()*0.3f);
 					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
-					m_particleList[i].m_rotation += (float)GLOBAL::GetInstance().GetDeltaTime();
+
 				}
 			}
 			break;
@@ -905,6 +915,7 @@ void ParticleEmitter::ClearOldParticles()
 				for (unsigned int j = i; j < m_maxParticles - 1; j++)
 				{
 					m_particleList[j].m_position = m_particleList[j + 1].m_position;
+					m_particleList[j].m_initPosition = m_particleList[j + 1].m_initPosition;
 					m_particleList[j].m_direction = m_particleList[j + 1].m_direction;
 					m_particleList[j].m_color = m_particleList[j + 1].m_color;
 					m_particleList[j].m_velocity = m_particleList[j + 1].m_velocity;
@@ -1001,12 +1012,22 @@ void ParticleEmitter::UpdateBuffers()
 
 			case PARTICLE_PATTERN_WORLD_DUST:
 			{
+
+				m_particleList[i].m_opacity = FadeIn(&m_particleList[i], 0.01f);
 				if (m_particleList[i].m_position.x>m_emitBorderLeft)
 				{
+
+					if (m_particleList[i].m_initPosition.x == 0 && m_particleList[i].m_initPosition.y == 0 && m_particleList[i].m_initPosition.z == 0){
+						std::cout << "__Fail  ";
+					}
+
 					m_particleList[i].m_position.x = m_particleList[i].m_initPosition.x;
 					m_particleList[i].m_position.y = m_particleList[i].m_initPosition.y;
 					m_particleList[i].m_position.z = m_particleList[i].m_initPosition.z;
 
+					if (m_particleList[i].m_position.x == 0 && m_particleList[i].m_position.y == 0 && m_particleList[i].m_position.z == 0){
+						std::cout << "Fail";
+					}
 					m_particleList[i].m_timePassed = 0;
 				}
 
