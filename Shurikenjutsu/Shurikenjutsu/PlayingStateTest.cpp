@@ -110,8 +110,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_minimap->Initialize();
 	
 	// Initialize the score board
-	m_scoreBoard = new ScoreBoard();
-	m_scoreBoard->Initialize();
+	ScoreBoard::GetInstance()->Initialize();
 	
 	// Initialize the team status bar.
 	m_teamStatusBar = new TeamStatusBar();
@@ -175,13 +174,8 @@ void PlayingStateTest::Shutdown()
 		delete m_suddenDeath;
 		m_suddenDeath = nullptr;
 	}
-	if (m_scoreBoard != nullptr)
-	{
-		m_scoreBoard->Shutdown();
-		delete m_scoreBoard;
-		m_scoreBoard = nullptr;
-	}
 
+	ScoreBoard::GetInstance()->Shutdown();
 
 	if (m_victoryMenu != nullptr)
 	{
@@ -435,7 +429,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_countdown->Update();
 
 	// Update scoreboard
-	m_scoreBoard->Update();
+	ScoreBoard::GetInstance()->Update();
 	
 	if (resized)
 	{
@@ -453,7 +447,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_TAB)))
 	{
-		m_scoreBoard->Render();
+		//ScoreBoard::GetInstance()->Render();
 		m_scoreBoardIsActive = true;
 	}
 
@@ -571,7 +565,7 @@ void PlayingStateTest::Render()
 
 	if (m_scoreBoardIsActive)
 	{
-		m_scoreBoard->Render();
+		ScoreBoard::GetInstance()->Render();
 	}
 
 	if (Network::GetInstance()->IsSuddenDeath())

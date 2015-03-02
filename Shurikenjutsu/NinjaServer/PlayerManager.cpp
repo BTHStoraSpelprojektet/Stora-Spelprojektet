@@ -591,9 +591,25 @@ void PlayerManager::DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES 
 void PlayerManager::ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID)
 {
 	RakNet::BitStream bitStream;
+	int kills, deaths = 0;
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_killerID)
+		{
+			m_players[i].kills += 1;
+			kills = m_players[i].kills;
+		}
+		if (m_players[i].guid == p_deadID)
+		{
+			m_players[i].deaths += 1;
+			deaths = m_players[i].deaths;
+		}
+	}
 	bitStream.Write((RakNet::MessageID)ID_SCOREBOARDKILL);
 	bitStream.Write(p_deadID);
 	bitStream.Write(p_killerID);
+	bitStream.Write(deaths);
+	bitStream.Write(kills);
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
