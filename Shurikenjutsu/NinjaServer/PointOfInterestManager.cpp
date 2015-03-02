@@ -26,10 +26,10 @@ bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 
 	m_nrOfRunes = 3;
 
-	DirectX::XMFLOAT3 spawnPoints[3];
+	/*DirectX::XMFLOAT3 spawnPoints[3];
 	spawnPoints[0] = DirectX::XMFLOAT3(m_POISpawnPoints[0].m_translationX, m_POISpawnPoints[0].m_translationY, m_POISpawnPoints[0].m_translationZ);
 	spawnPoints[1] = DirectX::XMFLOAT3(m_POISpawnPoints[1].m_translationX, m_POISpawnPoints[1].m_translationY, m_POISpawnPoints[1].m_translationZ);
-	spawnPoints[2] = DirectX::XMFLOAT3(m_POISpawnPoints[2].m_translationX, m_POISpawnPoints[2].m_translationY, m_POISpawnPoints[2].m_translationZ);
+	spawnPoints[2] = DirectX::XMFLOAT3(m_POISpawnPoints[2].m_translationX, m_POISpawnPoints[2].m_translationY, m_POISpawnPoints[2].m_translationZ);*/
 
 	m_lotusBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_LOTUS)->GetBoundingBoxes();
 	m_shieldBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_SHIELD)->GetBoundingBoxes();

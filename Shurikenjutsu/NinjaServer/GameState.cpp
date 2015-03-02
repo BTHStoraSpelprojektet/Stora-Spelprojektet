@@ -208,6 +208,7 @@ void GameState::Update(double p_deltaTime)
 		}
 	}
 }
+
 void GameState::SendSuddenDeathBoxActivation(int p_boxIndex)
 {
 	RakNet::BitStream bitStream;
@@ -286,6 +287,7 @@ void GameState::UpdateTime(double p_deltaTime)
 	}
 
 	m_timeSec += p_deltaTime;
+
 	if (m_timeSec >= 60)
 	{
 		m_timeSec -= 60;
@@ -301,6 +303,7 @@ void GameState::UpdateTime(double p_deltaTime)
 			SyncTime(playerList[i].guid);
 		}
 	}
+
 	if (m_timeMin >= ROUND_TIME_LIMIT_MINUTS && !m_isSuddenDeath)
 	{
 		m_isSuddenDeath = true;

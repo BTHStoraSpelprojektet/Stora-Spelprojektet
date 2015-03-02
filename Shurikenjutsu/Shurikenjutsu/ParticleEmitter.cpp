@@ -32,14 +32,12 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 			break;
 		}
-
 		case(PARTICLE_PATTERN_WORLD_MIST) :
 		{
 			InitParticles(125.0f, 125, DirectX::XMFLOAT3(35.0f, 5.2f, 45.0f), 3.0f, 0.1f, 300.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/WorldMistParticle.png"));
 
 			break;
 		}
-
 		case(PARTICLE_PATTERN_WORLD_DUST) :
 		{
 			//Border limit
@@ -51,34 +49,29 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 			break;
 		}
-
 		case(PARTICLE_PATTERN_FIRE) :
 		{
 			InitParticles(100.0f, 100, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle_texture2.png"));
 			break;
 		}
-
 		case(PARTICLE_PATTERN_FIRE_SPARK) :
 		{
 			InitParticles(0.5f, 5, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 2.5f, 2.0f, 2.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireSparkParticle.png"));
 
 			break;
 		}
-
 		case(PARTICLE_PATTERN_FIREFLIES) :
 		{
 			InitParticles(10.0f, 50, DirectX::XMFLOAT3(3.0f, 0.3f, 3.0f), 0.0f, 0.0f, 30.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/FireFlies.png"));
 
 			break;
 		}
-
 		case(PARTICLE_PATTERN_PINK_LEAVES) :
 		{
 			InitParticles(1.0f, 100, DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f), 1.5f, 0.4f, 60.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/sakuraLeafParticle_texture.png"));
 
 			break;
 		}
-
 		case(PARTICLE_PATTERN_GREEN_LEAVES) :
 		{
 			InitParticles(1.0f, 100, DirectX::XMFLOAT3(4.3f, 0.1f, 4.3f), 1.0f, 0.4f, 60.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/greenLeafParticle_texture.png"));
@@ -92,14 +85,12 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 
 			break;
 		}
-
 		case(PARTICLE_PATTERN_POI_SPARKLE) :
 		{
 			InitParticles(50.0f, 50, DirectX::XMFLOAT3(1.5f, 0.5f, 1.5f), 1.0f, 0.5f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particle_Sparkle.png"));
 
 			break;
 		}
-
 		case(PARTICLE_PATTERN_BUBBLES) :
 		{
 			InitParticles(10.0f, 50, DirectX::XMFLOAT3(2.0f, 0.1f, 2.0f), 0.75f, 0.2f, 2.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/bubbleparticle2.png"));
@@ -113,7 +104,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_SUDDENDEATH) :
 		{
-			initParticles(50.0f, 500, DirectX::XMFLOAT3(13.0f,0.0f,13.0f), 1.0f, 0.1f, 7.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/BloodParticle.png"));
+			InitParticles(50.0f, 500, DirectX::XMFLOAT3(13.0f,0.0f,13.0f), 1.0f, 0.1f, 7.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/BloodParticle.png"));
 			break;
 		}
 		default:
@@ -1004,29 +995,29 @@ void ParticleEmitter::UpdateBuffers()
 
 			case(PARTICLE_PATTERN_GREEN_LEAVES) :
 			{
-				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
 
 				break;
 			}
 
 			case(PARTICLE_PATTERN_PINK_LEAVES) :
 			{
-				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
 
 				break;
 			}
 
 			case(PARTICLE_PATTERN_ACERPALMATUM_LEAVES) :
 			{
-				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
 
 				break;
 			}
 
 			case PARTICLE_PATTERN_SUDDENDEATH:
 			{
-				m_particleList[i].m_opacity = fadeIn(&m_particleList[i], 0.01f);
-				m_particleList[i].m_opacity = fadeOut(&m_particleList[i], 0.5f);
+				m_particleList[i].m_opacity = FadeIn(&m_particleList[i], 0.01f);
+				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
 			}
 
 			default:
