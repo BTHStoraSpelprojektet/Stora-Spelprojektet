@@ -50,6 +50,7 @@ void PointOfInterestManager::Update(double p_deltaTime)
 
 void PointOfInterestManager::SpawnRunes()
 {
+	// Todo add runes
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_SPAWN_RUNES);
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
