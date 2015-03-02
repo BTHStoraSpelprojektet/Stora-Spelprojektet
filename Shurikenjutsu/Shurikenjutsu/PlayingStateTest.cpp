@@ -21,6 +21,9 @@
 #include "ScoreBoard.h"
 #include "SuddenDeathState.h"
 #include "PointLights.h"
+#include "Sound.h"
+
+ParticleEmitter* TEST_POIemitter;
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -81,7 +84,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	m_objectManager->Initialize(&level);
 
 	// Load and place arena walls.
-	std::vector<LevelImporter::LevelBoundingBox> temp = level.getLevelBoundingBoxes();
+	std::vector<LevelImporter::LevelBoundingBox> temp = level.GetLevelBoundingBoxes();
 	std::vector<Box> wallList;
 	for (unsigned int i = 0; i < temp.size(); i++)
 	{
@@ -286,7 +289,6 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	m_playerManager->SetStickyTrapList(m_objectManager->GetStickyTrapList());
 	m_playerManager->Update(false);
 
-	
 	if (!m_playerManager->GetPlayerIsAlive())
 	{
 		if (!GLOBAL::GetInstance().CAMERA_SPECTATE)
@@ -331,7 +333,7 @@ GAMESTATESWITCH PlayingStateTest::Update()
 				return GAMESTATESWITCH_CHOOSENINJA;
 
 				break;
-	}
+			}
 
 			case IN_GAME_MENU_TO_MAIN:
 			{
@@ -363,6 +365,8 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	TrailRenderer::GetInstance().SetViewMatrix(m_camera->GetViewMatrix());
 	TrailRenderer::GetInstance().SetProjectionMatrix(m_camera->GetProjectionMatrix());
 	m_objectManager->Update();
+	OBB playerOBB = m_playerManager->GetPlayerBoundingBox();
+	m_objectManager->CheckRunePickUp(playerOBB);
 
 	// Update health bars.
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
@@ -467,25 +471,22 @@ GAMESTATESWITCH PlayingStateTest::Update()
 
 				break;
 			}
-			
-		case IN_GAME_MENU_TO_MAIN:
+			case IN_GAME_MENU_TO_MAIN:
 			{
 				Network::GetInstance()->Disconnect();
 				return GAMESTATESWITCH_MENU;
 				break;
 			}
-			
-		case IN_GAME_MENU_QUIT:
+			case IN_GAME_MENU_QUIT:
 			{
 				PostQuitMessage(0);
 				break;
 			}
-			
-		default:
+			default:
 			{
 				break;
 			}
-	}
+		}
 	}
 
 	m_camera->Update3DSound(m_sound, player.x, player.y, player.z);
@@ -600,7 +601,7 @@ void PlayingStateTest::BasicPicking()
 	
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+		m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
 	}
 
 	m_mouseX = shurPos.x;
@@ -674,7 +675,7 @@ DirectX::XMFLOAT3 PlayingStateTest::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 void PlayingStateTest::MinimapUpdatePos(Minimap *p_minimap)
 {
 	for (unsigned int i = 0; i < 7; i++)
-		{
+	{
 		m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000, -1000, 0));
 
 		Player* player = m_playerManager->GetEnemyTeamMember(i);

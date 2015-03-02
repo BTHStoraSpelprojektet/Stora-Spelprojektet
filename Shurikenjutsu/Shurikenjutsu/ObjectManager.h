@@ -7,7 +7,6 @@
 #include "AnimatedObject.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
-#include "Sound.h"
 #include "Trail.h"
 
 class Volley;
@@ -19,6 +18,7 @@ class Projectile;
 class StickyTrap;
 class ParticleEmitter;
 class Sound;
+class PointOfInterestManager;
 
 class ObjectManager
 {
@@ -39,31 +39,33 @@ public:
 	void AddSpikeTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeTrapID, int p_team);
 	void AddStickyTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeTrapID, RakNet::RakNetGUID p_guid);
 	void AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid);
+	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_owner);
 	void AddStaticObject(Object p_object);
 	std::vector<Object> GetStaticObjectList()const;
 	std::vector<AnimatedObject*> GetAnimatedObjectList()const;
-
-	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_owner);
-
+	
 	void UpdateFrustum(Frustum* p_frustum);
 
 	void AddProjectile(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, int p_ability);
+	void RemoveProjectile(unsigned int p_projId);
 
 	void UpdateRenderLists();
-	std::vector<StickyTrap*> GetStickyTrapList();
 
-	void RemoveProjectile(unsigned int p_projId);
+	std::vector<StickyTrap*> GetStickyTrapList();
 
 	void AddBloodSpots(DirectX::XMFLOAT3 p_pos);
 	
 	void SetSound(Sound* p_sound);
+
+	void CheckRunePickUp(OBB p_OBB);
+	void SpawnRunes(int p_index, float p_x, float p_y, float p_z);
+
 private:
 	float CheckStickyTrapYPosition();
 	bool CheckIfObjectIsInList(Object *p_object, std::vector<Object*> p_list);
 	std::vector<Object*> CheckAmountOfSameModels(Object *p_object, std::vector<Object*> p_list);
 	void ResetListSinceRoundRestarted();
-
-
+	
 	std::vector<SmokeBomb*> m_smokeBombList;
 	std::vector<Spikes*> m_spikeTrapList;
 	std::vector<StickyTrap*> m_stickyTrapList;
@@ -79,8 +81,6 @@ private:
 	std::vector<ParticleEmitter*> m_bloodParticles;
 	std::vector<float> m_bloodParticlesTimer;
 
-	Frustum* m_frustum;
-
 	bool IsShurikenInList(unsigned int p_shurikenId);
 	bool IsShurikenInNetworkList(unsigned int p_shurikenId);
 	bool IsSmokeBombInList(unsigned int p_smokeBombId);
@@ -89,10 +89,15 @@ private:
 	bool IsFanInList(unsigned int p_fanId);
 	bool IsFanInNetworkList(unsigned int p_fanId);
 
+	Frustum* m_frustum;
+
 	Sound* m_sound;
+
 	std::vector<Trail*> m_shurikenTrails;
 	std::vector<Trail*> m_fanTrails;
 	std::vector<Trail*> m_kunaiTrails;
 	std::vector<std::vector<Trail*>> m_volleyTrails;
+
+	PointOfInterestManager* m_POIManager;
 };
 #endif
