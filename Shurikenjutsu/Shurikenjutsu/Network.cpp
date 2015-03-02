@@ -989,13 +989,13 @@ void Network::ReceviePacket()
 			}*/
 
 			if (m_sound != NULL){
-				m_sound->CreateDefaultSound(sound, x, y, z);
+			m_sound->CreateDefaultSound(sound, x, y, z);
 			}
 
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
-		}
+			}
 
 		case ID_SCOREBOARDKILL:
 		{
@@ -1018,6 +1018,17 @@ void Network::ReceviePacket()
 
 			bitStream.Read(messageID);
 			m_suddenDeath = true;
+
+			break;
+		}
+		case ID_INITIATE_SUDDEN_DEATH_BOX:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int boxIndex = 0;
+			bitStream.Read(messageID);
+			bitStream.Read(boxIndex);
+			m_suddenDeathBoxIndex = boxIndex;
 
 			break;
 		}
