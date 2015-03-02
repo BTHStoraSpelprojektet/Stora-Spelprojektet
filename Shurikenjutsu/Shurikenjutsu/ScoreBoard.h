@@ -31,8 +31,17 @@ private:
 	float m_portraitWidth;
 
 	GUIText m_playerName;
-	GUIText m_killNumber;
-	GUIText m_deathNumber;
+	GUIText m_killDeathNumber;
+
+	bool m_addedMyself;
+
+	void ResizeRedColorList();
+	void ResizeBlueColorList();
+
+	std::map<RakNet::RakNetGUID, GUIElement> m_redColorPlayers;
+	std::map<RakNet::RakNetGUID, GUIElement> m_blueColorPlayers;
+
+	std::vector<GUIText> m_text;
 
 	std::string GetTextureName(int p_charNr);
 };

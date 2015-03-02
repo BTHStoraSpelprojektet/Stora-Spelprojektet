@@ -12,26 +12,33 @@ public:
 	~ScreenSpace();
 
 	bool Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
-	
 
 	void Shutdown();
 	void Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_normal, ID3D11ShaderResourceView* p_color, ID3D11ShaderResourceView* p_depth, ID3D11ShaderResourceView* p_ssao);
 	void RenderSSAO(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_normal, ID3D11ShaderResourceView* p_depth);
 	void BlurImage(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_depth, ID3D11ShaderResourceView* p_normal, bool p_horizontal);
-	
+
+	void DOF(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_depth, bool p_horizontal);
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight, DirectX::XMFLOAT4X4 p_projection);
 	void UpdateSSAOBuffer(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_projection);
+	void SetLightBuffer(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_lightSRV);
 
 private:
 	
 	void BuildRandomVec(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
 	void BuildOffsetVectors();
 	bool InitializeSSAO(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
+	bool InitializeDOF(ID3D11Device* p_device, ID3D11DeviceContext* p_context);
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
 
+	ID3D11VertexShader* m_quadVertexShader;
+	ID3D11GeometryShader* m_quadGeometryShader;
+	ID3D11PixelShader* m_quadPixelShader;
+
 	std::string m_VSVersion;
+	std::string m_GSVersion;
 	std::string m_PSVersion;
 
 	ID3D11Buffer* m_frameBuffer;
@@ -64,5 +71,8 @@ private:
 	DirectX::XMFLOAT4X4 T;
 
 	// DOF
+	ID3D11PixelShader* m_pixelShaderDOFBlurH;
+	ID3D11PixelShader* m_pixelShaderDOFBlurV;
+
 };
 #endif

@@ -9,6 +9,7 @@ struct PlayerNet
 	float x, y, z;
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
+	int id;
 	int team;
 	float maxHP;
 	float currentHP;
@@ -79,6 +80,7 @@ struct VolleyNet
 	float startX, startZ, endX, endZ;
 	float timeToLand;
 	float speed;
+	bool playedLandSound;
 	RakNet::RakNetGUID guid;
 };
 enum Messages
@@ -124,6 +126,8 @@ enum Messages
 	ID_DEATHBOARDKILL,
 	ID_PLAY_SOUND_ABILITY,
 	ID_PLAY_SOUND,
+	ID_START_SUDDEN_DEATH,
+	ID_INITIATE_SUDDEN_DEATH_BOX,
 	ID_SPAWN_RUNES,
 	ID_RUNE_PICKED_UP,
 	ID_LOTUS_PICKED_UP,

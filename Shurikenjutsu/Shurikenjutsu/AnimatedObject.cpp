@@ -104,6 +104,11 @@ void AnimatedObject::RenderDepth()
 	GraphicsEngine::GetInstance()->RenderAnimatedDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_animationController.UpdateAnimation());
 }
 
+void AnimatedObject::RenderDepthOutlining()
+{
+	GraphicsEngine::GetInstance()->RenderAnimatedOutliningDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_animationController.UpdateAnimation());
+}
+
 void AnimatedObject::RenderOutlining()
 {
 	GraphicsEngine::GetInstance()->RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaled(1.05f), m_animationController.GetBoneTransforms());

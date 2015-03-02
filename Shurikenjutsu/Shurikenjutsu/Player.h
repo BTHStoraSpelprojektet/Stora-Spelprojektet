@@ -33,6 +33,7 @@ public:
 	void Render();
 	virtual void RenderAttackLocations();
 	void RenderDepth();
+	void RenderDepthOutlining();
 	void RenderOutlining();
 	void RenderAbilityBar();
 	//void SetDamage(float p_damage);

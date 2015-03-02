@@ -17,6 +17,7 @@ class VictoryScreenMenu;
 class DeathBoard;
 class Sound;
 class ScoreBoard;
+class SuddenDeathState;
 
 class PlayingStateTest : public GameState
 {
@@ -26,6 +27,7 @@ public:
 	virtual bool Initialize();
 	virtual bool Initialize(std::string p_levelName);
 	void Shutdown();
+	void ShutdownExit();
 	GAMESTATESWITCH Update();
 	void Render();
 	void ToggleFullscreen(bool p_fullscreen);
@@ -60,6 +62,7 @@ private:
 	InGameMenu *m_inGameMenu;
 	VictoryScreenMenu* m_victoryMenu;
 	ScoreBoard* m_scoreBoard;
+	SuddenDeathState* m_suddenDeath;
 
 	const float twoPi = DirectX::XM_PI * 2.0f;
 

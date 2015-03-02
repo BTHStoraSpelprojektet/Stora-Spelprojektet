@@ -90,6 +90,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 
 	PlayerNet player;
 	player.guid = p_guid;
+	player.id = GetIdForPlayer();
 	if (p_team == 0)
 	{
 		player.team = GetTeamForPlayer();
@@ -219,6 +220,7 @@ void PlayerManager::BroadcastPlayers()
 	for (int i = 0; i < nrOfPlayers; i++)
 	{
 		bitStream.Write(m_players[i].guid);
+		bitStream.Write(m_players[i].id);
 		bitStream.Write(m_players[i].x);
 		bitStream.Write(m_players[i].y);
 		bitStream.Write(m_players[i].z);
@@ -506,7 +508,7 @@ int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
 	return -1;
 }
 
-void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility)
+void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility, bool p_suddenDeathDamage)
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
@@ -535,8 +537,17 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 				}
 			}
 			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
-			SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
+			if (!p_suddenDeathDamage)
+			{
+				SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
 			SendPlaySound(p_usedAbility, m_players[i].x, m_players[i].y, m_players[i].z);
+			if (m_players[i].charNr == 1){
+				SendPlaySound(PLAYSOUND_FEMALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
+			else{
+				SendPlaySound(PLAYSOUND_MALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
 		}
 	}
 }
@@ -670,7 +681,7 @@ void PlayerManager::SendPlaySound(ABILITIES ability, float p_x, float p_y, float
 	wBitStream.Write(p_y);
 	wBitStream.Write(p_z);
 
-	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void PlayerManager::SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p_z)
@@ -682,7 +693,7 @@ void PlayerManager::SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p
 	wBitStream.Write(p_y);
 	wBitStream.Write(p_z);
 
-	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void PlayerManager::SendPlayerPosAndDir()
@@ -694,7 +705,7 @@ void PlayerManager::SendPlayerPosAndDir()
 		RakNet::BitStream bitStream;
 
 		bitStream.Write((RakNet::MessageID)ID_PLAYER_MOVE_AND_ROTATE);
-		bitStream.Write(m_players[i].guid.g);
+		bitStream.Write((unsigned char)m_players[i].id);
 
 		// pos x
 		mantissa = frexpf(m_players[i].x, &exp);
@@ -736,4 +747,25 @@ bool PlayerManager::CanSendDotDamage()
 {
 	m_haveSentDotDamage = true;
 	return m_canSendDotDamage;
+}
+
+int PlayerManager::GetIdForPlayer()
+{
+	int id = 0;
+	bool idTaken = false;
+	do
+	{
+		idTaken = false;
+		for (unsigned int i = 0; i < m_players.size(); i++)
+		{
+			if (m_players[i].id == id)
+			{
+				id++;
+				idTaken = true;
+				break;
+			}
+		}
+	} while (idTaken);
+
+	return id;
 }

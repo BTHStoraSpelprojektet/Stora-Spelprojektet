@@ -40,8 +40,17 @@ void GUIText::Render()
 
 void GUIText::Shutdown()
 {
-	m_format->Release();
-	m_layouts[0]->Release();
+	if (m_format != nullptr)
+	{
+		m_format->Release();
+		m_format = nullptr;
+	}
+
+	if (m_layouts.size() > 0)
+	{
+		m_layouts[0]->Release();		
+	}
+	m_layouts.clear();
 }
 
 void GUIText::SetText(std::string p_text)
