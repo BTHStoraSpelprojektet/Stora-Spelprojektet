@@ -51,7 +51,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	m_animationController.CreateNewStack(m_model->GetAnimationStacks()[0]);
 	m_animationController.CreateNewStack(m_model->GetAnimationStacks()[1]);
 
-	m_animationController.AnimatedObjectLayers();
+	m_animationController.AnimatedObjectLayers(p_pos);
 
 	return true;
 }

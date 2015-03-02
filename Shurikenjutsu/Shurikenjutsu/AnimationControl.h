@@ -20,7 +20,7 @@ public:
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 
 	void FindAndReferenceLayers();
-	void AnimatedObjectLayers();
+	void AnimatedObjectLayers(DirectX::XMFLOAT3 p_worldPos);
 
 	void Shutdown();
 
@@ -67,6 +67,8 @@ private:
 
 	bool m_isAlive;
 	bool m_stopAnimation;
+
+	DirectX::XMFLOAT3 m_worldPos;
 };
 
 #endif;

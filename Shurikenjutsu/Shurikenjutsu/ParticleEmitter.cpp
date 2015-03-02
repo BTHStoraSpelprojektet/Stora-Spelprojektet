@@ -612,8 +612,9 @@ void ParticleEmitter::UpdateParticles()
 				if (m_particleList != nullptr)
 				{
 				PointLight fireLight;
-				fireLight.m_diffuse = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
-				fireLight.m_specular = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+				fireLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+				fireLight.m_diffuse = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
+				fireLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
 
 				fireLight.m_position = DirectX::XMFLOAT3(m_emitterPosition.x, m_emitterPosition.y + 0.2f, m_emitterPosition.z);
 				fireLight.m_range = 5.0f;

@@ -40,6 +40,8 @@ float4 main(Input p_input) : SV_Target
 
 	float zBuffer = m_textures[2].Load(load).x; //
 
+	float ssao = m_textures[3].Load(load * 0.5f).x; //
+
 	float2 textureDimensions; //
 	m_textures[0].GetDimensions(textureDimensions.x, textureDimensions.y); //
 
@@ -60,10 +62,10 @@ float4 main(Input p_input) : SV_Target
 
 	float3 toCamera = normalize(-positionView);
 
-	ComputePointLight(material, m_pointLights[p_input.lightIndex.x], positionView, normal.xyz, toCamera, D, S);
+	ComputePointLight(material, m_pointLights[p_input.lightIndex.x], positionView, normal.xyz, toCamera, A, D, S);
 
 	float4 light;
-	light.xyz = albedo.xyz * ((D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
+	light.xyz = albedo.xyz * ((A.xyz + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum) * ssao;
 	light.w = D.w;
 
 	return light;

@@ -1,5 +1,6 @@
 #include "AnimationControl.h"
 #include "Globals.h"
+#include "PointLights.h"
 
 bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 {
@@ -150,7 +151,37 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 	quaternion = DirectX::XMQuaternionMultiply(quaternion, p_parentQuaternion);
 
+	if (strcmp(p_jointArms->m_name, "lightEmitter") == 0)
+	{
+		PointLight newLight;
+
+		newLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+		newLight.m_diffuse = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
+		newLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
+
+		DirectX::XMVECTOR pLTranslation = DirectX::XMVector4Transform(jointTranslation, DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(parentMatrix), parentMatrix));
+		newLight.m_position = DirectX::XMFLOAT3(jointTranslation.m128_f32[0] + m_worldPos.x, jointTranslation.m128_f32[1] + 0.2f + m_worldPos.y, jointTranslation.m128_f32[2] + m_worldPos.z);
+		newLight.m_range = 5.0f;
+
+		PointLights::GetInstance()->AddLight(newLight);
+	}
+
 	jointTranslation = DirectX::XMVector4Transform(jointTranslation, parentMatrix);
+
+	if (strcmp(p_jointArms->m_name, "lightEmitter") == 0)
+	{
+		PointLight newLight;
+
+		newLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+		newLight.m_diffuse = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
+		newLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
+
+		DirectX::XMVECTOR pLTranslation = DirectX::XMVector4Transform(jointTranslation, DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(parentMatrix), parentMatrix));
+		newLight.m_position = DirectX::XMFLOAT3(jointTranslation.m128_f32[0] + m_worldPos.x, jointTranslation.m128_f32[1] + 0.2f + m_worldPos.y, jointTranslation.m128_f32[2] + m_worldPos.z);
+		newLight.m_range = 5.0f;
+
+		PointLights::GetInstance()->AddLight(newLight);
+	}
 
 	DirectX::XMMATRIX transformMatrix = DirectX::XMMatrixRotationQuaternion(quaternion);
 	transformMatrix.r[3].m128_f32[0] = jointTranslation.m128_f32[0];
@@ -446,7 +477,7 @@ void AnimationControl::FindAndReferenceLayers()
 	}
 }
 
-void AnimationControl::AnimatedObjectLayers()
+void AnimationControl::AnimatedObjectLayers(DirectX::XMFLOAT3 p_worldPos)
 {
 	m_animationStacksArray = new AnimationStack[m_animationStacks.size()];
 
@@ -470,6 +501,8 @@ void AnimationControl::AnimatedObjectLayers()
 		DirectX::XMStoreFloat4(&m_QuaternionArms[i], temp);
 		DirectX::XMStoreFloat4(&m_QuaternionLegs[i], temp);
 	}
+
+	m_worldPos = p_worldPos;
 }
 
 void AnimationControl::Shutdown()
