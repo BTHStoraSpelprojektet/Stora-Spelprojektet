@@ -994,7 +994,7 @@ void Network::ReceviePacket()
 
 			break;
 		}
-<<<<<<< HEAD
+
 		case ID_SCOREBOARDKILL:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -1009,7 +1009,6 @@ void Network::ReceviePacket()
 
 			break;
 		}
-=======
 		case ID_START_SUDDEN_DEATH:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -1028,8 +1027,6 @@ void Network::ReceviePacket()
 			m_suddenDeathBoxIndex = index;
 			break;
 		}
-			
->>>>>>> origin/master
 		default:
 		{
 			break;
