@@ -43,9 +43,10 @@ bool ScoreBoard::Initialize()
 	// Initialize lists
 	m_redColorPlayers = std::map<RakNet::RakNetGUID, Ninja>();//std::map<RakNet::RakNetGUID, GUIElement>();
 	m_blueColorPlayers = std::map<RakNet::RakNetGUID, Ninja>();;//std::map<RakNet::RakNetGUID, GUIElement>();
-	m_text = std::vector<GUIText>();
+	//m_text = std::vector<GUIText>();
 
 	textst = GUIText();
+	textst.Initialize("HURRR", 25.0f, 0.0f, 0.0f, 0xff000000);
 	return true;
 }
 
@@ -74,16 +75,17 @@ void ScoreBoard::Update()
 			GUIText name = GUIText();
 			name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
 			m_text.push_back(name);
-			GUIText kdr = GUIText();
-			kdr.Initialize("0/0", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
-			m_text.push_back(kdr);
+			m_redColorPlayers[player.guid].death = 0;
+			m_redColorPlayers[player.guid].kill = 0;
+			m_redColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[player.guid].kill) + "/" + std::to_string(m_redColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
+			//textst.SetText(std::to_string(m_redColorPlayers[player.guid].kill) + "/" + std::to_string(m_redColorPlayers[player.guid].death));
+			//textst.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * (m_redColorPlayers.size())));
+			//m_text.push_back(textst);
 
 			// Initalize portraits
 			GUIElement element = GUIElement();
 			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_redColorPlayers[player.guid].portrait = element;
-			m_redColorPlayers[player.guid].kill = 0;
-			m_redColorPlayers[player.guid].death = 0;
 			m_addedMyself = true;
 		}
 		// Blue team
@@ -91,18 +93,16 @@ void ScoreBoard::Update()
 		{
 			// Initialize text
 			GUIText name = GUIText();
-			name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1) , 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+			name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_blueColorPlayers.size() + 1) , 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
 			m_text.push_back(name);
-			GUIText kdr = GUIText();
-			kdr.Initialize("3/5", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
-			m_text.push_back(kdr);
+			m_blueColorPlayers[player.guid].death = 0;
+			m_blueColorPlayers[player.guid].kill = 0;
+			m_blueColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[player.guid].kill) + "/" + std::to_string(m_blueColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
 
 			// Initialize portrait
 			GUIElement element = GUIElement();
 			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f/*skitlångtneråthelvete.y*/, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_blueColorPlayers[player.guid].portrait = element;
-			m_blueColorPlayers[player.guid].kill = 0;
-			m_blueColorPlayers[player.guid].death = 0;
 			m_addedMyself = true;
 		}
 	}
@@ -122,16 +122,14 @@ void ScoreBoard::Update()
 				GUIText name = GUIText();
 				name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
 				m_text.push_back(name);
-				GUIText kdr = GUIText();
-				kdr.Initialize("3/5", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
-				m_text.push_back(kdr);
+				m_redColorPlayers[players[i].guid].death = 0;
+				m_redColorPlayers[players[i].guid].kill = 0;
+				m_redColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_redColorPlayers[players[i].guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
 
 				//Initialize Portrait
 				GUIElement element = GUIElement();
-				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
+				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_redColorPlayers[players[i].guid].portrait = element;
-				m_redColorPlayers[players[i].guid].kill = 0;
-				m_redColorPlayers[players[i].guid].death = 0;
 			}
 		}
 		// Blue team
@@ -143,16 +141,14 @@ void ScoreBoard::Update()
 				GUIText name = GUIText();
 				name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
 				m_text.push_back(name);
-				GUIText kdr = GUIText();
-				kdr.Initialize("3/5", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
-				m_text.push_back(kdr);
+				m_blueColorPlayers[players[i].guid].death = 0;
+				m_blueColorPlayers[players[i].guid].kill = 0;
+				m_blueColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_blueColorPlayers[players[i].guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
 
 				//Initialize portrait
 				GUIElement element = GUIElement();
-				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
+				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_blueColorPlayers[players[i].guid].portrait = element;
-				m_redColorPlayers[players[i].guid].kill = 0;
-				m_redColorPlayers[players[i].guid].death = 0;
 			}
 		}
 	}
@@ -167,23 +163,27 @@ void ScoreBoard::Render()
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
 	{
 		it->second.portrait.QueueRender();
+		it->second.ninjaText.Render();
+		//textst.Initialize(std::to_string(it->second.kill) + "/" + std::to_string(it->second.death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * (m_redColorPlayers.size() - 1)), 0xff000000);
+		//textst.Render();
 	}
 
 	// Render blue team portraits
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
 	{
 		it->second.portrait.QueueRender();
-		GUIText testText = GUIText();
-		//testText.Initialize(/*std::to_string(it->second.kill) +*/ "hej goddammit" /*+ std::to_string(it->second.death)*/, 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * m_blueColorPlayers.size()), 0xff000000);
-		textst.Initialize(std::to_string(it->second.kill) + "/" + std::to_string(it->second.death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * (m_blueColorPlayers.size()- 1)), 0xff000000);
-		textst.Render();
+		it->second.ninjaText.Render();
+		//textst.Initialize(std::to_string(it->second.kill) + "/" + std::to_string(it->second.death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * (m_blueColorPlayers.size()- 1)), 0xff000000);
+		//textst.SetText(std::to_string(it->second.kill) + "/" + std::to_string(it->second.death));
+		//textst.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * (m_blueColorPlayers.size() - 1)));
+		//textst.Render();
 	}
 
 	// Render text
-	/*for (unsigned int i = 0; i < m_text.size(); i++)
+	for (unsigned int i = 0; i < m_text.size(); i++)
 	{
 		m_text[i].Render();
-	}*/
+	}
 }
 
 std::string ScoreBoard::GetTextureName(int p_charNr)

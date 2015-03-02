@@ -20,6 +20,7 @@ public:
 		GUIElement portrait;
 		int kill;
 		int death;
+		GUIText ninjaText;
 	};
 
 	static ScoreBoard* GetInstance();
