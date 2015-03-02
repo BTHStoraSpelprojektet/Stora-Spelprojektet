@@ -297,7 +297,7 @@ void GameState::UpdateTime(double p_deltaTime)
 		m_timeSec -= 60;
 		m_timeMin++;
 	}
-
+	//////////////Jonas kommentera ut detta1!!!!!!!
 	if (m_timeSec > 0.9f &&( redTeam == 0|| bluTeam == 0))
 	{
 		m_timeSec = 0.0f;
@@ -314,12 +314,15 @@ void GameState::UpdateTime(double p_deltaTime)
 
 		SendSuddenDeathMessage();
 	}
+	//////////////Jonas kommentera ut detta1!!!!!!!
+	//////////////Jonas kommentera in detta1!!!!!!!
 	//if (m_timeSec >= ROUND_TIME_LIMIT_SECONDS && !m_isSuddenDeath)
 	//{
 	//	m_isSuddenDeath = true;
 	//	
 	//	SendSuddenDeathMessage();
 	//}
+	//////////////Jonas kommentera in detta1!!!!!!!
 }
 
 void GameState::SendSuddenDeathMessage()
