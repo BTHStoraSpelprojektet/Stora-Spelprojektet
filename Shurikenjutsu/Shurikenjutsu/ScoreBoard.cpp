@@ -217,7 +217,7 @@ std::string ScoreBoard::GetTextureName(int p_charNr)
 
 void ScoreBoard::KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNetGUID p_ninjaKilled)
 {
-	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
+	/*std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
 	PlayerNet player = Network::GetInstance()->GetMyPlayer();
 	players.push_back(player);
 
@@ -236,5 +236,5 @@ void ScoreBoard::KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNet
 			m_blueColorPlayers[p_ninjaKiller].kill += 1;
 			m_redColorPlayers[p_ninjaKilled].death += 1;
 		}
-	}
+	}*/
 }
