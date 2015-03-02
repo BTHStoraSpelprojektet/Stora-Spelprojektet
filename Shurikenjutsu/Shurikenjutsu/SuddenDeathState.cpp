@@ -51,7 +51,7 @@ void SuddenDeathState::Initialize(std::vector<Box> p_walls)
 	positions.push_back(DirectX::XMFLOAT3(xLength / 4.0f, 0.0f, -zLength / 4.0f));
 	for (unsigned int i = 0; i < 8; i++)
 	{
-		m_gasParticle[i]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), positions[i], DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(5.0f, 5.0f), PARTICLE_PATTERN_SUDDENDEATH);
+		m_gasParticle[i]->Initialize(GraphicsEngine::GetInstance()->GetDevice(), positions[i], DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(2.5f, 2.5f), PARTICLE_PATTERN_SUDDENDEATH);
 	}
 	for (unsigned int i = 0; i < 8; i++)
 	{
