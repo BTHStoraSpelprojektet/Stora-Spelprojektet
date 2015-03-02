@@ -156,11 +156,6 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		return false;
 	}
 
-	if (!DeathBoard::GetInstance()->Initialize())
-	{
-		return false;
-	}
-
 	m_suddenDeath = new SuddenDeathState();
 	m_suddenDeath->Initialize(wallList);
 

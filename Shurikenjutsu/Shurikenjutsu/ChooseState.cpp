@@ -291,6 +291,11 @@ void ChooseState::ShutdownExit()
 	}
 }
 
+ObjectManager* ChooseState::GetObjectManager()
+{
+	return m_objectManager;
+}
+
 GAMESTATESWITCH ChooseState::Update()
 {
 	// Update Camera position
