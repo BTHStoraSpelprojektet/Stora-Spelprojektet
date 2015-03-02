@@ -924,7 +924,6 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 		}
 	}
 }
-
 void CollisionManager::SetDeltaTime(float p_deltaTime)
 {
 	m_deltaTime = p_deltaTime;
@@ -1239,7 +1238,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				}
 			}
 		}
-		
+
 		// Make collision test
 		for (unsigned int k = 0; k < invisBBox.size(); k++)
 		{
@@ -1269,6 +1268,5 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				}
 			}
 		}
-
 	}
 }

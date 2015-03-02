@@ -2,10 +2,12 @@
 #define PLAYERMANAGERSERVER_H_
 
 #include <iostream>
+
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\Level.h"
+#include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonEnums.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "CollisionManager.h"
@@ -57,6 +59,7 @@ public:
 	void SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage);
 	
 	void DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility);
+	void ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);

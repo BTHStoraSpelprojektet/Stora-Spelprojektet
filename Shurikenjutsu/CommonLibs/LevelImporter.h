@@ -79,31 +79,31 @@ public:
 	LevelImporter::LevelImporter(std::string p_level);
 	~LevelImporter();
 
-	void loadLevelFile();
-	bool readData();
+	void LoadLevelFile();
+	bool ReadData();
 	std::vector<SpawnPoint> GetSpawnPoints();
-	std::vector<POI> GetPOIPoints();
 	std::vector<Line> LevelImporter::GetShadowsShapes();
 	std::vector<ParticleEmitter> LevelImporter::GetParticleEmitters();
-	std::vector<LevelBoundingBox> getLevelBoundingBoxes();
+	std::vector<LevelBoundingBox> GetLevelBoundingBoxes();
 	std::vector<CommonObject> GetObjects();
 	std::vector<AnimatedObject> GetAnimatedObjects();
-	
+	std::vector<LevelImporter::POI> LevelImporter::GetPOIPoints();
+
 protected:
 	std::string m_level;
 	std::vector<std::vector<std::string>> levelData;
 	
 	std::vector<Line> m_shadowShapes;
 	std::vector<SpawnPoint> m_spawnPoints;
-	std::vector<POI> m_POIPoints;
 	std::vector<ParticleEmitter> m_particleEmitter;
+	std::vector<POI> m_POIPoints;
 	std::vector<LevelBoundingBox> m_levelBoundingBoxes;
 	std::vector<CommonObject> m_objects;
 	std::vector<AnimatedObject> m_animatedObjects;
 
-	std::string getObjectName(std::string &tmpStr);
-	void readBoundingBox(std::string &tmpStr, int currentWordTemp, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ, float &boundingBoxWidth, float &boundingBoxHeight, float &boundingBoxDepth);
-	void readLevelObject(std::string &tmpStr, int currentWordTemp, bool &isPointOfInterest, std::string &pointOfInterestType, bool &isAnimatedObject, bool &isParticleEmitter, std::string &particleEmitterType, bool &isSpawnPoint, int &currentTeam, bool &isShadowShape, std::string &currentShadowShape, std::string &filePathToModel, float &x, float &y, float &z, float &rotateX, float &rotateY, float &rotateZ);
+	std::string GetObjectName(std::string &p_tmpStr);
+	void ReadBoundingBox(std::string &p_tmpStr, int p_currentWordTemp, float &p_x, float &p_y, float &p_z, float &p_rotateX, float &p_rotateY, float &p_rotateZ, float &p_boundingBoxWidth, float &p_boundingBoxHeight, float &p_boundingBoxDepth);
+	void ReadLevelObject(std::string &p_tmpStr, int p_currentWordTemp, bool &p_isPointOfInterest, std::string &p_pointOfInterestType, bool &p_isAnimatedObject, bool &p_isParticleEmitter, std::string &p_particleEmitterType, bool &p_isSpawnPoint, int &p_currentTeam, bool &p_isShadowShape, std::string &p_currentShadowShape, std::string &p_filePathToModel, float &p_x, float &p_y, float &p_z, float &p_rotateX, float &p_rotateY, float &p_rotateZ);
 
 	Point tmpPointA;
 	Point tmpPointB;

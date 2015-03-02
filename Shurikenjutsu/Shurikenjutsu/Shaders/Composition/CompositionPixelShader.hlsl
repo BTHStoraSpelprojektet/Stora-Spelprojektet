@@ -62,7 +62,7 @@ float4 main(Input p_input) : SV_Target
 
 	ComputeDirectionalLight(material, m_directionalLight, normal.xyz, toCamera, A, D, S);
 
-	albedo.xyz = albedo.xyz*((A.xyz*ssao + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
+	albedo.xyz = albedo.xyz*((A.xyz + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum)*ssao;
 	albedo.w = 1.0f;
 
 	return float4(albedo.xyz, 1.0f);
