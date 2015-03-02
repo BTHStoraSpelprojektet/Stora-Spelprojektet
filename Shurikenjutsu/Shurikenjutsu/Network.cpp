@@ -1009,13 +1009,14 @@ void Network::ReceviePacket()
 			int index;
 			float x, y, z;
 			bitStream.Read(messageID);
-			for (int i = 0; i < 3; i++)
+			for (int i = -1; i < 2; i++)
 			{
 				bitStream.Read(index);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
-				SpawnRunes(index, x, y, z);
+				//SpawnRunes(index, x, y, z);
+				SpawnRunes(0, 0, 0, 10 * i);
 			}
 
 			break;
