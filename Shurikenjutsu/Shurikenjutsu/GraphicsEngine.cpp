@@ -328,6 +328,11 @@ void GraphicsEngine::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices
 	m_sceneShader->RenderAnimated(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
 }
 
+void GraphicsEngine::RenderAnimatedOutliningDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+{
+	m_sceneShader->RenderAnimatedOutliningDepth(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
+}
+
 void GraphicsEngine::RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	m_sceneShader->RenderAnimatedOutlining(m_directX.GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
@@ -410,6 +415,11 @@ void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
 void GraphicsEngine::SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection)
 {
 	m_screenSpace->UpdateFrameBuffer(m_directX.GetContext(), p_dLight, p_projection);
+}
+
+void GraphicsEngine::SetLightBuffer(ID3D11ShaderResourceView* p_lightSRV)
+{
+	m_screenSpace->SetLightBuffer(m_directX.GetContext(), p_lightSRV);
 }
 
 void GraphicsEngine::Clear()
@@ -641,7 +651,7 @@ void GraphicsEngine::ScreenChangeHandled()
 
 ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture1()
 {
-	return m_directX.GetGBufferSRV1();
+	return m_directX.GetCompositionTexture();
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::GetPostProcessingTexture2()
@@ -666,15 +676,16 @@ void GraphicsEngine::DoReportLiveObjects()
 
 void GraphicsEngine::Composition()
 {
-	m_directX.ScreenSpaceRenderTarget();
-	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+	
+	m_directX.SetRenderTargetForComposition();
+	m_directX.TurnOnPointLightAlphaBlending();
 	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetGBufferSRV2(), m_directX.GetGBufferSRV1(), m_directX.GetDepthSRV(), m_directX.GetPPSRV1());
+	TurnOffAlphaBlending();
 }
 
-void GraphicsEngine::SetScreenSpaceRenderTarget()
+void GraphicsEngine::SetForwardRenderTarget()
 {
-
-	m_directX.ScreenSpaceRenderTarget();
+	m_directX.SetRenderTargetForForwardRendering();
 }
 
 void GraphicsEngine::RenderSSAO()
@@ -693,6 +704,15 @@ void GraphicsEngine::RenderSSAO()
 void GraphicsEngine::SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection)
 {
 	m_screenSpace->UpdateSSAOBuffer(m_directX.GetContext(), p_projection);
+}
+
+void GraphicsEngine::ApplyDOF()
+{
+	m_directX.SetRenderTargetForDOF();
+	m_directX.TurnOffDepthStencil();
+	m_screenSpace->DOF(m_directX.GetContext(), m_directX.GetCompositionTexture(), m_directX.GetDepthSRV(), true);
+	m_directX.SetRenderTargetForDOF2();
+	m_screenSpace->DOF(m_directX.GetContext(), m_directX.GetCompositionTexture(), m_directX.GetGBufferSRV2(), false);
 }
 
 void GraphicsEngine::TurnOffBackfaceCulling()

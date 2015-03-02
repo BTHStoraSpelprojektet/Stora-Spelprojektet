@@ -183,6 +183,9 @@
     <Filter Include="Source Files\Graphics\Trails">
       <UniqueIdentifier>{d1182603-a101-4989-8baf-24532995970f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\DOF">
+      <UniqueIdentifier>{16953032-c664-4717-91bd-0002a799348f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -506,11 +509,23 @@
     <ClCompile Include="ScreenSpace.cpp">
       <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
+    <ClCompile Include="PointLights.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="ScoreBoard.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="VictoryScreenMenu.cpp">
       <Filter>Source Files\GUI\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryChecker.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugText.cpp">
+      <Filter>Source Files\Utility\DebugDraw</Filter>
+    </ClCompile>
+    <ClCompile Include="SuddenDeathState.cpp">
+      <Filter>Source Files\GameState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -847,11 +862,23 @@
     <ClInclude Include="ToolTipPopUp.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
+    <ClInclude Include="PointLights.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="VictoryScreenMenu.h">
       <Filter>Header Files\GUI\Menu</Filter>
     </ClInclude>
     <ClInclude Include="ScoreBoard.h">
       <Filter>Header Files\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryChecker.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugText.h">
+      <Filter>Header Files\Utility\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="SuddenDeathState.h">
+      <Filter>Header Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -962,6 +989,24 @@
     </FxCompile>
     <FxCompile Include="Shaders\Trails\TrailVertexShader.hlsl">
       <Filter>Shaders\Trail</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Composition\PointLightQuadCullingGS.hlsl">
+      <Filter>Shaders\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Composition\PointLightQuadCullingVS.hlsl">
+      <Filter>Shaders\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Composition\PointLightQuadCullingPS.hlsl">
+      <Filter>Shaders\Composition</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DOF\DOFPixelShader.hlsl">
+      <Filter>Shaders\DOF</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DOF\DOFBlurHPixelShader.hlsl">
+      <Filter>Shaders\DOF</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\DOF\DOFBlurVPixelShader.hlsl">
+      <Filter>Shaders\DOF</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

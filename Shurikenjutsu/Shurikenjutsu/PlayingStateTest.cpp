@@ -19,6 +19,8 @@
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
 #include "ScoreBoard.h"
+#include "SuddenDeathState.h"
+#include "PointLights.h"
 
 PlayingStateTest::PlayingStateTest(){}
 PlayingStateTest::~PlayingStateTest(){}
@@ -116,9 +118,9 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	}
 
 	// Initialize the directional light.
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.4f, 0.4f, 1.125f, 1.0f); //m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(2.525f, 2.525f, 5.525f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f);
 	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
@@ -159,11 +161,28 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 		return false;
 	}
 
+	m_suddenDeath = new SuddenDeathState();
+	m_suddenDeath->Initialize(wallList);
+
 	return true;
 }
 
 void PlayingStateTest::Shutdown()
 {
+	if (m_suddenDeath != nullptr)
+	{
+		m_suddenDeath->Shutdown();
+		delete m_suddenDeath;
+		m_suddenDeath = nullptr;
+	}
+	if (m_scoreBoard != nullptr)
+	{
+		m_scoreBoard->Shutdown();
+		delete m_scoreBoard;
+		m_scoreBoard = nullptr;
+	}
+
+
 	if (m_victoryMenu != nullptr)
 	{
 		m_victoryMenu->Shutdown();
@@ -233,8 +252,25 @@ void PlayingStateTest::Shutdown()
 	}
 }
 
+void PlayingStateTest::ShutdownExit()
+{
+	if (m_objectManager != nullptr)
+	{
+		m_objectManager->ShutdownExit();
+	}
+}
+
 GAMESTATESWITCH PlayingStateTest::Update()
 {
+	int tempSuddenDeathBoxIndex = Network::GetInstance()->GetSuddenDeathBoxIndex();
+	if (tempSuddenDeathBoxIndex != 99)
+	{
+		m_suddenDeath->StartEmittingParticles(tempSuddenDeathBoxIndex);
+	}
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Update();
+	}
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -429,31 +465,31 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	{
 		switch (m_inGameMenu->Update())
 		{
-		case IN_GAME_MENU_RESUME:
+			case IN_GAME_MENU_RESUME:
 			{
-			m_inGameMenuIsActive = false;
-			m_sound->StopMusic();
+				m_inGameMenuIsActive = false;
+				m_sound->StopMusic();
 
-			break;
+				break;
 			}
 			
 		case IN_GAME_MENU_TO_MAIN:
 			{
-			Network::GetInstance()->Disconnect();
-			return GAMESTATESWITCH_MENU;
-			break;
+				Network::GetInstance()->Disconnect();
+				return GAMESTATESWITCH_MENU;
+				break;
 			}
 			
 		case IN_GAME_MENU_QUIT:
 			{
-			PostQuitMessage(0);
-			break;
+				PostQuitMessage(0);
+				break;
 			}
 			
 		default:
 			{
-			break;
-		}
+				break;
+			}
 	}
 	}
 
@@ -478,17 +514,22 @@ void PlayingStateTest::Render()
 	m_objectManager->Render();
 	m_playerManager->Render(false);
 	
+	GraphicsEngine::GetInstance()->RenderFoliage();
+	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
+
 	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+	GraphicsEngine::GetInstance()->ApplyDOF();
+
+	GraphicsEngine::GetInstance()->SetForwardRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
-	GraphicsEngine::GetInstance()->RenderFoliage();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
@@ -497,6 +538,7 @@ void PlayingStateTest::Render()
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
 
+	//// Render the UI.
 	if (Network::GetInstance()->GetMatchOver())
 	{
 		m_victoryMenu->Render();
@@ -532,6 +574,10 @@ void PlayingStateTest::Render()
 		m_scoreBoard->Render();
 	}
 
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Render();
+	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
@@ -559,7 +605,7 @@ void PlayingStateTest::BasicPicking()
 	
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-		m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
+	m_playerManager->SetAttackDirection(NormalizeFloat3(shurDir));
 	}
 
 	m_mouseX = shurPos.x;

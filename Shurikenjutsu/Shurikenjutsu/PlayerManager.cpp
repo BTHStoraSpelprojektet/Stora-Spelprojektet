@@ -100,9 +100,9 @@ void PlayerManager::Update(bool p_inMenu)
 			m_enemyList[i]->Update();
 
 			if (m_enemyList[i]->m_soundEmitter != NULL) {
-				m_enemyList[i]->m_soundEmitter->m_x = enemyPlayers[i].x;
-				m_enemyList[i]->m_soundEmitter->m_y = enemyPlayers[i].y;
-				m_enemyList[i]->m_soundEmitter->m_z = enemyPlayers[i].z;
+				m_enemyList[i]->m_soundEmitter->m_pos.x = enemyPlayers[i].x;
+				m_enemyList[i]->m_soundEmitter->m_pos.y = enemyPlayers[i].y;
+				m_enemyList[i]->m_soundEmitter->m_pos.z = enemyPlayers[i].z;
 			}
 		}
 	}
@@ -138,7 +138,7 @@ void PlayerManager::Render(bool p_inMenu)
 
 void PlayerManager::RenderOutliningPassOne()
 {
-	m_player->Render();
+	m_player->RenderDepthOutlining();
 }
 
 void PlayerManager::RenderDepth(bool p_inMenu)

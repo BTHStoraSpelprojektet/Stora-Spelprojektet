@@ -206,7 +206,8 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 	}
 	
 	m_texture = GraphicsEngine::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/grassFoil2.png");
-
+	m_normalMap = GraphicsEngine::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/blanknormalmap_50.png");
+	
 	ReadRawFile();
 
 	// Setup vertex buffer description.
@@ -269,7 +270,7 @@ void FoliageShader::ReadRawFile()
 			{		
 				for (unsigned int k = 0; k < 3; k++)
 				{
-					newVert.m_position = DirectX::XMFLOAT3((j - (row * 0.5f)) * 0.5f, 0.0f, -(i - (row * 0.5f)) * 0.5f);
+					newVert.m_position = DirectX::XMFLOAT3((j - (row * 0.5f)) * 0.5f, (in[(row * i) + j] / 255.0f), -(i - (row * 0.5f)) * 0.5f);
 
 					r1 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 					r2 = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
@@ -346,6 +347,12 @@ void FoliageShader::Shutdown()
 		m_texture->Release();
 		m_texture = 0;
 	}
+
+	if (m_normalMap)
+	{
+		m_normalMap->Release();
+		m_normalMap = 0;
+	}
 }
 
 void FoliageShader::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* m_shadowMap)
@@ -358,6 +365,7 @@ void FoliageShader::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceV
 	UpdateAngleBuffer(p_context);
 
 	p_context->PSSetShaderResources(0, 1, &m_texture);
+	p_context->PSSetShaderResources(1, 1, &m_normalMap);
 	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
 	p_context->PSSetSamplers(0, 1, &m_samplerState);
 

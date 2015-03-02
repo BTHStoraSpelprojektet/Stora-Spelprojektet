@@ -48,12 +48,6 @@ private:
 	double m_timeSec;
 	double m_timeMin;
 	GUIText m_timerText;
-
-	GUIText m_fpsTimer;
-	GUIText m_pingText;
-
-	GUIText m_3DMouseX;
-	GUIText m_3DMouseY;
 };
 
 #endif

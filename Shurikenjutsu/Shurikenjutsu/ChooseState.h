@@ -36,6 +36,7 @@ public:
 	void operator delete(void* p_p);
 
 	void Shutdown();
+	void ShutdownExit();
 	bool Initialize();
 	GAMESTATESWITCH Update();
 	void Render();

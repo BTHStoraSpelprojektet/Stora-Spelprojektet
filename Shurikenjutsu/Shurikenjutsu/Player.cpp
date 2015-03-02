@@ -279,27 +279,28 @@ void Player::UpdateMe()
 
 		if (!CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere))
 		{
-		if (distance >= m_dashDistanceLeft)
-		{
-			m_position.x += m_dashDistanceLeft * m_dashDirection.x;
-			m_position.z += m_dashDistanceLeft * m_dashDirection.z;
-			m_dashDistanceLeft = 0.0f;
-			m_isDashing = false;
+			if (distance >= m_dashDistanceLeft)
+			{
+				m_position.x += m_dashDistanceLeft * m_dashDirection.x;
+				m_position.z += m_dashDistanceLeft * m_dashDirection.z;
+				m_dashDistanceLeft = 0.0f;
+				m_isDashing = false;
 
 				Network::GetInstance()->SendAnimationState(AnimationState::None);
 
 				m_trail->StopEmiting();
-		}
+			}
+			else
+			{
+				m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
+				m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
+				m_dashDistanceLeft -= distance;
+			}
 
-		else
-		{
-			m_position.x += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.x;
-			m_position.z += (DASH_SPEED * m_speed * (float)GLOBAL::GetInstance().GetDeltaTime()) * m_dashDirection.z;
-			m_dashDistanceLeft -= distance;
-		}
-
-		// If we dashed, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+			// If we dashed, update shadow shapes.
+			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+			// Force network to send pos
+			Network::GetInstance()->SendLatestPos();
 		}
 
 		else
@@ -324,9 +325,9 @@ void Player::UpdateMe()
 
 		//Update sound (walking)
 		m_sound->StartAmbientSound(m_soundEmitter);
-		m_soundEmitter->m_x = position.x;
-		m_soundEmitter->m_y = position.y;
-		m_soundEmitter->m_z = position.z;
+		m_soundEmitter->m_pos.x = position.x;
+		m_soundEmitter->m_pos.y = position.y;
+		m_soundEmitter->m_pos.z = position.z;
 	}
 	else{
 		m_sound->StopAmbientSound(m_soundEmitter);
@@ -999,6 +1000,11 @@ void Player::Render()
 void Player::RenderDepth()
 {
 	AnimatedObject::RenderDepth();
+}
+
+void Player::RenderDepthOutlining()
+{
+	AnimatedObject::RenderDepthOutlining();
 }
 
 void Player::RenderOutlining()
