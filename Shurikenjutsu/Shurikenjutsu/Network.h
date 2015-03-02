@@ -63,6 +63,8 @@ public:
 
 	void SendPlayerPos(float p_x, float p_y, float p_z);
 	void SendPlayerDir(float p_dirX, float p_dirY, float p_dirZ);
+	void SendLatestPos();
+	void SendLatestDir();
 	std::vector<PlayerNet> GetOtherPlayers();
 	PlayerNet GetMyPlayer();
 	void AddShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ);
@@ -144,6 +146,12 @@ public:
 	void SpawnBloodParticles(RakNet::RakNetGUID p_guid);
 	std::vector<DirectX::XMFLOAT3*> BloodParticlesLocations();
 	bool IsBloodParticlesUpdated();
+	bool IsSuddenDeath();
+	int GetSuddenDeathBoxIndex();
+
+	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
+	void RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
+
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
@@ -160,10 +168,11 @@ private:
 	void ReceviePacket();
 	void UpdateSmokeBomb(unsigned int p_smokebombId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime);
 	void UpdatePlayerPos(RakNet::RakNetGUID p_owner, float p_x, float p_y, float p_z);
-	void UpdatePlayerPos(uint64_t p_owner, float p_x, float p_y, float p_z);
+	void UpdatePlayerPos(int p_id, float p_x, float p_y, float p_z);
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
-	void UpdatePlayerDir(uint64_t p_owner, float p_dirX, float p_dirY, float p_dirZ);
+	void UpdatePlayerDir(int p_id, float p_dirX, float p_dirY, float p_dirZ);
 
+	void UpdatePlayerID(RakNet::RakNetGUID p_owner, int p_id);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive);
@@ -179,6 +188,7 @@ private:
 	void RemoveFan(unsigned int p_id);
 	void UpdateFanLifeTime(unsigned int p_id, float p_lifeTime);
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
+
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;
 	RakNet::Packet *m_packet;
@@ -234,5 +244,14 @@ private:
 
 	float m_dealtDamage;
 	DirectX::XMFLOAT3 m_dealtDamagePosition;
+	bool m_suddenDeath;
+	int m_suddenDeathBoxIndex;
+
+	DirectX::XMFLOAT3 m_latestPos;
+	DirectX::XMFLOAT3 m_latestDir;
+	bool m_sendDir;
+	bool m_sendPos;
+	double m_timeToSendPos;
+	double m_posTimer;
 };
 #endif

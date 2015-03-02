@@ -19,6 +19,7 @@ class PlayerManager;
 class SpikeManager;
 class ProjectileManager;
 class VolleyManager;
+class PointOfInterestManager;
 
 class CollisionManager
 {
@@ -41,6 +42,8 @@ public:
 	void SetDeltaTime(float p_deltaTime);
 
 	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
+	void SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList, std::vector<int> p_inactiveBoxIndexes);
+	void POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager);
 
 private:
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);
@@ -50,6 +53,8 @@ private:
 	bool IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos);
 	bool RayOBBTest(Ray *p_ray, OBB p_Obb);
 	bool RaySphereTest(Ray *p_ray, Sphere p_sphere);
+
+	bool DoesIndexExistInList(int p_index, std::vector<int> p_list);
 
 	static CollisionManager* m_instance;
 	void SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList);

@@ -5,6 +5,7 @@
 #include "AnimatedObject.h"
 #include "Network.h"
 #include "Trail.h"
+#include "Sound.h"
 
 class Ability;
 class InputManager;
@@ -32,6 +33,7 @@ public:
 	void Render();
 	virtual void RenderAttackLocations();
 	void RenderDepth();
+	void RenderDepthOutlining();
 	void RenderOutlining();
 	void RenderAbilityBar();
 	//void SetDamage(float p_damage);

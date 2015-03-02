@@ -50,7 +50,17 @@ enum PLAYSOUND
 	PLAYSOUND_MALE_DEATH_SOUND,
 	PLAYSOUND_FEMALE_DEATH_SOUND,
 	PLAYSOUND_MALE_HURT_SOUND,
-	PLAYSOUND_FEMALE_HURT_SOUND
+	PLAYSOUND_FEMALE_HURT_SOUND,
+	PLAYSOUND_COUNTDOWN_BEEP_SOUND,
+	PLAYSOUND_RUNE_SHIELD_SOUND,
+	PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND,
+	PLAYSOUND_RUNE_SHIELD_PICKUP_SOUND,
+	PLAYSOUND_RUNE_HEAL_SOUND,
+	PLAYSOUND_RUNE_HEAL_SPAWN_SOUND,
+	PLAYSOUND_RUNE_HEAL_PICKUP_SOUND,
+	PLAYSOUND_RUNE_INVISIBLE_SOUND,
+	PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND,
+	PLAYSOUND_RUNE_INVISIBLE_PICKUP_SOUND,
 };
 
 enum AnimationState {
@@ -65,15 +75,21 @@ enum AnimationState {
 };
 
 enum EmitterType{
-	BrazierFire,
-	Fireflies,
-	FireSpark,
-	Smoke,
-	LeafTree,
-	LeafSakura,
-	LeafAcerPalmatum,
-	WorldMist,
-	WorldDust
+	EmitterType_BrazierFire,
+	EmitterType_Fireflies,
+	EmitterType_FireSpark,
+	EmitterType_Smoke,
+	EmitterType_LeafTree,
+	EmitterType_LeafSakura,
+	EmitterType_LeafAcerPalmatum,
+	EmitterType_WorldMist,
+	EmitterType_WorldDust
+};
+
+enum PointOfInterestType{
+	PointOfInterestType_Heal,
+	PointOfInterestType_Invisible,
+	PointOfInterestType_Shield
 };
 
 #endif // !COMMONENUMS_H_

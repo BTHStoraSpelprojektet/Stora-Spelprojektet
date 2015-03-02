@@ -8,6 +8,7 @@
 
 Object::Object(){}
 Object::~Object(){}
+
 bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 {
 	SetPosition(p_pos);
@@ -49,10 +50,6 @@ void Object::Shutdown()
 
 void Object::ShutdownGameExit()
 {
-	if (m_model != nullptr)
-	{
-		m_model->ShutdownModel();
-	}
 }
 
 void Object::Render()

@@ -9,6 +9,7 @@
 #include "Frustum.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "MenuItem.h"
+#include "PointLights.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -108,9 +109,9 @@ bool MenuState::Initialize()
 	m_objectManager->UpdateFrustum(m_frustum);
 
 	// Initialize directional light
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.18f*0.25, 0.34f*0.25, 0.48f*0.25, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.18f, 0.34f, 0.48f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(0.77f, 0.94f, 0.94f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
@@ -190,6 +191,14 @@ void MenuState::Shutdown()
 		delete m_logo;
 		m_logo = NULL;
 }
+}
+
+void MenuState::ShutdownExit()
+{
+	if (m_objectManager != nullptr)
+	{
+		m_objectManager->ShutdownExit();
+	}
 }
 
 GAMESTATESWITCH MenuState::Update()
@@ -307,6 +316,9 @@ GAMESTATESWITCH MenuState::Update()
 	// Update every object.
 	m_objectManager->UpdateRenderLists();
 
+	// Update every object.
+	m_objectManager->Update();
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -343,15 +355,19 @@ void MenuState::Render()
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 
+	GraphicsEngine::GetInstance()->RenderFoliage();
+
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
-	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
+	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->ApplyDOF();
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 }
 
 void MenuState::EscapeIsPressed()

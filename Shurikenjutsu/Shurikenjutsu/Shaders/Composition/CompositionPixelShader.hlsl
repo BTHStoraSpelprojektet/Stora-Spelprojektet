@@ -8,6 +8,8 @@ cbuffer FrameBuffer : register(b0)
 
 Texture2D m_textures[4] : register(t3);
 
+StructuredBuffer<PointLight> m_pointLights : register(t7);
+
 struct Input
 {
 	float4 m_position: SV_POSITION;
@@ -52,7 +54,7 @@ float4 main(Input p_input) : SV_Target
 	material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	material.m_specular = float4(albedo.a, albedo.a, albedo.a, albedo.a * 255.0f);
 
-	float4 A = m_directionalLight.m_ambient;
+	float4 A = 0.0f;
 	float4 D = 0.0f;
 	float4 S = 0.0f;
 
@@ -60,7 +62,7 @@ float4 main(Input p_input) : SV_Target
 
 	ComputeDirectionalLight(material, m_directionalLight, normal.xyz, toCamera, A, D, S);
 
-	albedo.xyz = albedo.xyz*((A.xyz*ssao + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum);
+	albedo.xyz = albedo.xyz*((A.xyz + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum)*ssao;
 	albedo.w = 1.0f;
 
 	return float4(albedo.xyz, 1.0f);

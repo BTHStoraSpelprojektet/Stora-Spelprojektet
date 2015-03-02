@@ -15,6 +15,7 @@
 #include "Frustum.h"
 #include "Sound.h"
 #include "PlayerManager.h"
+#include "PointLights.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -38,8 +39,8 @@ bool ChooseState::Initialize()
 	m_isRandoming = false;
 	m_screenHeight = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	m_screenWidth = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
-	m_portraitHeight = m_screenHeight / 5.12f;
-	m_portraitWidth = m_screenWidth / 6.4f;
+	m_portraitHeight = 200.0f;
+	m_portraitWidth = 200.0f;
 	m_buttonWidth = m_screenWidth / 4.27f;
 	m_buttonHeight = m_screenHeight / 10.24f; 
 	m_nextWidth = m_screenWidth / 12.80f;
@@ -145,9 +146,9 @@ bool ChooseState::Initialize()
 	m_objectManager->Initialize(&level);
 
 	// Initialize directional light
-	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 1.0f);
-	m_directionalLight.m_diffuse = DirectX::XMVectorSet(1.125f, 1.125f, 1.125f, 1.0f);
-	m_directionalLight.m_specular = DirectX::XMVectorSet(5.525f, 5.525f, 5.525f, 1.0f);
+	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.18f*0.25, 0.34f*0.25, 0.48f*0.25, 1.0f);
+	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.18f, 0.34f, 0.48f, 1.0f);
+	m_directionalLight.m_specular = DirectX::XMVectorSet(0.77f, 0.94f, 0.94f, 1.0f);
 	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
 	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
@@ -273,6 +274,26 @@ void ChooseState::Shutdown()
 			m_abilityDescription[i] = nullptr;
 		}
 	}
+
+	if (m_questionMark != nullptr)
+	{
+		m_questionMark->Shutdown();
+		delete m_questionMark;
+		m_questionMark = nullptr;
+	}
+}
+
+void ChooseState::ShutdownExit()
+{
+	if (m_objectManager != nullptr)
+	{
+		m_objectManager->ShutdownExit();
+	}
+}
+
+ObjectManager* ChooseState::GetObjectManager()
+{
+	return m_objectManager;
 }
 
 GAMESTATESWITCH ChooseState::Update()
@@ -436,12 +457,18 @@ void ChooseState::Render()
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render(true);
+
+	GraphicsEngine::GetInstance()->RenderFoliage();
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
+
 	GraphicsEngine::GetInstance()->Composition();
+	GraphicsEngine::GetInstance()->ApplyDOF();
+
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();

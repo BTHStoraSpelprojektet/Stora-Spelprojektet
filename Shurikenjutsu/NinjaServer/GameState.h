@@ -14,6 +14,7 @@ class SpikeManager;
 class ProjectileManager;
 class VolleyManager;
 class StickyTrapManager;
+class PointOfInterestManager;
 
 class GameState
 {
@@ -39,6 +40,10 @@ public:
 	void SyncTime(RakNet::RakNetGUID p_guid);
 	void SendCurrentTeamScore(RakNet::RakNetGUID p_guid);
 	void UserConnected(RakNet::RakNetGUID p_guid);
+
+	void SendSuddenDeathMessage();
+	void SendSuddenDeathBoxActivation(int p_boxIndex);
+	int GetNewSuddenDeathBoxIndex();
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();
@@ -54,12 +59,19 @@ protected:
 	ProjectileManager* m_projectileManager;
 	StickyTrapManager* m_stickyTrapManager;
 	VolleyManager* m_volleyManager;
+	PointOfInterestManager* m_POIManager;
 
 	std::map<int, int> m_winningTeams;
 	double m_timeMin;
 	double m_timeSec;
 	bool m_roundRestarting;
-	
+	bool m_isSuddenDeath;
+	std::vector<Box> m_suddenDeathBoxes;
+	std::vector<int> m_suddenDeathInActiveBoxes;
+	float m_suddenDeathTimer;
+	float m_suddenDeathMaxBoxExtentX;
+	float m_suddenDeathMaxBoxExtentZ;
+	bool m_runesSpawned;
 };
 
 #endif

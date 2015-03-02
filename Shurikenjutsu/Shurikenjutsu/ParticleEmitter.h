@@ -34,10 +34,10 @@ public:
 	unsigned int GetVertices();
 	DirectX::XMFLOAT4X4 GetWorldMatrix();
 	ID3D11ShaderResourceView* GetParticleTexture();
+	void SetSuddenDeathBoxLimits(float p_xMax, float p_xMin, float p_zMax, float p_zMin);
 
 private:
 
-	bool m_emit;
 	void ClearOldParticles();
 	void EmitParticles();
 	void UpdateParticles();
@@ -53,6 +53,8 @@ private:
 
 	ID3D11ShaderResourceView* m_particleTexture;
 	DirectX::XMFLOAT2 m_particleSize;
+
+	bool m_emit;
 
 	float m_velocity;
 	float m_velocityVariation;
@@ -124,12 +126,19 @@ private:
 	ID3D11Buffer* m_vertexBuffer;
 	unsigned int m_vertices;
 
-	float getWindOffsetX(float timePassed, float timeToLive);
-	float getWindOffsetZ(float timePassed, float timeToLive);
-	float fadeIn(Particle* particle, float timeToFade);
-	float fadeOut(Particle* particle, float timeToFade);
+	float GetWindOffsetX(float p_timePassed, float p_timeToLive);
+	float GetWindOffsetZ(float p_timePassed, float p_timeToLive);
+	float FadeIn(Particle* p_particle, float p_timeToFade);
+	float FadeOut(Particle* p_particle, float p_timeToFade);
 
-	void initParticles(float particlesPerSecond, float maxParticles, DirectX::XMFLOAT3 emitionPositionOffset, float velocity, float velocityVariation, float timeToLive, ID3D11ShaderResourceView* particleTexture);
-	void ParticleEmitter::fallingLeafUpdate();
+	void InitParticles(float p_particlesPerSecond, float p_maxParticles, DirectX::XMFLOAT3 p_emitionPositionOffset, float p_velocity, float p_velocityVariation, float p_timeToLive, ID3D11ShaderResourceView* p_particleTexture);
+	void FallingLeafUpdate();
+	
+
+
+	float m_SDxMax;
+	float m_SDxMin;
+	float m_SDzMax;
+	float m_SDzMin;
 };
 #endif

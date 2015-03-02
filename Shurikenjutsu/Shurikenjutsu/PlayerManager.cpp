@@ -17,7 +17,7 @@ bool PlayerManager::Initialize(bool p_inMenu)
 	m_enemyList = NULL;
 	if (!p_inMenu)
 	{
-	AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+		AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 	return true;
 }
@@ -53,7 +53,7 @@ void PlayerManager::Update(bool p_inMenu)
 		// Check if the round have restarted
 		if (Network::GetInstance()->RoundRestarted())
 		{
-			ResetCooldowns();
+			ResetCooldowns(p_inMenu);
 		}
 
 		std::vector<PlayerNet> enemyPlayers = Network::GetInstance()->GetOtherPlayers();
@@ -100,9 +100,9 @@ void PlayerManager::Update(bool p_inMenu)
 			m_enemyList[i]->Update();
 
 			if (m_enemyList[i]->m_soundEmitter != NULL) {
-				m_enemyList[i]->m_soundEmitter->m_x = enemyPlayers[i].x;
-				m_enemyList[i]->m_soundEmitter->m_y = enemyPlayers[i].y;
-				m_enemyList[i]->m_soundEmitter->m_z = enemyPlayers[i].z;
+				m_enemyList[i]->m_soundEmitter->m_pos.x = enemyPlayers[i].x;
+				m_enemyList[i]->m_soundEmitter->m_pos.y = enemyPlayers[i].y;
+				m_enemyList[i]->m_soundEmitter->m_pos.z = enemyPlayers[i].z;
 			}
 		}
 	}
@@ -138,7 +138,7 @@ void PlayerManager::Render(bool p_inMenu)
 
 void PlayerManager::RenderOutliningPassOne()
 {
-	m_player->Render();
+	m_player->RenderDepthOutlining();
 }
 
 void PlayerManager::RenderDepth(bool p_inMenu)
@@ -341,14 +341,16 @@ void PlayerManager::UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOA
 	m_player->UpdateHealthBar(p_view, p_projection);
 }
 
-void PlayerManager::ResetCooldowns()
+void PlayerManager::ResetCooldowns(bool p_inMenu)
 {
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
 		m_enemyList[i]->ResetCooldowns();
 	}
-
-	m_player->ResetCooldowns();
+	if (!p_inMenu)
+	{
+		m_player->ResetCooldowns();
+	}
 }
 
 void PlayerManager::UpdateFrustum(Frustum*  p_frustum)

@@ -265,14 +265,14 @@ void TrailRenderer::Shutdown()
 
 	if (m_matrixBuffer)
 	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = nullptr;
+		//m_matrixBuffer->Release();
+		//m_matrixBuffer = nullptr;
 	}
 
 	if (m_samplerState)
 	{
-		m_samplerState->Release();
-		m_samplerState = nullptr;
+		/*m_samplerState->Release();
+		m_samplerState = nullptr;*/
 	}
 }
 

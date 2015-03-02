@@ -101,7 +101,7 @@ ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int 
 			ConsolePrintError("Failed create shader resource loadtexture - model");
 		}
 
-		//texture->Release();
+		texture->Release();
 	}
 
 	return textureSRV;

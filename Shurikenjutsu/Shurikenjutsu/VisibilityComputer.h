@@ -104,6 +104,8 @@ private:
 
 	void UpdatePolygonMatrices(ID3D11DeviceContext* p_context);
 
+	void UVAnimate();
+
 	std::vector<Point> m_intersections;
 	std::vector<DirectX::XMFLOAT3> m_vertices;
 
@@ -135,5 +137,9 @@ private:
 	RenderTarget m_renderTarget; 
 	RenderTarget m_minimapTarget;
 	ID3D11ShaderResourceView* m_texture;
+
+	Point m_topLeft;
+	Point m_bottomRight;
+	float m_UVOffset;
 };
 #endif

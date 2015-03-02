@@ -40,7 +40,7 @@ public:
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	void BroadcastPlayers();
 	void RespawnPlayer(RakNet::RakNetGUID p_guid);
-	void DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility);
+	void DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_damage, RakNet::RakNetGUID p_attackingGuid, ABILITIES p_usedAbility, bool p_suddenDeathDamage);
 	bool CanSendDotDamage();
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
 	int GetPlayerIndex(RakNet::RakNetGUID p_guid);
@@ -59,6 +59,7 @@ public:
 	void SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage);
 	
 	void DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility);
+	void ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
@@ -67,6 +68,7 @@ private:
 	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable);
 	
 	int GetTeamForPlayer();
+	int GetIdForPlayer();
 
 	RakNet::RakPeerInterface *m_serverPeer;
 

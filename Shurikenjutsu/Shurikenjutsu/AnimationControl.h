@@ -12,6 +12,9 @@ public:
 	bool CreateNewStack(AnimationStack p_newStack);
 	std::vector<DirectX::XMFLOAT4X4> UpdateAnimation();
 
+	bool IsLight();
+	DirectX::XMFLOAT3 GetLightPosition();
+
 	bool IsAnimated();
 	void SetIkDirection(DirectX::XMFLOAT3 p_direction);
 	void ChangeAnimationState(AnimationState p_newState);
@@ -67,6 +70,9 @@ private:
 
 	bool m_isAlive;
 	bool m_stopAnimation;
+
+	bool m_light;
+	DirectX::XMFLOAT3 m_lightPos;
 };
 
 #endif;
