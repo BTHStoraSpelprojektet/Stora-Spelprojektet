@@ -8,6 +8,7 @@
 #include <vector>
 #include "InstanceManager.h"
 #include "RenderTarget.h"
+#include "CustomFont.h"
 
 class WICTextureLoader;
 class GUIShader;
@@ -102,6 +103,7 @@ public:
 	void ClearOutlining();
 
 	IFW1FontWrapper* GetFontWrapper();
+	IDWriteFontCollection* GetFontCollection();
 	void AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags);
 	void RenderTextGeometry(UINT p_flags);
 
@@ -148,6 +150,7 @@ private:
 
 	IFW1FontWrapper* m_fontWrapper;
 	IFW1TextGeometry* m_textGeometry;
+	IDWriteFontCollection* m_fontCollection;
 	InstanceManager* m_instanceManager;
 
 	bool m_screenChanged;

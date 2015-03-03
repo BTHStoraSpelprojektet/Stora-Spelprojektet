@@ -217,6 +217,7 @@
     <ClInclude Include="FoliageShader.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
+    <ClInclude Include="CustomFont.h" />
     <ClInclude Include="PointOfInterest.h" />
     <ClInclude Include="PointOfInterestManager.h" />
     <ClInclude Include="PointLights.h" />
