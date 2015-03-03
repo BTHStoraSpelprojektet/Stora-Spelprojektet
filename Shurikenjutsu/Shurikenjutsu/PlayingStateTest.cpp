@@ -161,7 +161,7 @@ bool PlayingStateTest::Initialize(std::string p_levelName)
 	}
 
 	m_suddenDeath = new SuddenDeathState();
-	m_suddenDeath->Initialize(wallList);
+	m_suddenDeath->Initialize();
 
 	return true;
 }
@@ -256,15 +256,11 @@ void PlayingStateTest::ShutdownExit()
 
 GAMESTATESWITCH PlayingStateTest::Update()
 {
-	int tempSuddenDeathBoxIndex = Network::GetInstance()->GetSuddenDeathBoxIndex();
-	if (tempSuddenDeathBoxIndex != 99)
-	{
-		m_suddenDeath->StartEmittingParticles(tempSuddenDeathBoxIndex);
-	}
 	if (Network::GetInstance()->IsSuddenDeath())
 	{
 		m_suddenDeath->Update();
 	}
+
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -561,8 +557,6 @@ void PlayingStateTest::Render()
 		m_inGameMenu->Render();
 	}
 
-
-
 	if (m_scoreBoardIsActive)
 	{
 		ScoreBoard::GetInstance()->Render();
@@ -570,8 +564,9 @@ void PlayingStateTest::Render()
 
 	if (Network::GetInstance()->IsSuddenDeath())
 	{
-		m_suddenDeath->Render();
+		m_suddenDeath->Render(m_camera);
 	}
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
