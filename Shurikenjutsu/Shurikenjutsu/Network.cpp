@@ -249,8 +249,9 @@ void Network::ReceviePacket()
 				UpdatePlayerTeam(guid, team);
 				UpdatePlayerChar(guid, charNr, toolNr);
 				UpdatePlayerID(guid, id);
+				UpdatePlayerKD(guid, deaths, kills);
 
-				ScoreBoard::GetInstance()->AddKD(guid, deaths, kills);
+				//ScoreBoard::GetInstance()->AddKD(guid, deaths, kills);
 
 				playerGuids.push_back(guid);
 			}
@@ -1225,6 +1226,27 @@ void Network::UpdatePlayerPos(int p_id, float p_x, float p_y, float p_z)
 				m_enemyPlayers[i].y = p_y;
 				m_enemyPlayers[i].z = p_z;
 
+				break;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerKD(RakNet::RakNetGUID p_owner, int p_deaths, int p_kills)
+{
+	if (p_owner == m_clientPeer->GetMyGUID())
+	{
+		m_myPlayer.kills = p_kills;
+		m_myPlayer.deaths = p_deaths;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].kills = p_kills;
+				m_enemyPlayers[i].deaths = p_deaths;
 				break;
 			}
 		}
