@@ -60,8 +60,8 @@ bool ChooseState::Initialize()
 	m_currentNinja = 0;
 	m_nrOfTools = 3;
 	m_currentTool = 0;
-	m_redTeamScore->Initialize("0", 50.0f, -m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xff0000ff);
-	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xffff0000);
+	m_redTeamScore->Initialize("0", L"RagingRedLotus BB", 50.0f, -m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xff0000ff);
+	m_blueTeamScore->Initialize("0", L"RagingRedLotus BB", 50.0f, m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xffff0000);
 		
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f + offset;

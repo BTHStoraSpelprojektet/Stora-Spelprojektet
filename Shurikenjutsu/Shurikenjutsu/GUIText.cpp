@@ -8,13 +8,14 @@
 GUIText::GUIText(){}
 GUIText::~GUIText(){}
 
-bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
+bool GUIText::Initialize(std::string p_text, const WCHAR* p_font, float p_size, float p_x, float p_y, UINT32 p_color)
 {
 	IDWriteFactory* wf = NULL;
 	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
-	
+	//IDWriteFontCollection* collection;
+
 	wf->CreateTextFormat(
-		L"RagingRedLotus BB",
+		p_font,
 		GraphicsEngine::GetInstance()->GetFontCollection(),
 		DWRITE_FONT_WEIGHT_BOLD,
 		DWRITE_FONT_STYLE_NORMAL,
