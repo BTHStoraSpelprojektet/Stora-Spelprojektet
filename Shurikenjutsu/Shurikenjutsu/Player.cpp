@@ -65,7 +65,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dashDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_dashDistanceLeft = 0.0f;
 	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-
+	m_invis = false;
 	throwDistance = 0.0f;
 
 	m_updateVisibility = false;
