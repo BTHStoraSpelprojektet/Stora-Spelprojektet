@@ -235,8 +235,8 @@ void ScoreBoard::KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNet
 		{
 			if (players[i].guid == p_ninjaKiller)
 			{
-				m_redColorPlayers[p_ninjaKiller].kill += 1;
-				m_blueColorPlayers[p_ninjaKilled].death += 1;
+				m_redColorPlayers[p_ninjaKiller].kill = p_kills;
+				m_blueColorPlayers[p_ninjaKilled].death = p_deaths;
 				m_redColorPlayers[p_ninjaKiller].ninjaText.SetText(std::to_string(m_redColorPlayers[p_ninjaKiller].kill) + "/" + std::to_string(m_redColorPlayers[p_ninjaKiller].death));
 				m_blueColorPlayers[p_ninjaKilled].ninjaText.SetText(std::to_string(m_blueColorPlayers[p_ninjaKilled].kill) + "/" + std::to_string(m_blueColorPlayers[p_ninjaKilled].death));
 				break;
@@ -247,8 +247,8 @@ void ScoreBoard::KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNet
 		{
 			if (players[i].guid == p_ninjaKiller)
 			{
-				m_blueColorPlayers[p_ninjaKiller].kill += 1;
-				m_redColorPlayers[p_ninjaKilled].death += 1;
+				m_blueColorPlayers[p_ninjaKiller].kill = p_kills;
+				m_redColorPlayers[p_ninjaKilled].death = p_deaths;
 				m_redColorPlayers[p_ninjaKilled].ninjaText.SetText(std::to_string(m_redColorPlayers[p_ninjaKilled].kill) + "/" + std::to_string(m_redColorPlayers[p_ninjaKilled].death));
 				m_blueColorPlayers[p_ninjaKiller].ninjaText.SetText(std::to_string(m_blueColorPlayers[p_ninjaKiller].kill) + "/" + std::to_string(m_blueColorPlayers[p_ninjaKiller].death));
 				break;
