@@ -1180,3 +1180,8 @@ void Player::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	m_stickyTrapList = p_stickyTrapList;
 }
+
+void Player::SetInvis(bool p_invis)
+{
+	m_invis = p_invis;
+}
