@@ -590,6 +590,11 @@ void PlayerManager::HealPlayer()
 			if (m_players[i].hotHeal > 0.0)
 			{
 					m_players[i].currentHP += m_players[i].hotHeal;
+					if (m_players[i].currentHP > m_players[i].maxHP)
+					{
+						m_players[i].currentHP = m_players[i].maxHP;
+						m_players[i].hotHeal = 0.0;
+					}
 					UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
 					m_haveSentHotDamage = true;
 			}

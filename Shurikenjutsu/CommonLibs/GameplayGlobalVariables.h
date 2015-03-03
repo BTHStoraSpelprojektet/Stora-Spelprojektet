@@ -50,7 +50,7 @@ const float MEGASHURIKEN_SPEED = 25.0f;
 
 // Fan Boomerang
 const float FANBOOMERANG_DAMAGE = 50.0f;
-const float FANBOOMERANG_COOLDOWN = 2.0f;
+const float FANBOOMERANG_COOLDOWN = 4.0f;
 const float FANBOOMERANG_DURATION = 3.0f;
 const float FANBOOMERANG_SPEED = 20.0f;
 
