@@ -17,6 +17,7 @@
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
 #include "ConsoleFunctions.h"
+#include "PointLights.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -1004,6 +1005,17 @@ void Player::Render()
 	}
 
 	m_trail->Render();
+
+	PointLight newLight;
+	newLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 0.0f);
+	newLight.m_diffuse = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	newLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
+
+	newLight.m_position = m_position;
+	newLight.m_position.y += 1.8f;
+	newLight.m_range = 1.5f;
+
+	PointLights::GetInstance()->AddLight(newLight);
 
 	AnimatedObject::RenderPlayer(m_team);
 }
