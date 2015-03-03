@@ -256,6 +256,7 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].maxHP);
 		bitStream.Write(m_players[i].currentHP);
 		bitStream.Write(m_players[i].isAlive);
+		bitStream.Write(m_players[i].invis);
 		bitStream.Write(m_players[i].toolNr);
 		bitStream.Write(m_players[i].deaths);
 		bitStream.Write(m_players[i].kills);
