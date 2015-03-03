@@ -710,10 +710,12 @@ void GraphicsEngine::DoReportLiveObjects()
 
 void GraphicsEngine::Composition()
 {
-	
 	m_directX.SetRenderTargetForComposition();
 	m_directX.TurnOnPointLightAlphaBlending();
 	m_screenSpace->Render(m_directX.GetContext(), m_directX.GetGBufferSRV2(), m_directX.GetGBufferSRV1(), m_directX.GetDepthSRV(), m_directX.GetPPSRV1());
+
+
+	m_screenSpace->RenderLights(m_directX.GetContext());
 	TurnOffAlphaBlending();
 }
 

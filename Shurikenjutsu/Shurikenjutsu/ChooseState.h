@@ -12,6 +12,7 @@
 class Menu;
 class MenuItem;
 class GUIText;
+class MenuButton;
 class CharacterAbilityDescription;
 class ToolTipPopUp;
 class Camera;
@@ -72,6 +73,7 @@ private:
 	float m_screenWidth;
 	bool m_isRandoming;
 	CurrentTeam m_currentTeam;
+	MenuButton* m_playButton;
 
 	Camera *m_camera;
 	ObjectManager* m_objectManager;
