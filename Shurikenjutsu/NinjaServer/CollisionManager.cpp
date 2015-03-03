@@ -1144,6 +1144,7 @@ void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, Pla
 		}
 	}
 }
+
 float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
 {
 	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_attackingPlayer.dirX, 0.1f, p_attackingPlayer.dirZ);
