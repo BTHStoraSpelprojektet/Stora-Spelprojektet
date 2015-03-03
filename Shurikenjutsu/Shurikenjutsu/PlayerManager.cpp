@@ -148,19 +148,22 @@ void PlayerManager::RenderOutliningPassOne()
 void PlayerManager::RenderDepth(bool p_inMenu)
 {
 	if (!p_inMenu)
-{
-	m_player->RenderDepth();
+	{
+		m_player->RenderDepth();
 	}
 
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
 		if (!p_inMenu)
 		{
-		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
-		{
-			m_enemyList[i]->RenderDepth();
+			if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			{
+				if (!m_enemyList[i]->IsInvis())
+				{
+					m_enemyList[i]->RenderDepth();
+				}
+			}
 		}
-	}
 		else
 		{
 			m_enemyList[i]->RenderDepth();
