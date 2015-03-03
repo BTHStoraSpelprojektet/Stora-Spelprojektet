@@ -256,3 +256,19 @@ void ScoreBoard::KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNet
 		}
 	}
 }
+
+void ScoreBoard::AddKD(RakNet::RakNetGUID p_ninja, int p_deaths, int p_kills)
+{
+	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
+	PlayerNet player = Network::GetInstance()->GetMyPlayer();
+	players.push_back(player);
+
+	for (unsigned int i = 0; i < players.size(); i++)
+	{
+		if (players[i].guid == p_ninja)
+		{
+			players[i].kills = p_kills;
+			players[i].deaths = p_deaths;
+		}
+	}
+}
