@@ -174,4 +174,7 @@ const float PARTICLE_WORLDDUST_SIZE_Y = 0.05f;
 // Sphere for character
 const float CHARACTER_ENEMY_BOUNDINGSPHERE = 1.0f;
 
+// Runes
+const float LOTUS_HEALTICK = 10.0f;
+
 #endif

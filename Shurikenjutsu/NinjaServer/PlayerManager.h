@@ -2,7 +2,6 @@
 #define PLAYERMANAGERSERVER_H_
 
 #include <iostream>
-
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
 #include "..\CommonLibs\ServerMessages.h"
@@ -61,6 +60,9 @@ public:
 	void DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility);
 	void ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID);
 
+	void RuneLotusPickedUp(RakNet::RakNetGUID p_player);
+	void HealPlayer(RakNet::RakNetGUID p_player, float p_heal);
+
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
@@ -92,6 +94,10 @@ private:
 	double m_dotIntervall;
 	double m_lastDotSent;
 	
+	double m_hotIntervall;
+	double m_lastHotSent;
+	bool m_canSendHotDamage;
+	bool m_haveSentHotDamage;
 };
 
 #endif
