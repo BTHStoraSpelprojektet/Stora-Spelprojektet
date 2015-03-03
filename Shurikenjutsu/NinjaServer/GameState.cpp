@@ -338,6 +338,7 @@ void GameState::ResetTime()
 	m_timeSec = 0;
 	m_timeMin = 0;
 	m_isSuddenDeath = false;
+	m_runesSpawned = false;
 	m_suddenDeathTimer = 0.0f;
 	for (unsigned int i = 0; i < 8; i++)
 	{

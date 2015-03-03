@@ -246,6 +246,7 @@ void ParticleEmitter::EmitParticles()
 			position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
 			position.z += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z;
 
+
 			float velocity = m_velocity + (((float)rand() - (float)rand()) / RAND_MAX) * m_velocityVariation;
 			float rotation = ((float)rand() - (float)rand() / RAND_MAX) * (DirectX::XM_PI * 2);
 
@@ -273,6 +274,7 @@ void ParticleEmitter::EmitParticles()
 			{
 				// Copy data.
 				m_particleList[i].m_position = m_particleList[j].m_position;
+				m_particleList[i].m_initPosition = m_particleList[j].m_initPosition;
 				m_particleList[i].m_direction = m_particleList[j].m_direction;
 				m_particleList[i].m_color = m_particleList[j].m_color;
 				m_particleList[i].m_velocity = m_particleList[j].m_velocity;
@@ -343,6 +345,13 @@ void ParticleEmitter::EmitParticles()
 					// Randomize a color.
 					float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.05f;
 
+					if (position.x == 0 && position.z == 0){
+						std::cout << "Fail";
+						position.x += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.x;
+						position.y += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.y;
+						position.z += (((float)rand() - (float)rand()) / RAND_MAX) * m_emitionPositionOffset.z;
+					}
+
 					m_particleList[index].m_position = position;
 					m_particleList[index].m_initPosition = position;
 
@@ -356,7 +365,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = rotation;
-					m_particleList[index].m_opacity = 1.0f;
+					m_particleList[index].m_opacity = 0.0f;
 
 					break;
 				}
@@ -906,6 +915,7 @@ void ParticleEmitter::ClearOldParticles()
 				for (unsigned int j = i; j < m_maxParticles - 1; j++)
 				{
 					m_particleList[j].m_position = m_particleList[j + 1].m_position;
+					m_particleList[j].m_initPosition = m_particleList[j + 1].m_initPosition;
 					m_particleList[j].m_direction = m_particleList[j + 1].m_direction;
 					m_particleList[j].m_color = m_particleList[j + 1].m_color;
 					m_particleList[j].m_velocity = m_particleList[j + 1].m_velocity;
@@ -1002,12 +1012,22 @@ void ParticleEmitter::UpdateBuffers()
 
 			case PARTICLE_PATTERN_WORLD_DUST:
 			{
+
+				m_particleList[i].m_opacity = FadeIn(&m_particleList[i], 0.01f);
 				if (m_particleList[i].m_position.x>m_emitBorderLeft)
 				{
+
+					if (m_particleList[i].m_initPosition.x == 0 && m_particleList[i].m_initPosition.y == 0 && m_particleList[i].m_initPosition.z == 0){
+						std::cout << "__Fail  ";
+					}
+
 					m_particleList[i].m_position.x = m_particleList[i].m_initPosition.x;
 					m_particleList[i].m_position.y = m_particleList[i].m_initPosition.y;
 					m_particleList[i].m_position.z = m_particleList[i].m_initPosition.z;
 
+					if (m_particleList[i].m_position.x == 0 && m_particleList[i].m_position.y == 0 && m_particleList[i].m_position.z == 0){
+						std::cout << "Fail";
+					}
 					m_particleList[i].m_timePassed = 0;
 				}
 

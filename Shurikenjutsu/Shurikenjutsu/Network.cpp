@@ -214,7 +214,7 @@ void Network::ReceviePacket()
 			float x, y, z;
 			float dirX, dirY, dirZ;
 			float maxHP, currentHP;
-			int team, charNr,toolNr;
+			int team, charNr, toolNr, kills, deaths;
 			bool isAlive;
 			RakNet::RakNetGUID guid;
 			int id;
@@ -238,6 +238,8 @@ void Network::ReceviePacket()
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
 				bitStream.Read(toolNr);
+				bitStream.Read(deaths);
+				bitStream.Read(kills);
 
 
 				// (Add and) update players position
@@ -248,6 +250,7 @@ void Network::ReceviePacket()
 				UpdatePlayerChar(guid, charNr, toolNr);
 				UpdatePlayerID(guid, id);
 
+				ScoreBoard::GetInstance()->AddKD(guid, deaths, kills);
 
 				playerGuids.push_back(guid);
 			}
@@ -1002,12 +1005,15 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID takerNinja, killerNinja;
+			int kills, deaths;
 
 			bitStream.Read(messageID);
 			bitStream.Read(takerNinja);
 			bitStream.Read(killerNinja);
+			bitStream.Read(deaths);
+			bitStream.Read(kills);
 
-			ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja);
+			ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja, deaths, kills);
 
 			break;
 		}
@@ -1937,6 +1943,7 @@ void Network::ClearListsAtNewRound()
 	m_spikeTrapList.clear();
 	m_stickyTrapList.clear();
 	m_fanList.clear();
+	m_objectManager->RunesRestartRound();
 }
 
 int Network::GetLastPing()

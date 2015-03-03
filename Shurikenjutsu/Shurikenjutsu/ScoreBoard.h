@@ -12,8 +12,8 @@
 class ScoreBoard
 {
 public:
-	ScoreBoard();
-	~ScoreBoard();
+	ScoreBoard(const ScoreBoard&) = delete;
+	ScoreBoard& operator=(const ScoreBoard&) = delete;
 
 	struct Ninja
 	{
@@ -30,9 +30,13 @@ public:
 	void Update();
 	void Render();
 	GUIText textst;
-	void KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNetGUID p_ninjaKilled);
+	void KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNetGUID p_ninjaKilled, int p_deaths, int p_kills);
+	void AddKD(RakNet::RakNetGUID p_ninja, int p_deaths, int p_kills);
 
 private:
+	ScoreBoard();
+	~ScoreBoard();
+
 	static ScoreBoard* m_instance;
 
 	GUIElement m_background;

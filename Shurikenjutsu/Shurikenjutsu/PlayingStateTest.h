@@ -61,7 +61,6 @@ private:
 	Countdown* m_countdown;
 	InGameMenu *m_inGameMenu;
 	VictoryScreenMenu* m_victoryMenu;
-	ScoreBoard* m_scoreBoard;
 	SuddenDeathState* m_suddenDeath;
 
 	const float twoPi = DirectX::XM_PI * 2.0f;

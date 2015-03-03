@@ -86,6 +86,10 @@ void PointOfInterestManager::SpawnRunes(PointOfInterestType p_poiType, float p_x
 
 void PointOfInterestManager::RunePickedUp(PointOfInterestType p_poiType)
 {
+	if (m_runes.size() == 0)
+	{
+		return;
+	}
 	switch (p_poiType)
 	{
 	case PointOfInterestType_Heal:
