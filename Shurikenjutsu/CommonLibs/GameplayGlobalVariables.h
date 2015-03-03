@@ -50,7 +50,7 @@ const float MEGASHURIKEN_SPEED = 25.0f;
 
 // Fan Boomerang
 const float FANBOOMERANG_DAMAGE = 50.0f;
-const float FANBOOMERANG_COOLDOWN = 2.0f;
+const float FANBOOMERANG_COOLDOWN = 4.0f;
 const float FANBOOMERANG_DURATION = 3.0f;
 const float FANBOOMERANG_SPEED = 20.0f;
 
@@ -173,5 +173,8 @@ const float PARTICLE_WORLDDUST_SIZE_Y = 0.05f;
 /////////////////////////////////////////////////////////////// Bounding Boxes
 // Sphere for character
 const float CHARACTER_ENEMY_BOUNDINGSPHERE = 1.0f;
+
+// Runes
+const float LOTUS_HEALTICK = 10.0f;
 
 #endif

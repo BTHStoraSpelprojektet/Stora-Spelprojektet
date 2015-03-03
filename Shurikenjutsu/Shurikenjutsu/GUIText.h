@@ -7,13 +7,14 @@
 #include <D3D11.h>
 struct IDWriteTextLayout;
 struct IDWriteTextFormat;
+
 class GUIText
 {
 public:
 	GUIText();
 	~GUIText();
 
-	bool Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color);
+	bool Initialize(std::string p_text, const WCHAR* p_font, float p_size, float p_x, float p_y, UINT32 p_color);
 	void Render();
 	void Shutdown();
 
@@ -33,7 +34,6 @@ private:
 	int m_textLength;
 	UINT32 m_color;
 	IDWriteTextFormat* m_format;
-	//IDWriteTextLayout* m_textLayout;
 	std::vector<IDWriteTextLayout*> m_layouts;
 };
 

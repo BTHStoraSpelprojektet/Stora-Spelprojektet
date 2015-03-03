@@ -1158,7 +1158,7 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 	{
 		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
 		{
-			if (ray->m_distance != 0)
+			if (ray->m_distance < 0)
 			{
 				rayLengths.push_back(ray->m_distance);
 			}
@@ -1171,7 +1171,7 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 		tmpSphere.m_position.y = 0.1f;
 		if (Collisions::RaySphereCollision(ray, tmpSphere))
 		{
-			if (ray->m_distance != 0)
+			if (ray->m_distance < 0)
 			{
 				rayLengths.push_back(ray->m_distance);
 			}
@@ -1245,6 +1245,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
 					{
 						p_POIManager->PickUpRunes(PointOfInterestType_Heal, playerList[j].guid);
+						p_playerManager->RuneLotusPickedUp(playerList[j].guid);
 					}
 				}
 			}

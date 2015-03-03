@@ -63,6 +63,5 @@ IN_GAME_MENU_ACTION VictoryScreenMenu::Update()
 
 void VictoryScreenMenu::Render()
 {
-	m_background->QueueRender();
 	m_menu->Render();
 }

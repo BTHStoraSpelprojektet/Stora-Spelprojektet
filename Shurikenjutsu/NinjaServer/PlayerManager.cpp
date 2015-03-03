@@ -38,6 +38,12 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_canSendDotDamage = true;
 	m_haveSentDotDamage = false;
 
+	m_hotIntervall = 3.0;
+	m_lastHotSent = 0.0;
+	m_canSendDotDamage = true;
+	m_haveSentDotDamage = false;
+
+
 	return true;
 }
 
@@ -60,12 +66,27 @@ void PlayerManager::Update(double p_deltaTime)
 	{
 		m_canSendDotDamage = false;
 		m_haveSentDotDamage = false;
-}
+	}
 	if (m_lastDotSent < 0)
 	{
 		m_lastDotSent = m_dotIntervall;
 		m_canSendDotDamage = true;
 	}
+
+	// Timer hot
+	m_lastHotSent -= p_deltaTime;
+	if (m_haveSentHotDamage)
+	{
+		m_canSendHotDamage = false;
+		m_haveSentHotDamage = false;
+	}
+	if (m_lastHotSent < 0)
+	{
+		m_lastHotSent = m_hotIntervall;
+		m_canSendHotDamage = true;
+	}
+
+	HealPlayer();
 }
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
@@ -133,6 +154,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
 	player.dotDamage = 0.0f;
+	player.hotHeal = 0.0f;
 	player.toolNr = p_toolNr;
 	player.kills = 0;
 	player.deaths = 0;
@@ -346,7 +368,7 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	return boundingBoxes;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager)
+void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
 	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
@@ -391,7 +413,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		case ABILITIES_MEGASHURIKEN:
 		{
 			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
-			p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
+			p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ, p_deltaTime);
 			break;
 		}
 
@@ -518,6 +540,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 	{
 		if (m_players[i].guid == p_defendingGuid)
 		{
+			m_players[i].hotHeal = 0.0f;
 			m_players[i].currentHP -= p_damage;
 			if (m_players[i].currentHP <= 0)
 			{
@@ -553,6 +576,27 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			}
 			else{
 				SendPlaySound(PLAYSOUND_MALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
+		}
+	}
+}
+
+void PlayerManager::HealPlayer()
+{
+	if (m_canSendHotDamage)
+	{
+		for (unsigned int i = 0; i < m_players.size(); i++)
+		{
+			if (m_players[i].hotHeal > 0.0)
+			{
+					m_players[i].currentHP += m_players[i].hotHeal;
+					if (m_players[i].currentHP > m_players[i].maxHP)
+					{
+						m_players[i].currentHP = m_players[i].maxHP;
+						m_players[i].hotHeal = 0.0;
+					}
+					UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
+					m_haveSentHotDamage = true;
 			}
 		}
 	}
@@ -799,4 +843,15 @@ int PlayerManager::GetIdForPlayer()
 	} while (idTaken);
 
 	return id;
+}
+
+void PlayerManager::RuneLotusPickedUp(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			m_players[i].hotHeal = LOTUS_HEALTICK;
+		}
+	}
 }

@@ -15,6 +15,7 @@
 #include "FoliageShader.h"
 #include "ScreenSpace.h"
 
+
 GraphicsEngine* GraphicsEngine::m_instance;
 
 GraphicsEngine* GraphicsEngine::GetInstance()
@@ -170,7 +171,7 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	// Create the font wrapper.
 	IFW1Factory* FW1Factory = NULL;
 	HRESULT hResult = FW1CreateFactory(FW1_VERSION, &FW1Factory);
-	hResult = FW1Factory->CreateFontWrapper(GraphicsEngine::GetInstance()->GetDevice(), L"Calibri", &m_fontWrapper);
+	hResult = FW1Factory->CreateFontWrapper(m_directX.GetDevice(), L"Arial", &m_fontWrapper);
 	if (FAILED(hResult))
 	{
 		ConsolePrintError("Failed to create the font wrapper!");
@@ -189,15 +190,37 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 	else
 	{
-		ConsolePrintSuccess("Successfully created the font wrapper.");
+		ConsolePrintSuccess("Successfully created the font geometry.");
 	}
 	ConsoleSkipLines(1);
-
 
 	if (FW1Factory != NULL)
 	{
 		FW1Factory->Release();
 	}
+
+	// Get DWrite factory
+	IDWriteFactory *writeFactory;
+	hResult = m_fontWrapper->GetDWriteFactory(&writeFactory);
+
+	// Set up custom font collection
+	IDWriteFontCollectionLoader *collectionLoader = new CCollectionLoader(L"../Shurikenjutsu/Fonts/RagingRedLotusBB.ttf");
+
+	hResult = writeFactory->RegisterFontCollectionLoader(collectionLoader);
+	if (FAILED(hResult))
+	{
+		ConsolePrintError("Failed to create custom font!");
+	}
+
+	hResult = writeFactory->CreateCustomFontCollection(collectionLoader, NULL, 0, &m_fontCollection);
+	if (FAILED(hResult))
+	{
+		ConsolePrintError("Failed to create custom font collection!");
+	}
+
+	writeFactory->UnregisterFontCollectionLoader(collectionLoader);
+	collectionLoader->Release();
+	writeFactory->Release();
 
 	m_instanceManager = new InstanceManager();
 
@@ -260,6 +283,12 @@ void GraphicsEngine::Shutdown()
 	{
 		m_textGeometry->Release();
 		m_textGeometry = nullptr;
+	}
+
+	if (m_fontCollection != nullptr)
+	{
+		m_fontCollection->Release();
+		m_fontCollection = nullptr;
 	}
 
 	if (m_instanceManager != nullptr)
@@ -625,6 +654,11 @@ void GraphicsEngine::UpdateInstanceBuffers(std::vector<Object*> p_ObjectList)
 IFW1FontWrapper* GraphicsEngine::GetFontWrapper()
 {
 	return m_fontWrapper;
+}
+
+IDWriteFontCollection* GraphicsEngine::GetFontCollection()
+{
+	return m_fontCollection;
 }
 
 void GraphicsEngine::AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags)

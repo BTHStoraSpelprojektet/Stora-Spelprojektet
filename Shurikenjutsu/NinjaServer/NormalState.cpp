@@ -52,7 +52,7 @@ bool NormalState::Initialize()
 	m_roundLimit = 5;
 	m_currentRound = 1;
 	m_roundTimer = 10.0f;
-	m_matchTimer = 20.0f;
+	m_matchTimer = 15.0f;
 	m_currentTimer = 10.0f;
 	m_sendTime = (int)m_currentTimer;
 	m_roundRestarting = false;
