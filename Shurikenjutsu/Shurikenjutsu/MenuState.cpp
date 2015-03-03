@@ -76,7 +76,7 @@ bool MenuState::Initialize()
 	m_ipbox = new MenuIpBox();
 	m_ipbox->Initialize(0.0f, 0.0f, 304.0f, 67.0f);
 	m_ipboxText = new GUIText();
-	m_ipboxText->Initialize(m_ipbox->GetIp(), 36.0f, 0.0f, 0.0f, 0xff333333);
+	m_ipboxText->Initialize(m_ipbox->GetIp(), L"RagingRedLotus BB", 36.0f, 0.0f, 0.0f, 0xff333333);
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);

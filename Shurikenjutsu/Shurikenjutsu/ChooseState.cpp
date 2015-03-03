@@ -60,8 +60,8 @@ bool ChooseState::Initialize()
 	m_currentNinja = 0;
 	m_nrOfTools = 3;
 	m_currentTool = 0;
-	m_redTeamScore->Initialize("0", 50.0f, -m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xff0000ff);
-	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xffff0000);
+	m_redTeamScore->Initialize("0", L"RagingRedLotus BB", 50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
+	m_blueTeamScore->Initialize("0", L"RagingRedLotus BB", 50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
 		
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f + offset;
@@ -403,15 +403,15 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		break;
 	case MENUACTION_RANDOM_NINJA:
-		if (m_isRandoming)
+		/*if (m_isRandoming)
 		{
 			m_isRandoming = false;
 		}
 		else
 		{
 			m_isRandoming = true;
-		}
-		//RandomNinja();
+		}*/
+		RandomNinja();	
 		break;
 	case MENUACTION_CLICKED_QUESTIONMARK:
 		m_currentTeam = CURRENTTEAM_NONE;
@@ -528,7 +528,7 @@ void ChooseState::EscapeIsPressed()
 
 void ChooseState::RandomNinja()
 {
-	std::srand((unsigned int)std::time(0));
+	std::srand((unsigned int)std::time(NULL));
 	m_currentTool = std::rand() % 3;
 	m_currentNinja = std::rand() % 3;
 }

@@ -5,16 +5,16 @@
 void FloatingText::Initialize()
 {
 	m_receivedDamageText = new GUIText();
-	m_receivedDamageText->Initialize("received", 30.0f, 20.0f, 115.0f, 0xff0000ff);
+	m_receivedDamageText->Initialize("received", L"RagingRedLotus BB", 30.0f, 20.0f, 115.0f, 0xff0000ff);
 
 	m_dealtDamageText = new GUIText();
-	m_dealtDamageText->Initialize("dealt", 30.0f, 20.0f, 115.0f, 0xff00ffff);
+	m_dealtDamageText->Initialize("dealt", L"RagingRedLotus BB", 30.0f, 20.0f, 115.0f, 0xff00ffff);
 
 	m_healingText = new GUIText();
-	m_healingText->Initialize("healing", 30.0f, 20.0f, 115.0f, 0xff00ff00);
+	m_healingText->Initialize("healing", L"RagingRedLotus BB", 30.0f, 20.0f, 115.0f, 0xff00ff00);
 
 	m_cantUseAbilityText = new GUIText();
-	m_cantUseAbilityText->Initialize("Can't use that ability.", 30.0f, 20.0f, 115.0f, 0xff0000ff);
+	m_cantUseAbilityText->Initialize("Can't use that ability.", L"RagingRedLotus BB", 30.0f, 20.0f, 115.0f, 0xff0000ff);
 }
 void FloatingText::Update(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
