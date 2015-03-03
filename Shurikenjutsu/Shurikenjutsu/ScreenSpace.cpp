@@ -541,7 +541,10 @@ void ScreenSpace::Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceVie
 	p_context->PSSetShader(m_pixelShader, 0, 0);
 
 	p_context->Draw(3, 0);
+}
 
+void ScreenSpace::RenderLights(ID3D11DeviceContext* p_context)
+{
 	// Render point lights
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
