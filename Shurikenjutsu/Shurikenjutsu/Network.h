@@ -172,6 +172,7 @@ private:
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdatePlayerDir(int p_id, float p_dirX, float p_dirY, float p_dirZ);
 
+	void UpdatePlayerKD(RakNet::RakNetGUID p_owner, int p_deaths, int p_kills);
 	void UpdatePlayerID(RakNet::RakNetGUID p_owner, int p_id);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive);

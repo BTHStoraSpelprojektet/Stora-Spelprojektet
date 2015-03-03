@@ -78,12 +78,25 @@ void PointLights::AddLight(PointLight& p_newLight)
 
 void PointLights::SetLightBuffer(DirectX::XMFLOAT4X4 p_viewMatrix)
 {
+	PointLight newLight;
+	newLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	newLight.m_diffuse = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
+	newLight.m_specular = DirectX::XMVectorSet(4.0f, 4.0f, 4.0f, 0.0f);
+
+	newLight.m_position = DirectX::XMFLOAT3(-33.0f, 0.0f, 0.0f);
+	newLight.m_position.y += 8.0f;
+	newLight.m_range = 14.0f;
+
+	PointLights::GetInstance()->AddLight(newLight);
+	newLight.m_position.x *= -1.0f;
+	PointLights::GetInstance()->AddLight(newLight);
+
 	for (unsigned int i = 0; i < m_newPointLights.size(); i++)
 	{
 		m_newPointLights[i].m_position = TransformPosition(m_newPointLights[i].m_position, p_viewMatrix);
 
-		if (m_newPointLights[i].m_position.x < 30.0f || m_newPointLights[i].m_position.x > -30.0f ||
-			m_newPointLights[i].m_position.y < 20.0f || m_newPointLights[i].m_position.y > -20.0f)
+		if (m_newPointLights[i].m_position.x < (30.0f + m_newPointLights[i].m_range) || m_newPointLights[i].m_position.x >(-30.0f - m_newPointLights[i].m_range) ||
+			m_newPointLights[i].m_position.y < (20.0f + m_newPointLights[i].m_range) || m_newPointLights[i].m_position.y >(-20.0f - m_newPointLights[i].m_range))
 		{
 			m_pointLights.push_back(m_newPointLights[i]);
 		}
