@@ -16,6 +16,7 @@
 #include "Sound.h"
 #include "PlayerManager.h"
 #include "PointLights.h"
+#include "MenuButton.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -85,9 +86,11 @@ bool ChooseState::Initialize()
 	
 	// back button
 	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + m_buttonWidth * 0.5f + offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
-
+	
 	// Play button
-	m_chooseNinja->AddButton(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
+	m_playButton = new MenuButton();
+	m_playButton->Initialize(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
+	//m_chooseNinja->AddButton(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
 
 	// Random Ninja button
 	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/randomButton.png"), MENUACTION_RANDOM_NINJA);
@@ -164,6 +167,12 @@ bool ChooseState::Initialize()
 
 void ChooseState::Shutdown()
 {
+	if (m_playButton != nullptr)
+	{
+		m_playButton->Shutdown();
+		delete m_playButton;
+		m_playButton = nullptr;
+	}
 	if (m_tintedBackground != nullptr)
 	{
 		m_tintedBackground->Shutdown();
@@ -347,21 +356,6 @@ GAMESTATESWITCH ChooseState::Update()
 	
 	switch (action.m_action)
 	{
-	case MENUACTION_PLAY:
-		if (m_currentTeam == CURRENTTEAM_RED)
-		{
-			Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 1);
-		}
-		else if (m_currentTeam == CURRENTTEAM_BLUE)
-		{
-			Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 2);
-		}
-		else
-		{
-			Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
-		}
-		return GAMESTATESWITCH_PLAY;
-		break;
 	case MENUACTION_BACK:
 			Network::GetInstance()->Disconnect();
 			return GAMESTATESWITCH_MENU;
@@ -416,6 +410,31 @@ GAMESTATESWITCH ChooseState::Update()
 	case MENUACTION_CLICKED_QUESTIONMARK:
 		m_currentTeam = CURRENTTEAM_NONE;
 		break;
+	}
+
+
+	if (m_playButton->IsClicked())
+	{
+		if (!Network::GetInstance()->GetMatchOver())
+		{
+			if (m_currentTeam == CURRENTTEAM_RED)
+			{
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 1);
+			}
+			else if (m_currentTeam == CURRENTTEAM_BLUE)
+			{
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 2);
+			}
+			else
+			{
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
+			}
+			return GAMESTATESWITCH_PLAY;
+		}
+		else
+		{
+			return GAMESTATESWITCH_NONE;
+		}
 	}
 
 	return GAMESTATESWITCH_NONE;
@@ -483,6 +502,11 @@ void ChooseState::Render()
 	m_questionMark->Render();
 	m_toolDescription[m_currentTool]->Render();
 	m_title->Render();
+
+	if (!Network::GetInstance()->GetMatchOver())
+	{
+		m_playButton->Render();
+	}
 }
 
 void ChooseState::NextNinja()
