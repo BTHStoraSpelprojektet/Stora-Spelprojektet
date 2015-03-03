@@ -120,7 +120,7 @@ void AnimatedObject::Render()
 		newLight.m_ambient = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
 		newLight.m_diffuse = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 		newLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
-		newLight.m_range = 1.0f;
+		newLight.m_range = 0.5f;
 		PointLights::GetInstance()->AddLight(newLight);
 	}
 }
