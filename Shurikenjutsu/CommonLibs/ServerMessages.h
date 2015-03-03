@@ -18,6 +18,8 @@ struct PlayerNet
 	bool isAlive;
 	float gcd;
 	float dotDamage;
+	int kills;
+	int deaths;
 };
 
 struct ShurikenNet
