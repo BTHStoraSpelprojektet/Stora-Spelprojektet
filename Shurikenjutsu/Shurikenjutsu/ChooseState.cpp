@@ -428,6 +428,7 @@ GAMESTATESWITCH ChooseState::Update()
 			{
 				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
 			}
+			Network::GetInstance()->SetHaveUpdateNewLevel();
 			return GAMESTATESWITCH_PLAY;
 		}
 		else
