@@ -1937,6 +1937,7 @@ void Network::ClearListsAtNewRound()
 	m_spikeTrapList.clear();
 	m_stickyTrapList.clear();
 	m_fanList.clear();
+	m_objectManager->RunesRestartRound();
 }
 
 int Network::GetLastPing()

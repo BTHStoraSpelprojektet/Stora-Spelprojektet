@@ -92,22 +92,24 @@ void PointOfInterestManager::PickUpRunes(PointOfInterestType p_poiType, RakNet::
 	{
 	case PointOfInterestType_Heal:
 	{
+		m_lotusActive = false;
 		bitStream.Write((RakNet::MessageID)ID_LOTUS_PICKED_UP);
 		// Add sound
 		break;
 	}
 	case PointOfInterestType_Shield:
 	{
+		m_shieldActive = false;
 		bitStream.Write((RakNet::MessageID)ID_SHIELD_PICKED_UP);
 		break;
 	}
 	case PointOfInterestType_Invisible:
 	{
+		m_invisActive = false;
 		bitStream.Write((RakNet::MessageID)ID_INVIS_PICKED_UP);
 		break;
 	}
 	default:
-		bitStream.Write((RakNet::MessageID)ID_RUNE_PICKED_UP);
 		break;
 	}
 	bitStream.Write(p_guid);
