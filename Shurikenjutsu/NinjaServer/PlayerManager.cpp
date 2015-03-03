@@ -153,6 +153,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	player.maxHP = m_playerHealth;
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
+	player.invis = false;
 	player.dotDamage = 0.0f;
 	player.hotHeal = 0.0f;
 	player.toolNr = p_toolNr;
