@@ -16,10 +16,10 @@ bool Countdown::Initialize()
 	m_blueColor = 0xffB71300;
 
 	m_cdText = GUIText();
-	m_cdText.Initialize("", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, m_redColor);
+	m_cdText.Initialize("", L"RagingRedLotus BB", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, m_redColor);
 
 	m_roundTeamText = GUIText();
-	m_roundTeamText.Initialize("", 50.0f, 0.0f, -(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f), 0xffffffff);
+	m_roundTeamText.Initialize("", L"RagingRedLotus BB", 50.0f, 0.0f, -(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f), 0xffffffff);
 
 	m_victDefTexture = GUIElement();
 	m_victDefTexture.Initialize(DirectX::XMFLOAT3(0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0.0f), 310.0f, 125.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/victory.png"));
