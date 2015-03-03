@@ -22,7 +22,7 @@ bool Countdown::Initialize()
 	m_roundTeamText.Initialize("", 50.0f, 0.0f, -(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f), 0xffffffff);
 
 	m_victDefTexture = GUIElement();
-	m_victDefTexture.Initialize(DirectX::XMFLOAT3(0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0.0f), 310.0f, 125.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/victory.png"));
+	m_victDefTexture.Initialize(DirectX::XMFLOAT3(0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0.0f), 340.0f, 125.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/victory.png"));
 
 	m_renderCd = true;
 	m_renderRoundTeam = false;
@@ -106,13 +106,11 @@ void Countdown::Update()
 		{
 			// Victory
 			m_victDefTexture.SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/victory.png"));
-			m_victDefTexture.SetSize(DirectX::XMFLOAT2(310.0f, 125.0f));
 		}
 		else
 		{
 			// Defeat
 			m_victDefTexture.SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/defeat.png"));
-			m_victDefTexture.SetSize(DirectX::XMFLOAT2(244.0f, 125.0f));
 		}
 	}
 	else
