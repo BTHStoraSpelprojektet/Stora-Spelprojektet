@@ -8,22 +8,47 @@
 GUIText::GUIText(){}
 GUIText::~GUIText(){}
 
-bool GUIText::Initialize(std::string p_text, const WCHAR* p_font, float p_size, float p_x, float p_y, UINT32 p_color)
+bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
 {
 	IDWriteFactory* wf = NULL;
 	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
 	//IDWriteFontCollection* collection;
 
 	wf->CreateTextFormat(
-		p_font,
+		L"RagingRedLotus BB",
 		GraphicsEngine::GetInstance()->GetFontCollection(),
 		DWRITE_FONT_WEIGHT_BOLD,
 		DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
 		p_size,
 		L"",
-		&m_format
-		);
+		&m_format);
+
+	wf->Release();
+
+	SetText(p_text);
+	SetSize(p_size);
+	SetPosition(p_x, p_y);
+	m_color = p_color;
+
+	return true;
+}
+bool GUIText::InitializeCalibri(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
+{
+	IDWriteFactory* wf = NULL;
+	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
+	//IDWriteFontCollection* collection;
+
+	wf->CreateTextFormat(
+		L"Calibri",
+		NULL,
+		DWRITE_FONT_WEIGHT_BOLD,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		p_size,
+		L"",
+		&m_format);
+
 	wf->Release();
 
 	SetText(p_text);

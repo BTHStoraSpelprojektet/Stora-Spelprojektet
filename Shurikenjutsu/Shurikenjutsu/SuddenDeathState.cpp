@@ -10,7 +10,7 @@ SuddenDeathState::~SuddenDeathState(){}
 void SuddenDeathState::Initialize(std::vector<Box> p_walls)
 {
 	m_title = new GUIText();
-	m_title->Initialize("SUDDEN FUCKING DEATH", L"RagingRedLotus BB", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.25f, 0xffffffff);
+	m_title->Initialize("SUDDEN FUCKING DEATH", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.25f, 0xffffffff);
 	m_walls = p_walls;
 	float xMax = 0, xMin = 0;
 	float zMax = 0, zMin = 0;
