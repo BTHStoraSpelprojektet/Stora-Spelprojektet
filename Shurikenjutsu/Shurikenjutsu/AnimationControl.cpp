@@ -528,6 +528,10 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 			m_currentArms = &m_animationStacksArray[12];
 		}		
 	}	
+	else
+	{
+		m_currentArms = &m_animationStacksArray[7];
+	}
 }
 
 std::vector<DirectX::XMFLOAT4X4> AnimationControl::GetBoneTransforms()
