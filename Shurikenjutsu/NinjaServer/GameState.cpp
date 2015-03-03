@@ -160,6 +160,7 @@ void GameState::Shutdown()
 void GameState::Update(double p_deltaTime)
 {
 	m_collisionManager->SetDeltaTime((float)p_deltaTime);
+	m_deltaTime = (float)p_deltaTime;
 
 	m_playerManager->Update(p_deltaTime);
 	m_shurikenManager->Update(p_deltaTime);
@@ -266,7 +267,7 @@ void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, f
 	m_spikeManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_stickyTrapManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_volleyManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
-	m_playerManager->ExecuteAbility(p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager, *m_stickyTrapManager, *m_volleyManager);
+	m_playerManager->ExecuteAbility(m_deltaTime, p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager, *m_stickyTrapManager, *m_volleyManager);
 }
 
 void GameState::BroadcastPlayers()
