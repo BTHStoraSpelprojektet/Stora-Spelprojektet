@@ -258,6 +258,8 @@ void Player::UpdateMe()
 		// Animation None ?
 		UpdateAbilities();
 		UpdateAbilityBar();
+		AnimatedObject::ChangeAnimationState(AnimationState::None);
+
 		return;
 	}
 
