@@ -922,14 +922,14 @@ void ObjectManager::AddStickyTrap(float p_startPosX, float p_startPosZ, float p_
 
 float ObjectManager::CheckStickyTrapYPosition()
 {
-	float returnValue = 0.001f;
+	float returnValue = 0.005f;
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
 		if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y < 1.0f)
 		{
 			if (m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y >= returnValue)
 			{
-				returnValue = m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y + 0.01f;
+				returnValue = m_stickyTrapList[i]->GetStickyTrapSphere().m_position.y + 0.005f;
 			}
 		}
 	}

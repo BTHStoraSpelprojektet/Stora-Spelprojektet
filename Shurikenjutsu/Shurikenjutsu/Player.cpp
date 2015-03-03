@@ -248,6 +248,7 @@ void Player::UpdateMe()
 		if (Collisions::SphereSphereCollision(m_playerSphere, m_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
 			SetSpeed(m_speed * STICKY_TRAP_SLOW_PRECENTAGE);
+			break;
 		}
 	}
 
