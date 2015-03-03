@@ -80,7 +80,7 @@ void AttackPredictionEditor::ThickRectanglePrediction(Object *p_object, DirectX:
 	float poleLength = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
 	DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / poleLength, 0.03f, vectorToMouse.z / poleLength);
 	float yaw = atan2(p_attackDirection.x, p_attackDirection.z);
-	poleLength = CollisionManager::GetInstance()->CalculateAttackPredictionRange(p_playerPosition, p_attackDirection, p_length, false);
+	poleLength = CollisionManager::GetInstance()->CalculateAttackPredictionRange(p_playerPosition, p_attackDirection, p_length, true);
 
 	p_object->SetRotation(DirectX::XMFLOAT3(0.0f, yaw - 1.57f, 0.0f));
 

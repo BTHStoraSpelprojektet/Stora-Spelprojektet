@@ -93,7 +93,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 
 			if (angle < attackAngle)
 			{
-				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos))
+				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos, true))
 				{
 					// Damage the player
 					p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid, p_ability, false);
@@ -778,17 +778,17 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			if (distance <= WHIP_RANGE)
 			{
-				if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+				if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z), true))
 				{
-				// Damage the player
+					// Damage the player
 					p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE, attackingPlayer.guid, ABILITIES_WHIP_PRIMARY, false);
 
-				if (whipRay != nullptr)
-				{
-					delete whipRay;
-					whipRay = nullptr;
-				}
-				break;
+					if (whipRay != nullptr)
+					{
+						delete whipRay;
+						whipRay = nullptr;
+					}
+					break;
 				}
 			}
 		}
@@ -831,7 +831,7 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackPosition, WHIP_SP_RANGE, spherePosition, 1.0f))
 		{
-			if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z), true))
 			{
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE, attackingPlayer.guid, ABILITIES_WHIP_SECONDARY, false);
@@ -899,7 +899,7 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 				// Make collision test
 				if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
 				{
-					if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+					if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z), true))
 					{
 						// Damage the player
 						if (playerList[i].dotDamage > 1.0f && p_playerManager->CanSendDotDamage())
@@ -1003,7 +1003,7 @@ bool CollisionManager::SphereSphereTest(Sphere p_spikeTrap, Sphere p_player)
 {
 	return IntersectionTests::Intersections::SphereSphereCollision(p_spikeTrap.m_position, p_spikeTrap.m_radius, p_player.m_position, p_player.m_radius);
 }
-bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos)
+bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos, bool p_isThrowing)
 {
 	DirectX::XMFLOAT3 vectorFromA2B = DirectX::XMFLOAT3(p_defendingPlayerPos.x - p_attackingPlayerPos.x, 0.0f, p_defendingPlayerPos.z - p_attackingPlayerPos.z);
 	float distance = sqrt(vectorFromA2B.x * vectorFromA2B.x + vectorFromA2B.z * vectorFromA2B.z);
@@ -1015,7 +1015,17 @@ bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attac
 	{
 		if (RayOBBTest(ray, m_staticBoxList[i]))
 		{
-			listOfDistances.push_back(ray->m_distance);
+			if (p_isThrowing)
+			{
+				if (m_staticBoxList[i].m_extents.y > 1.8f)
+				{
+					listOfDistances.push_back(ray->m_distance);
+				}
+			}
+			else
+			{
+				listOfDistances.push_back(ray->m_distance);
+			}
 		}
 	}
 	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
