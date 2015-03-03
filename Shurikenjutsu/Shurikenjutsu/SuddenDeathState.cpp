@@ -262,12 +262,6 @@ void SuddenDeathState::Shutdown()
 		m_matrixBuffer = nullptr;
 	}
 
-	if (m_texture)
-	{
-		m_texture->Release();
-		m_texture = nullptr;
-	}
-
 	if (m_vertexShader)
 	{
 		m_vertexShader->Release();
