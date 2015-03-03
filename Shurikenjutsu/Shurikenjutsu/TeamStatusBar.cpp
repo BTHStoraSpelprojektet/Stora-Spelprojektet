@@ -45,9 +45,9 @@ bool TeamStatusBar::Initialize()
 
 	// Score text
 	m_redScore = GUIText();
-	m_redScore.Initialize("0", L"RagingRedLotus BB", 25.0f, m_originPos.x + 20.0f, m_originPos.y - 13.0f, 0xff0700B6);
+	m_redScore.Initialize("0", L"RagingRedLotus BB", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13.0f, 0xff0700B6);
 	m_blueScore = GUIText();
-	m_blueScore.Initialize("0", L"RagingRedLotus BB", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13.0f, 0xffB71300);
+	m_blueScore.Initialize("0", L"RagingRedLotus BB", 25.0f, m_originPos.x + 20.0f, m_originPos.y - 13.0f, 0xffB71300);
 
 	// Timer text
 	m_timerText = GUIText();
