@@ -120,6 +120,17 @@ bool ObjectManager::Initialize(Level* p_level)
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SPARK_SIZE_X, PARTICLE_FIRE_SPARK_SIZE_Y), PARTICLE_PATTERN_FIRE_SPARK);
 		}
 
+		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_TorchFire)
+		{
+			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+				DirectX::XMFLOAT3(0, 1, 0),
+				DirectX::XMFLOAT2(PARTICLE_FIRE_TORCH_SIZE_X, PARTICLE_FIRE_TORCH_SIZE_Y), PARTICLE_PATTERN_FIRE_TORCH);
+			//m_sound->PlayAmbientSound(PLAYSOUND_FIRE_SOUND, 0.3f);
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(PLAYSOUND_FIRE_SOUND, particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ);
+			}
+		}
+
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_LeafSakura)
 		{
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
