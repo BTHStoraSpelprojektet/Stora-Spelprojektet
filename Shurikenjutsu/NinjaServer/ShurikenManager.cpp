@@ -56,12 +56,12 @@ void ShurikenManager::AddShuriken(RakNet::RakNetGUID p_guid, float p_posX, float
 	m_serverPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
-void ShurikenManager::AddMegaShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)
+void ShurikenManager::AddMegaShuriken(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ, float p_deltaTime)
 {
 	ShurikenNet shuriken;
-	shuriken.x = p_posX;
+	shuriken.x = p_posX + p_dirX ;
 	shuriken.y = p_posY;
-	shuriken.z = p_posZ;
+	shuriken.z = p_posZ + p_dirZ;
 	shuriken.dirX = p_dirX;
 	shuriken.dirY = p_dirY;
 	shuriken.dirZ = p_dirZ;

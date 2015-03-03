@@ -46,7 +46,7 @@ bool ScoreBoard::Initialize()
 	//m_text = std::vector<GUIText>();
 
 	textst = GUIText();
-	textst.Initialize("HURRR", 25.0f, 0.0f, 0.0f, 0xff000000);
+	textst.Initialize("HURRR", L"RagingRedLotus BB", 25.0f, 0.0f, 0.0f, 0xff000000);
 	return true;
 }
 
@@ -79,11 +79,11 @@ void ScoreBoard::Update()
 		{
 			// Initialize text
 			GUIText name = GUIText();
-			name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+			name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), L"RagingRedLotus BB", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
 			m_text.push_back(name);
 			m_redColorPlayers[player.guid].death = 0;
 			m_redColorPlayers[player.guid].kill = 0;
-			m_redColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[player.guid].kill) + "/" + std::to_string(m_redColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
+			m_redColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[player.guid].kill) + "/" + std::to_string(m_redColorPlayers[player.guid].death), L"RagingRedLotus BB", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
 			//textst.SetText(std::to_string(m_redColorPlayers[player.guid].kill) + "/" + std::to_string(m_redColorPlayers[player.guid].death));
 			//textst.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * (m_redColorPlayers.size())));
 			//m_text.push_back(textst);
@@ -99,11 +99,11 @@ void ScoreBoard::Update()
 		{
 			// Initialize text
 			GUIText name = GUIText();
-			name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_blueColorPlayers.size() + 1) , 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+			name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_blueColorPlayers.size() + 1), L"RagingRedLotus BB", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
 			m_text.push_back(name);
 			m_blueColorPlayers[player.guid].death = 0;
 			m_blueColorPlayers[player.guid].kill = 0;
-			m_blueColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[player.guid].kill) + "/" + std::to_string(m_blueColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
+			m_blueColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[player.guid].kill) + "/" + std::to_string(m_blueColorPlayers[player.guid].death), L"RagingRedLotus BB", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
 
 			// Initialize portrait
 			GUIElement element = GUIElement();
@@ -126,11 +126,11 @@ void ScoreBoard::Update()
 			{
 				//Initialize text
 				GUIText name = GUIText();
-				name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+				name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), L"RagingRedLotus BB", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
 				m_text.push_back(name);
 				m_redColorPlayers[players[i].guid].death = 0;
 				m_redColorPlayers[players[i].guid].kill = 0;
-				m_redColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_redColorPlayers[players[i].guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
+				m_redColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_redColorPlayers[players[i].guid].death), L"RagingRedLotus BB",25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
 
 				//Initialize Portrait
 				GUIElement element = GUIElement();
@@ -145,11 +145,11 @@ void ScoreBoard::Update()
 			{
 				//Initialize text
 				GUIText name = GUIText();
-				name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+				name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), L"RagingRedLotus BB", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
 				m_text.push_back(name);
 				m_blueColorPlayers[players[i].guid].death = 0;
 				m_blueColorPlayers[players[i].guid].kill = 0;
-				m_blueColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_blueColorPlayers[players[i].guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
+				m_blueColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_blueColorPlayers[players[i].guid].death), L"RagingRedLotus BB", 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
 
 				//Initialize portrait
 				GUIElement element = GUIElement();
@@ -253,6 +253,22 @@ void ScoreBoard::KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNet
 				m_blueColorPlayers[p_ninjaKiller].ninjaText.SetText(std::to_string(m_blueColorPlayers[p_ninjaKiller].kill) + "/" + std::to_string(m_blueColorPlayers[p_ninjaKiller].death));
 				break;
 			}
+		}
+	}
+}
+
+void ScoreBoard::AddKD(RakNet::RakNetGUID p_ninja, int p_deaths, int p_kills)
+{
+	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
+	PlayerNet player = Network::GetInstance()->GetMyPlayer();
+	players.push_back(player);
+
+	for (unsigned int i = 0; i < players.size(); i++)
+	{
+		if (players[i].guid == p_ninja)
+		{
+			players[i].kills = p_kills;
+			players[i].deaths = p_deaths;
 		}
 	}
 }

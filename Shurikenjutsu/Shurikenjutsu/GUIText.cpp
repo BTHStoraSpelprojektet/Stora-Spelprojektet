@@ -8,19 +8,20 @@
 GUIText::GUIText(){}
 GUIText::~GUIText(){}
 
-bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
+bool GUIText::Initialize(std::string p_text, const WCHAR* p_font, float p_size, float p_x, float p_y, UINT32 p_color)
 {
 	IDWriteFactory* wf = NULL;
 	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
-	
+	//IDWriteFontCollection* collection;
+
 	wf->CreateTextFormat(
-		L"Calibri",
-		NULL,
-		DWRITE_FONT_WEIGHT_ULTRA_BOLD,
+		p_font,
+		GraphicsEngine::GetInstance()->GetFontCollection(),
+		DWRITE_FONT_WEIGHT_BOLD,
 		DWRITE_FONT_STYLE_NORMAL,
-		DWRITE_FONT_STRETCH_EXTRA_EXPANDED,
+		DWRITE_FONT_STRETCH_NORMAL,
 		p_size,
-		L"en-us",
+		L"",
 		&m_format
 		);
 	wf->Release();

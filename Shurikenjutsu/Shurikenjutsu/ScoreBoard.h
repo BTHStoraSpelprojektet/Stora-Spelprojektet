@@ -31,6 +31,7 @@ public:
 	void Render();
 	GUIText textst;
 	void KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNetGUID p_ninjaKilled, int p_deaths, int p_kills);
+	void AddKD(RakNet::RakNetGUID p_ninja, int p_deaths, int p_kills);
 
 private:
 	ScoreBoard();

@@ -230,13 +230,23 @@ void Player::UpdateMe()
 		SetGuID(Network::GetInstance()->GetMyPlayer().guid);
 		//SetPosition(DirectX::XMFLOAT3(Network::GetInstance()->GetMyPlayer().x, Network::GetInstance()->GetMyPlayer().y, Network::GetInstance()->GetMyPlayer().z));
 	}
-	
-	SetSpeed(m_originalSpeed);
-	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+
+	float directionAngle = DirectX::XMVector3AngleBetweenVectors(DirectX::XMLoadFloat3(&m_attackDir), DirectX::XMLoadFloat3(&m_direction)).m128_f32[0];
+
+	if (directionAngle > (3.14f * 0.625f))
 	{
+		m_speed = m_originalSpeed * 0.85f;
+	}
+	else
+	{
+		SetSpeed(m_originalSpeed);
+	}
+	
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{		
 		if (Collisions::SphereSphereCollision(m_playerSphere, m_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
-			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
+			SetSpeed(m_speed * STICKY_TRAP_SLOW_PRECENTAGE);
 		}
 	}
 

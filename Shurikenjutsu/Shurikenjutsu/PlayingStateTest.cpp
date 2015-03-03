@@ -320,7 +320,10 @@ GAMESTATESWITCH PlayingStateTest::Update()
 	}
 	else if (Network::GetInstance()->GetMatchOver())
 	{
-		m_camera->MenuCameraRotation();
+		if (Network::GetInstance()->GetRestartingTimer() <= 7)
+		{
+			m_camera->MenuCameraRotation();
+		}
 
 		switch (m_victoryMenu->Update())
 		{

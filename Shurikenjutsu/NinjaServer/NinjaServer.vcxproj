@@ -88,6 +88,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapManager.cpp" />
+    <ClCompile Include="MemoryChecker.cpp" />
     <ClCompile Include="NormalState.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="FanBoomerangManager.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="MapManager.h" />
+    <ClInclude Include="MemoryChecker.h" />
     <ClInclude Include="NormalState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />

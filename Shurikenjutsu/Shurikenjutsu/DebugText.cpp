@@ -26,22 +26,22 @@ bool DebugText::Initialize()
 	m_renderText = true;
 
 	m_fpsText = new GUIText();
-	m_fpsText->Initialize("0 fps", m_size, m_originPos.x, m_originPos.y, 0xFFFFFFFF);
+	m_fpsText->Initialize("0 fps", L"Calibri", m_size, m_originPos.x, m_originPos.y, 0xFFFFFFFF);
 
 	m_virtualMemText = new GUIText();
-	m_virtualMemText->Initialize("VRAM: 0 MB", m_size, m_originPos.x, m_originPos.y - 25.0f, 0xFFFFFFFF);
+	m_virtualMemText->Initialize("VRAM: 0 MB", L"Calibri", m_size, m_originPos.x, m_originPos.y - 25.0f, 0xFFFFFFFF);
 
 	m_physicalMemText = new GUIText();
-	m_physicalMemText->Initialize("RAM: 0 MB", m_size, m_originPos.x, m_originPos.y - 50.0f, 0xFFFFFFFF);
+	m_physicalMemText->Initialize("RAM: 0 MB", L"Calibri", m_size, m_originPos.x, m_originPos.y - 50.0f, 0xFFFFFFFF);
 
 	m_pingText = new GUIText();
-	m_pingText->Initialize("0 ms", m_size, m_originPos.x, m_originPos.y - 75.0f, 0xFFFFFFFF);
+	m_pingText->Initialize("0 ms", L"Calibri", m_size, m_originPos.x, m_originPos.y - 75.0f, 0xFFFFFFFF);
 
 	m_inMessagesText = new GUIText();
-	m_inMessagesText->Initialize("In: 0 B/s", m_size, m_originPos.x, m_originPos.y - 100.0f, 0xFFFFFFFF);
+	m_inMessagesText->Initialize("In: 0 B/s", L"Calibri", m_size, m_originPos.x, m_originPos.y - 100.0f, 0xFFFFFFFF);
 
 	m_outMessagesText = new GUIText();
-	m_outMessagesText->Initialize("Out: 0 B/s", m_size, m_originPos.x, m_originPos.y - 125.0f, 0xFFFFFFFF);
+	m_outMessagesText->Initialize("Out: 0 B/s", L"Calibri", m_size, m_originPos.x, m_originPos.y - 125.0f, 0xFFFFFFFF);
 
 	return true;
 }
