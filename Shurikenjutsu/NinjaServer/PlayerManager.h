@@ -61,7 +61,7 @@ public:
 	void ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID);
 
 	void RuneLotusPickedUp(RakNet::RakNetGUID p_player);
-	void HealPlayer(RakNet::RakNetGUID p_player, float p_heal);
+	void HealPlayer();
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);

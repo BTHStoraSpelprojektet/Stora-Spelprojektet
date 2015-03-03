@@ -80,11 +80,13 @@ void PlayerManager::Update(double p_deltaTime)
 		m_canSendHotDamage = false;
 		m_haveSentHotDamage = false;
 	}
-	if (m_lastDotSent < 0)
+	if (m_lastHotSent < 0)
 	{
-		m_lastDotSent = m_dotIntervall;
-		m_canSendDotDamage = true;
+		m_lastHotSent = m_hotIntervall;
+		m_canSendHotDamage = true;
 	}
+
+	HealPlayer();
 }
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
@@ -577,16 +579,17 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 	}
 }
 
-void PlayerManager::HealPlayer(RakNet::RakNetGUID p_player, float p_heal)
+void PlayerManager::HealPlayer()
 {
-	if (m_canSendDotDamage)
+	if (m_canSendHotDamage)
 	{
 		for (unsigned int i = 0; i < m_players.size(); i++)
 		{
-			if (m_players[i].guid == p_player)
+			if (m_players[i].hotHeal > 0.0)
 			{
-				m_players[i].currentHP += m_players[i].hotHeal;
-				UpdateHealth(p_player, m_players[i].currentHP, m_players[i].isAlive);
+					m_players[i].currentHP += m_players[i].hotHeal;
+					UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
+					m_haveSentHotDamage = true;
 			}
 		}
 	}
