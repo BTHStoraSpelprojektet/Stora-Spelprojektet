@@ -235,6 +235,8 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].currentHP);
 		bitStream.Write(m_players[i].isAlive);
 		bitStream.Write(m_players[i].toolNr);
+		bitStream.Write(m_players[i].deaths);
+		bitStream.Write(m_players[i].kills);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
