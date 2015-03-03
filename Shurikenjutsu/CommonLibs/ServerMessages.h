@@ -18,6 +18,7 @@ struct PlayerNet
 	bool isAlive;
 	float gcd;
 	float dotDamage;
+	float hotHeal;
 	int kills;
 	int deaths;
 };

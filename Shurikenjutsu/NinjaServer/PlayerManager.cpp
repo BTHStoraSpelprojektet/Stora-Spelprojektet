@@ -38,6 +38,12 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_canSendDotDamage = true;
 	m_haveSentDotDamage = false;
 
+	m_hotIntervall = 3.0;
+	m_lastHotSent = 0.0;
+	m_canSendDotDamage = true;
+	m_haveSentDotDamage = false;
+
+
 	return true;
 }
 
@@ -60,12 +66,27 @@ void PlayerManager::Update(double p_deltaTime)
 	{
 		m_canSendDotDamage = false;
 		m_haveSentDotDamage = false;
-}
+	}
 	if (m_lastDotSent < 0)
 	{
 		m_lastDotSent = m_dotIntervall;
 		m_canSendDotDamage = true;
 	}
+
+	// Timer hot
+	m_lastHotSent -= p_deltaTime;
+	if (m_haveSentHotDamage)
+	{
+		m_canSendHotDamage = false;
+		m_haveSentHotDamage = false;
+	}
+	if (m_lastHotSent < 0)
+	{
+		m_lastHotSent = m_hotIntervall;
+		m_canSendHotDamage = true;
+	}
+
+	HealPlayer();
 }
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
@@ -133,6 +154,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
 	player.dotDamage = 0.0f;
+	player.hotHeal = 0.0f;
 	player.toolNr = p_toolNr;
 	player.kills = 0;
 	player.deaths = 0;
@@ -518,6 +540,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 	{
 		if (m_players[i].guid == p_defendingGuid)
 		{
+			m_players[i].hotHeal = 0.0f;
 			m_players[i].currentHP -= p_damage;
 			if (m_players[i].currentHP <= 0)
 			{
@@ -553,6 +576,27 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			}
 			else{
 				SendPlaySound(PLAYSOUND_MALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
+		}
+	}
+}
+
+void PlayerManager::HealPlayer()
+{
+	if (m_canSendHotDamage)
+	{
+		for (unsigned int i = 0; i < m_players.size(); i++)
+		{
+			if (m_players[i].hotHeal > 0.0)
+			{
+					m_players[i].currentHP += m_players[i].hotHeal;
+					if (m_players[i].currentHP > m_players[i].maxHP)
+					{
+						m_players[i].currentHP = m_players[i].maxHP;
+						m_players[i].hotHeal = 0.0;
+					}
+					UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
+					m_haveSentHotDamage = true;
 			}
 		}
 	}
@@ -799,4 +843,15 @@ int PlayerManager::GetIdForPlayer()
 	} while (idTaken);
 
 	return id;
+}
+
+void PlayerManager::RuneLotusPickedUp(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			m_players[i].hotHeal = LOTUS_HEALTICK;
+		}
+	}
 }

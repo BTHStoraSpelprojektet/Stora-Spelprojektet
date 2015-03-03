@@ -1245,6 +1245,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
 					{
 						p_POIManager->PickUpRunes(PointOfInterestType_Heal, playerList[j].guid);
+						p_playerManager->RuneLotusPickedUp(playerList[j].guid);
 					}
 				}
 			}
