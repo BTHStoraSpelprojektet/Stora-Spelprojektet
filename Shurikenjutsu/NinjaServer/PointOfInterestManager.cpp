@@ -28,15 +28,30 @@ bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	m_invisActive = false;
 	m_nrOfRunes = 3;
 
-	/*DirectX::XMFLOAT3 spawnPoints[3];
-	spawnPoints[0] = DirectX::XMFLOAT3(m_POISpawnPoints[0].m_translationX, m_POISpawnPoints[0].m_translationY, m_POISpawnPoints[0].m_translationZ);
-	spawnPoints[1] = DirectX::XMFLOAT3(m_POISpawnPoints[1].m_translationX, m_POISpawnPoints[1].m_translationY, m_POISpawnPoints[1].m_translationZ);
-	spawnPoints[2] = DirectX::XMFLOAT3(m_POISpawnPoints[2].m_translationX, m_POISpawnPoints[2].m_translationY, m_POISpawnPoints[2].m_translationZ);*/
-
 	m_lotusBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_LOTUS)->GetBoundingBoxes();
-	m_shieldBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_SHIELD)->GetBoundingBoxes();
-	m_invisBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_INVIS)->GetBoundingBoxes();
+	for (unsigned int i = 0; i < m_lotusBoundingBoxes.size(); i++)
+	{
+		m_lotusBoundingBoxes[i].m_center.x += m_POISpawnPoints[0].m_translationX;
+		m_lotusBoundingBoxes[i].m_center.y += m_POISpawnPoints[0].m_translationY;
+		m_lotusBoundingBoxes[i].m_center.z += m_POISpawnPoints[0].m_translationZ;
+	}
 
+	m_invisBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_INVIS)->GetBoundingBoxes();
+	for (unsigned int i = 0; i < m_invisBoundingBoxes.size(); i++)
+	{
+		m_invisBoundingBoxes[i].m_center.x += m_POISpawnPoints[1].m_translationX;
+		m_invisBoundingBoxes[i].m_center.y += m_POISpawnPoints[1].m_translationY;
+		m_invisBoundingBoxes[i].m_center.z += m_POISpawnPoints[1].m_translationZ;
+	}
+	
+	m_shieldBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_SHIELD)->GetBoundingBoxes();
+	for (unsigned int i = 0; i < m_shieldBoundingBoxes.size(); i++)
+	{
+		m_shieldBoundingBoxes[i].m_center.x += m_POISpawnPoints[2].m_translationX;
+		m_shieldBoundingBoxes[i].m_center.y += m_POISpawnPoints[2].m_translationY;
+		m_shieldBoundingBoxes[i].m_center.z += m_POISpawnPoints[2].m_translationZ;
+	}
+	
 	return true;
 }
 
@@ -69,30 +84,32 @@ void PointOfInterestManager::SpawnRunes()
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
-void PointOfInterestManager::PickUpRunes(int p_index, RakNet::RakNetGUID p_guid)
+void PointOfInterestManager::PickUpRunes(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
 {
 	RakNet::BitStream bitStream;
 	
-	switch (p_index)
+	switch (p_poiType)
 	{
-	case 0:
+	case PointOfInterestType_Heal:
 	{
+		m_lotusActive = false;
 		bitStream.Write((RakNet::MessageID)ID_LOTUS_PICKED_UP);
 		// Add sound
 		break;
 	}
-	case 1:
+	case PointOfInterestType_Shield:
 	{
+		m_shieldActive = false;
 		bitStream.Write((RakNet::MessageID)ID_SHIELD_PICKED_UP);
 		break;
 	}
-	case 2:
+	case PointOfInterestType_Invisible:
 	{
+		m_invisActive = false;
 		bitStream.Write((RakNet::MessageID)ID_INVIS_PICKED_UP);
 		break;
 	}
 	default:
-		bitStream.Write((RakNet::MessageID)ID_RUNE_PICKED_UP);
 		break;
 	}
 	bitStream.Write(p_guid);
@@ -106,25 +123,19 @@ void PointOfInterestManager::RoundRestart()
 	//Initialize();
 }
 
-std::vector<Box> PointOfInterestManager::GetBoundingBoxes(int p_index)
+std::vector<Box> PointOfInterestManager::GetBoundingBoxes(PointOfInterestType p_poiType)
 {
-	switch (p_index)
+	switch (p_poiType)
 	{
-	case 0:
-	{
+	case PointOfInterestType_Heal:
 		return m_lotusBoundingBoxes;
 		break;
-	}
-	case 1:
-	{
+	case PointOfInterestType_Invisible:
 		return m_invisBoundingBoxes;
 		break;
-	}
-	case 2:
-	{
+	case PointOfInterestType_Shield:
 		return m_shieldBoundingBoxes;
 		break;
-	}
 	default:
 		break;
 	}

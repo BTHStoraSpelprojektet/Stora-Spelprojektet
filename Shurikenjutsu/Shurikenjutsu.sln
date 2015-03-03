@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shurikenjutsu", "Shurikenjutsu\Shurikenjutsu.vcxproj", "{06153634-8859-4B86-97DF-0471AAEB4044}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -17,6 +17,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommonLibs", "CommonLibs\CommonLibs.vcxproj", "{08098CFA-42E0-4D98-BB87-CF14F6D264F7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsDll", "Physics\Physics.vcxproj", "{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngineDLL", "GraphicsEngineDLL\GraphicsEngineDLL.vcxproj", "{79D94755-24EC-4ADD-816E-E26287DBCC02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +66,15 @@ Global
 		{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}.Release|Win32.ActiveCfg = Release|Win32
 		{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}.Release|Win32.Build.0 = Release|Win32
 		{097E6F6B-BAC8-441E-858C-CA9FAB82C07A}.Release|x64.ActiveCfg = Release|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Debug|Win32.ActiveCfg = Debug|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Debug|Win32.Build.0 = Debug|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Debug|x64.ActiveCfg = Debug|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Profile|Win32.ActiveCfg = Release|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Profile|Win32.Build.0 = Release|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Profile|x64.ActiveCfg = Release|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Release|Win32.ActiveCfg = Release|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Release|Win32.Build.0 = Release|Win32
+		{79D94755-24EC-4ADD-816E-E26287DBCC02}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

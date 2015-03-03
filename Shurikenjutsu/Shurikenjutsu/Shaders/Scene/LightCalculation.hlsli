@@ -1,5 +1,6 @@
 struct PointLight
 {
+	float4 m_ambient;
 	float4 m_diffuse;
 	float4 m_specular;
 
@@ -23,7 +24,7 @@ struct Material
 	float4 m_specular;
 };
 
-void ComputePointLight(Material p_material, PointLight p_light, float3 p_position, float3 p_normal, float3 p_toEye, inout float4 p_diffuse, inout float4 p_specular)
+void ComputePointLight(Material p_material, PointLight p_light, float3 p_position, float3 p_normal, float3 p_toEye, inout float4 p_ambient, inout float4 p_diffuse, inout float4 p_specular)
 {
 	float3 lightVec = p_light.m_position - p_position;
 	float d = length(lightVec);
@@ -49,6 +50,7 @@ void ComputePointLight(Material p_material, PointLight p_light, float3 p_positio
 
 		float att = 1.0f - smoothstep(0, p_light.m_range, d);// 1.0f / (d*d);
 
+		p_ambient += p_material.m_ambient * p_light.m_ambient * att;
 		p_diffuse += diffuse * att;
 		p_specular += specular * att;
 	}

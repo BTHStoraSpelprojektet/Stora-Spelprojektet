@@ -7,6 +7,7 @@
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
+#include "PointOfInterestManager.h"
 
 GameState::GameState(){}
 GameState::~GameState(){}
@@ -47,7 +48,8 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_projectileManager->Initialize(m_serverPeer);
 	m_volleyManager = new VolleyManager();
 	m_volleyManager->Initialize(m_serverPeer);
-
+	m_POIManager = new PointOfInterestManager();
+	m_POIManager->Initialize(m_serverPeer);
 	m_winningTeams = std::map<int, int>();
 
 	// Time
@@ -55,7 +57,8 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_timeSec = 0;
 
 	m_roundRestarting = false;
-	
+	m_runesSpawned = false;
+
 	Level level(p_levelName);
 	float xMax = 0, xMin = 0;
 	float zMax = 0, zMin = 0;
@@ -145,6 +148,13 @@ void GameState::Shutdown()
 	delete m_collisionManager;
 	delete m_projectileManager;
 	delete m_volleyManager;
+
+	if (m_POIManager != nullptr)
+	{
+		m_POIManager->Shutdown();
+		delete m_POIManager;
+		m_playerManager = nullptr;
+	}
 }
 
 void GameState::Update(double p_deltaTime)
@@ -159,12 +169,14 @@ void GameState::Update(double p_deltaTime)
 	m_fanBoomerangManager->Update(p_deltaTime, m_playerManager);
 	m_projectileManager->Update(p_deltaTime);
 	m_volleyManager->Update(p_deltaTime);
+	m_POIManager->Update(p_deltaTime);
 
 	m_collisionManager->ShurikenCollisionChecks(m_shurikenManager, m_playerManager);
 	m_collisionManager->ProjectileCollisionChecks(m_projectileManager, m_playerManager);
 	m_collisionManager->SpikeTrapCollisionChecks(m_spikeManager, m_playerManager);
 	m_collisionManager->FanCollisionChecks(p_deltaTime, m_fanBoomerangManager, m_playerManager);
 	m_collisionManager->VolleyCollisionChecks(m_volleyManager, m_playerManager);
+	m_collisionManager->POICollisionChecks(m_POIManager, m_playerManager);
 
 	m_collisionManager->NaginataStbDot(m_playerManager);
 	UpdateTime(p_deltaTime);
@@ -190,6 +202,15 @@ void GameState::Update(double p_deltaTime)
 		int boxIndex = GetNewSuddenDeathBoxIndex();
 		SendSuddenDeathBoxActivation(boxIndex);
 		m_suddenDeathTimer = 0.0f;
+	}
+
+	if ((m_timeSec >= 20 && m_timeSec <= 21) && m_timeMin == 0)
+	{
+		if (!m_runesSpawned)
+		{
+			m_POIManager->SpawnRunes();
+			m_runesSpawned = true;
+		}
 	}
 
 }

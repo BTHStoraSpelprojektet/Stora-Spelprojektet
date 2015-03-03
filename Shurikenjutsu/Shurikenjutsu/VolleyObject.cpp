@@ -33,7 +33,7 @@ void VolleyObject::Shutdown()
 bool VolleyObject::Update(float p_timer)
 {
 	// Update
-	if (p_timer < m_timeToLand)
+	if (p_timer <= m_timeToLand)
 	{
 		float x = m_speed * p_timer * m_percentX;
 		float y = VOLLEY_HEIGHT*m_speedY*sinf(p_timer*m_angle);
@@ -52,6 +52,12 @@ bool VolleyObject::Update(float p_timer)
 	else if (p_timer > m_lifeTime)
 	{
 		return true;
+	}
+
+	else
+	{
+		m_position = m_endPosition;
+		m_position.y = 0.3f;
 	}
 	
 	return false;
