@@ -242,6 +242,9 @@ void LevelImporter::ReadLevelObject(std::string &p_tmpStr, int p_currentWordTemp
 			else if (p_particleEmitterType.find("BrazierSparks") != std::string::npos){
 				particleEmitter.type = EmitterType::EmitterType_FireSpark;
 			}
+			else if (p_particleEmitterType.find("TorchFire") != std::string::npos){
+				particleEmitter.type = EmitterType::EmitterType_TorchFire;
+			}
 			else if (p_particleEmitterType.find("Smoke") != std::string::npos){
 				particleEmitter.type = EmitterType::EmitterType_Smoke;
 			}
