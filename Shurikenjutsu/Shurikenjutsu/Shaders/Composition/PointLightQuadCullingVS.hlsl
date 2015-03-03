@@ -103,7 +103,7 @@ GSInput main(uint lightIndex : SV_VertexID)
 	PointLight light = m_pointLights[lightIndex];
 	output.coords = ComputeClipRegion(light.m_position, light.m_range);
 
-	float quadDepth = light.m_position.z - light.m_range;
+	float quadDepth = max(0.1f ,light.m_position.z - light.m_range);
 
 	float4 quadClip = mul(float4(0.0f, 0.0f, quadDepth, 1.0f), m_projectionMatrix);
 	output.quadZ = quadClip.z / quadClip.w;
