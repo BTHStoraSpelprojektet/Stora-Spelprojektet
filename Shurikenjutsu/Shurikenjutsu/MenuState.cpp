@@ -70,7 +70,13 @@ bool MenuState::Initialize()
 	m_main = new Menu();
 	m_main->AddButton(0.0f, -BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_IP);
 	m_main->AddButton(0.0f, -1.0f * BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/options.png"), MENUACTION_OPTIONS);
-	m_main->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"), MENUACTION_BACK);
+	m_main->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_CREDITS);
+	m_main->AddButton(0.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"), MENUACTION_BACK);
+	
+	// Initialize creditsCreen
+	m_creditScreen = new CreaditsScreen();
+	m_creditScreen->Initialize();
+	m_creditScreen->AddButton(-GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f + BUTTONWIDTH * 0.5f + 10.0f , -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"), MENUACTION_BACK);
 
 	// Initialize play menu
 	m_ipbox = new MenuIpBox();
@@ -116,11 +122,19 @@ bool MenuState::Initialize()
 	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
 	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
 
+	InitializeCreditScreen();
+
 	return true;
 }
 
 void MenuState::Shutdown()
 {
+	if (m_creditScreen != nullptr)
+	{
+		m_creditScreen->Shutdown();
+		delete m_creditScreen;
+		m_creditScreen = nullptr;
+	}
 	if (m_main != nullptr)
 	{
 		m_main->Shutdown();
@@ -236,6 +250,10 @@ GAMESTATESWITCH MenuState::Update()
 			break;
 
 		case MENUACTION_PLAY:
+			break;
+		case MENUACTION_CREDITS:
+			m_creditScreen->ResetTexts();
+			m_menues.push(m_creditScreen);
 			break;
 
 		case MENUACTION_CHOOSENINJA:
@@ -382,4 +400,8 @@ void MenuState::EscapeIsPressed()
 
 void MenuState::setSound(Sound* p_sound){
 	m_sound = p_sound;
+}
+
+void MenuState::InitializeCreditScreen()
+{
 }

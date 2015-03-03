@@ -533,6 +533,9 @@
     <ClCompile Include="SuddenDeathState.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
+    <ClCompile Include="CreaditsScreen.cpp">
+      <Filter>Source Files\GUI\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -894,6 +897,9 @@
     </ClInclude>
     <ClInclude Include="CustomFont.h">
       <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="CreaditsScreen.h">
+      <Filter>Header Files\GUI\Menu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
