@@ -855,3 +855,14 @@ void PlayerManager::RuneLotusPickedUp(RakNet::RakNetGUID p_player)
 		}
 	}
 }
+
+void PlayerManager::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			m_players[i].invis = true;
+		}
+	}
+}

@@ -152,6 +152,8 @@ public:
 	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
 	void RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
 
+	void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player);
+
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);

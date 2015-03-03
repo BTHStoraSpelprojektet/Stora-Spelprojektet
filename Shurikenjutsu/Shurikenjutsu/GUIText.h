@@ -14,7 +14,8 @@ public:
 	GUIText();
 	~GUIText();
 
-	bool Initialize(std::string p_text, const WCHAR* p_font, float p_size, float p_x, float p_y, UINT32 p_color);
+	bool Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color);
+	bool InitializeCalibri(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color);
 	void Render();
 	void Shutdown();
 

@@ -97,6 +97,7 @@ void PlayerManager::Update(bool p_inMenu)
 			m_enemyList[i]->SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i]->SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
+			m_enemyList[i]->SetIsVisible(!enemyPlayers[i].invis);
 			m_enemyList[i]->Update();
 
 			if (m_enemyList[i]->m_soundEmitter != NULL) {

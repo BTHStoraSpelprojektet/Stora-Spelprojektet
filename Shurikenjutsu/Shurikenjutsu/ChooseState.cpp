@@ -61,8 +61,8 @@ bool ChooseState::Initialize()
 	m_currentNinja = 0;
 	m_nrOfTools = 3;
 	m_currentTool = 0;
-	m_redTeamScore->Initialize("0", L"RagingRedLotus BB", 50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
-	m_blueTeamScore->Initialize("0", L"RagingRedLotus BB", 50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
+	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
+	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
 		
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f + offset;
@@ -90,7 +90,6 @@ bool ChooseState::Initialize()
 	// Play button
 	m_playButton = new MenuButton();
 	m_playButton->Initialize(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
-	//m_chooseNinja->AddButton(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
 
 	// Random Ninja button
 	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/randomButton.png"), MENUACTION_RANDOM_NINJA);
@@ -429,6 +428,7 @@ GAMESTATESWITCH ChooseState::Update()
 			{
 				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
 			}
+			Network::GetInstance()->SetHaveUpdateNewLevel();
 			return GAMESTATESWITCH_PLAY;
 		}
 		else
