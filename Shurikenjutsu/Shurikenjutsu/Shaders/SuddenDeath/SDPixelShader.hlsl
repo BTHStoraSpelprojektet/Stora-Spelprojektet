@@ -14,7 +14,7 @@ float4 main(Input p_input) : SV_TARGET
 	float4 color = (m_texture.Sample(m_sampler, p_input.m_UV));
 
 	// Apply opacity.
-	color.a * p_input.m_opacity;
+	color.a = p_input.m_opacity;
 
 	return color;
 }

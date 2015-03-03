@@ -71,6 +71,7 @@ private:
 	ID3D11ShaderResourceView* m_texture;
 
 	SuddenDeathVertex m_mesh[24];
+	DirectX::XMFLOAT2 m_originalUV[24];
 	ID3D11Buffer* m_vertexBuffer;
 	ID3D11Buffer* m_matrixBuffer;
 };

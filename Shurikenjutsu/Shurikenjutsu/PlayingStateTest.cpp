@@ -256,10 +256,10 @@ void PlayingStateTest::ShutdownExit()
 
 GAMESTATESWITCH PlayingStateTest::Update()
 {
-	if (Network::GetInstance()->IsSuddenDeath())
-	{
+	/*if (Network::GetInstance()->IsSuddenDeath())
+	{*/
 		m_suddenDeath->Update();
-	}
+	//}
 
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
@@ -531,7 +531,7 @@ void PlayingStateTest::Render()
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
 
-	//// Render the UI.
+	// Render the UI.
 	if (Network::GetInstance()->GetMatchOver())
 	{
 		m_victoryMenu->Render();
@@ -565,10 +565,10 @@ void PlayingStateTest::Render()
 		ScoreBoard::GetInstance()->Render();
 	}
 
-	if (Network::GetInstance()->IsSuddenDeath())
-	{
+	/*if (Network::GetInstance()->IsSuddenDeath())
+	{*/
 		m_suddenDeath->Render(m_camera);
-	}
+	//}
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
