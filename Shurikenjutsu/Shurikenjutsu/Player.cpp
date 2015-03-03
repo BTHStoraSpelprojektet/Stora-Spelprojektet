@@ -1198,7 +1198,7 @@ void Player::SetInvis(bool p_invis)
 	m_invis = p_invis;
 }
 
-bool Player::IsInvis(bool p_invis)
+bool Player::IsInvis()
 {
 	return m_invis;
 }
