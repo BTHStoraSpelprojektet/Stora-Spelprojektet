@@ -4,6 +4,7 @@
 #include "Server.h"
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "..\CommonLibs\Timer.h"
+#include "MemoryChecker.h"
 
 class System
 {
@@ -17,6 +18,7 @@ private:
 
 	Server m_server;
 	Timer m_timer;
+	MemoryChecker m_memoryChecker;
 
 	bool m_firstUpdate;
 };

@@ -64,10 +64,10 @@ private:
 	CharacterAbilityDescription *m_abilityDescription[4];
 	GUIText* m_redTeamScore;
 	GUIText* m_blueTeamScore;
-	int currentNinja;
-	int nrOfNinjas;
-	int currentTool;
-	int nrOfTools;
+	int m_currentNinja;
+	int m_nrOfNinjas;
+	int m_currentTool;
+	int m_nrOfTools;
 	float m_screenHeight;
 	float m_screenWidth;
 	bool m_isRandoming;

@@ -523,7 +523,7 @@
     </ClCompile>
     <ClCompile Include="PointOfInterestManager.cpp">
       <Filter>Source Files\Object</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="MemoryChecker.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
@@ -882,7 +882,7 @@
     </ClInclude>
     <ClInclude Include="PointOfInterestManager.h">
       <Filter>Header Files\Object</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="MemoryChecker.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
@@ -891,6 +891,9 @@
     </ClInclude>
     <ClInclude Include="SuddenDeathState.h">
       <Filter>Header Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomFont.h">
+      <Filter>Header Files\GUI\Internal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
