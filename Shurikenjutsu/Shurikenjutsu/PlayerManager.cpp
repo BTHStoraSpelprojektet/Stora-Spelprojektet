@@ -126,7 +126,7 @@ void PlayerManager::Render(bool p_inMenu)
 			{
 				if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 				{
-					if (!m_enemyList[i].IsInvis())
+					if (!m_enemyList[i]->IsInvis())
 					{
 						m_enemyList[i]->Render();
 					}
