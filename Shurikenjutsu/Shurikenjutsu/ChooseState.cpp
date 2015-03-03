@@ -403,15 +403,15 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		break;
 	case MENUACTION_RANDOM_NINJA:
-		if (m_isRandoming)
+		/*if (m_isRandoming)
 		{
 			m_isRandoming = false;
 		}
 		else
 		{
 			m_isRandoming = true;
-		}
-		//RandomNinja();
+		}*/
+		RandomNinja();	
 		break;
 	case MENUACTION_CLICKED_QUESTIONMARK:
 		m_currentTeam = CURRENTTEAM_NONE;
@@ -528,7 +528,7 @@ void ChooseState::EscapeIsPressed()
 
 void ChooseState::RandomNinja()
 {
-	std::srand((unsigned int)std::time(0));
+	std::srand((unsigned int)std::time(NULL));
 	m_currentTool = std::rand() % 3;
 	m_currentNinja = std::rand() % 3;
 }
