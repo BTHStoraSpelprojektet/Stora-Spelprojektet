@@ -94,7 +94,7 @@ void TessenNinja::RenderAttackLocations()
 	{
 		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
 		{
-			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
+			m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
 			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
 			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
