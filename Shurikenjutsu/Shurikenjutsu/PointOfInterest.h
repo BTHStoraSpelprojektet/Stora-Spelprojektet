@@ -20,11 +20,14 @@ public:
 	void SparkleState(bool p_stateOn);
 	bool IsActive();
 	void SetActive(bool p_active);
+	void SpawnLight();
 	void PickedUp();
 private:
 	void Sparkle();
 
 	ParticleEmitter* m_sparkles;
 	bool m_active;
+
+	DirectX::XMFLOAT3 m_positionLight;
 };
 #endif // !POINTOFINTEREST_H_

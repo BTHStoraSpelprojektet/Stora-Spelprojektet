@@ -21,6 +21,7 @@ public:
 		int kill;
 		int death;
 		GUIText ninjaText;
+		GUIText name;
 	};
 
 	static ScoreBoard* GetInstance();
@@ -56,8 +57,7 @@ private:
 	void ResizeRedColorList();
 	void ResizeBlueColorList();
 
-	int killerNinja;
-	int takerNinja;
+	int m_myTeam;
 
 	//std::map<RakNet::RakNetGUID, GUIElement> m_redColorPlayers;
 	//std::map<RakNet::RakNetGUID, GUIElement> m_blueColorPlayers;
