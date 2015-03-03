@@ -59,6 +59,7 @@ public:
 
 	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
 	void RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
+	void RunesRestartRound();
 
 private:
 	float CheckStickyTrapYPosition();

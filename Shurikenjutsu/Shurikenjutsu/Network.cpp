@@ -1002,12 +1002,15 @@ void Network::ReceviePacket()
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID takerNinja, killerNinja;
+			int kills, deaths;
 
 			bitStream.Read(messageID);
 			bitStream.Read(takerNinja);
 			bitStream.Read(killerNinja);
+			bitStream.Read(deaths);
+			bitStream.Read(kills);
 
-			ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja);
+			ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja, deaths, kills);
 
 			break;
 		}
@@ -1937,6 +1940,7 @@ void Network::ClearListsAtNewRound()
 	m_spikeTrapList.clear();
 	m_stickyTrapList.clear();
 	m_fanList.clear();
+	m_objectManager->RunesRestartRound();
 }
 
 int Network::GetLastPing()

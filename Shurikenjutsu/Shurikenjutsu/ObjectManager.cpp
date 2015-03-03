@@ -1310,3 +1310,8 @@ void ObjectManager::RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGU
 	m_POIManager->RunePickedUp(p_poiType);
 	// ADD method for adding pick up effect
 }
+
+void ObjectManager::RunesRestartRound()
+{
+	m_POIManager->RoundRestart();
+}
