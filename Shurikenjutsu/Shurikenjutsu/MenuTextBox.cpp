@@ -48,7 +48,7 @@ bool MenuTextBox::Initialize(float p_x, float p_y, float p_width, float p_height
 
 bool MenuTextBox::Initialize(ID3D11ShaderResourceView* p_texture, float p_x, float p_y, float p_width, float p_height, int p_maxChars, std::string p_text)
 {
-	MenuItem::Initialize(p_x, p_y, p_width, p_height, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/ipbox.png"));
+	MenuItem::Initialize(p_x, p_y, p_width, p_height, p_texture);
 
 	m_maxChars = p_maxChars;
 
