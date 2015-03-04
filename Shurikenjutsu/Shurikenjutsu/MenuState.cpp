@@ -80,17 +80,17 @@ bool MenuState::Initialize()
 
 	// Initialize play menu
 	m_ipbox = new MenuTextBox();
-	m_ipbox->Initialize(0, -68, 304.0f, 67.0f, 15, "194.47.150.130");
+	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/BloodParticle.png"), 0, -67, 354.0f, 67.0f, 15, "194.47.150.130");
 	m_hideIpBox = true;
 
 	m_namebox = new MenuTextBox();
-	m_namebox->Initialize(0, 0, 304.0f, 67.0f, 15, "Name");
+	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/namebox.png"), 0, 0, 394.0f, 67.0f, 15, "Name");
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);
 	m_play->AddButton(0.0f, -3.0f * BUTTONHEIGHT - 4.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
-	m_play->AddTexture(0.0f, 96.0f, 65.0f, 65.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ip2.png"));
-	m_play->AddTexture(-198.0f, 0.0f, 93.0f, 67.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/name2.png"));
+	//m_play->AddTexture(0.0f, -67, 354.0f, 67.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ipbox2.png"));
+	//m_play->AddTexture(0, 0.0f, 394.0f, 67.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/namebox.png"));
 
 	// Initialize connecting menu;
 	m_connecting = new Menu();

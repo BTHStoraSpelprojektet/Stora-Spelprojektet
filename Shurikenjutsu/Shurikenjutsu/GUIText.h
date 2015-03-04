@@ -26,6 +26,10 @@ public:
 
 	float GetPositionX();
 	float GetPositionY();
+
+	float GetWidth();
+	float GetHeight();
+
 	UINT32 GetColor();
 	IDWriteTextLayout* GetLayout();
 	std::string GetText();
@@ -33,6 +37,8 @@ public:
 private:
 	float m_posx;
 	float m_posy;
+	float m_width;
+	float m_height;
 	int m_textLength;
 	UINT32 m_color;
 	IDWriteTextFormat* m_format;
