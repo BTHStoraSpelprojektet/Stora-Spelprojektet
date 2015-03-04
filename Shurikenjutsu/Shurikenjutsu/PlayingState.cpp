@@ -526,6 +526,7 @@ void PlayingState::Render()
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+
 	if (FLAG_DEBUG == 1)
 	{
 		ShadowShapes::GetInstance().DebugRender();	
@@ -547,7 +548,7 @@ void PlayingState::Render()
 
 	/*if (Network::GetInstance()->IsSuddenDeath())
 	{*/
-	m_suddenDeath->Render(m_camera);
+		m_suddenDeath->Render(m_camera);
 	//}
 
 	// Render character outlining.
@@ -665,6 +666,7 @@ void PlayingState::OutliningRays()
 DirectX::XMFLOAT3 PlayingState::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 {
 	float t2 = sqrt(p_f.x * p_f.x + p_f.y * p_f.y + p_f.z * p_f.z);
+
 	return DirectX::XMFLOAT3(p_f.x / t2, p_f.y / t2, p_f.z/t2);
 }
 
