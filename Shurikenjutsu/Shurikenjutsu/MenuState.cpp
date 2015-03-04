@@ -1,6 +1,6 @@
 #include "MenuState.h"
 #include "Menu.h"
-#include "MenuIpBox.h"
+#include "MenuTextBox.h"
 #include "GUIText.h"
 #include "Globals.h"
 #include "TextureLibrary.h"
@@ -70,19 +70,27 @@ bool MenuState::Initialize()
 	m_main = new Menu();
 	m_main->AddButton(0.0f, -BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_IP);
 	m_main->AddButton(0.0f, -1.0f * BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/options.png"), MENUACTION_OPTIONS);
-	m_main->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"), MENUACTION_BACK);
+	m_main->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/credits.png"), MENUACTION_CREDITS);
+	m_main->AddButton(0.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/quit.png"), MENUACTION_BACK);
+	
+	// Initialize creditsCreen
+	m_creditScreen = new CreaditsScreen();
+	m_creditScreen->Initialize();
+	m_creditScreen->AddButton(-GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f + BUTTONWIDTH * 0.5f + 10.0f , -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
 
 	// Initialize play menu
-	m_ipbox = new MenuIpBox();
-	m_ipbox->Initialize(0.0f, 0.0f, 304.0f, 67.0f);
-	m_ipboxText = new GUIText();
-	m_ipboxText->Initialize(m_ipbox->GetIp(), 36.0f, 0.0f, 0.0f, 0xff333333);
+	m_ipbox = new MenuTextBox();
+	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/ipbox2.png"), 0, -67, 394.0f, 67.0f, 15, "194.47.150.130");
+	m_hideIpBox = true;
+
+	m_namebox = new MenuTextBox();
+	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/namebox.png"), 0, 0, 394.0f, 67.0f, 15, "Name");
 
 	m_play = new Menu();
-	m_play->AddButton(0.0f, -BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);
-	m_play->AddButton(0.0f, -2.0f*BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
-	m_play->AddTexture(0.0f, 96.0f, 97.0f, 96.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ip_text.png"));
-	m_hideIpBox = true;
+	m_play->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);
+	m_play->AddButton(0.0f, -3.0f * BUTTONHEIGHT - 4.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
+	//m_play->AddTexture(0.0f, -67, 354.0f, 67.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ipbox2.png"));
+	//m_play->AddTexture(0, 0.0f, 394.0f, 67.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/namebox.png"));
 
 	// Initialize connecting menu;
 	m_connecting = new Menu();
@@ -112,15 +120,21 @@ bool MenuState::Initialize()
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.18f*0.25, 0.34f*0.25, 0.48f*0.25, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.18f, 0.34f, 0.48f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.77f, 0.94f, 0.94f, 1.0f);
-	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
-	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
-	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
+	m_directionalLight.m_direction = DirectX::XMLoadFloat4(&DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f));
+
+	InitializeCreditScreen();
 
 	return true;
 }
 
 void MenuState::Shutdown()
 {
+	if (m_creditScreen != nullptr)
+	{
+		m_creditScreen->Shutdown();
+		delete m_creditScreen;
+		m_creditScreen = nullptr;
+	}
 	if (m_main != nullptr)
 	{
 		m_main->Shutdown();
@@ -151,13 +165,12 @@ void MenuState::Shutdown()
 		delete m_ipbox;
 		m_ipbox = nullptr;
 	}
-	if (m_ipboxText != nullptr)
+	if (m_namebox != nullptr)
 	{
-		m_ipboxText->Shutdown();
-		delete m_ipboxText;
-		m_ipboxText = nullptr;
+		m_namebox->Shutdown();
+		delete m_namebox;
+		m_namebox = nullptr;
 	}
-
 	if (m_camera != nullptr)
 	{
 		m_camera->Shutdown();
@@ -204,18 +217,10 @@ void MenuState::ShutdownExit()
 GAMESTATESWITCH MenuState::Update()
 {
 	MenuActionData action = m_menues.top()->Update();
-
-	// Ipbox special case
 	if (!m_hideIpBox)
 	{
-		if (m_ipbox->IsClicked())
-		{
-			m_ipboxText->SetText(m_ipbox->GetIp());
-		}
-		if (m_ipbox->GetInput())
-		{
-			m_ipboxText->SetText(m_ipbox->GetIp());
-		}
+		m_ipbox->Update();
+		m_namebox->Update();
 	}
 
 	// Check buttons
@@ -237,6 +242,10 @@ GAMESTATESWITCH MenuState::Update()
 
 		case MENUACTION_PLAY:
 			break;
+		case MENUACTION_CREDITS:
+			m_creditScreen->ResetTexts();
+			m_menues.push(m_creditScreen);
+			break;
 
 		case MENUACTION_CHOOSENINJA:
 			return GAMESTATESWITCH_CHOOSENINJA;
@@ -251,7 +260,8 @@ GAMESTATESWITCH MenuState::Update()
 		case MENUACTION_CONNECT:
 			m_menues.push(m_connecting);
 			m_hideIpBox = true;
-			Network::GetInstance()->Connect((std::string)m_ipbox->GetIp());
+			Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
+			Network::GetInstance()->Connect((std::string)m_ipbox->GetText());
 			Network::GetInstance()->SetNetworkStatusConnecting();
 			break;
 
@@ -328,7 +338,7 @@ void MenuState::Render()
 	if (!m_hideIpBox)
 	{
 		m_ipbox->Render();
-		m_ipboxText->Render();
+		m_namebox->Render();
 	}
 
 	if (!m_menues.empty())
@@ -361,7 +371,7 @@ void MenuState::Render()
 	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();
@@ -382,4 +392,8 @@ void MenuState::EscapeIsPressed()
 
 void MenuState::setSound(Sound* p_sound){
 	m_sound = p_sound;
+}
+
+void MenuState::InitializeCreditScreen()
+{
 }

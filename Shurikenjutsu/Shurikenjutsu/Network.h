@@ -56,7 +56,7 @@ public:
 	void Connect(std::string p_ip);
 	void Disconnect();
 
-	void ChooseChar(char* p_name, int p_charNr, int p_toolNr, int p_team);
+	void ChooseChar(int p_charNr, int p_toolNr, int p_team);
 
 	bool ConnectedNow();
 	bool IsConnected();
@@ -152,7 +152,10 @@ public:
 	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
 	void RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
 
-	void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player);
+	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
+
+	void SetPlayerName(std::string p_playerName);
+	std::string GetPlayerName(RakNet::RakNetGUID p_guid);
 
 private:
 	void ClearListsAtNewRound();
@@ -259,5 +262,6 @@ private:
 	bool m_sendPos;
 	double m_timeToSendPos;
 	double m_posTimer;
+	std::string m_playerName;
 };
 #endif

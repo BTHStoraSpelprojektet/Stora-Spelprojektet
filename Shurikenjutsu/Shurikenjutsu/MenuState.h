@@ -6,9 +6,10 @@
 #include <stack>
 #include "Network.h"
 
+#include "CreaditsScreen.h"
 class GUIText;
 class Menu;
-class MenuIpBox;
+class MenuTextBox;
 class ObjectManager;
 class Frustum;
 class Camera;
@@ -34,17 +35,19 @@ public:
 
 	void setSound(Sound* p_sound);
 private:
+	void InitializeCreditScreen();
+
 
 	std::stack<Menu*> m_menues;
 	Menu* m_main;
 	Menu* m_options;
 	Menu* m_play;
 	Menu* m_connecting;
+	CreaditsScreen* m_creditScreen;
 
-	MenuIpBox* m_ipbox;
+	MenuTextBox* m_ipbox;
+	MenuTextBox* m_namebox;
 	bool m_hideIpBox;
-	GUIText* m_ipboxText;
-	GUIText* m_ipText;
 
 	bool m_lastvsync;
 	bool m_lastfullscreen;

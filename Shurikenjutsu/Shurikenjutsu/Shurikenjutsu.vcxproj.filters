@@ -186,6 +186,9 @@
     <Filter Include="Shaders\DOF">
       <UniqueIdentifier>{16953032-c664-4717-91bd-0002a799348f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\SuddenDeath">
+      <UniqueIdentifier>{6bc18550-8554-4bff-a1bb-1e2c952770c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -243,9 +246,6 @@
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
     <ClCompile Include="GameState.cpp">
-      <Filter>Source Files\GameState</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayingStateTest.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
     <ClCompile Include="Network.cpp">
@@ -379,9 +379,6 @@
     </ClCompile>
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp">
       <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuIpBox.cpp">
-      <Filter>Source Files\GUI\Menu\Menu Items</Filter>
     </ClCompile>
     <ClCompile Include="GUIText.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
@@ -531,6 +528,15 @@
       <Filter>Source Files\Utility\DebugDraw</Filter>
     </ClCompile>
     <ClCompile Include="SuddenDeathState.cpp">
+      <Filter>Source Files\GameState</Filter>    
+	</ClCompile>
+    <ClCompile Include="CreaditsScreen.cpp">
+      <Filter>Source Files\GUI\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuTextBox.cpp">
+      <Filter>Source Files\GUI\Menu\Menu Items</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayingState.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
   </ItemGroup>
@@ -605,9 +611,6 @@
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>Header Files\GameState</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayingStateTest.h">
       <Filter>Header Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
@@ -738,9 +741,6 @@
     </ClInclude>
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
       <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuIpBox.h">
-      <Filter>Header Files\GUI\Menu\Menu Items</Filter>
     </ClInclude>
     <ClInclude Include="GUIText.h">
       <Filter>Header Files\GUI\Internal</Filter>
@@ -895,6 +895,15 @@
     <ClInclude Include="CustomFont.h">
       <Filter>Header Files\GUI\Internal</Filter>
     </ClInclude>
+    <ClInclude Include="CreaditsScreen.h">
+      <Filter>Header Files\GUI\Menu</Filter>
+	</ClInclude>
+    <ClInclude Include="MenuTextBox.h">
+      <Filter>Header Files\GUI\Menu\Menu Items</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayingState.h">
+      <Filter>Header Files\GameState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -1022,6 +1031,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\DOF\DOFBlurVPixelShader.hlsl">
       <Filter>Shaders\DOF</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SuddenDeath\SDPixelShader.hlsl">
+      <Filter>Shaders\SuddenDeath</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SuddenDeath\SDVertexShader.hlsl">
+      <Filter>Shaders\SuddenDeath</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

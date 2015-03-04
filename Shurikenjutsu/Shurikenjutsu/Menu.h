@@ -3,7 +3,7 @@
 
 #include "MenuButton.h"
 #include "MenuCheckbox.h"
-#include "MenuIpBox.h"
+#include "MenuTextBox.h"
 #include <vector>
 
 struct MenuActionData
@@ -18,9 +18,9 @@ public:
 	Menu();
 	~Menu();
 
-	MenuActionData Update();
-	void Shutdown();
-	void Render();
+	virtual MenuActionData Update();
+	virtual void Shutdown();
+    virtual	void Render();
 	void AddButton(float p_x, float p_y, float p_width, float p_height, ID3D11ShaderResourceView* p_texture, MENUACTION p_action);
 	int AddCheckbox(float p_x, float p_y, MENUACTION p_action, bool p_state);
 	void AddTexture(float p_x, float p_y, float p_width, float p_height, ID3D11ShaderResourceView* p_texture);

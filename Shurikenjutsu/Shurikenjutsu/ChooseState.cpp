@@ -149,9 +149,7 @@ bool ChooseState::Initialize()
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.18f*0.25, 0.34f*0.25, 0.48f*0.25, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.18f, 0.34f, 0.48f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.77f, 0.94f, 0.94f, 1.0f);
-	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
-	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
-	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
+	m_directionalLight.m_direction = DirectX::XMLoadFloat4(&DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f));
 
 	m_frustum = new Frustum();
 	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
@@ -418,15 +416,15 @@ GAMESTATESWITCH ChooseState::Update()
 		{
 			if (m_currentTeam == CURRENTTEAM_RED)
 			{
-				Network::GetInstance()->ChooseChar("name", m_currentNinja, m_currentTool, 1);
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 1);
 			}
 			else if (m_currentTeam == CURRENTTEAM_BLUE)
 			{
-				Network::GetInstance()->ChooseChar("name2", m_currentNinja, m_currentTool, 2);
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 2);
 			}
 			else
 			{
-				Network::GetInstance()->ChooseChar("name3", m_currentNinja, m_currentTool, 0);
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
 			}
 			Network::GetInstance()->SetHaveUpdateNewLevel();
 			return GAMESTATESWITCH_PLAY;
@@ -479,7 +477,7 @@ void ChooseState::Render()
 	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();

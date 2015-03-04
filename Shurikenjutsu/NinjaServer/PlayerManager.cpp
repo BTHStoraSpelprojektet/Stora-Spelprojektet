@@ -464,7 +464,7 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 		case ABILITIES_FANBOOMERANG:
 		{
 			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
-			p_fanBoomerang.Add(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
+			p_fanBoomerang.Add(p_deltaTime, p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 			break;
 		}
 
@@ -573,7 +573,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 						if (m_players[j].guid == p_attackingGuid)
 						{
 							// Send to deathboard
-							DeathBoard(m_players[i].charNr, m_players[j].charNr, p_usedAbility);
+							DeathBoard(m_players[i].guid, m_players[j].guid, p_usedAbility);
 							// Send to scoreboard
 							ScoreBoard(m_players[i].guid, m_players[j].guid);
 							break;
@@ -642,7 +642,7 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool
 
 }
 
-void PlayerManager::DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility)
+void PlayerManager::DeathBoard(RakNet::RakNetGUID p_TakerNinja, RakNet::RakNetGUID p_AttackerNinja, ABILITIES p_usedAbility)
 {
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_DEATHBOARDKILL);
@@ -656,11 +656,15 @@ void PlayerManager::ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p
 {
 	RakNet::BitStream bitStream;
 	int kills, deaths = 0;
+
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
 		if (m_players[i].guid == p_killerID)
 		{
-			m_players[i].kills += 1;
+			if (p_killerID != p_deadID)
+			{
+				m_players[i].kills += 1;
+			}
 			kills = m_players[i].kills;
 		}
 		if (m_players[i].guid == p_deadID)

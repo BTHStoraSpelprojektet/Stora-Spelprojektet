@@ -6,7 +6,7 @@
 #include "GUIManager.h"
 #include "ChooseState.h"
 #include "MenuState.h"
-#include "PlayingStateTest.h"
+#include "PlayingState.h"
 #include "Camera.h"
 #include "GameState.h"
 #include "..\CommonLibs\ModelLibrary.h"
@@ -29,7 +29,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	// Set default game state.
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
-	m_playingState = new PlayingStateTest();
+	m_playingState = new PlayingState();
 	m_gameState = m_menuState;
 
 	// Set starting window values.

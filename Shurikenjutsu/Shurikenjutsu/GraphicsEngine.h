@@ -119,7 +119,7 @@ public:
 	void SetRenderTargetsForGBuffers();
 
 	void Composition();
-	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection);
+	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
 
 	void SetForwardRenderTarget();
 

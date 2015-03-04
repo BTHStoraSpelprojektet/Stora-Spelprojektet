@@ -14,6 +14,7 @@ enum MENUACTION
 	MENUACTION_NEXTTOOL,
 	MENUACTION_PREVTOOL,
 	MENUACTION_OPTIONS,
+	MENUACTION_CREDITS,
 	MENUACTION_VSYNC,
 	MENUACTION_FULLSCREEN,
 	MENUACTION_IP,
@@ -39,7 +40,7 @@ public:
 
 	bool Initialize(float p_x, float p_y, float p_width, float p_height, ID3D11ShaderResourceView* p_texture);
 	bool Initialize(float p_x, float p_y, float p_size, ID3D11ShaderResourceView* p_texture);
-	void Render();
+	virtual void Render();
 	
 	void SetBackgroundTexture(ID3D11ShaderResourceView* p_texture);
 	virtual void Shutdown();

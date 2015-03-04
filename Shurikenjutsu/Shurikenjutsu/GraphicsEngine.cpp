@@ -441,9 +441,9 @@ void GraphicsEngine::SetSceneDirectionalLight(DirectionalLight& p_dLight)
 	m_sceneShader->UpdateFrameBuffer(m_directX.GetContext(), p_dLight);
 }
 
-void GraphicsEngine::SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection)
+void GraphicsEngine::SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view)
 {
-	m_screenSpace->UpdateFrameBuffer(m_directX.GetContext(), p_dLight, p_projection);
+	m_screenSpace->UpdateFrameBuffer(m_directX.GetContext(), p_dLight, p_projection, p_view);
 }
 
 void GraphicsEngine::SetLightBuffer(ID3D11ShaderResourceView* p_lightSRV)
