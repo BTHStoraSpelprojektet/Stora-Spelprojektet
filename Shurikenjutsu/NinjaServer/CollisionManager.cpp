@@ -1244,8 +1244,8 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
 					{
-						p_POIManager->PickUpRunes(PointOfInterestType_Heal, playerList[j].guid);
 						p_playerManager->RuneLotusPickedUp(playerList[j].guid);
+						p_POIManager->PickUpRunes(PointOfInterestType_Heal, playerList[j].guid);
 					}
 				}
 			}
@@ -1260,6 +1260,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
 					{
+						p_playerManager->RuneInvisPickedUp(playerList[j].guid);
 						p_POIManager->PickUpRunes(PointOfInterestType_Invisible, playerList[j].guid);
 					}
 				}
@@ -1275,6 +1276,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shieldBBox[k]))
 					{
+						p_playerManager->RuneShieldPickedUp(playerList[j].guid);
 						p_POIManager->PickUpRunes(PointOfInterestType_Shield, playerList[j].guid);
 					}
 				}

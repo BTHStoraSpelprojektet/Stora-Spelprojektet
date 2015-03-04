@@ -139,7 +139,7 @@
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuButton.cpp" />
     <ClCompile Include="MeleeSwing.cpp" />
-    <ClCompile Include="MenuIpBox.cpp" />
+    <ClCompile Include="MenuTextBox.cpp" />
     <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="Minimap.cpp" />
@@ -156,7 +156,7 @@
     <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
-    <ClCompile Include="PlayingStateTest.cpp" />
+    <ClCompile Include="PlayingState.cpp" />
     <ClCompile Include="PointOfInterest.cpp" />
     <ClCompile Include="PointOfInterestManager.cpp" />
     <ClCompile Include="PointLights.cpp" />
@@ -261,7 +261,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuButton.h" />
     <ClInclude Include="MeleeSwing.h" />
-    <ClInclude Include="MenuIpBox.h" />
+    <ClInclude Include="MenuTextBox.h" />
     <ClInclude Include="MenuItem.h" />
     <ClInclude Include="MenuState.h" />
     <ClInclude Include="Minimap.h" />
@@ -279,7 +279,7 @@
     <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
-    <ClInclude Include="PlayingStateTest.h" />
+    <ClInclude Include="PlayingState.h" />
     <ClInclude Include="DebugRectangle.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="QuadTree.h" />

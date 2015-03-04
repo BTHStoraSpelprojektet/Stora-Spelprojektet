@@ -231,9 +231,9 @@ int GameState::GetNewSuddenDeathBoxIndex()
 	m_suddenDeathInActiveBoxes.erase(m_suddenDeathInActiveBoxes.begin() + random);
 	return returnValue;
 }
-void GameState::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team)
+void GameState::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team)
 {
-	m_playerManager->AddPlayer(p_guid, p_charNr, p_toolNr, p_team);
+	m_playerManager->AddPlayer(p_guid, p_name, p_charNr, p_toolNr, p_team);
 }
 
 void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)

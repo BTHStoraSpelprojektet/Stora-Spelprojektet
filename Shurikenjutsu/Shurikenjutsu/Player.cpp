@@ -32,7 +32,7 @@ void Player::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType, std::string p_name)
 {
 	m_ninjaType = p_ninjaType;
 
@@ -65,7 +65,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dashDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_dashDistanceLeft = 0.0f;
 	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-
+	m_invis = false;
 	throwDistance = 0.0f;
 
 	m_updateVisibility = false;
@@ -101,7 +101,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	if (m_sound != NULL){
 		m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
 	}
-
+	m_name = p_name;
 	return true;
 }
 
@@ -248,6 +248,7 @@ void Player::UpdateMe()
 		if (Collisions::SphereSphereCollision(m_playerSphere, m_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
 			SetSpeed(m_speed * STICKY_TRAP_SLOW_PRECENTAGE);
+			break;
 		}
 	}
 
@@ -258,6 +259,8 @@ void Player::UpdateMe()
 		// Animation None ?
 		UpdateAbilities();
 		UpdateAbilityBar();
+		AnimatedObject::ChangeAnimationState(AnimationState::None);
+
 		return;
 	}
 
@@ -1191,4 +1194,14 @@ void Player::SetSound(Sound* p_sound){
 void Player::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	m_stickyTrapList = p_stickyTrapList;
+}
+
+void Player::SetInvis(bool p_invis)
+{
+	m_invis = p_invis;
+}
+
+bool Player::IsInvis()
+{
+	return m_invis;
 }

@@ -33,7 +33,7 @@ public:
 
 	std::vector<PlayerNet> GetPlayers();
 	std::vector<Box> GetBoundingBoxes(int p_index);
-	void AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team);
+	void AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team);
 	bool MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed);
 	bool RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
@@ -62,6 +62,8 @@ public:
 
 	void RuneLotusPickedUp(RakNet::RakNetGUID p_player);
 	void HealPlayer();
+	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
+	void RuneShieldPickedUp(RakNet::RakNetGUID p_player);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);

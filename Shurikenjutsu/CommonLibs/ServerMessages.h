@@ -3,9 +3,11 @@
 
 #include "..\CommonLibs\RakNet\MessageIdentifiers.h"
 #include "..\CommonLibs\RakNet\RakNetTypes.h"
+#include "..\CommonLibs\RakNet\RakString.h"
 
 struct PlayerNet
 {
+	RakNet::RakString name;
 	float x, y, z;
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
@@ -19,8 +21,10 @@ struct PlayerNet
 	float gcd;
 	float dotDamage;
 	float hotHeal;
+	bool invis;
 	int kills;
 	int deaths;
+	float shield;
 };
 
 struct ShurikenNet

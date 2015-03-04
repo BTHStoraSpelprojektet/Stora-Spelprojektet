@@ -210,12 +210,13 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+			RakNet::RakString name;
 			int nrOfPlayers = 0;
 			float x, y, z;
 			float dirX, dirY, dirZ;
-			float maxHP, currentHP;
+			float maxHP, currentHP, shield;
 			int team, charNr, toolNr, kills, deaths;
-			bool isAlive;
+			bool isAlive, invis;
 			RakNet::RakNetGUID guid;
 			int id;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -226,6 +227,7 @@ void Network::ReceviePacket()
 			{
 				bitStream.Read(guid);
 				bitStream.Read(id);
+				bitStream.Read(name);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
@@ -237,9 +239,11 @@ void Network::ReceviePacket()
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
+				bitStream.Read(invis);
 				bitStream.Read(toolNr);
 				bitStream.Read(deaths);
 				bitStream.Read(kills);
+				bitStream.Read(shield);
 
 
 				// (Add and) update players position
@@ -250,8 +254,9 @@ void Network::ReceviePacket()
 				UpdatePlayerChar(guid, charNr, toolNr);
 				UpdatePlayerID(guid, id);
 				UpdatePlayerKD(guid, deaths, kills);
-
-				//ScoreBoard::GetInstance()->AddKD(guid, deaths, kills);
+				UpdatePlayerInvis(guid, invis);
+				UpdatePlayerShield(guid, shield);
+				UpdatePlayerName(guid, name);
 
 				playerGuids.push_back(guid);
 			}
@@ -1087,6 +1092,7 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
 			RunePickedUp(PointOfInterestType_Invisible, guid);
+			RuneInvisPickedUp(guid);
 			break;
 		}
 		case ID_SHIELD_PICKED_UP:
@@ -1128,8 +1134,10 @@ void Network::Disconnect()
 void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 {
 	RakNet::BitStream bitStream;
+	RakNet::RakString name = m_playerName.c_str();
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
+	bitStream.Write(name);
 	bitStream.Write(p_charNr);
 	bitStream.Write(p_toolNr);
 	bitStream.Write(p_team);
@@ -1138,6 +1146,7 @@ void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 
 	m_myPlayer.charNr = p_charNr;
 	m_myPlayer.toolNr = p_toolNr;
+	m_myPlayer.name = name;
 }
 
 bool Network::IsConnected()
@@ -2077,4 +2086,80 @@ void Network::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, fl
 void Network::RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
 {
 	m_objectManager->RunePickedUp(p_poiType, p_guid);
+}
+
+void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
+{
+	if (m_myPlayer.guid == p_player)
+	{
+		m_myPlayer.invis = true;
+	}
+
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (m_enemyPlayers[i].guid == p_player)
+		{
+			m_enemyPlayers[i].invis = true;
+		}
+	}
+}
+
+void Network::UpdatePlayerInvis(RakNet::RakNetGUID p_guid, bool p_invis)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.invis = p_invis;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].invis = p_invis;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerShield(RakNet::RakNetGUID p_guid, float p_shield)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.shield = p_shield;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].shield = p_shield;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerName(RakNet::RakNetGUID p_guid, RakNet::RakString p_name)
+{
+	if (p_guid == GetMyGUID())
+	{
+		m_myPlayer.name = p_name;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				m_enemyPlayers[i].name = p_name;
+				break;
+			}
+		}
+	}
+}
+
+void Network::SetPlayerName(std::string p_playerName)
+{
+	m_playerName = p_playerName;
 }
