@@ -575,7 +575,10 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 							// Send to deathboard
 							DeathBoard(m_players[i].charNr, m_players[j].charNr, p_usedAbility);
 							// Send to scoreboard
-							ScoreBoard(m_players[i].guid, m_players[j].guid);
+							if (m_players[j].guid != m_players[i].guid)
+							{
+								ScoreBoard(m_players[i].guid, m_players[j].guid);
+							}
 							break;
 						}
 					}
