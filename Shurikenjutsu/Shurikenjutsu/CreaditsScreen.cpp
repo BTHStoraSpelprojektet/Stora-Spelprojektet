@@ -1,6 +1,7 @@
 #include "CreaditsScreen.h"
 #include "GUIText.h"
 #include "Globals.h"
+#include "TextResource.h"
 
 
 CreaditsScreen::CreaditsScreen(){}
@@ -8,14 +9,13 @@ CreaditsScreen::~CreaditsScreen(){}
 
 void CreaditsScreen::Initialize()
 {
-	std::string developerText = "adhdgfhdjfhkjfhkfgkhfgkghjkghjkghjkghjkgjkghjkghjkghjkghjk";
 	m_developers = new GUIText();
-	m_developers->Initialize(developerText, 25.0f, 0.0f, -200.0f, 0xffffffff);
-	m_developersTextPositionY = 0.0;
-
+	m_developers->InitializeCalibri(CREDITS_DEVELOPERS, 40.0f, 0.0f, -500.0f, 0xffffffff);
+	m_developersTextPositionY = -500.0f;
+	
 	m_music = new GUIText();
-	m_music->Initialize("a", 25.0f, 0.0f, -200.0f, 0xffffffff);
-
+	m_music->InitializeCalibri(CREDITS_MUSIC, 25.0f, 0.0f, -2000.0f, 0xffffffff);
+	m_musicTextPositionY = -2000.0f;
 }
 void CreaditsScreen::Shutdown()
 {
@@ -36,11 +36,13 @@ void CreaditsScreen::Shutdown()
 MenuActionData CreaditsScreen::Update()
 {
 	MenuActionData returnMenuAction = Menu::Update();
-	float textMoveSpeed = 1.0f * GLOBAL::GetInstance().GetDeltaTime();
+	float textMoveSpeed = 130.0f * (float)GLOBAL::GetInstance().GetDeltaTime();
 
 	m_developersTextPositionY += textMoveSpeed;
+	m_musicTextPositionY += textMoveSpeed;
+
 	m_developers->SetPosition(0.0f, m_developersTextPositionY);
-	m_music->SetPosition(0.0f, 0.0f);
+	m_music->SetPosition(0.0f, m_musicTextPositionY);
 	return returnMenuAction;
 }
 void CreaditsScreen::Render()
@@ -52,7 +54,8 @@ void CreaditsScreen::Render()
 
 void CreaditsScreen::ResetTexts()
 {
-	m_developers->SetPosition(0.0f, 0.0f);
-	m_music->SetPosition(0.0f, 0.0f);
-	m_developersTextPositionY = 0.0;
+	m_developers->SetPosition(0.0f, -500.0f);
+	m_music->SetPosition(0.0f, -2000.0f);
+	m_developersTextPositionY = -500.0f;
+	m_musicTextPositionY = -2000.0f;
 }

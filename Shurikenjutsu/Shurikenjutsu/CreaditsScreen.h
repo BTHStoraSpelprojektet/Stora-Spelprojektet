@@ -19,6 +19,7 @@ private:
 	GUIText *m_music;
 
 	float m_developersTextPositionY;
+	float m_musicTextPositionY;
 };
 
 #endif
