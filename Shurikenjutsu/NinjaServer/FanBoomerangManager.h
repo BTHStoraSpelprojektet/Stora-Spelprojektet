@@ -21,7 +21,7 @@ public:
 	void Shutdown();
 	void Update(double p_deltaTime, PlayerManager* p_playerManager);
 
-	void Add(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
+	void Add(float p_deltaTime, RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ);
 	void Remove(unsigned int p_id);
 	void UpdateClients();
 	std::vector<FanNet> GetObjects();

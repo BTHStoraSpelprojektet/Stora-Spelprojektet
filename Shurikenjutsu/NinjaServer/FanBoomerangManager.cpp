@@ -68,12 +68,12 @@ void FanBoomerangManager::Update(double p_deltaTime, PlayerManager* p_playerMana
 	}
 }
 
-void FanBoomerangManager::Add(RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)
+void FanBoomerangManager::Add(float p_deltaTime, RakNet::RakNetGUID p_guid, float p_posX, float p_posY, float p_posZ, float p_dirX, float p_dirY, float p_dirZ)
 {
 	FanNet fan;
-	fan.x = p_posX;
+	fan.x = p_posX + p_dirX;
 	fan.y = p_posY;
-	fan.z = p_posZ;
+	fan.z = p_posZ + p_dirZ;
 	fan.dirX = p_dirX;
 	fan.dirY = p_dirY;
 	fan.dirZ = p_dirZ;
