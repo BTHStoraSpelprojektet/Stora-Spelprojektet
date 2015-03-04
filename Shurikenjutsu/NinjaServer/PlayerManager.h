@@ -63,6 +63,7 @@ public:
 	void RuneLotusPickedUp(RakNet::RakNetGUID p_player);
 	void HealPlayer();
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
+	void RuneShieldPickedUp(RakNet::RakNetGUID p_player);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);

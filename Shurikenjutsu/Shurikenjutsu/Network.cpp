@@ -214,7 +214,7 @@ void Network::ReceviePacket()
 			int nrOfPlayers = 0;
 			float x, y, z;
 			float dirX, dirY, dirZ;
-			float maxHP, currentHP;
+			float maxHP, currentHP, shield;
 			int team, charNr, toolNr, kills, deaths;
 			bool isAlive, invis;
 			RakNet::RakNetGUID guid;
@@ -243,6 +243,7 @@ void Network::ReceviePacket()
 				bitStream.Read(toolNr);
 				bitStream.Read(deaths);
 				bitStream.Read(kills);
+				bitStream.Read(shield);
 
 
 				// (Add and) update players position
@@ -254,6 +255,7 @@ void Network::ReceviePacket()
 				UpdatePlayerID(guid, id);
 				UpdatePlayerKD(guid, deaths, kills);
 				UpdatePlayerInvis(guid, invis);
+				UpdatePlayerShield(guid, shield);
 				UpdatePlayerName(guid, name);
 
 				playerGuids.push_back(guid);
@@ -2114,6 +2116,24 @@ void Network::UpdatePlayerInvis(RakNet::RakNetGUID p_guid, bool p_invis)
 			if (p_guid == m_enemyPlayers[i].guid)
 			{
 				m_enemyPlayers[i].invis = p_invis;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerShield(RakNet::RakNetGUID p_guid, float p_shield)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.shield = p_shield;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].shield = p_shield;
 			}
 		}
 	}
