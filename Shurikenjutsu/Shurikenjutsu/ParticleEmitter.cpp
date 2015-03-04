@@ -639,8 +639,8 @@ void ParticleEmitter::UpdateParticles()
 		// Fire just moves right up, ignoring direction.
 		case(PARTICLE_PATTERN_FIRE) :
 		{
-				if (m_particleList != nullptr)
-				{
+			if (m_particleList != nullptr)
+			{
 				PointLight fireLight;
 				fireLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 				fireLight.m_diffuse = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
@@ -656,6 +656,9 @@ void ParticleEmitter::UpdateParticles()
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
 					float xWindOffset = GetWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 					float zWindOffset = GetWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+
+					float lColor = 1.0f - (m_particleList[i].m_timePassed / m_particleList[i].m_timeToLive);
+					m_particleList[i].m_color = DirectX::XMFLOAT4(lColor, lColor, lColor, lColor);
 
 					if (timeToDirectionChange>m_particleList[i].m_timePassed)
 					{
