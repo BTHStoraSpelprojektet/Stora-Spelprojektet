@@ -1242,6 +1242,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 					{
 						p_playerManager->RuneLotusPickedUp(playerList[j].guid);
 						p_POIManager->PickUpRunes(PointOfInterestType_Heal, playerList[j].guid);
+						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_HEAL_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}
 			}
@@ -1258,6 +1259,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 					{
 						p_playerManager->RuneInvisPickedUp(playerList[j].guid);
 						p_POIManager->PickUpRunes(PointOfInterestType_Invisible, playerList[j].guid);
+						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_INVISIBLE_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}
 			}
@@ -1274,6 +1276,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 					{
 						p_playerManager->RuneShieldPickedUp(playerList[j].guid);
 						p_POIManager->PickUpRunes(PointOfInterestType_Shield, playerList[j].guid);
+						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_SHIELD_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}
 			}

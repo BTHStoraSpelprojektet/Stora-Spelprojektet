@@ -4,6 +4,7 @@
 #include "Collisions.h"
 #include "../CommonLibs/Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
+#include "PlayerManager.h"
 
 
 PointOfInterestManager::PointOfInterestManager()
