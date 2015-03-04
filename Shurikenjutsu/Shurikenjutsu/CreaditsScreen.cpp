@@ -10,7 +10,7 @@ CreaditsScreen::~CreaditsScreen(){}
 void CreaditsScreen::Initialize()
 {
 	m_originalDevPosY = -500.0f;
-	m_originalMusPosY = -2200.0f;
+	m_originalMusPosY = -1900.0f;
 	m_developers = new GUIText();
 	m_developers->InitializeCalibri(CREDITS_DEVELOPERS, 40.0f, 0.0f, -500.0f, 0xffffffff);
 	m_developersTextPositionY = -500.0f;
