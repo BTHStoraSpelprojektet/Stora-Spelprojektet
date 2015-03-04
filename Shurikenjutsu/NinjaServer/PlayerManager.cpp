@@ -159,6 +159,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	player.toolNr = p_toolNr;
 	player.kills = 0;
 	player.deaths = 0;
+	player.shield = 0.0f;
 	m_players.push_back(player);
 	
 	ConsolePrintText("New player joined.");
@@ -261,6 +262,7 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].toolNr);
 		bitStream.Write(m_players[i].deaths);
 		bitStream.Write(m_players[i].kills);
+		bitStream.Write(m_players[i].shield);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
@@ -543,31 +545,41 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 		if (m_players[i].guid == p_defendingGuid)
 		{
 			m_players[i].hotHeal = 0.0f;
-			m_players[i].currentHP -= p_damage;
-			if (m_players[i].currentHP <= 0)
+			if (m_players[i].shield > 0.0f)
 			{
-				m_players[i].isAlive = false;
-				if (m_players[i].charNr == 1){
-					SendPlaySound(PLAYSOUND_FEMALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
-				}
-				else{
-					SendPlaySound(PLAYSOUND_MALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
-				}
+				// Shield active
+				// Play Shield sound, now it will play hurt sound
+				m_players[i].shield = 0.0f;
 				
-				// Loop throu players to get ninja nr
-				for (unsigned int j = 0; j < m_players.size(); j++)
+			}
+			else
+			{
+				m_players[i].currentHP -= p_damage;
+				if (m_players[i].currentHP <= 0)
 				{
-					if (m_players[j].guid == p_attackingGuid)
+					m_players[i].isAlive = false;
+					if (m_players[i].charNr == 1){
+						SendPlaySound(PLAYSOUND_FEMALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+					}
+					else{
+						SendPlaySound(PLAYSOUND_MALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+					}
+
+					// Loop throu players to get ninja nr
+					for (unsigned int j = 0; j < m_players.size(); j++)
 					{
-						// Send to deathboard
-						DeathBoard(m_players[i].charNr, m_players[j].charNr, p_usedAbility);
-						// Send to scoreboard
-						ScoreBoard(m_players[i].guid, m_players[j].guid);
-						break;
+						if (m_players[j].guid == p_attackingGuid)
+						{
+							// Send to deathboard
+							DeathBoard(m_players[i].charNr, m_players[j].charNr, p_usedAbility);
+							// Send to scoreboard
+							ScoreBoard(m_players[i].guid, m_players[j].guid);
+							break;
+						}
 					}
 				}
+				UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			}
-			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			if (!p_suddenDeathDamage)
 			{
 				SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
@@ -865,6 +877,17 @@ void PlayerManager::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
 		if (m_players[i].guid == p_player)
 		{
 			m_players[i].invis = true;
+		}
+	}
+}
+
+void PlayerManager::RuneShieldPickedUp(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			m_players[i].shield = 1.0f;
 		}
 	}
 }

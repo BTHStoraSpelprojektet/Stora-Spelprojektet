@@ -22,6 +22,7 @@ struct PlayerNet
 	bool invis;
 	int kills;
 	int deaths;
+	float shield;
 };
 
 struct ShurikenNet

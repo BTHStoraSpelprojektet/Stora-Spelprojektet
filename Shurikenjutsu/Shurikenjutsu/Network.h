@@ -181,6 +181,7 @@ private:
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive);
 	void UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr, int p_toolNr);
 	void UpdatePlayerInvis(RakNet::RakNetGUID p_guid, bool p_invis);
+	void UpdatePlayerShield(RakNet::RakNetGUID p_guid, float p_shield);
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken);
