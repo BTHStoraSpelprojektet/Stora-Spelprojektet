@@ -388,6 +388,7 @@ void Network::ReceviePacket()
 			bitStream.Read(z);
 
 			RespawnPlayer(x, y, z);
+			UpdatePlayerInvisAll(false);
 
 			break;
 		}
@@ -410,6 +411,7 @@ void Network::ReceviePacket()
 			bitStream.Read(isAlive);
 
 			UpdatePlayerHP(guid, currentHP, isAlive);
+			UpdatePlayerInvis(guid, false);
 			SpawnBloodParticles(guid);
 			break;
 		}
@@ -2094,12 +2096,20 @@ void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
 	{
 		m_myPlayer.invis = true;
 	}
+	else
+	{
+		m_myPlayer.invis = false;
+	}
 
 	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 	{
 		if (m_enemyPlayers[i].guid == p_player)
 		{
 			m_enemyPlayers[i].invis = true;
+		}
+		else
+		{
+			m_enemyPlayers[i].invis = false;
 		}
 	}
 }
@@ -2182,4 +2192,14 @@ std::string Network::GetPlayerName(RakNet::RakNetGUID p_guid)
 		}
 	}
 	return "";
+}
+
+void Network::UpdatePlayerInvisAll(bool p_invis)
+{
+	m_myPlayer.invis = p_invis;
+
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		m_enemyPlayers[i].invis = p_invis;
+	}
 }
