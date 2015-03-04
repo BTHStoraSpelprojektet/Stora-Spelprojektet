@@ -65,7 +65,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dashDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_dashDistanceLeft = 0.0f;
 	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-
+	m_invis = false;
 	throwDistance = 0.0f;
 
 	m_updateVisibility = false;
@@ -248,6 +248,7 @@ void Player::UpdateMe()
 		if (Collisions::SphereSphereCollision(m_playerSphere, m_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
 			SetSpeed(m_speed * STICKY_TRAP_SLOW_PRECENTAGE);
+			break;
 		}
 	}
 
@@ -258,6 +259,8 @@ void Player::UpdateMe()
 		// Animation None ?
 		UpdateAbilities();
 		UpdateAbilityBar();
+		AnimatedObject::ChangeAnimationState(AnimationState::None);
+
 		return;
 	}
 
@@ -1196,4 +1199,9 @@ void Player::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
 void Player::SetInvis(bool p_invis)
 {
 	m_invis = p_invis;
+}
+
+bool Player::IsInvis()
+{
+	return m_invis;
 }

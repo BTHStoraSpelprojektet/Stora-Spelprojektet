@@ -78,6 +78,7 @@ enum EmitterType{
 	EmitterType_BrazierFire,
 	EmitterType_Fireflies,
 	EmitterType_FireSpark,
+	EmitterType_TorchFire,
 	EmitterType_Smoke,
 	EmitterType_LeafTree,
 	EmitterType_LeafSakura,
