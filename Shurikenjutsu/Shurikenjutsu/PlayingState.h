@@ -19,11 +19,11 @@ class Sound;
 class ScoreBoard;
 class SuddenDeathState;
 
-class PlayingStateTest : public GameState
+class PlayingState : public GameState
 {
 public:
-	PlayingStateTest();
-	~PlayingStateTest();
+	PlayingState();
+	~PlayingState();
 	virtual bool Initialize();
 	virtual bool Initialize(std::string p_levelName);
 	void Shutdown();
@@ -48,7 +48,7 @@ public:
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);
-	void PlayingStateTest::OnScreenResize();
+	void OnScreenResize();
 
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 

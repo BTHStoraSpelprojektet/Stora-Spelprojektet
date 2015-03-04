@@ -1131,10 +1131,10 @@ void Network::Disconnect()
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }
 
-void Network::ChooseChar(char* p_name, int p_charNr, int p_toolNr, int p_team)
+void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 {
 	RakNet::BitStream bitStream;
-	RakNet::RakString name = p_name;
+	RakNet::RakString name = m_playerName.c_str();
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
 	bitStream.Write(name);
@@ -1146,7 +1146,7 @@ void Network::ChooseChar(char* p_name, int p_charNr, int p_toolNr, int p_team)
 
 	m_myPlayer.charNr = p_charNr;
 	m_myPlayer.toolNr = p_toolNr;
-	m_myPlayer.name = p_name;
+	m_myPlayer.name = name;
 }
 
 bool Network::IsConnected()
@@ -2157,4 +2157,9 @@ void Network::UpdatePlayerName(RakNet::RakNetGUID p_guid, RakNet::RakString p_na
 			}
 		}
 	}
+}
+
+void Network::SetPlayerName(std::string p_playerName)
+{
+	m_playerName = p_playerName;
 }

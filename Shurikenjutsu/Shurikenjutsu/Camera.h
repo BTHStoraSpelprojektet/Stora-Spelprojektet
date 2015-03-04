@@ -48,6 +48,8 @@ public:
 	void Update3DSound(Sound* p_sound, float p_x, float p_y, float p_z);
 
 private:
+	DirectX::XMVECTOR SmoothStep(DirectX::XMVECTOR V0, DirectX::XMVECTOR V1, float t);
+
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT3 m_target;
 	DirectX::XMFLOAT3 m_look;

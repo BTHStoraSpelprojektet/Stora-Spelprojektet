@@ -12,7 +12,7 @@ class Timer;
 class Debug;
 class ChooseState;
 class MenuState;
-class PlayingStateTest;
+class PlayingState;
 class GameState;
 class Cursor;
 
@@ -37,7 +37,7 @@ private:
 	MenuState* m_menuState;
 	ChooseState* m_chooseNinjaState;
 	GameState* m_gameState;
-	PlayingStateTest* m_playingState;
+	PlayingState* m_playingState;
 	Cursor *m_cursor;
 
 	Sound* m_sound;
