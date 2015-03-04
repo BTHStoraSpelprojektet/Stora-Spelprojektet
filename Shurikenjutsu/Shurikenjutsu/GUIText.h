@@ -3,10 +3,8 @@
 
 #include <string>
 #include <vector>
-
+#include "FW1FontWrapper.h"
 #include <D3D11.h>
-struct IDWriteTextLayout;
-struct IDWriteTextFormat;
 
 class GUIText
 {
@@ -23,6 +21,7 @@ public:
 	void SetPosition(float p_x, float p_y);
 	void SetSize(float p_size);
 	void SetColor(UINT32 p_color);
+	void SetTextAlignment(DWRITE_TEXT_ALIGNMENT p_alignmentType);
 
 	float GetPositionX();
 	float GetPositionY();
@@ -44,6 +43,7 @@ private:
 	IDWriteTextFormat* m_format;
 	std::vector<IDWriteTextLayout*> m_layouts;
 	std::string m_text;
+	DWRITE_TEXT_ALIGNMENT m_textAlignment;
 };
 
 #endif

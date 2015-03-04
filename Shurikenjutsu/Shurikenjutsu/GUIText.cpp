@@ -1,6 +1,5 @@
 #include "GUIText.h"
 #include "GUIManager.h"
-#include "FW1FontWrapper.h"
 #include "GraphicsEngine.h"
 #include "Globals.h"
 #include "ConsoleFunctions.h"
@@ -26,6 +25,7 @@ bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y,
 
 	wf->Release();
 
+	SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 	SetText(p_text);
 	SetSize(p_size);
 	SetPosition(p_x, p_y);
@@ -105,7 +105,7 @@ void GUIText::SetText(std::string p_text)
 	wf->CreateTextLayout(your_result, m_textLength, m_format, 0.0f, 0.0f, &textLayout);
 	textLayout->SetWordWrapping(DWRITE_WORD_WRAPPING_NO_WRAP);
 	textLayout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-	textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+	textLayout->SetTextAlignment(m_textAlignment);
 	m_layouts.push_back(textLayout);
 	
 	// Get the layout measurements
@@ -138,6 +138,11 @@ void GUIText::SetColor(UINT32 p_color)
 	m_color = p_color;
 }
 
+void GUIText::SetTextAlignment(DWRITE_TEXT_ALIGNMENT p_alignmentType)
+{
+	m_textAlignment = p_alignmentType;
+}
+
 float GUIText::GetPositionX()
 {
 	return m_posx;
@@ -158,7 +163,7 @@ float GUIText::GetHeight()
 	return m_height;
 }
 
-UINT32 GUIText::GUIText::GetColor()
+UINT32 GUIText::GetColor()
 {
 	return m_color;
 }

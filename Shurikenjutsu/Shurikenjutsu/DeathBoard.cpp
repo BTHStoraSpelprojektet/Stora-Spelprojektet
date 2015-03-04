@@ -23,7 +23,7 @@ DeathBoard* DeathBoard::GetInstance()
 
 bool DeathBoard::Initialize()
 {
-	m_originalPos = DirectX::XMFLOAT3((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - 140, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f - 30, 0);
+	m_originalPos = DirectX::XMFLOAT3((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - 40, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f - 30, 0);
 	for (int i = 0; i < 5; i++)
 	{
 		m_deathTimer[i] = 0.0;
@@ -33,18 +33,20 @@ bool DeathBoard::Initialize()
 
 	for (int i = 0; i < 5; i++)
 	{
-		m_killer[i] = GUIText();
-		m_killer[i].Initialize("Name", 30.0f, position.x, position.y, 0xFFFFFFFF);
-		//m_killer[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
-		position.x += 55;
+		m_deadGuy[i] = GUIText();
+		m_deadGuy[i].Initialize("Name", 30.0f, position.x, position.y, 0xFFFFFFFF);
+		m_deadGuy[i].SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
+		position.x -= (m_deadGuy[i].GetWidth() + 22.5f);
 
 		m_killAbility[i] = GUIElement();
 		m_killAbility[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
-		position.x += 55;
+		position.x -= 22.5f;
 
-		m_deadGuy[i] = GUIText();
-		m_deadGuy[i].Initialize("Name", 30.0f, position.x, position.y, 0xFFFFFFFF);
-		//m_deadGuy[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+		m_killer[i] = GUIText();
+		m_killer[i].Initialize("Name", 30.0f, position.x, position.y, 0xFFFFFFFF);
+		m_killer[i].SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
+
+
 	}
 	m_nrOfDeaths = -1;
 
@@ -110,13 +112,16 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 	DirectX::XMFLOAT3 position = m_originalPos;
 	position.y -= (55 * m_nrOfDeaths);
 
-	m_killer[m_nrOfDeaths].SetPosition(position.x, position.y);
-	m_killer[m_nrOfDeaths].SetText(Network::GetInstance()->GetPlayerName(p_ninjaKilling));
-	position.x += 55;
-	m_killAbility[m_nrOfDeaths].SetPosition(position);
-	position.x += 55;
 	m_deadGuy[m_nrOfDeaths].SetPosition(position.x, position.y);
 	m_deadGuy[m_nrOfDeaths].SetText(Network::GetInstance()->GetPlayerName(p_ninjaKilled));
+	position.x -= (m_deadGuy[m_nrOfDeaths].GetWidth() + 22.5f);
+
+	m_killAbility[m_nrOfDeaths].SetPosition(position);
+	position.x -= 30.0f;
+
+	m_killer[m_nrOfDeaths].SetPosition(position.x, position.y);
+	m_killer[m_nrOfDeaths].SetText(Network::GetInstance()->GetPlayerName(p_ninjaKilling));
+	
 	
 
 	//switch (p_ninjaKilling)
