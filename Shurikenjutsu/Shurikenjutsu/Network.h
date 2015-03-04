@@ -155,6 +155,7 @@ public:
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
 
 	void SetPlayerName(std::string p_playerName);
+	std::string GetPlayerName(RakNet::RakNetGUID p_guid);
 
 private:
 	void ClearListsAtNewRound();

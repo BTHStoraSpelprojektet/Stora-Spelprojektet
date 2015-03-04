@@ -80,7 +80,7 @@ bool MenuState::Initialize()
 
 	// Initialize play menu
 	m_ipbox = new MenuTextBox();
-	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/BloodParticle.png"), 0, -67, 354.0f, 67.0f, 15, "194.47.150.130");
+	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/ipbox2.png"), 0, -67, 394.0f, 67.0f, 15, "194.47.150.130");
 	m_hideIpBox = true;
 
 	m_namebox = new MenuTextBox();

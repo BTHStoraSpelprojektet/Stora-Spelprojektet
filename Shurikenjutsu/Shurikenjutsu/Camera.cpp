@@ -110,7 +110,6 @@ void Camera::UpdateProjectionMatrix(bool p_orthographic)
 	}
 }
 	
-
 void Camera::Walk(float p_value)
 {
 	DirectX::XMFLOAT3 look = DirectX::XMFLOAT3(p_value * m_look.x, p_value * m_look.y, p_value * m_look.z);
@@ -196,6 +195,12 @@ DirectX::XMFLOAT3 Camera::GetPosition()
 {
 	// Return view matrix
 	return m_position;
+}
+
+DirectX::XMFLOAT3 Camera::GetLookAt()
+{
+	// Return view matrix
+	return m_look;
 }
 
 DirectX::XMFLOAT4X4 Camera::GetViewMatrix()
@@ -357,6 +362,9 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	position = DirectX::XMFLOAT3(playerPosition.x, playerPosition.y + 30.0f, playerPosition.z - 15.0f);
 	target = playerPosition;
 
+	SetOutliningRayPosition(position);
+	SetOutliningRayTarget(target);
+
 	if (GLOBAL::GetInstance().CAMERA_MOVING)
 	{
 		MovingCamera(playerPosition);
@@ -486,7 +494,7 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 
 	moveX = 8 * procX;
 	moveY = 8 * procY;
-	
+
 	DirectX::XMFLOAT3 position, target, finalPos;
 	DirectX::XMFLOAT3 playerPosition = p_pos;
 	position = DirectX::XMFLOAT3(playerPosition.x + moveX, playerPosition.y + 30.0f, playerPosition.z - moveY - 15.0f);
@@ -502,7 +510,10 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 	m_oldPosition = finalPos;
-}
+
+	SetOutliningRayPosition(finalPos);
+	SetOutliningRayTarget(playerPosition);
+};
 
 void Camera::Update3DSound(Sound* p_sound, float p_x, float p_y, float p_z)
 {
@@ -531,4 +542,24 @@ DirectX::XMVECTOR Camera::SmoothStep(DirectX::XMVECTOR V0, DirectX::XMVECTOR V1,
 	t = (t > 1.0f) ? 1.0f : ((t < 0.0f) ? 0.0f : t);  // Clamp value to 0 to 1
 	t = t*t*(3.f - 2.f*t);
 	return DirectX::XMVectorLerp(V0, V1, t);
+}
+
+void Camera::SetOutliningRayPosition(DirectX::XMFLOAT3 p_position)
+{
+	m_outliningRayPosition = p_position;
+}
+
+void Camera::SetOutliningRayTarget(DirectX::XMFLOAT3 p_target)
+{
+	m_outliningRayTarget = p_target;
+}
+
+DirectX::XMFLOAT3 Camera::GetOutliningRayPosition()
+{
+	return m_outliningRayPosition;
+}
+
+DirectX::XMFLOAT3 Camera::GetOutliningRayTarget()
+{
+	return m_outliningRayTarget;
 }

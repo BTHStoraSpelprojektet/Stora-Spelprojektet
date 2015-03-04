@@ -253,7 +253,7 @@ void PlayingState::ShutdownExit()
 }
 
 GAMESTATESWITCH PlayingState::Update()
-{
+	{
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -510,7 +510,7 @@ void PlayingState::Render()
 	
 	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
 	GraphicsEngine::GetInstance()->RenderSSAO();
-	
+
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
@@ -631,35 +631,47 @@ DirectX::XMFLOAT3 PlayingState::Pick(Point p_point)
 
 void PlayingState::OutliningRays()
 {
-
+	DirectX::XMFLOAT3 target;
 	DirectX::XMFLOAT3 rayDir;
 	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	float rayDist = 0;
 	float collisionDist = 0;
 
-	rayPos = m_camera->GetPosition();
-	rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
-	Ray* rayTest = new Ray(rayPos, rayDir);
+	rayPos = m_camera->GetOutliningRayPosition();
+	target = m_camera->GetOutliningRayTarget();
+	// Increase height of check
+	target.y += 1;
 
-	if (Collisions::RayOBBCollision(rayTest, m_playerManager->GetPlayerBoundingBox()))
+	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&rayPos)));
+	DirectX::XMStoreFloat3(&rayDir,	DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
+
+	Ray* ray = new Ray(rayPos, rayDir);
+
+	if (Collisions::RayOBBCollision(ray, m_playerManager->GetPlayerBoundingBox()))
 	{
-		if (rayTest->m_distance != 0)
+		if (ray->m_distance != 0)
 		{
-			rayDist = rayTest->m_distance;
+			rayDist = ray->m_distance;
 		}
 	}
 
-	if (CollisionManager::GetInstance()->CalculateRayLength(rayTest, rayDist))
+	/*target.y -= 2;
+
+	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&rayPos)));
+	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
+
+	ray->m_direction = DirectX::XMFLOAT4(rayDir.x, rayDir.y, rayDir.z, 1);*/
+
+	if (CollisionManager::GetInstance()->CalculateRayLength(ray, rayDist))
 	{
 		m_renderOutlining = true;
 	}
-
 	else
 	{
 		m_renderOutlining = false;
 	}
 	
-	delete rayTest;
+	delete ray;
 }
 
 DirectX::XMFLOAT3 PlayingState::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
