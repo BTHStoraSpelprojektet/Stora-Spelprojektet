@@ -52,7 +52,6 @@ void ScoreBoard::Shutdown()
 	// Hoohhohoohohohohohohoohohohohoh
 	m_redColorPlayers.clear();
 	m_blueColorPlayers.clear();
-	m_text.clear();
 
 	m_playerName.Shutdown();
 	m_killDeathNumber.Shutdown();
@@ -236,7 +235,7 @@ void ScoreBoard::Render()
 	// Render background
 	m_background.QueueRender();
 
-	// Render red team portraits
+	// Render red team
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
 	{
 		it->second.portrait.QueueRender();
@@ -244,18 +243,12 @@ void ScoreBoard::Render()
 		it->second.name.Render();
 	}
 
-	// Render blue team portraits
+	// Render blue team
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
 	{
 		it->second.portrait.QueueRender();
 		it->second.ninjaText.Render();
 		it->second.name.Render();
-	}
-
-	// Render text
-	for (unsigned int i = 0; i < m_text.size(); i++)
-	{
-		m_text[i].Render();
 	}
 }
 
