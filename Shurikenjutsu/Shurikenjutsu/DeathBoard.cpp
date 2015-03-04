@@ -24,6 +24,8 @@ DeathBoard* DeathBoard::GetInstance()
 bool DeathBoard::Initialize()
 {
 	m_originalPos = DirectX::XMFLOAT3((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - 40, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f - 30, 0);
+	m_redColor = 0xff0700B6;
+	m_blueColor = 0xffB71300;
 	for (int i = 0; i < 5; i++)
 	{
 		m_deathTimer[i] = 0.0;
@@ -34,7 +36,7 @@ bool DeathBoard::Initialize()
 	for (int i = 0; i < 5; i++)
 	{
 		m_deadGuy[i] = GUIText();
-		m_deadGuy[i].Initialize("Name", 30.0f, position.x, position.y, 0xFFFFFFFF);
+		m_deadGuy[i].Initialize("Name", 35.0f, position.x, position.y, 0xFFFFFFFF);
 		m_deadGuy[i].SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
 		position.x -= (m_deadGuy[i].GetWidth() + 22.5f);
 
@@ -43,7 +45,7 @@ bool DeathBoard::Initialize()
 		position.x -= 22.5f;
 
 		m_killer[i] = GUIText();
-		m_killer[i].Initialize("Name", 30.0f, position.x, position.y, 0xFFFFFFFF);
+		m_killer[i].Initialize("Name", 35.0f, position.x, position.y, 0xFFFFFFFF);
 		m_killer[i].SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
 
 
@@ -109,50 +111,41 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 {
 	DeathEverywhere();
 	
+	int team;
 	DirectX::XMFLOAT3 position = m_originalPos;
 	position.y -= (55 * m_nrOfDeaths);
 
+	// Dead guy
 	m_deadGuy[m_nrOfDeaths].SetPosition(position.x, position.y);
 	m_deadGuy[m_nrOfDeaths].SetText(Network::GetInstance()->GetPlayerName(p_ninjaKilled));
+	team = Network::GetInstance()->GetTeam(p_ninjaKilled);
+	if (team == 1)
+	{
+		m_deadGuy[m_nrOfDeaths].SetColor(m_redColor);
+	}
+	else if (team == 2)
+	{
+		m_deadGuy[m_nrOfDeaths].SetColor(m_blueColor);
+	}
 	position.x -= (m_deadGuy[m_nrOfDeaths].GetWidth() + 22.5f);
 
+	// Ability
 	m_killAbility[m_nrOfDeaths].SetPosition(position);
 	position.x -= 30.0f;
 
+	// Killer
 	m_killer[m_nrOfDeaths].SetPosition(position.x, position.y);
 	m_killer[m_nrOfDeaths].SetText(Network::GetInstance()->GetPlayerName(p_ninjaKilling));
+	team = Network::GetInstance()->GetTeam(p_ninjaKilling);
+	if (team == 1)
+	{
+		m_killer[m_nrOfDeaths].SetColor(m_redColor);
+	}
+	else if (team == 2)
+	{
+		m_killer[m_nrOfDeaths].SetColor(m_blueColor);
+	}
 	
-	
-
-	//switch (p_ninjaKilling)
-	//{
-	//case 0:
-	//	m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
-	//	break;
-	//case 1:
-	//	m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
-	//	break;
-	//case 2:
-	//	m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
-	//	break;
-	//default:
-	//	break;
-	//}
-
-	//switch (p_ninjaKilled)
-	//{
-	//case 0:
-	//	m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
-	//	break;
-	//case 1:
-	//	m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
-	//	break;
-	//case 2:
-	//	m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
-	//	break;
-	//default:
-	//	break;
-	//}
 
 	switch (p_abilityUsed)
 	{
@@ -214,8 +207,10 @@ void DeathBoard::ChangeOrder(int p_index)
 	for (int i = p_index; i < 4; i++)
 	{
 		m_killer[i].SetText(m_killer[i + 1].GetText());
+		m_killer[i].SetPosition(m_killer[i + 1].GetPositionX(), m_killer[i + 1].GetPositionY());
 		m_killAbility[i].SetTexture(m_killAbility[i + 1].GetTexture());
 		m_deadGuy[i].SetText(m_deadGuy[i + 1].GetText());
+		m_deadGuy[i].SetPosition(m_deadGuy[i + 1].GetPositionX(), m_deadGuy[i + 1].GetPositionY());
 
 		m_deathTimer[i] = m_deathTimer[i + 1];
 	}

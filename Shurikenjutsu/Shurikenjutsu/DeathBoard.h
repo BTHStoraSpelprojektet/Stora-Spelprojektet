@@ -40,6 +40,9 @@ private:
 
 	double m_deathTimer[5];
 	int m_nrOfDeaths;
+
+	UINT32 m_redColor;
+	UINT32 m_blueColor;
 };
 
 #endif // !DEATHBOARD_H_
