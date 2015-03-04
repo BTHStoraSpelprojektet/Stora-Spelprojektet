@@ -464,7 +464,7 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 		case ABILITIES_FANBOOMERANG:
 		{
 			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
-			p_fanBoomerang.Add(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
+			p_fanBoomerang.Add(p_deltaTime, p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 			break;
 		}
 
