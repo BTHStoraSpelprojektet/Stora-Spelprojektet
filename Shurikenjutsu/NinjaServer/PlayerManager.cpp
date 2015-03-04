@@ -658,7 +658,7 @@ void PlayerManager::ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p
 	int kills, deaths = 0;
 	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
-		if (m_players[i].guid == p_killerID)
+		if (m_players[i].guid == p_killerID && p_killerID != p_deadID)
 		{
 			m_players[i].kills += 1;
 			kills = m_players[i].kills;
