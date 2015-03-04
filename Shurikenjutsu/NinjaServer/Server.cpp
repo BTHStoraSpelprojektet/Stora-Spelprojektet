@@ -189,17 +189,19 @@ void Server::ReceviePacket()
 
 			std::cout << "Connection " << m_packet->guid.ToString() << " have choosen a character\n";
 
+			RakNet::RakString name;
 			int charNr;
 			int toolNr;
 			int team;
 			bitStream.Read(messageID);
+			bitStream.Read(name);
 			bitStream.Read(charNr);
 			bitStream.Read(toolNr);
 			bitStream.Read(team);
 
 			if (m_gameState->GetPlayerIndex(m_packet->guid) == -1)
 			{
-				m_gameState->AddPlayer(m_packet->guid, charNr, toolNr, team);
+				m_gameState->AddPlayer(m_packet->guid, name, charNr, toolNr, team);
 			}
 			break;
 		}
