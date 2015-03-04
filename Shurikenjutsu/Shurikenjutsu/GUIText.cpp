@@ -106,6 +106,13 @@ void GUIText::SetText(std::string p_text)
 	textLayout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 	textLayout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 	m_layouts.push_back(textLayout);
+	
+	// Get the layout measurements
+	DWRITE_OVERHANG_METRICS overhangMetrics;
+	textLayout->GetOverhangMetrics(&overhangMetrics);
+
+	m_width = (overhangMetrics.left + overhangMetrics.right) / GLOBAL::GetInstance().MAX_SCREEN_WIDTH * GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
+	m_height = (overhangMetrics.bottom + overhangMetrics.top) / GLOBAL::GetInstance().MAX_SCREEN_HEIGHT* GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 
 	wf->Release();
 }
@@ -138,6 +145,16 @@ float GUIText::GetPositionX()
 float GUIText::GetPositionY()
 {
 	return m_posy;
+}
+
+float GUIText::GetWidth()
+{
+	return m_width;
+}
+
+float GUIText::GetHeight()
+{
+	return m_height;
 }
 
 UINT32 GUIText::GetColor()
