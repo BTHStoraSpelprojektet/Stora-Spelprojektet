@@ -636,7 +636,7 @@ DirectX::XMFLOAT3 PlayingStateTest::Pick(Point p_point)
 
 void PlayingStateTest::OutliningRays()
 {
-
+	DirectX::XMFLOAT3 target;
 	DirectX::XMFLOAT3 rayDir;
 	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	float rayDist = 0;
@@ -644,14 +644,20 @@ void PlayingStateTest::OutliningRays()
 
 	rayPos = m_camera->GetOutliningRayPosition();
 	// Increase height of check
-	rayPos.y += 2;
-	rayDir = m_camera->GetLookAt();
-	//rayDir = m_camera->GetOutliningRayTarget();
-	// Get LookAt from viewmatrix..
-	//rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
+	target = m_camera->GetOutliningRayTarget();
+	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&rayPos)));
+	
 	DirectX::XMStoreFloat3(&rayDir,	DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
+	rayPos.y += 2;
 	Ray* rayTest = new Ray(rayPos, rayDir);
 
+	if (Collisions::RayOBBCollision(rayTest, m_playerManager->GetPlayerBoundingBox()))
+	{
+		if (rayTest->m_distance != 0)
+		{
+			rayDist = rayTest->m_distance;
+		}
+	}
 	if (Collisions::RayOBBCollision(rayTest, m_playerManager->GetPlayerBoundingBox()))
 	{
 		if (rayTest->m_distance != 0)

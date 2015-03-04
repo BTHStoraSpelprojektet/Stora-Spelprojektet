@@ -38,7 +38,7 @@ bool DeathBoard::Initialize()
 		m_killer[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
 		position.x += 55;
 
-		m_killAbility[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+		m_killAbility[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		position.x += 55;
 
 		m_deadGuy[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
@@ -165,7 +165,7 @@ void DeathBoard::KillHappened(int p_ninjaKilling, int p_ninjaKilled, ABILITIES p
 		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_CALPTROPS));
 		break;
 	case ABILITIES_WHIP_PRIMARY:
-		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_N2MELEE));
+		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_N2RANGED));
 		break;
 	case ABILITIES_WHIP_SECONDARY:
 		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_N2E));

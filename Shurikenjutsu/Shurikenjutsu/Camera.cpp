@@ -494,7 +494,7 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 
 	moveX = 8 * procX;
 	moveY = 8 * procY;
-	
+
 	DirectX::XMFLOAT3 position, target, finalPos;
 	DirectX::XMFLOAT3 playerPosition = p_pos;
 	position = DirectX::XMFLOAT3(playerPosition.x + moveX, playerPosition.y + 30.0f, playerPosition.z - moveY - 15.0f);
@@ -510,7 +510,10 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
 	m_oldPosition = finalPos;
-}
+
+	SetOutliningRayPosition(finalPos);
+	SetOutliningRayTarget(playerPosition);
+};
 
 void Camera::Update3DSound(Sound* p_sound, float p_x, float p_y, float p_z)
 {
