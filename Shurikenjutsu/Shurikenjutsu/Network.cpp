@@ -411,6 +411,7 @@ void Network::ReceviePacket()
 			bitStream.Read(isAlive);
 
 			UpdatePlayerHP(guid, currentHP, isAlive);
+			UpdatePlayerInvis(guid, false);
 			SpawnBloodParticles(guid);
 			break;
 		}
