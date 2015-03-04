@@ -1,9 +1,13 @@
 #ifndef DEATHBOARD_H_
 #define DEATHBOARD_H_
 
+#define WIN32_LEAN_AND_MEAN
+
 #include <DirectXMath.h>
 #include "../CommonLibs/CommonEnums.h"
 #include "GUIElement.h"
+#include "GUIText.h"
+#include "..\CommonLibs\RakNet\RakNetTypes.h"
 
 class DeathBoard
 {
@@ -20,7 +24,7 @@ public:
 	void Render();
 	
 	void DeathEverywhere();
-	void KillHappened(int p_ninjaKilling, int p_ninjaKilled, ABILITIES p_abilityUsed);
+	void KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetGUID p_ninjaKilled, ABILITIES p_abilityUsed);
 
 private:
 	DeathBoard();
@@ -30,8 +34,8 @@ private:
 	void ChangeOrder(int p_index);
 
 	DirectX::XMFLOAT3 m_originalPos;
-	GUIElement m_killer[5];
-	GUIElement m_deadGuy[5];
+	GUIText m_killer[5];
+	GUIText m_deadGuy[5];
 	GUIElement m_killAbility[5];
 
 	double m_deathTimer[5];

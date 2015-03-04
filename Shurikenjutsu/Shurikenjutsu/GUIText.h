@@ -28,6 +28,7 @@ public:
 	float GetPositionY();
 	UINT32 GetColor();
 	IDWriteTextLayout* GetLayout();
+	std::string GetText();
 
 private:
 	float m_posx;
@@ -36,6 +37,7 @@ private:
 	UINT32 m_color;
 	IDWriteTextFormat* m_format;
 	std::vector<IDWriteTextLayout*> m_layouts;
+	std::string m_text;
 };
 
 #endif

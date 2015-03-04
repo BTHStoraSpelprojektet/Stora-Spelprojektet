@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "../CommonLibs/ModelNames.h"
 #include "../CommonLibs/CommonEnums.h"
+#include "Network.h"
 
 DeathBoard* DeathBoard::m_instance;
 
@@ -27,21 +28,23 @@ bool DeathBoard::Initialize()
 	{
 		m_deathTimer[i] = 0.0;
 	}
-	m_killer[0] = GUIElement();
-	m_deadGuy[0] = GUIElement();
-	m_killAbility[0] = GUIElement();
 
 	DirectX::XMFLOAT3 position = m_originalPos;
 
 	for (int i = 0; i < 5; i++)
 	{
-		m_killer[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+		m_killer[i] = GUIText();
+		m_killer[i].Initialize("Name", 30.0f, position.x, position.y, 0xFFFFFFFF);
+		//m_killer[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
 		position.x += 55;
 
+		m_killAbility[i] = GUIElement();
 		m_killAbility[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
 		position.x += 55;
 
-		m_deadGuy[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+		m_deadGuy[i] = GUIText();
+		m_deadGuy[i].Initialize("Name", 30.0f, position.x, position.y, 0xFFFFFFFF);
+		//m_deadGuy[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
 	}
 	m_nrOfDeaths = -1;
 
@@ -83,9 +86,9 @@ void DeathBoard::Render()
 	{
 		if (m_deathTimer[i] > 0)
 		{
-			m_killer[i].QueueRender();
+			m_killer[i].Render();
 			m_killAbility[i].QueueRender();
-			m_deadGuy[i].QueueRender();
+			m_deadGuy[i].Render();
 		}
 	}
 }
@@ -100,49 +103,51 @@ void DeathBoard::DeathEverywhere()
 	m_deathTimer[m_nrOfDeaths] = 5.0;
 }
 
-void DeathBoard::KillHappened(int p_ninjaKilling, int p_ninjaKilled, ABILITIES p_abilityUsed)
+void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetGUID p_ninjaKilled, ABILITIES p_abilityUsed)
 {
 	DeathEverywhere();
 	
 	DirectX::XMFLOAT3 position = m_originalPos;
 	position.y -= (55 * m_nrOfDeaths);
 
-	m_killer[m_nrOfDeaths].SetPosition(position);
+	m_killer[m_nrOfDeaths].SetPosition(position.x, position.y);
+	m_killer[m_nrOfDeaths].SetText(Network::GetInstance()->GetPlayerName(p_ninjaKilling));
 	position.x += 55;
 	m_killAbility[m_nrOfDeaths].SetPosition(position);
 	position.x += 55;
-	m_deadGuy[m_nrOfDeaths].SetPosition(position);
+	m_deadGuy[m_nrOfDeaths].SetPosition(position.x, position.y);
+	m_deadGuy[m_nrOfDeaths].SetText(Network::GetInstance()->GetPlayerName(p_ninjaKilled));
 	
 
-	switch (p_ninjaKilling)
-	{
-	case 0:
-		m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
-		break;
-	case 1:
-		m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
-		break;
-	case 2:
-		m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
-		break;
-	default:
-		break;
-	}
+	//switch (p_ninjaKilling)
+	//{
+	//case 0:
+	//	m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+	//	break;
+	//case 1:
+	//	m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
+	//	break;
+	//case 2:
+	//	m_killer[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
+	//	break;
+	//default:
+	//	break;
+	//}
 
-	switch (p_ninjaKilled)
-	{
-	case 0:
-		m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
-		break;
-	case 1:
-		m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
-		break;
-	case 2:
-		m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
-		break;
-	default:
-		break;
-	}
+	//switch (p_ninjaKilled)
+	//{
+	//case 0:
+	//	m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+	//	break;
+	//case 1:
+	//	m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA2));
+	//	break;
+	//case 2:
+	//	m_deadGuy[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA3));
+	//	break;
+	//default:
+	//	break;
+	//}
 
 	switch (p_abilityUsed)
 	{
@@ -203,9 +208,9 @@ void DeathBoard::ChangeOrder(int p_index)
 
 	for (int i = p_index; i < 4; i++)
 	{
-		m_killer[i].SetTexture(m_killer[i + 1].GetTexture());
+		m_killer[i].SetText(m_killer[i + 1].GetText());
 		m_killAbility[i].SetTexture(m_killAbility[i + 1].GetTexture());
-		m_deadGuy[i].SetTexture(m_deadGuy[i + 1].GetTexture());
+		m_deadGuy[i].SetText(m_deadGuy[i + 1].GetText());
 
 		m_deathTimer[i] = m_deathTimer[i + 1];
 	}

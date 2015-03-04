@@ -81,6 +81,7 @@ void GUIText::Shutdown()
 
 void GUIText::SetText(std::string p_text)
 {
+	m_text = p_text;
 	std::wstring wstring;
 	for (unsigned int i = 0; i < p_text.length(); ++i)
 	{
@@ -148,4 +149,9 @@ UINT32 GUIText::GetColor()
 IDWriteTextLayout* GUIText::GetLayout()
 {
 	return m_layouts[0];
+}
+
+std::string GUIText::GetText()
+{
+	return m_text;
 }

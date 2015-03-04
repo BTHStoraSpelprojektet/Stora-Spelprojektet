@@ -573,7 +573,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 						if (m_players[j].guid == p_attackingGuid)
 						{
 							// Send to deathboard
-							DeathBoard(m_players[i].charNr, m_players[j].charNr, p_usedAbility);
+							DeathBoard(m_players[i].guid, m_players[j].guid, p_usedAbility);
 							// Send to scoreboard
 							ScoreBoard(m_players[i].guid, m_players[j].guid);
 							break;
@@ -642,7 +642,7 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool
 
 }
 
-void PlayerManager::DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility)
+void PlayerManager::DeathBoard(RakNet::RakNetGUID p_TakerNinja, RakNet::RakNetGUID p_AttackerNinja, ABILITIES p_usedAbility)
 {
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_DEATHBOARDKILL);
