@@ -1205,3 +1205,8 @@ bool Player::IsInvis()
 {
 	return m_invis;
 }
+
+std::string Player::GetName()
+{
+	return m_name;
+}

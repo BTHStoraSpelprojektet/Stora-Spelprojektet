@@ -81,6 +81,8 @@ public:
 	void SetInvis(bool p_invis);
 	bool IsInvis();
 
+	std::string GetName();
+
 protected:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
