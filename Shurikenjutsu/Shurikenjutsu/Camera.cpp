@@ -475,24 +475,25 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 	posY = InputManager::GetInstance()->GetMousePositionY() - centerY;
 	float procX = posX / 440;
 	float procY = posY / 352; // 512 *0,68 //0.68 = 440/640;
-	if (procX > 1.0f)
-		procX = 1.0f;
-	if (procX < -1.0f)
-		procX = -1.0f;
-	if (procY > 1.0f)
-		procY = 1.0f;
-	if (procY < -1.0f)
-		procY = -1.0f;
+	if (procX > 1.0)
+		procX = 1.0;
+	if (procX < -1.0)
+		procX = -1.0;
+	if (procY > 1.0)
+		procY = 1.0;
+	if (procY < -1.0)
+		procY = -1.0;
 
-	moveX = 10 * procX;
-	moveY = 10 * procY;
+	moveX = 8 * procX;
+	moveY = 8 * procY;
 	
 	DirectX::XMFLOAT3 position, target, finalPos;
 	DirectX::XMFLOAT3 playerPosition = p_pos;
 	position = DirectX::XMFLOAT3(playerPosition.x + moveX, playerPosition.y + 30.0f, playerPosition.z - moveY - 15.0f);
 	target = DirectX::XMFLOAT3(playerPosition.x + moveX, 0, playerPosition.z - moveY);
 
-	DirectX::XMStoreFloat3(&finalPos, DirectX::XMVectorLerp(DirectX::XMLoadFloat3(&m_oldPosition), DirectX::XMLoadFloat3(&position), 0.6f));
+	//DirectX::XMStoreFloat3(&finalPos, DirectX::XMVectorLerp(DirectX::XMLoadFloat3(&m_oldPosition), DirectX::XMLoadFloat3(&position), 0.001f));
+	DirectX::XMStoreFloat3(&finalPos, SmoothStep(DirectX::XMLoadFloat3(&m_oldPosition), DirectX::XMLoadFloat3(&position), 0.25f));
 	target = DirectX::XMFLOAT3(finalPos.x, 0, finalPos.z + 15.0f);
 	UpdatePosition(finalPos);
 	UpdateTarget(target);
@@ -500,7 +501,7 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 	UpdateProjectionMatrix(false);
 	GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 
-	m_oldPosition = position;
+	m_oldPosition = finalPos;
 }
 
 void Camera::Update3DSound(Sound* p_sound, float p_x, float p_y, float p_z)
@@ -523,4 +524,11 @@ void Camera::Update3DSound(Sound* p_sound, float p_x, float p_y, float p_z)
 	up.y = 1; //m_upVector.y;
 	up.z = 0; //m_upVector.z;
 	p_sound->UpdateListenerPos(pos, forward, up);
+}
+
+DirectX::XMVECTOR Camera::SmoothStep(DirectX::XMVECTOR V0, DirectX::XMVECTOR V1, float t)
+{
+	t = (t > 1.0f) ? 1.0f : ((t < 0.0f) ? 0.0f : t);  // Clamp value to 0 to 1
+	t = t*t*(3.f - 2.f*t);
+	return DirectX::XMVectorLerp(V0, V1, t);
 }
