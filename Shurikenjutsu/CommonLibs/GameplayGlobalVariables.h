@@ -4,7 +4,7 @@
 const float ALL_AROUND_GLOBAL_COOLDOWN = 0.4f;
 
 
-const float ROUND_TIME_LIMIT_MINUTS = 5.0f;
+const float ROUND_TIME_LIMIT_MINUTS = 1.0f;
 const float ROUND_TIME_LIMIT_SECONDS = 10.0f;
 const float SUDDEN_DEATH_DAMAGE = 5.0f;
 const float TIME_UNTIL_NEXT_SUDDEN_DEATH_BOX = 1.0f;
