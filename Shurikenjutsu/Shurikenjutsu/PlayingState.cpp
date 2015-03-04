@@ -256,11 +256,6 @@ void PlayingState::ShutdownExit()
 
 GAMESTATESWITCH PlayingState::Update()
 {
-	/*if (Network::GetInstance()->IsSuddenDeath())
-	{*/
-		m_suddenDeath->Update();
-	//}
-
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -304,6 +299,12 @@ GAMESTATESWITCH PlayingState::Update()
 
 	// Calculate new visibility polygon boundries.
 	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
+
+	// Update sudden death gas if the time is right.
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Update();
+	}
 
 	// Handle camera input.
 	m_camera->HandleInput();
@@ -546,10 +547,10 @@ void PlayingState::Render()
 
 	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 
-	/*if (Network::GetInstance()->IsSuddenDeath())
-	{*/
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
 		m_suddenDeath->Render(m_camera);
-	//}
+	}
 
 	// Render character outlining.
 	if (m_renderOutlining)
