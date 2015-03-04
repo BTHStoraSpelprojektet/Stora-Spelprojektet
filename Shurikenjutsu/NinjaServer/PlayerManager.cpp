@@ -656,33 +656,21 @@ void PlayerManager::ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p
 {
 	RakNet::BitStream bitStream;
 	int kills, deaths = 0;
-	if (p_deadID == p_killerID)
+
+	for (unsigned int i = 0; i < m_players.size(); i++)
 	{
-		for (unsigned int i = 0; i < m_players.size(); i++)
+		if (m_players[i].guid == p_killerID)
 		{
-			if (m_players[i].guid == p_deadID)
+			if (p_killerID != p_deadID)
 			{
-				kills = m_players[i].deaths +1;
+				m_players[i].kills += 1;
 			}
+			kills = m_players[i].kills;
 		}
-	}
-	else
-	{
-		for (unsigned int i = 0; i < m_players.size(); i++)
+		if (m_players[i].guid == p_deadID)
 		{
-			if (m_players[i].guid == p_killerID)
-			{
-				if (p_killerID != p_deadID)
-				{
-					m_players[i].kills += 1;
-				}
-				kills = m_players[i].kills;
-			}
-			if (m_players[i].guid == p_deadID)
-			{
-				m_players[i].deaths += 1;
-				deaths = m_players[i].deaths;
-			}
+			m_players[i].deaths += 1;
+			deaths = m_players[i].deaths;
 		}
 	}
 	bitStream.Write((RakNet::MessageID)ID_SCOREBOARDKILL);
