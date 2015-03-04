@@ -928,42 +928,38 @@ void CollisionManager::SetDeltaTime(float p_deltaTime)
 {
 	m_deltaTime = p_deltaTime;
 }
-void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList, std::vector<int> p_inactiveBoxIndexes)
+void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager)
 {
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+
 	for (unsigned int i = 0; i < playerList.size(); i++)
 	{
-		if (!DoesIndexExistInList(i, p_inactiveBoxIndexes))
+		if (playerList[i].isAlive)
 		{
-			if (playerList[i].isAlive)
-			{
-				Sphere playerSphere = Sphere(playerList[i].x, playerList[i].y, playerList[i].z, CHARACTER_ENEMY_BOUNDINGSPHERE);
+			Sphere playerSphere = Sphere(playerList[i].x, playerList[i].y, playerList[i].z, CHARACTER_ENEMY_BOUNDINGSPHERE);
 
-				std::vector<Box> damageBox = p_boxList;
-				for (unsigned int j = 0; j < damageBox.size(); j++)
+			if (playerList[i].x > 12.0f || playerList[i].x < -12.0f || playerList[i].z > 12.0f || playerList[i].z < -12.0f)
+			{
+				// Damage the player
+				if (playerList[i].dotDamage > 2.0f && p_playerManager->CanSendDotDamage())
 				{
-					if (IntersectionTests::Intersections::SphereBoxCollision(playerSphere.m_position, playerSphere.m_radius, damageBox[j].m_center, damageBox[j].m_extents))
-					{
-						// Damage the player
-						if (playerList[i].dotDamage > 2.0f && p_playerManager->CanSendDotDamage())
-						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
-							p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, playerList[i].guid, ABILITIES_SMOKEBOMB, true);
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
-						}
-						else
-						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
-						}
-						break;
-					}
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
+					p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, playerList[i].guid, ABILITIES_SMOKEBOMB, true);
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
 				}
+
+				else
+				{
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
+				}
+
+				break;
 			}
 		}
 	}
 }
-//Private
 
+//Private
 bool CollisionManager::DoesIndexExistInList(int p_index, std::vector<int> p_list)
 {
 	for (unsigned int i = 0; i < p_list.size(); i++)
