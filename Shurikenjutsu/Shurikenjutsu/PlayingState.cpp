@@ -545,6 +545,11 @@ void PlayingState::Render()
 
 	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 
+	/*if (Network::GetInstance()->IsSuddenDeath())
+	{*/
+	m_suddenDeath->Render(m_camera);
+	//}
+
 	// Render character outlining.
 	if (m_renderOutlining)
 	{
@@ -564,11 +569,6 @@ void PlayingState::Render()
 	{
 		ScoreBoard::GetInstance()->Render();
 	}
-
-	/*if (Network::GetInstance()->IsSuddenDeath())
-	{*/
-		m_suddenDeath->Render(m_camera);
-	//}
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
