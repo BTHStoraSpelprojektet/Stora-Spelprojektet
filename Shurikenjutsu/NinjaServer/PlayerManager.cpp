@@ -575,10 +575,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 							// Send to deathboard
 							DeathBoard(m_players[i].guid, m_players[j].guid, p_usedAbility);
 							// Send to scoreboard
-							if (m_players[j].guid != m_players[i].guid)
-							{
-								ScoreBoard(m_players[i].guid, m_players[j].guid);
-							}
+							ScoreBoard(m_players[i].guid, m_players[j].guid);
 							break;
 						}
 					}
@@ -659,20 +656,33 @@ void PlayerManager::ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p
 {
 	RakNet::BitStream bitStream;
 	int kills, deaths = 0;
-	for (unsigned int i = 0; i < m_players.size(); i++)
+	if (p_deadID == p_killerID)
 	{
-		if (m_players[i].guid == p_killerID)
+		for (unsigned int i = 0; i < m_players.size(); i++)
 		{
-			if (p_killerID != p_deadID)
+			if (m_players[i].guid == p_deadID)
 			{
-				m_players[i].kills += 1;
+				kills = m_players[i].deaths +1;
 			}
-			kills = m_players[i].kills;
 		}
-		if (m_players[i].guid == p_deadID)
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_players.size(); i++)
 		{
-			m_players[i].deaths += 1;
-			deaths = m_players[i].deaths;
+			if (m_players[i].guid == p_killerID)
+			{
+				if (p_killerID != p_deadID)
+				{
+					m_players[i].kills += 1;
+				}
+				kills = m_players[i].kills;
+			}
+			if (m_players[i].guid == p_deadID)
+			{
+				m_players[i].deaths += 1;
+				deaths = m_players[i].deaths;
+			}
 		}
 	}
 	bitStream.Write((RakNet::MessageID)ID_SCOREBOARDKILL);

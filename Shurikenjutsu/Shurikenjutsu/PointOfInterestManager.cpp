@@ -108,10 +108,6 @@ void PointOfInterestManager::RunePickedUp(PointOfInterestType p_poiType)
 
 void PointOfInterestManager::RoundRestart()
 {
-	for (unsigned int i = 0; i < m_runes.size(); i++)
-	{
-		m_runes[i].SetActive(true);
-	}
-	/*	Shutdown();
-	Initialize();*/
+	Shutdown();
+	Initialize();
 }

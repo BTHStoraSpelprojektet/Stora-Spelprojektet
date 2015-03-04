@@ -47,16 +47,18 @@ private:
 
 		MatrixBuffer()
 		{
-			DirectX::XMFLOAT4X4 view;
-			DirectX::XMStoreFloat4x4(&view, DirectX::XMMatrixIdentity());
-			m_viewMatrix = DirectX::XMLoadFloat4x4(&view);
 
-			DirectX::XMFLOAT4X4 projection;
-			DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixIdentity());
-			m_projectionMatrix = DirectX::XMLoadFloat4x4(&projection);
-
-			m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		}
+		void* MatrixBuffer::operator new(size_t p_i)
+		{
+			return _mm_malloc(p_i, 16);
+		}
+
+		void MatrixBuffer::operator delete(void* p_p)
+		{
+			_mm_free(p_p);
+		}
+
 	};
 
 	GUIText* m_title;

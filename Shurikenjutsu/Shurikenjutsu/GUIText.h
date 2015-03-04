@@ -45,5 +45,4 @@ private:
 	std::string m_text;
 	DWRITE_TEXT_ALIGNMENT m_textAlignment;
 };
-
 #endif
