@@ -1260,8 +1260,8 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
 					{
-						p_POIManager->PickUpRunes(PointOfInterestType_Invisible, playerList[j].guid);
 						p_playerManager->RuneInvisPickedUp(playerList[j].guid);
+						p_POIManager->PickUpRunes(PointOfInterestType_Invisible, playerList[j].guid);
 					}
 				}
 			}

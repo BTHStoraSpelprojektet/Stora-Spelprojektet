@@ -79,6 +79,7 @@ public:
 	Sound::SoundEmitter* m_soundEmitter;
 
 	void SetInvis(bool p_invis);
+	bool IsInvis();
 
 protected:
 	void CheckForSpecialAttack();

@@ -251,6 +251,7 @@ void Network::ReceviePacket()
 				UpdatePlayerChar(guid, charNr, toolNr);
 				UpdatePlayerID(guid, id);
 				UpdatePlayerKD(guid, deaths, kills);
+				UpdatePlayerInvis(guid, invis);
 
 				//ScoreBoard::GetInstance()->AddKD(guid, deaths, kills);
 
@@ -2088,11 +2089,29 @@ void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
 		m_myPlayer.invis = true;
 	}
 
-	for (int i = 0; i < m_enemyPlayers.size(); i++)
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 	{
 		if (m_enemyPlayers[i].guid == p_player)
 		{
 			m_enemyPlayers[i].invis = true;
+		}
+	}
+}
+
+void Network::UpdatePlayerInvis(RakNet::RakNetGUID p_guid, bool p_invis)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.invis = p_invis;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].invis = p_invis;
+			}
 		}
 	}
 }
