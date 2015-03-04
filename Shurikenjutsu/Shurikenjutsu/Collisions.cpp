@@ -28,11 +28,9 @@ bool Collisions::RayBoxCollision(Ray *p_ray, Box p_box)
 }
 bool Collisions::RayOBBCollision(Ray *p_ray, OBB p_OBB)
 {	
-	bool temp = IntersectionTests::Intersections::RayOBBCollision(p_ray->m_position, DirectX::XMFLOAT3(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z), p_OBB.m_center, p_OBB.m_extents, p_OBB.m_direction, p_ray->m_distance);
-	//bool temp2 = RayBoxCollision(p_ray, Box(p_OBB.m_center, p_OBB.m_extents));
-
-	return temp;
+	return IntersectionTests::Intersections::RayOBBCollision(p_ray->m_position, DirectX::XMFLOAT3(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z), p_OBB.m_center, p_OBB.m_extents, p_OBB.m_direction, p_ray->m_distance);	
 }
+
 bool Collisions::OBBOBBCollision(OBB p_OBB1, OBB p_OBB2)
 {
 	return IntersectionTests::Intersections::OBBOBBCollision(p_OBB1.m_center, p_OBB1.m_extents, p_OBB1.m_direction,p_OBB2.m_center, p_OBB2.m_extents, p_OBB2.m_direction);

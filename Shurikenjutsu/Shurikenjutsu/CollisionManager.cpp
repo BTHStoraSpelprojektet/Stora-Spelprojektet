@@ -210,6 +210,7 @@ bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 	float rayLength = p_rayDistance;
 	std::vector<float> rayLengths;
 
+	// Check all boxes, houses
 	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
 	{
 		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
@@ -220,6 +221,20 @@ bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 			}
 		}
 	}
+
+	// Check all spheres in the map, trees
+	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	{
+		if (Collisions::RaySphereCollision(ray, m_staticSphereList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+	
+	// If collision with ray check distanse, go throu get shortest length
 	for (unsigned int i = 0; i < rayLengths.size(); i++)
 	{
 		if (rayLengths[i] < rayLength)
@@ -227,11 +242,13 @@ bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 			rayLength = rayLengths[i];
 		}
 	}
-	if (rayLength < p_rayDistance)
-			return true;
 
+	// Return true if the raylength to a box or sphere is shorter then sent length
+	if (rayLength < p_rayDistance)
+	{
+		return true;
+	}
 	return false;
-	//return rayLength;
 }
 
 float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos)
