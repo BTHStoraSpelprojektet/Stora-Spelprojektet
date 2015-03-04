@@ -20,6 +20,8 @@ private:
 
 	float m_developersTextPositionY;
 	float m_musicTextPositionY;
+	float m_originalDevPosY;
+	float m_originalMusPosY;
 };
 
 #endif
