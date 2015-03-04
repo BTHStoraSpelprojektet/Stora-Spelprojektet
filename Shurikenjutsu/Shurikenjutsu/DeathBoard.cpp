@@ -23,7 +23,7 @@ DeathBoard* DeathBoard::GetInstance()
 
 bool DeathBoard::Initialize()
 {
-	m_originalPos = DirectX::XMFLOAT3((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - 40, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f - 30, 0);
+	m_originalPos = DirectX::XMFLOAT3((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH * 0.5f - 40, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT* 0.5f - 30, 0);
 	m_redColor = 0xff0700B6;
 	m_blueColor = 0xffB71300;
 	for (int i = 0; i < 5; i++)
