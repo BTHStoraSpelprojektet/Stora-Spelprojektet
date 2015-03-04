@@ -291,31 +291,59 @@ void ScoreBoard::KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNet
 	PlayerNet player = Network::GetInstance()->GetMyPlayer();
 	players.push_back(player);
 
-
-	for (unsigned int i = 0; i < players.size(); i++)
+	if (p_ninjaKiller == p_ninjaKilled)
 	{
-		// Red team
-		if (players[i].team == 1)
+		for (unsigned int i = 0; i < players.size(); i++)
 		{
-			if (players[i].guid == p_ninjaKiller)
+			// Red team
+			if (players[i].team == 1)
 			{
-				m_redColorPlayers[p_ninjaKiller].kill = p_kills;
-				m_blueColorPlayers[p_ninjaKilled].death = p_deaths;
-				m_redColorPlayers[p_ninjaKiller].ninjaText.SetText(std::to_string(m_redColorPlayers[p_ninjaKiller].kill) + "/" + std::to_string(m_redColorPlayers[p_ninjaKiller].death));
-				m_blueColorPlayers[p_ninjaKilled].ninjaText.SetText(std::to_string(m_blueColorPlayers[p_ninjaKilled].kill) + "/" + std::to_string(m_blueColorPlayers[p_ninjaKilled].death));
-				break;
+				if (players[i].guid == p_ninjaKilled)
+				{
+					m_redColorPlayers[p_ninjaKilled].death++;
+					m_redColorPlayers[p_ninjaKilled].ninjaText.SetText(std::to_string(m_redColorPlayers[p_ninjaKilled].kill) + "/" + std::to_string(m_redColorPlayers[p_ninjaKilled].death));
+					break;
+				}
+			}
+			// Blue team
+			else if (players[i].team == 2)
+			{
+				if (players[i].guid == p_ninjaKilled)
+				{
+					m_blueColorPlayers[p_ninjaKilled].death++;
+					m_blueColorPlayers[p_ninjaKilled].ninjaText.SetText(std::to_string(m_blueColorPlayers[p_ninjaKilled].kill) + "/" + std::to_string(m_blueColorPlayers[p_ninjaKilled].death));
+					break;
+				}
 			}
 		}
-		// Blue team
-		else if (players[i].team == 2)
+	}
+	else
+	{
+		for (unsigned int i = 0; i < players.size(); i++)
 		{
-			if (players[i].guid == p_ninjaKiller)
+			// Red team
+			if (players[i].team == 1)
 			{
-				m_blueColorPlayers[p_ninjaKiller].kill = p_kills;
-				m_redColorPlayers[p_ninjaKilled].death = p_deaths;
-				m_redColorPlayers[p_ninjaKilled].ninjaText.SetText(std::to_string(m_redColorPlayers[p_ninjaKilled].kill) + "/" + std::to_string(m_redColorPlayers[p_ninjaKilled].death));
-				m_blueColorPlayers[p_ninjaKiller].ninjaText.SetText(std::to_string(m_blueColorPlayers[p_ninjaKiller].kill) + "/" + std::to_string(m_blueColorPlayers[p_ninjaKiller].death));
-				break;
+				if (players[i].guid == p_ninjaKiller)
+				{
+					m_redColorPlayers[p_ninjaKiller].kill = p_kills;
+					m_blueColorPlayers[p_ninjaKilled].death = p_deaths;
+					m_redColorPlayers[p_ninjaKiller].ninjaText.SetText(std::to_string(m_redColorPlayers[p_ninjaKiller].kill) + "/" + std::to_string(m_redColorPlayers[p_ninjaKiller].death));
+					m_blueColorPlayers[p_ninjaKilled].ninjaText.SetText(std::to_string(m_blueColorPlayers[p_ninjaKilled].kill) + "/" + std::to_string(m_blueColorPlayers[p_ninjaKilled].death));
+					break;
+				}
+			}
+			// Blue team
+			else if (players[i].team == 2)
+			{
+				if (players[i].guid == p_ninjaKiller)
+				{
+					m_blueColorPlayers[p_ninjaKiller].kill = p_kills;
+					m_redColorPlayers[p_ninjaKilled].death = p_deaths;
+					m_redColorPlayers[p_ninjaKilled].ninjaText.SetText(std::to_string(m_redColorPlayers[p_ninjaKilled].kill) + "/" + std::to_string(m_redColorPlayers[p_ninjaKilled].death));
+					m_blueColorPlayers[p_ninjaKiller].ninjaText.SetText(std::to_string(m_blueColorPlayers[p_ninjaKiller].kill) + "/" + std::to_string(m_blueColorPlayers[p_ninjaKiller].death));
+					break;
+				}
 			}
 		}
 	}
