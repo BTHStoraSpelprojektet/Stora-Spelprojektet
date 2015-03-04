@@ -97,6 +97,7 @@ void PlayerManager::Update(bool p_inMenu)
 			m_enemyList[i]->SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i]->SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
+			m_enemyList[i]->SetInvis(enemyPlayers[i].invis);
 			m_enemyList[i]->Update();
 
 			if (m_enemyList[i]->m_soundEmitter != NULL) {
@@ -125,7 +126,10 @@ void PlayerManager::Render(bool p_inMenu)
 			{
 				if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 				{
-					m_enemyList[i]->Render();
+					if (!m_enemyList[i]->IsInvis())
+					{
+						m_enemyList[i]->Render();
+					}
 				}
 			}
 			else
@@ -144,19 +148,22 @@ void PlayerManager::RenderOutliningPassOne()
 void PlayerManager::RenderDepth(bool p_inMenu)
 {
 	if (!p_inMenu)
-{
-	m_player->RenderDepth();
+	{
+		m_player->RenderDepth();
 	}
 
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
 		if (!p_inMenu)
 		{
-		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
-		{
-			m_enemyList[i]->RenderDepth();
+			if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			{
+				if (!m_enemyList[i]->IsInvis())
+				{
+					m_enemyList[i]->RenderDepth();
+				}
+			}
 		}
-	}
 		else
 		{
 			m_enemyList[i]->RenderDepth();

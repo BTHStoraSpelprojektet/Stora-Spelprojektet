@@ -78,6 +78,9 @@ public:
 	void SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList);
 	Sound::SoundEmitter* m_soundEmitter;
 
+	void SetInvis(bool p_invis);
+	bool IsInvis();
+
 protected:
 	void CheckForSpecialAttack();
 	bool CalculateDirection();
@@ -140,5 +143,7 @@ protected:
 
 	Trail* m_trail;
 	std::vector<StickyTrap*> m_stickyTrapList;
+
+	bool m_invis;
 };
 #endif PLAYER

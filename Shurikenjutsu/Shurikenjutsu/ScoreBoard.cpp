@@ -75,7 +75,7 @@ void ScoreBoard::Update()
 		if (player.team == 1)
 		{
 			// Initialize text
-			m_redColorPlayers[player.guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1),  25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+			m_redColorPlayers[player.guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
 			m_redColorPlayers[player.guid].death = player.deaths;
 			m_redColorPlayers[player.guid].kill = player.kills;
 			m_redColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[player.guid].kill) + "/" + std::to_string(m_redColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
@@ -91,19 +91,19 @@ void ScoreBoard::Update()
 		else if (player.team == 2)
 		{
 			// Initialize text
-			m_blueColorPlayers[player.guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_blueColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+			m_blueColorPlayers[player.guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_blueColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
 			m_blueColorPlayers[player.guid].death = player.deaths;
 			m_blueColorPlayers[player.guid].kill = player.kills;
-			m_blueColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[player.guid].kill) + "/" + std::to_string(m_blueColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
+			m_blueColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[player.guid].kill) + "/" + std::to_string(m_blueColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
 
 			// Initialize portrait
 			GUIElement element = GUIElement();
-			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f/*skitlångtneråthelvete.y*/, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
+			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f/*skitlångtneråthelvete.y*/, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_blueColorPlayers[player.guid].portrait = element;
 			m_addedMyself = true;
 			m_myTeam = player.team;
 		}
-		}
+	}
 	else if (m_addedMyself && player.team != m_myTeam)
 	{
 		// Look which team the player is in and remove him/her
@@ -113,7 +113,7 @@ void ScoreBoard::Update()
 			ResizeRedColorList();
 			m_addedMyself = false;
 			m_myTeam = 0;
-	}
+		}
 		if (m_blueColorPlayers.find(player.guid) != m_blueColorPlayers.end())
 		{
 			m_blueColorPlayers.erase(player.guid);
@@ -157,14 +157,14 @@ void ScoreBoard::Update()
 			if (m_blueColorPlayers.find(players[i].guid) == m_blueColorPlayers.end())
 			{
 				//Initialize text
-				m_blueColorPlayers[players[i].guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1),  25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+				m_blueColorPlayers[players[i].guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
 				m_blueColorPlayers[players[i].guid].death = players[i].deaths;
 				m_blueColorPlayers[players[i].guid].kill = players[i].kills;
-				m_blueColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_blueColorPlayers[players[i].guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
+				m_blueColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_blueColorPlayers[players[i].guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
 
 				//Initialize portrait
 				GUIElement element = GUIElement();
-				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (offset * (m_blueColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
+				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * (m_blueColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_blueColorPlayers[players[i].guid].portrait = element;
 			}
 			if (m_redColorPlayers.find(players[i].guid) != m_redColorPlayers.end())
@@ -212,9 +212,9 @@ void ScoreBoard::ResizeBlueColorList()
 	float index = 0.0f;
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
 	{
-		m_blueColorPlayers[it->first].portrait.SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * index), 0.0f));
+		m_blueColorPlayers[it->first].portrait.SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index), 0.0f));
 		m_blueColorPlayers[it->first].name.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * index));
-		m_blueColorPlayers[it->first].ninjaText.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 377.0f - (60.0f * index));
+		m_blueColorPlayers[it->first].ninjaText.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index));
 		index++;
 	}
 }

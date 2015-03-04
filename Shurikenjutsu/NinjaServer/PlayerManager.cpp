@@ -153,6 +153,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	player.maxHP = m_playerHealth;
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
+	player.invis = false;
 	player.dotDamage = 0.0f;
 	player.hotHeal = 0.0f;
 	player.toolNr = p_toolNr;
@@ -256,6 +257,7 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].maxHP);
 		bitStream.Write(m_players[i].currentHP);
 		bitStream.Write(m_players[i].isAlive);
+		bitStream.Write(m_players[i].invis);
 		bitStream.Write(m_players[i].toolNr);
 		bitStream.Write(m_players[i].deaths);
 		bitStream.Write(m_players[i].kills);
@@ -852,6 +854,17 @@ void PlayerManager::RuneLotusPickedUp(RakNet::RakNetGUID p_player)
 		if (m_players[i].guid == p_player)
 		{
 			m_players[i].hotHeal = LOTUS_HEALTICK;
+		}
+	}
+}
+
+void PlayerManager::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			m_players[i].invis = true;
 		}
 	}
 }

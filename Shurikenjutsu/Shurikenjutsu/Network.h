@@ -152,6 +152,8 @@ public:
 	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
 	void RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
 
+	void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player);
+
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
@@ -178,6 +180,7 @@ private:
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive);
 	void UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr, int p_toolNr);
+	void UpdatePlayerInvis(RakNet::RakNetGUID p_guid, bool p_invis);
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken);

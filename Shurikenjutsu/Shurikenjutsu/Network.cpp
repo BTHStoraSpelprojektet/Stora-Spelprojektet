@@ -215,7 +215,7 @@ void Network::ReceviePacket()
 			float dirX, dirY, dirZ;
 			float maxHP, currentHP;
 			int team, charNr, toolNr, kills, deaths;
-			bool isAlive;
+			bool isAlive, invis;
 			RakNet::RakNetGUID guid;
 			int id;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -237,6 +237,7 @@ void Network::ReceviePacket()
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
+				bitStream.Read(invis);
 				bitStream.Read(toolNr);
 				bitStream.Read(deaths);
 				bitStream.Read(kills);
@@ -250,6 +251,7 @@ void Network::ReceviePacket()
 				UpdatePlayerChar(guid, charNr, toolNr);
 				UpdatePlayerID(guid, id);
 				UpdatePlayerKD(guid, deaths, kills);
+				UpdatePlayerInvis(guid, invis);
 
 				//ScoreBoard::GetInstance()->AddKD(guid, deaths, kills);
 
@@ -1087,6 +1089,7 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
 			RunePickedUp(PointOfInterestType_Invisible, guid);
+			RuneInvisPickedUp(guid);
 			break;
 		}
 		case ID_SHIELD_PICKED_UP:
@@ -2077,4 +2080,38 @@ void Network::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, fl
 void Network::RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
 {
 	m_objectManager->RunePickedUp(p_poiType, p_guid);
+}
+
+void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
+{
+	if (m_myPlayer.guid == p_player)
+	{
+		m_myPlayer.invis = true;
+	}
+
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (m_enemyPlayers[i].guid == p_player)
+		{
+			m_enemyPlayers[i].invis = true;
+		}
+	}
+}
+
+void Network::UpdatePlayerInvis(RakNet::RakNetGUID p_guid, bool p_invis)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.invis = p_invis;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].invis = p_invis;
+			}
+		}
+	}
 }
