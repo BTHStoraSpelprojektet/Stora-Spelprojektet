@@ -57,7 +57,7 @@ public:
 	void SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage, float p_x, float p_y, float p_z);
 	void SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage);
 	
-	void DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility);
+	void DeathBoard(RakNet::RakNetGUID p_TakerNinja, RakNet::RakNetGUID p_AttackerNinja, ABILITIES p_usedAbility);
 	void ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID);
 
 	void RuneLotusPickedUp(RakNet::RakNetGUID p_player);
