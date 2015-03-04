@@ -32,7 +32,7 @@ float4 main(Input p_input) : SV_Target
 	uint3 load = uint3(p_input.m_position.xy, 0); //
 
 	float4 normal = m_textures[0].Load(load).xyzw; //
-	normal.xyz = (normal.xyz * 2.0f) - 1.0f; //
+	normal.xyz = normalize((normal.xyz * 2.0f) - 1.0f); //
 	float shadowSum = normal.w;
 
 	float3 albedo = m_textures[1].Load(load).xyz; //

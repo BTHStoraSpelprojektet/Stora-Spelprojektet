@@ -632,7 +632,7 @@ void ScreenSpace::DOF(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* 
 	p_context->Draw(3, 0);
 }
 
-void ScreenSpace::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight, DirectX::XMFLOAT4X4 p_projection)
+void ScreenSpace::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view)
 {	
 	// Lock the "every frame" constant buffer so it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
@@ -647,6 +647,13 @@ void ScreenSpace::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 
 	// Copy the fog information into the frame constant buffer.
 	frameBuffer->m_directionalLight = p_dlight;
+	DirectX::XMFLOAT4X4 lView = p_view;
+	lView._41 = 0.0f;
+	lView._42 = 0.0f;
+	lView._43 = 0.0f;
+	frameBuffer->m_directionalLight.m_direction = DirectX::XMVector3TransformNormal(frameBuffer->m_directionalLight.m_direction, DirectX::XMLoadFloat4x4(&lView));
+	frameBuffer->m_directionalLight.m_direction = DirectX::XMVector3Normalize(frameBuffer->m_directionalLight.m_direction);
+
 	DirectX::XMStoreFloat4x4(&frameBuffer->m_projection, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_projection)));
 
 	// Unlock the constant buffer.
