@@ -157,7 +157,7 @@ float GUIText::GetHeight()
 	return m_height;
 }
 
-UINT32 GUIText::GUIText::GetColor()
+UINT32 GUIText::GetColor()
 {
 	return m_color;
 }
