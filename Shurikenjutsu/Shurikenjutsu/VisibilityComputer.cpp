@@ -615,9 +615,9 @@ void VisibilityComputer::UVAnimate()
 {
 	m_UVOffset += (float)(GLOBAL::GetInstance().GetDeltaTime() * 0.0025f);
 
-	if (m_UVOffset > 0.5f)
+	if (m_UVOffset >= 1.0f)
 	{
-		m_UVOffset = 0.0f;
+		m_UVOffset -= 1.0f;
 	}
 
 	// Top triangle.

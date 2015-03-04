@@ -19,27 +19,33 @@ SuddenDeathState::~SuddenDeathState()
 
 void SuddenDeathState::Initialize()
 {
+	m_UVForward = false;
 	m_gasOpacity = 0.0f;
+	m_gasHeight = 0.0f;
 
 	m_title = new GUIText();
-	m_title->Initialize("Sudden death! Only the center is safe!", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT*0.25f, 0xffffffff);
+	m_title->Initialize("Sudden death! Only the center is safe!", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0xffffffff);
 
 	// Setup precalculated positions.
-	DirectX::XMFLOAT3 positions[8];
-	positions[0] = DirectX::XMFLOAT3(-45.0f, 2.5f, 52.0f);
-	positions[1] = DirectX::XMFLOAT3(45.0f, 2.5f, 52.0f);
-	positions[2] = DirectX::XMFLOAT3(-45.0f, 2.5f, -52.0f);
-	positions[3] = DirectX::XMFLOAT3(45.0f, 2.5f, -52.0f);
-	positions[4] = DirectX::XMFLOAT3(-12.0f, 2.5f, 12.0f);
-	positions[5] = DirectX::XMFLOAT3(12.0f, 2.5f, 12.0f);
-	positions[6] = DirectX::XMFLOAT3(-12.0f, 2.5f, -12.0f);
-	positions[7] = DirectX::XMFLOAT3(12.0f, 2.5f, -12.0f);
+	DirectX::XMFLOAT3 positions[12];
+	positions[0] = DirectX::XMFLOAT3(-45.0f, m_gasHeight, 52.0f);
+	positions[1] = DirectX::XMFLOAT3(45.0f, m_gasHeight, 52.0f);
+	positions[2] = DirectX::XMFLOAT3(-45.0f, m_gasHeight, -52.0f);
+	positions[3] = DirectX::XMFLOAT3(45.0f, m_gasHeight, -52.0f);
+	positions[4] = DirectX::XMFLOAT3(-12.0f, m_gasHeight, 12.0f);
+	positions[5] = DirectX::XMFLOAT3(12.0f, m_gasHeight, 12.0f);
+	positions[6] = DirectX::XMFLOAT3(-12.0f, m_gasHeight, -12.0f);
+	positions[7] = DirectX::XMFLOAT3(12.0f, m_gasHeight, -12.0f);
+	positions[8] = DirectX::XMFLOAT3(0.0f, -12.0f, 12.0f);
+	positions[9] = DirectX::XMFLOAT3(12.0f, -12.0f, 0.0f);
+	positions[10] = DirectX::XMFLOAT3(0.0f, -12.0f, -12.0f);
+	positions[11] = DirectX::XMFLOAT3(-12.0f, -12.0f, 0.0f);
 
 	float wallRadius = 12.0f;
 	float halfWallRadius = wallRadius * 0.5f;
 
 	// Setup precalculated uv coordinates.
-	DirectX::XMFLOAT2 UV[8];
+	DirectX::XMFLOAT2 UV[9];
 	UV[0] = DirectX::XMFLOAT2(0.5f, 0.0f);
 	UV[1] = DirectX::XMFLOAT2(1.0f, 0.0f);
 	UV[2] = DirectX::XMFLOAT2(0.5f, 1.0f);
@@ -48,75 +54,108 @@ void SuddenDeathState::Initialize()
 	UV[5] = DirectX::XMFLOAT2(0.75f + (halfWallRadius / 90.0f), 0.5f - (wallRadius / 104.0f));
 	UV[6] = DirectX::XMFLOAT2(0.75f - (halfWallRadius / 90.0f), 0.5f + (wallRadius / 104.0f));
 	UV[7] = DirectX::XMFLOAT2(0.75f + (halfWallRadius / 90.0f), 0.5f + (wallRadius / 104.0f));
+	UV[8] = DirectX::XMFLOAT2(0.75f, 0.5f);
 
 	// Triangle 1.
 	m_mesh[0] = SuddenDeathVertex(positions[0], UV[0]);
-	m_originalUV[0] = UV[0];
+	m_originalValues[0] = DirectX::XMFLOAT2(UV[0].x, positions[0].y);
 	m_mesh[1] = SuddenDeathVertex(positions[1], UV[1]);
-	m_originalUV[1] = UV[1];
+	m_originalValues[1] = DirectX::XMFLOAT2(UV[1].x, positions[1].y);
 	m_mesh[2] = SuddenDeathVertex(positions[5], UV[5]);
-	m_originalUV[2] = UV[5];
+	m_originalValues[2] = DirectX::XMFLOAT2(UV[5].x, positions[5].y);
 
 	// Triangle 2.
 	m_mesh[3] = SuddenDeathVertex(positions[0], UV[0]);
-	m_originalUV[3] = UV[0];
+	m_originalValues[3] = DirectX::XMFLOAT2(UV[0].x, positions[0].y);
 	m_mesh[4] = SuddenDeathVertex(positions[5], UV[5]);
-	m_originalUV[4] = UV[5];
+	m_originalValues[4] = DirectX::XMFLOAT2(UV[5].x, positions[5].y);
 	m_mesh[5] = SuddenDeathVertex(positions[4], UV[4]);
-	m_originalUV[5] = UV[4];
+	m_originalValues[5] = DirectX::XMFLOAT2(UV[4].x, positions[4].y);
 
 	// Triangle 3.
 	m_mesh[6] = SuddenDeathVertex(positions[7], UV[7]);
-	m_originalUV[6] = UV[7];
+	m_originalValues[6] = DirectX::XMFLOAT2(UV[7].x, positions[7].y);
 	m_mesh[7] = SuddenDeathVertex(positions[1], UV[1]);
-	m_originalUV[7] = UV[1];
+	m_originalValues[7] = DirectX::XMFLOAT2(UV[1].x, positions[1].y);
 	m_mesh[8] = SuddenDeathVertex(positions[3], UV[3]);
-	m_originalUV[8] = UV[3];
+	m_originalValues[8] = DirectX::XMFLOAT2(UV[3].x, positions[3].y);
 
 	// Triangle 4.
 	m_mesh[9] = SuddenDeathVertex(positions[5], UV[5]);
-	m_originalUV[9] = UV[5];
+	m_originalValues[9] = DirectX::XMFLOAT2(UV[5].x, positions[5].y);
 	m_mesh[10] = SuddenDeathVertex(positions[1], UV[1]);
-	m_originalUV[10] = UV[1];
+	m_originalValues[10] = DirectX::XMFLOAT2(UV[1].x, positions[1].y);
 	m_mesh[11] = SuddenDeathVertex(positions[7], UV[7]);
-	m_originalUV[11] = UV[7];
+	m_originalValues[11] = DirectX::XMFLOAT2(UV[7].x, positions[7].y);
 
 	// Triangle 5.
 	m_mesh[12] = SuddenDeathVertex(positions[3], UV[3]);
-	m_originalUV[12] = UV[3];
+	m_originalValues[12] = DirectX::XMFLOAT2(UV[3].x, positions[3].y);
 	m_mesh[13] = SuddenDeathVertex(positions[2], UV[2]);
-	m_originalUV[13] = UV[2];
+	m_originalValues[13] = DirectX::XMFLOAT2(UV[2].x, positions[2].y);
 	m_mesh[14] = SuddenDeathVertex(positions[6], UV[6]);
-	m_originalUV[14] = UV[6];
+	m_originalValues[14] = DirectX::XMFLOAT2(UV[6].x, positions[6].y);
 
 	// Triangle 6.
 	m_mesh[15] = SuddenDeathVertex(positions[3], UV[3]);
-	m_originalUV[15] = UV[3];
+	m_originalValues[15] = DirectX::XMFLOAT2(UV[3].x, positions[3].y);
 	m_mesh[16] = SuddenDeathVertex(positions[6], UV[6]);
-	m_originalUV[16] = UV[6];
+	m_originalValues[16] = DirectX::XMFLOAT2(UV[6].x, positions[6].y);
 	m_mesh[17] = SuddenDeathVertex(positions[7], UV[7]);
-	m_originalUV[17] = UV[7];
+	m_originalValues[17] = DirectX::XMFLOAT2(UV[7].x, positions[7].y);
 
 	// Triangle 7.
 	m_mesh[18] = SuddenDeathVertex(positions[2], UV[2]);
-	m_originalUV[18] = UV[2];
+	m_originalValues[18] = DirectX::XMFLOAT2(UV[2].x, positions[2].y);
 	m_mesh[19] = SuddenDeathVertex(positions[0], UV[0]);
-	m_originalUV[19] = UV[0];
+	m_originalValues[19] = DirectX::XMFLOAT2(UV[0].x, positions[0].y);
 	m_mesh[20] = SuddenDeathVertex(positions[4], UV[4]);
-	m_originalUV[20] = UV[4];
+	m_originalValues[20] = DirectX::XMFLOAT2(UV[4].x, positions[4].y);
 
 	// Triangle 8.
 	m_mesh[21] = SuddenDeathVertex(positions[2], UV[2]);
-	m_originalUV[21] = UV[2];
+	m_originalValues[21] = DirectX::XMFLOAT2(UV[2].x, positions[2].y);
 	m_mesh[22] = SuddenDeathVertex(positions[4], UV[4]);
-	m_originalUV[22] = UV[4];
+	m_originalValues[22] = DirectX::XMFLOAT2(UV[4].x, positions[4].y);
 	m_mesh[23] = SuddenDeathVertex(positions[6], UV[6]);
-	m_originalUV[23] = UV[6];
+	m_originalValues[23] = DirectX::XMFLOAT2(UV[6].x, positions[6].y);
+
+	// Triangle 9.
+	m_mesh[24] = SuddenDeathVertex(positions[4], UV[4]);
+	m_originalValues[24] = DirectX::XMFLOAT2(UV[4].x, positions[4].y);
+	m_mesh[25] = SuddenDeathVertex(positions[5], UV[5]);
+	m_originalValues[25] = DirectX::XMFLOAT2(UV[5].x, positions[5].y);
+	m_mesh[26] = SuddenDeathVertex(positions[8], UV[8]);
+	m_originalValues[26] = DirectX::XMFLOAT2(UV[8].x, positions[8].y);
+
+	// Triangle 10.
+	m_mesh[27] = SuddenDeathVertex(positions[5], UV[5]);
+	m_originalValues[27] = DirectX::XMFLOAT2(UV[5].x, positions[5].y);
+	m_mesh[28] = SuddenDeathVertex(positions[7], UV[7]);
+	m_originalValues[28] = DirectX::XMFLOAT2(UV[7].x, positions[7].y);
+	m_mesh[29] = SuddenDeathVertex(positions[9], UV[8]);
+	m_originalValues[29] = DirectX::XMFLOAT2(UV[8].x, positions[9].y);
+
+	// Triangle 11.
+	m_mesh[30] = SuddenDeathVertex(positions[7], UV[7]);
+	m_originalValues[30] = DirectX::XMFLOAT2(UV[7].x, positions[7].y);
+	m_mesh[31] = SuddenDeathVertex(positions[6], UV[6]);
+	m_originalValues[31] = DirectX::XMFLOAT2(UV[6].x, positions[6].y);
+	m_mesh[32] = SuddenDeathVertex(positions[10], UV[8]);
+	m_originalValues[32] = DirectX::XMFLOAT2(UV[8].x, positions[10].y);
+
+	// Triangle 12.
+	m_mesh[33] = SuddenDeathVertex(positions[6], UV[6]);
+	m_originalValues[33] = DirectX::XMFLOAT2(UV[6].x, positions[6].y);
+	m_mesh[34] = SuddenDeathVertex(positions[4], UV[4]);
+	m_originalValues[34] = DirectX::XMFLOAT2(UV[4].x, positions[4].y);
+	m_mesh[35] = SuddenDeathVertex(positions[11], UV[8]);
+	m_originalValues[35] = DirectX::XMFLOAT2(UV[8].x, positions[11].y);
 
 	// Setup vertex buffer description.
 	D3D11_BUFFER_DESC vertexBuffer;
 	vertexBuffer.Usage = D3D11_USAGE_DYNAMIC;
-	vertexBuffer.ByteWidth = sizeof(SuddenDeathVertex) * 24;
+	vertexBuffer.ByteWidth = sizeof(SuddenDeathVertex) * NUMBER_OF_VERTICES;
 	vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBuffer.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	vertexBuffer.MiscFlags = 0;
@@ -141,6 +180,8 @@ void SuddenDeathState::Initialize()
 	DirectX::XMFLOAT4X4 projection;
 	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixIdentity());
 	matrices->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projection);
+
+	matrices->m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	// Create the matrix buffer description.
 	D3D11_BUFFER_DESC matrixBuffer;
@@ -312,44 +353,55 @@ void SuddenDeathState::Shutdown()
 
 void SuddenDeathState::Update()
 {
-	// Increment offset time.
-	m_UVOffset += (float)(GLOBAL::GetInstance().GetDeltaTime() * 0.006f);
+	// Increase opacity gradually until fully faded in.
+	if (m_gasOpacity < 0.65f)
+	{
+		m_gasOpacity += (float)(GLOBAL::GetInstance().GetDeltaTime() * 0.035f);
 
-	if (m_UVOffset > 0.5f) 
-	{ 
-		m_UVOffset = 0.0f; 
+		if (m_gasOpacity >= 0.65f)
+		{
+			m_gasOpacity = 0.65f;
+		}
+	}
+
+	// Increase height gradually until satisfied.
+	if (m_gasHeight < 2.5)
+	{
+		m_gasHeight += (float)(GLOBAL::GetInstance().GetDeltaTime() * 0.1f);
+	}
+
+	// Increment UV offset.
+	if (!m_UVForward)
+	{
+		m_UVOffset += (float)(GLOBAL::GetInstance().GetDeltaTime() * 0.005f);
+
+		if (m_UVOffset >= 1.0f)
+		{
+			m_UVOffset -= 1.0f;
+		}
 	}
 
 	// UV offset.
-	for (unsigned int i = 0; i < 24; i++)
+	for (unsigned int i = 0; i < NUMBER_OF_VERTICES; i++)
 	{
-		m_mesh[i].m_UV.x = m_originalUV[i].x - m_UVOffset;
+		m_mesh[i].m_position.y = m_originalValues[i].y + m_gasHeight;
+		m_mesh[i].m_UV.x = m_originalValues[i].x - m_UVOffset;
 	}
 
 	// Update buffer.
 	D3D11_MAPPED_SUBRESOURCE resource;
 	GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	memcpy(resource.pData, m_mesh, sizeof(SuddenDeathVertex) * 24);
+	memcpy(resource.pData, m_mesh, sizeof(SuddenDeathVertex) * NUMBER_OF_VERTICES);
 	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
 }
 
 void SuddenDeathState::Render(Camera* p_camera)
 {
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	GraphicsEngine::GetInstance()->TurnOffBackfaceCulling();
 
 	// Render the sudden death warning.
 	m_title->Render();
-
-	// Increase opacity gradually until fully faded in.
-	if (m_gasOpacity < 0.75f)
-	{
-		m_gasOpacity += (float)(GLOBAL::GetInstance().GetDeltaTime() * 0.075f);
-
-		if (m_gasOpacity >= 0.75f)
-		{
-			m_gasOpacity = 0.75f;
-		}
-	}
 
 	// Set parameters and then render.
 	unsigned int stride = sizeof(SuddenDeathVertex);
@@ -385,7 +437,7 @@ void SuddenDeathState::Render(Camera* p_camera)
 	// Set matrices in buffer.
 	matrixBuffer->m_viewMatrix = DirectX::XMLoadFloat4x4(&viewMatrix);
 	matrixBuffer->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projectionMatrix);
-	matrixBuffer->m_gasOpacity = m_gasOpacity;
+	matrixBuffer->m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, m_gasOpacity);
 
 	// Unlock the matrix buffer after it has been written to.
 	context->Unmap(m_matrixBuffer, 0);
@@ -393,7 +445,8 @@ void SuddenDeathState::Render(Camera* p_camera)
 	context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
 	context->PSSetShaderResources(0, 1, &m_texture);
 
-	context->Draw(24, 0);
+	context->Draw(NUMBER_OF_VERTICES, 0);
 
+	GraphicsEngine::GetInstance()->TurnOnBackfaceCulling();
 	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
 }

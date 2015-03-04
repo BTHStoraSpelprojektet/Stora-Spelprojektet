@@ -43,7 +43,7 @@ private:
 	{
 		DirectX::XMMATRIX m_viewMatrix;
 		DirectX::XMMATRIX m_projectionMatrix;
-		float m_gasOpacity;
+		DirectX::XMFLOAT4 m_color;
 
 		MatrixBuffer()
 		{
@@ -55,7 +55,7 @@ private:
 			DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixIdentity());
 			m_projectionMatrix = DirectX::XMLoadFloat4x4(&projection);
 
-			m_gasOpacity = 0.0f;
+			m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 	};
 
@@ -63,15 +63,18 @@ private:
 	std::string m_VSVersion;
 	std::string m_PSVersion;
 	float m_UVOffset;
+	bool m_UVForward;
 	float m_gasOpacity;
+	float m_gasHeight;
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
 	ID3D11InputLayout* m_layout;
 	ID3D11ShaderResourceView* m_texture;
 
-	SuddenDeathVertex m_mesh[24];
-	DirectX::XMFLOAT2 m_originalUV[24];
+	#define NUMBER_OF_VERTICES 36
+	SuddenDeathVertex m_mesh[NUMBER_OF_VERTICES];
+	DirectX::XMFLOAT2 m_originalValues[NUMBER_OF_VERTICES];
 	ID3D11Buffer* m_vertexBuffer;
 	ID3D11Buffer* m_matrixBuffer;
 };
