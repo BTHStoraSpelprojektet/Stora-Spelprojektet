@@ -14,8 +14,8 @@ void CreaditsScreen::Initialize()
 	m_developersTextPositionY = -500.0f;
 	
 	m_music = new GUIText();
-	m_music->InitializeCalibri(CREDITS_MUSIC, 25.0f, 0.0f, -2000.0f, 0xffffffff);
-	m_musicTextPositionY = -2000.0f;
+	m_music->InitializeCalibri(CREDITS_MUSIC, 25.0f, 0.0f, -2200.0f, 0xffffffff);
+	m_musicTextPositionY = -2200.0f;
 }
 void CreaditsScreen::Shutdown()
 {
@@ -55,7 +55,7 @@ void CreaditsScreen::Render()
 void CreaditsScreen::ResetTexts()
 {
 	m_developers->SetPosition(0.0f, -500.0f);
-	m_music->SetPosition(0.0f, -2000.0f);
+	m_music->SetPosition(0.0f, -2200.0f);
 	m_developersTextPositionY = -500.0f;
-	m_musicTextPositionY = -2000.0f;
+	m_musicTextPositionY = -2200.0f;
 }

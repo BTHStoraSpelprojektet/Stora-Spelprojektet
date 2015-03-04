@@ -64,14 +64,14 @@ const std::string CREDITS_MUSIC_15 ="Creator : Taira Komori \nLink : https : // 
 const std::string CREDITS_MUSIC_16 ="Creator : Matthus \nLink : https : //www.freesound.org / people / Matthus / sounds / 41248 / \nFile : ninja style.wav \n\n";
 const std::string CREDITS_MUSIC_17 ="Creator : Taira Komori \nLink : https : // www.freesound.org / people / Taira % 20Komori / sounds / 215014 / \nFile : kung - fu » katana_cut1.mp3 \n\n";
 const std::string CREDITS_MUSIC_18 ="Creator : sunboy \nLink : https : //www.freesound.org / people / sunboy / sounds / 164864 / \nFile : Steps » Grass Steps \n\n";
-const std::string CREDITS_MUSIC_19 ="Creator : Mike Koenig \nLink : http : // soundbible.com / 963 - Arrow.html \nFile : Arrow Sound \n\n";
-const std::string CREDITS_MUSIC_20 ="Creator : JaBa \nLink : http ://soundbible.com/1902-Fire-Burning.html \nFile : Fire Burning Sound \n  ";
-
-
+const std::string CREDITS_MUSIC_19 = "Creator : Mike Koenig \nLink : http : // soundbible.com / 963 - Arrow.html \nFile : Arrow Sound \n\n";
+const std::string CREDITS_MUSIC_20 = "Creator : JaBa \nLink : http ://soundbible.com/1902-Fire-Burning.html \nFile : Fire Burning Sound \n  ";
+const std::string CREDITS_MUSIC_21 = "Creator: Rock Savage\nLink : https ://www.freesound.org/people/Rock%20Savage/sounds/81042/\n File : Blood Hitting Window.wav\n\n";
+const std::string CREDITS_MUSIC_22 = "Creator : nextmaking\nLink : https ://www.freesound.org/people/nextmaking/sounds/86015/\nFile : Step on dead leaf.aif\n\n";
 
 const std::string CREDITS_MUSIC = CREDITS_MUSIC_TITLE + CREDITS_MUSIC_1 + CREDITS_MUSIC_2 + CREDITS_MUSIC_3 + CREDITS_MUSIC_4 + CREDITS_MUSIC_5 + CREDITS_MUSIC_6 + CREDITS_MUSIC_7 +
 CREDITS_MUSIC_8 + CREDITS_MUSIC_9 + CREDITS_MUSIC_10 + CREDITS_MUSIC_11 + CREDITS_MUSIC_12 + CREDITS_MUSIC_13 + CREDITS_MUSIC_14 + CREDITS_MUSIC_15 + CREDITS_MUSIC_16 + CREDITS_MUSIC_17 + 
-CREDITS_MUSIC_18 + CREDITS_MUSIC_19 + CREDITS_MUSIC_20;
+CREDITS_MUSIC_18 + CREDITS_MUSIC_19 + CREDITS_MUSIC_20 + CREDITS_MUSIC_21 + CREDITS_MUSIC_22;
 
 
 
