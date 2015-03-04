@@ -273,6 +273,8 @@ GAMESTATESWITCH MenuState::Update()
 			temp = m_options->GetCheckboxState(m_fullscreenIndex);
 			m_lastfullscreen = temp;
 			GraphicsEngine::GetInstance()->ToggleFullscreen(temp);
+			Shutdown();
+			Initialize();
 			break;
 	}
 

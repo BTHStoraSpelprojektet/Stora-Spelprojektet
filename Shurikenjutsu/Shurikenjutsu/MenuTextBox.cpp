@@ -77,7 +77,9 @@ bool MenuTextBox::Initialize(ID3D11ShaderResourceView* p_texture, float p_x, flo
 	}
 
 	m_guiText = new GUIText;
-	m_guiText->Initialize(GetText(), 36.0f, p_x, p_y, 0xff333333);
+	m_guiText->Initialize(GetText(), 36.0f, p_x - 90.0f, p_y, 0xff333333);
+	m_guiText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	m_guiText->SetText(GetText());
 
 	return true;
 }
