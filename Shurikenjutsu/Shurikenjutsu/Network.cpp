@@ -1137,6 +1137,7 @@ void Network::ChooseChar(char* p_name, int p_charNr, int p_toolNr, int p_team)
 	RakNet::RakString name = p_name;
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
+	bitStream.Write(name);
 	bitStream.Write(p_charNr);
 	bitStream.Write(p_toolNr);
 	bitStream.Write(p_team);
