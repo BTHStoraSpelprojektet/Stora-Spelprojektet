@@ -418,15 +418,15 @@ GAMESTATESWITCH ChooseState::Update()
 		{
 			if (m_currentTeam == CURRENTTEAM_RED)
 			{
-				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 1);
+				Network::GetInstance()->ChooseChar("name", m_currentNinja, m_currentTool, 1);
 			}
 			else if (m_currentTeam == CURRENTTEAM_BLUE)
 			{
-				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 2);
+				Network::GetInstance()->ChooseChar("name2", m_currentNinja, m_currentTool, 2);
 			}
 			else
 			{
-				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
+				Network::GetInstance()->ChooseChar("name3", m_currentNinja, m_currentTool, 0);
 			}
 			Network::GetInstance()->SetHaveUpdateNewLevel();
 			return GAMESTATESWITCH_PLAY;

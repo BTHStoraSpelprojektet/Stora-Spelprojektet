@@ -94,7 +94,7 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 	return m_players;
 }
 
-void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team)
+void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team)
 {
 	if (p_charNr == 0)
 	{
@@ -112,6 +112,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	PlayerNet player;
 	player.guid = p_guid;
 	player.id = GetIdForPlayer();
+	player.name = p_name;
 	if (p_team == 0)
 	{
 		player.team = GetTeamForPlayer();
@@ -247,6 +248,7 @@ void PlayerManager::BroadcastPlayers()
 	{
 		bitStream.Write(m_players[i].guid);
 		bitStream.Write(m_players[i].id);
+		bitStream.Write(m_players[i].name);
 		bitStream.Write(m_players[i].x);
 		bitStream.Write(m_players[i].y);
 		bitStream.Write(m_players[i].z);

@@ -210,6 +210,7 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+			RakNet::RakString name;
 			int nrOfPlayers = 0;
 			float x, y, z;
 			float dirX, dirY, dirZ;
@@ -226,6 +227,7 @@ void Network::ReceviePacket()
 			{
 				bitStream.Read(guid);
 				bitStream.Read(id);
+				bitStream.Read(name);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
@@ -254,8 +256,7 @@ void Network::ReceviePacket()
 				UpdatePlayerKD(guid, deaths, kills);
 				UpdatePlayerInvis(guid, invis);
 				UpdatePlayerShield(guid, shield);
-
-				//ScoreBoard::GetInstance()->AddKD(guid, deaths, kills);
+				UpdatePlayerName(guid, name);
 
 				playerGuids.push_back(guid);
 			}
@@ -1130,11 +1131,13 @@ void Network::Disconnect()
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
 }
 
-void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
+void Network::ChooseChar(char* p_name, int p_charNr, int p_toolNr, int p_team)
 {
 	RakNet::BitStream bitStream;
+	RakNet::RakString name = p_name;
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
+	bitStream.Write(name);
 	bitStream.Write(p_charNr);
 	bitStream.Write(p_toolNr);
 	bitStream.Write(p_team);
@@ -1143,6 +1146,7 @@ void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 
 	m_myPlayer.charNr = p_charNr;
 	m_myPlayer.toolNr = p_toolNr;
+	m_myPlayer.name = p_name;
 }
 
 bool Network::IsConnected()
@@ -2131,6 +2135,25 @@ void Network::UpdatePlayerShield(RakNet::RakNetGUID p_guid, float p_shield)
 			if (p_guid == m_enemyPlayers[i].guid)
 			{
 				m_enemyPlayers[i].shield = p_shield;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerName(RakNet::RakNetGUID p_guid, RakNet::RakString p_name)
+{
+	if (p_guid == GetMyGUID())
+	{
+		m_myPlayer.name = p_name;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				m_enemyPlayers[i].name = p_name;
+				break;
 			}
 		}
 	}
