@@ -32,7 +32,7 @@ void Player::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType, std::string p_name)
 {
 	m_ninjaType = p_ninjaType;
 
@@ -101,7 +101,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	if (m_sound != NULL){
 		m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
 	}
-
+	m_name = p_name;
 	return true;
 }
 

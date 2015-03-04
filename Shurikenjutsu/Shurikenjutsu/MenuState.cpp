@@ -244,6 +244,7 @@ GAMESTATESWITCH MenuState::Update()
 		case MENUACTION_CONNECT:
 			m_menues.push(m_connecting);
 			m_hideIpBox = true;
+			Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 			Network::GetInstance()->Connect((std::string)m_ipbox->GetText());
 			Network::GetInstance()->SetNetworkStatusConnecting();
 			break;

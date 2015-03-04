@@ -24,11 +24,11 @@ void TessenNinja::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_charNr)
+bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_charNr, std::string p_name)
 {
 	bool result;
 
-	result = Player::Initialize(TESSEN_NINJA_MODEL_NAME, p_pos, p_direction, p_charNr);
+	result = Player::Initialize(TESSEN_NINJA_MODEL_NAME, p_pos, p_direction, p_charNr, p_name);
 	if (!result)
 	{
 		return false;
