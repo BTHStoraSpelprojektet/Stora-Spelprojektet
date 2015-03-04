@@ -49,6 +49,16 @@ private:
 		{
 
 		}
+		void* MatrixBuffer::operator new(size_t p_i)
+		{
+			return _mm_malloc(p_i, 16);
+		}
+
+		void MatrixBuffer::operator delete(void* p_p)
+		{
+			_mm_free(p_p);
+		}
+
 	};
 
 	GUIText* m_title;
