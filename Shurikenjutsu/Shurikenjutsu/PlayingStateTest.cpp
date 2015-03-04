@@ -642,8 +642,14 @@ void PlayingStateTest::OutliningRays()
 	float rayDist = 0;
 	float collisionDist = 0;
 
-	rayPos = m_camera->GetPosition();
-	rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
+	rayPos = m_camera->GetOutliningRayPosition();
+	// Increase height of check
+	rayPos.y += 2;
+	rayDir = m_camera->GetLookAt();
+	//rayDir = m_camera->GetOutliningRayTarget();
+	// Get LookAt from viewmatrix..
+	//rayDir = DirectX::XMFLOAT3(m_camera->GetViewMatrix()._13, m_camera->GetViewMatrix()._23, m_camera->GetViewMatrix()._33);
+	DirectX::XMStoreFloat3(&rayDir,	DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
 	Ray* rayTest = new Ray(rayPos, rayDir);
 
 	if (Collisions::RayOBBCollision(rayTest, m_playerManager->GetPlayerBoundingBox()))
@@ -658,7 +664,6 @@ void PlayingStateTest::OutliningRays()
 	{
 		m_renderOutlining = true;
 	}
-
 	else
 	{
 		m_renderOutlining = false;
