@@ -186,6 +186,9 @@
     <Filter Include="Shaders\DOF">
       <UniqueIdentifier>{16953032-c664-4717-91bd-0002a799348f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\SuddenDeath">
+      <UniqueIdentifier>{6bc18550-8554-4bff-a1bb-1e2c952770c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -1028,6 +1031,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\DOF\DOFBlurVPixelShader.hlsl">
       <Filter>Shaders\DOF</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SuddenDeath\SDPixelShader.hlsl">
+      <Filter>Shaders\SuddenDeath</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SuddenDeath\SDVertexShader.hlsl">
+      <Filter>Shaders\SuddenDeath</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

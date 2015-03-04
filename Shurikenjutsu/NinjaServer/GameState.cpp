@@ -59,55 +59,9 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	m_roundRestarting = false;
 	m_runesSpawned = false;
 
-	Level level(p_levelName);
-	float xMax = 0, xMin = 0;
-	float zMax = 0, zMin = 0;
-	for each(LevelImporter::LevelBoundingBox levelBoundingBox in level.GetLevelBoundingBoxes())
-	{
-		Box boundingBox = Box(levelBoundingBox.m_translationX, levelBoundingBox.m_translationY, levelBoundingBox.m_translationZ, levelBoundingBox.m_halfDepth, levelBoundingBox.m_halfHeight, levelBoundingBox.m_halfWidth);
-		if (boundingBox.m_center.x > 0.0f)
-		{
-			xMax = boundingBox.m_center.x;
-		}
-		if (boundingBox.m_center.x < 0.0f)
-		{
-			xMin = boundingBox.m_center.x;
-		}
-		if (boundingBox.m_center.z > 0.0f)
-		{
-			zMax = boundingBox.m_center.z;
-		}
-		if (boundingBox.m_center.z < 0.0f)
-		{
-			zMin = boundingBox.m_center.z;
-		}
-	}
-
-	float xLength = xMax - xMin;
-	float zLength = zMax - zMin;
-	std::vector<DirectX::XMFLOAT3> positions;
-	positions.push_back(DirectX::XMFLOAT3(-xLength / 4.0f, 0.0f, zLength / 4.0f));
-	positions.push_back(DirectX::XMFLOAT3(0.0f, 0.0f, zLength / 4.0f));
-	positions.push_back(DirectX::XMFLOAT3(xLength / 4.0f, 0.0f, zLength / 4.0f));
-	positions.push_back(DirectX::XMFLOAT3(-xLength / 4.0f, 0.0f, 0.0f));
-	positions.push_back(DirectX::XMFLOAT3(xLength / 4.0f, 0.0f, 0.0f));
-	positions.push_back(DirectX::XMFLOAT3(-xLength / 4.0f, 0.0f, -zLength / 4.0f));
-	positions.push_back(DirectX::XMFLOAT3(0.0f, 0.0f, -zLength / 4.0f));
-	positions.push_back(DirectX::XMFLOAT3(xLength / 4.0f, 0.0f, -zLength / 4.0f));
-
-	m_suddenDeathMaxBoxExtentX = xLength / 8.0f;
-	m_suddenDeathMaxBoxExtentZ = zLength / 8.0f;
-	for (unsigned int i = 0; i < 8; i++)
-	{
-		m_suddenDeathBoxes.push_back(Box(positions[i], DirectX::XMFLOAT3(0.0f,10.0f,0.0f)));
-	}
-
 	m_isSuddenDeath = false;
 	m_suddenDeathTimer = 0.0f;
-	for (unsigned int i = 0; i < 8; i++)
-	{
-		m_suddenDeathInActiveBoxes.push_back(i);
-	}
+
 	return true;
 }
 
@@ -178,31 +132,21 @@ void GameState::Update(double p_deltaTime)
 	m_collisionManager->FanCollisionChecks(p_deltaTime, m_fanBoomerangManager, m_playerManager);
 	m_collisionManager->VolleyCollisionChecks(m_volleyManager, m_playerManager);
 	m_collisionManager->POICollisionChecks(m_POIManager, m_playerManager);
-
 	m_collisionManager->NaginataStbDot(m_playerManager);
+
 	UpdateTime(p_deltaTime);
 	
 	if (m_isSuddenDeath)
 	{
-		m_suddenDeathTimer += (float)p_deltaTime;
-		m_collisionManager->SuddenDeathDot((float)p_deltaTime, m_playerManager, m_suddenDeathBoxes, m_suddenDeathInActiveBoxes);
-		for (unsigned int i = 0; i < m_suddenDeathBoxes.size(); i++)
+		if (m_suddenDeathTimer <= 10.0f)
 		{
-			if (m_suddenDeathBoxes[i].m_extents.x <= m_suddenDeathMaxBoxExtentX)
-			{
-				m_suddenDeathBoxes[i].m_extents.x += (float)p_deltaTime;
-			}
-			if (m_suddenDeathBoxes[i].m_extents.z <= m_suddenDeathMaxBoxExtentZ)
-			{
-				m_suddenDeathBoxes[i].m_extents.z += (float)p_deltaTime;
-			}
+			m_suddenDeathTimer += (float)p_deltaTime;
 		}
-	}	
-	if (m_suddenDeathTimer > TIME_UNTIL_NEXT_SUDDEN_DEATH_BOX && m_suddenDeathInActiveBoxes.size() > 0)
-	{
-		int boxIndex = GetNewSuddenDeathBoxIndex();
-		SendSuddenDeathBoxActivation(boxIndex);
-		m_suddenDeathTimer = 0.0f;
+
+		else
+		{
+			m_collisionManager->SuddenDeathDot((float)p_deltaTime, m_playerManager);
+		}
 	}
 
 	if ((m_timeSec >= 20 && m_timeSec <= 21) && m_timeMin == 0)
@@ -215,22 +159,7 @@ void GameState::Update(double p_deltaTime)
 	}
 
 }
-void GameState::SendSuddenDeathBoxActivation(int p_boxIndex)
-{
-	RakNet::BitStream bitStream;
 
-	bitStream.Write((RakNet::MessageID)ID_INITIATE_SUDDEN_DEATH_BOX);
-	bitStream.Write(p_boxIndex);
-
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
-}
-int GameState::GetNewSuddenDeathBoxIndex()
-{
-	int random = std::rand() % m_suddenDeathInActiveBoxes.size();
-	int returnValue = m_suddenDeathInActiveBoxes[random];
-	m_suddenDeathInActiveBoxes.erase(m_suddenDeathInActiveBoxes.begin() + random);
-	return returnValue;
-}
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team)
 {
 	m_playerManager->AddPlayer(p_guid, p_name, p_charNr, p_toolNr, p_team);
@@ -298,8 +227,8 @@ void GameState::UpdateTime(double p_deltaTime)
 		m_timeSec -= 60;
 		m_timeMin++;
 	}
-	//////////////Jonas kommentera ut detta1!!!!!!!
-	if (m_timeSec > 0.9f &&( redTeam == 0|| bluTeam == 0))
+
+	if (m_timeSec > 0.9f && (redTeam == 0 || bluTeam == 0))
 	{
 		m_timeSec = 0.0f;
 		m_timeMin = 0.0f;
@@ -315,15 +244,6 @@ void GameState::UpdateTime(double p_deltaTime)
 
 		SendSuddenDeathMessage();
 	}
-	//////////////Jonas kommentera ut detta1!!!!!!!
-	//////////////Jonas kommentera in detta1!!!!!!!
-	//if (m_timeSec >= ROUND_TIME_LIMIT_SECONDS && !m_isSuddenDeath)
-	//{
-	//	m_isSuddenDeath = true;
-	//	
-	//	SendSuddenDeathMessage();
-	//}
-	//////////////Jonas kommentera in detta1!!!!!!!
 }
 
 void GameState::SendSuddenDeathMessage()
@@ -334,6 +254,7 @@ void GameState::SendSuddenDeathMessage()
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
+
 void GameState::ResetTime()
 {
 	m_timeSec = 0;
@@ -341,10 +262,6 @@ void GameState::ResetTime()
 	m_isSuddenDeath = false;
 	m_runesSpawned = false;
 	m_suddenDeathTimer = 0.0f;
-	for (unsigned int i = 0; i < 8; i++)
-	{
-		m_suddenDeathInActiveBoxes.push_back(i);
-	}
 }
 
 void GameState::SyncTime(RakNet::RakNetGUID p_guid)

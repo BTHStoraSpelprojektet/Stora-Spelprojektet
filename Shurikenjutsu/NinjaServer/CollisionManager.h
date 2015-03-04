@@ -42,7 +42,7 @@ public:
 	void SetDeltaTime(float p_deltaTime);
 
 	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
-	void SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList, std::vector<int> p_inactiveBoxIndexes);
+	void SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager);
 	void POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager);
 
 private:

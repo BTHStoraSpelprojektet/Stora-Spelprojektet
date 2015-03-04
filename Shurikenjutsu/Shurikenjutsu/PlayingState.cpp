@@ -161,7 +161,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	}
 
 	m_suddenDeath = new SuddenDeathState();
-	m_suddenDeath->Initialize(wallList);
+	m_suddenDeath->Initialize();
 
 	return true;
 }
@@ -256,15 +256,6 @@ void PlayingState::ShutdownExit()
 
 GAMESTATESWITCH PlayingState::Update()
 {
-	int tempSuddenDeathBoxIndex = Network::GetInstance()->GetSuddenDeathBoxIndex();
-	if (tempSuddenDeathBoxIndex != 99)
-	{
-		m_suddenDeath->StartEmittingParticles(tempSuddenDeathBoxIndex);
-	}
-	if (Network::GetInstance()->IsSuddenDeath())
-	{
-		m_suddenDeath->Update();
-	}
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -308,6 +299,12 @@ GAMESTATESWITCH PlayingState::Update()
 
 	// Calculate new visibility polygon boundries.
 	DirectX::XMFLOAT3 player = m_playerManager->GetPlayerPosition();
+
+	// Update sudden death gas if the time is right.
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Update();
+	}
 
 	// Handle camera input.
 	m_camera->HandleInput();
@@ -530,12 +527,13 @@ void PlayingState::Render()
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+
 	if (FLAG_DEBUG == 1)
 	{
 		ShadowShapes::GetInstance().DebugRender();	
 	}	
 
-	//// Render the UI.
+	// Render the UI.
 	if (Network::GetInstance()->GetMatchOver())
 	{
 		m_victoryMenu->Render();
@@ -548,6 +546,11 @@ void PlayingState::Render()
 	DeathBoard::GetInstance()->Render();
 
 	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+
+	if (Network::GetInstance()->IsSuddenDeath())
+	{
+		m_suddenDeath->Render(m_camera);
+	}
 
 	// Render character outlining.
 	if (m_renderOutlining)
@@ -564,17 +567,11 @@ void PlayingState::Render()
 		m_inGameMenu->Render();
 	}
 
-
-
 	if (m_scoreBoardIsActive)
 	{
 		ScoreBoard::GetInstance()->Render();
 	}
 
-	if (Network::GetInstance()->IsSuddenDeath())
-	{
-		m_suddenDeath->Render();
-	}
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
@@ -670,6 +667,7 @@ void PlayingState::OutliningRays()
 DirectX::XMFLOAT3 PlayingState::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 {
 	float t2 = sqrt(p_f.x * p_f.x + p_f.y * p_f.y + p_f.z * p_f.z);
+
 	return DirectX::XMFLOAT3(p_f.x / t2, p_f.y / t2, p_f.z/t2);
 }
 
