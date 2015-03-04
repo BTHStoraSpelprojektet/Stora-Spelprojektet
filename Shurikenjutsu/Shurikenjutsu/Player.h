@@ -25,7 +25,7 @@ public:
 	void* operator new(size_t p_i);
 	void operator delete(void* p_p);
 
-	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType);
+	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType, std::string p_name);
 	void Shutdown();
 	void UpdateMe();
 	void Update();
@@ -80,6 +80,8 @@ public:
 
 	void SetInvis(bool p_invis);
 	bool IsInvis();
+
+	std::string GetName();
 
 protected:
 	void CheckForSpecialAttack();
@@ -145,5 +147,6 @@ protected:
 	std::vector<StickyTrap*> m_stickyTrapList;
 
 	bool m_invis;
+	std::string m_name;
 };
 #endif PLAYER

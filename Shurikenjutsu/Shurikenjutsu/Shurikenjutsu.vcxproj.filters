@@ -248,9 +248,6 @@
     <ClCompile Include="GameState.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
-    <ClCompile Include="PlayingStateTest.cpp">
-      <Filter>Source Files\GameState</Filter>
-    </ClCompile>
     <ClCompile Include="Network.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
@@ -382,9 +379,6 @@
     </ClCompile>
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp">
       <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuIpBox.cpp">
-      <Filter>Source Files\GUI\Menu\Menu Items</Filter>
     </ClCompile>
     <ClCompile Include="GUIText.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
@@ -534,6 +528,15 @@
       <Filter>Source Files\Utility\DebugDraw</Filter>
     </ClCompile>
     <ClCompile Include="SuddenDeathState.cpp">
+      <Filter>Source Files\GameState</Filter>    
+	</ClCompile>
+    <ClCompile Include="CreaditsScreen.cpp">
+      <Filter>Source Files\GUI\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuTextBox.cpp">
+      <Filter>Source Files\GUI\Menu\Menu Items</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayingState.cpp">
       <Filter>Source Files\GameState</Filter>
     </ClCompile>
   </ItemGroup>
@@ -608,9 +611,6 @@
       <Filter>Header Files\Network</Filter>
     </ClInclude>
     <ClInclude Include="GameState.h">
-      <Filter>Header Files\GameState</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayingStateTest.h">
       <Filter>Header Files\GameState</Filter>
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
@@ -741,9 +741,6 @@
     </ClInclude>
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
       <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="MenuIpBox.h">
-      <Filter>Header Files\GUI\Menu\Menu Items</Filter>
     </ClInclude>
     <ClInclude Include="GUIText.h">
       <Filter>Header Files\GUI\Internal</Filter>
@@ -897,6 +894,15 @@
     </ClInclude>
     <ClInclude Include="CustomFont.h">
       <Filter>Header Files\GUI\Internal</Filter>
+    </ClInclude>
+    <ClInclude Include="CreaditsScreen.h">
+      <Filter>Header Files\GUI\Menu</Filter>
+	</ClInclude>
+    <ClInclude Include="MenuTextBox.h">
+      <Filter>Header Files\GUI\Menu\Menu Items</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayingState.h">
+      <Filter>Header Files\GameState</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

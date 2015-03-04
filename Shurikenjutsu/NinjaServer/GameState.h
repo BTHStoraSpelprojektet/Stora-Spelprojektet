@@ -29,7 +29,7 @@ public:
 	virtual void Update(double p_deltaTime);
 	
 public:
-	void AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team);
+	void AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team);
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	bool MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);

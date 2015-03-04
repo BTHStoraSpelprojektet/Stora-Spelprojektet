@@ -50,12 +50,12 @@ public:
 	bool GetPlayerIsAlive();
 	int GetNrOfPlayersInTeam(int p_team);
 
-	void PlayerManager::SetSound(Sound* p_sound);
+	void SetSound(Sound* p_sound);
 	void SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList);
 
 private:
-	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
-	void AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction);
+	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name);
+	void AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name);
 	
 	bool IsGuidInEnemyList(RakNet::RakNetGUID p_guid);
 	bool IsGuidInNetworkList(RakNet::RakNetGUID p_guid);

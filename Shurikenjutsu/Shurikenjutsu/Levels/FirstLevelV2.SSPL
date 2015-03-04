@@ -61,8 +61,8 @@ ParticleEmitter_BrazierSparks_12 30.812 1.79524 37.7466 0 -0.785398 0
 ParticleEmitter_BrazierSparks_13 5.35181 1.79524 -5.04196 0 3.14159 0
 ParticleEmitter_BrazierSparks_14 -5.352 1.79524 -5.042 0 -1.5708 0
 ParticleEmitter_BrazierSparks_15 5.04196 1.79524 5.042 0 1.5708 0
-ParticleEmitter_Fireflies_1 -18 4 -38 0 0 0
-ParticleEmitter_Fireflies_2 18 4 39 0 0 0
+ParticleEmitter_Fireflies_1 -18 3 -38 0 0 0
+ParticleEmitter_Fireflies_2 18 3 39 0 0 0
 ParticleEmitter_LeafAcerPalmatum_3 -19.3634 6.37349 40.5038 0 1.5708 0
 ParticleEmitter_LeafAcerPalmatum_4 30.9636 6.37349 45.8456 0 1.5708 0
 ParticleEmitter_LeafAcerPalmatum_5 19.1899 6.37349 -40.7249 0 1.5708 0

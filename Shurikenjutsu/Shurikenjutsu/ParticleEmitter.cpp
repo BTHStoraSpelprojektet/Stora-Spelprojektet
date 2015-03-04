@@ -67,7 +67,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_FIREFLIES) :
 		{
-			InitParticles(10.0f, 50, DirectX::XMFLOAT3(3.0f, 0.3f, 3.0f), 0.0f, 0.0f, 30.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/FireFlies.png"));
+			InitParticles(10.0f, 50, DirectX::XMFLOAT3(2.5f, 0.3f, 2.5f), 0.0f, 0.0f, 30.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/FireFlies.png"));
 
 			break;
 		}
@@ -684,10 +684,12 @@ void ParticleEmitter::UpdateParticles()
 				{
 				for (int i = 0; i < m_currentParticles; i++)
 				{
-					m_particleList[i].m_position.x = m_particleList[i].m_position.x;
+					m_particleList[i].m_direction = DirectX::XMFLOAT3(cos(m_particleList[i].m_timePassed)*0.005f, 0.0f, sin(m_particleList[i].m_timePassed)*0.005f);
 
-					m_particleList[i].m_position.y = m_particleList[i].m_position.y;
-					m_particleList[i].m_position.z = m_particleList[i].m_position.z;
+					m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_direction.x /*+ m_particleList[i].m_velocity*/; //+ 0.1f;
+
+					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_particleList[i].m_direction.y;
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_direction.z;
 
 					// Add time passed.
 					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();

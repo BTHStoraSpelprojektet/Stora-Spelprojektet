@@ -309,7 +309,7 @@ float CollisionManager::AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_pl
 	{
 		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
 		{
-			if (ray->m_distance != 0 )
+			if (ray->m_distance > 0 )
 			{
 				if (p_throwStuff)
 				{
@@ -332,7 +332,7 @@ float CollisionManager::AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_pl
 		tmpSphere.m_position.y = 0.1f;
 		if (Collisions::RaySphereCollision(ray, tmpSphere))
 		{
-			if (ray->m_distance != 0)
+			if (ray->m_distance > 0)
 			{
 				rayLengths.push_back(ray->m_distance);
 			}
