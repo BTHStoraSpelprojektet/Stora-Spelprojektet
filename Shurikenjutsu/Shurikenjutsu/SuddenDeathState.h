@@ -47,15 +47,7 @@ private:
 
 		MatrixBuffer()
 		{
-			DirectX::XMFLOAT4X4 view;
-			DirectX::XMStoreFloat4x4(&view, DirectX::XMMatrixIdentity());
-			m_viewMatrix = DirectX::XMLoadFloat4x4(&view);
 
-			DirectX::XMFLOAT4X4 projection;
-			DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixIdentity());
-			m_projectionMatrix = DirectX::XMLoadFloat4x4(&projection);
-
-			m_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 	};
 

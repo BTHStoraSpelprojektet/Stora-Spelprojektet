@@ -43,5 +43,4 @@ private:
 	IDWriteTextFormat* m_format;
 	std::vector<IDWriteTextLayout*> m_layouts;
 };
-
 #endif
