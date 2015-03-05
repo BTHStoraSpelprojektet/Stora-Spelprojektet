@@ -2159,7 +2159,9 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 void Network::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
 {
 	//Only support sound for one rune per type for now
-	m_sound->StopAmbientSound(runeSoundEmitters[p_poiType]);
+	if (m_sound != nullptr){
+		m_sound->StopAmbientSound(runeSoundEmitters[p_poiType]);
+	}
 
 	m_objectManager->RunePickedUp(p_poiType, p_guid);
 	if (m_myPlayer.guid == p_guid){
