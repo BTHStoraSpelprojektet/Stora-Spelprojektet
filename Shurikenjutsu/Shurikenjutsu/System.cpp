@@ -417,6 +417,7 @@ void System::Render()
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	ParticleRenderer::GetInstance()->Render();
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	// The need to switch back to the original depth stencil state is not needed yet, since GUI switches it to be completely off
 

@@ -528,8 +528,8 @@
       <Filter>Source Files\Utility\DebugDraw</Filter>
     </ClCompile>
     <ClCompile Include="SuddenDeathState.cpp">
-      <Filter>Source Files\GameState</Filter>    
-	</ClCompile>
+      <Filter>Source Files\GameState</Filter>
+    </ClCompile>
     <ClCompile Include="CreaditsScreen.cpp">
       <Filter>Source Files\GUI\Menu</Filter>
     </ClCompile>
@@ -897,7 +897,7 @@
     </ClInclude>
     <ClInclude Include="CreaditsScreen.h">
       <Filter>Header Files\GUI\Menu</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="MenuTextBox.h">
       <Filter>Header Files\GUI\Menu\Menu Items</Filter>
     </ClInclude>
@@ -1037,6 +1037,9 @@
     </FxCompile>
     <FxCompile Include="Shaders\SuddenDeath\SDVertexShader.hlsl">
       <Filter>Shaders\SuddenDeath</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Particle\ParticlePixelShaderNotFire.hlsl">
+      <Filter>Shaders\Particle</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

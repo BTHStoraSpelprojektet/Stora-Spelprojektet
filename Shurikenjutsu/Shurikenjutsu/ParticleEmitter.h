@@ -29,6 +29,7 @@ public:
 	void SetEmitParticleState(bool p_emit);
 
 	int GetParticleCount();
+	bool IsFire();
 
 	ID3D11Buffer* GetVertexBuffer();
 	unsigned int GetVertices();
@@ -140,5 +141,7 @@ private:
 	float m_SDxMin;
 	float m_SDzMax;
 	float m_SDzMin;
+
+	bool m_fire;
 };
 #endif

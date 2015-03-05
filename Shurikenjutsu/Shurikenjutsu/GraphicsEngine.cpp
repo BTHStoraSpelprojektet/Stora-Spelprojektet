@@ -397,9 +397,9 @@ void GraphicsEngine::RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XM
 	m_sceneShader->RenderLine(m_directX.GetContext(), p_mesh, p_number, p_color, p_worldMatrix);
 }
 
-void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, bool p_isFire)
 {
-	m_particleShader->Render(m_directX.GetContext(), p_mesh, p_vertexCount, p_worldMatrix, p_texture);
+	m_particleShader->Render(m_directX.GetContext(), p_mesh, p_vertexCount, p_worldMatrix, p_texture, p_isFire);
 }
 
 void GraphicsEngine::RenderFoliage()
@@ -522,6 +522,11 @@ std::string GraphicsEngine::CreateTitle(D3D_FEATURE_LEVEL p_version)
 			return "ERROR";
 		}
 	}
+}
+
+void GraphicsEngine::TurnOnPointLightAlphaBlending()
+{
+	m_directX.TurnOnPointLightAlphaBlending();
 }
 
 void GraphicsEngine::TurnOnAlphaBlending()

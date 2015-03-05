@@ -12,7 +12,7 @@ public:
 	bool Initialize(ID3D11Device* p_device);
 	void Shutdown();
 
-	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	void Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, bool p_isFire);
 
 	void UpdateViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 
@@ -25,6 +25,7 @@ private:
 
 	ID3D11VertexShader* m_vertexShader;
 	ID3D11PixelShader* m_pixelShader;
+	ID3D11PixelShader* m_pixelShaderNotFire;
 	ID3D11GeometryShader* m_geometryShader;
 
 	ID3D11InputLayout* m_layout;
