@@ -87,10 +87,10 @@ enum EmitterType{
 	EmitterType_WorldDust
 };
 
-enum PointOfInterestType{
-	PointOfInterestType_Heal,
-	PointOfInterestType_Invisible,
-	PointOfInterestType_Shield
+enum POINTOFINTERESTTYPE{
+	POINTOFINTERESTTYPE_HEAL,
+	POINTOFINTERESTTYPE_INVISIBLE,
+	POINTOFINTERESTTYPE_SHIELD
 };
 
 #endif // !COMMONENUMS_H_

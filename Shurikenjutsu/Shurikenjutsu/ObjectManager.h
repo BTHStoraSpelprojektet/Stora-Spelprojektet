@@ -57,8 +57,8 @@ public:
 	
 	void SetSound(Sound* p_sound);
 
-	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
-	void RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
+	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
 	void RunesRestartRound();
 
 private:

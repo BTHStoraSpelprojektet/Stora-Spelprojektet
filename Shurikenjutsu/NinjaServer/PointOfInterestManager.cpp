@@ -85,26 +85,25 @@ void PointOfInterestManager::SpawnRunes()
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
-void PointOfInterestManager::PickUpRunes(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
+void PointOfInterestManager::PickUpRunes(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
 {
 	RakNet::BitStream bitStream;
 	
 	switch (p_poiType)
 	{
-	case PointOfInterestType_Heal:
+	case POINTOFINTERESTTYPE_HEAL:
 	{
 		m_lotusActive = false;
 		bitStream.Write((RakNet::MessageID)ID_LOTUS_PICKED_UP);
-		// Add sound
 		break;
 	}
-	case PointOfInterestType_Shield:
+	case POINTOFINTERESTTYPE_SHIELD:
 	{
 		m_shieldActive = false;
 		bitStream.Write((RakNet::MessageID)ID_SHIELD_PICKED_UP);
 		break;
 	}
-	case PointOfInterestType_Invisible:
+	case POINTOFINTERESTTYPE_INVISIBLE:
 	{
 		m_invisActive = false;
 		bitStream.Write((RakNet::MessageID)ID_INVIS_PICKED_UP);
@@ -124,17 +123,17 @@ void PointOfInterestManager::RoundRestart()
 	//Initialize();
 }
 
-std::vector<Box> PointOfInterestManager::GetBoundingBoxes(PointOfInterestType p_poiType)
+std::vector<Box> PointOfInterestManager::GetBoundingBoxes(POINTOFINTERESTTYPE p_poiType)
 {
 	switch (p_poiType)
 	{
-	case PointOfInterestType_Heal:
+	case POINTOFINTERESTTYPE_HEAL:
 		return m_lotusBoundingBoxes;
 		break;
-	case PointOfInterestType_Invisible:
+	case POINTOFINTERESTTYPE_INVISIBLE:
 		return m_invisBoundingBoxes;
 		break;
-	case PointOfInterestType_Shield:
+	case POINTOFINTERESTTYPE_SHIELD:
 		return m_shieldBoundingBoxes;
 		break;
 	default:

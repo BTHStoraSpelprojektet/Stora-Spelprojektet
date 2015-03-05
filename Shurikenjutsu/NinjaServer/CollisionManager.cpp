@@ -1215,9 +1215,9 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager)
 {
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
-	std::vector<Box> lotusBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Heal);
-	std::vector<Box> shieldBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Shield);
-	std::vector<Box> invisBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Invisible);
+	std::vector<Box> lotusBBox = p_POIManager->GetBoundingBoxes(POINTOFINTERESTTYPE_HEAL);
+	std::vector<Box> shieldBBox = p_POIManager->GetBoundingBoxes(POINTOFINTERESTTYPE_SHIELD);
+	std::vector<Box> invisBBox = p_POIManager->GetBoundingBoxes(POINTOFINTERESTTYPE_INVISIBLE);
 
 	// Go through player list
 	for (unsigned int j = 0; j < playerList.size(); j++)
@@ -1241,7 +1241,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
 					{
 						p_playerManager->RuneLotusPickedUp(playerList[j].guid);
-						p_POIManager->PickUpRunes(PointOfInterestType_Heal, playerList[j].guid);
+						p_POIManager->PickUpRunes(POINTOFINTERESTTYPE_HEAL, playerList[j].guid);
 						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_HEAL_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}
@@ -1258,7 +1258,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 					if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
 					{
 						p_playerManager->RuneInvisPickedUp(playerList[j].guid);
-						p_POIManager->PickUpRunes(PointOfInterestType_Invisible, playerList[j].guid);
+						p_POIManager->PickUpRunes(POINTOFINTERESTTYPE_INVISIBLE, playerList[j].guid);
 						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_INVISIBLE_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}
@@ -1275,7 +1275,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 					if (BoxBoxTest(playerBoundingBoxes[l], shieldBBox[k]))
 					{
 						p_playerManager->RuneShieldPickedUp(playerList[j].guid);
-						p_POIManager->PickUpRunes(PointOfInterestType_Shield, playerList[j].guid);
+						p_POIManager->PickUpRunes(POINTOFINTERESTTYPE_SHIELD, playerList[j].guid);
 						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_SHIELD_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}

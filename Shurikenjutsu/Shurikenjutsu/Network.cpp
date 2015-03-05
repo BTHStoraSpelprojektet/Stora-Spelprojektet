@@ -5,7 +5,6 @@
 #include "Globals.h"
 #include "DeathBoard.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
-#include "Sound.h"
 #include "ScoreBoard.h"
 
 Network* Network::m_instance;
@@ -1006,7 +1005,47 @@ void Network::ReceviePacket()
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
+		}
+
+		case ID_PLAY_AMBIENT_SOUND:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			PLAYSOUND sound;
+			float x, y, z;
+
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+			Sound::SoundEmitter* soundEmitter;
+
+			if (m_sound != NULL){
+				soundEmitter = m_sound->CreateAmbientSound(sound, x, y, z);
 			}
+			break;
+		}
+
+		case ID_STOP_AMBIENT_SOUND:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			PLAYSOUND sound;
+			float x, y, z;
+
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(sound, x, y, z);
+			}
+
+			break;
+		}
 
 		case ID_SCOREBOARDKILL:
 		{
@@ -1050,7 +1089,7 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			RakNet::RakNetGUID guid;
-			PointOfInterestType poi_type;
+			POINTOFINTERESTTYPE poi_type;
 			float x, y, z;
 			bitStream.Read(messageID);
 			for (int i = 0; i < 3; i++)
@@ -1083,7 +1122,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(PointOfInterestType_Heal, guid);
+			RunePickedUp(POINTOFINTERESTTYPE_HEAL, guid);
 			break;
 		}
 		case ID_INVIS_PICKED_UP:
@@ -1093,7 +1132,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(PointOfInterestType_Invisible, guid);
+			RunePickedUp(POINTOFINTERESTTYPE_INVISIBLE, guid);
 			RuneInvisPickedUp(guid);
 			break;
 		}
@@ -1104,7 +1143,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(PointOfInterestType_Shield, guid);
+			RunePickedUp(POINTOFINTERESTTYPE_SHIELD, guid);
 			break;
 		}
 		default:
@@ -2080,14 +2119,49 @@ void Network::SendLatestDir()
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 2, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
-void Network::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z)
+void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
 {
 	m_objectManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
+
+	Sound::SoundEmitter* soundEmitter = NULL;
+	switch (p_poiType)
+	{
+	case POINTOFINTERESTTYPE_HEAL:
+	{
+		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SPAWN_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_RUNE_HEAL_SOUND, p_x, p_y, p_z);
+		break;
+	}
+	case POINTOFINTERESTTYPE_SHIELD:
+	{
+		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_RUNE_SHIELD_SOUND, p_x, p_y, p_z);
+		break;
+	}
+	case POINTOFINTERESTTYPE_INVISIBLE:
+	{
+		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_RUNE_INVISIBLE_SOUND, p_x, p_y, p_z);
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	//Only support sound for one rune per type for now
+	runeSoundEmitters[p_poiType] = soundEmitter;
 }
 
-void Network::RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
+void Network::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
 {
+	//Only support sound for one rune per type for now
+	m_sound->StopAmbientSound(runeSoundEmitters[p_poiType]);
+
 	m_objectManager->RunePickedUp(p_poiType, p_guid);
+	if (m_myPlayer.guid == p_guid){
+		m_myPlayer.x;
+	}
 }
 
 void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
