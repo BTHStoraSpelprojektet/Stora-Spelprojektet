@@ -17,6 +17,7 @@
 #include "PlayerManager.h"
 #include "PointLights.h"
 #include "MenuButton.h"
+#include "ScoreBoard.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -159,6 +160,9 @@ bool ChooseState::Initialize()
 	m_playerManager->Initialize(true);
 	m_playerManager->UpdateFrustum(m_frustum);
 
+	// Initialize the score board
+	ScoreBoard::GetInstance()->Initialize();
+
 	return true;
 }
 
@@ -284,6 +288,8 @@ void ChooseState::Shutdown()
 		delete m_questionMark;
 		m_questionMark = nullptr;
 	}
+
+	ScoreBoard::GetInstance()->Shutdown();
 }
 
 void ChooseState::ShutdownExit()
@@ -303,6 +309,9 @@ GAMESTATESWITCH ChooseState::Update()
 {
 	// Update Camera position
 	m_camera->MenuCameraRotation();
+
+	m_objectManager->UpdateFrustum(m_frustum);
+	m_playerManager->UpdateFrustum(m_frustum);
 
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
@@ -409,6 +418,7 @@ GAMESTATESWITCH ChooseState::Update()
 		break;
 	}
 
+	ScoreBoard::GetInstance()->Update();
 
 	if (m_playButton->IsClicked())
 	{
