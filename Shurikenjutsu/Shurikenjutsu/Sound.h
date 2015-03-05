@@ -101,6 +101,7 @@ private:
 	FMOD::Sound *m_maleHurtSound;
 	FMOD::Sound *m_femaleHurtSound;
 	FMOD::Sound *m_countdownBeep;
+	FMOD::Sound *m_countdownGong;
 	FMOD::Sound *m_runeInvisibility;
 	FMOD::Sound *m_runeInvisibilitySpawn;
 	FMOD::Sound *m_runeInvisibilityPickup;

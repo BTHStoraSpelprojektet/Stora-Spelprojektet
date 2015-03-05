@@ -454,6 +454,7 @@ void Network::ReceviePacket()
 			m_timeRestarting = 0;
 			ClearListsAtNewRound();
 
+			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
 			ConsolePrintSuccess("A new round has started!");
 			ConsoleSkipLines(1);
 			break;
@@ -482,7 +483,9 @@ void Network::ReceviePacket()
 
 			m_timeRestarting = time;
 
-			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_BEEP_SOUND,0,0,0);
+			if (time <= 5 && time != 0){
+				m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_BEEP_SOUND, 0, 0, 0);
+			}
 			ConsolePrintText(std::to_string(time) + "...");
 			break;
 		}
@@ -561,7 +564,7 @@ void Network::ReceviePacket()
 			wBitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
 			m_clientPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 0, m_packet->guid, false);
 
-
+			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
 			ConsolePrintSuccess("Starting a new match.");
 			ConsoleSkipLines(1);
 			break;

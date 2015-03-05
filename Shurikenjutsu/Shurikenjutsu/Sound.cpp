@@ -117,6 +117,9 @@ bool Sound::Initialize()
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/CountdownBeep.wav", FMOD_2D, 0, &m_countdownBeep);
 	FMODErrorCheck(m_result);
 
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/CountdownGong.wav", FMOD_2D, 0, &m_countdownGong);
+	FMODErrorCheck(m_result);
+
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneInvisibility.wav", FMOD_MODE, 0, &m_runeInvisibility);
 	FMODErrorCheck(m_result);
 
@@ -449,6 +452,13 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 		m_countdownBeep->setMode(FMOD_LOOP_OFF);
 		m_countdownBeep->setLoopCount(1);
 		m_system->playSound(m_countdownBeep, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_COUNTDOWN_GONG_SOUND:
+	{
+		m_countdownGong->setMode(FMOD_LOOP_OFF);
+		m_countdownGong->setLoopCount(1);
+		m_system->playSound(m_countdownGong, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}
 	case PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND:
