@@ -791,6 +791,18 @@ void PlayerManager::SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p
 	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
+void PlayerManager::SendPlayAmbientSound(PLAYSOUND sound, float p_x, float p_y, float p_z)
+{
+	RakNet::BitStream wBitStream;
+	wBitStream.Write((RakNet::MessageID)ID_PLAY_AMBIENT_SOUND);
+	wBitStream.Write(sound);
+	wBitStream.Write(p_x);
+	wBitStream.Write(p_y);
+	wBitStream.Write(p_z);
+
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
 void PlayerManager::SendPlayerPosAndDir()
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)

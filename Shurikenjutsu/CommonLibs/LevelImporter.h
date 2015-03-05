@@ -29,7 +29,7 @@ public:
 		float m_rotationX;
 		float m_rotationY;
 		float m_rotationZ; 
-		PointOfInterestType type;
+		POINTOFINTERESTTYPE type;
 	};
 
 	struct ParticleEmitter{

@@ -284,13 +284,13 @@ void LevelImporter::ReadLevelObject(std::string &p_tmpStr, int p_currentWordTemp
 			poi.m_rotationZ = p_rotateZ;
 
 			if (p_particleEmitterType.find("Heal") != std::string::npos){
-				poi.type = PointOfInterestType::PointOfInterestType_Heal;
+				poi.type = POINTOFINTERESTTYPE::POINTOFINTERESTTYPE_HEAL;
 			}
 			else if (p_particleEmitterType.find("Invisible") != std::string::npos){
-				poi.type = PointOfInterestType::PointOfInterestType_Invisible;
+				poi.type = POINTOFINTERESTTYPE::POINTOFINTERESTTYPE_INVISIBLE;
 			}
 			else if (p_particleEmitterType.find("Shield") != std::string::npos){
-				poi.type = PointOfInterestType::PointOfInterestType_Shield;
+				poi.type = POINTOFINTERESTTYPE::POINTOFINTERESTTYPE_SHIELD;
 			}
 
 			m_POIPoints.push_back(poi);

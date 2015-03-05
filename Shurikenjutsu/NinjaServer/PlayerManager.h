@@ -54,6 +54,7 @@ public:
 	void ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager);
 	void SendPlaySound(ABILITIES ability, float p_x, float p_y, float p_z);
 	void SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p_z);
+	void SendPlayAmbientSound(PLAYSOUND sound, float p_x, float p_y, float p_z);
 	void SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage, float p_x, float p_y, float p_z);
 	void SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage);
 	
