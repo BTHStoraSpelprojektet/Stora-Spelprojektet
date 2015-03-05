@@ -277,8 +277,11 @@ void ObjectManager::Shutdown()
 	// Trails.
 	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
 	{
-		m_bloodParticles[i]->Shutdown();
-		delete m_bloodParticles[i];
+		if (m_bloodParticles[i] != nullptr)
+		{
+			m_bloodParticles[i]->Shutdown();
+			delete m_bloodParticles[i];
+		}
 	}
 	m_bloodParticles.clear();
 	m_bloodParticlesTimer.clear();
@@ -625,15 +628,20 @@ void ObjectManager::Update()
 		{
 			m_bloodParticlesTimer[i] -= (float)GLOBAL::GetInstance().GetDeltaTime();
 		}
-		else
+		else // If timer is 0 turn off emitiing
 		{
-			// If timer is 0 turn off emitiing
 			if (i < m_bloodParticles.size())
 			{
-				m_bloodParticles[i]->SetEmitParticleState(false);
+				m_bloodParticles[i]->Shutdown();
+				delete m_bloodParticles[i];
+				m_bloodParticles[i] = nullptr;
+				m_bloodParticles.erase(m_bloodParticles.begin() + i);
+				m_bloodParticlesTimer.erase(m_bloodParticlesTimer.begin() + i);
+				i--;
 			}
 		}
 	}
+	m_bloodParticles.shrink_to_fit();
 
 	// Update blood
 	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
@@ -1308,7 +1316,7 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 	temp->SetEmitParticleState(true);
 	m_bloodParticles.push_back(temp);
 
-	m_bloodParticlesTimer.push_back(float(0.5f));
+	m_bloodParticlesTimer.push_back(0.5f);
 }
 
 void ObjectManager::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z)
