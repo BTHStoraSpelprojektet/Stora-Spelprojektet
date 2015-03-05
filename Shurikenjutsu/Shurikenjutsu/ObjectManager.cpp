@@ -1314,7 +1314,7 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 	p_pos.y += 2;
 	temp->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
 	temp->SetEmitParticleState(true);
-	m_bloodParticles.push_back(temp);
+	m_bloodParticles.push_back(temp); 
 
 	m_bloodParticlesTimer.push_back(0.5f);
 }

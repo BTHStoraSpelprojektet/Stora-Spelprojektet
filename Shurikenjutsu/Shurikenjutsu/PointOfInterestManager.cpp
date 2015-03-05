@@ -22,6 +22,10 @@ bool PointOfInterestManager::Initialize()
 
 void PointOfInterestManager::Shutdown()
 {
+	for(unsigned int i = 0; i < m_runes.size(); i++)
+	{
+		m_runes[i].Shutdown();
+	}
 	m_runes.clear();
 }
 

@@ -203,7 +203,12 @@ void MenuState::Shutdown()
 		m_logo->Shutdown();
 		delete m_logo;
 		m_logo = NULL;
-}
+	}
+
+	while (!m_menues.empty())
+	{
+		m_menues.pop();
+	}
 }
 
 void MenuState::ShutdownExit()
@@ -273,8 +278,8 @@ GAMESTATESWITCH MenuState::Update()
 			temp = m_options->GetCheckboxState(m_fullscreenIndex);
 			m_lastfullscreen = temp;
 			GraphicsEngine::GetInstance()->ToggleFullscreen(temp);
-			//Shutdown();
-			//Initialize();
+			Shutdown();
+			Initialize();
 			break;
 	}
 
