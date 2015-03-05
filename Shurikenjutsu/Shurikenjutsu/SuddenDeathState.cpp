@@ -198,6 +198,9 @@ void SuddenDeathState::Initialize()
 	matrixData.SysMemPitch = 0;
 	matrixData.SysMemSlicePitch = 0;
 
+	delete matrices;
+	matrices = nullptr;
+
 	// Create the matrix buffer.
 	GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&matrixBuffer, &matrixData, &m_matrixBuffer);
 

@@ -91,7 +91,12 @@ void MenuTextBox::Shutdown()
 	delete[] m_text;
 	m_text = 0;
 
-	m_guiText->Shutdown();
+	if (m_guiText != nullptr)
+	{
+		m_guiText->Shutdown();
+		delete m_guiText;
+		m_guiText = nullptr;
+	}
 }
 
 void MenuTextBox::Render()
