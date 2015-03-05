@@ -83,7 +83,7 @@ void PlayerManager::Update(bool p_inMenu)
 				{
 					// Add player
 					AddEnemy(enemyPlayers[i].guid, enemyPlayers[i].charNr, DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), 
-						DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), enemyPlayers[i].name.C_String());
+					DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), enemyPlayers[i].name.C_String());
 				}
 			}
 
@@ -122,7 +122,7 @@ void PlayerManager::Render(bool p_inMenu)
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i]->GetFrustumSphere(), 1.0f))
 		{
-			if (!p_inMenu || !Network::GetInstance()->GetMatchOver())
+			if (!p_inMenu && !Network::GetInstance()->GetMatchOver())
 			{
 				if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 				{

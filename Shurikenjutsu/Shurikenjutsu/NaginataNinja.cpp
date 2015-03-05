@@ -64,68 +64,71 @@ void NaginataNinja::Shutdown()
 }
 void NaginataNinja::RenderAttackLocations()
 {
-	if (InputManager::GetInstance()->IsLeftMousePressed())
+	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
 	{
-		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
-			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, NAGINATA_RANGE);
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			{
+				m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, NAGINATA_RANGE);
 
-			ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		if (InputManager::GetInstance()->IsRightMousePressed())
 		{
-			StillCDText();
-		}
-	}
-	if (InputManager::GetInstance()->IsRightMousePressed())
-	{
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
-		{
-			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
+			if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+			{
+				m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
-			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
-			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 		{
-			StillCDText();
-		}
-	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
-	{
-		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
-		{
-			m_ape->ThickRectanglePrediction(m_aimPole, m_attackDir, m_position, NAGINATASTAB_RANGE * 2);
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ape->ThickRectanglePrediction(m_aimPole, m_attackDir, m_position, NAGINATASTAB_RANGE * 2);
 
-			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 		{
-			StillCDText();
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ape->ThrowSphere(m_aimSphere, m_position, 3.5f, VOLLEY_RANGE);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
-	{
-		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
 		{
-			m_ape->ThrowSphere(m_aimSphere, m_position, 3.5f, VOLLEY_RANGE);
-			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
-		}
-		else
-		{
-			StillCDText();
-		}
-	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
-	{
-		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
-		{
-			m_ape->ThrowSphere(m_aimSphere, m_position, 7.0f, STICKY_TRAP_RANGE);
-			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
-		}
-		else
-		{
-			StillCDText();
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ape->ThrowSphere(m_aimSphere, m_position, 7.0f, STICKY_TRAP_RANGE);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
 	}
 }

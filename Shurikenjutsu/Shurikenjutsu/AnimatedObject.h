@@ -4,6 +4,8 @@
 #include "Object.h"
 #include "AnimationControl.h"
 
+class Trail;
+
 class AnimatedObject : public Object
 {
 public:
@@ -31,6 +33,8 @@ public:
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);
 	void SetIkDirection(DirectX::XMFLOAT3 p_ikDirection);
 
+	void ChangeTrailColor(int p_team);
+
 protected:
 	DirectX::XMFLOAT3 m_direction;
 	float m_speed;
@@ -41,6 +45,8 @@ private:
 	AnimationControl m_animationController;
 
 	ID3D11ShaderResourceView* m_texture;
+
+	Trail* m_trail;
 };
 
 #endif ANIMATEDOBJECT_H_

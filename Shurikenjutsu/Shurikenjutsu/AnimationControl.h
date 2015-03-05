@@ -28,6 +28,10 @@ public:
 	void Shutdown();
 
 	std::vector<DirectX::XMFLOAT4X4> GetBoneTransforms();
+
+	DirectX::XMFLOAT3 GetTrailPosition();
+	float GetTrailAngle();
+	bool ShowTrail();
 	
 private:
 	void CombineMatrices(int* p_index, BoneFrame* p_jointArms, BoneFrame* p_jointLegs, DirectX::XMVECTOR& p_parentQuaternion, DirectX::XMVECTOR& p_parentTranslation);
@@ -73,6 +77,10 @@ private:
 
 	bool m_light;
 	DirectX::XMFLOAT3 m_lightPos;
+
+	bool m_showTrail;
+	DirectX::XMFLOAT3 m_trailPosition;
+	float m_trailAngle;
 };
 
 #endif;

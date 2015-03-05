@@ -370,31 +370,60 @@ void Player::UpdateMe()
 
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
-	
-	// Range attack
-	if (InputManager::GetInstance()->IsRightMouseClicked())
+	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
 	{
-		// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		// Range attack
+		if (InputManager::GetInstance()->IsRightMouseClicked())
 		{
-			m_ability = m_rangeAttack;
+			// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
+			if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+			{
+				m_ability = m_rangeAttack;
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		// Melee attack
+		if (InputManager::GetInstance()->IsLeftMouseClicked())
 		{
-			StillCDText();
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeAttack;
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
 	}
-
-	// Melee attack
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	else
 	{
-		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		// Range attack
+		if (InputManager::GetInstance()->IsRightMousePressed())
 		{
-			m_ability = m_meleeAttack;
+			// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
+			if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+			{
+				m_ability = m_rangeAttack;
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		// Melee attack
+		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
-			StillCDText();
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeAttack;
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
 	}
 
@@ -420,25 +449,52 @@ void Player::UpdateMe()
 
 void Player::CheckForSpecialAttack()
 {
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('e')))
+	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
 	{
-		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('e')))
 		{
-			m_ability = m_rangeSpecialAttack;
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_rangeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('q')))
+		{
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('r')))
+		{
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_toolAbility;
+			}
 		}
 	}
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('q')))
+	else
 	{
-		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 		{
-			m_ability = m_meleeSpecialAttack;
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_rangeSpecialAttack;
+			}
 		}
-	}
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('r')))
-	{
-		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 		{
-			m_ability = m_toolAbility;
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+		{
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_toolAbility;
+			}
 		}
 	}
 }
@@ -1075,10 +1131,12 @@ void Player::SetTeam(int p_team)
 	if (m_team == 1)
 	{
 		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
+		AnimatedObject::ChangeTrailColor(1);
 	}
 	else
 	{
 		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
+		AnimatedObject::ChangeTrailColor(0);
 	}
 }
 
