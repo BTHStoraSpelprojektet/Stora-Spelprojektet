@@ -25,6 +25,8 @@ public:
 
 	float GetPositionX();
 	float GetPositionY();
+	float GetOriginPosX();
+	float GetOriginPosY();
 
 	float GetWidth();
 	float GetHeight();
@@ -36,6 +38,8 @@ public:
 private:
 	float m_posx;
 	float m_posy;
+	float m_originPosX;
+	float m_originPosY;
 	float m_width;
 	float m_height;
 	int m_textLength;

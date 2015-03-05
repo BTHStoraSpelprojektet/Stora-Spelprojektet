@@ -2282,3 +2282,23 @@ void Network::UpdatePlayerInvisAll(bool p_invis)
 		m_enemyPlayers[i].invis = p_invis;
 	}
 }
+
+int Network::GetCharNr(RakNet::RakNetGUID p_guid)
+{
+	if (p_guid == GetMyGUID())
+	{
+		return m_myPlayer.charNr;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				return m_enemyPlayers[i].charNr;
+			}
+		}
+	}
+
+	return -1;
+}

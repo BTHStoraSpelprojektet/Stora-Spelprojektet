@@ -157,6 +157,7 @@ public:
 
 	void SetPlayerName(std::string p_playerName);
 	std::string GetPlayerName(RakNet::RakNetGUID p_guid);
+	int GetCharNr(RakNet::RakNetGUID p_guid);
 
 private:
 	void ClearListsAtNewRound();
