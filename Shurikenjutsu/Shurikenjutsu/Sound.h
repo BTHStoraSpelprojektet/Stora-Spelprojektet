@@ -36,8 +36,12 @@ public:
 	void ClearAmbientSounds();
 
 	void StopMusic();
-	void StartMusic();
 	void StartStopMusic();
+	void StartMusic();
+
+	void MuteEverything();
+	void UnMuteEverything();
+	bool GetMuteState();
 private:
 	FMOD::System *m_system;
 	FMOD_RESULT m_result;
@@ -46,9 +50,10 @@ private:
 	FMOD_SPEAKERMODE m_speakerMode;
 	//FMOD_Caps caps;
 	char m_name[256];
-	float m_musicVolume = 0.7f;
-	float m_defaultWindVolume = 0.2f;
+	float m_musicVolume;
+	float m_defaultWindVolume;
 	int music_sound_id = 0;
+	bool m_isMuted;
 
 	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
 	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);

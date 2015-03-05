@@ -36,6 +36,9 @@ public:
 
 	std::string FPS;
 
+	bool VOLUME_ON;
+	bool VOLUME_PREVSTATE;
+
 private:
 	GLOBAL() {};
 	GLOBAL(GLOBAL const&);              

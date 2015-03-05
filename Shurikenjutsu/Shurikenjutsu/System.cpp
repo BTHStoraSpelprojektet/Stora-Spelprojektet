@@ -142,6 +142,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('v'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('r'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('o'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('m'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
@@ -184,6 +185,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	{
 		return false;
 	}
+
+	GLOBAL::GetInstance().VOLUME_ON = true;
 
 	return true;
 }
@@ -310,6 +313,20 @@ void System::Run()
 // Update game logic here.
 void System::Update()
 {
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('m')))
+	{
+		GLOBAL::GetInstance().VOLUME_PREVSTATE = GLOBAL::GetInstance().VOLUME_ON;
+		if (GLOBAL::GetInstance().VOLUME_ON)
+		{
+			GLOBAL::GetInstance().VOLUME_ON = false;
+			m_sound->MuteEverything();
+		}
+		else
+		{
+			GLOBAL::GetInstance().VOLUME_ON = true;
+			m_sound->UnMuteEverything();
+		}
+	}
 	// Update the timer to enable delta time and FPS measurements.
 	m_timer->Update();
 
