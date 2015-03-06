@@ -49,7 +49,6 @@ bool ScoreBoard::Initialize()
 
 void ScoreBoard::Shutdown()
 {
-	// Hoohhohoohohohohohohoohohohohoh
 	m_redColorPlayers.clear();
 	m_blueColorPlayers.clear();
 
@@ -74,8 +73,9 @@ void ScoreBoard::Update()
 		if (player.team == 1)
 		{
 			// Initialize text
-			//m_redColorPlayers[player.guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
-			m_redColorPlayers[player.guid].name.Initialize(player.name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+			m_redColorPlayers[player.guid].name.Initialize(player.name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+			m_redColorPlayers[player.guid].name.SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+			m_redColorPlayers[player.guid].name.SetText(player.name.C_String());
 			m_redColorPlayers[player.guid].death = player.deaths;
 			m_redColorPlayers[player.guid].kill = player.kills;
 			m_redColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[player.guid].kill) + "/" + std::to_string(m_redColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
@@ -91,15 +91,16 @@ void ScoreBoard::Update()
 		else if (player.team == 2)
 		{
 			// Initialize text
-			//m_blueColorPlayers[player.guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_blueColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
-			m_blueColorPlayers[player.guid].name.Initialize(player.name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+			m_blueColorPlayers[player.guid].name.Initialize(player.name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+			m_blueColorPlayers[player.guid].name.SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+			m_blueColorPlayers[player.guid].name.SetText(player.name.C_String());
 			m_blueColorPlayers[player.guid].death = player.deaths;
 			m_blueColorPlayers[player.guid].kill = player.kills;
 			m_blueColorPlayers[player.guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[player.guid].kill) + "/" + std::to_string(m_blueColorPlayers[player.guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);
 
 			// Initialize portrait
 			GUIElement element = GUIElement();
-			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f/*skitlångtneråthelvete.y*/, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
+			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_blueColorPlayers[player.guid].portrait = element;
 			m_addedMyself = true;
 			m_myTeam = player.team;
@@ -136,8 +137,9 @@ void ScoreBoard::Update()
 			if (m_redColorPlayers.find(players[i].guid) == m_redColorPlayers.end())
 			{
 				//Initialize text
-				//m_redColorPlayers[players[i].guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
-				m_redColorPlayers[players[i].guid].name.Initialize(players[i].name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+				m_redColorPlayers[players[i].guid].name.Initialize(players[i].name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+				m_redColorPlayers[players[i].guid].name.SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+				m_redColorPlayers[players[i].guid].name.SetText(players[i].name.C_String());
 				m_redColorPlayers[players[i].guid].death = players[i].deaths;
 				m_redColorPlayers[players[i].guid].kill = players[i].kills;
 				m_redColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_redColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_redColorPlayers[players[i].guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0xff000000);
@@ -159,8 +161,9 @@ void ScoreBoard::Update()
 			if (m_blueColorPlayers.find(players[i].guid) == m_blueColorPlayers.end())
 			{
 				//Initialize text
-				//m_blueColorPlayers[players[i].guid].name.Initialize("Player " + std::to_string(m_blueColorPlayers.size() + m_redColorPlayers.size() + 1), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
-				m_blueColorPlayers[players[i].guid].name.Initialize(players[i].name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+				m_blueColorPlayers[players[i].guid].name.Initialize(players[i].name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+				m_blueColorPlayers[players[i].guid].name.SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+				m_blueColorPlayers[players[i].guid].name.SetText(players[i].name.C_String());
 				m_blueColorPlayers[players[i].guid].death = players[i].deaths;
 				m_blueColorPlayers[players[i].guid].kill = players[i].kills;
 				m_blueColorPlayers[players[i].guid].ninjaText.Initialize(std::to_string(m_blueColorPlayers[players[i].guid].kill) + "/" + std::to_string(m_blueColorPlayers[players[i].guid].death), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * (m_blueColorPlayers.size() - 1)), 0xff000000);

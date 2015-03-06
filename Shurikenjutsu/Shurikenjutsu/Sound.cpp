@@ -510,6 +510,27 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 		m_system->playSound(m_runeShieldPickup, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}
+	case PLAYSOUND_RUNE_SHIELD_SOUND:
+	{
+		m_runeShield->setMode(FMOD_LOOP_NORMAL);
+		m_runeShield->setLoopCount(-1);
+		m_system->playSound(m_runeShield, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_HEAL_SOUND:
+	{
+		m_runeHeal->setMode(FMOD_LOOP_NORMAL);
+		m_runeHeal->setLoopCount(-1);
+		m_system->playSound(m_runeHeal, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_INVISIBLE_SOUND:
+	{
+		m_runeInvisibility->setMode(FMOD_LOOP_NORMAL);
+		m_runeInvisibility->setLoopCount(-1);
+		m_system->playSound(m_runeInvisibility, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
 	default:
 	{
 		break;
@@ -528,7 +549,7 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 	p_soundEmitter->m_channel->set3DAttributes(&p_soundEmitter->m_pos, NULL, NULL);
 }
 
-void Sound::CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
+Sound::SoundEmitter* Sound::CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
 {
 	SoundEmitter* soundEmitter = new SoundEmitter;
 	soundEmitter->m_playSound = p_playSound;
@@ -542,6 +563,7 @@ void Sound::CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, floa
 
 	defaultSoundEmitters.push_back(soundEmitter);
 	PlayDefaultSound(soundEmitter);
+	return soundEmitter;
 }
 
 void Sound::GarbageCollectOldSounds(){
@@ -651,27 +673,6 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 		m_stepsLeavesSound->setMode(FMOD_LOOP_NORMAL);
 		m_stepsLeavesSound->setLoopCount(-1);
 		m_system->playSound(m_stepsLeavesSound, channelAmbient, true, &p_soundEmitter->m_channel);
-		break;
-	}
-	case PLAYSOUND_RUNE_SHIELD_SOUND:
-	{
-		m_runeShield->setMode(FMOD_LOOP_NORMAL);
-		m_runeShield->setLoopCount(-1);
-		m_system->playSound(m_runeShield, channelEffects, true, &p_soundEmitter->m_channel);
-		break;
-	}
-	case PLAYSOUND_RUNE_HEAL_SOUND:
-	{
-		m_runeHeal->setMode(FMOD_LOOP_NORMAL);
-		m_runeHeal->setLoopCount(-1);
-		m_system->playSound(m_runeHeal, channelEffects, true, &p_soundEmitter->m_channel);
-		break;
-	}
-	case PLAYSOUND_RUNE_INVISIBLE_SOUND:
-	{
-		m_runeInvisibility->setMode(FMOD_LOOP_NORMAL);
-		m_runeInvisibility->setLoopCount(-1);
-		m_system->playSound(m_runeInvisibility, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}
 	default:

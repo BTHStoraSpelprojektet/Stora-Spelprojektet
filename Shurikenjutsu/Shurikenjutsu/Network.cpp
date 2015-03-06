@@ -2132,19 +2132,19 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 	case POINTOFINTERESTTYPE_HEAL:
 	{
 		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_RUNE_HEAL_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SOUND, p_x, p_y, p_z);
 		break;
 	}
 	case POINTOFINTERESTTYPE_SHIELD:
 	{
 		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_RUNE_SHIELD_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SOUND, p_x, p_y, p_z);
 		break;
 	}
 	case POINTOFINTERESTTYPE_INVISIBLE:
 	{
 		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_RUNE_INVISIBLE_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SOUND, p_x, p_y, p_z);
 		break;
 	}
 	default:
@@ -2153,14 +2153,45 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 	}
 	}
 	//Only support sound for one rune per type for now
-	runeSoundEmitters[p_poiType] = soundEmitter;
+	runeSoundEmitters.push_back(soundEmitter);
 }
 
 void Network::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
 {
 	//Only support sound for one rune per type for now
 	if (m_sound != nullptr){
-		m_sound->StopAmbientSound(runeSoundEmitters[p_poiType]);
+		for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
+		{
+			switch (p_poiType)
+			{
+			case POINTOFINTERESTTYPE_HEAL:
+			{
+				if (PLAYSOUND_RUNE_HEAL_SOUND == runeSoundEmitters[i]->m_playSound){
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				}
+				break;
+			}
+			case POINTOFINTERESTTYPE_SHIELD:
+			{
+				if (PLAYSOUND_RUNE_SHIELD_SOUND == runeSoundEmitters[i]->m_playSound){
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				}
+				break;
+			}
+			case POINTOFINTERESTTYPE_INVISIBLE:
+			{
+				if (PLAYSOUND_RUNE_INVISIBLE_SOUND == runeSoundEmitters[i]->m_playSound){
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				}
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
+		
 	}
 
 	m_objectManager->RunePickedUp(p_poiType, p_guid);
