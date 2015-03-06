@@ -244,7 +244,7 @@ private:
 	int m_lastTeamWon;
 	bool m_matchOver;
 	int m_matchWinningTeam;
-	std::map<POINTOFINTERESTTYPE, Sound::SoundEmitter*> runeSoundEmitters;
+	std::vector<Sound::SoundEmitter*> runeSoundEmitters;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
