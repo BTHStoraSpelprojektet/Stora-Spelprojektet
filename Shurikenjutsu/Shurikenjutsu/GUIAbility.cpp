@@ -1,5 +1,5 @@
 #include "GUIAbility.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "..\CommonLibs\ModelNames.h"
 
 GUIAbility::GUIAbility(){}

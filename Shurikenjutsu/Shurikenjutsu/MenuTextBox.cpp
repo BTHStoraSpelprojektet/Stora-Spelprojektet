@@ -1,9 +1,9 @@
 #include "MenuTextBox.h"
 #include "Globals.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "InputManager.h"
 #include "..\CommonLibs\ModelNames.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "GUIText.h"
 
 MenuTextBox::MenuTextBox(){}
@@ -12,7 +12,7 @@ MenuTextBox::~MenuTextBox(){}
 
 bool MenuTextBox::Initialize(float p_x, float p_y, float p_width, float p_height, int p_maxChars, std::string p_text)
 {
-	MenuItem::Initialize(p_x, p_y, p_width, p_height, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/ipbox.png"));
+	MenuItem::Initialize(p_x, p_y, p_width, p_height, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"));
 
 	m_maxChars = p_maxChars;
 

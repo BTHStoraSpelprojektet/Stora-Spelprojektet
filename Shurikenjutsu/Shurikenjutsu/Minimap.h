@@ -2,7 +2,7 @@
 #define MINIMAP_H_
 
 #include "GraphicsEngine.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "GUIElement.h"
 
 

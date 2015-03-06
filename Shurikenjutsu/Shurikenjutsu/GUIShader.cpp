@@ -1,6 +1,5 @@
 #include "GUIShader.h"
-#include "ConsoleFunctions.h"
-#include "Globals.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>
 
@@ -266,7 +265,7 @@ void GUIShader::Shutdown()
 	}
 }
 
-void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, float p_currentScreenWidth, float p_currentScreenHeight)
 {
 	// Set parameters and then render.
 	unsigned int stride;
@@ -290,7 +289,7 @@ void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_wor
 	// Copy the fog information into the frame constant buffer.
 	matrixBuffer->m_worldMatrix = p_worldMatrix;
 
-	DirectX::XMStoreFloat4x4(&matrixBuffer->m_projectionMatrix, DirectX::XMMatrixOrthographicLH((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, 1.0f, 2.0f));
+	DirectX::XMStoreFloat4x4(&matrixBuffer->m_projectionMatrix, DirectX::XMMatrixOrthographicLH(p_currentScreenWidth, p_currentScreenHeight, 1.0f, 2.0f));
 
 	// Unlock the constant buffer.
 	p_context->Unmap(m_matrixBuffer, 0);
@@ -462,7 +461,7 @@ bool GUIShader::InitializeColorShader(ID3D11Device* p_device, ID3D11DeviceContex
 	return true;
 }
 
-void GUIShader::RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color)
+void GUIShader::RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color, float p_currentScreenWidth, float p_currentScreenHeight)
 {
 	// Set parameters and then render.
 	unsigned int stride;
@@ -486,7 +485,7 @@ void GUIShader::RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 
 	// Copy the fog information into the frame constant buffer.
 	matrixBuffer->m_worldMatrix = p_worldMatrix;
 
-	DirectX::XMStoreFloat4x4(&matrixBuffer->m_projectionMatrix, DirectX::XMMatrixOrthographicLH((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, 1.0f, 2.0f));
+	DirectX::XMStoreFloat4x4(&matrixBuffer->m_projectionMatrix, DirectX::XMMatrixOrthographicLH(p_currentScreenWidth, p_currentScreenHeight, 1.0f, 2.0f));
 
 	// Unlock the constant buffer.
 	p_context->Unmap(m_matrixBuffer, 0);

@@ -1,6 +1,6 @@
 #include "MenuCheckbox.h"
 #include "GUIElement.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 
 MenuCheckbox::MenuCheckbox(){}
 MenuCheckbox::~MenuCheckbox(){}
@@ -28,11 +28,11 @@ void MenuCheckbox::SetState(bool p_state)
 
 	if (m_state)
 	{
-		m_background->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/checkbox_checked.png"));
+		m_background->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/checkbox_checked.png"));
 	}
 	else
 	{
-		m_background->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/checkbox_empty.png"));
+		m_background->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/checkbox_empty.png"));
 	}
 }
 

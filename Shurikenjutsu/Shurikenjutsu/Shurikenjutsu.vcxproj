@@ -166,6 +166,7 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="ScreenSpace.cpp" />
+    <ClCompile Include="Settings.cpp" />
     <ClCompile Include="ShadowShapes.cpp" />
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="DebugCircle.cpp" />
@@ -184,7 +185,6 @@
     <ClCompile Include="TeamStatusBar.cpp" />
     <ClCompile Include="TeamTable.cpp" />
     <ClCompile Include="TessenNinja.cpp" />
-    <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="ToolTipPopUp.cpp" />
     <ClCompile Include="Trail.cpp" />
@@ -225,6 +225,7 @@
     <ClInclude Include="PointLights.h" />
     <ClInclude Include="MemoryChecker.h" />
     <ClInclude Include="ScoreBoard.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="SuddenDeathState.h" />
     <ClInclude Include="TeamTable.h" />
     <ClInclude Include="TextResource.h" />
@@ -235,7 +236,6 @@
     <ClInclude Include="MenuCheckbox.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
-    <ClInclude Include="ConsoleFunctions.h" />
     <ClInclude Include="Dash.h" />
     <ClInclude Include="DebugBox.h" />
     <ClInclude Include="DebugCircle.h" />
@@ -245,8 +245,6 @@
     <ClInclude Include="DebugShape3D.h" />
     <ClInclude Include="DepthShader.h" />
     <ClInclude Include="DirectX.h" />
-    <ClInclude Include="Enumerations.h" />
-    <ClInclude Include="Flags.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Globals.h" />
@@ -305,7 +303,6 @@
     <ClInclude Include="System.h" />
     <ClInclude Include="TeamStatusBar.h" />
     <ClInclude Include="TessenNinja.h" />
-    <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="ToolTipPopUp.h" />
     <ClInclude Include="Trail.h" />

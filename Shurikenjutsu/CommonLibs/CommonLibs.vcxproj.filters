@@ -525,6 +525,15 @@
     <ClInclude Include="NetworkLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\Shurikenjutsu\ConsoleFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shurikenjutsu\Flags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RakNet\_FindFirst.cpp">
@@ -876,6 +885,9 @@
       <Filter>Source Files\Models</Filter>
     </ClCompile>
     <ClCompile Include="NetworkLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,7 +7,7 @@
 #include "InputManager.h"
 #include "GraphicsEngine.h"
 #include "VisibilityComputer.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 bool Camera::Initialize()
 {
@@ -225,7 +225,7 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 		SetWindowPos(GraphicsEngine::GetInstance()->GetWindowHandle(), HWND_TOP, 0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, SWP_SHOWWINDOW);
-		GraphicsEngine::GetInstance()->ToggleFullscreen(true);
+		//GraphicsEngine::GetInstance()->ToggleFullscreen(true);
 
 		// Update aspect ratio.
 		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
@@ -243,7 +243,7 @@ void Camera::ToggleFullscreen(bool p_fullscreen)
 		// Go to windowed mode.
 		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
-		GraphicsEngine::GetInstance()->ToggleFullscreen(false);
+		//GraphicsEngine::GetInstance()->ToggleFullscreen(false);
 
 		// Update aspect ratio.
 		float aspectRatio = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;

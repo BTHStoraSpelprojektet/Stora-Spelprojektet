@@ -1,11 +1,12 @@
 #include "DirectX.h"
-#include "ConsoleFunctions.h"
-#include "Globals.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 #pragma comment(lib, "dxgi.lib")
 
-bool DirectXWrapper::Initialize(HWND p_handle)
+bool DirectXWrapper::Initialize(HWND p_handle, float p_maxWindowHeight,	float p_maxWindowWidth, bool p_fullscreen)
 {
+	m_maxWindowHeight = p_maxWindowHeight;
+	m_maxWindowWidth = p_maxWindowWidth;
 	m_depthStencilViewOutlining = NULL;
 	m_depthStencilOutlining = NULL;
 	m_outliningALWAYS = NULL;
@@ -84,9 +85,9 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
 	for (unsigned int i = 0; i<numModes; i++)
 	{
-		if (displayModeList[i].Width == (unsigned int)GLOBAL::GetInstance().MAX_SCREEN_WIDTH)
+		if (displayModeList[i].Width == (unsigned int)m_maxWindowWidth)
 		{
-			if (displayModeList[i].Height == (unsigned int)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT)
+			if (displayModeList[i].Height == (unsigned int)m_maxWindowHeight)
 			{
 				numerator = displayModeList[i].RefreshRate.Numerator;
 				denominator = displayModeList[i].RefreshRate.Denominator;
@@ -98,8 +99,8 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	DXGI_SWAP_CHAIN_DESC swapChainDescription;
 	ZeroMemory(&swapChainDescription, sizeof(swapChainDescription));
 	swapChainDescription.BufferCount = 1;
-	swapChainDescription.BufferDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-	swapChainDescription.BufferDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	swapChainDescription.BufferDesc.Width = (unsigned int)m_maxWindowWidth;
+	swapChainDescription.BufferDesc.Height = (unsigned int)m_maxWindowHeight;
 	swapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDescription.BufferDesc.RefreshRate.Numerator = numerator;
 	swapChainDescription.BufferDesc.RefreshRate.Denominator = denominator;
@@ -109,7 +110,7 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	swapChainDescription.SampleDesc.Quality = 0;
 	swapChainDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	if (GLOBAL::GetInstance().FULLSCREEN)
+	if (p_fullscreen)
 	{
 		swapChainDescription.Windowed = FALSE;
 	}
@@ -221,8 +222,8 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 	// Initialize the depth stencil.
 	D3D11_TEXTURE2D_DESC depthStencilDescription;
 	ZeroMemory(&depthStencilDescription, sizeof(depthStencilDescription));
-	depthStencilDescription.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-	depthStencilDescription.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	depthStencilDescription.Width = (unsigned int)m_maxWindowWidth;
+	depthStencilDescription.Height = (unsigned int)m_maxWindowHeight;
 	depthStencilDescription.MipLevels = 1;
 	depthStencilDescription.ArraySize = 1;
 	depthStencilDescription.Format = DXGI_FORMAT_R32_TYPELESS;
@@ -274,8 +275,8 @@ bool DirectXWrapper::Initialize(HWND p_handle)
 
 	// Initialize the view port.
 	ZeroMemory(&m_viewPort, sizeof(m_viewPort));
-	m_viewPort.Width = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-	m_viewPort.Height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	m_viewPort.Width = (float)m_maxWindowWidth;
+	m_viewPort.Height = (float)m_maxWindowHeight;
 	m_viewPort.MinDepth = 0.0f;
 	m_viewPort.MaxDepth = 1.0f;
 	m_viewPort.TopLeftX = 0;
@@ -643,8 +644,8 @@ bool DirectXWrapper::InitializeOutlinging()
 	// Initialize the depth stencil.
 	D3D11_TEXTURE2D_DESC depthStencilDescription;
 	ZeroMemory(&depthStencilDescription, sizeof(depthStencilDescription));
-	depthStencilDescription.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-	depthStencilDescription.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	depthStencilDescription.Width = (unsigned int)m_maxWindowWidth;
+	depthStencilDescription.Height = (unsigned int)m_maxWindowHeight;
 	depthStencilDescription.MipLevels = 1;
 	depthStencilDescription.ArraySize = 1;
 	depthStencilDescription.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -721,8 +722,8 @@ bool DirectXWrapper::InitializeGBuffer()
 
 	// Initialize the post processing target texture
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
-	textureDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-	textureDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	textureDesc.Width = (unsigned int)m_maxWindowWidth;
+	textureDesc.Height = (unsigned int)m_maxWindowHeight;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -872,8 +873,8 @@ bool DirectXWrapper::InitializePP()
 
 	// Initialize the post processing target texture
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
-	textureDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH/2;
-	textureDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT/2;
+	textureDesc.Width = (unsigned int)m_maxWindowWidth / 2;
+	textureDesc.Height = (unsigned int)m_maxWindowHeight / 2;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R32_FLOAT;
@@ -1001,8 +1002,8 @@ bool DirectXWrapper::InitializeComposition()
 
 	// Initialize the post processing target texture
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
-	textureDesc.Width = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-	textureDesc.Height = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	textureDesc.Width = (unsigned int)m_maxWindowWidth;
+	textureDesc.Height = (unsigned int)m_maxWindowHeight;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;

@@ -1,5 +1,5 @@
 #include "ObjectManager.h"
-#include "Flags.h"
+#include "..\CommonLibs\Flags.h"
 #include "Network.h"
 #include "Frustum.h"
 #include "Globals.h"
@@ -12,7 +12,7 @@
 #include "StickyTrap.h"
 #include "Volley.h"
 #include "ParticleEmitter.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "VolleyObject.h"
 #include "Sound.h"
 #include "PointOfInterestManager.h"
@@ -150,13 +150,6 @@ bool ObjectManager::Initialize(Level* p_level)
 			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_ACERPALMATUM_LEAVES);
-		}
-
-		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_WorldMist)
-		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
-				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
-				DirectX::XMFLOAT2(PARTICLE_WORLDMIST_SIZE_X, PARTICLE_WORLDMIST_SIZE_Y), PARTICLE_PATTERN_WORLD_MIST);
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_WorldDust)
@@ -454,7 +447,7 @@ void ObjectManager::Update()
 					DirectX::XMFLOAT4 color;
 					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
 					
-					if (!trail->Initialize(100.0f, 0.50f, 0.60f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+					if (!trail->Initialize(100.0f, 0.50f, 0.60f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
 					}
@@ -471,7 +464,7 @@ void ObjectManager::Update()
 					DirectX::XMFLOAT4 color;
 					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
 
-					if (!trail->Initialize(50.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+					if (!trail->Initialize(50.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 					{
 						ConsolePrintErrorAndQuit("A shuriken trail failed to initialize!");
 					}
@@ -669,10 +662,10 @@ void ObjectManager::Update()
 
 void ObjectManager::UpdateRenderLists()
 {
-	std::vector<Object*> tempList;
+	std::vector<Object*> objectsInFrustumList;
 	m_objectsToInstanceRender.clear();
 	m_objectsToSingleRender.clear();
-	tempList.clear();
+	objectsInFrustumList.clear();
 
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
@@ -682,31 +675,38 @@ void ObjectManager::UpdateRenderLists()
 		if (m_frustum->CheckSphere(sphere, 10.0f))
 		{
 			m_staticObjects[i].UpdateRotation();
-			tempList.push_back(&m_staticObjects[i]);
+			objectsInFrustumList.push_back(&m_staticObjects[i]);
 		}
 	}
 
-	std::vector<Object*>  temp;
+	std::vector<Object*>  tempObjectList;
 	Object* prevObject = &m_staticObjects[m_staticObjects.size() - 1];
-	for (unsigned int i = 0; i < tempList.size(); i++)
+	for (unsigned int i = 0; i < objectsInFrustumList.size(); i++)
 	{
-		temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
-		if (prevObject->GetModel() != temp[0]->GetModel())
+		tempObjectList = CheckAmountOfSameModels(objectsInFrustumList[i], objectsInFrustumList);// Return vector med de ombjekt som finns i templist som är lika dana
+		if (prevObject->GetModel() != tempObjectList[0]->GetModel())
 		{
-			if (temp.size() == 1)
+			if (tempObjectList.size() == 1)
 			{
-				m_objectsToSingleRender.push_back(tempList[i]);
+				m_objectsToSingleRender.push_back(objectsInFrustumList[i]);
 			}
 			else
 			{
-				if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
+				if (!CheckIfObjectIsInList(objectsInFrustumList[i], m_objectsToInstanceRender))
 				{
-					m_objectsToInstanceRender.push_back(tempList[i]);
-					GraphicsEngine::GetInstance()->UpdateInstanceBuffers(temp);
+					m_objectsToInstanceRender.push_back(objectsInFrustumList[i]);
+
+					std::vector<DirectX::XMFLOAT4X4>  matrixList;
+					for (unsigned int j = 0; j < tempObjectList.size(); j++)
+					{
+						matrixList.push_back(tempObjectList[j]->GetWorldMatrix());
+					}
+					GraphicsEngine::GetInstance()->UpdateInstanceBuffers(matrixList, tempObjectList[0]->GetInstanceIndex());
+					matrixList.clear();
 				}
 			}
 		}
-		prevObject = temp[0];
+		prevObject = tempObjectList[0];
 	}
 }
 
@@ -787,7 +787,7 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
 	{
-		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 1.0f))
+		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 7.0f))
 		{
 			m_animatedObjects[i]->Render();
 		}
@@ -963,7 +963,7 @@ void ObjectManager::AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Dire
 	DirectX::XMFLOAT4 color;
 	Network::GetInstance()->GetTeam(p_owner) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
 
-	if (!trail->Initialize(100.0f, 0.5f, 0.2f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+	if (!trail->Initialize(100.0f, 0.5f, 0.2f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A fan trail failed to initialize!");
 	}
@@ -1131,7 +1131,7 @@ void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX,
 	DirectX::XMFLOAT4 color;
 	Network::GetInstance()->GetTeam(p_guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
 
-	if (!trail->Initialize(50.0f, 0.15f, 0.1f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+	if (!trail->Initialize(50.0f, 0.15f, 0.1f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A kunai trail failed to initialize!");
 	}
@@ -1182,7 +1182,7 @@ void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ,
 	for (unsigned int i = 0; i < 9; i++)
 	{
 		Trail* trail = new Trail();
-		if (!trail->Initialize(50.0f, 0.5f, 0.05f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+		if (!trail->Initialize(50.0f, 0.5f, 0.05f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 		{
 			ConsolePrintErrorAndQuit("A volley trail failed to initialize!");
 		}

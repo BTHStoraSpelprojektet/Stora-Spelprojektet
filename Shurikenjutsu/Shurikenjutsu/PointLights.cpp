@@ -3,14 +3,8 @@
 
 PointLights* PointLights::m_instance;
 
-PointLights::PointLights()
-{
-}
-
-PointLights::~PointLights()
-{
-}
-
+PointLights::PointLights(){}
+PointLights::~PointLights(){}
 PointLights* PointLights::GetInstance()
 {
 	if (m_instance == nullptr)

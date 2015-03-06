@@ -3,8 +3,8 @@
 #include "Globals.h"
 
 #include <D3Dcompiler.h>
-#include "ConsoleFunctions.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "Network.h"
 
 VisibilityComputer& VisibilityComputer::GetInstance()
@@ -427,7 +427,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
 	if (!m_texture)
 	{
-		m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ShadowShapeTexture.png");
+		m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/ShadowShapeTexture.png");
 	}
 
 	// Render the quad to reverse project the polygon onto.

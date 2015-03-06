@@ -1,5 +1,5 @@
 #include "InputManager.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 InputManager* InputManager::m_instance;
 

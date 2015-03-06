@@ -2,7 +2,7 @@
 #include "GUIManager.h"
 #include "GraphicsEngine.h"
 #include "Globals.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 GUIText::GUIText(){}
 GUIText::~GUIText(){}

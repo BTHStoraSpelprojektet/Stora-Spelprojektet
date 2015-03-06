@@ -1,5 +1,5 @@
 #include "GUIElement.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "GUIManager.h"
 #include "GraphicsEngine.h"
 

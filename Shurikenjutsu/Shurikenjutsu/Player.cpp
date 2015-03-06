@@ -16,7 +16,7 @@
 #include "StickyTrapAbility.h"
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "PointLights.h"
 
 Player::Player(){}
@@ -32,7 +32,7 @@ void Player::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType, std::string p_name)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType, std::string p_name, UINT32 p_color)
 {
 	m_ninjaType = p_ninjaType;
 
@@ -55,7 +55,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_noAbility->setSound(m_sound);
 
 	m_healthbar = new HealthBar();
-	m_healthbar->Initialize(110.0f, 21.0f);
+	m_healthbar->Initialize(110.0f, 21.0f, p_name, p_color);
 
 	m_team = 0;
 	m_isDashing = false;
@@ -98,7 +98,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_floatingText->Initialize();
 
 	m_trail = new Trail();
-	if (!m_trail->Initialize(100.0f, 0.5f, 0.2f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
+	if (!m_trail->Initialize(100.0f, 0.5f, 0.2f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A dash trail failed to initialize!");
 	}
@@ -108,6 +108,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	if (m_sound != NULL){
 		m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
+		m_sound->StopAmbientSound(m_soundEmitter);
 	}
 	m_name = p_name;
 	return true;

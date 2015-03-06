@@ -1,6 +1,6 @@
 #include "Player.h"
 #include <iostream>
-#include "../Shurikenjutsu/ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 Player::Player(){}
 Player::~Player(){}

@@ -1,7 +1,7 @@
 #include "MenuButton.h"
 #include "Globals.h"
 #include "InputManager.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 
 MenuButton::MenuButton(){}
 MenuButton::~MenuButton(){}

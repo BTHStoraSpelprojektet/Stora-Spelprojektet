@@ -1,5 +1,5 @@
 #include "AbilityBar.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "GUIAbility.h"
 #include "GUIElement.h"
 #include "..\CommonLibs\ModelNames.h"

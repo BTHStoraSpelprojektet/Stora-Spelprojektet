@@ -1,11 +1,11 @@
 #include "Cursor.h"
 #include "Window.h"
 #include "GUIElement.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "Globals.h"
 #include "InputManager.h"
-#include "Flags.h"
+#include "..\CommonLibs\Flags.h"
 
 Cursor::Cursor(){}
 Cursor::~Cursor(){}

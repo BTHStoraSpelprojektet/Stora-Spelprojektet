@@ -4,7 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "GraphicsEngine.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "GUIElement.h"
 #include "Network.h"
 #include "GUIText.h"

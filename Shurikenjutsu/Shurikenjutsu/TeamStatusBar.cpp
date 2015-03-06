@@ -1,7 +1,7 @@
 #include "TeamStatusBar.h"
 #include "Globals.h"
 #include "..\CommonLibs\ModelNames.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "InputManager.h"
 #include <stdio.h>
 #include "..\CommonLibs\ServerGlobals.h"

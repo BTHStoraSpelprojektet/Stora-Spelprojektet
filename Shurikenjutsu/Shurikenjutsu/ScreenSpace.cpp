@@ -1,5 +1,5 @@
 #include "ScreenSpace.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include <DirectXMath.h>
 #include <Windows.h>
 #include <D3Dcompiler.h>

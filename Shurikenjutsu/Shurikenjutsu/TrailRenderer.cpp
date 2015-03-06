@@ -1,6 +1,6 @@
 #include "TrailRenderer.h"
 
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
 #include <D3Dcompiler.h>
 

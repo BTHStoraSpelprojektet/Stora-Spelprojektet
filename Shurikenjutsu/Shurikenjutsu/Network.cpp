@@ -1,6 +1,6 @@
 #include "Network.h"
 #include <iostream>
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "ObjectManager.h"
 #include "Globals.h"
 #include "DeathBoard.h"
@@ -469,6 +469,14 @@ void Network::ReceviePacket()
 			ClearListsAtNewRound();
 
 			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
+
+			//Reset Rune Sounds
+			for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
+			{
+				m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				runeSoundEmitters.clear();
+			}
+
 			ConsolePrintSuccess("A new round has started!");
 			ConsoleSkipLines(1);
 			break;

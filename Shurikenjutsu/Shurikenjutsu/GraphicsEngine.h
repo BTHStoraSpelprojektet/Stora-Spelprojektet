@@ -3,12 +3,11 @@
 
 #include "DirectX.h"
 #include "DirectXTex\DirectXTex\DirectXTex.h"
-#include "Structures.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
-#include <vector>
-#include "InstanceManager.h"
 #include "RenderTarget.h"
-#include "CustomFont.h"
+
+#include <DirectXMath.h>
+#include <vector>
 
 class WICTextureLoader;
 class GUIShader;
@@ -16,9 +15,12 @@ class DepthShader;
 class RenderTarget;
 class ParticleShader;
 class SceneShader;
-class Object;
 class FoliageShader;
 class ScreenSpace;
+class InstanceManager;
+struct WindowRectangle;
+struct DirectionalLight;
+
 
 class GraphicsEngine
 {
@@ -28,7 +30,7 @@ public:
 
 	static GraphicsEngine* GetInstance();
 
-	bool Initialize(HWND p_handle);
+	bool Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen);
 	void Shutdown();
 
 	void SetClearColor(float R, float G, float B, float p_opacity);
@@ -63,7 +65,7 @@ public:
 	void SetSceneDirectionalLight(DirectionalLight& p_dLight);
 	void SetLightBuffer(ID3D11ShaderResourceView* p_lightSRV);
 
-	void UpdateInstanceBuffers(std::vector<Object*> p_ObjectList);
+	void UpdateInstanceBuffers(std::vector<DirectX::XMFLOAT4X4> p_matrixList, int p_index);
 
 	void SetShadowMap();
 
@@ -74,7 +76,7 @@ public:
 	void TurnOnBackfaceCulling();
 	void TurnOffBackfaceCulling();
 
-	bool ToggleFullscreen(bool p_fullscreen);
+	bool ToggleFullscreen(bool p_fullscreen, float p_currentScreenWidth, float p_currentScreenHeight);
 
 	void AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position);
 
@@ -155,5 +157,8 @@ private:
 	InstanceManager* m_instanceManager;
 
 	bool m_screenChanged;
+
+	float m_currentScreenWidth;
+	float m_currentScreenHeight;
 };
 #endif //GRAPHICSENGINE_H_

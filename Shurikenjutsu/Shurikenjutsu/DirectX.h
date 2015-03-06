@@ -7,7 +7,7 @@
 class DirectXWrapper
 {
 public:
-	bool Initialize(HWND p_handle);
+	bool Initialize(HWND p_handle, float m_maxWindowHeight, float m_maxWindowWidth, bool p_fullscreen);
 	void Shutdown();
 	void Clear();
 	void ClearOutlining();
@@ -114,6 +114,9 @@ private:
 	// Composition
 	ID3D11RenderTargetView* m_compositionRTV;
 	ID3D11ShaderResourceView* m_compositionSRV;
+
+	float m_maxWindowHeight;
+	float m_maxWindowWidth;
 
 };
 #endif;

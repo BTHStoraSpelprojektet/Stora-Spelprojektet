@@ -1,20 +1,21 @@
 #include "GraphicsEngine.h"
 
-#include "Enumerations.h"
-#include "Globals.h"
+#include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\CommonStructures.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "ParticleShader.h"
 #include "WICTextureLoader.h"
 #include "SceneShader.h"
 #include "GUIShader.h"
 #include "DepthShader.h"
 #include "RenderTarget.h"
-#include "ConsoleFunctions.h"
 #include "VisibilityComputer.h"
 #include "OutlingShader.h"
-#include "Object.h"
 #include "FoliageShader.h"
 #include "ScreenSpace.h"
-
+#include "InstanceManager.h"
+#include "RenderTarget.h"
+#include "CustomFont.h"
 
 GraphicsEngine* GraphicsEngine::m_instance;
 
@@ -28,15 +29,16 @@ GraphicsEngine* GraphicsEngine::GetInstance()
 	return m_instance;
 }
 
-bool GraphicsEngine::Initialize(HWND p_handle)
+bool GraphicsEngine::Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen)
 {
 	m_screenChanged = false;
-
+	m_currentScreenHeight = p_screenCurrentHeight;
+	m_currentScreenWidth = p_screenCurrentWidth;
 	bool result = true;
 	m_windowHandle = p_handle;
 
 	// Initialize directX.
-	if (m_directX.Initialize(p_handle))
+	if (m_directX.Initialize(p_handle, p_screenMaxHeight, p_screenMaxWidth, p_fullscreen))
 	{
 		m_directX.Present();
 		ConsolePrintSuccess("DirectX initialized successfully.");
@@ -153,12 +155,12 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 
 	// Initialize shadow map.
-	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
+	if (m_shadowMap.Initialize(m_directX.GetDevice(), (int)p_screenMaxWidth, (int)p_screenMaxHeight))
 	{
 		ConsolePrintSuccess("Shadow map initialized successfully.");
 
-		std::string size = "Map size: " + std::to_string(GLOBAL::GetInstance().MAX_SCREEN_WIDTH);
-		size.append("x" + std::to_string(GLOBAL::GetInstance().MAX_SCREEN_HEIGHT));
+		std::string size = "Map size: " + std::to_string(p_screenMaxWidth);
+		size.append("x" + std::to_string(p_screenMaxHeight));
 		ConsolePrintText(size);
 
 		ConsoleSkipLines(1);
@@ -235,9 +237,12 @@ void GraphicsEngine::Shutdown()
 		delete m_particleShader;
 		m_particleShader = nullptr;
 	}
-	
-	m_shadowMap.Shutdown();
-
+	//if (m_shadowMap != nullptr)
+	//{
+		m_shadowMap.Shutdown();
+	//	delete m_shadowMap;
+	//	m_shadowMap = nullptr;
+	//}
 	if (m_sceneShader != nullptr)
 	{
 		m_sceneShader->Shutdown();
@@ -384,12 +389,12 @@ void GraphicsEngine::RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVer
 
 void GraphicsEngine::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
-	m_GUIShader->Render(m_directX.GetContext(), p_worldMatrix, p_texture);
+	m_GUIShader->Render(m_directX.GetContext(), p_worldMatrix, p_texture, m_currentScreenWidth, m_currentScreenHeight);
 }
 
 void GraphicsEngine::RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color)
 {
-	m_GUIShader->RenderColor(m_directX.GetContext(), p_worldMatrix, p_color);
+	m_GUIShader->RenderColor(m_directX.GetContext(), p_worldMatrix, p_color, m_currentScreenWidth, m_currentScreenHeight);
 }
 
 void GraphicsEngine::RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix)
@@ -547,7 +552,7 @@ int GraphicsEngine::GetNumberOfInstanceBuffer()
 {
 	return m_instanceManager->GetNumberOfInstanceBuffer();
 }
-bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
+bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen, float p_currentScreenWidth, float p_currentScreenHeight)
 {    
 	if (p_fullscreen)
 	{               
@@ -559,9 +564,9 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 
 		m_screenChanged = true;
 
-		GLOBAL::GetInstance().FULLSCREEN = true;
-		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		//GLOBAL::GetInstance().FULLSCREEN = true;
+		//GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		//GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	}    
 	
 	else    
@@ -574,11 +579,12 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 
 		m_screenChanged = true;
 		
-		GLOBAL::GetInstance().FULLSCREEN = false;
-		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
-		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
+		//GLOBAL::GetInstance().FULLSCREEN = false;
+		//GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		//GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}    
-
+	m_currentScreenWidth = p_currentScreenWidth;
+	m_currentScreenHeight = p_currentScreenHeight;
 	return true;
 }
 
@@ -651,9 +657,9 @@ void GraphicsEngine::ClearOutlining()
 	m_directX.ClearOutlining();
 }
 
-void GraphicsEngine::UpdateInstanceBuffers(std::vector<Object*> p_ObjectList)
+void GraphicsEngine::UpdateInstanceBuffers(std::vector<DirectX::XMFLOAT4X4> p_matrixList, int p_index)
 {
-	m_instanceManager->UpdateDynamicInstanceBuffer(GetContext(), p_ObjectList);
+	m_instanceManager->UpdateDynamicInstanceBuffer(GetContext(), p_matrixList, p_index);
 }
 
 IFW1FontWrapper* GraphicsEngine::GetFontWrapper()

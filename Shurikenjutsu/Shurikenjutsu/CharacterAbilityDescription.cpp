@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "TextResource.h"
 #include "Structures.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "ToolTipPopUp.h"
 
 CharacterAbilityDescription::CharacterAbilityDescription(){}
@@ -24,7 +24,7 @@ void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 	m_FourthPic = new MenuItem();
 	float size = 75.0f;
 	m_abilityBarBG = new MenuItem();
-	m_abilityBarBG->Initialize(0.0f, -quarterHeight, size*8.0f, size* 1.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/abilitybarLobby.png"));
+	m_abilityBarBG->Initialize(0.0f, -quarterHeight, size*8.0f, size* 1.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/abilitybarLobby.png"));
 
 	DirectX::XMFLOAT2 ability1 = DirectX::XMFLOAT2(-size * 3, -quarterHeight);
 	DirectX::XMFLOAT2 ability2 = DirectX::XMFLOAT2(-size, -quarterHeight);
@@ -35,45 +35,45 @@ void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 	if (p_ninjaIndex == 1)
 	{
 		m_FirstText->Initialize(ability1.x , ability1.y, KATANA_PRIMARY_ATTACK, size );
-		m_FirstPic->Initialize(ability1.x, ability1.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Melee.png"));
+		m_FirstPic->Initialize(ability1.x, ability1.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N1_Melee.png"));
 
 		m_SecondText->Initialize(ability2.x, ability2.y, KATANA_SECONDARY_ATTACK, size);
-		m_SecondPic->Initialize(ability2.x, ability2.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Q.png"));
+		m_SecondPic->Initialize(ability2.x, ability2.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N1_Q.png"));
 
 		m_ThirdText->Initialize(ability3.x, ability3.y, SHURIKEN_PRIMARY_ATTACK, size);
-		m_ThirdPic->Initialize(ability3.x, ability3.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_Ranged.png"));
+		m_ThirdPic->Initialize(ability3.x, ability3.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N1_Ranged.png"));
 
 		m_FourthText->Initialize(ability4.x, ability4.y, SHURIKEN_SECONDARY_ATTACK, size);
-		m_FourthPic->Initialize(ability4.x, ability4.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N1_E.png"));
+		m_FourthPic->Initialize(ability4.x, ability4.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N1_E.png"));
 
 	}
 	else if (p_ninjaIndex == 2)
 	{
 		m_FirstText->Initialize(ability1.x, ability1.y, TESSEN_PRIMARY_ATTACK, size);
-		m_FirstPic->Initialize(ability1.x, ability1.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N2_Melee.png"));
+		m_FirstPic->Initialize(ability1.x, ability1.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N2_Melee.png"));
 
 		m_SecondText->Initialize(ability2.x, ability2.y, TESSEN_SECONDARY_ATTACK, size);
-		m_SecondPic->Initialize(ability2.x, ability2.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N2_Q.png"));
+		m_SecondPic->Initialize(ability2.x, ability2.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N2_Q.png"));
 
 		m_ThirdText->Initialize(ability3.x , ability3.y, WHIP_PRIMARY_ATTACK, size);
-		m_ThirdPic->Initialize(ability3.x, ability3.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N2_Ranged.png"));
+		m_ThirdPic->Initialize(ability3.x, ability3.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N2_Ranged.png"));
 
 		m_FourthText->Initialize(ability4.x, ability4.y, WHIP_SECONDARY_ATTACK, size);
-		m_FourthPic->Initialize(ability4.x, ability4.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N2_E.png"));
+		m_FourthPic->Initialize(ability4.x, ability4.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N2_E.png"));
 	}
 	else
 	{
 		m_FirstText->Initialize(ability1.x , ability1.y, NAGINATA_PRIMARY_ATTACK, size);
-		m_FirstPic->Initialize(ability1.x, ability1.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N3_Melee.png"));
+		m_FirstPic->Initialize(ability1.x, ability1.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N3_Melee.png"));
 
 		m_SecondText->Initialize(ability2.x, ability2.y, NAGINATA_SECONDARY_ATTACK, size);
-		m_SecondPic->Initialize(ability2.x, ability2.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N3_Q.png"));
+		m_SecondPic->Initialize(ability2.x, ability2.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N3_Q.png"));
 
 		m_ThirdText->Initialize(ability3.x, ability3.y, KUNAI_PRIMARY_ATTACK, size);
-		m_ThirdPic->Initialize(ability3.x, ability3.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N3_Ranged.png"));
+		m_ThirdPic->Initialize(ability3.x, ability3.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N3_Ranged.png"));
 
 		m_FourthText->Initialize(ability4.x, ability4.y, KUNAI_SECONDARY_ATTACK, size);
-		m_FourthPic->Initialize(ability4.x, ability4.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/TB_N3_E.png"));
+		m_FourthPic->Initialize(ability4.x, ability4.y, size, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N3_E.png"));
 	}
 }
 

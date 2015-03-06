@@ -184,7 +184,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 	{
 		KatanaNinja *tempPlayer = new KatanaNinja();
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
 		break;
@@ -193,7 +193,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 	{
 		TessenNinja *tempPlayer = new TessenNinja();
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
 		break;
@@ -203,7 +203,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 		// Todo change to ninja 3
 		NaginataNinja *tempPlayer = new NaginataNinja();
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
 		break;
@@ -213,7 +213,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 		// Todo change to ninja 4
 		KatanaNinja *tempPlayer = new KatanaNinja();
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
 		break;
@@ -237,7 +237,7 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 		tempPlayer->m_soundEmitter.m_z = p_pos.z;
 		m_sound->PlayAmbientSound(&tempPlayer->m_soundEmitter);*/
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
 
@@ -250,7 +250,7 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 
 		tempPlayer->SetSound(m_sound);
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_TESSEN_HEALTH);
 		
@@ -264,7 +264,7 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 
 		tempPlayer->SetSound(m_sound);
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_NAGINATA_HEALTH);
 		

@@ -14,8 +14,8 @@ public:
 
 	void Shutdown();
 
-	void Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-	void RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
+	void Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, float p_currentScreenWidth, float p_currentScreenHeight);
+	void RenderColor(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color, float p_currentScreenWidth, float p_currentScreenHeight);
 
 private:
 	ID3D11Buffer* InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances);

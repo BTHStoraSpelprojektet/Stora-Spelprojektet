@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "Enumerations.h"
+#include "..\CommonLibs\CommonEnums.h"
 #include "../CommonLibs/ModelImporter.h"
 
 class ParticleEmitter

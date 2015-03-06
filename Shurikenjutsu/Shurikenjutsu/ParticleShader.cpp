@@ -1,7 +1,7 @@
 #include "ParticleShader.h"
 
 #include <D3Dcompiler.h>
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 
 bool ParticleShader::Initialize(ID3D11Device* p_device)
