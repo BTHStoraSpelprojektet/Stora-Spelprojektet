@@ -36,6 +36,8 @@ public:
 
 	std::string FPS;
 
+	bool VOLUME_ON;
+
 private:
 	GLOBAL() {};
 	GLOBAL(GLOBAL const&);              

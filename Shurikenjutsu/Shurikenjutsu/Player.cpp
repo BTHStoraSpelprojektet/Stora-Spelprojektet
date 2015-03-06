@@ -213,7 +213,6 @@ void Player::UpdateMe()
 	float angle = atan2(m_dashDirection.z, m_dashDirection.x);
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
 	m_trail->Update(position, angle);
-	m_sound->UpdateAmbientSound(m_position.x, m_position.y, m_position.z);
 
 	if (m_updateVisibility)
 	{
@@ -338,6 +337,7 @@ void Player::UpdateMe()
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 
 		//Update sound (walking)
+	
 		m_sound->StartAmbientSound(m_soundEmitter);
 		m_soundEmitter->m_pos.x = position.x;
 		m_soundEmitter->m_pos.y = position.y;

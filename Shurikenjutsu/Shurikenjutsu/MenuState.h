@@ -15,6 +15,7 @@ class Frustum;
 class Camera;
 class MenuItem;
 
+
 class MenuState : public GameState
 {
 public:
@@ -62,6 +63,7 @@ private:
 	MenuItem* m_logo;
 
 	Sound* m_sound;
+	bool m_isPlayingBackgroundMusic;
 };
 
 #endif

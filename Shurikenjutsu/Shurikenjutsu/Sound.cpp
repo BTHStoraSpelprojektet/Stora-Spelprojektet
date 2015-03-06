@@ -1,7 +1,7 @@
 #include "Sound.h"
 #include <iostream>
 #include "fmod_errors.h"
-
+#include "Globals.h"
 #include "../CommonLibs/CommonStructures.h"
 Sound::Sound(){}
 Sound::~Sound(){}
@@ -176,6 +176,9 @@ bool Sound::Initialize()
 		m_result = m_system->getDriverInfo(0, m_name, 256, 0, 0, &m_speakerMode, 0);
 	}*/
 
+
+	m_musicVolume = 0.7f;
+	m_defaultWindVolume = 0.2f;
 	return true;
 }
 
@@ -200,7 +203,8 @@ void Sound::Shutdown()
 	m_system->release();
 }
 
-void Sound::Update(){
+void Sound::Update()
+{
 	GarbageCollectOldSounds();
 	m_system->update();
 }
@@ -219,7 +223,8 @@ void Sound::FMODErrorCheck(FMOD_RESULT p_result)
 	}
 }
 
-void Sound::StopMusic(){
+void Sound::StopMusic()
+{
 	bool* isPLaying = new bool;
 	
 	musicChannel->isPlaying(isPLaying);
@@ -230,11 +235,13 @@ void Sound::StopMusic(){
 	delete isPLaying;
 }
 
-void Sound::StartMusic(){
+void Sound::StartMusic()
+{
 	bool* isPLaying = new bool;
 
 	musicChannel->isPlaying(isPLaying);
-	if (!*isPLaying){
+	if (!*isPLaying)
+	{
 		PlayBackgroundSound(PLAYSOUND_BACKGROUND_SOUND);
 	}
 
@@ -516,7 +523,7 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 	//if (p_initialVolume > 1.0f){
 //		p_initialVolume = 1.0f;
 	//}
-	p_soundEmitter->m_channel->setVolume(1.0f);
+	p_soundEmitter->m_channel->setVolume(m_musicVolume);
 	p_soundEmitter->m_channel->setPaused(false);
 	p_soundEmitter->m_channel->set3DAttributes(&p_soundEmitter->m_pos, NULL, NULL);
 }
@@ -535,7 +542,6 @@ void Sound::CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, floa
 
 	defaultSoundEmitters.push_back(soundEmitter);
 	PlayDefaultSound(soundEmitter);
-
 }
 
 void Sound::GarbageCollectOldSounds(){
@@ -574,8 +580,8 @@ Sound::SoundEmitter* Sound::CreateAmbientSound(PLAYSOUND p_playSound, float p_x,
 	soundEmitter->m_pos.y = p_y;
 	soundEmitter->m_pos.z = p_z;
 
-	PlayAmbientSound(soundEmitter);
 
+	PlayAmbientSound(soundEmitter);
 	ambientSoundEmitters.push_back(soundEmitter);
 
 	return soundEmitter;
@@ -602,15 +608,18 @@ void Sound::UpdateAmbientSound(float p_player_x, float p_player_y, float p_playe
 	}
 }
 
-void Sound::StopAmbientSound(SoundEmitter* p_soundEmitter){
+void Sound::StopAmbientSound(SoundEmitter* p_soundEmitter)
+{
 	p_soundEmitter->isPlaying = false;
 }
 
-void Sound::StartAmbientSound(SoundEmitter* p_soundEmitter){
+void Sound::StartAmbientSound(SoundEmitter* p_soundEmitter)
+{
 	p_soundEmitter->isPlaying = true;
 }
 
-void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume){
+void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume)
+{
 	switch (p_soundEmitter->m_playSound)
 	{
 	case PLAYSOUND_FIRE_SOUND:
@@ -678,7 +687,6 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 	p_soundEmitter->m_channel->setVolume(0.0f);
 	p_soundEmitter->m_channel->setPaused(false);
 }
-
 void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
 
 	//If wind always same volume
@@ -705,4 +713,21 @@ void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
 		p_soundEmitter->m_channel->setVolume(0.0f);
 		p_soundEmitter->m_channel->setPaused(false);
 	}
+}
+
+void Sound::MuteEverything()
+{
+	masterChannelGroup->setMute(true);
+	channelEffects->setMute(true);
+	channelAmbient->setMute(true);
+	channelMusic->setMute(true);
+
+
+}
+void Sound::UnMuteEverything()
+{
+	masterChannelGroup->setMute(false);
+	channelEffects->setMute(false);
+	channelAmbient->setMute(false);
+	channelMusic->setMute(false);
 }
