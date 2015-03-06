@@ -62,7 +62,8 @@ void UpdateClipRegion(float lc,
 	float lcSqPluslzSq = lc * lc + lz * lz;
 	float d = rSq * lc * lc - lcSqPluslzSq * (rSq - lz * lz);
 
-	if (d > 0) {
+	if (d > 0) 
+	{
 		float a = lightRadius * lc;
 		float b = sqrt(d);
 		float nx0 = (a + b) / lcSqPluslzSq;

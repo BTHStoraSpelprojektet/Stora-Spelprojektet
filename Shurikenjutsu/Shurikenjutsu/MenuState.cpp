@@ -275,8 +275,14 @@ GAMESTATESWITCH MenuState::Update()
 			temp = m_options->GetCheckboxState(m_fullscreenIndex);
 			m_lastfullscreen = temp;
 			GraphicsEngine::GetInstance()->ToggleFullscreen(temp);
-			Shutdown();
-			Initialize();
+			std::string tempstring = m_ipbox->GetText();
+			m_ipbox->Shutdown();
+			m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/ipbox2.png"), 0, -67, 394.0f, 67.0f, 15, tempstring);
+			m_hideIpBox = true;
+			tempstring = m_namebox->GetText();
+			m_namebox->Shutdown();
+			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/namebox.png"), 0, 0, 394.0f, 67.0f, 15, tempstring);
+
 			break;
 	}
 

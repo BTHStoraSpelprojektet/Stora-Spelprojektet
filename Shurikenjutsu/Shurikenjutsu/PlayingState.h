@@ -79,6 +79,7 @@ private:
 	float m_quadHeightBottom;
 
 	int m_spectateIndex;
+	//Tas bort?
 	float m_spectateCountDown;
 	bool m_inGameMenuIsActive;
 

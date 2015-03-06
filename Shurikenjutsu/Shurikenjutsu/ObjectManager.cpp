@@ -780,7 +780,7 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
 	{
-		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 1.0f))
+		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 7.0f))
 		{
 			m_animatedObjects[i]->Render();
 		}
