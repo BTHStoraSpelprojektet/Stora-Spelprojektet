@@ -31,7 +31,7 @@
 #define MINIMAP_BG_TEXTURE "../Shurikenjutsu/2DTextures/GUI/minimapframe.png"
 
 // Abilities
-#define ABILITY_BG_TEXTURE "../Shurikenjutsu/2DTextures/GUI/tb_bg.png"
+#define ABILITY_BG_TEXTURE "../Shurikenjutsu/2DTextures/GUI/tb_bg2.png"
 #define ABILITY_CD_TEXTURE "../Shurikenjutsu/2DTextures/GUI/TB_cd.png"
 
 #define ABILITY_KATANA_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N1_Melee.png"

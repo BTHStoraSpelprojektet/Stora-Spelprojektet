@@ -76,8 +76,9 @@ bool ChooseState::Initialize()
 	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f, 2);
 	m_tintedBackground->Initialize(0.0f, 0.0f, m_screenWidth, m_screenHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/bgTint.png"));
 	m_title->Initialize(0.0f, m_screenHeight / 2.0f - m_buttonHeight * 0.5f, m_buttonWidth * 2.0f, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/chooseButton.png"));
+	
 	//the questionmark
-	m_questionMark->Initialize(0.0f, 0.0f, m_screenHeight / 13.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/pickChara.png"));
+	m_questionMark->Initialize(0.0f, 0.0f, m_screenHeight / 13.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Ninjas/pickChara.png"));
 
 	// pick red team
 	m_chooseNinja->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/redTeamLobby.png"), MENUACTION_PICK_RED_TEAM);
