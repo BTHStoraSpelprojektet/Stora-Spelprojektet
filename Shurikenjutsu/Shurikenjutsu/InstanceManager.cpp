@@ -35,31 +35,30 @@ int InstanceManager::GetNumberOfInstances(int p_index)
 {
 	return m_numberOfInstanceList[p_index];
 }
-void InstanceManager::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<Object*> p_ObjectList)
+void InstanceManager::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_matrixList, int p_index)
 {	//TODO: Re mappar bufferns information med den inkommande vector med objekt med objektets instance index.
 	//TODO 2: Skapa en vektor med objekt, utav varje typ av objekt, som skickas in i denna funktionen.
 	//https://msdn.microsoft.com/en-us/library/windows/desktop/dn508285(v=vs.85).aspx
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
-	if (FAILED(p_context->Map(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+	if (FAILED(p_context->Map(m_instanceBufferList[p_index], 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
 		ConsolePrintErrorAndQuit("Failed to update instance buffer.");
 		return;
 	}
 	std::vector<InstancePos> instances;
-	for (unsigned int i = 0; i < p_ObjectList.size(); i++)
+	for (unsigned int i = 0; i < p_matrixList.size(); i++)
 	{
 		InstancePos temp;
-		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_ObjectList[i]->GetWorldMatrix())));
+		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrixList[i])));
 		instances.push_back(temp);
-
 	}
 
 	memcpy(mappedResource.pData, &instances[0], sizeof(InstancePos) *instances.size());
 
-	p_context->Unmap(m_instanceBufferList[p_ObjectList[0]->GetInstanceIndex()], 0);
+	p_context->Unmap(m_instanceBufferList[p_index], 0);
 
-	m_numberOfInstanceList[p_ObjectList[0]->GetInstanceIndex()] = p_ObjectList.size();
+	m_numberOfInstanceList[p_index] = p_matrixList.size();
 }
 //Private
 

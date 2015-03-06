@@ -66,7 +66,7 @@ public:
 	void SetSceneDirectionalLight(DirectionalLight& p_dLight);
 	void SetLightBuffer(ID3D11ShaderResourceView* p_lightSRV);
 
-	void UpdateInstanceBuffers(std::vector<Object*> p_ObjectList);
+	void UpdateInstanceBuffers(std::vector<DirectX::XMFLOAT4X4> p_matrixList, int p_index);
 
 	void SetShadowMap();
 

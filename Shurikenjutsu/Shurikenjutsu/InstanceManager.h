@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <D3D11.h>
-#include "Structures.h"
+#include <DirectXMath.h>
 class Object;
 class InstanceManager
 {
@@ -17,7 +17,7 @@ public:
 	ID3D11Buffer* GetInstanceBuffer(int p_index);
 	int GetNumberOfInstances(int p_index);
 
-	void UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<Object*> p_ObjectList);
+	void UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context, std::vector<DirectX::XMFLOAT4X4> p_ObjectList, int p_index);
 private:
 	void InitializeInstanceBuffer(ID3D11Device* p_device, int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_matrices);
 

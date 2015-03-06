@@ -657,9 +657,9 @@ void GraphicsEngine::ClearOutlining()
 	m_directX.ClearOutlining();
 }
 
-void GraphicsEngine::UpdateInstanceBuffers(std::vector<Object*> p_ObjectList)
+void GraphicsEngine::UpdateInstanceBuffers(std::vector<DirectX::XMFLOAT4X4> p_matrixList, int p_index)
 {
-	m_instanceManager->UpdateDynamicInstanceBuffer(GetContext(), p_ObjectList);
+	m_instanceManager->UpdateDynamicInstanceBuffer(GetContext(), p_matrixList, p_index);
 }
 
 IFW1FontWrapper* GraphicsEngine::GetFontWrapper()

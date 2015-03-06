@@ -686,14 +686,15 @@ void ObjectManager::UpdateRenderLists()
 		}
 	}
 
-	std::vector<Object*>  temp;
+	std::vector<Object*>  tempObjectList;
+	std::vector<Object*>  tempObjectList;
 	Object* prevObject = &m_staticObjects[m_staticObjects.size() - 1];
 	for (unsigned int i = 0; i < tempList.size(); i++)
 	{
-		temp = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
-		if (prevObject->GetModel() != temp[0]->GetModel())
+		tempObjectList = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
+		if (prevObject->GetModel() != tempObjectList[0]->GetModel())
 		{
-			if (temp.size() == 1)
+			if (tempObjectList.size() == 1)
 			{
 				m_objectsToSingleRender.push_back(tempList[i]);
 			}
@@ -702,11 +703,11 @@ void ObjectManager::UpdateRenderLists()
 				if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
 				{
 					m_objectsToInstanceRender.push_back(tempList[i]);
-					GraphicsEngine::GetInstance()->UpdateInstanceBuffers(temp);
+					GraphicsEngine::GetInstance()->UpdateInstanceBuffers(tempObjectList);
 				}
 			}
 		}
-		prevObject = temp[0];
+		prevObject = tempObjectList[0];
 	}
 }
 
