@@ -2353,7 +2353,7 @@ int Network::GetCharNr(RakNet::RakNetGUID p_guid)
 void Network::SetVisiblePlayers(std::vector<RakNet::RakNetGUID> p_visiblePlayers)
 {
 	m_visibleEnemies = std::vector<int>();
-	for (int i = 0; i < p_visiblePlayers.size(); i++)
+	for (unsigned int i = 0; i < p_visiblePlayers.size(); i++)
 	{
 		if (GetTeam(p_visiblePlayers[i]) != m_myPlayer.team)
 		{
