@@ -99,8 +99,8 @@ bool DirectXWrapper::Initialize(HWND p_handle, float p_maxWindowHeight,	float p_
 	DXGI_SWAP_CHAIN_DESC swapChainDescription;
 	ZeroMemory(&swapChainDescription, sizeof(swapChainDescription));
 	swapChainDescription.BufferCount = 1;
-	swapChainDescription.BufferDesc.Width = m_maxWindowWidth;
-	swapChainDescription.BufferDesc.Height = m_maxWindowHeight;
+	swapChainDescription.BufferDesc.Width = (unsigned int)m_maxWindowWidth;
+	swapChainDescription.BufferDesc.Height = (unsigned int)m_maxWindowHeight;
 	swapChainDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDescription.BufferDesc.RefreshRate.Numerator = numerator;
 	swapChainDescription.BufferDesc.RefreshRate.Denominator = denominator;
@@ -222,8 +222,8 @@ bool DirectXWrapper::Initialize(HWND p_handle, float p_maxWindowHeight,	float p_
 	// Initialize the depth stencil.
 	D3D11_TEXTURE2D_DESC depthStencilDescription;
 	ZeroMemory(&depthStencilDescription, sizeof(depthStencilDescription));
-	depthStencilDescription.Width = m_maxWindowWidth;
-	depthStencilDescription.Height = m_maxWindowHeight;
+	depthStencilDescription.Width = (unsigned int)m_maxWindowWidth;
+	depthStencilDescription.Height = (unsigned int)m_maxWindowHeight;
 	depthStencilDescription.MipLevels = 1;
 	depthStencilDescription.ArraySize = 1;
 	depthStencilDescription.Format = DXGI_FORMAT_R32_TYPELESS;
@@ -644,8 +644,8 @@ bool DirectXWrapper::InitializeOutlinging()
 	// Initialize the depth stencil.
 	D3D11_TEXTURE2D_DESC depthStencilDescription;
 	ZeroMemory(&depthStencilDescription, sizeof(depthStencilDescription));
-	depthStencilDescription.Width = m_maxWindowWidth;
-	depthStencilDescription.Height = m_maxWindowHeight;
+	depthStencilDescription.Width = (unsigned int)m_maxWindowWidth;
+	depthStencilDescription.Height = (unsigned int)m_maxWindowHeight;
 	depthStencilDescription.MipLevels = 1;
 	depthStencilDescription.ArraySize = 1;
 	depthStencilDescription.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -722,8 +722,8 @@ bool DirectXWrapper::InitializeGBuffer()
 
 	// Initialize the post processing target texture
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
-	textureDesc.Width = m_maxWindowWidth;
-	textureDesc.Height = m_maxWindowHeight;
+	textureDesc.Width = (unsigned int)m_maxWindowWidth;
+	textureDesc.Height = (unsigned int)m_maxWindowHeight;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -873,8 +873,8 @@ bool DirectXWrapper::InitializePP()
 
 	// Initialize the post processing target texture
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
-	textureDesc.Width = m_maxWindowWidth / 2;
-	textureDesc.Height = m_maxWindowHeight / 2;
+	textureDesc.Width = (unsigned int)m_maxWindowWidth / 2;
+	textureDesc.Height = (unsigned int)m_maxWindowHeight / 2;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R32_FLOAT;
@@ -1002,8 +1002,8 @@ bool DirectXWrapper::InitializeComposition()
 
 	// Initialize the post processing target texture
 	ZeroMemory(&textureDesc, sizeof(textureDesc));
-	textureDesc.Width = m_maxWindowWidth;
-	textureDesc.Height = m_maxWindowHeight;
+	textureDesc.Width = (unsigned int)m_maxWindowWidth;
+	textureDesc.Height = (unsigned int)m_maxWindowHeight;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
 	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
