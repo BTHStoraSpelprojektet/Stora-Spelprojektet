@@ -307,7 +307,7 @@ void SuddenDeathState::Initialize()
 
 	if (!m_texture)
 	{
-		m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/SuddenDeathTexture.png");
+		m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/SuddenDeathTexture.png");
 	}
 
 	ConsolePrintSuccess("Sudden death state initialized successfully.");

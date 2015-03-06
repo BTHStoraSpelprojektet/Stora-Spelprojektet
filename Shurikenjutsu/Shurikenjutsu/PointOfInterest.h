@@ -12,7 +12,7 @@ public:
 	PointOfInterest();
 	~PointOfInterest();
 
-	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed);
+	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, DirectX::XMFLOAT3 p_lightColor);
 	void Shutdown();
 	void Update();
 	void Render();
@@ -29,5 +29,6 @@ private:
 	bool m_active;
 
 	DirectX::XMFLOAT3 m_positionLight;
+	DirectX::XMFLOAT3 m_lightColor;
 };
 #endif // !POINTOFINTEREST_H_
