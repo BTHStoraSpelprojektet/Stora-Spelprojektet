@@ -6,7 +6,6 @@
 #include "Structures.h"
 
 class InstanceManager;
-class Object;
 
 class SceneShader
 {
