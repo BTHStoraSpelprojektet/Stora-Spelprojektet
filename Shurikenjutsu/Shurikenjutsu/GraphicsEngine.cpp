@@ -17,6 +17,7 @@
 #include "RenderTarget.h"
 #include "CustomFont.h"
 #include "DirectX.h"
+#include "RenderTarget.h"
 
 
 GraphicsEngine* GraphicsEngine::m_instance;
@@ -158,7 +159,8 @@ bool GraphicsEngine::Initialize(HWND p_handle, float p_screenCurrentWidth, float
 	}
 
 	// Initialize shadow map.
-	if (m_shadowMap.Initialize(m_directX->GetDevice(), (int)p_screenMaxWidth, (int)p_screenMaxHeight))
+	m_shadowMap = new RenderTarget();
+	if (m_shadowMap->Initialize(m_directX->GetDevice(), (int)p_screenMaxWidth, (int)p_screenMaxHeight))
 	{
 		ConsolePrintSuccess("Shadow map initialized successfully.");
 
@@ -240,12 +242,12 @@ void GraphicsEngine::Shutdown()
 		delete m_particleShader;
 		m_particleShader = nullptr;
 	}
-	//if (m_shadowMap != nullptr)
-	//{
-		m_shadowMap.Shutdown();
-	//	delete m_shadowMap;
-	//	m_shadowMap = nullptr;
-	//}
+	if (m_shadowMap != nullptr)
+	{
+		m_shadowMap->Shutdown();
+		delete m_shadowMap;
+		m_shadowMap = nullptr;
+	}
 	if (m_sceneShader != nullptr)
 	{
 		m_sceneShader->Shutdown();
@@ -416,7 +418,7 @@ void GraphicsEngine::RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, Di
 
 void GraphicsEngine::RenderFoliage()
 {
-	m_foliageShader->Render(m_directX->GetContext(), m_shadowMap.GetRenderTarget());
+	m_foliageShader->Render(m_directX->GetContext(), m_shadowMap->GetRenderTarget());
 }
 
 void GraphicsEngine::SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
@@ -435,12 +437,12 @@ void GraphicsEngine::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix,
 
 void GraphicsEngine::SetShadowMap()
 {
-	if (m_shadowMap.GetRenderTarget() == nullptr)
+	if (m_shadowMap->GetRenderTarget() == nullptr)
 	{
 		ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
 	}
 
-	m_sceneShader->UpdateShadowMap(m_shadowMap.GetRenderTarget());
+	m_sceneShader->UpdateShadowMap(m_shadowMap->GetRenderTarget());
 }
 
 void GraphicsEngine::SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity)
@@ -495,7 +497,7 @@ void GraphicsEngine::SetClearColor(float R, float G, float B, float p_opacity)
 
 ID3D11ShaderResourceView* GraphicsEngine::GetShadowMap()
 {
-	return m_shadowMap.GetRenderTarget();
+	return m_shadowMap->GetRenderTarget();
 }
 
 ID3D11ShaderResourceView* GraphicsEngine::GetSceneShaderShadowMap()
@@ -605,8 +607,8 @@ void GraphicsEngine::BeginRenderToShadowMap()
 	// Set color to clear the back buffer to.
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
-	m_shadowMap.SetAsRenderTarget(m_directX->GetContext());
-	m_shadowMap.Clear(m_directX->GetContext(), color);
+	m_shadowMap->SetAsRenderTarget(m_directX->GetContext());
+	m_shadowMap->Clear(m_directX->GetContext(), color);
 }
 
 void GraphicsEngine::ResetRenderTarget()

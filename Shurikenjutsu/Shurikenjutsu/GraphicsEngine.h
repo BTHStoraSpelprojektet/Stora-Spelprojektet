@@ -3,7 +3,6 @@
 
 #include "DirectXTex\DirectXTex\DirectXTex.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
-#include "RenderTarget.h"
 
 #include <DirectXMath.h>
 #include <vector>
@@ -149,7 +148,7 @@ private:
 
 	HWND m_windowHandle;
 
-	RenderTarget m_shadowMap;
+	RenderTarget *m_shadowMap;
 
 	IFW1FontWrapper* m_fontWrapper;
 	IFW1TextGeometry* m_textGeometry;
