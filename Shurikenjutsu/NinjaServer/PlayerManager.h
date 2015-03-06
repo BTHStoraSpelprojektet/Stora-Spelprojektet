@@ -2,7 +2,6 @@
 #define PLAYERMANAGERSERVER_H_
 
 #include <iostream>
-
 #include "..\CommonLibs\RakNet\RakPeerInterface.h"
 #include "..\CommonLibs\RakNet\BitStream.h"
 #include "..\CommonLibs\ServerMessages.h"
@@ -34,7 +33,7 @@ public:
 
 	std::vector<PlayerNet> GetPlayers();
 	std::vector<Box> GetBoundingBoxes(int p_index);
-	void AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team);
+	void AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team);
 	bool MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed);
 	bool RotatePlayer(RakNet::RakNetGUID p_guid, float p_dirX, float p_dirY, float p_dirZ);	
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
@@ -52,14 +51,20 @@ public:
 	bool CanUseAbility(int p_index, ABILITIES p_ability);
 	void NaginataStabAttackPerformed(RakNet::RakNetGUID p_guid);
 
-	void ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager);
+	void ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager);
 	void SendPlaySound(ABILITIES ability, float p_x, float p_y, float p_z);
 	void SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p_z);
+	void SendPlayAmbientSound(PLAYSOUND sound, float p_x, float p_y, float p_z);
 	void SendDealtDamage(RakNet::RakNetGUID p_attackingPlayerGUID, float p_damage, float p_x, float p_y, float p_z);
 	void SetPlayerDotDamage(RakNet::RakNetGUID p_guid, float p_damage);
 	
-	void DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility);
+	void DeathBoard(RakNet::RakNetGUID p_TakerNinja, RakNet::RakNetGUID p_AttackerNinja, ABILITIES p_usedAbility);
 	void ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID);
+
+	void RuneLotusPickedUp(RakNet::RakNetGUID p_player);
+	void HealPlayer();
+	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
+	void RuneShieldPickedUp(RakNet::RakNetGUID p_player);
 
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
@@ -92,6 +97,10 @@ private:
 	double m_dotIntervall;
 	double m_lastDotSent;
 	
+	double m_hotIntervall;
+	double m_lastHotSent;
+	bool m_canSendHotDamage;
+	bool m_haveSentHotDamage;
 };
 
 #endif

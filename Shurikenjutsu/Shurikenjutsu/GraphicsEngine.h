@@ -8,6 +8,7 @@
 #include <vector>
 #include "InstanceManager.h"
 #include "RenderTarget.h"
+#include "CustomFont.h"
 
 class WICTextureLoader;
 class GUIShader;
@@ -53,7 +54,7 @@ public:
 	void RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 	void RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
 	void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
-	void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, bool p_isFire);
 	void RenderFoliage();
 
 	void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
@@ -66,6 +67,7 @@ public:
 
 	void SetShadowMap();
 
+	void TurnOnPointLightAlphaBlending();
 	void TurnOnAlphaBlending();
 	void TurnOffAlphaBlending();
 
@@ -102,6 +104,7 @@ public:
 	void ClearOutlining();
 
 	IFW1FontWrapper* GetFontWrapper();
+	IDWriteFontCollection* GetFontCollection();
 	void AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags);
 	void RenderTextGeometry(UINT p_flags);
 
@@ -117,7 +120,7 @@ public:
 	void SetRenderTargetsForGBuffers();
 
 	void Composition();
-	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection);
+	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
 
 	void SetForwardRenderTarget();
 
@@ -148,6 +151,7 @@ private:
 
 	IFW1FontWrapper* m_fontWrapper;
 	IFW1TextGeometry* m_textGeometry;
+	IDWriteFontCollection* m_fontCollection;
 	InstanceManager* m_instanceManager;
 
 	bool m_screenChanged;

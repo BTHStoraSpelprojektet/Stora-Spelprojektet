@@ -12,8 +12,8 @@
 class ScoreBoard
 {
 public:
-	ScoreBoard();
-	~ScoreBoard();
+	ScoreBoard(const ScoreBoard&) = delete;
+	ScoreBoard& operator=(const ScoreBoard&) = delete;
 
 	struct Ninja
 	{
@@ -21,6 +21,7 @@ public:
 		int kill;
 		int death;
 		GUIText ninjaText;
+		GUIText name;
 	};
 
 	static ScoreBoard* GetInstance();
@@ -30,9 +31,13 @@ public:
 	void Update();
 	void Render();
 	GUIText textst;
-	void KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNetGUID p_ninjaKilled);
+	void KillDeathRatio(RakNet::RakNetGUID p_ninjaKiller, RakNet::RakNetGUID p_ninjaKilled, int p_deaths, int p_kills);
+	void AddKD(RakNet::RakNetGUID p_ninja, int p_deaths, int p_kills);
 
 private:
+	ScoreBoard();
+	~ScoreBoard();
+
 	static ScoreBoard* m_instance;
 
 	GUIElement m_background;
@@ -52,15 +57,10 @@ private:
 	void ResizeRedColorList();
 	void ResizeBlueColorList();
 
-	int killerNinja;
-	int takerNinja;
+	int m_myTeam;
 
-	//std::map<RakNet::RakNetGUID, GUIElement> m_redColorPlayers;
-	//std::map<RakNet::RakNetGUID, GUIElement> m_blueColorPlayers;
 	std::map<RakNet::RakNetGUID, Ninja> m_redColorPlayers;
 	std::map<RakNet::RakNetGUID, Ninja> m_blueColorPlayers;
-
-	std::vector<GUIText> m_text;
 
 	std::string GetTextureName(int p_charNr);
 };

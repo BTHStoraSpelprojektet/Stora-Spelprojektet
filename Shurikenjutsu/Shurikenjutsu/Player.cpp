@@ -17,6 +17,7 @@
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
 #include "ConsoleFunctions.h"
+#include "PointLights.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -31,7 +32,7 @@ void Player::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType)
+bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_ninjaType, std::string p_name)
 {
 	m_ninjaType = p_ninjaType;
 
@@ -64,7 +65,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_dashDirection = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_dashDistanceLeft = 0.0f;
 	m_oldPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
-
+	m_invis = false;
 	throwDistance = 0.0f;
 
 	m_updateVisibility = false;
@@ -100,7 +101,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	if (m_sound != NULL){
 		m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
 	}
-
+	m_name = p_name;
 	return true;
 }
 
@@ -212,7 +213,11 @@ void Player::UpdateMe()
 	float angle = atan2(m_dashDirection.z, m_dashDirection.x);
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
 	m_trail->Update(position, angle);
-	m_sound->UpdateAmbientSound(m_position.x, m_position.y, m_position.z);
+
+	//Required for ambient 3D sounds
+	if (m_sound != nullptr){
+		m_sound->UpdateAmbientSound(m_position.x, m_position.y, m_position.z);
+	}
 
 	if (m_updateVisibility)
 	{
@@ -230,13 +235,24 @@ void Player::UpdateMe()
 		SetGuID(Network::GetInstance()->GetMyPlayer().guid);
 		//SetPosition(DirectX::XMFLOAT3(Network::GetInstance()->GetMyPlayer().x, Network::GetInstance()->GetMyPlayer().y, Network::GetInstance()->GetMyPlayer().z));
 	}
-	
-	SetSpeed(m_originalSpeed);
-	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+
+	float directionAngle = DirectX::XMVector3AngleBetweenVectors(DirectX::XMLoadFloat3(&m_attackDir), DirectX::XMLoadFloat3(&m_direction)).m128_f32[0];
+
+	if (directionAngle > (3.14f * 0.625f))
 	{
+		m_speed = m_originalSpeed * 0.85f;
+	}
+	else
+	{
+		SetSpeed(m_originalSpeed);
+	}
+	
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{		
 		if (Collisions::SphereSphereCollision(m_playerSphere, m_stickyTrapList[i]->GetStickyTrapSphere()))
 		{
-			SetSpeed(m_originalSpeed * STICKY_TRAP_SLOW_PRECENTAGE);
+			SetSpeed(m_speed * STICKY_TRAP_SLOW_PRECENTAGE);
+			break;
 		}
 	}
 
@@ -247,6 +263,8 @@ void Player::UpdateMe()
 		// Animation None ?
 		UpdateAbilities();
 		UpdateAbilityBar();
+		AnimatedObject::ChangeAnimationState(AnimationState::None);
+
 		return;
 	}
 
@@ -324,6 +342,7 @@ void Player::UpdateMe()
 		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
 
 		//Update sound (walking)
+	
 		m_sound->StartAmbientSound(m_soundEmitter);
 		m_soundEmitter->m_pos.x = position.x;
 		m_soundEmitter->m_pos.y = position.y;
@@ -356,31 +375,60 @@ void Player::UpdateMe()
 
 	m_ability = m_noAbility;
 	CheckForSpecialAttack();
-	
-	// Range attack
-	if (InputManager::GetInstance()->IsRightMouseClicked())
+	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
 	{
-		// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
-		if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+		// Range attack
+		if (InputManager::GetInstance()->IsRightMouseClicked())
 		{
-			m_ability = m_rangeAttack;
+			// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
+			if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+			{
+				m_ability = m_rangeAttack;
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		// Melee attack
+		if (InputManager::GetInstance()->IsLeftMouseClicked())
 		{
-			StillCDText();
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeAttack;
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
 	}
-
-	// Melee attack
-	if (InputManager::GetInstance()->IsLeftMouseClicked())
+	else
 	{
-		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		// Range attack
+		if (InputManager::GetInstance()->IsRightMousePressed())
 		{
-			m_ability = m_meleeAttack;
+			// Check cd so m_ability does not get set if u have cooldown preventing other abilities to be casted.
+			if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+			{
+				m_ability = m_rangeAttack;
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		// Melee attack
+		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
-			StillCDText();
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeAttack;
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
 	}
 
@@ -406,25 +454,52 @@ void Player::UpdateMe()
 
 void Player::CheckForSpecialAttack()
 {
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('e')))
+	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
 	{
-		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('e')))
 		{
-			m_ability = m_rangeSpecialAttack;
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_rangeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('q')))
+		{
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('r')))
+		{
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_toolAbility;
+			}
 		}
 	}
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('q')))
+	else
 	{
-		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 		{
-			m_ability = m_meleeSpecialAttack;
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_rangeSpecialAttack;
+			}
 		}
-	}
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('r')))
-	{
-		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 		{
-			m_ability = m_toolAbility;
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+		{
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_toolAbility;
+			}
 		}
 	}
 }
@@ -995,6 +1070,17 @@ void Player::Render()
 
 	m_trail->Render();
 
+	PointLight newLight;
+	newLight.m_ambient = DirectX::XMVectorSet(0.4f, 0.4f, 0.4f, 0.0f);
+	newLight.m_diffuse = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	newLight.m_specular = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+
+	newLight.m_position = m_position;
+	newLight.m_position.y += 1.8f;
+	newLight.m_range = 1.5f;
+
+	PointLights::GetInstance()->AddLight(newLight);
+
 	AnimatedObject::RenderPlayer(m_team);
 }
 
@@ -1050,10 +1136,12 @@ void Player::SetTeam(int p_team)
 	if (m_team == 1)
 	{
 		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
+		AnimatedObject::ChangeTrailColor(1);
 	}
 	else
 	{
 		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
+		AnimatedObject::ChangeTrailColor(0);
 	}
 }
 
@@ -1169,4 +1257,19 @@ void Player::SetSound(Sound* p_sound){
 void Player::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	m_stickyTrapList = p_stickyTrapList;
+}
+
+void Player::SetInvis(bool p_invis)
+{
+	m_invis = p_invis;
+}
+
+bool Player::IsInvis()
+{
+	return m_invis;
+}
+
+std::string Player::GetName()
+{
+	return m_name;
 }

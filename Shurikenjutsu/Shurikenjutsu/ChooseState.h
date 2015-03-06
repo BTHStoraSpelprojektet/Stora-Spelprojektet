@@ -12,6 +12,7 @@
 class Menu;
 class MenuItem;
 class GUIText;
+class MenuButton;
 class CharacterAbilityDescription;
 class ToolTipPopUp;
 class Camera;
@@ -64,14 +65,15 @@ private:
 	CharacterAbilityDescription *m_abilityDescription[4];
 	GUIText* m_redTeamScore;
 	GUIText* m_blueTeamScore;
-	int currentNinja;
-	int nrOfNinjas;
-	int currentTool;
-	int nrOfTools;
+	int m_currentNinja;
+	int m_nrOfNinjas;
+	int m_currentTool;
+	int m_nrOfTools;
 	float m_screenHeight;
 	float m_screenWidth;
 	bool m_isRandoming;
 	CurrentTeam m_currentTeam;
+	MenuButton* m_playButton;
 
 	Camera *m_camera;
 	ObjectManager* m_objectManager;

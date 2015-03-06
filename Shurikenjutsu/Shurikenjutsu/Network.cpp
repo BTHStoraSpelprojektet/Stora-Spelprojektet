@@ -5,7 +5,6 @@
 #include "Globals.h"
 #include "DeathBoard.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
-#include "Sound.h"
 #include "ScoreBoard.h"
 
 Network* Network::m_instance;
@@ -210,12 +209,13 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+			RakNet::RakString name;
 			int nrOfPlayers = 0;
 			float x, y, z;
 			float dirX, dirY, dirZ;
-			float maxHP, currentHP;
-			int team, charNr,toolNr;
-			bool isAlive;
+			float maxHP, currentHP, shield;
+			int team, charNr, toolNr, kills, deaths;
+			bool isAlive, invis;
 			RakNet::RakNetGUID guid;
 			int id;
 			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -226,6 +226,7 @@ void Network::ReceviePacket()
 			{
 				bitStream.Read(guid);
 				bitStream.Read(id);
+				bitStream.Read(name);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
@@ -237,7 +238,11 @@ void Network::ReceviePacket()
 				bitStream.Read(maxHP);
 				bitStream.Read(currentHP);
 				bitStream.Read(isAlive);
+				bitStream.Read(invis);
 				bitStream.Read(toolNr);
+				bitStream.Read(deaths);
+				bitStream.Read(kills);
+				bitStream.Read(shield);
 
 
 				// (Add and) update players position
@@ -247,7 +252,10 @@ void Network::ReceviePacket()
 				UpdatePlayerTeam(guid, team);
 				UpdatePlayerChar(guid, charNr, toolNr);
 				UpdatePlayerID(guid, id);
-
+				UpdatePlayerKD(guid, deaths, kills);
+				UpdatePlayerInvis(guid, invis);
+				UpdatePlayerShield(guid, shield);
+				UpdatePlayerName(guid, name);
 
 				playerGuids.push_back(guid);
 			}
@@ -379,6 +387,7 @@ void Network::ReceviePacket()
 			bitStream.Read(z);
 
 			RespawnPlayer(x, y, z);
+			UpdatePlayerInvisAll(false);
 
 			break;
 		}
@@ -401,6 +410,7 @@ void Network::ReceviePacket()
 			bitStream.Read(isAlive);
 
 			UpdatePlayerHP(guid, currentHP, isAlive);
+			UpdatePlayerInvis(guid, false);
 			SpawnBloodParticles(guid);
 			break;
 		}
@@ -444,6 +454,7 @@ void Network::ReceviePacket()
 			m_timeRestarting = 0;
 			ClearListsAtNewRound();
 
+			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
 			ConsolePrintSuccess("A new round has started!");
 			ConsoleSkipLines(1);
 			break;
@@ -472,7 +483,9 @@ void Network::ReceviePacket()
 
 			m_timeRestarting = time;
 
-			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_BEEP_SOUND,0,0,0);
+			if (time <= 5 && time != 0){
+				m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_BEEP_SOUND, 0, 0, 0);
+			}
 			ConsolePrintText(std::to_string(time) + "...");
 			break;
 		}
@@ -551,7 +564,7 @@ void Network::ReceviePacket()
 			wBitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
 			m_clientPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 0, m_packet->guid, false);
 
-
+			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
 			ConsolePrintSuccess("Starting a new match.");
 			ConsoleSkipLines(1);
 			break;
@@ -864,7 +877,7 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-			int takerNinja, killerNinja;
+			RakNet::RakNetGUID takerNinja, killerNinja;
 			ABILITIES murderWeapon;
 
 			bitStream.Read(messageID);
@@ -995,19 +1008,62 @@ void Network::ReceviePacket()
 			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 			break;
+		}
+
+		case ID_PLAY_AMBIENT_SOUND:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			PLAYSOUND sound;
+			float x, y, z;
+
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+			Sound::SoundEmitter* soundEmitter;
+
+			if (m_sound != NULL){
+				soundEmitter = m_sound->CreateAmbientSound(sound, x, y, z);
 			}
+			break;
+		}
+
+		case ID_STOP_AMBIENT_SOUND:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			PLAYSOUND sound;
+			float x, y, z;
+
+			bitStream.Read(messageID);
+			bitStream.Read(sound);
+			bitStream.Read(x);
+			bitStream.Read(y);
+			bitStream.Read(z);
+
+			if (m_sound != NULL){
+				m_sound->CreateAmbientSound(sound, x, y, z);
+			}
+
+			break;
+		}
 
 		case ID_SCOREBOARDKILL:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
 			RakNet::RakNetGUID takerNinja, killerNinja;
+			int kills, deaths;
 
 			bitStream.Read(messageID);
 			bitStream.Read(takerNinja);
 			bitStream.Read(killerNinja);
+			bitStream.Read(deaths);
+			bitStream.Read(kills);
 
-			ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja);
+			ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja, deaths, kills);
 
 			break;
 		}
@@ -1036,7 +1092,7 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			RakNet::RakNetGUID guid;
-			PointOfInterestType poi_type;
+			POINTOFINTERESTTYPE poi_type;
 			float x, y, z;
 			bitStream.Read(messageID);
 			for (int i = 0; i < 3; i++)
@@ -1069,7 +1125,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(PointOfInterestType_Heal, guid);
+			RunePickedUp(POINTOFINTERESTTYPE_HEAL, guid);
 			break;
 		}
 		case ID_INVIS_PICKED_UP:
@@ -1079,7 +1135,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(PointOfInterestType_Invisible, guid);
+			RunePickedUp(POINTOFINTERESTTYPE_INVISIBLE, guid);
+			RuneInvisPickedUp(guid);
 			break;
 		}
 		case ID_SHIELD_PICKED_UP:
@@ -1089,7 +1146,7 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
-			RunePickedUp(PointOfInterestType_Shield, guid);
+			RunePickedUp(POINTOFINTERESTTYPE_SHIELD, guid);
 			break;
 		}
 		default:
@@ -1121,8 +1178,10 @@ void Network::Disconnect()
 void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 {
 	RakNet::BitStream bitStream;
+	RakNet::RakString name = m_playerName.c_str();
 
 	bitStream.Write((RakNet::MessageID)ID_CHOOSE_CHAR);
+	bitStream.Write(name);
 	bitStream.Write(p_charNr);
 	bitStream.Write(p_toolNr);
 	bitStream.Write(p_team);
@@ -1131,6 +1190,7 @@ void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 
 	m_myPlayer.charNr = p_charNr;
 	m_myPlayer.toolNr = p_toolNr;
+	m_myPlayer.name = name;
 }
 
 bool Network::IsConnected()
@@ -1219,6 +1279,27 @@ void Network::UpdatePlayerPos(int p_id, float p_x, float p_y, float p_z)
 				m_enemyPlayers[i].y = p_y;
 				m_enemyPlayers[i].z = p_z;
 
+				break;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerKD(RakNet::RakNetGUID p_owner, int p_deaths, int p_kills)
+{
+	if (p_owner == m_clientPeer->GetMyGUID())
+	{
+		m_myPlayer.kills = p_kills;
+		m_myPlayer.deaths = p_deaths;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_owner)
+			{
+				m_enemyPlayers[i].kills = p_kills;
+				m_enemyPlayers[i].deaths = p_deaths;
 				break;
 			}
 		}
@@ -1937,6 +2018,7 @@ void Network::ClearListsAtNewRound()
 	m_spikeTrapList.clear();
 	m_stickyTrapList.clear();
 	m_fanList.clear();
+	m_objectManager->RunesRestartRound();
 }
 
 int Network::GetLastPing()
@@ -2040,12 +2122,214 @@ void Network::SendLatestDir()
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 2, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
-void Network::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z)
+void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
 {
 	m_objectManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
+
+	Sound::SoundEmitter* soundEmitter = NULL;
+	switch (p_poiType)
+	{
+	case POINTOFINTERESTTYPE_HEAL:
+	{
+		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SPAWN_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SOUND, p_x, p_y, p_z);
+		break;
+	}
+	case POINTOFINTERESTTYPE_SHIELD:
+	{
+		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SOUND, p_x, p_y, p_z);
+		break;
+	}
+	case POINTOFINTERESTTYPE_INVISIBLE:
+	{
+		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND, p_x, p_y, p_z);
+		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SOUND, p_x, p_y, p_z);
+		break;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	//Only support sound for one rune per type for now
+	runeSoundEmitters.push_back(soundEmitter);
 }
 
-void Network::RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid)
+void Network::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
 {
+	//Only support sound for one rune per type for now
+	if (m_sound != nullptr){
+		for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
+		{
+			switch (p_poiType)
+			{
+			case POINTOFINTERESTTYPE_HEAL:
+			{
+				if (PLAYSOUND_RUNE_HEAL_SOUND == runeSoundEmitters[i]->m_playSound){
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				}
+				break;
+			}
+			case POINTOFINTERESTTYPE_SHIELD:
+			{
+				if (PLAYSOUND_RUNE_SHIELD_SOUND == runeSoundEmitters[i]->m_playSound){
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				}
+				break;
+			}
+			case POINTOFINTERESTTYPE_INVISIBLE:
+			{
+				if (PLAYSOUND_RUNE_INVISIBLE_SOUND == runeSoundEmitters[i]->m_playSound){
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				}
+				break;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
+		
+	}
+
 	m_objectManager->RunePickedUp(p_poiType, p_guid);
+	if (m_myPlayer.guid == p_guid){
+		m_myPlayer.x;
+	}
+}
+
+void Network::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
+{
+	if (m_myPlayer.guid == p_player)
+	{
+		m_myPlayer.invis = true;
+	}
+	else
+	{
+		m_myPlayer.invis = false;
+	}
+
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (m_enemyPlayers[i].guid == p_player)
+		{
+			m_enemyPlayers[i].invis = true;
+		}
+		else
+		{
+			m_enemyPlayers[i].invis = false;
+		}
+	}
+}
+
+void Network::UpdatePlayerInvis(RakNet::RakNetGUID p_guid, bool p_invis)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.invis = p_invis;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].invis = p_invis;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerShield(RakNet::RakNetGUID p_guid, float p_shield)
+{
+	if (p_guid == m_myPlayer.guid)
+	{
+		m_myPlayer.shield = p_shield;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].shield = p_shield;
+			}
+		}
+	}
+}
+
+void Network::UpdatePlayerName(RakNet::RakNetGUID p_guid, RakNet::RakString p_name)
+{
+	if (p_guid == GetMyGUID())
+	{
+		m_myPlayer.name = p_name;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				m_enemyPlayers[i].name = p_name;
+				break;
+			}
+		}
+	}
+}
+
+void Network::SetPlayerName(std::string p_playerName)
+{
+	m_playerName = p_playerName;
+}
+
+std::string Network::GetPlayerName(RakNet::RakNetGUID p_guid)
+{
+	std::string name = "";
+	if (p_guid == GetMyGUID())
+	{
+		return m_myPlayer.name.C_String();
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				return m_enemyPlayers[i].name.C_String();
+			}
+		}
+	}
+	return "";
+}
+
+void Network::UpdatePlayerInvisAll(bool p_invis)
+{
+	m_myPlayer.invis = p_invis;
+
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		m_enemyPlayers[i].invis = p_invis;
+	}
+}
+
+int Network::GetCharNr(RakNet::RakNetGUID p_guid)
+{
+	if (p_guid == GetMyGUID())
+	{
+		return m_myPlayer.charNr;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				return m_enemyPlayers[i].charNr;
+			}
+		}
+	}
+
+	return -1;
 }

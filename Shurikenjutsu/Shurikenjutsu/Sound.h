@@ -32,12 +32,15 @@ public:
 	void UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z);
 	void StopAmbientSound(SoundEmitter* p_soundEmitter);
 	void StartAmbientSound(SoundEmitter* p_soundEmitter);
-	void CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
+	Sound::SoundEmitter* CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
 	void ClearAmbientSounds();
 
 	void StopMusic();
-	void StartMusic();
 	void StartStopMusic();
+	void StartMusic();
+
+	void MuteEverything();
+	void UnMuteEverything();
 private:
 	FMOD::System *m_system;
 	FMOD_RESULT m_result;
@@ -46,8 +49,8 @@ private:
 	FMOD_SPEAKERMODE m_speakerMode;
 	//FMOD_Caps caps;
 	char m_name[256];
-	float m_musicVolume = 0.7f;
-	float m_defaultWindVolume = 0.2f;
+	float m_musicVolume;
+	float m_defaultWindVolume;
 	int music_sound_id = 0;
 
 	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
@@ -101,6 +104,7 @@ private:
 	FMOD::Sound *m_maleHurtSound;
 	FMOD::Sound *m_femaleHurtSound;
 	FMOD::Sound *m_countdownBeep;
+	FMOD::Sound *m_countdownGong;
 	FMOD::Sound *m_runeInvisibility;
 	FMOD::Sound *m_runeInvisibilitySpawn;
 	FMOD::Sound *m_runeInvisibilityPickup;

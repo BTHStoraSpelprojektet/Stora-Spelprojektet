@@ -157,6 +157,34 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 
+	// Compile the pixel shader.
+	pixelShader = 0;
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticlePixelShaderNotFire.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticlePixelShaderNotFire.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile particle pixel shader from file.");
+			return false;
+		}
+
+		else
+		{
+			m_PSVersion = "4.0";
+		}
+	}
+
+	else
+	{
+		m_PSVersion = "5.0";
+	}
+
+	// Create pixel shader from buffer.
+	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderNotFire)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create particle pixel shader.");
+		return false;
+	}
+
 	ConsolePrintSuccess("Particle pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
 
@@ -228,6 +256,13 @@ void ParticleShader::Shutdown()
 		m_pixelShader->Release();
 		m_pixelShader = 0;
 	}
+	
+	// Release the pixel shader.
+	if (m_pixelShaderNotFire)
+	{
+		m_pixelShaderNotFire->Release();
+		m_pixelShaderNotFire = 0;
+	}
 
 	// Release the sampler state.
 	if (m_samplerState)
@@ -251,7 +286,7 @@ void ParticleShader::Shutdown()
 	}
 }
 
-void ParticleShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void ParticleShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, bool p_isFire)
 {
 	// Set vertex buffer stride and offset.
 	unsigned int stride = sizeof(ParticleVertex);
@@ -269,7 +304,15 @@ void ParticleShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh
 	// Set vertex and pixel shaders.
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
 	p_context->GSSetShader(m_geometryShader, NULL, 0);
-	p_context->PSSetShader(m_pixelShader, NULL, 0);
+
+	if (p_isFire)
+	{
+		p_context->PSSetShader(m_pixelShader, NULL, 0);
+	}
+	else
+	{
+		p_context->PSSetShader(m_pixelShaderNotFire, NULL, 0);
+	}
 
 	// Render the polygon.
 	p_context->Draw(p_vertexCount, 0);

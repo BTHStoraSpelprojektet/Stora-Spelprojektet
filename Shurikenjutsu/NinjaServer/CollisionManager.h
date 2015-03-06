@@ -42,7 +42,7 @@ public:
 	void SetDeltaTime(float p_deltaTime);
 
 	void VolleyCollisionChecks(VolleyManager* p_volleymanager, PlayerManager* p_playerManager);
-	void SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList, std::vector<int> p_inactiveBoxIndexes);
+	void SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager);
 	void POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager);
 
 private:
@@ -50,7 +50,7 @@ private:
 	bool BoxBoxTest(Box p_box1, Box p_box2);
 	bool SphereSphereTest(Sphere p_spikeTrap, Sphere p_player);
 	bool OBBSphereTest(OBB p_OBB, Sphere p_sphere);
-	bool IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos);
+	bool IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos, bool p_isThrowing);
 	bool RayOBBTest(Ray *p_ray, OBB p_Obb);
 	bool RaySphereTest(Ray *p_ray, Sphere p_sphere);
 

@@ -4,14 +4,14 @@
 const float ALL_AROUND_GLOBAL_COOLDOWN = 0.4f;
 
 
-const float ROUND_TIME_LIMIT_MINUTS = 5.0f;
+const float ROUND_TIME_LIMIT_MINUTS = 3.0f;
 const float ROUND_TIME_LIMIT_SECONDS = 10.0f;
 const float SUDDEN_DEATH_DAMAGE = 5.0f;
 const float TIME_UNTIL_NEXT_SUDDEN_DEATH_BOX = 1.0f;
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
 //Shuriken
-const float SHURIKEN_DAMAGE = 20.0f;
+const float SHURIKEN_DAMAGE = 15.0f;
 const float SHURIKEN_COOLDOWN = 2.0f;
 const float SHURIKEN_DURATION = 3.0f;
 const int SHURIKEN_MAX_STACK = 3;
@@ -44,18 +44,18 @@ const float WHIP_SP_RANGE = 7.0f;
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 // Megashuriken
 const float MEGASHURIKEN_COOLDOWN = 5.0f;
-const float MEGASHURIKEN_DAMAGE = 40.0f;
+const float MEGASHURIKEN_DAMAGE = 30.0f;
 const float MEGASHURIKEN_DURATION = 4.0f;
 const float MEGASHURIKEN_SPEED = 25.0f;
 
 // Fan Boomerang
-const float FANBOOMERANG_DAMAGE = 50.0f;
-const float FANBOOMERANG_COOLDOWN = 2.0f;
+const float FANBOOMERANG_DAMAGE = 75.0f;
+const float FANBOOMERANG_COOLDOWN = 4.0f;
 const float FANBOOMERANG_DURATION = 3.0f;
 const float FANBOOMERANG_SPEED = 20.0f;
 
 // Volley
-const float VOLLEY_DAMAGE = 25.0f;
+const float VOLLEY_DAMAGE = 40.0f;
 const float VOLLEY_COOLDOWN = 4.0f;
 const float VOLLEY_RANGE = 15.0f;
 const float VOLLEY_RADIUS = 0.5f;
@@ -65,7 +65,7 @@ const float VOLLEY_HEIGHT = 15.0f;
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
 ////////////////////////////////////////////////////////////////Melee Attacks
 // Katana
-const float KATANA_DAMAGE = 40.0f;
+const float KATANA_DAMAGE = 25.0f;
 const float KATANA_RANGE = 2.0f;
 const float KATANA_COOLDOWN = 0.5f;
 
@@ -86,7 +86,7 @@ const float DASH_SPEED = 8.0f;
 // Naginata stab
 const float NAGINATASTAB_DAMAGE = 20.0f;
 const float NAGINATASTAB_RANGE = 5.0f;
-const float NAGINATASTAB_COOLDOWN = 4.0f;
+const float NAGINATASTAB_COOLDOWN = 2.0f;
 const float NAGINATASTAB_GLOBAL_COOLDOWN = 1.5f;
 const float NAGINATASTAB_DURATION = 1.5f;
 // Bounding Box
@@ -137,10 +137,10 @@ const float STICKY_TRAP_SLOW_PRECENTAGE = 0.5f;
 const float CHARACTER_KATANA_SHURIKEN_HEALTH = 100.0f;
 const float CHARACTER_KATANA_SHURIKEN_SPEED = 10.0f;
 
-const float CHARACTER_TESSEN_HEALTH = 90.0f;
+const float CHARACTER_TESSEN_HEALTH = 110.0f;
 const float CHARACTER_TESSEN_SPEED = 12.0f;
 
-const float CHARACTER_NAGINATA_HEALTH = 95.0f;
+const float CHARACTER_NAGINATA_HEALTH = 115.0f;
 const float CHARACTER_NAGINATA_SPEED = 11.0f;
 
 ////////////////////////////////////////////////////////////////Character Variables
@@ -148,6 +148,9 @@ const float CHARACTER_NAGINATA_SPEED = 11.0f;
 
 const float PARTICLE_FIRE_SIZE_X = 0.3f;
 const float PARTICLE_FIRE_SIZE_Y = 0.3f;
+
+const float PARTICLE_FIRE_TORCH_SIZE_X = 0.2f;
+const float PARTICLE_FIRE_TORCH_SIZE_Y = 0.2f;
 
 const float PARTICLE_FIRE_SPARK_SIZE_X = 0.02f;
 const float PARTICLE_FIRE_SPARK_SIZE_Y = 0.02f;
@@ -173,5 +176,8 @@ const float PARTICLE_WORLDDUST_SIZE_Y = 0.05f;
 /////////////////////////////////////////////////////////////// Bounding Boxes
 // Sphere for character
 const float CHARACTER_ENEMY_BOUNDINGSPHERE = 1.0f;
+
+// Runes
+const float LOTUS_HEALTICK = 10.0f;
 
 #endif

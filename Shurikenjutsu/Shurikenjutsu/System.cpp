@@ -6,7 +6,7 @@
 #include "GUIManager.h"
 #include "ChooseState.h"
 #include "MenuState.h"
-#include "PlayingStateTest.h"
+#include "PlayingState.h"
 #include "Camera.h"
 #include "GameState.h"
 #include "..\CommonLibs\ModelLibrary.h"
@@ -29,7 +29,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	// Set default game state.
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
-	m_playingState = new PlayingStateTest();
+	m_playingState = new PlayingState();
 	m_gameState = m_menuState;
 
 	// Set starting window values.
@@ -142,6 +142,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('v'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('r'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('o'));
+	InputManager::GetInstance()->RegisterKey(VkKeyScan('m'));
 	InputManager::GetInstance()->RegisterKey(VK_UP);
 	InputManager::GetInstance()->RegisterKey(VK_LEFT);
 	InputManager::GetInstance()->RegisterKey(VK_DOWN);
@@ -149,6 +150,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_ESCAPE);
 	InputManager::GetInstance()->RegisterKey(VK_TAB);
 	InputManager::GetInstance()->RegisterKey(VK_F1);
+	InputManager::GetInstance()->RegisterKey(VK_SPACE);
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
@@ -183,6 +185,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	{
 		return false;
 	}
+
+	GLOBAL::GetInstance().VOLUME_ON = true;
 
 	return true;
 }
@@ -309,6 +313,19 @@ void System::Run()
 // Update game logic here.
 void System::Update()
 {
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('m')))
+	{
+		if (GLOBAL::GetInstance().VOLUME_ON)
+		{
+			GLOBAL::GetInstance().VOLUME_ON = false;
+			m_sound->MuteEverything();
+		}
+		else
+		{
+			GLOBAL::GetInstance().VOLUME_ON = true;
+			m_sound->UnMuteEverything();
+		}
+	}
 	// Update the timer to enable delta time and FPS measurements.
 	m_timer->Update();
 
@@ -416,6 +433,7 @@ void System::Render()
 	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
 	ParticleRenderer::GetInstance()->Render();
+	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
 
 	// The need to switch back to the original depth stencil state is not needed yet, since GUI switches it to be completely off
 

@@ -16,6 +16,8 @@
 #include "Sound.h"
 #include "PlayerManager.h"
 #include "PointLights.h"
+#include "MenuButton.h"
+#include "ScoreBoard.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -35,28 +37,34 @@ void ChooseState::operator delete(void* p_p)
 
 bool ChooseState::Initialize()
 {
+	m_redTeamScore = new GUIText();
+	m_blueTeamScore = new GUIText();
+	m_blueTeam = new TeamTable();
+	m_redTeam = new TeamTable();
+	m_title = new MenuItem(); 
+	m_tintedBackground = new MenuItem();
+	m_chooseNinja = new Menu();
+	m_questionMark = new MenuItem();
+
 	m_currentTeam = CURRENTTEAM_NONE;
 	m_isRandoming = false;
 	m_screenHeight = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	m_screenWidth = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
 	m_portraitHeight = 200.0f;
 	m_portraitWidth = 200.0f;
-	m_buttonWidth = m_screenWidth / 4.27f;
-	m_buttonHeight = m_screenHeight / 10.24f; 
-	m_nextWidth = m_screenWidth / 12.80f;
-	m_nextHeight = m_screenHeight / 10.24f;
-	m_toolWidth = m_nextWidth * 0.5f;
-	m_toolHeight = m_nextHeight * 0.5f;
-	nrOfNinjas = 3;
-	currentNinja = 0;
-	nrOfTools = 3;
-	currentTool = 0;
-	m_redTeamScore = new GUIText();
-	m_blueTeamScore = new GUIText();
-	m_redTeamScore->Initialize("0", 50.0f, -m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xff0000ff);
-	m_blueTeamScore->Initialize("0", 50.0f, m_screenWidth * 0.1f, m_screenHeight * 0.33f, 0xffff0000);
-	
-	
+	m_buttonWidth = 300.0f;
+	m_buttonHeight = 100.0f; 
+	m_nextWidth = 100.0f;
+	m_nextHeight = 100.0f;
+	m_toolWidth = 50.0f;
+	m_toolHeight = 50.0f;
+	m_nrOfNinjas = 3;
+	m_currentNinja = 0;
+	m_nrOfTools = 3;
+	m_currentTool = 0;
+	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
+	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
+		
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f + offset;
 	float toolCycleHeight = m_toolHeight*0.5f - m_buttonHeight*0.5f- 150.0f;
@@ -64,14 +72,8 @@ bool ChooseState::Initialize()
 	float toolButtonSize = m_screenHeight / 20.48f;
 	float toolButtonXPos = m_screenHeight / 18.29f;
 
-	m_blueTeam = new TeamTable();
-	m_redTeam = new TeamTable();
 	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f, 1);
 	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f, 2);
-	m_title = new MenuItem(); 
-	m_tintedBackground = new MenuItem();
-	m_chooseNinja = new Menu();
-	m_questionMark = new MenuItem();
 	m_tintedBackground->Initialize(0.0f, 0.0f, m_screenWidth, m_screenHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/bgTint.png"));
 	m_title->Initialize(0.0f, m_screenHeight / 2.0f - m_buttonHeight * 0.5f, m_buttonWidth * 2.0f, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/chooseButton.png"));
 	//the questionmark
@@ -85,9 +87,10 @@ bool ChooseState::Initialize()
 	
 	// back button
 	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + m_buttonWidth * 0.5f + offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
-
+	
 	// Play button
-	m_chooseNinja->AddButton(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
+	m_playButton = new MenuButton();
+	m_playButton->Initialize(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/play.png"), MENUACTION_PLAY);
 
 	// Random Ninja button
 	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/randomButton.png"), MENUACTION_RANDOM_NINJA);
@@ -132,11 +135,9 @@ bool ChooseState::Initialize()
 	m_abilityDescription[1]->Initialize(2);
 	m_abilityDescription[2]->Initialize(3);
 
-
 	m_camera = new Camera();
 	m_camera->Initialize();
 	m_camera->ResetCamera();
-
 
 	// Load the level.
 	Level level(LEVEL_NAME);
@@ -149,9 +150,7 @@ bool ChooseState::Initialize()
 	m_directionalLight.m_ambient = DirectX::XMVectorSet(0.18f*0.25, 0.34f*0.25, 0.48f*0.25, 1.0f);
 	m_directionalLight.m_diffuse = DirectX::XMVectorSet(0.18f, 0.34f, 0.48f, 1.0f);
 	m_directionalLight.m_specular = DirectX::XMVectorSet(0.77f, 0.94f, 0.94f, 1.0f);
-	DirectX::XMFLOAT4 direction = DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 1.0f);
-	DirectX::XMStoreFloat4(&direction, DirectX::XMVector3TransformNormal(DirectX::XMLoadFloat4(&direction), DirectX::XMLoadFloat4x4(&m_camera->GetViewMatrix())));
-	m_directionalLight.m_direction = DirectX::XMVector3Normalize(DirectX::XMLoadFloat4(&direction));
+	m_directionalLight.m_direction = DirectX::XMLoadFloat4(&DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f));
 
 	m_frustum = new Frustum();
 	m_frustum->ConstructFrustum(1000, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
@@ -161,12 +160,20 @@ bool ChooseState::Initialize()
 	m_playerManager->Initialize(true);
 	m_playerManager->UpdateFrustum(m_frustum);
 
+	// Initialize the score board
+	ScoreBoard::GetInstance()->Initialize();
+
 	return true;
 }
 
 void ChooseState::Shutdown()
 {
-
+	if (m_playButton != nullptr)
+	{
+		m_playButton->Shutdown();
+		delete m_playButton;
+		m_playButton = nullptr;
+	}
 	if (m_tintedBackground != nullptr)
 	{
 		m_tintedBackground->Shutdown();
@@ -281,6 +288,8 @@ void ChooseState::Shutdown()
 		delete m_questionMark;
 		m_questionMark = nullptr;
 	}
+
+	ScoreBoard::GetInstance()->Shutdown();
 }
 
 void ChooseState::ShutdownExit()
@@ -301,6 +310,9 @@ GAMESTATESWITCH ChooseState::Update()
 	// Update Camera position
 	m_camera->MenuCameraRotation();
 
+	m_objectManager->UpdateFrustum(m_frustum);
+	m_playerManager->UpdateFrustum(m_frustum);
+
 	// Update Directional Light's camera position
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	m_playerManager->Update(true);
@@ -316,8 +328,8 @@ GAMESTATESWITCH ChooseState::Update()
 	}
 	else
 	{
-		m_abilityDescription[currentNinja]->Update();
-		m_toolDescription[currentTool]->Update();
+		m_abilityDescription[m_currentNinja]->Update();
+		m_toolDescription[m_currentTool]->Update();
 	}
 	UpdateTeams();
 
@@ -350,21 +362,6 @@ GAMESTATESWITCH ChooseState::Update()
 	
 	switch (action.m_action)
 	{
-	case MENUACTION_PLAY:
-		if (m_currentTeam == CURRENTTEAM_RED)
-		{
-			Network::GetInstance()->ChooseChar(currentNinja, currentTool, 1);
-		}
-		else if (m_currentTeam == CURRENTTEAM_BLUE)
-		{
-			Network::GetInstance()->ChooseChar(currentNinja, currentTool, 2);
-		}
-		else
-		{
-			Network::GetInstance()->ChooseChar(currentNinja, currentTool, 0);
-		}
-		return GAMESTATESWITCH_PLAY;
-		break;
 	case MENUACTION_BACK:
 			Network::GetInstance()->Disconnect();
 			return GAMESTATESWITCH_MENU;
@@ -406,19 +403,46 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		break;
 	case MENUACTION_RANDOM_NINJA:
-		if (m_isRandoming)
+		/*if (m_isRandoming)
 		{
 			m_isRandoming = false;
 		}
 		else
 		{
 			m_isRandoming = true;
-		}
-		//RandomNinja();
+		}*/
+		RandomNinja();	
 		break;
 	case MENUACTION_CLICKED_QUESTIONMARK:
 		m_currentTeam = CURRENTTEAM_NONE;
 		break;
+	}
+
+	ScoreBoard::GetInstance()->Update();
+
+	if (m_playButton->IsClicked())
+	{
+		if (!Network::GetInstance()->GetMatchOver())
+		{
+			if (m_currentTeam == CURRENTTEAM_RED)
+			{
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 1);
+			}
+			else if (m_currentTeam == CURRENTTEAM_BLUE)
+			{
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 2);
+			}
+			else
+			{
+				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
+			}
+			Network::GetInstance()->SetHaveUpdateNewLevel();
+			return GAMESTATESWITCH_PLAY;
+		}
+		else
+		{
+			return GAMESTATESWITCH_NONE;
+		}
 	}
 
 	return GAMESTATESWITCH_NONE;
@@ -463,7 +487,7 @@ void ChooseState::Render()
 	GraphicsEngine::GetInstance()->RenderSSAO();
 
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix());
+	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();
@@ -476,62 +500,67 @@ void ChooseState::Render()
 	m_tintedBackground->Render();
 	m_chooseNinja->Render();
 
-	m_ninjas[currentNinja]->Render();
-	m_tools[currentTool]->Render();
-	m_abilityDescription[currentNinja]->Render();
+	m_ninjas[m_currentNinja]->Render();
+	m_tools[m_currentTool]->Render();
+	m_abilityDescription[m_currentNinja]->Render();
 	m_redTeamScore->Render();
 	m_blueTeamScore->Render();
 	m_redTeam->Render();
 	m_blueTeam->Render();
 	m_questionMark->Render();
-	m_toolDescription[currentTool]->Render();
+	m_toolDescription[m_currentTool]->Render();
 	m_title->Render();
+
+	if (!Network::GetInstance()->GetMatchOver())
+	{
+		m_playButton->Render();
+	}
 }
 
 void ChooseState::NextNinja()
 {
-	currentNinja += 1;
-	if (currentNinja >= nrOfNinjas )
+	m_currentNinja += 1;
+	if (m_currentNinja >= m_nrOfNinjas)
 	{
-		currentNinja = 0;
+		m_currentNinja = 0;
 	}
 }
 
 void ChooseState::PrevNinja()
 {
-	currentNinja -= 1;
-	if (currentNinja < 0)
+	m_currentNinja -= 1;
+	if (m_currentNinja < 0)
 	{
-		currentNinja = nrOfNinjas - 1;
+		m_currentNinja = m_nrOfNinjas - 1;
 	}
 }
 
 void ChooseState::NextTool()
 {
-	currentTool += 1;
-	if (currentTool >= nrOfTools)
+	m_currentTool += 1;
+	if (m_currentTool >= m_nrOfTools)
 	{
-		currentTool = 0;
+		m_currentTool = 0;
 	}
 }
 
 void ChooseState::PrevTool()
 {
-	currentTool -= 1;
-	if (currentTool < 0)
+	m_currentTool -= 1;
+	if (m_currentTool < 0)
 	{
-		currentTool = nrOfTools - 1;
+		m_currentTool = m_nrOfTools - 1;
 	}
 }
 
 void ChooseState::EscapeIsPressed()
 {
-		Network::GetInstance()->Disconnect();
-	}
+	Network::GetInstance()->Disconnect();
+}
 
 void ChooseState::RandomNinja()
 {
-	std::srand((unsigned int)std::time(0));
-	currentTool = std::rand() % 3;
-	currentNinja = std::rand() % 3;
+	std::srand((unsigned int)std::time(NULL));
+	m_currentTool = std::rand() % 3;
+	m_currentNinja = std::rand() % 3;
 }

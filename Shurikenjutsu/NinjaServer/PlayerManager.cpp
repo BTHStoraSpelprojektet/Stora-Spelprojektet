@@ -38,6 +38,12 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_canSendDotDamage = true;
 	m_haveSentDotDamage = false;
 
+	m_hotIntervall = 3.0;
+	m_lastHotSent = 0.0;
+	m_canSendDotDamage = true;
+	m_haveSentDotDamage = false;
+
+
 	return true;
 }
 
@@ -60,12 +66,27 @@ void PlayerManager::Update(double p_deltaTime)
 	{
 		m_canSendDotDamage = false;
 		m_haveSentDotDamage = false;
-}
+	}
 	if (m_lastDotSent < 0)
 	{
 		m_lastDotSent = m_dotIntervall;
 		m_canSendDotDamage = true;
 	}
+
+	// Timer hot
+	m_lastHotSent -= p_deltaTime;
+	if (m_haveSentHotDamage)
+	{
+		m_canSendHotDamage = false;
+		m_haveSentHotDamage = false;
+	}
+	if (m_lastHotSent < 0)
+	{
+		m_lastHotSent = m_hotIntervall;
+		m_canSendHotDamage = true;
+	}
+
+	HealPlayer();
 }
 
 std::vector<PlayerNet> PlayerManager::GetPlayers()
@@ -73,7 +94,7 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 	return m_players;
 }
 
-void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team)
+void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team)
 {
 	if (p_charNr == 0)
 	{
@@ -91,6 +112,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	PlayerNet player;
 	player.guid = p_guid;
 	player.id = GetIdForPlayer();
+	player.name = p_name;
 	if (p_team == 0)
 	{
 		player.team = GetTeamForPlayer();
@@ -132,8 +154,13 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_too
 	player.maxHP = m_playerHealth;
 	player.currentHP = m_playerHealth;
 	player.isAlive = true;
+	player.invis = false;
 	player.dotDamage = 0.0f;
+	player.hotHeal = 0.0f;
 	player.toolNr = p_toolNr;
+	player.kills = 0;
+	player.deaths = 0;
+	player.shield = 0.0f;
 	m_players.push_back(player);
 	
 	ConsolePrintText("New player joined.");
@@ -221,6 +248,7 @@ void PlayerManager::BroadcastPlayers()
 	{
 		bitStream.Write(m_players[i].guid);
 		bitStream.Write(m_players[i].id);
+		bitStream.Write(m_players[i].name);
 		bitStream.Write(m_players[i].x);
 		bitStream.Write(m_players[i].y);
 		bitStream.Write(m_players[i].z);
@@ -232,7 +260,11 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].maxHP);
 		bitStream.Write(m_players[i].currentHP);
 		bitStream.Write(m_players[i].isAlive);
+		bitStream.Write(false);
 		bitStream.Write(m_players[i].toolNr);
+		bitStream.Write(m_players[i].deaths);
+		bitStream.Write(m_players[i].kills);
+		bitStream.Write(m_players[i].shield);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
@@ -342,7 +374,7 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	return boundingBoxes;
 }
 
-void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager)
+void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
 	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
@@ -387,7 +419,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		case ABILITIES_MEGASHURIKEN:
 		{
 			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
-			p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
+			p_shurikenManager.AddMegaShuriken(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ, p_deltaTime);
 			break;
 		}
 
@@ -432,7 +464,7 @@ void PlayerManager::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_readAb
 		case ABILITIES_FANBOOMERANG:
 		{
 			SendPlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
-			p_fanBoomerang.Add(p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
+			p_fanBoomerang.Add(p_deltaTime, p_guid, m_players[index].x, m_players[index].y + 2.0f, m_players[index].z, m_players[index].dirX, m_players[index].dirY, m_players[index].dirZ);
 			break;
 		}
 
@@ -514,31 +546,42 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 	{
 		if (m_players[i].guid == p_defendingGuid)
 		{
-			m_players[i].currentHP -= p_damage;
-			if (m_players[i].currentHP <= 0)
+			m_players[i].hotHeal = 0.0f;
+			if (m_players[i].shield > 0.0f)
 			{
-				m_players[i].isAlive = false;
-				if (m_players[i].charNr == 1){
-					SendPlaySound(PLAYSOUND_FEMALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
-				}
-				else{
-					SendPlaySound(PLAYSOUND_MALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
-				}
+				// Shield active
+				// Play Shield sound, now it will play hurt sound
+				m_players[i].shield = 0.0f;
 				
-				// Loop throu players to get ninja nr
-				for (unsigned int j = 0; j < m_players.size(); j++)
+			}
+			else
+			{
+				m_players[i].currentHP -= p_damage;
+				if (m_players[i].currentHP <= 0)
 				{
-					if (m_players[j].guid == p_attackingGuid)
+					m_players[i].isAlive = false;
+					if (m_players[i].charNr == 1){
+						SendPlaySound(PLAYSOUND_FEMALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+					}
+					else{
+						SendPlaySound(PLAYSOUND_MALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+					}
+
+					// Loop throu players to get ninja nr
+					for (unsigned int j = 0; j < m_players.size(); j++)
 					{
-						// Send to deathboard
-						DeathBoard(m_players[i].charNr, m_players[j].charNr, p_usedAbility);
-						// Send to scoreboard
-						ScoreBoard(m_players[i].guid, m_players[j].guid);
-						break;
+						if (m_players[j].guid == p_attackingGuid)
+						{
+							// Send to deathboard
+							DeathBoard(m_players[i].guid, m_players[j].guid, p_usedAbility);
+							// Send to scoreboard
+							ScoreBoard(m_players[i].guid, m_players[j].guid);
+							break;
+						}
 					}
 				}
+				UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			}
-			UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			if (!p_suddenDeathDamage)
 			{
 				SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
@@ -549,6 +592,27 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 			}
 			else{
 				SendPlaySound(PLAYSOUND_MALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
+			}
+		}
+	}
+}
+
+void PlayerManager::HealPlayer()
+{
+	if (m_canSendHotDamage)
+	{
+		for (unsigned int i = 0; i < m_players.size(); i++)
+		{
+			if (m_players[i].hotHeal > 0.0)
+			{
+					m_players[i].currentHP += m_players[i].hotHeal;
+					if (m_players[i].currentHP > m_players[i].maxHP)
+					{
+						m_players[i].currentHP = m_players[i].maxHP;
+						m_players[i].hotHeal = 0.0;
+					}
+					UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
+					m_haveSentHotDamage = true;
 			}
 		}
 	}
@@ -578,7 +642,7 @@ void PlayerManager::UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool
 
 }
 
-void PlayerManager::DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES p_usedAbility)
+void PlayerManager::DeathBoard(RakNet::RakNetGUID p_TakerNinja, RakNet::RakNetGUID p_AttackerNinja, ABILITIES p_usedAbility)
 {
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_DEATHBOARDKILL);
@@ -591,9 +655,29 @@ void PlayerManager::DeathBoard(int p_TakerNinja, int p_AttackerNinja, ABILITIES 
 void PlayerManager::ScoreBoard(RakNet::RakNetGUID p_deadID, RakNet::RakNetGUID p_killerID)
 {
 	RakNet::BitStream bitStream;
+	int kills, deaths = 0;
+
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_killerID)
+		{
+			if (p_killerID != p_deadID)
+			{
+				m_players[i].kills += 1;
+			}
+			kills = m_players[i].kills;
+		}
+		if (m_players[i].guid == p_deadID)
+		{
+			m_players[i].deaths += 1;
+			deaths = m_players[i].deaths;
+		}
+	}
 	bitStream.Write((RakNet::MessageID)ID_SCOREBOARDKILL);
 	bitStream.Write(p_deadID);
 	bitStream.Write(p_killerID);
+	bitStream.Write(deaths);
+	bitStream.Write(kills);
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
@@ -707,6 +791,18 @@ void PlayerManager::SendPlaySound(PLAYSOUND sound, float p_x, float p_y, float p
 	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
+void PlayerManager::SendPlayAmbientSound(PLAYSOUND sound, float p_x, float p_y, float p_z)
+{
+	RakNet::BitStream wBitStream;
+	wBitStream.Write((RakNet::MessageID)ID_PLAY_AMBIENT_SOUND);
+	wBitStream.Write(sound);
+	wBitStream.Write(p_x);
+	wBitStream.Write(p_y);
+	wBitStream.Write(p_z);
+
+	m_serverPeer->Send(&wBitStream, MEDIUM_PRIORITY, UNRELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
 void PlayerManager::SendPlayerPosAndDir()
 {
 	for (unsigned int i = 0; i < m_players.size(); i++)
@@ -779,4 +875,37 @@ int PlayerManager::GetIdForPlayer()
 	} while (idTaken);
 
 	return id;
+}
+
+void PlayerManager::RuneLotusPickedUp(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			m_players[i].hotHeal = LOTUS_HEALTICK;
+		}
+	}
+}
+
+void PlayerManager::RuneInvisPickedUp(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			m_players[i].invis = true;
+		}
+	}
+}
+
+void PlayerManager::RuneShieldPickedUp(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			m_players[i].shield = 1.0f;
+		}
+	}
 }

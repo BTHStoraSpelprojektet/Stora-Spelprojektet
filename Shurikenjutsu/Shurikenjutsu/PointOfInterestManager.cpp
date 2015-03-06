@@ -22,6 +22,10 @@ bool PointOfInterestManager::Initialize()
 
 void PointOfInterestManager::Shutdown()
 {
+	for(unsigned int i = 0; i < m_runes.size(); i++)
+	{
+		m_runes[i].Shutdown();
+	}
 	m_runes.clear();
 }
 
@@ -58,23 +62,23 @@ void PointOfInterestManager::RenderDepth()
 	}
 }
 
-void PointOfInterestManager::SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z)
+void PointOfInterestManager::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
 {
 	PointOfInterest temp;
 	
 	switch (p_poiType)
 	{
-	case PointOfInterestType_Heal:
+	case POINTOFINTERESTTYPE_HEAL:
 		temp.Initialize(RUNE_LOTUS, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
 		temp.SetActive(true);
 		m_runes.push_back(temp);
 		break;
-	case PointOfInterestType_Invisible:
+	case POINTOFINTERESTTYPE_INVISIBLE:
 		temp.Initialize(RUNE_INVIS, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
 		temp.SetActive(true);
 		m_runes.push_back(temp);
 		break;
-	case PointOfInterestType_Shield:
+	case POINTOFINTERESTTYPE_SHIELD:
 		temp.Initialize(RUNE_SHIELD, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f);
 		temp.SetActive(true);
 		m_runes.push_back(temp);
@@ -84,17 +88,21 @@ void PointOfInterestManager::SpawnRunes(PointOfInterestType p_poiType, float p_x
 	}
 }
 
-void PointOfInterestManager::RunePickedUp(PointOfInterestType p_poiType)
+void PointOfInterestManager::RunePickedUp(POINTOFINTERESTTYPE p_poiType)
 {
+	if (m_runes.size() == 0)
+	{
+		return;
+	}
 	switch (p_poiType)
 	{
-	case PointOfInterestType_Heal:
+	case POINTOFINTERESTTYPE_HEAL:
 		m_runes[0].SetActive(false);
 		break;
-	case PointOfInterestType_Invisible:
+	case POINTOFINTERESTTYPE_INVISIBLE:
 		m_runes[1].SetActive(false);
 		break;
-	case PointOfInterestType_Shield:
+	case POINTOFINTERESTTYPE_SHIELD:
 		m_runes[2].SetActive(false);
 		break;
 	default:

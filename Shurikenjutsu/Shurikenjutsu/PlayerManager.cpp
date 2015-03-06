@@ -17,7 +17,7 @@ bool PlayerManager::Initialize(bool p_inMenu)
 	m_enemyList = NULL;
 	if (!p_inMenu)
 	{
-		AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+		AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), Network::GetInstance()->GetMyPlayer().name.C_String());
 	}
 	return true;
 }
@@ -83,7 +83,7 @@ void PlayerManager::Update(bool p_inMenu)
 				{
 					// Add player
 					AddEnemy(enemyPlayers[i].guid, enemyPlayers[i].charNr, DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z), 
-						DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX));
+					DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirX, enemyPlayers[i].dirX), enemyPlayers[i].name.C_String());
 				}
 			}
 
@@ -97,6 +97,7 @@ void PlayerManager::Update(bool p_inMenu)
 			m_enemyList[i]->SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i]->SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
+			m_enemyList[i]->SetInvis(enemyPlayers[i].invis);
 			m_enemyList[i]->Update();
 
 			if (m_enemyList[i]->m_soundEmitter != NULL) {
@@ -121,11 +122,14 @@ void PlayerManager::Render(bool p_inMenu)
 	{
 		if (m_frustum->CheckSphere(m_enemyList[i]->GetFrustumSphere(), 1.0f))
 		{
-			if (!p_inMenu || !Network::GetInstance()->GetMatchOver())
+			if (!p_inMenu && !Network::GetInstance()->GetMatchOver())
 			{
 				if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 				{
-					m_enemyList[i]->Render();
+					if (!m_enemyList[i]->IsInvis())
+					{
+						m_enemyList[i]->Render();
+					}
 				}
 			}
 			else
@@ -144,19 +148,22 @@ void PlayerManager::RenderOutliningPassOne()
 void PlayerManager::RenderDepth(bool p_inMenu)
 {
 	if (!p_inMenu)
-{
-	m_player->RenderDepth();
+	{
+		m_player->RenderDepth();
 	}
 
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
 		if (!p_inMenu)
 		{
-		if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
-		{
-			m_enemyList[i]->RenderDepth();
+			if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			{
+				if (!m_enemyList[i]->IsInvis())
+				{
+					m_enemyList[i]->RenderDepth();
+				}
+			}
 		}
-	}
 		else
 		{
 			m_enemyList[i]->RenderDepth();
@@ -169,7 +176,7 @@ void PlayerManager::RenderOutliningPassTwo()
 	m_player->RenderOutlining();
 }
 
-void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name)
 {
 	switch (p_charNr)
 	{
@@ -177,7 +184,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 	{
 		KatanaNinja *tempPlayer = new KatanaNinja();
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
 		break;
@@ -186,7 +193,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 	{
 		TessenNinja *tempPlayer = new TessenNinja();
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
 		break;
@@ -196,7 +203,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 		// Todo change to ninja 3
 		NaginataNinja *tempPlayer = new NaginataNinja();
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
 		break;
@@ -206,7 +213,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 		// Todo change to ninja 4
 		KatanaNinja *tempPlayer = new KatanaNinja();
 		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
 		m_player = tempPlayer;
 		m_player->SendPosition(m_player->GetPosition());
 		break;
@@ -215,7 +222,7 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 	
 }
 
-void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction)
+void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name)
 {
 	switch (p_charNr)
 	{
@@ -230,7 +237,7 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 		tempPlayer->m_soundEmitter.m_z = p_pos.z;
 		m_sound->PlayAmbientSound(&tempPlayer->m_soundEmitter);*/
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
 
@@ -243,7 +250,7 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 
 		tempPlayer->SetSound(m_sound);
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_TESSEN_HEALTH);
 		
@@ -257,7 +264,7 @@ void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::X
 
 		tempPlayer->SetSound(m_sound);
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr);
+		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name);
 		tempPlayer->SetGuID(p_guid);
 		tempPlayer->SetMaxHealth(CHARACTER_NAGINATA_HEALTH);
 		
@@ -461,26 +468,41 @@ void PlayerManager::RemoveEnemyFromList(unsigned int p_index)
 	m_enemyListSize--;
 }
 
-DirectX::XMFLOAT3 PlayerManager::GetTeamMemberPosSpectate(int &p_index, int p_team)
+//DirectX::XMFLOAT3 PlayerManager::GetTeamMemberPosSpectate(int &p_index, int p_team)
+//{
+//	for (unsigned int i = 0; i < m_enemyListSize; i++)
+//	{
+//		if (m_enemyListSize <= (unsigned int)p_index || p_index == -1)
+//		{
+//			p_index = -1;
+//			return m_player->GetPosition();
+//		}
+//
+//		if (m_enemyList[p_index]->GetTeam() == p_team)
+//		{
+//			return m_enemyList[p_index]->GetPosition();
+//		}
+//		p_index++;
+//	}
+//
+//	return m_player->GetPosition();
+//}
+
+std::vector<Player*> PlayerManager::GetMyTeamPlayers(int p_team)
 {
+	std::vector<Player*> tempList;
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
-		if (m_enemyListSize <= (unsigned int)p_index || p_index == -1)
+		if (m_enemyList[i]->GetIsAlive())
 		{
-			p_index = -1;
-			return m_player->GetPosition();
+			if (m_enemyList[i]->GetTeam() == p_team)
+			{
+				tempList.push_back(m_enemyList[i]);
+			}
 		}
-
-		if (m_enemyList[p_index]->GetTeam() == p_team)
-		{
-			return m_enemyList[p_index]->GetPosition();
-		}
-		p_index++;
 	}
-
-	return m_player->GetPosition();
+	return tempList;
 }
-
 bool PlayerManager::GetPlayerIsAlive()
 {
 	return m_player->GetIsAlive();

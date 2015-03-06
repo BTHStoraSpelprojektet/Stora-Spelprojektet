@@ -1,7 +1,7 @@
 #include "Sound.h"
 #include <iostream>
 #include "fmod_errors.h"
-
+#include "Globals.h"
 #include "../CommonLibs/CommonStructures.h"
 Sound::Sound(){}
 Sound::~Sound(){}
@@ -38,7 +38,7 @@ bool Sound::Initialize()
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/AirCut.wav", FMOD_MODE, 0, &m_airCutSound);
 	FMODErrorCheck(m_result);
 
-	m_result = m_system->createSound("../Shurikenjutsu/Sound/DashGrassSteps.wav", FMOD_MODE, 0, &m_dashStepsSound);
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/DashWoosh.wav", FMOD_MODE, 0, &m_dashStepsSound);
 	FMODErrorCheck(m_result);
 
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/ShurikenThrow.wav", FMOD_MODE, 0, &m_shurikenThrowSound);
@@ -117,6 +117,9 @@ bool Sound::Initialize()
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/CountdownBeep.wav", FMOD_2D, 0, &m_countdownBeep);
 	FMODErrorCheck(m_result);
 
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/CountdownGong.wav", FMOD_2D, 0, &m_countdownGong);
+	FMODErrorCheck(m_result);
+
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneInvisibility.wav", FMOD_MODE, 0, &m_runeInvisibility);
 	FMODErrorCheck(m_result);
 
@@ -173,6 +176,9 @@ bool Sound::Initialize()
 		m_result = m_system->getDriverInfo(0, m_name, 256, 0, 0, &m_speakerMode, 0);
 	}*/
 
+
+	m_musicVolume = 0.7f;
+	m_defaultWindVolume = 0.2f;
 	return true;
 }
 
@@ -197,7 +203,8 @@ void Sound::Shutdown()
 	m_system->release();
 }
 
-void Sound::Update(){
+void Sound::Update()
+{
 	GarbageCollectOldSounds();
 	m_system->update();
 }
@@ -216,7 +223,8 @@ void Sound::FMODErrorCheck(FMOD_RESULT p_result)
 	}
 }
 
-void Sound::StopMusic(){
+void Sound::StopMusic()
+{
 	bool* isPLaying = new bool;
 	
 	musicChannel->isPlaying(isPLaying);
@@ -227,11 +235,13 @@ void Sound::StopMusic(){
 	delete isPLaying;
 }
 
-void Sound::StartMusic(){
+void Sound::StartMusic()
+{
 	bool* isPLaying = new bool;
 
 	musicChannel->isPlaying(isPLaying);
-	if (!*isPLaying){
+	if (!*isPLaying)
+	{
 		PlayBackgroundSound(PLAYSOUND_BACKGROUND_SOUND);
 	}
 
@@ -451,6 +461,13 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 		m_system->playSound(m_countdownBeep, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}
+	case PLAYSOUND_COUNTDOWN_GONG_SOUND:
+	{
+		m_countdownGong->setMode(FMOD_LOOP_OFF);
+		m_countdownGong->setLoopCount(1);
+		m_system->playSound(m_countdownGong, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
 	case PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND:
 	{
 		m_runeInvisibilitySpawn->setMode(FMOD_LOOP_OFF);
@@ -493,6 +510,27 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 		m_system->playSound(m_runeShieldPickup, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}
+	case PLAYSOUND_RUNE_SHIELD_SOUND:
+	{
+		m_runeShield->setMode(FMOD_LOOP_NORMAL);
+		m_runeShield->setLoopCount(-1);
+		m_system->playSound(m_runeShield, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_HEAL_SOUND:
+	{
+		m_runeHeal->setMode(FMOD_LOOP_NORMAL);
+		m_runeHeal->setLoopCount(-1);
+		m_system->playSound(m_runeHeal, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
+	case PLAYSOUND_RUNE_INVISIBLE_SOUND:
+	{
+		m_runeInvisibility->setMode(FMOD_LOOP_NORMAL);
+		m_runeInvisibility->setLoopCount(-1);
+		m_system->playSound(m_runeInvisibility, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
 	default:
 	{
 		break;
@@ -506,12 +544,12 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 	//if (p_initialVolume > 1.0f){
 //		p_initialVolume = 1.0f;
 	//}
-	p_soundEmitter->m_channel->setVolume(1.0f);
+	p_soundEmitter->m_channel->setVolume(m_musicVolume);
 	p_soundEmitter->m_channel->setPaused(false);
 	p_soundEmitter->m_channel->set3DAttributes(&p_soundEmitter->m_pos, NULL, NULL);
 }
 
-void Sound::CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
+Sound::SoundEmitter* Sound::CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z)
 {
 	SoundEmitter* soundEmitter = new SoundEmitter;
 	soundEmitter->m_playSound = p_playSound;
@@ -525,7 +563,7 @@ void Sound::CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, floa
 
 	defaultSoundEmitters.push_back(soundEmitter);
 	PlayDefaultSound(soundEmitter);
-
+	return soundEmitter;
 }
 
 void Sound::GarbageCollectOldSounds(){
@@ -564,8 +602,8 @@ Sound::SoundEmitter* Sound::CreateAmbientSound(PLAYSOUND p_playSound, float p_x,
 	soundEmitter->m_pos.y = p_y;
 	soundEmitter->m_pos.z = p_z;
 
-	PlayAmbientSound(soundEmitter);
 
+	PlayAmbientSound(soundEmitter);
 	ambientSoundEmitters.push_back(soundEmitter);
 
 	return soundEmitter;
@@ -592,15 +630,21 @@ void Sound::UpdateAmbientSound(float p_player_x, float p_player_y, float p_playe
 	}
 }
 
-void Sound::StopAmbientSound(SoundEmitter* p_soundEmitter){
-	p_soundEmitter->isPlaying = false;
+void Sound::StopAmbientSound(SoundEmitter* p_soundEmitter)
+{
+	if (p_soundEmitter != NULL)
+	{
+		p_soundEmitter->isPlaying = false;
+	}
 }
 
-void Sound::StartAmbientSound(SoundEmitter* p_soundEmitter){
+void Sound::StartAmbientSound(SoundEmitter* p_soundEmitter)
+{
 	p_soundEmitter->isPlaying = true;
 }
 
-void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume){
+void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume)
+{
 	switch (p_soundEmitter->m_playSound)
 	{
 	case PLAYSOUND_FIRE_SOUND:
@@ -631,27 +675,6 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 		m_system->playSound(m_stepsLeavesSound, channelAmbient, true, &p_soundEmitter->m_channel);
 		break;
 	}
-	case PLAYSOUND_RUNE_SHIELD_SOUND:
-	{
-		m_runeShield->setMode(FMOD_LOOP_OFF);
-		m_runeShield->setLoopCount(1);
-		m_system->playSound(m_runeShield, channelEffects, true, &p_soundEmitter->m_channel);
-		break;
-	}
-	case PLAYSOUND_RUNE_HEAL_SOUND:
-	{
-		m_runeHeal->setMode(FMOD_LOOP_OFF);
-		m_runeHeal->setLoopCount(1);
-		m_system->playSound(m_runeHeal, channelEffects, true, &p_soundEmitter->m_channel);
-		break;
-	}
-	case PLAYSOUND_RUNE_INVISIBLE_SOUND:
-	{
-		m_runeInvisibility->setMode(FMOD_LOOP_OFF);
-		m_runeInvisibility->setLoopCount(1);
-		m_system->playSound(m_runeInvisibility, channelEffects, true, &p_soundEmitter->m_channel);
-		break;
-	}
 	default:
 	{
 		break;
@@ -668,7 +691,6 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 	p_soundEmitter->m_channel->setVolume(0.0f);
 	p_soundEmitter->m_channel->setPaused(false);
 }
-
 void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
 
 	//If wind always same volume
@@ -695,4 +717,21 @@ void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
 		p_soundEmitter->m_channel->setVolume(0.0f);
 		p_soundEmitter->m_channel->setPaused(false);
 	}
+}
+
+void Sound::MuteEverything()
+{
+	masterChannelGroup->setMute(true);
+	channelEffects->setMute(true);
+	channelAmbient->setMute(true);
+	channelMusic->setMute(true);
+
+
+}
+void Sound::UnMuteEverything()
+{
+	masterChannelGroup->setMute(false);
+	channelEffects->setMute(false);
+	channelAmbient->setMute(false);
+	channelMusic->setMute(false);
 }

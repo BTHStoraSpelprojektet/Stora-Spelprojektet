@@ -13,5 +13,9 @@ float4 main(PixelInput p_input) : SV_TARGET
 	// Combine the texture color and the particle color to get the final pixel.
 	float4 pixel = (m_texture.Sample(m_sampler, p_input.m_UV)) * p_input.m_color;
 
+	float uvLength = length(p_input.m_UV - 0.5f);
+	float alpha = 1.0f - smoothstep(0.0f, 0.5f, uvLength);
+	pixel *= alpha;
+
 	return pixel;
 }

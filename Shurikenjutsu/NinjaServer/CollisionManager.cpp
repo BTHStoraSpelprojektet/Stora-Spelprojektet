@@ -93,7 +93,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 
 			if (angle < attackAngle)
 			{
-				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos))
+				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos, true))
 				{
 					// Damage the player
 					p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid, p_ability, false);
@@ -778,17 +778,17 @@ void CollisionManager::WhipPrimaryAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		{
 			if (distance <= WHIP_RANGE)
 			{
-				if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+				if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z), true))
 				{
-				// Damage the player
+					// Damage the player
 					p_playerManager->DamagePlayer(playerList[i].guid, WHIP_DAMAGE, attackingPlayer.guid, ABILITIES_WHIP_PRIMARY, false);
 
-				if (whipRay != nullptr)
-				{
-					delete whipRay;
-					whipRay = nullptr;
-				}
-				break;
+					if (whipRay != nullptr)
+					{
+						delete whipRay;
+						whipRay = nullptr;
+					}
+					break;
 				}
 			}
 		}
@@ -831,7 +831,7 @@ void CollisionManager::WhipSecondaryAttack(RakNet::RakNetGUID p_guid, PlayerMana
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackPosition, WHIP_SP_RANGE, spherePosition, 1.0f))
 		{
-			if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+			if (!IntersectingObjectWhenAttacking(attackPosition, DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z), true))
 			{
 				// Damage the player
 				p_playerManager->DamagePlayer(playerList[i].guid, WHIP_SP_DAMAGE, attackingPlayer.guid, ABILITIES_WHIP_SECONDARY, false);
@@ -899,7 +899,7 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 				// Make collision test
 				if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
 				{
-					if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z)))
+					if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z), true))
 					{
 						// Damage the player
 						if (playerList[i].dotDamage > 1.0f && p_playerManager->CanSendDotDamage())
@@ -928,42 +928,38 @@ void CollisionManager::SetDeltaTime(float p_deltaTime)
 {
 	m_deltaTime = p_deltaTime;
 }
-void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager, std::vector<Box> p_boxList, std::vector<int> p_inactiveBoxIndexes)
+void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager)
 {
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+
 	for (unsigned int i = 0; i < playerList.size(); i++)
 	{
-		if (!DoesIndexExistInList(i, p_inactiveBoxIndexes))
+		if (playerList[i].isAlive)
 		{
-			if (playerList[i].isAlive)
-			{
-				Sphere playerSphere = Sphere(playerList[i].x, playerList[i].y, playerList[i].z, CHARACTER_ENEMY_BOUNDINGSPHERE);
+			Sphere playerSphere = Sphere(playerList[i].x, playerList[i].y, playerList[i].z, CHARACTER_ENEMY_BOUNDINGSPHERE);
 
-				std::vector<Box> damageBox = p_boxList;
-				for (unsigned int j = 0; j < damageBox.size(); j++)
+			if (playerList[i].x > 12.0f || playerList[i].x < -12.0f || playerList[i].z > 12.0f || playerList[i].z < -12.0f)
+			{
+				// Damage the player
+				if (playerList[i].dotDamage > 2.0f && p_playerManager->CanSendDotDamage())
 				{
-					if (IntersectionTests::Intersections::SphereBoxCollision(playerSphere.m_position, playerSphere.m_radius, damageBox[j].m_center, damageBox[j].m_extents))
-					{
-						// Damage the player
-						if (playerList[i].dotDamage > 2.0f && p_playerManager->CanSendDotDamage())
-						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
-							p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, playerList[i].guid, ABILITIES_SMOKEBOMB, true);
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
-						}
-						else
-						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
-						}
-						break;
-					}
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
+					p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, playerList[i].guid, ABILITIES_SMOKEBOMB, true);
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
 				}
+
+				else
+				{
+					p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
+				}
+
+				break;
 			}
 		}
 	}
 }
-//Private
 
+//Private
 bool CollisionManager::DoesIndexExistInList(int p_index, std::vector<int> p_list)
 {
 	for (unsigned int i = 0; i < p_list.size(); i++)
@@ -1003,7 +999,7 @@ bool CollisionManager::SphereSphereTest(Sphere p_spikeTrap, Sphere p_player)
 {
 	return IntersectionTests::Intersections::SphereSphereCollision(p_spikeTrap.m_position, p_spikeTrap.m_radius, p_player.m_position, p_player.m_radius);
 }
-bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos)
+bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos, bool p_isThrowing)
 {
 	DirectX::XMFLOAT3 vectorFromA2B = DirectX::XMFLOAT3(p_defendingPlayerPos.x - p_attackingPlayerPos.x, 0.0f, p_defendingPlayerPos.z - p_attackingPlayerPos.z);
 	float distance = sqrt(vectorFromA2B.x * vectorFromA2B.x + vectorFromA2B.z * vectorFromA2B.z);
@@ -1015,7 +1011,17 @@ bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attac
 	{
 		if (RayOBBTest(ray, m_staticBoxList[i]))
 		{
-			listOfDistances.push_back(ray->m_distance);
+			if (p_isThrowing)
+			{
+				if (m_staticBoxList[i].m_extents.y > 1.8f)
+				{
+					listOfDistances.push_back(ray->m_distance);
+				}
+			}
+			else
+			{
+				listOfDistances.push_back(ray->m_distance);
+			}
 		}
 	}
 	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
@@ -1134,6 +1140,7 @@ void CollisionManager::VolleyCollisionChecks(VolleyManager* p_volleyManager, Pla
 		}
 	}
 }
+
 float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
 {
 	DirectX::XMFLOAT3 rayDirection = DirectX::XMFLOAT3(p_attackingPlayer.dirX, 0.1f, p_attackingPlayer.dirZ);
@@ -1208,9 +1215,9 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager)
 {
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
-	std::vector<Box> lotusBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Heal);
-	std::vector<Box> shieldBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Shield);
-	std::vector<Box> invisBBox = p_POIManager->GetBoundingBoxes(PointOfInterestType_Invisible);
+	std::vector<Box> lotusBBox = p_POIManager->GetBoundingBoxes(POINTOFINTERESTTYPE_HEAL);
+	std::vector<Box> shieldBBox = p_POIManager->GetBoundingBoxes(POINTOFINTERESTTYPE_SHIELD);
+	std::vector<Box> invisBBox = p_POIManager->GetBoundingBoxes(POINTOFINTERESTTYPE_INVISIBLE);
 
 	// Go through player list
 	for (unsigned int j = 0; j < playerList.size(); j++)
@@ -1233,7 +1240,9 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
 					{
-						p_POIManager->PickUpRunes(PointOfInterestType_Heal, playerList[j].guid);
+						p_playerManager->RuneLotusPickedUp(playerList[j].guid);
+						p_POIManager->PickUpRunes(POINTOFINTERESTTYPE_HEAL, playerList[j].guid);
+						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_HEAL_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}
 			}
@@ -1248,7 +1257,9 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
 					{
-						p_POIManager->PickUpRunes(PointOfInterestType_Invisible, playerList[j].guid);
+						p_playerManager->RuneInvisPickedUp(playerList[j].guid);
+						p_POIManager->PickUpRunes(POINTOFINTERESTTYPE_INVISIBLE, playerList[j].guid);
+						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_INVISIBLE_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}
 			}
@@ -1263,7 +1274,9 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shieldBBox[k]))
 					{
-						p_POIManager->PickUpRunes(PointOfInterestType_Shield, playerList[j].guid);
+						p_playerManager->RuneShieldPickedUp(playerList[j].guid);
+						p_POIManager->PickUpRunes(POINTOFINTERESTTYPE_SHIELD, playerList[j].guid);
+						p_playerManager->SendPlaySound(PLAYSOUND_RUNE_SHIELD_PICKUP_SOUND, playerBoundingBoxes[l].m_center.x, playerBoundingBoxes[l].m_center.y, playerBoundingBoxes[l].m_center.z);
 					}
 				}
 			}

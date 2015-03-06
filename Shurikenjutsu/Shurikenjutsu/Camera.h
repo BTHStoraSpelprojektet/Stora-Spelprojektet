@@ -30,6 +30,7 @@ public:
 	void UpdateClippingPlanes(float p_nearPlane, float p_farPlane);
 
 	DirectX::XMFLOAT3 GetPosition();
+	DirectX::XMFLOAT3 GetLookAt();
 	DirectX::XMFLOAT4X4 GetViewMatrix();
 	DirectX::XMFLOAT4X4 GetProjectionMatrix();
 
@@ -46,14 +47,22 @@ public:
 
 	//void Update3DSound(Sound* p_sound);
 	void Update3DSound(Sound* p_sound, float p_x, float p_y, float p_z);
-
+	void SetOutliningRayPosition(DirectX::XMFLOAT3 p_position);
+	DirectX::XMFLOAT3 GetOutliningRayPosition();
+	void SetOutliningRayTarget(DirectX::XMFLOAT3 p_target);
+	DirectX::XMFLOAT3 GetOutliningRayTarget();
+	
 private:
+	DirectX::XMVECTOR SmoothStep(DirectX::XMVECTOR V0, DirectX::XMVECTOR V1, float t);
+
 	DirectX::XMFLOAT3 m_position;
 	DirectX::XMFLOAT3 m_target;
 	DirectX::XMFLOAT3 m_look;
 	DirectX::XMFLOAT3 m_upVector;
 	DirectX::XMFLOAT3 m_right;
 	DirectX::XMFLOAT3 m_oldPosition;
+	DirectX::XMFLOAT3 m_outliningRayPosition;
+	DirectX::XMFLOAT3 m_outliningRayTarget;
 
 	float m_fieldOfView;
 	float m_aspectRatio;

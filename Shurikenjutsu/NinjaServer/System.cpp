@@ -12,6 +12,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_timer.Initialize();
 	m_timer.StartTimer();
 
+	m_memoryChecker.Initialize();
+
 	m_firstUpdate = true;
 	return true;
 }
@@ -45,6 +47,7 @@ void System::Run()
 
 	// Shutdown
 	m_server.Shutdown();
+	m_memoryChecker.Shutdown();
 }
 
 void System::Update()
@@ -57,6 +60,7 @@ void System::Update()
 	if (!m_firstUpdate)
 	{
 		m_server.Update(deltaTime);
+		m_memoryChecker.Update(deltaTime);
 	}
 	m_firstUpdate = false;
 }

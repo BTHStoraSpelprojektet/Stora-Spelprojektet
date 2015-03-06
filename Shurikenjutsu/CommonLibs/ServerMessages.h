@@ -3,9 +3,11 @@
 
 #include "..\CommonLibs\RakNet\MessageIdentifiers.h"
 #include "..\CommonLibs\RakNet\RakNetTypes.h"
+#include "..\CommonLibs\RakNet\RakString.h"
 
 struct PlayerNet
 {
+	RakNet::RakString name;
 	float x, y, z;
 	float dirX, dirY, dirZ;
 	RakNet::RakNetGUID guid;
@@ -18,6 +20,11 @@ struct PlayerNet
 	bool isAlive;
 	float gcd;
 	float dotDamage;
+	float hotHeal;
+	bool invis;
+	int kills;
+	int deaths;
+	float shield;
 };
 
 struct ShurikenNet
@@ -126,6 +133,8 @@ enum Messages
 	ID_DEATHBOARDKILL,
 	ID_PLAY_SOUND_ABILITY,
 	ID_PLAY_SOUND,
+	ID_PLAY_AMBIENT_SOUND,
+	ID_STOP_AMBIENT_SOUND,
 	ID_START_SUDDEN_DEATH,
 	ID_INITIATE_SUDDEN_DEATH_BOX,
 	ID_SCOREBOARDKILL,

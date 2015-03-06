@@ -29,7 +29,7 @@ public:
 	virtual void Update(double p_deltaTime);
 	
 public:
-	void AddPlayer(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team);
+	void AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team);
 	void RemovePlayer(RakNet::RakNetGUID p_guid);
 	bool MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dash);
 	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
@@ -42,8 +42,7 @@ public:
 	void UserConnected(RakNet::RakNetGUID p_guid);
 
 	void SendSuddenDeathMessage();
-	void SendSuddenDeathBoxActivation(int p_boxIndex);
-	int GetNewSuddenDeathBoxIndex();
+
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();
@@ -66,12 +65,11 @@ protected:
 	double m_timeSec;
 	bool m_roundRestarting;
 	bool m_isSuddenDeath;
-	std::vector<Box> m_suddenDeathBoxes;
-	std::vector<int> m_suddenDeathInActiveBoxes;
 	float m_suddenDeathTimer;
 	float m_suddenDeathMaxBoxExtentX;
 	float m_suddenDeathMaxBoxExtentZ;
 	bool m_runesSpawned;
+	float m_deltaTime;
 };
 
 #endif

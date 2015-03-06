@@ -20,6 +20,7 @@
 #include <map>
 #include <DirectXMath.h>
 #include "ObjectManager.h"
+#include "Sound.h"
 
 
 enum NETWORKSTATUS
@@ -149,8 +150,14 @@ public:
 	bool IsSuddenDeath();
 	int GetSuddenDeathBoxIndex();
 
-	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
-	void RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
+	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
+
+	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
+
+	void SetPlayerName(std::string p_playerName);
+	std::string GetPlayerName(RakNet::RakNetGUID p_guid);
+	int GetCharNr(RakNet::RakNetGUID p_guid);
 
 private:
 	void ClearListsAtNewRound();
@@ -172,11 +179,16 @@ private:
 	void UpdatePlayerDir(RakNet::RakNetGUID p_owner, float p_dirX, float p_dirY, float p_dirZ);
 	void UpdatePlayerDir(int p_id, float p_dirX, float p_dirY, float p_dirZ);
 
+	void UpdatePlayerKD(RakNet::RakNetGUID p_owner, int p_deaths, int p_kills);
 	void UpdatePlayerID(RakNet::RakNetGUID p_owner, int p_id);
 	void UpdatePlayerTeam(RakNet::RakNetGUID p_owner, int p_team);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_currentHP, bool p_isAlive);
 	void UpdatePlayerHP(RakNet::RakNetGUID p_guid, float p_maxHP, float p_currentHP, bool p_isAlive);
 	void UpdatePlayerChar(RakNet::RakNetGUID p_owner, int p_charNr, int p_toolNr);
+	void UpdatePlayerInvis(RakNet::RakNetGUID p_guid, bool p_invis);
+	void UpdatePlayerInvisAll(bool p_invis);
+	void UpdatePlayerShield(RakNet::RakNetGUID p_guid, float p_shield);
+	void UpdatePlayerName(RakNet::RakNetGUID p_guid, RakNet::RakString p_name);
 	void CheckForRemovedPlayers(std::vector<RakNet::RakNetGUID> p_playerGuids);
 	bool IsGuidInList(std::vector<RakNet::RakNetGUID> p_playerGuids, RakNet::RakNetGUID p_guid);
 	void UpdateShurikens(float p_x, float p_y, float p_z, float p_dirX, float p_dirY, float p_dirZ, unsigned int p_shurikenID, RakNet::RakNetGUID p_guid, float p_speed, bool p_megaShuriken);
@@ -232,6 +244,7 @@ private:
 	int m_lastTeamWon;
 	bool m_matchOver;
 	int m_matchWinningTeam;
+	std::vector<Sound::SoundEmitter*> runeSoundEmitters;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;
@@ -253,5 +266,6 @@ private:
 	bool m_sendPos;
 	double m_timeToSendPos;
 	double m_posTimer;
+	std::string m_playerName;
 };
 #endif

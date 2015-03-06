@@ -22,6 +22,8 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 	m_state = AnimationState::None;
 	m_light = false;
 
+	m_showTrail = false;
+
 	return true;
 }
 
@@ -183,6 +185,27 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 
 		m_surujinChild = true;
 	}	
+
+	if (m_state == AnimationState::Range || m_state == AnimationState::Special2)
+	{
+		if (strcmp(p_jointArms->m_name, "Surujin10") == 0)
+		{
+			m_trailPosition = DirectX::XMFLOAT3(jointTranslation.m128_f32[0], jointTranslation.m128_f32[1], jointTranslation.m128_f32[2]);
+			DirectX::XMFLOAT3 lastPos = DirectX::XMFLOAT3(m_boneTransforms[*p_index]._14, m_boneTransforms[*p_index]._24, m_boneTransforms[*p_index]._34);
+
+			DirectX::XMFLOAT3 weaponDirection;
+			weaponDirection.x = m_trailPosition.x - lastPos.x;
+			weaponDirection.y = m_trailPosition.y - lastPos.y;
+			weaponDirection.z = m_trailPosition.z - lastPos.z;
+
+			m_trailAngle = atan2(weaponDirection.z, weaponDirection.x);
+			m_showTrail = true;
+		}
+	}
+	else
+	{
+		m_showTrail = false;
+	}
 
 	DirectX::XMStoreFloat4x4(&m_boneTransforms[*p_index], DirectX::XMMatrixTranspose(transformMatrix));
 
@@ -528,6 +551,10 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 			m_currentArms = &m_animationStacksArray[12];
 		}		
 	}	
+	else
+	{
+		m_currentArms = &m_animationStacksArray[7];
+	}
 }
 
 std::vector<DirectX::XMFLOAT4X4> AnimationControl::GetBoneTransforms()
@@ -543,4 +570,19 @@ bool AnimationControl::IsLight()
 DirectX::XMFLOAT3 AnimationControl::GetLightPosition()
 {
 	return m_lightPos;
+}
+
+DirectX::XMFLOAT3 AnimationControl::GetTrailPosition()
+{
+	return m_trailPosition;
+}
+
+float AnimationControl::GetTrailAngle()
+{
+	return m_trailAngle;
+}
+
+bool AnimationControl::ShowTrail()
+{
+	return m_showTrail;
 }

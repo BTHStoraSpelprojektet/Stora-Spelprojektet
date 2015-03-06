@@ -3,6 +3,8 @@
 #include "Model.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "PointLights.h"
+#include "Trail.h"
+#include "Globals.h"
 
 AnimatedObject::AnimatedObject(){}
 AnimatedObject::~AnimatedObject(){}
@@ -36,6 +38,9 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	m_animationController.FindAndReferenceLayers();
 	m_animationController.HandleInput(p_dir);
 
+	m_trail = new Trail();
+	m_trail->Initialize(1000.0f, 0.50f, 0.2f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png");
+
 	return true;
 }
 
@@ -60,6 +65,12 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 
 void AnimatedObject::Shutdown()
 {
+	if (m_trail)
+	{
+		m_trail->Shutdown();
+		delete m_trail;
+	}	
+
 	m_animationController.Shutdown();
 	Object::Shutdown();
 }
@@ -94,6 +105,20 @@ void AnimatedObject::RenderPlayer(int p_team)
 	{
 		GraphicsEngine::GetInstance()->RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_texture, m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 	}	
+
+	if (m_animationController.ShowTrail())
+	{
+		m_trail->StartEmiting();
+	}
+	else
+	{
+		m_trail->StopEmiting();
+	}
+
+	DirectX::XMFLOAT3 trailPos;
+	DirectX::XMStoreFloat3(&trailPos, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&m_animationController.GetTrailPosition()), DirectX::XMLoadFloat4x4(&GetWorldMatrix())));
+	m_trail->Update(trailPos, m_animationController.GetTrailAngle());
+	m_trail->Render();
 }
 
 void AnimatedObject::Render()
@@ -116,6 +141,12 @@ void AnimatedObject::Render()
 		newLight.m_range = 5.0f;
 
 		PointLights::GetInstance()->AddLight(newLight);
+
+		newLight.m_ambient = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
+		newLight.m_diffuse = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+		newLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
+		newLight.m_range = 0.5f;
+		PointLights::GetInstance()->AddLight(newLight);
 	}
 }
 
@@ -126,7 +157,7 @@ void AnimatedObject::RenderDepth()
 
 void AnimatedObject::RenderDepthOutlining()
 {
-	GraphicsEngine::GetInstance()->RenderAnimatedOutliningDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_animationController.UpdateAnimation());
+	GraphicsEngine::GetInstance()->RenderAnimatedOutliningDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_animationController.GetBoneTransforms());
 }
 
 void AnimatedObject::RenderOutlining()
@@ -163,4 +194,16 @@ void AnimatedObject::LoadTexture(const char* p_filepath)
 	filePathString = filePathString.substr(0, positionToCutStringEnd);
 
 	m_texture = TextureLibrary::GetInstance()->GetTexture(NINJA_TEXTURE + filePathString + ".png");
+}
+
+void AnimatedObject::ChangeTrailColor(int p_team)
+{
+	if (p_team == 1)
+	{
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
+	}
+	else
+	{
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
+	}
 }

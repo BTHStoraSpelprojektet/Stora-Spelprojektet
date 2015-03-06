@@ -24,11 +24,11 @@ void TessenNinja::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_charNr)
+bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_charNr, std::string p_name)
 {
 	bool result;
 
-	result = Player::Initialize(TESSEN_NINJA_MODEL_NAME, p_pos, p_direction, p_charNr);
+	result = Player::Initialize(TESSEN_NINJA_MODEL_NAME, p_pos, p_direction, p_charNr, p_name);
 	if (!result)
 	{
 		return false;
@@ -64,68 +64,71 @@ void TessenNinja::Shutdown()
 }
 void TessenNinja::RenderAttackLocations()
 {
-	if (InputManager::GetInstance()->IsLeftMousePressed())
+	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
 	{
-		if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
-			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			{
+				m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
 
-			ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		if (InputManager::GetInstance()->IsRightMousePressed())
 		{
-			StillCDText();
-		}
-	}
-	if (InputManager::GetInstance()->IsRightMousePressed())
-	{
-		if ((float)m_rangeAttack->GetCooldown() <= 0.0f)
-		{
-			m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
+			if ((float)m_rangeAttack->GetCooldown() <= 0.0f)
+			{
+				m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
 
-			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 		{
-			StillCDText();
-		}
-	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
-	{
-		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
-		{
-			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
-			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
-			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-		else
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 		{
-			StillCDText();
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ape->SpinAttackBigSphere(m_aimSphere, m_position, 16.0f);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
-	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
-	{
-		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
 		{
-			m_ape->SpinAttackBigSphere(m_aimSphere, m_position, 16.0f);
-			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
-		}
-		else
-		{
-			StillCDText();
-		}
-	}
-	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
-	{
-		if ((float)m_toolAbility->GetCooldown() <= 0.0f)
-		{
-			m_ape->ThrowSphere(m_aimSphere,m_position, 5.0f, SPIKE_RANGE);
-			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
-		}
-		else
-		{
-			StillCDText();
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ape->ThrowSphere(m_aimSphere, m_position, 5.0f, SPIKE_RANGE);
+				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
+			}
+			else
+			{
+				StillCDText();
+			}
 		}
 	}
 }

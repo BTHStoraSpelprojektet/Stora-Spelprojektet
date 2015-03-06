@@ -52,6 +52,7 @@ enum PLAYSOUND
 	PLAYSOUND_MALE_HURT_SOUND,
 	PLAYSOUND_FEMALE_HURT_SOUND,
 	PLAYSOUND_COUNTDOWN_BEEP_SOUND,
+	PLAYSOUND_COUNTDOWN_GONG_SOUND,
 	PLAYSOUND_RUNE_SHIELD_SOUND,
 	PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND,
 	PLAYSOUND_RUNE_SHIELD_PICKUP_SOUND,
@@ -78,6 +79,7 @@ enum EmitterType{
 	EmitterType_BrazierFire,
 	EmitterType_Fireflies,
 	EmitterType_FireSpark,
+	EmitterType_TorchFire,
 	EmitterType_Smoke,
 	EmitterType_LeafTree,
 	EmitterType_LeafSakura,
@@ -86,10 +88,10 @@ enum EmitterType{
 	EmitterType_WorldDust
 };
 
-enum PointOfInterestType{
-	PointOfInterestType_Heal,
-	PointOfInterestType_Invisible,
-	PointOfInterestType_Shield
+enum POINTOFINTERESTTYPE{
+	POINTOFINTERESTTYPE_HEAL,
+	POINTOFINTERESTTYPE_INVISIBLE,
+	POINTOFINTERESTTYPE_SHIELD
 };
 
 #endif // !COMMONENUMS_H_

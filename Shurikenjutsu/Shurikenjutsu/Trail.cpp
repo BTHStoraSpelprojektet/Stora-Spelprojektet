@@ -54,7 +54,6 @@ bool Trail::Initialize(float p_pointsPerSecond, float p_timeToLive, float p_trai
 	m_points.clear();
 
 	m_vertexBuffer = nullptr;
-	std::vector<TrailPoint> dummyData;
 
 	// Set up description for the dynamic vertex buffer.
 	D3D11_BUFFER_DESC vertexBufferDescription;
@@ -65,14 +64,8 @@ bool Trail::Initialize(float p_pointsPerSecond, float p_timeToLive, float p_trai
 	vertexBufferDescription.MiscFlags = 0;
 	vertexBufferDescription.StructureByteStride = 0;
 
-	// Get a pointer to the vertex data.
-	D3D11_SUBRESOURCE_DATA vertexBuffer;
-	vertexBuffer.pSysMem = &dummyData;
-	vertexBuffer.SysMemPitch = 0;
-	vertexBuffer.SysMemSlicePitch = 0;
-
 	// Create the vertex buffer.
-	if (FAILED(GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDescription, &vertexBuffer, &m_vertexBuffer)))
+	if (FAILED(GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDescription, NULL, &m_vertexBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create trail dynamic vertex buffer.");
 		return false;
