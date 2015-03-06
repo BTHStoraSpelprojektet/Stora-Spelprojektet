@@ -2,7 +2,8 @@ cbuffer cbSettings : register(b13)
 {
 	static const float m_weights[11] =
 	{
-		0.05f, 0.05f, 0.1f, 0.1f, 0.1f, 0.2f, 0.1f, 0.1f, 0.1f, 0.05f, 0.05f
+		1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f
+		//0.05f, 0.05f, 0.1f, 0.1f, 0.1f, 0.2f, 0.1f, 0.1f, 0.1f, 0.05f, 0.05f
 	};
 
 	static const int m_blurRadius = 5;
@@ -56,8 +57,8 @@ float4 main(Input p_input) : SV_Target
 
 	float asd = (p_input.m_position.y - textureDimensions.y*0.5f) / textureDimensions.y;
 	
-	float b = 16.0f - asd*16.0f*0.5f;
-	float a = 26.0f - asd*b*0.5f;
+	float b = 14.0f - asd*16.0f*0.5f;
+	float a = 32.0f - asd*b*0.5f;
 	
 
 	float x = 1 / (a - b);

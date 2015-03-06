@@ -632,7 +632,10 @@ void Sound::UpdateAmbientSound(float p_player_x, float p_player_y, float p_playe
 
 void Sound::StopAmbientSound(SoundEmitter* p_soundEmitter)
 {
-	p_soundEmitter->isPlaying = false;
+	if (p_soundEmitter != NULL)
+	{
+		p_soundEmitter->isPlaying = false;
+	}
 }
 
 void Sound::StartAmbientSound(SoundEmitter* p_soundEmitter)
