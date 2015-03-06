@@ -232,7 +232,7 @@ void LevelImporter::ReadLevelObject(std::string &p_tmpStr, int p_currentWordTemp
 			particleEmitter.m_translationX = p_x;
 			particleEmitter.m_translationY = p_y;
 			particleEmitter.m_translationZ = -p_z;
-			particleEmitter.m_rotationX = p_rotateX;
+			particleEmitter.m_rotationX = -p_rotateX;
 			particleEmitter.m_rotationY = -p_rotateY;
 			particleEmitter.m_rotationZ = p_rotateZ;
 
@@ -302,7 +302,7 @@ void LevelImporter::ReadLevelObject(std::string &p_tmpStr, int p_currentWordTemp
 				animatedObject.m_translationX = p_x;
 				animatedObject.m_translationY = p_y;
 				animatedObject.m_translationZ = -p_z;
-				animatedObject.m_rotationX = p_rotateX;
+				animatedObject.m_rotationX = -p_rotateX;
 				animatedObject.m_rotationY = -p_rotateY;
 				animatedObject.m_rotationZ = p_rotateZ;
 				m_animatedObjects.push_back(animatedObject);
@@ -317,7 +317,7 @@ void LevelImporter::ReadLevelObject(std::string &p_tmpStr, int p_currentWordTemp
 				object.m_translationX = p_x;
 				object.m_translationY = p_y;
 				object.m_translationZ = -p_z;
-				object.m_rotationX = p_rotateX;
+				object.m_rotationX = -p_rotateX;
 				object.m_rotationY = -p_rotateY;
 				object.m_rotationZ = p_rotateZ;
 				m_objects.push_back(object);

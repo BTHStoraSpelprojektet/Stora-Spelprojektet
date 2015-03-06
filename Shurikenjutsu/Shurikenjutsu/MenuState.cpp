@@ -121,7 +121,7 @@ bool MenuState::Initialize()
 	m_directionalLight.m_direction = DirectX::XMLoadFloat4(&DirectX::XMFLOAT4(-1.0f, -4.0f, -2.0f, 0.0f));
 
 	InitializeCreditScreen();
-
+	m_isPlayingBackgroundMusic = true;
 	return true;
 }
 
@@ -225,7 +225,6 @@ GAMESTATESWITCH MenuState::Update()
 		m_ipbox->Update();
 		m_namebox->Update();
 	}
-
 	// Check buttons
 	switch (action.m_action)
 	{

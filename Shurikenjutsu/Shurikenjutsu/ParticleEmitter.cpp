@@ -66,7 +66,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_FIRE_TORCH) :
 		{
 			m_fire = true;
-			InitParticles(50.0f, 100, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle2.png"));
+			InitParticles(12.0f, 100, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle2.png"));
 			break;
 		}
 		case(PARTICLE_PATTERN_FIREFLIES) :
@@ -651,7 +651,7 @@ void ParticleEmitter::UpdateParticles()
 				fireLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
 
 				fireLight.m_position = DirectX::XMFLOAT3(m_emitterPosition.x, m_emitterPosition.y + 0.2f, m_emitterPosition.z);
-				fireLight.m_range = 5.0f;
+				fireLight.m_range = 7.0f;
 				
 				PointLights::GetInstance()->AddLight(fireLight);
 
