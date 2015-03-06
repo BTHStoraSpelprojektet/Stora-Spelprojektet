@@ -3,6 +3,8 @@
 
 #pragma comment(lib, "dxgi.lib")
 
+DirectXWrapper::DirectXWrapper(){}
+DirectXWrapper::~DirectXWrapper(){}
 bool DirectXWrapper::Initialize(HWND p_handle, float p_maxWindowHeight,	float p_maxWindowWidth, bool p_fullscreen)
 {
 	m_maxWindowHeight = p_maxWindowHeight;

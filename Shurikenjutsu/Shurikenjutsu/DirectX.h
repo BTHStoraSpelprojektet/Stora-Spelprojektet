@@ -7,6 +7,8 @@
 class DirectXWrapper
 {
 public:
+	DirectXWrapper();
+	~DirectXWrapper();
 	bool Initialize(HWND p_handle, float m_maxWindowHeight, float m_maxWindowWidth, bool p_fullscreen);
 	void Shutdown();
 	void Clear();

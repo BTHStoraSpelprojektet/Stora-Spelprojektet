@@ -1,7 +1,6 @@
 #ifndef GRAPHICSENGINE_H_
 #define GRAPHICSENGINE_H_
 
-#include "DirectX.h"
 #include "DirectXTex\DirectXTex\DirectXTex.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include "RenderTarget.h"
@@ -18,6 +17,7 @@ class SceneShader;
 class FoliageShader;
 class ScreenSpace;
 class InstanceManager;
+class DirectXWrapper;
 struct WindowRectangle;
 struct DirectionalLight;
 
@@ -138,7 +138,7 @@ private:
 
 	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
 
-	DirectXWrapper m_directX;
+	DirectXWrapper *m_directX;
 
 	SceneShader* m_sceneShader;
 	GUIShader* m_GUIShader;
