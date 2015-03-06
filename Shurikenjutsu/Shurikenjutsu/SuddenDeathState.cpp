@@ -3,8 +3,8 @@
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include <D3Dcompiler.h>
-#include "ConsoleFunctions.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "Camera.h"
 
 SuddenDeathState::SuddenDeathState()

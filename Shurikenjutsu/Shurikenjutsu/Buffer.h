@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <vector>
 #include "Structures.h"
-#include "Enumerations.h"
+#include "..\CommonLibs\CommonEnums.h"
 
 class Buffer
 {

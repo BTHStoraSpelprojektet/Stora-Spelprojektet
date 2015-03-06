@@ -14,7 +14,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
 #include "Countdown.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "InGameMenu.h"
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"

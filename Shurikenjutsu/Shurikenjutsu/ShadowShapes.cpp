@@ -1,7 +1,7 @@
 #include "ShadowShapes.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "Globals.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "VisibilityComputer.h"
 
 ShadowShapes& ShadowShapes::GetInstance()

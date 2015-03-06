@@ -7,7 +7,7 @@
 #include "InputManager.h"
 #include "GraphicsEngine.h"
 #include "VisibilityComputer.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 bool Camera::Initialize()
 {

@@ -1,6 +1,6 @@
 #include "Network.h"
 #include <iostream>
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "ObjectManager.h"
 #include "Globals.h"
 #include "DeathBoard.h"

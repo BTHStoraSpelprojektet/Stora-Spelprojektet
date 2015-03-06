@@ -4,7 +4,7 @@
 #include "ProjectileManager.h"
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
-#include "..\Shurikenjutsu\ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 #include "..\CommonLibs\ModelNames.h"
 

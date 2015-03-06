@@ -1,10 +1,11 @@
-#include "TextureLibrary.h"
+
 #include "ParticleEmitter.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include "ParticleRenderer.h"
 #include "PointLights.h"
+#include "..\CommonLibs\TextureLibrary.h"
 
 ParticleEmitter::ParticleEmitter(){}
 ParticleEmitter::~ParticleEmitter(){}

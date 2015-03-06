@@ -1,20 +1,18 @@
 #include "GraphicsEngine.h"
 
-#include "Enumerations.h"
-#include "Globals.h"
+#include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\CommonStructures.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "ParticleShader.h"
 #include "WICTextureLoader.h"
 #include "SceneShader.h"
 #include "GUIShader.h"
 #include "DepthShader.h"
 #include "RenderTarget.h"
-#include "ConsoleFunctions.h"
 #include "VisibilityComputer.h"
 #include "OutlingShader.h"
-#include "Object.h"
 #include "FoliageShader.h"
 #include "ScreenSpace.h"
-#include "Structures.h"
 #include "InstanceManager.h"
 #include "RenderTarget.h"
 #include "CustomFont.h"
@@ -31,7 +29,7 @@ GraphicsEngine* GraphicsEngine::GetInstance()
 	return m_instance;
 }
 
-bool GraphicsEngine::Initialize(HWND p_handle)
+bool GraphicsEngine::Initialize(HWND p_handle, float p_screenMaxWidth, float p_screenMaxHeight)
 {
 	m_screenChanged = false;
 
@@ -156,12 +154,12 @@ bool GraphicsEngine::Initialize(HWND p_handle)
 	}
 
 	// Initialize shadow map.
-	if (m_shadowMap.Initialize(m_directX.GetDevice(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT))
+	if (m_shadowMap.Initialize(m_directX.GetDevice(), (int)p_screenMaxWidth, (int)p_screenMaxHeight))
 	{
 		ConsolePrintSuccess("Shadow map initialized successfully.");
 
-		std::string size = "Map size: " + std::to_string(GLOBAL::GetInstance().MAX_SCREEN_WIDTH);
-		size.append("x" + std::to_string(GLOBAL::GetInstance().MAX_SCREEN_HEIGHT));
+		std::string size = "Map size: " + std::to_string(p_screenMaxWidth);
+		size.append("x" + std::to_string(p_screenMaxHeight));
 		ConsolePrintText(size);
 
 		ConsoleSkipLines(1);
@@ -565,9 +563,9 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 
 		m_screenChanged = true;
 
-		GLOBAL::GetInstance().FULLSCREEN = true;
-		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+		//GLOBAL::GetInstance().FULLSCREEN = true;
+		//GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		//GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 	}    
 	
 	else    
@@ -580,9 +578,9 @@ bool GraphicsEngine::ToggleFullscreen(bool p_fullscreen)
 
 		m_screenChanged = true;
 		
-		GLOBAL::GetInstance().FULLSCREEN = false;
-		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
-		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
+		//GLOBAL::GetInstance().FULLSCREEN = false;
+		//GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		//GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}    
 
 	return true;

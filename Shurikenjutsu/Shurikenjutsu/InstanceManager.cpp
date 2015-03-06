@@ -1,9 +1,9 @@
 #include "InstanceManager.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include <DirectXMath.h>
 #include <Windows.h>
 #include <D3Dcompiler.h>
-#include "Object.h"
+#include "..\CommonLibs\CommonStructures.h"
 InstanceManager::InstanceManager(){}
 InstanceManager::~InstanceManager(){}
 void InstanceManager::Shutdown()

@@ -16,7 +16,7 @@
 #include "StickyTrapAbility.h"
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "PointLights.h"
 
 Player::Player(){}

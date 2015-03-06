@@ -4,7 +4,6 @@
 #include <vector>
 #include <D3D11.h>
 #include <DirectXMath.h>
-class Object;
 class InstanceManager
 {
 public:

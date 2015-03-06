@@ -1,5 +1,5 @@
 #include "DirectX.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "Globals.h"
 
 #pragma comment(lib, "dxgi.lib")

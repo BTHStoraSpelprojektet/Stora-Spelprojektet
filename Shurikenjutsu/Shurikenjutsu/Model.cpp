@@ -1,5 +1,5 @@
 #include "Model.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
 #include "Buffer.h"
 #include "..\CommonLibs\ModelImporter.h"

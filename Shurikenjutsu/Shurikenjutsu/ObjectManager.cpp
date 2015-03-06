@@ -1,5 +1,5 @@
 #include "ObjectManager.h"
-#include "Flags.h"
+#include "..\CommonLibs\Flags.h"
 #include "Network.h"
 #include "Frustum.h"
 #include "Globals.h"
@@ -12,7 +12,7 @@
 #include "StickyTrap.h"
 #include "Volley.h"
 #include "ParticleEmitter.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "VolleyObject.h"
 #include "Sound.h"
 #include "PointOfInterestManager.h"
@@ -669,10 +669,10 @@ void ObjectManager::Update()
 
 void ObjectManager::UpdateRenderLists()
 {
-	std::vector<Object*> tempList;
+	std::vector<Object*> objectsInFrustumList;
 	m_objectsToInstanceRender.clear();
 	m_objectsToSingleRender.clear();
-	tempList.clear();
+	objectsInFrustumList.clear();
 
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
@@ -682,28 +682,34 @@ void ObjectManager::UpdateRenderLists()
 		if (m_frustum->CheckSphere(sphere, 10.0f))
 		{
 			m_staticObjects[i].UpdateRotation();
-			tempList.push_back(&m_staticObjects[i]);
+			objectsInFrustumList.push_back(&m_staticObjects[i]);
 		}
 	}
 
 	std::vector<Object*>  tempObjectList;
-	std::vector<Object*>  tempObjectList;
 	Object* prevObject = &m_staticObjects[m_staticObjects.size() - 1];
-	for (unsigned int i = 0; i < tempList.size(); i++)
+	for (unsigned int i = 0; i < objectsInFrustumList.size(); i++)
 	{
-		tempObjectList = CheckAmountOfSameModels(tempList[i], tempList);// Return vector med de ombjekt som finns i templist som är lika dana
+		tempObjectList = CheckAmountOfSameModels(objectsInFrustumList[i], objectsInFrustumList);// Return vector med de ombjekt som finns i templist som är lika dana
 		if (prevObject->GetModel() != tempObjectList[0]->GetModel())
 		{
 			if (tempObjectList.size() == 1)
 			{
-				m_objectsToSingleRender.push_back(tempList[i]);
+				m_objectsToSingleRender.push_back(objectsInFrustumList[i]);
 			}
 			else
 			{
-				if (!CheckIfObjectIsInList(tempList[i], m_objectsToInstanceRender))
+				if (!CheckIfObjectIsInList(objectsInFrustumList[i], m_objectsToInstanceRender))
 				{
-					m_objectsToInstanceRender.push_back(tempList[i]);
-					GraphicsEngine::GetInstance()->UpdateInstanceBuffers(tempObjectList);
+					m_objectsToInstanceRender.push_back(objectsInFrustumList[i]);
+
+					std::vector<DirectX::XMFLOAT4X4>  matrixList;
+					for (unsigned int j = 0; j < tempObjectList.size(); j++)
+					{
+						matrixList.push_back(tempObjectList[j]->GetWorldMatrix());
+					}
+					GraphicsEngine::GetInstance()->UpdateInstanceBuffers(matrixList, tempObjectList[0]->GetInstanceIndex());
+					matrixList.clear();
 				}
 			}
 		}

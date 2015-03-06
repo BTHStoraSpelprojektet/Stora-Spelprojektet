@@ -71,6 +71,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\RakNet\Source\XBox360Includes.h" />
+    <ClInclude Include="..\Shurikenjutsu\ConsoleFunctions.h" />
+    <ClInclude Include="..\Shurikenjutsu\Flags.h" />
     <ClInclude Include="BaseModel.h" />
     <ClInclude Include="CommonEnums.h" />
     <ClInclude Include="CommonStructures.h" />
@@ -234,6 +236,7 @@
     <ClInclude Include="RakNet\_FindFirst.h" />
     <ClInclude Include="ServerGlobals.h" />
     <ClInclude Include="ServerMessages.h" />
+    <ClInclude Include="TextureLibrary.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -353,6 +356,7 @@
     <ClCompile Include="RakNet\WSAStartupSingleton.cpp" />
     <ClCompile Include="RakNet\_FindFirst.cpp" />
     <ClCompile Include="ServerGlobals.cpp" />
+    <ClCompile Include="TextureLibrary.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

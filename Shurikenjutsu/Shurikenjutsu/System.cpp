@@ -1,7 +1,7 @@
 #include "System.h"
 #include "Sound.h"
 #include "Timer.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
 #include "GUIManager.h"
 #include "ChooseState.h"
@@ -13,7 +13,7 @@
 #include "Model.h"
 #include "InputManager.h"
 #include "Globals.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "VisibilityComputer.h"
 #include "Cursor.h"
 #include "ParticleRenderer.h"
@@ -82,7 +82,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_window.SetTitle(m_title);
 
 	// Initialize the graphics engine.
-	GraphicsEngine::GetInstance()->Initialize(m_window.GetHandle());
+	GraphicsEngine::GetInstance()->Initialize(m_window.GetHandle(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
 	GraphicsEngine::GetInstance()->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	GraphicsEngine::GetInstance()->SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::GetInstance()->SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);

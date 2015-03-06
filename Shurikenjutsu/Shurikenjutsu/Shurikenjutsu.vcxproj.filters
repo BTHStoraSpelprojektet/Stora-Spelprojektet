@@ -374,9 +374,6 @@
     <ClCompile Include="GUIElementColor.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
-    <ClCompile Include="TextureLibrary.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXTex\WICTextureLoader\WICTextureLoader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -553,14 +550,8 @@
     <ClInclude Include="Structures.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
-    <ClInclude Include="ConsoleFunctions.h">
-      <Filter>Header Files\Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Flags.h">
-      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Collisions.h">
       <Filter>Header Files\Physics</Filter>
@@ -570,9 +561,6 @@
     </ClInclude>
     <ClInclude Include="GraphicsEngine.h">
       <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Enumerations.h">
-      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
       <Filter>Header Files\Graphics</Filter>
@@ -738,9 +726,6 @@
     </ClInclude>
     <ClInclude Include="GUIElementColor.h">
       <Filter>Header Files\GUI\Internal</Filter>
-    </ClInclude>
-    <ClInclude Include="TextureLibrary.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
       <Filter>Header Files\Graphics</Filter>

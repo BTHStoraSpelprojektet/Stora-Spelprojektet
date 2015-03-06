@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "GraphicsEngine.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_spikeBombID, int p_team)
 {

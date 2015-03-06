@@ -1,5 +1,5 @@
 #include "GUIShader.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "Globals.h"
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>

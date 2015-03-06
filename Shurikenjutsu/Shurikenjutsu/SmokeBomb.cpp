@@ -6,7 +6,7 @@
 #include "Object.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "ShadowShapes.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {

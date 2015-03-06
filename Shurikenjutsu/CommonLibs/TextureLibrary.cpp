@@ -1,8 +1,6 @@
 #include "TextureLibrary.h"
 #include <iostream>
-#include "GraphicsEngine.h"
-#include "WICTextureLoader.h"
-#include "ConsoleFunctions.h"
+#include "..\Shurikenjutsu\GraphicsEngine.h"
 
 TextureLibrary* TextureLibrary::m_instance;
 

@@ -15,7 +15,6 @@ class DepthShader;
 class RenderTarget;
 class ParticleShader;
 class SceneShader;
-class Object;
 class FoliageShader;
 class ScreenSpace;
 class InstanceManager;
@@ -31,7 +30,7 @@ public:
 
 	static GraphicsEngine* GetInstance();
 
-	bool Initialize(HWND p_handle);
+	bool Initialize(HWND p_handle, float p_screenMaxWidt, float p_screenMaxHeight);
 	void Shutdown();
 
 	void SetClearColor(float R, float G, float B, float p_opacity);

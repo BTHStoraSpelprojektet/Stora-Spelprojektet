@@ -1,9 +1,9 @@
 #include "MenuTextBox.h"
 #include "Globals.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "InputManager.h"
 #include "..\CommonLibs\ModelNames.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 #include "GUIText.h"
 
 MenuTextBox::MenuTextBox(){}

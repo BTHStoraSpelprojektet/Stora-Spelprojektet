@@ -1,5 +1,5 @@
 #include "Buffer.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 ID3D11Buffer* Buffer::CreateBuffer(BUFFERTYPE P_type, ID3D11Device* p_device, std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated)
 {
 	ID3D11Buffer* buffer = NULL;

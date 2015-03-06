@@ -1,5 +1,5 @@
 #include "RenderTarget.h"
-#include "ConsoleFunctions.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 bool RenderTarget::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 {

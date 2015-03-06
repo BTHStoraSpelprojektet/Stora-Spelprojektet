@@ -3,7 +3,7 @@
 #include "MenuTextBox.h"
 #include "GUIText.h"
 #include "Globals.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "GraphicsEngine.h"
 #include "Camera.h"
 #include "Frustum.h"
@@ -282,6 +282,19 @@ GAMESTATESWITCH MenuState::Update()
 			tempstring = m_namebox->GetText();
 			m_namebox->Shutdown();
 			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/namebox.png"), 0, 0, 394.0f, 67.0f, 15, tempstring);
+
+			if (GLOBAL::GetInstance().FULLSCREEN)
+			{
+				GLOBAL::GetInstance().FULLSCREEN = false;
+				GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+				GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
+			}
+			else
+			{
+				GLOBAL::GetInstance().FULLSCREEN = true;
+				GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+				GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+			}
 
 			break;
 	}
