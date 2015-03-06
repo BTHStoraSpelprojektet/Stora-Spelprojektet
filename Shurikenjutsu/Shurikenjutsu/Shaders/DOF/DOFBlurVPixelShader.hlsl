@@ -2,7 +2,7 @@ cbuffer cbSettings : register(b13)
 {
 	static const float m_weights[11] =
 	{
-		0.05f, 0.05f, 0.1f, 0.1f, 0.1f, 0.2f, 0.1f, 0.1f, 0.1f, 0.05f, 0.05f
+		1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f
 	};
 
 	static const int m_blurRadius = 5;
@@ -52,6 +52,7 @@ float4 main(Input p_input) : SV_Target
 	}
 	color /= totalWeight;
 
-	return float4(comp.xyz, 1.0f);
+	//return float4(a.xxx, 1.0f);
+	//return float4(color.xyz, 1.0f);
 	return float4(comp.xyz * (1.0f - a) + color.rgb*a, 1.0f);
 }

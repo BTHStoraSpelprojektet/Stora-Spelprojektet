@@ -89,8 +89,6 @@ bool MenuState::Initialize()
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/connect.png"), MENUACTION_CONNECT);
 	m_play->AddButton(0.0f, -3.0f * BUTTONHEIGHT - 4.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/back.png"), MENUACTION_BACK);
-	//m_play->AddTexture(0.0f, -67, 354.0f, 67.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/ipbox2.png"));
-	//m_play->AddTexture(0, 0.0f, 394.0f, 67.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/namebox.png"));
 
 	// Initialize connecting menu;
 	m_connecting = new Menu();
@@ -278,8 +276,14 @@ GAMESTATESWITCH MenuState::Update()
 			temp = m_options->GetCheckboxState(m_fullscreenIndex);
 			m_lastfullscreen = temp;
 			GraphicsEngine::GetInstance()->ToggleFullscreen(temp);
-			Shutdown();
-			Initialize();
+			std::string tempstring = m_ipbox->GetText();
+			m_ipbox->Shutdown();
+			m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/ipbox2.png"), 0, -67, 394.0f, 67.0f, 15, tempstring);
+			m_hideIpBox = true;
+			tempstring = m_namebox->GetText();
+			m_namebox->Shutdown();
+			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/namebox.png"), 0, 0, 394.0f, 67.0f, 15, tempstring);
+
 			break;
 	}
 

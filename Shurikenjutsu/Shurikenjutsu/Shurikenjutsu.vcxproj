@@ -166,6 +166,7 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="ScreenSpace.cpp" />
+    <ClCompile Include="Settings.cpp" />
     <ClCompile Include="ShadowShapes.cpp" />
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="DebugCircle.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="PointLights.h" />
     <ClInclude Include="MemoryChecker.h" />
     <ClInclude Include="ScoreBoard.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="SuddenDeathState.h" />
     <ClInclude Include="TeamTable.h" />
     <ClInclude Include="TextResource.h" />
