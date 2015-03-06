@@ -81,7 +81,7 @@ void Network::InitValues()
 	m_timeToPing = m_pingTimer;
 	m_dealtDamage = 0;
 
-	m_posTimer = 0.01;
+	m_posTimer = 0.02;
 	m_timeToSendPos = 0.0;
 }
 

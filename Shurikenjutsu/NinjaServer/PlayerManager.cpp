@@ -30,7 +30,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_tessenBoundingBoxes = ModelLibrary::GetInstance()->GetModel(TESSEN_NINJA_MODEL_NAME)->GetBoundingBoxes();
 	m_naginataBoundingBoxes = ModelLibrary::GetInstance()->GetModel(NAGINATA_NINJA_MODEL_NAME)->GetBoundingBoxes();
 
-	m_sendIntervall = 0.03;
+	m_sendIntervall = TICK_RATE;
 	m_lastTimeSent = 0.0;
 
 	m_dotIntervall = 0.1;

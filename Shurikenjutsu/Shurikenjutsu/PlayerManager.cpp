@@ -92,8 +92,8 @@ void PlayerManager::Update(bool p_inMenu)
 		
 		for (unsigned int i = 0; i < m_enemyListSize; i++)
 		{			
-			m_enemyList[i]->SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));				
-			m_enemyList[i]->SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
+			m_enemyList[i]->InterpolatePos(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));				
+			m_enemyList[i]->InterpolateAttackDir(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i]->SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i]->SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
