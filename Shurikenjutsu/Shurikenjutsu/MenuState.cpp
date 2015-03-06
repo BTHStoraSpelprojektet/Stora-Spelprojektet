@@ -84,7 +84,7 @@ bool MenuState::Initialize()
 	m_hideIpBox = true;
 
 	m_namebox = new MenuTextBox();
-	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/NameBox.png"), 0, 0, 394.0f, 67.0f, 15, "Name");
+	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 0, 394.0f, 67.0f, 15, "Name");
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/connect.png"), MENUACTION_CONNECT);
@@ -281,7 +281,7 @@ GAMESTATESWITCH MenuState::Update()
 			m_hideIpBox = true;
 			tempstring = m_namebox->GetText();
 			m_namebox->Shutdown();
-			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/NameBox.png"), 0, 0, 394.0f, 67.0f, 15, tempstring);
+			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 0, 394.0f, 67.0f, 15, tempstring);
 
 			break;
 	}
