@@ -32,7 +32,7 @@ public:
 	void UpdateAmbientSound(float p_player_x, float p_player_y, float p_player_z);
 	void StopAmbientSound(SoundEmitter* p_soundEmitter);
 	void StartAmbientSound(SoundEmitter* p_soundEmitter);
-	void CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
+	Sound::SoundEmitter* CreateDefaultSound(PLAYSOUND p_playSound, float p_x, float p_y, float p_z);
 	void ClearAmbientSounds();
 
 	void StopMusic();
