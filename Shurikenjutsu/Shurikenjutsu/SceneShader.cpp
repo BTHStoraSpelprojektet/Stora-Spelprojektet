@@ -4,7 +4,6 @@
 #include <DirectXMath.h>
 #include <Windows.h>
 #include <D3Dcompiler.h>
-#include "Object.h"
 #include "InstanceManager.h"
 #include "VisibilityComputer.h"
 
