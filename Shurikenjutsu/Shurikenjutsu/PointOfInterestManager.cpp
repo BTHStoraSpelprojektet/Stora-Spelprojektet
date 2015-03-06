@@ -69,17 +69,17 @@ void PointOfInterestManager::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x
 	switch (p_poiType)
 	{
 	case POINTOFINTERESTTYPE_HEAL:
-		temp.Initialize(RUNE_LOTUS, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f, DirectX::XMFLOAT3(1.0f, 0.77f, 1.0f));
+		temp.Initialize(RUNE_LOTUS, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f, DirectX::XMFLOAT3(1.0f, 0.0f, 0.5f));
 		temp.SetActive(true);
 		m_runes.push_back(temp);
 		break;
 	case POINTOFINTERESTTYPE_INVISIBLE:
-		temp.Initialize(RUNE_INVIS, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f, DirectX::XMFLOAT3(0.46f, 0.0f, 0.46f));
+		temp.Initialize(RUNE_INVIS, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f, DirectX::XMFLOAT3(0.4f, 0.02f, 0.64f));
 		temp.SetActive(true);
 		m_runes.push_back(temp);
 		break;
 	case POINTOFINTERESTTYPE_SHIELD:
-		temp.Initialize(RUNE_SHIELD, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f, DirectX::XMFLOAT3(1.0f, 1.0f, 0.34f));
+		temp.Initialize(RUNE_SHIELD, DirectX::XMFLOAT3(p_x, p_y, p_z), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), 0.0f, DirectX::XMFLOAT3(1.0f, 1.0f, 0.0f));
 		temp.SetActive(true);
 		m_runes.push_back(temp);
 		break;
