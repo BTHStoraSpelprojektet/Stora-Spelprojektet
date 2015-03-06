@@ -1,5 +1,5 @@
 #include "AnimatedObject.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "Model.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "PointLights.h"

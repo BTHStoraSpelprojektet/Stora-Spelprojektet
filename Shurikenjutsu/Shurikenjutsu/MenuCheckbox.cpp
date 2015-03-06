@@ -1,6 +1,6 @@
 #include "MenuCheckbox.h"
 #include "GUIElement.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 
 MenuCheckbox::MenuCheckbox(){}
 MenuCheckbox::~MenuCheckbox(){}

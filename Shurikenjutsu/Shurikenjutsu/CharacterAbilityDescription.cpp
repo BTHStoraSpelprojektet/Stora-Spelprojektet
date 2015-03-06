@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "TextResource.h"
 #include "Structures.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "ToolTipPopUp.h"
 
 CharacterAbilityDescription::CharacterAbilityDescription(){}

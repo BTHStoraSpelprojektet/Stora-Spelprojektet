@@ -3,7 +3,7 @@
 #include "MenuItem.h"
 #include "GUIText.h"
 #include "CharacterAbilityDescription.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "Globals.h"
 #include <ctime>
 #include "Network.h"

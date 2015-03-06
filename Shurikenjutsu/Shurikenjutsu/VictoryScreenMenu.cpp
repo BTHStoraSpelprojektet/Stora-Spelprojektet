@@ -1,5 +1,5 @@
 #include "VictoryScreenMenu.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "GUIElement.h"
 #include "Globals.h"
 

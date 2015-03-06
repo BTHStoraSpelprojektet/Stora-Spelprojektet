@@ -1,6 +1,6 @@
 #include "TeamTable.h"
 #include "MenuItem.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "Globals.h"
 
 

@@ -1,5 +1,5 @@
 #include "ToolTipPopUp.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "InputManager.h"
 #include "GUIText.h"
 #include "Globals.h"

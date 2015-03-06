@@ -1,6 +1,6 @@
 #include "DeathBoard.h"
 #include "GUIElement.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "Globals.h"
 #include "../CommonLibs/ModelNames.h"
 #include "../CommonLibs/CommonEnums.h"

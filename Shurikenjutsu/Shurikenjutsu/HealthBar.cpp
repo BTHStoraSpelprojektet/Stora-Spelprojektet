@@ -1,7 +1,7 @@
 #include "HealthBar.h"
 #include "GUIElement.h"
 #include "GUIElementColor.h"
-#include "TextureLibrary.h"
+#include "..\CommonLibs\TextureLibrary.h"
 #include "Globals.h"
 #include "Network.h"
 
