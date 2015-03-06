@@ -37,7 +37,7 @@ bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_e
 	p_team == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
 
 	m_trail = new Trail();
-	if (!m_trail->Initialize(50.0f, 0.2f, 0.2f, color, "../Shurikenjutsu/2DTextures/Trail.png"))
+	if (!m_trail->Initialize(50.0f, 0.2f, 0.2f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A spike trap trail failed to initialize!");
 	}

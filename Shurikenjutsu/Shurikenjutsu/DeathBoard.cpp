@@ -47,7 +47,7 @@ bool DeathBoard::Initialize()
 
 		// Ability
 		m_killAbility[i] = GUIElement();
-		m_killAbility[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_NINJA1));
+		m_killAbility[i].Initialize(position, 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		position.x -= 22.5f;
 
 		// Killer

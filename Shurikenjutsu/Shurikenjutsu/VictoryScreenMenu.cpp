@@ -11,13 +11,13 @@ bool VictoryScreenMenu::Initialize()
 	m_menu = new Menu();
 	
 	// Continue button
-	m_menu->AddButton(0.0f, -1.0f * BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/continue.png"), MENUACTION_INGAME_CONTINUE);
+	m_menu->AddButton(0.0f, -1.0f * BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/continue.png"), MENUACTION_INGAME_CONTINUE);
 	// Main menu button
-	m_menu->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/main_menu.png"), MENUACTION_INGAME_TO_MAIN);
+	m_menu->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/main_menu.png"), MENUACTION_INGAME_TO_MAIN);
 
 	m_background = new GUIElement();
 	m_background->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, 
-		TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/bgTint.png"));
+		TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/bgTint.png"));
 
 	return true;
 }

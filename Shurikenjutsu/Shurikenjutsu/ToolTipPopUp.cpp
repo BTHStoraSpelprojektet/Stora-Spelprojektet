@@ -24,7 +24,7 @@ void ToolTipPopUp::Initialize(float p_xPos, float p_yPos, std::string p_text , f
 	m_halfScreenY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - (GLOBAL::GetInstance().BORDER_SIZE + GLOBAL::GetInstance().TITLE_BORDER_SIZE) * 0.5f;
 
 	m_toolTipBG = new MenuItem();
-	m_toolTipBG->Initialize(p_xPos, p_yPos + 75.0f, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 2.84f, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH/6.83f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/textBox.png"));
+	m_toolTipBG->Initialize(p_xPos, p_yPos + 75.0f, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 2.84f, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH/6.83f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/textBox.png"));
 	
 
 }

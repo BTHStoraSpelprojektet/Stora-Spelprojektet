@@ -59,13 +59,9 @@ void TextureLibrary::LoadTextureDirectory()
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	DWORD dwError = 0;
 
-	// Find the first file in the directory.
-	hFind = FindFirstFile("../Shurikenjutsu/2DTextures/*", &ffd);
-
-	// Skip the ".." file
+	// Look through base folder.
+	hFind = FindFirstFile("../Shurikenjutsu/2DTextures/*.png", &ffd);
 	FindNextFile(hFind, &ffd);
-
-	// Relevant files
 	while (FindNextFile(hFind, &ffd) != 0)
 	{
 		// Avoid loading the windows folder thumb file.
@@ -74,6 +70,70 @@ void TextureLibrary::LoadTextureDirectory()
 			AddTexture("../Shurikenjutsu/2DTextures/" + (std::string)ffd.cFileName);
 		}
 	}
+	FindClose(hFind);
 
+	// Look through the Abilities folder.
+	hFind = FindFirstFile("../Shurikenjutsu/2DTextures/Abilities/*", &ffd);
+	FindNextFile(hFind, &ffd);
+	while (FindNextFile(hFind, &ffd) != 0)
+	{
+		// Avoid loading the windows folder thumb file.
+		if ((std::string)ffd.cFileName != "Thumbs.db")
+		{
+			AddTexture("../Shurikenjutsu/2DTextures/Abilities/" + (std::string)ffd.cFileName);
+		}
+	}
+	FindClose(hFind);
+
+	// Look through the DeathBoard folder.
+	hFind = FindFirstFile("../Shurikenjutsu/2DTextures/DeathBoard/*", &ffd);
+	FindNextFile(hFind, &ffd);
+	while (FindNextFile(hFind, &ffd) != 0)
+	{
+		// Avoid loading the windows folder thumb file.
+		if ((std::string)ffd.cFileName != "Thumbs.db")
+		{
+			AddTexture("../Shurikenjutsu/2DTextures/DeathBoard/" + (std::string)ffd.cFileName);
+		}
+	}
+	FindClose(hFind);
+
+	// Look through the GUI folder.
+	hFind = FindFirstFile("../Shurikenjutsu/2DTextures/GUI/*", &ffd);
+	FindNextFile(hFind, &ffd);
+	while (FindNextFile(hFind, &ffd) != 0)
+	{
+		// Avoid loading the windows folder thumb file.
+		if ((std::string)ffd.cFileName != "Thumbs.db")
+		{
+			AddTexture("../Shurikenjutsu/2DTextures/GUI/" + (std::string)ffd.cFileName);
+		}
+	}
+	FindClose(hFind);
+
+	// Look through the Ninjas folder.
+	hFind = FindFirstFile("../Shurikenjutsu/2DTextures/Ninjas/*", &ffd);
+	FindNextFile(hFind, &ffd);
+	while (FindNextFile(hFind, &ffd) != 0)
+	{
+		// Avoid loading the windows folder thumb file.
+		if ((std::string)ffd.cFileName != "Thumbs.db")
+		{
+			AddTexture("../Shurikenjutsu/2DTextures/Ninjas/" + (std::string)ffd.cFileName);
+		}
+	}
+	FindClose(hFind);
+
+	// Look through the Particles folder.
+	hFind = FindFirstFile("../Shurikenjutsu/2DTextures/Particles/*", &ffd);
+	FindNextFile(hFind, &ffd);
+	while (FindNextFile(hFind, &ffd) != 0)
+	{
+		// Avoid loading the windows folder thumb file.
+		if ((std::string)ffd.cFileName != "Thumbs.db")
+		{
+			AddTexture("../Shurikenjutsu/2DTextures/Particles/" + (std::string)ffd.cFileName);
+		}
+	}
 	FindClose(hFind);
 }

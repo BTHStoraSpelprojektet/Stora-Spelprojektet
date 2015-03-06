@@ -205,7 +205,7 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 	
-	m_texture = GraphicsEngine::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/grassFoil2.png");
+	m_texture = GraphicsEngine::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/Particles/GrassFoil.png");
 	m_normalMap = GraphicsEngine::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/blanknormalmap_50.png");
 	
 	ReadRawFile();
