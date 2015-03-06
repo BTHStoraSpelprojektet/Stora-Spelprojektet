@@ -339,12 +339,19 @@ GAMESTATESWITCH PlayingState::Update()
 		}
 	}
 
-	else if (GLOBAL::GetInstance().CAMERA_SPECTATE && m_spectateCountDown <= 0.0f)
+	else if (GLOBAL::GetInstance().CAMERA_SPECTATE)
 	{
-		player = m_playerManager->GetTeamMemberPosSpectate(m_spectateIndex, m_playerManager->GetPlayerTeam());
-		m_camera->FollowCharacter(player);
+		std::vector<Player*> tempList = m_playerManager->GetMyTeamPlayers(m_playerManager->GetPlayerTeam());
+		if (m_spectateIndex > ((int)tempList.size() - 1) || m_spectateIndex < 0)
+		{
+			m_spectateIndex = 0;
+		}
+		if (tempList.size() != 0)
+		{
+			player = tempList[m_spectateIndex]->GetPosition();
+			m_camera->FollowCharacter(player);
+		}
 	}
-
 	else
 	{
 		m_camera->FollowCharacter(player);
