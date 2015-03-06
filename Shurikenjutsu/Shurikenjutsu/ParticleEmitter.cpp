@@ -66,7 +66,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_FIRE_TORCH) :
 		{
 			m_fire = true;
-			InitParticles(50.0f, 100, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle2.png"));
+			InitParticles(12.0f, 100, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle2.png"));
 			break;
 		}
 		case(PARTICLE_PATTERN_FIREFLIES) :
