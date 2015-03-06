@@ -70,6 +70,7 @@ void Network::InitValues()
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
 	m_fanList = std::vector<FanNet>();
+	m_visibleEnemies = std::vector<int>();
 
 	m_connectionCount = 0;
 	m_previousCount = 0;
@@ -127,15 +128,21 @@ void Network::Update()
 	m_timeToSendPos -= GLOBAL::GetInstance().GetDeltaTime();
 	if (m_timeToSendPos < 0.0)
 	{
+		// Send pos
 		if (m_sendPos)
 		{
 			SendLatestPos();
-}
+		}
 
+		// Send dir
 		if (m_sendDir)
 		{
 			SendLatestDir();
 		}
+
+		// Send visible
+		SendVisiblePlayers();
+
 		m_timeToSendPos = m_posTimer;
 	}
 }
@@ -2341,4 +2348,50 @@ int Network::GetCharNr(RakNet::RakNetGUID p_guid)
 	}
 
 	return -1;
+}
+
+void Network::SetVisiblePlayers(std::vector<RakNet::RakNetGUID> p_visiblePlayers)
+{
+	m_visibleEnemies = std::vector<int>();
+	for (int i = 0; i < p_visiblePlayers.size(); i++)
+	{
+		if (GetTeam(p_visiblePlayers[i]) != m_myPlayer.team)
+		{
+			m_visibleEnemies.push_back(GUIDToID(p_visiblePlayers[i]));
+		}
+	}
+}
+
+int Network::GUIDToID(RakNet::RakNetGUID p_guid)
+{
+	if (p_guid == GetMyGUID())
+	{
+		return m_myPlayer.id;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				return m_enemyPlayers[i].id;
+			}
+		}
+	}
+
+	return -1;
+}
+
+void Network::SendVisiblePlayers()
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_SEND_VISIBLE_PLAYERS);
+
+	bitStream.Write((unsigned char)m_visibleEnemies.size());
+	
+	for (unsigned int i = 0; i < m_visibleEnemies.size(); i++)
+	{
+		bitStream.Write((unsigned char)m_visibleEnemies[i]);
+	}
 }

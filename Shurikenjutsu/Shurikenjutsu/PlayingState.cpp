@@ -690,6 +690,7 @@ DirectX::XMFLOAT3 PlayingState::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 
 void PlayingState::MinimapUpdatePos(Minimap *p_minimap)
 {
+	std::vector<RakNet::RakNetGUID> visiblePlayers = std::vector<RakNet::RakNetGUID>();
 	for (unsigned int i = 0; i < 7; i++)
 	{
 		m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000, -1000, 0));
@@ -699,6 +700,7 @@ void PlayingState::MinimapUpdatePos(Minimap *p_minimap)
 		if (player && (m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || VisibilityComputer::GetInstance().IsPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
 		{
 			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
+			visiblePlayers.push_back(player->GetGuID());
 		}
 	}
 }
