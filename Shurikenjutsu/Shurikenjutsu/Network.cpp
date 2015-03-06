@@ -141,7 +141,7 @@ void Network::Update()
 		}
 
 		// Send visible
-		SendVisiblePlayers();
+		//SendVisiblePlayers();
 
 		m_timeToSendPos = m_posTimer;
 	}
