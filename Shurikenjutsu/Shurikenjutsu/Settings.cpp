@@ -6,6 +6,16 @@ Settings::Settings(){}
 
 Settings::~Settings(){}
 
+Settings* Settings::GetInstance()
+{
+	if (m_instance == nullptr)
+	{
+		m_instance = new Settings();
+	}
+
+	return m_instance;
+}
+
 void Settings::Shutdown()
 {
 	if (m_instance)
