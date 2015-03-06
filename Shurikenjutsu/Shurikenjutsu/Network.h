@@ -20,6 +20,7 @@
 #include <map>
 #include <DirectXMath.h>
 #include "ObjectManager.h"
+#include "Sound.h"
 
 
 enum NETWORKSTATUS
@@ -149,13 +150,14 @@ public:
 	bool IsSuddenDeath();
 	int GetSuddenDeathBoxIndex();
 
-	void SpawnRunes(PointOfInterestType p_poiType, float p_x, float p_y, float p_z);
-	void RunePickedUp(PointOfInterestType p_poiType, RakNet::RakNetGUID p_guid);
+	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
 
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
 
 	void SetPlayerName(std::string p_playerName);
 	std::string GetPlayerName(RakNet::RakNetGUID p_guid);
+	int GetCharNr(RakNet::RakNetGUID p_guid);
 
 private:
 	void ClearListsAtNewRound();
@@ -242,6 +244,7 @@ private:
 	int m_lastTeamWon;
 	bool m_matchOver;
 	int m_matchWinningTeam;
+	std::map<POINTOFINTERESTTYPE, Sound::SoundEmitter*> runeSoundEmitters;
 
 	NETWORKSTATUS m_networkStatus;
 	std::string m_ip;

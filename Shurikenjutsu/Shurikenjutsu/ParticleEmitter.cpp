@@ -23,6 +23,8 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	m_mesh = nullptr;
 	m_particleTexture = 0;
 
+	m_fire = false;
+
 	// Set maximum number of particles, and the number of particles to emit per second.
 	switch (m_pattern)
 	{
@@ -51,7 +53,8 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_FIRE) :
 		{
-			InitParticles(100.0f, 100, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle_texture2.png"));
+			m_fire = true;
+			InitParticles(50.0f, 100, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle2.png"));
 			break;
 		}
 		case(PARTICLE_PATTERN_FIRE_SPARK) :
@@ -62,7 +65,8 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_FIRE_TORCH) :
 		{
-			InitParticles(100.0f, 100, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle_texture2.png"));
+			m_fire = true;
+			InitParticles(50.0f, 100, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 1.5f, 0.5f, 1.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/fireParticle2.png"));
 			break;
 		}
 		case(PARTICLE_PATTERN_FIREFLIES) :
@@ -657,7 +661,7 @@ void ParticleEmitter::UpdateParticles()
 					float xWindOffset = GetWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 					float zWindOffset = GetWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 
-					float lColor = 1.0f - (m_particleList[i].m_timePassed / m_particleList[i].m_timeToLive);
+					float lColor = (1.0f - (m_particleList[i].m_timePassed / m_particleList[i].m_timeToLive));
 					m_particleList[i].m_color = DirectX::XMFLOAT4(lColor, lColor, lColor, lColor);
 
 					if (timeToDirectionChange>m_particleList[i].m_timePassed)
@@ -752,6 +756,9 @@ void ParticleEmitter::UpdateParticles()
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
 					float xWindOffset = GetWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 					float zWindOffset = GetWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
+
+					float lColor = (1.0f - (m_particleList[i].m_timePassed / m_particleList[i].m_timeToLive));
+					m_particleList[i].m_color = DirectX::XMFLOAT4(lColor, lColor, lColor, lColor);
 
 					if (timeToDirectionChange>m_particleList[i].m_timePassed)
 					{
@@ -1300,4 +1307,9 @@ void ParticleEmitter::SetSuddenDeathBoxLimits(float p_xMax, float p_xMin, float 
 	m_SDxMin = p_xMin;
 	m_SDzMax = p_zMax;
 	m_SDzMin = p_zMin;
+}
+
+bool ParticleEmitter::IsFire()
+{
+	return m_fire;
 }

@@ -1131,10 +1131,12 @@ void Player::SetTeam(int p_team)
 	if (m_team == 1)
 	{
 		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
+		AnimatedObject::ChangeTrailColor(1);
 	}
 	else
 	{
 		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
+		AnimatedObject::ChangeTrailColor(0);
 	}
 }
 

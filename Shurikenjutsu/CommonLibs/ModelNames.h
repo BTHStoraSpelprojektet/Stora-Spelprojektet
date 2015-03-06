@@ -66,6 +66,7 @@
 #define TEAM_STATUS_FRAME "../Shurikenjutsu/2DTextures/statusBar_frame.png"
 
 // DeathBoard
+#define DEATHBOARD_BACKGROUND "../Shurikenjutsu/2DTextures/abilitybarLobby.png"
 #define DEATHBOARD_NINJA1 "../Shurikenjutsu/2DTextures/DeathBoardN1.png"
 #define DEATHBOARD_NINJA2 "../Shurikenjutsu/2DTextures/DeathBoardN2.png"
 #define DEATHBOARD_NINJA3 "../Shurikenjutsu/2DTextures/DeathBoardN3.png"

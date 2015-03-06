@@ -37,6 +37,7 @@ private:
 	GUIText m_killer[5];
 	GUIText m_deadGuy[5];
 	GUIElement m_killAbility[5];
+	GUIElement m_background[5];
 
 	double m_deathTimer[5];
 	int m_nrOfDeaths;

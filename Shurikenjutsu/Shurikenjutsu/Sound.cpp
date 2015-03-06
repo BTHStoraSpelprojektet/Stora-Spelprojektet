@@ -38,7 +38,7 @@ bool Sound::Initialize()
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/AirCut.wav", FMOD_MODE, 0, &m_airCutSound);
 	FMODErrorCheck(m_result);
 
-	m_result = m_system->createSound("../Shurikenjutsu/Sound/DashGrassSteps.wav", FMOD_MODE, 0, &m_dashStepsSound);
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/DashWoosh.wav", FMOD_MODE, 0, &m_dashStepsSound);
 	FMODErrorCheck(m_result);
 
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/ShurikenThrow.wav", FMOD_MODE, 0, &m_shurikenThrowSound);
@@ -115,6 +115,9 @@ bool Sound::Initialize()
 	FMODErrorCheck(m_result);
 	
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/CountdownBeep.wav", FMOD_2D, 0, &m_countdownBeep);
+	FMODErrorCheck(m_result);
+
+	m_result = m_system->createSound("../Shurikenjutsu/Sound/CountdownGong.wav", FMOD_2D, 0, &m_countdownGong);
 	FMODErrorCheck(m_result);
 
 	m_result = m_system->createSound("../Shurikenjutsu/Sound/RuneInvisibility.wav", FMOD_MODE, 0, &m_runeInvisibility);
@@ -458,6 +461,13 @@ void Sound::PlayDefaultSound(SoundEmitter* p_soundEmitter){
 		m_system->playSound(m_countdownBeep, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}
+	case PLAYSOUND_COUNTDOWN_GONG_SOUND:
+	{
+		m_countdownGong->setMode(FMOD_LOOP_OFF);
+		m_countdownGong->setLoopCount(1);
+		m_system->playSound(m_countdownGong, channelEffects, true, &p_soundEmitter->m_channel);
+		break;
+	}
 	case PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND:
 	{
 		m_runeInvisibilitySpawn->setMode(FMOD_LOOP_OFF);
@@ -642,22 +652,22 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 	}
 	case PLAYSOUND_RUNE_SHIELD_SOUND:
 	{
-		m_runeShield->setMode(FMOD_LOOP_OFF);
-		m_runeShield->setLoopCount(1);
+		m_runeShield->setMode(FMOD_LOOP_NORMAL);
+		m_runeShield->setLoopCount(-1);
 		m_system->playSound(m_runeShield, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}
 	case PLAYSOUND_RUNE_HEAL_SOUND:
 	{
-		m_runeHeal->setMode(FMOD_LOOP_OFF);
-		m_runeHeal->setLoopCount(1);
+		m_runeHeal->setMode(FMOD_LOOP_NORMAL);
+		m_runeHeal->setLoopCount(-1);
 		m_system->playSound(m_runeHeal, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}
 	case PLAYSOUND_RUNE_INVISIBLE_SOUND:
 	{
-		m_runeInvisibility->setMode(FMOD_LOOP_OFF);
-		m_runeInvisibility->setLoopCount(1);
+		m_runeInvisibility->setMode(FMOD_LOOP_NORMAL);
+		m_runeInvisibility->setLoopCount(-1);
 		m_system->playSound(m_runeInvisibility, channelEffects, true, &p_soundEmitter->m_channel);
 		break;
 	}

@@ -120,6 +120,8 @@ void GUIText::SetText(std::string p_text)
 
 void GUIText::SetPosition(float p_x, float p_y)
 {
+	m_originPosX = p_x;
+	m_originPosY = p_y;
 	m_posx = (p_x + (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_WIDTH / GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
 	m_posy = (-p_y + (GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT* 0.5f)) * GLOBAL::GetInstance().MAX_SCREEN_HEIGHT / GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 
@@ -151,6 +153,16 @@ float GUIText::GetPositionX()
 float GUIText::GetPositionY()
 {
 	return m_posy;
+}
+
+float GUIText::GetOriginPosX()
+{
+	return m_originPosX;
+}
+
+float GUIText::GetOriginPosY()
+{
+	return m_originPosY;
 }
 
 float GUIText::GetWidth()
