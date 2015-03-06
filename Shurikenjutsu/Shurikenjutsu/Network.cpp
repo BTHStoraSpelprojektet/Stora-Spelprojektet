@@ -25,6 +25,22 @@ Network* Network::GetInstance()
 bool Network::Initialize()
 {
 	ServerGlobals::IS_SERVER = false;
+	
+
+	m_clientPeer = RakNet::RakPeerInterface::GetInstance();	
+	m_clientPeer->Startup(1, &m_socketDesc, 1);
+
+	m_networkLogger = NetworkLogger();
+	m_networkLogger.Initialize();
+	m_clientPeer->AttachPlugin(&m_networkLogger);
+
+	InitValues();
+
+	return true;
+}
+
+void Network::InitValues()
+{
 	m_connected = false;
 	m_prevConnected = false;
 	m_newOrRemovedPlayers = false;
@@ -51,13 +67,6 @@ bool Network::Initialize()
 	m_suddenDeath = false;
 	m_suddenDeathBoxIndex = 99;
 
-	m_clientPeer = RakNet::RakPeerInterface::GetInstance();	
-	m_clientPeer->Startup(1, &m_socketDesc, 1);
-
-	m_networkLogger = NetworkLogger();
-	m_networkLogger.Initialize();
-	m_clientPeer->AttachPlugin(&m_networkLogger);
-
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
 	m_fanList = std::vector<FanNet>();
@@ -73,8 +82,6 @@ bool Network::Initialize()
 
 	m_posTimer = 0.01;
 	m_timeToSendPos = 0.0;
-
-	return true;
 }
 
 void Network::SetObjectManager(ObjectManager* p_objectManager)
@@ -1173,6 +1180,8 @@ void Network::Disconnect()
 
 	m_clientPeer->Shutdown(300);
 	m_clientPeer->Startup(1, &m_socketDesc, 1);
+
+	InitValues();
 }
 
 void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)

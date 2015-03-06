@@ -50,6 +50,7 @@ public:
 	static Network* GetInstance();
 
 	bool Initialize();
+	void InitValues();
 	void Shutdown();
 
 	void Update();
