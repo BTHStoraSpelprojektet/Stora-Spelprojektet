@@ -348,15 +348,34 @@ void DirectXWrapper::Shutdown()
 	}
 
 	m_outliningNOTEQUAL->Release();
+	m_outliningNOTEQUAL = nullptr;
+
 	m_outliningALWAYS->Release();
+	m_outliningALWAYS = nullptr;
+
 	m_depthStateParticles->Release();
+	m_depthStateParticles = nullptr;
+
 	m_depthEnabled->Release();
+	m_depthEnabled = nullptr;
+
 	m_depthDisabled->Release();
+	m_depthDisabled = nullptr;
+
 	m_depthStencilViewOutlining->Release();
+	m_depthStencilViewOutlining = nullptr;
+
 	m_depthStencilView->Release();
+	m_depthStencilView = nullptr;
+
 	m_depthStencilOutlining->Release();
+	m_depthStencilOutlining = nullptr;
+
 	m_depthStencil->Release();
+	m_depthStencil = nullptr;
+
 	m_renderTarget->Release();
+	m_renderTarget = nullptr;
 
 	if (m_alphaDisabled != nullptr)
 	{
@@ -379,72 +398,73 @@ void DirectXWrapper::Shutdown()
 	if (m_gBufferSRV[0])
 	{
 		m_gBufferSRV[0]->Release();
-		m_gBufferSRV[0] = 0;
+		m_gBufferSRV[0] = nullptr;
 	}
 
 	if (m_gBufferSRV[1])
 	{
 		m_gBufferSRV[1]->Release();
-		m_gBufferSRV[1] = 0;
+		m_gBufferSRV[1] = nullptr;
 	}
 
 	if (m_gBufferRTV[0])
 	{
 		m_gBufferRTV[0]->Release();
-		m_gBufferRTV[0] = 0;
+		m_gBufferRTV[0] = nullptr;
 	}
 
 	if (m_gBufferRTV[1])
 	{
 		m_gBufferRTV[1]->Release();
-		m_gBufferRTV[1] = 0;
+		m_gBufferRTV[1] = nullptr;
 	}
 
 	if (m_pPSRV[0])
 	{
 		m_pPSRV[0]->Release();
-		m_pPSRV[0] = 0;
+		m_pPSRV[0] = nullptr;
 	}
 
 	if (m_pPSRV[1])
 	{
 		m_pPSRV[1]->Release();
-		m_pPSRV[1] = 0;
+		m_pPSRV[1] = nullptr;
 	}
 
 	if (m_pPRTV[0])
 	{
 		m_pPRTV[0]->Release();
-		m_pPRTV[0] = 0;
+		m_pPRTV[0] = nullptr;
 	}
 
 	if (m_pPRTV[1])
 	{
 		m_pPRTV[1]->Release();
-		m_pPRTV[1] = 0;
+		m_pPRTV[1] = nullptr;
 	}
 
 	if (m_compositionSRV)
 	{
 		m_compositionSRV->Release();
-		m_compositionSRV = 0;
+		m_compositionSRV = nullptr;
 	}
 
 	if (m_compositionRTV)
 	{
 		m_compositionRTV->Release();
-		m_compositionRTV = 0;
+		m_compositionRTV = nullptr;
 	}
 
 	m_context->ClearState();
 	m_context->Flush();
-
 	m_context->Release();
-	m_device->Release();
-
 	m_context = nullptr;
+
+	m_device->Release();
 	m_device = nullptr;	
+
 	m_swapChain->Release();
+	m_swapChain = nullptr;
 
 	if (m_pointLightsAlphaEnabled)
 	{

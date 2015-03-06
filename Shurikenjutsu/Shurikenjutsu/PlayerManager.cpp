@@ -468,26 +468,41 @@ void PlayerManager::RemoveEnemyFromList(unsigned int p_index)
 	m_enemyListSize--;
 }
 
-DirectX::XMFLOAT3 PlayerManager::GetTeamMemberPosSpectate(int &p_index, int p_team)
+//DirectX::XMFLOAT3 PlayerManager::GetTeamMemberPosSpectate(int &p_index, int p_team)
+//{
+//	for (unsigned int i = 0; i < m_enemyListSize; i++)
+//	{
+//		if (m_enemyListSize <= (unsigned int)p_index || p_index == -1)
+//		{
+//			p_index = -1;
+//			return m_player->GetPosition();
+//		}
+//
+//		if (m_enemyList[p_index]->GetTeam() == p_team)
+//		{
+//			return m_enemyList[p_index]->GetPosition();
+//		}
+//		p_index++;
+//	}
+//
+//	return m_player->GetPosition();
+//}
+
+std::vector<Player*> PlayerManager::GetMyTeamPlayers(int p_team)
 {
+	std::vector<Player*> tempList;
 	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
-		if (m_enemyListSize <= (unsigned int)p_index || p_index == -1)
+		if (m_enemyList[i]->GetIsAlive())
 		{
-			p_index = -1;
-			return m_player->GetPosition();
+			if (m_enemyList[i]->GetTeam() == p_team)
+			{
+				tempList.push_back(m_enemyList[i]);
+			}
 		}
-
-		if (m_enemyList[p_index]->GetTeam() == p_team)
-		{
-			return m_enemyList[p_index]->GetPosition();
-		}
-		p_index++;
 	}
-
-	return m_player->GetPosition();
+	return tempList;
 }
-
 bool PlayerManager::GetPlayerIsAlive()
 {
 	return m_player->GetIsAlive();
