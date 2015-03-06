@@ -90,7 +90,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_floatingText->Initialize();
 
 	m_trail = new Trail();
-	if (!m_trail->Initialize(100.0f, 0.5f, 0.2f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Trail.png"))
+	if (!m_trail->Initialize(100.0f, 0.5f, 0.2f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A dash trail failed to initialize!");
 	}

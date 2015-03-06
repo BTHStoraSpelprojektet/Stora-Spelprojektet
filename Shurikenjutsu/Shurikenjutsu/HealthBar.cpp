@@ -13,12 +13,12 @@ bool HealthBar::Initialize(float p_width, float p_height)
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	m_border = new GUIElement();
-	m_border->Initialize(position, p_width, p_height, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/hpBorder.png"));
+	m_border->Initialize(position, p_width, p_height, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/hpBorder.png"));
 
 	m_background = new GUIElement();
-	m_background->Initialize(position, p_width - 10.0f, p_height - 6.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/hpRed.png")); //DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+	m_background->Initialize(position, p_width - 10.0f, p_height - 6.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/hpRed.png")); //DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 	m_foreground = new GUIElement();
-	m_foreground->Initialize(position, p_width - 10.0f, p_height - 6.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/hpGreen.png")); //DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+	m_foreground->Initialize(position, p_width - 10.0f, p_height - 6.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/hpGreen.png")); //DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
 
 	return true;
 }
