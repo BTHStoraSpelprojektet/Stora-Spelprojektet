@@ -14,7 +14,10 @@
 #include "Object.h"
 #include "FoliageShader.h"
 #include "ScreenSpace.h"
-
+#include "Structures.h"
+#include "InstanceManager.h"
+#include "RenderTarget.h"
+#include "CustomFont.h"
 
 GraphicsEngine* GraphicsEngine::m_instance;
 
@@ -235,9 +238,12 @@ void GraphicsEngine::Shutdown()
 		delete m_particleShader;
 		m_particleShader = nullptr;
 	}
-	
-	m_shadowMap.Shutdown();
-
+	//if (m_shadowMap != nullptr)
+	//{
+		m_shadowMap.Shutdown();
+	//	delete m_shadowMap;
+	//	m_shadowMap = nullptr;
+	//}
 	if (m_sceneShader != nullptr)
 	{
 		m_sceneShader->Shutdown();

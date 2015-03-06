@@ -3,12 +3,11 @@
 
 #include "DirectX.h"
 #include "DirectXTex\DirectXTex\DirectXTex.h"
-#include "Structures.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
-#include <vector>
-#include "InstanceManager.h"
 #include "RenderTarget.h"
-#include "CustomFont.h"
+
+#include <DirectXMath.h>
+#include <vector>
 
 class WICTextureLoader;
 class GUIShader;
@@ -19,6 +18,10 @@ class SceneShader;
 class Object;
 class FoliageShader;
 class ScreenSpace;
+class InstanceManager;
+struct WindowRectangle;
+struct DirectionalLight;
+
 
 class GraphicsEngine
 {

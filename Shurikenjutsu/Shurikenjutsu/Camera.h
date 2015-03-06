@@ -3,6 +3,7 @@
 
 #include "GraphicsEngine.h"
 #include "Sound.h"
+#include <DirectXMath.h>
 
 class Camera
 {
