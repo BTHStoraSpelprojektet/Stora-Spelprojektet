@@ -214,6 +214,11 @@ void Player::UpdateMe()
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(m_position.x, 2.0f, m_position.z);
 	m_trail->Update(position, angle);
 
+	//Required for ambient 3D sounds
+	if (m_sound != nullptr){
+		m_sound->UpdateAmbientSound(m_position.x, m_position.y, m_position.z);
+	}
+
 	if (m_updateVisibility)
 	{
 		m_updateVisibility = false;
