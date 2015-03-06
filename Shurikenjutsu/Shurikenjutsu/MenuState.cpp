@@ -227,10 +227,6 @@ GAMESTATESWITCH MenuState::Update()
 		m_ipbox->Update();
 		m_namebox->Update();
 	}
-	if (!m_sound->GetMuteState())
-	{
-		m_sound->StartMusic();
-	}
 	// Check buttons
 	switch (action.m_action)
 	{

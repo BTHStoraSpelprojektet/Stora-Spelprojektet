@@ -1,7 +1,7 @@
 #include "Sound.h"
 #include <iostream>
 #include "fmod_errors.h"
-
+#include "Globals.h"
 #include "../CommonLibs/CommonStructures.h"
 Sound::Sound(){}
 Sound::~Sound(){}
@@ -175,7 +175,6 @@ bool Sound::Initialize()
 
 
 	m_musicVolume = 0.7f;
-	m_isMuted = false;
 	m_defaultWindVolume = 0.2f;
 	return true;
 }
@@ -678,7 +677,6 @@ void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume
 	p_soundEmitter->m_channel->setVolume(0.0f);
 	p_soundEmitter->m_channel->setPaused(false);
 }
-
 void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
 
 	//If wind always same volume
@@ -709,35 +707,17 @@ void Sound::setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume){
 
 void Sound::MuteEverything()
 {
-	m_musicVolume = 0.0f;
-	m_defaultWindVolume = 0.0f;
-	StopMusic();
-	for (unsigned int i = 0; i < defaultSoundEmitters.size(); i++)
-	{
-		StopAmbientSound(defaultSoundEmitters[i]);
-	}
-	for (unsigned int i = 0; i < ambientSoundEmitters.size(); i++)
-	{
-		StopAmbientSound(ambientSoundEmitters[i]);
-	}
-	m_isMuted = true;
+	masterChannelGroup->setMute(true);
+	channelEffects->setMute(true);
+	channelAmbient->setMute(true);
+	channelMusic->setMute(true);
+
+
 }
 void Sound::UnMuteEverything()
 {
-	m_musicVolume = 0.7f;
-	m_defaultWindVolume = 0.2f;
-	for (unsigned int i = 0; i < defaultSoundEmitters.size(); i++)
-	{
-		StartAmbientSound(defaultSoundEmitters[i]);
-	}
-	for (unsigned int i = 0; i < ambientSoundEmitters.size(); i++)
-	{
-		StartAmbientSound(ambientSoundEmitters[i]);
-	}
-	m_isMuted = false;
-}
-
-bool Sound::GetMuteState()
-{
-	return m_isMuted;
+	masterChannelGroup->setMute(false);
+	channelEffects->setMute(false);
+	channelAmbient->setMute(false);
+	channelMusic->setMute(false);
 }

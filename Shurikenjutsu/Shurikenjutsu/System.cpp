@@ -315,7 +315,6 @@ void System::Update()
 {
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('m')))
 	{
-		GLOBAL::GetInstance().VOLUME_PREVSTATE = GLOBAL::GetInstance().VOLUME_ON;
 		if (GLOBAL::GetInstance().VOLUME_ON)
 		{
 			GLOBAL::GetInstance().VOLUME_ON = false;

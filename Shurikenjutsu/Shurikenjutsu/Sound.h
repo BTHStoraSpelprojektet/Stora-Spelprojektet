@@ -41,7 +41,6 @@ public:
 
 	void MuteEverything();
 	void UnMuteEverything();
-	bool GetMuteState();
 private:
 	FMOD::System *m_system;
 	FMOD_RESULT m_result;
@@ -53,7 +52,6 @@ private:
 	float m_musicVolume;
 	float m_defaultWindVolume;
 	int music_sound_id = 0;
-	bool m_isMuted;
 
 	void PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume = 0.0f);
 	void setAmbientVolume(SoundEmitter* p_soundEmitter, float p_volume);
