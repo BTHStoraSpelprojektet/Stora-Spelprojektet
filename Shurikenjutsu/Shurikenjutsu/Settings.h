@@ -1,6 +1,8 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
+#include <string>
+
 class Settings
 {
 public:
@@ -16,6 +18,12 @@ private:
 
 	Settings();
 	~Settings();
+
+	std::string m_name;
+	bool m_vsync;
+	bool m_fullscreen;
+	
+
 };
 
 #endif
