@@ -215,6 +215,30 @@ void Server::ReceviePacket()
 			m_gameState->SendCurrentTeamScore(m_packet->guid);
 			break;
 		}
+		case ID_SEND_VISIBLE_PLAYERS:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned char size;
+			unsigned char id;
+
+			bitStream.Read(messageID);
+			bitStream.Read(size);
+
+			unsigned int iSize = (unsigned int)size;
+			int iId;
+
+			for (unsigned int i = 0; i < size; i++)
+			{
+				bitStream.Read(id);
+				iId = (int)id;
+
+				// Todo
+				// playerManager->UpdateVisibleThingymabob
+			}
+
+			break;
+		}
 		default:
 			break;
 		}
