@@ -89,7 +89,7 @@ void PointOfInterest::SpawnLight()
 	PointLight newLight;
 	newLight.m_ambient = DirectX::XMVectorSet(m_lightColor.x, m_lightColor.y, m_lightColor.z, 0.0f);
 	newLight.m_diffuse = DirectX::XMVectorSet(m_lightColor.x, m_lightColor.y, m_lightColor.z, 0.0f);
-	newLight.m_specular = DirectX::XMVectorSet(0.4f, 0.4f, 4.0f, 0.0f);
+	newLight.m_specular = DirectX::XMVectorSet(m_lightColor.x, m_lightColor.y, m_lightColor.z, 0.0f);
 
 	newLight.m_position = m_positionLight;
 	newLight.m_position.y += 1.8f;

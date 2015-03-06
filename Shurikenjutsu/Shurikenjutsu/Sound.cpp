@@ -635,12 +635,14 @@ void Sound::StopAmbientSound(SoundEmitter* p_soundEmitter)
 	if (p_soundEmitter != NULL)
 	{
 		p_soundEmitter->isPlaying = false;
+		p_soundEmitter->m_channel->setPaused(true);
 	}
 }
 
 void Sound::StartAmbientSound(SoundEmitter* p_soundEmitter)
 {
 	p_soundEmitter->isPlaying = true;
+	p_soundEmitter->m_channel->setPaused(false);
 }
 
 void Sound::PlayAmbientSound(SoundEmitter* p_soundEmitter, float p_initialVolume)

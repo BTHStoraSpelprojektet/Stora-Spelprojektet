@@ -100,6 +100,7 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 
 	if (m_sound != NULL){
 		m_soundEmitter = m_sound->CreateAmbientSound(PLAYSOUND_STEPS_LEAVES_SOUND, p_pos.x, p_pos.y, p_pos.z);
+		m_sound->StopAmbientSound(m_soundEmitter);
 	}
 	m_name = p_name;
 	return true;
