@@ -82,7 +82,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_window.SetTitle(m_title);
 
 	// Initialize the graphics engine.
-	GraphicsEngine::GetInstance()->Initialize(m_window.GetHandle(), GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
+	GraphicsEngine::GetInstance()->Initialize(m_window.GetHandle(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, GLOBAL::GetInstance().MAX_SCREEN_WIDTH, GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, GLOBAL::GetInstance().FULLSCREEN);
 	GraphicsEngine::GetInstance()->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	GraphicsEngine::GetInstance()->SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::GetInstance()->SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);

@@ -30,7 +30,7 @@ public:
 
 	static GraphicsEngine* GetInstance();
 
-	bool Initialize(HWND p_handle, float p_screenMaxWidt, float p_screenMaxHeight);
+	bool Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen);
 	void Shutdown();
 
 	void SetClearColor(float R, float G, float B, float p_opacity);
@@ -76,7 +76,7 @@ public:
 	void TurnOnBackfaceCulling();
 	void TurnOffBackfaceCulling();
 
-	bool ToggleFullscreen(bool p_fullscreen);
+	bool ToggleFullscreen(bool p_fullscreen, float p_currentScreenWidth, float p_currentScreenHeight);
 
 	void AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position);
 
@@ -157,5 +157,8 @@ private:
 	InstanceManager* m_instanceManager;
 
 	bool m_screenChanged;
+
+	float m_currentScreenWidth;
+	float m_currentScreenHeight;
 };
 #endif //GRAPHICSENGINE_H_
