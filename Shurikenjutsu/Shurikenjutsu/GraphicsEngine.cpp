@@ -18,6 +18,7 @@
 #include "CustomFont.h"
 #include "DirectX.h"
 #include "RenderTarget.h"
+#include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 
 
 GraphicsEngine* GraphicsEngine::m_instance;

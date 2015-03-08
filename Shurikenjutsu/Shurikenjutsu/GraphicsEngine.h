@@ -2,7 +2,6 @@
 #define GRAPHICSENGINE_H_
 
 #include "DirectXTex\DirectXTex\DirectXTex.h"
-#include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 
 #include <DirectXMath.h>
 #include <vector>
@@ -17,6 +16,11 @@ class FoliageShader;
 class ScreenSpace;
 class InstanceManager;
 class DirectXWrapper;
+
+struct IFW1FontWrapper;
+struct IDWriteFontCollection;
+struct IDWriteTextLayout;
+struct IFW1TextGeometry;
 struct WindowRectangle;
 struct DirectionalLight;
 
