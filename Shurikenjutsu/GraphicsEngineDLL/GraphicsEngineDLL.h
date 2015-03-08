@@ -4,9 +4,32 @@
 #define GRAPHICSENGINEDLL_API __declspec(dllimport)
 #endif
 
-
+#include <Windows.h>
+#include <DirectXMath.h>
+#include <vector>
 namespace GraphicsEngine
 {
+
+
+	class WICTextureLoader;
+	class GUIShader;
+	class DepthShader;
+	class RenderTarget;
+	class ParticleShader;
+	class SceneShader;
+	class FoliageShader;
+	class ScreenSpace;
+	class InstanceManager;
+	class DirectXWrapper;
+
+	struct IFW1FontWrapper;
+	struct IDWriteFontCollection;
+	struct IDWriteTextLayout;
+	struct IFW1TextGeometry;
+	struct WindowRectangle;
+	struct DirectionalLight;
+	struct ID3D11ShaderResourceView;
+
 	class GE
 	{
 	public:
@@ -22,7 +45,12 @@ namespace GraphicsEngine
 		//static GRAPHICSENGINEDLL_API bool OBBSphereCollision(DirectX::XMFLOAT3 p_OBBPosition, DirectX::XMFLOAT3 p_OBBExtents, DirectX::XMFLOAT4 p_OBBDirection, DirectX::XMFLOAT3 p_spherePosition, float p_sphereRadius);
 
 		//static GRAPHICSENGINEDLL_API bool MeleeAttackCollision(DirectX::XMFLOAT3 p_attackerPosition, float p_attackerRadius, DirectX::XMFLOAT3 p_attackDir, DirectX::XMFLOAT3 p_defenderCenter, DirectX::XMFLOAT3 p_defenderExtents, float p_defenderRadius);
+		GRAPHICSENGINEDLL_API bool Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen);
+		GRAPHICSENGINEDLL_API void Shutdown();
 
+		GRAPHICSENGINEDLL_API void SetClearColor(float R, float G, float B, float p_opacity);
+		GRAPHICSENGINEDLL_API void Clear();
+		GRAPHICSENGINEDLL_API void Present();
 
 
 	};

@@ -1,10 +1,11 @@
 #ifndef GRAPHICSENGINE_H_
 #define GRAPHICSENGINE_H_
 
-#include "DirectXTex\DirectXTex\DirectXTex.h"
 
 #include <DirectXMath.h>
 #include <vector>
+#include <Windows.h>
+//
 
 class WICTextureLoader;
 class GUIShader;
@@ -23,6 +24,13 @@ struct IDWriteTextLayout;
 struct IFW1TextGeometry;
 struct WindowRectangle;
 struct DirectionalLight;
+
+struct ID3D11ShaderResourceView;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct ID3D11Buffer;
+
+enum D3D_FEATURE_LEVEL;
 
 
 class GraphicsEngine

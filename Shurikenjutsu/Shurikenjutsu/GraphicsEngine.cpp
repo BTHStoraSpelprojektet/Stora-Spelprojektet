@@ -19,6 +19,7 @@
 #include "DirectX.h"
 #include "RenderTarget.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
+#include "DirectXTex\DirectXTex\DirectXTex.h"
 
 
 GraphicsEngine* GraphicsEngine::m_instance;
