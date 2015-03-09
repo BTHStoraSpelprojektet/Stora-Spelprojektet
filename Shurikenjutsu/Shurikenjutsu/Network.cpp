@@ -52,7 +52,7 @@ void Network::InitValues()
 	m_invalidMove = false;
 	m_roundRestarted = false;
 	m_newLevel = false;
-	m_levelName = "";
+	m_levelName = "../Shurikenjutsu/Levels/NightTimeArena.SSPL";
 	m_dashed = false;
 	m_restartingRound = false;
 	m_timeRestarting = 0;
@@ -170,6 +170,19 @@ void Network::ReceviePacket()
 			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
 
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
+
+			break;
+		}
+		case ID_LEVELNAME:
+		{
+			RakNet::RakString levelName;
+
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			bitStream.Read(messageID);
+			bitStream.Read(levelName);
+
+			m_levelName = levelName;
 
 			break;
 		}
