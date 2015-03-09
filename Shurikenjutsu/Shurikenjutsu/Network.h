@@ -50,6 +50,7 @@ public:
 	static Network* GetInstance();
 
 	bool Initialize();
+	void InitValues();
 	void Shutdown();
 
 	void Update();
@@ -158,6 +159,7 @@ public:
 	void SetPlayerName(std::string p_playerName);
 	std::string GetPlayerName(RakNet::RakNetGUID p_guid);
 	int GetCharNr(RakNet::RakNetGUID p_guid);
+	void SetVisiblePlayers(std::vector<RakNet::RakNetGUID> p_visiblePlayers);
 
 private:
 	void ClearListsAtNewRound();
@@ -200,6 +202,8 @@ private:
 	void RemoveFan(unsigned int p_id);
 	void UpdateFanLifeTime(unsigned int p_id, float p_lifeTime);
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
+	int GUIDToID(RakNet::RakNetGUID p_guid);
+	void SendVisiblePlayers();
 
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;
@@ -267,5 +271,7 @@ private:
 	double m_timeToSendPos;
 	double m_posTimer;
 	std::string m_playerName;
+
+	std::vector<int> m_visibleEnemies;
 };
 #endif

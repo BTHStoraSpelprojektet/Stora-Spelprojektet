@@ -42,6 +42,14 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	}
 	SetAttackDirection(DirectX::XMFLOAT3(0, 0, 0));
 	m_playerSphere = Sphere(0.0f,0.0f,0.0f,0.5f);
+
+	m_interpolatingPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_interpolatigPosSpeed = 0.0f;
+	m_interpolatePos = false;
+
+	m_interpolatingAttackDir = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_interpolatigAttackDirSpeed = 0.0f;
+	m_interpolateAttackDir = false;
 	
 	m_noAbility = new Ability();
 	m_noAbility->setSound(m_sound);
@@ -665,6 +673,102 @@ void Player::SetPosition(DirectX::XMFLOAT3 p_pos)
 	}
 
 	Object::SetPosition(p_pos);
+}
+
+void Player::SetInterpolatingPos(DirectX::XMFLOAT3 p_pos)
+{
+	if (m_interpolatingPos.x == p_pos.x && m_interpolatingPos.y == p_pos.y && m_interpolatingPos.z == p_pos.z)
+	{
+		return;
+	}
+
+	float dx = fabsf(m_position.x - p_pos.x);
+	float dy = fabsf(m_position.y - p_pos.y);
+	float dz = fabsf(m_position.z - p_pos.z);
+	float length = sqrtf(dx * dx + dy * dy + dz * dz);
+
+	m_interpolatigPosSpeed = length / TICK_RATE;
+	m_interpolatingPos = p_pos;
+	m_interpolatePos = true;
+}
+
+void Player::InterpolatePos(DirectX::XMFLOAT3 p_pos)
+{
+	SetInterpolatingPos(p_pos);
+	if (m_interpolatePos)
+	{
+		float dx = m_interpolatingPos.x - m_position.x;
+		float dy = m_interpolatingPos.y - m_position.y;
+		float dz = m_interpolatingPos.z - m_position.z;
+		float distanceLeft = sqrtf(dx * dx + dy * dy + dz * dz);
+		DirectX::XMVECTOR dirVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(dx, dy, dz));
+		dirVector = DirectX::XMVector3Normalize(dirVector);
+		DirectX::XMFLOAT3 dir;
+		DirectX::XMStoreFloat3(&dir, dirVector);
+	
+		float distanceTraveling = m_interpolatigPosSpeed * (float)GLOBAL::GetInstance().GetDeltaTime();
+	
+		if (distanceTraveling >= distanceLeft)
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x + distanceLeft * dir.x, m_position.y, m_position.z + distanceLeft * dir.z));
+
+			m_interpolatePos = false;
+		}
+		else
+		{
+			SetPosition(DirectX::XMFLOAT3(m_position.x + distanceTraveling * dir.x, m_position.y, m_position.z + distanceTraveling * dir.z));
+		}
+	}
+	else
+	{
+		SetPosition(GetPosition());
+	}
+}
+
+void Player::SetInterpolatingAttackDir(DirectX::XMFLOAT3 p_attackDir)
+{
+	if (m_interpolatingAttackDir.x == p_attackDir.x && m_interpolatingAttackDir.y == p_attackDir.y && m_interpolatingAttackDir.z == p_attackDir.z)
+	{
+		return;
+	}
+
+	float dx = fabsf(m_attackDir.x - p_attackDir.x);
+	float dy = fabsf(m_attackDir.y - p_attackDir.y);
+	float dz = fabsf(m_attackDir.z - p_attackDir.z);
+	float length = sqrtf(dx * dx + dy * dy + dz * dz);
+
+	m_interpolatigAttackDirSpeed = length / TICK_RATE;
+	m_interpolatingAttackDir = p_attackDir;
+	m_interpolateAttackDir = true;
+}
+
+void Player::InterpolateAttackDir(DirectX::XMFLOAT3 p_attackDir)
+{
+	SetInterpolatingAttackDir(p_attackDir);
+	if (m_interpolateAttackDir)
+	{
+		float dx = m_interpolatingAttackDir.x - m_attackDir.x;
+		float dy = m_interpolatingAttackDir.y - m_attackDir.y;
+		float dz = m_interpolatingAttackDir.z - m_attackDir.z;
+		float distanceLeft = sqrtf(dx * dx + dy * dy + dz * dz);
+		DirectX::XMVECTOR dirVector = DirectX::XMLoadFloat3(&DirectX::XMFLOAT3(dx, dy, dz));
+		dirVector = DirectX::XMVector3Normalize(dirVector);
+		DirectX::XMFLOAT3 dir;
+		DirectX::XMStoreFloat3(&dir, dirVector);
+
+		float distanceTraveling = m_interpolatigAttackDirSpeed * (float)GLOBAL::GetInstance().GetDeltaTime();
+
+		if (distanceTraveling >= distanceLeft)
+		{
+			SetAttackDirection(DirectX::XMFLOAT3(m_attackDir.x + distanceLeft * dir.x, m_attackDir.y + distanceLeft * dir.y, m_attackDir.z + distanceLeft * dir.z));
+
+			m_interpolateAttackDir = false;
+		}
+		else
+		{
+			SetAttackDirection(DirectX::XMFLOAT3(m_attackDir.x + distanceTraveling * dir.x, m_attackDir.y + distanceTraveling * dir.y, m_attackDir.z + distanceTraveling * dir.z));
+		}
+	}
 }
 
 DirectX::XMFLOAT3 Player::GetFacingDirection()

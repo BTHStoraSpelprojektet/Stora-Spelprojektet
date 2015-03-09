@@ -241,6 +241,7 @@ void DeathBoard::ChangeOrder(int p_index)
 		DirectX::XMFLOAT3 backgroundPos = m_background[i + 1].GetPosition();
 		backgroundPos.y = m_background[i].GetPosition().y;
 		m_background[i].SetPosition(backgroundPos);
+		m_background[i].SetSize(m_background[i + 1].GetSize());
 
 		// Killer
 		m_killer[i].SetText(m_killer[i + 1].GetText());

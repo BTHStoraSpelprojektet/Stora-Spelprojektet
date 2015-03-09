@@ -44,13 +44,16 @@ public:
 	float GetMaxHealth() const;
 	//void SetAgility(float p_agility);
 	//float GetAgility() const;
-	void SetPosition(DirectX::XMFLOAT3 p_pos);
+	void SetPosition(DirectX::XMFLOAT3 p_pos);	
 	void SendPosition(DirectX::XMFLOAT3 p_pos);
+	void InterpolatePos(DirectX::XMFLOAT3 p_pos);
+
 
 	DirectX::XMFLOAT3 GetFacingDirection();
 	void SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection);
 	DirectX::XMFLOAT3 GetAttackDirection();
 	void SetAttackDirection(DirectX::XMFLOAT3 p_attackDir);
+	void InterpolateAttackDir(DirectX::XMFLOAT3 p_attackDir);
 	void SetMyAttackDirection(DirectX::XMFLOAT3 p_attackDir);
 	RakNet::RakNetGUID GetGuID();
 	void SetGuID(RakNet::RakNetGUID p_guid);
@@ -91,6 +94,8 @@ protected:
 	bool CheckSidesIfMultipleCollisions();
 	void SetOriginalSpeed(float p_speed);
 	void StillCDText();
+	void SetInterpolatingPos(DirectX::XMFLOAT3 p_pos);
+	void SetInterpolatingAttackDir(DirectX::XMFLOAT3 p_dir);
 
 	float m_health; // Player health
 	float m_maxHealth; // Max player health
@@ -148,5 +153,13 @@ protected:
 
 	bool m_invis;
 	std::string m_name;
+
+	DirectX::XMFLOAT3 m_interpolatingPos;
+	float m_interpolatigPosSpeed;
+	bool m_interpolatePos;
+
+	DirectX::XMFLOAT3 m_interpolatingAttackDir;
+	float m_interpolatigAttackDirSpeed;
+	bool m_interpolateAttackDir;
 };
 #endif PLAYER
