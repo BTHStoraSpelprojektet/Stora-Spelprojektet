@@ -924,10 +924,12 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 		}
 	}
 }
+
 void CollisionManager::SetDeltaTime(float p_deltaTime)
 {
 	m_deltaTime = p_deltaTime;
 }
+
 void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_playerManager)
 {
 	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
@@ -952,8 +954,6 @@ void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_player
 				{
 					p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
 				}
-
-				break;
 			}
 		}
 	}
