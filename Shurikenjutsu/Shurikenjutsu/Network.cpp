@@ -472,8 +472,6 @@ void Network::ReceviePacket()
 			m_timeRestarting = 0;
 			ClearListsAtNewRound();
 
-			
-
 			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
 
 			//Reset Rune Sounds
@@ -2190,6 +2188,11 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 	}
 	//Only support sound for one rune per type for now
 	runeSoundEmitters.push_back(soundEmitter);
+}
+
+void Network::RoundOverText()
+{
+	m_roundOver = false;
 }
 
 void Network::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)

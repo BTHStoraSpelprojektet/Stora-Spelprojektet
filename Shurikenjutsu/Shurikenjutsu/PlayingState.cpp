@@ -596,7 +596,7 @@ void PlayingState::Render()
 	if (Network::GetInstance()->GetRoundOver())
 	{
 		m_startText->SetColor(0xffffffff);
-		//m_startText->Render();
+		Network::GetInstance()->RoundOverText();
 	}
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
