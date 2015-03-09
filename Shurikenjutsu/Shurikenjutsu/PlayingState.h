@@ -49,6 +49,7 @@ private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);
 	void OnScreenResize();
+	void SSBoundryUpdate(DirectX::XMFLOAT3 p_player);
 
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
