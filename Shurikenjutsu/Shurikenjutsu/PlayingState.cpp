@@ -109,6 +109,9 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
+	m_startText = new GUIText();
+	m_startText->Initialize("Round started\nFight enemy team!", 70.0f, 0.0f, 0.0f, 0xffffffff);
+
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
 	
@@ -203,6 +206,13 @@ void PlayingState::Shutdown()
 		m_playerManager = nullptr;
 	}
 
+	if (m_startText != nullptr)
+	{
+		m_startText->Shutdown();
+		delete m_startText;
+		m_startText = nullptr;
+	}
+
 	if (m_objectManager != nullptr)
 	{
 		m_objectManager->Shutdown();
@@ -262,6 +272,11 @@ GAMESTATESWITCH PlayingState::Update()
 		Shutdown();
 
 		return GAMESTATESWITCH_CHOOSENINJA;
+	}
+
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		DecreaseTextOpacity(m_startText);
 	}
 
 	// Update global delta time.
@@ -577,6 +592,13 @@ void PlayingState::Render()
 		ScoreBoard::GetInstance()->Render();
 	}
 
+	m_startText->Render();
+	if (Network::GetInstance()->GetRoundOver())
+	{
+		m_startText->SetColor(0xffffffff);
+		//m_startText->Render();
+	}
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
@@ -740,4 +762,16 @@ void PlayingState::OnScreenResize()
 void PlayingState::SetSound(Sound* p_sound)
 {
 	m_sound = p_sound;
+}
+
+void PlayingState::DecreaseTextOpacity(GUIText* p_text)
+{
+	if (p_text->GetColor() < 16777216)
+	{
+		p_text->SetColor(0);
+	}
+	else
+	{
+		p_text->SetColor(p_text->GetColor() - 16777216);
+	}
 }

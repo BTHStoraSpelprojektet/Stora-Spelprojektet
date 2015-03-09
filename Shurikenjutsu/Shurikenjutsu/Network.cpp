@@ -63,6 +63,7 @@ void Network::InitValues()
 	m_blueTeamScore = 0;
 	m_lastTeamWon = 0;
 	m_matchOver = false;
+	m_roundOver = false;
 	m_matchWinningTeam = 0;
 	m_suddenDeath = false;
 	m_suddenDeathBoxIndex = 99;
@@ -437,6 +438,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
 
+			//m_roundOver = true;
+
 			// Team 1 = red
 			// Team 2 = blue
 			if (winningTeam == 1)
@@ -465,8 +468,11 @@ void Network::ReceviePacket()
 
 			m_roundRestarted = true;
 			m_restartingRound = false;
+			m_roundOver = true;
 			m_timeRestarting = 0;
 			ClearListsAtNewRound();
+
+			
 
 			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
 
@@ -579,6 +585,7 @@ void Network::ReceviePacket()
 			m_redTeamScore = 0;
 			m_blueTeamScore = 0;
 			m_matchOver = false;
+			m_roundOver = false;
 			m_matchWinningTeam = 0;
 			m_restartingRound = false;
 
@@ -2028,6 +2035,11 @@ void Network::AddVolley(unsigned int p_id, float p_startX, float p_startZ, float
 bool Network::GetMatchOver()
 {
 	return m_matchOver;
+}
+
+bool Network::GetRoundOver()
+{
+	return m_roundOver;
 }
 
 int Network::GetMatchWinningTeam()

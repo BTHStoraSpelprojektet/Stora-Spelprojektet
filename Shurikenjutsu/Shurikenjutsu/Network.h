@@ -132,6 +132,7 @@ public:
 	int GetLastWinningTeam();
 	
 	bool GetMatchOver();
+	bool GetRoundOver();
 	int GetMatchWinningTeam();
 
 	bool CheckIfNaginataStabAttackIsPerformed();
@@ -247,6 +248,7 @@ private:
 	int m_blueTeamScore;
 	int m_lastTeamWon;
 	bool m_matchOver;
+	bool m_roundOver;
 	int m_matchWinningTeam;
 	std::vector<Sound::SoundEmitter*> runeSoundEmitters;
 
