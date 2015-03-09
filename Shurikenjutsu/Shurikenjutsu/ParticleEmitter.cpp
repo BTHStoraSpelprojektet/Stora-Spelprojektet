@@ -1,4 +1,3 @@
-
 #include "ParticleEmitter.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\TextureLibrary.h"
@@ -160,7 +159,8 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 	return true;
 }
 
-void ParticleEmitter::InitParticles(float p_particlesPerSecond, float p_maxParticles, DirectX::XMFLOAT3 p_emitionPositionOffset, float p_velocity, float p_velocityVariation, float p_timeToLive, ID3D11ShaderResourceView* p_particleTexture){
+void ParticleEmitter::InitParticles(float p_particlesPerSecond, float p_maxParticles, DirectX::XMFLOAT3 p_emitionPositionOffset, float p_velocity, float p_velocityVariation, float p_timeToLive, ID3D11ShaderResourceView* p_particleTexture)
+{
 	m_particlesPerSecond = p_particlesPerSecond;
 	m_maxParticles = (unsigned int)p_maxParticles;
 

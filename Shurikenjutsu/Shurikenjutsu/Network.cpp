@@ -52,7 +52,7 @@ void Network::InitValues()
 	m_invalidMove = false;
 	m_roundRestarted = false;
 	m_newLevel = false;
-	m_levelName = "";
+	m_levelName = "../Shurikenjutsu/Levels/NightTimeArena.SSPL";
 	m_dashed = false;
 	m_restartingRound = false;
 	m_timeRestarting = 0;
@@ -63,6 +63,7 @@ void Network::InitValues()
 	m_blueTeamScore = 0;
 	m_lastTeamWon = 0;
 	m_matchOver = false;
+	m_roundOver = false;
 	m_matchWinningTeam = 0;
 	m_suddenDeath = false;
 	m_suddenDeathBoxIndex = 99;
@@ -171,6 +172,19 @@ void Network::ReceviePacket()
 			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
 
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
+
+			break;
+		}
+		case ID_LEVELNAME:
+		{
+			RakNet::RakString levelName;
+
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			bitStream.Read(messageID);
+			bitStream.Read(levelName);
+
+			m_levelName = levelName;
 
 			break;
 		}
@@ -438,6 +452,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
 
+			//m_roundOver = true;
+
 			// Team 1 = red
 			// Team 2 = blue
 			if (winningTeam == 1)
@@ -466,6 +482,7 @@ void Network::ReceviePacket()
 
 			m_roundRestarted = true;
 			m_restartingRound = false;
+			m_roundOver = true;
 			m_timeRestarting = 0;
 			ClearListsAtNewRound();
 
@@ -580,6 +597,7 @@ void Network::ReceviePacket()
 			m_redTeamScore = 0;
 			m_blueTeamScore = 0;
 			m_matchOver = false;
+			m_roundOver = false;
 			m_matchWinningTeam = 0;
 			m_restartingRound = false;
 
@@ -2056,6 +2074,11 @@ bool Network::GetMatchOver()
 	return m_matchOver;
 }
 
+bool Network::GetRoundOver()
+{
+	return m_roundOver;
+}
+
 int Network::GetMatchWinningTeam()
 {
 	return m_matchWinningTeam;
@@ -2204,6 +2227,11 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 	}
 	//Only support sound for one rune per type for now
 	runeSoundEmitters.push_back(soundEmitter);
+}
+
+void Network::RoundOverText()
+{
+	m_roundOver = false;
 }
 
 void Network::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
