@@ -159,9 +159,6 @@ void GameState::Update(double p_deltaTime)
 			m_runesSpawned = true;
 		}
 	}
-
-	
-
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team)

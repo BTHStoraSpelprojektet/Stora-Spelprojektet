@@ -1171,6 +1171,19 @@ void Network::ReceviePacket()
 			RunePickedUp(POINTOFINTERESTTYPE_SHIELD, guid);
 			break;
 		}
+		case ID_RUNE_SHIELD_CANCEL:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			bitStream.Read(messageID);
+			CancelRune(POINTOFINTERESTTYPE_SHIELD);
+			break;
+		}
+		case ID_RUNE_INVIS_CANCEL:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			bitStream.Read(messageID);
+			CancelRune(POINTOFINTERESTTYPE_SHIELD);
+		}
 		default:
 		{
 			break;
@@ -2401,5 +2414,30 @@ void Network::SendVisiblePlayers()
 	for (unsigned int i = 0; i < m_visibleEnemies.size(); i++)
 	{
 		bitStream.Write((unsigned char)m_visibleEnemies[i]);
+	}
+}
+
+void Network::CancelRune(POINTOFINTERESTTYPE p_rune)
+{
+	switch (p_rune)
+	{
+	case POINTOFINTERESTTYPE_HEAL:
+		break;
+	case POINTOFINTERESTTYPE_INVISIBLE:
+		m_myPlayer.invis = false;
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			m_enemyPlayers[i].invis = false;
+		}
+		break;
+	case POINTOFINTERESTTYPE_SHIELD:
+		m_myPlayer.shield = 0.0f;
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			m_enemyPlayers[i].shield = 0.0f;
+		}
+		break;
+	default:
+		break;
 	}
 }
