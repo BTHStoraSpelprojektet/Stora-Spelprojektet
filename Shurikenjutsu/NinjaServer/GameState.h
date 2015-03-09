@@ -43,6 +43,7 @@ public:
 
 	void SendSuddenDeathMessage();
 	void UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<int> p_visiblePlayers);
+	void AbilityUsedCancelInvis(RakNet::RakNetGUID p_guid);
 
 protected:
 	void UpdateTime(double p_deltaTime);
@@ -71,6 +72,8 @@ protected:
 	float m_suddenDeathMaxBoxExtentZ;
 	bool m_runesSpawned;
 	float m_deltaTime;
+	float m_shieldActiveTimer;
+	float m_invisActiveTimer;
 };
 
 #endif

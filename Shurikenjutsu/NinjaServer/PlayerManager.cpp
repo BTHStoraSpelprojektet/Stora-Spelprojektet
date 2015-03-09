@@ -44,13 +44,14 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_haveSentDotDamage = false;
 
 	m_playerVisibility = std::map<RakNet::RakNetGUID, std::vector<int>>();
-	resetTakenSpawnPoints();
+	ResetTakenSpawnPoints();
 
 
 	return true;
 }
 
-void PlayerManager::resetTakenSpawnPoints(){
+void PlayerManager::ResetTakenSpawnPoints()
+{
 	for (unsigned int i = 0; i < m_takenSpawnPoints.size(); i++)
 	{
 		m_takenSpawnPoints[i] = false;
@@ -1021,4 +1022,19 @@ int PlayerManager::GetTeam(RakNet::RakNetGUID p_player)
 		}
 	}
 	return -1;
+}
+
+bool PlayerManager::GetInvis(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			if (m_players[i].invis)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }

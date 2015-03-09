@@ -69,8 +69,8 @@ public:
 
 	void UpdateVisiblePlayers(RakNet::RakNetGUID p_player, std::vector<int> p_visiblePlayers);
 
-	void resetTakenSpawnPoints();
-
+	void ResetTakenSpawnPoints();
+	bool GetInvis(RakNet::RakNetGUID p_guid);
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);

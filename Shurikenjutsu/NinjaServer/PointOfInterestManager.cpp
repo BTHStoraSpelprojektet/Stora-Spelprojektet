@@ -5,7 +5,7 @@
 #include "../CommonLibs/Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
 #include "PlayerManager.h"
-
+#include "../CommonLibs/GameplayGlobalVariables.h"
 
 PointOfInterestManager::PointOfInterestManager()
 {
@@ -27,6 +27,8 @@ bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	m_lotusActive = false;
 	m_shieldActive = false;
 	m_invisActive = false;
+	canceledInvis = false;
+	canceledShield = false;
 	m_nrOfRunes = 3;
 
 	m_lotusBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_LOTUS)->GetBoundingBoxes();
@@ -53,6 +55,8 @@ bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 		m_shieldBoundingBoxes[i].m_center.z += m_POISpawnPoints[2].m_translationZ;
 	}
 	
+	m_shieldActiveTimer = 0.0f;
+	m_invisActiveTimer= 0.0f;
 	return true;
 }
 
@@ -63,7 +67,35 @@ void PointOfInterestManager::Shutdown()
 
 void PointOfInterestManager::Update(double p_deltaTime)
 {
-	
+	// check if invis is picked up and have been held for to loong
+	if (m_invisActiveTimer > 0.0f)
+	{
+		m_invisActiveTimer -= (float)p_deltaTime;
+	}
+	// If timer is zero and runed is pickedup(active=false)
+	// Send cancel rune
+	else if (!m_invisActive)
+	{
+		if (!canceledInvis)
+		{
+			CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
+			canceledInvis = true;
+		}
+	}
+
+	// Do same update for shield
+	if (m_shieldActiveTimer > 0.0f)
+	{
+		m_shieldActiveTimer -= (float)p_deltaTime;
+	}
+	else if (!m_shieldActive)
+	{
+		if (!canceledShield)
+		{
+			CancelRune(POINTOFINTERESTTYPE_SHIELD);
+			canceledShield = true;
+		}
+	}
 }
 
 void PointOfInterestManager::SpawnRunes()
@@ -71,6 +103,8 @@ void PointOfInterestManager::SpawnRunes()
 	m_lotusActive = true;
 	m_shieldActive = true;
 	m_invisActive = true;
+	canceledInvis = false;
+	canceledShield = false;
 	// Todo add runes
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_SPAWN_RUNES);
@@ -99,12 +133,14 @@ void PointOfInterestManager::PickUpRunes(POINTOFINTERESTTYPE p_poiType, RakNet::
 	}
 	case POINTOFINTERESTTYPE_SHIELD:
 	{
+		m_shieldActiveTimer = SHIELD_TIMER;
 		m_shieldActive = false;
 		bitStream.Write((RakNet::MessageID)ID_SHIELD_PICKED_UP);
 		break;
 	}
 	case POINTOFINTERESTTYPE_INVISIBLE:
 	{
+		m_invisActiveTimer = INVIS_TIMER;
 		m_invisActive = false;
 		bitStream.Write((RakNet::MessageID)ID_INVIS_PICKED_UP);
 		break;
@@ -161,4 +197,30 @@ bool PointOfInterestManager::IsRuneActive(int p_index)
 		break;
 	}
 	return false;
+}
+
+void PointOfInterestManager::CancelRune(POINTOFINTERESTTYPE p_runeType)
+{
+	RakNet::BitStream bitStream;
+	
+	switch (p_runeType)
+	{
+	case POINTOFINTERESTTYPE_HEAL:
+		break;
+	case POINTOFINTERESTTYPE_INVISIBLE:
+		bitStream.Write((RakNet::MessageID)ID_RUNE_INVIS_CANCEL);
+		break;
+	case POINTOFINTERESTTYPE_SHIELD:
+		bitStream.Write((RakNet::MessageID)ID_RUNE_SHIELD_CANCEL);
+		break;
+	default:
+		break;
+	}
+
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void PointOfInterestManager::AbilityUsed()
+{
+	CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
 }
