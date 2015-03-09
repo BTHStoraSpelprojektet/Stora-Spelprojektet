@@ -41,9 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>..\GraphicsEngineDLL\FW1FontWrapper_1_1\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\GraphicsEngineDLL\FW1FontWrapper_1_1;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -56,6 +60,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>D3Dcompiler.lib;FW1FontWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Shurikenjutsu\FW1FontWrapper_1_1\x86;..\Shurikenjutsu\DirectXTex\DirectXTex\Bin\Desktop_2013\Win32\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,17 +79,51 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>FW1FontWrapper.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="buffer.h" />
+    <ClInclude Include="DebugBox.h" />
+    <ClInclude Include="DebugCircle.h" />
+    <ClInclude Include="DebugDot.h" />
+    <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="DebugLineList.h" />
+    <ClInclude Include="DebugRectangle.h" />
+    <ClInclude Include="DebugShape2D.h" />
+    <ClInclude Include="DebugShape3D.h" />
+    <ClInclude Include="DepthShader.h" />
+    <ClInclude Include="DirectX.h" />
+    <ClInclude Include="FoliageShader.h" />
     <ClInclude Include="GraphicsEngineDLL.h" />
+    <ClInclude Include="GUIShader.h" />
+    <ClInclude Include="InstanceManager.h" />
+    <ClInclude Include="ParticleShader.h" />
+    <ClInclude Include="PointLights.h" />
+    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="SceneShader.h" />
+    <ClInclude Include="ScreenSpace.h" />
+    <ClInclude Include="ShadowShapes.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="VisibilityComputer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="DebugBox.cpp" />
+    <ClCompile Include="DebugCircle.cpp" />
+    <ClCompile Include="DebugDot.cpp" />
+    <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="DebugLineList.cpp" />
+    <ClCompile Include="DebugRectangle.cpp" />
+    <ClCompile Include="DebugShape2D.cpp" />
+    <ClCompile Include="DebugShape3D.cpp" />
+    <ClCompile Include="DepthShader.cpp" />
+    <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="dllmain.cpp">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -92,11 +132,21 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="FoliageShader.cpp" />
     <ClCompile Include="GraphicsEngineDLL.cpp" />
+    <ClCompile Include="GUIShader.cpp" />
+    <ClCompile Include="InstanceManager.cpp" />
+    <ClCompile Include="ParticleShader.cpp" />
+    <ClCompile Include="PointLights.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="SceneShader.cpp" />
+    <ClCompile Include="ScreenSpace.cpp" />
+    <ClCompile Include="ShadowShapes.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="VisibilityComputer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

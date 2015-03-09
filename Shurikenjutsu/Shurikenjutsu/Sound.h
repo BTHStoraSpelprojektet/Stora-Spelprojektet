@@ -1,7 +1,7 @@
 #ifndef SOUND_H_
 #define SOUND_H_
 
-#include "fmod.hpp"
+#include "FMOD\inc\fmod.hpp"
 #include "..\CommonLibs\CommonEnums.h"
 #include <vector>
 

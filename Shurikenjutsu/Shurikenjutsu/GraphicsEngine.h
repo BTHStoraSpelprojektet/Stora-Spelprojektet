@@ -5,7 +5,6 @@
 #include <DirectXMath.h>
 #include <vector>
 #include <Windows.h>
-//
 
 class WICTextureLoader;
 class GUIShader;
@@ -24,7 +23,6 @@ struct IDWriteTextLayout;
 struct IFW1TextGeometry;
 struct WindowRectangle;
 struct DirectionalLight;
-
 struct ID3D11ShaderResourceView;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -47,7 +45,7 @@ public:
 	void SetClearColor(float R, float G, float B, float p_opacity);
 	void Clear();
 	void Present();
-
+	///
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 	D3D_FEATURE_LEVEL GetVersion();
