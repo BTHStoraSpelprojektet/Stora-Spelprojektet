@@ -163,6 +163,9 @@ public:
 	void SetVisiblePlayers(std::vector<RakNet::RakNetGUID> p_visiblePlayers);
 
 	void RoundOverText();
+	void PoiText();
+
+	bool GetPoiSpawned();
 
 private:
 	void ClearListsAtNewRound();
@@ -262,6 +265,8 @@ private:
 
 	double m_timeToPing;
 	double m_pingTimer;
+
+	bool m_poiSpawned;
 
 	float m_dealtDamage;
 	DirectX::XMFLOAT3 m_dealtDamagePosition;

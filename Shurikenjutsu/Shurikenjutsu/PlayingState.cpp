@@ -111,6 +111,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 	
 	m_startText = new GUIText();
 	m_startText->Initialize("Round started\nFight enemy team!", 70.0f, 0.0f, 0.0f, 0xffffffff);
+	m_poiText = new GUIText();
+	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -234,6 +236,13 @@ void PlayingState::Shutdown()
 		m_teamStatusBar = nullptr;
 	}
 
+	if (m_poiText != nullptr)
+	{
+		m_poiText->Shutdown();
+		delete m_poiText;
+		m_poiText = nullptr;
+	}
+
 	if (m_countdown != nullptr)
 	{
 		m_countdown->Shutdown();
@@ -277,6 +286,7 @@ GAMESTATESWITCH PlayingState::Update()
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		DecreaseTextOpacity(m_startText);
+		DecreaseTextOpacity(m_poiText);
 	}
 
 	// Update global delta time.
@@ -589,6 +599,14 @@ void PlayingState::Render()
 	{
 		m_startText->SetColor(0xffffffff);
 		Network::GetInstance()->RoundOverText();
+	}
+
+	m_poiText->Render();
+	if (Network::GetInstance()->GetPoiSpawned())
+	{
+		m_poiText->SetText("Runes have spawned!");
+		m_poiText->SetColor(0xffffffff);
+		Network::GetInstance()->PoiText();
 	}
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();

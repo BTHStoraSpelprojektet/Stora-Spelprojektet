@@ -1131,6 +1131,9 @@ void Network::ReceviePacket()
 				SpawnRunes(poi_type, x, y, z);
 				//SpawnRunes(0, 0, 0, 10 * i);
 			}
+			
+			//skriva ut på skärmen
+			m_poiSpawned = true;
 
 			break;
 		}
@@ -2417,4 +2420,14 @@ void Network::SendVisiblePlayers()
 	{
 		bitStream.Write((unsigned char)m_visibleEnemies[i]);
 	}
+}
+
+void Network::PoiText()
+{
+	m_poiSpawned = false;
+}
+
+bool Network::GetPoiSpawned()
+{
+	return m_poiSpawned;
 }
