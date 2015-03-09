@@ -13,6 +13,7 @@
 #include "ShurikenManager.h"
 #include "SmokeBombManager.h"
 #include <vector>
+#include <map>
 
 class FanBoomerangManager;
 class SpikeManager;
@@ -66,6 +67,8 @@ public:
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
 	void RuneShieldPickedUp(RakNet::RakNetGUID p_player);
 
+	void resetTakenSpawnPoints();
+
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
@@ -101,6 +104,8 @@ private:
 	double m_lastHotSent;
 	bool m_canSendHotDamage;
 	bool m_haveSentHotDamage;
+
+	std::map<int, bool> m_takenSpawnPoints;
 };
 
 #endif

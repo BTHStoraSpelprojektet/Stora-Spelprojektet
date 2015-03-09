@@ -43,8 +43,16 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_canSendDotDamage = true;
 	m_haveSentDotDamage = false;
 
+	resetTakenSpawnPoints();
 
 	return true;
+}
+
+void PlayerManager::resetTakenSpawnPoints(){
+	for (unsigned int i = 0; i < m_takenSpawnPoints.size(); i++)
+	{
+		m_takenSpawnPoints[i] = false;
+	}
 }
 
 void PlayerManager::Shutdown(){}
@@ -224,6 +232,7 @@ void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
 	{
 		if (m_players[i].guid == p_guid)
 		{
+			m_takenSpawnPoints[i] = false;
 			m_players.erase(m_players.begin() + i);
 
 			ConsolePrintError("A player disconnected.");
@@ -320,8 +329,9 @@ LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(int p_team)
 {
 	for (unsigned int i = 0; i < m_spawnPoints.size(); i++)
 	{
-		if (m_spawnPoints[i].m_team == p_team)
+		if (m_spawnPoints[i].m_team == p_team && !m_takenSpawnPoints[i])
 		{
+			m_takenSpawnPoints[i] = true;
 			return m_spawnPoints[i];
 		}
 	}
