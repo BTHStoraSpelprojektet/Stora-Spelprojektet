@@ -363,49 +363,28 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p
 	const float highMid = 3.14f * 0.625f;
 	const float high = 3.14f * 0.875f;
 
-	//Turn test!
+	//Turn test!		ChangeLayer(7, 15);
 	if (DirectX::XMVector3Length(p_direction).m128_f32[0] == 0.0f)
 	{	
 		if (p_cross > 0)
 		{
-			float temp = atan2f(m_forwardDirection.x - m_ikLegDirection.x, m_forwardDirection.z - m_ikLegDirection.z);
+			int degreeForward = (int)((6.28f - forwardAngle) * (180.0f / 3.14f));
+			int degreeHip = (int)(m_hipRotation * (180.0f / 3.14f));
+			int shortest_angle = ((((degreeForward - degreeHip) % 360) + 540) % 360) - 180;
 
-			float legTurnAngle = 0.0f;
-			if (temp > -1.57f)
-			{
-				legTurnAngle = m_hipRotation - temp;
-			}				
-			else
-			{
-				legTurnAngle = m_hipRotation - (6.28f - forwardAngle);
-			}				
-			
-			if (legTurnAngle > lowMid || -legTurnAngle > lowMid)
-			{
-				//ChangeLayer(7, 15);
-				m_hipRotation -= 0.01f * legTurnAngle;
-			}			
+			float radianHip = ((float)shortest_angle * (3.14f / 180.0f));
+
+			m_hipRotation += radianHip * 0.1f;
 		}
 		else
 		{
-			float temp = atan2f(m_forwardDirection.x - m_ikLegDirection.x, m_forwardDirection.z - m_ikLegDirection.z);
-			//float legTurnAngle = m_hipRotation - temp;// forwardAngle;
+			int degreeForward = (int)(forwardAngle * (180.0f / 3.14f));
+			int degreeHip = (int)(m_hipRotation * (180.0f / 3.14f));
+			int shortest_angle = ((((degreeForward - degreeHip) % 360) + 540) % 360) - 180;
 
-			float legTurnAngle = 0.0f;
-			if (temp < 1.57f)
-			{
-				legTurnAngle = m_hipRotation - temp;
-			}				
-			else
-			{
-				legTurnAngle = m_hipRotation - forwardAngle;
-			}
-				
-			if (legTurnAngle > lowMid || -legTurnAngle > lowMid)
-			{
-				//ChangeLayer(7, 16);
-				m_hipRotation -= 0.01f * legTurnAngle;
-			}
+			float radianHip = ((float)shortest_angle * (3.14f / 180.0f));
+
+			m_hipRotation += radianHip * 0.1f;
 		}
 
 		return;
