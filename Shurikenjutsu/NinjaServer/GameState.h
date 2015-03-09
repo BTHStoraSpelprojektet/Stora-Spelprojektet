@@ -42,6 +42,7 @@ public:
 	void UserConnected(RakNet::RakNetGUID p_guid);
 
 	void SendSuddenDeathMessage();
+	void AbilityUsedCancelInvis(RakNet::RakNetGUID p_guid);
 
 protected:
 	void UpdateTime(double p_deltaTime);

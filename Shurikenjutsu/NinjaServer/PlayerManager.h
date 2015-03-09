@@ -67,8 +67,8 @@ public:
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
 	void RuneShieldPickedUp(RakNet::RakNetGUID p_player);
 
-	void resetTakenSpawnPoints();
-
+	void ResetTakenSpawnPoints();
+	bool GetInvis(RakNet::RakNetGUID p_guid);
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);

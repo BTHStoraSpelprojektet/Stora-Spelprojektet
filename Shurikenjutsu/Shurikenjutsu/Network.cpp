@@ -1174,7 +1174,11 @@ void Network::ReceviePacket()
 		case ID_RUNE_SHIELD_CANCEL:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			bitStream.Read(messageID);
+			//RakNet::RakNetGUID guid;
+			
+			bitStream.Read(messageID); 
+			//bitStream.Read(guid);
+
 			CancelRune(POINTOFINTERESTTYPE_SHIELD);
 			break;
 		}
@@ -1182,7 +1186,8 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 			bitStream.Read(messageID);
-			CancelRune(POINTOFINTERESTTYPE_SHIELD);
+			CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
+			break;
 		}
 		default:
 		{

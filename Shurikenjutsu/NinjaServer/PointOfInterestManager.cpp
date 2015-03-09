@@ -27,6 +27,8 @@ bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	m_lotusActive = false;
 	m_shieldActive = false;
 	m_invisActive = false;
+	canceledInvis = false;
+	canceledShield = false;
 	m_nrOfRunes = 3;
 
 	m_lotusBoundingBoxes = ModelLibrary::GetInstance()->GetModel(RUNE_LOTUS)->GetBoundingBoxes();
@@ -74,7 +76,11 @@ void PointOfInterestManager::Update(double p_deltaTime)
 	// Send cancel rune
 	else if (!m_invisActive)
 	{
-		CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
+		if (!canceledInvis)
+		{
+			CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
+			canceledInvis = true;
+		}
 	}
 
 	// Do same update for shield
@@ -84,7 +90,11 @@ void PointOfInterestManager::Update(double p_deltaTime)
 	}
 	else if (!m_shieldActive)
 	{
-		CancelRune(POINTOFINTERESTTYPE_SHIELD);
+		if (!canceledShield)
+		{
+			CancelRune(POINTOFINTERESTTYPE_SHIELD);
+			canceledShield = true;
+		}
 	}
 }
 
@@ -93,6 +103,8 @@ void PointOfInterestManager::SpawnRunes()
 	m_lotusActive = true;
 	m_shieldActive = true;
 	m_invisActive = true;
+	canceledInvis = false;
+	canceledShield = false;
 	// Todo add runes
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_SPAWN_RUNES);
@@ -206,4 +218,9 @@ void PointOfInterestManager::CancelRune(POINTOFINTERESTTYPE p_runeType)
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 2, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void PointOfInterestManager::AbilityUsed()
+{
+	CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
 }
