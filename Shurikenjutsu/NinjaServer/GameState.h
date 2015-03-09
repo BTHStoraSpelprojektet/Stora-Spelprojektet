@@ -70,6 +70,8 @@ protected:
 	float m_suddenDeathMaxBoxExtentZ;
 	bool m_runesSpawned;
 	float m_deltaTime;
+	float m_shieldActiveTimer;
+	float m_invisActiveTimer;
 };
 
 #endif

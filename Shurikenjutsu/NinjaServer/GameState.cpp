@@ -58,6 +58,8 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 
 	m_roundRestarting = false;
 	m_runesSpawned = false;
+	m_shieldActiveTimer = 0.0f;
+	m_invisActiveTimer = 0.0f;
 
 	m_isSuddenDeath = false;
 	m_suddenDeathTimer = 0.0f;
@@ -157,6 +159,8 @@ void GameState::Update(double p_deltaTime)
 			m_runesSpawned = true;
 		}
 	}
+
+	
 
 }
 

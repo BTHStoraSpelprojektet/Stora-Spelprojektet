@@ -26,6 +26,8 @@ public:
 	std::vector<Box> GetBoundingBoxes(POINTOFINTERESTTYPE p_poiType);
 
 private:
+	void CancelRune(POINTOFINTERESTTYPE p_runrType);
+
 	RakNet::RakPeerInterface *m_serverPeer;
 	int m_nrOfRunes;
 
@@ -38,5 +40,7 @@ private:
 	bool m_shieldActive;
 	bool m_invisActive;
 
+	float m_invisActiveTimer;
+	float m_shieldActiveTimer;
 };
 #endif // !POINTOFINTERESTMANAGER_H_
