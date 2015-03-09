@@ -702,7 +702,12 @@ void PlayingState::MinimapUpdatePos(Minimap *p_minimap)
 			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
 			visiblePlayers.push_back(player->GetGuID());
 		}
+		else if (player &&  Network::GetInstance()->IsEnemyVisible(player->GetGuID()))
+		{
+			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
+		}
 	}
+	Network::GetInstance()->SetVisiblePlayers(visiblePlayers);
 }
 
 ObjectManager* PlayingState::GetObjectManager()

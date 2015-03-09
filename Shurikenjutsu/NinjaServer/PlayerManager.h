@@ -13,6 +13,7 @@
 #include "ShurikenManager.h"
 #include "SmokeBombManager.h"
 #include <vector>
+#include <map>
 
 class FanBoomerangManager;
 class SpikeManager;
@@ -66,6 +67,8 @@ public:
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
 	void RuneShieldPickedUp(RakNet::RakNetGUID p_player);
 
+	void UpdateVisiblePlayers(RakNet::RakNetGUID p_player, std::vector<int> p_visiblePlayers);
+
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
@@ -74,6 +77,9 @@ private:
 	
 	int GetTeamForPlayer();
 	int GetIdForPlayer();
+
+	void SendVisiblePlayers();
+	int GetTeam(RakNet::RakNetGUID p_player);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 
@@ -101,6 +107,8 @@ private:
 	double m_lastHotSent;
 	bool m_canSendHotDamage;
 	bool m_haveSentHotDamage;
+
+	std::map<RakNet::RakNetGUID, std::vector<int>> m_playerVisibility;
 };
 
 #endif
