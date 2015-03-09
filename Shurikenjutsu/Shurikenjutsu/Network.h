@@ -162,6 +162,8 @@ public:
 	int GetCharNr(RakNet::RakNetGUID p_guid);
 	void SetVisiblePlayers(std::vector<RakNet::RakNetGUID> p_visiblePlayers);
 
+	bool IsEnemyVisible(RakNet::RakNetGUID p_guid);
+
 	void RoundOverText();
 
 private:
@@ -277,5 +279,6 @@ private:
 	std::string m_playerName;
 
 	std::vector<int> m_visibleEnemies;
+	std::vector<int> m_teamVisibleEnemies;
 };
 #endif

@@ -235,17 +235,19 @@ void Server::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(size);
 
-			unsigned int iSize = (unsigned int)size;
+			unsigned int uiSize = (unsigned int)size;
 			int iId;
+			std::vector<int> visiblePlayers = std::vector<int>();
 
-			for (unsigned int i = 0; i < size; i++)
+			for (unsigned int i = 0; i < uiSize; i++)
 			{
 				bitStream.Read(id);
 				iId = (int)id;
 
-				// Todo
-				// playerManager->UpdateVisibleThingymabob
+				visiblePlayers.push_back(iId);
 			}
+
+			m_gameState->UpdatePlayerVisibility(m_packet->guid, visiblePlayers);
 
 			break;
 		}

@@ -301,3 +301,8 @@ void GameState::UserConnected(RakNet::RakNetGUID p_guid)
 		m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, p_guid, false);
 	}
 }
+
+void GameState::UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<int> p_visiblePlayers)
+{
+	m_playerManager->UpdateVisiblePlayers(p_guid, p_visiblePlayers);
+}

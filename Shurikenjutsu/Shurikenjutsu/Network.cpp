@@ -72,6 +72,7 @@ void Network::InitValues()
 	m_shurikensList = std::vector<ShurikenNet>();
 	m_fanList = std::vector<FanNet>();
 	m_visibleEnemies = std::vector<int>();
+	m_teamVisibleEnemies = std::vector<int>();
 
 	m_connectionCount = 0;
 	m_previousCount = 0;
@@ -142,7 +143,7 @@ void Network::Update()
 		}
 
 		// Send visible
-		//SendVisiblePlayers();
+		SendVisiblePlayers();
 
 		m_timeToSendPos = m_posTimer;
 	}
@@ -1187,6 +1188,31 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
 			RunePickedUp(POINTOFINTERESTTYPE_SHIELD, guid);
+			break;
+		}
+		case ID_SEND_VISIBLE_PLAYERS:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned char size;
+			unsigned char playerID;
+
+			bitStream.Read(messageID);
+			bitStream.Read(size);
+
+			unsigned int uiSize = (unsigned int)size;
+			int iPlayerID;
+			std::vector<int> teamVisiblePlayers = std::vector<int>();
+
+			for (unsigned int i = 0; i < uiSize; i++)
+			{
+				bitStream.Read(playerID);
+				iPlayerID = (int)playerID;
+				teamVisiblePlayers.push_back(iPlayerID);
+			}
+
+			m_teamVisibleEnemies = teamVisiblePlayers;
+
 			break;
 		}
 		default:
@@ -2430,4 +2456,24 @@ void Network::SendVisiblePlayers()
 	{
 		bitStream.Write((unsigned char)m_visibleEnemies[i]);
 	}
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+bool Network::IsEnemyVisible(RakNet::RakNetGUID p_guid)
+{
+	if (p_guid == GetMyGUID())
+	{
+		return true;
+	}
+
+	int id = GUIDToID(p_guid);
+	for (unsigned int i = 0; i < m_teamVisibleEnemies.size(); i++)
+	{
+		if (id == m_teamVisibleEnemies[i])
+		{
+			return true;
+		}
+	}
+	return false;
 }
