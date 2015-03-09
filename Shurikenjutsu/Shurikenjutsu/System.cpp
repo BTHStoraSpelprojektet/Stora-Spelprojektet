@@ -122,7 +122,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		ConsolePrintSuccess("Sound initialized successfully.");
 		ConsoleSkipLines(1);
 		//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_BACKGROUND_SOUND);
-		//m_sound->StartMusic();
+		m_sound->StartMusic();
 		m_playingState->SetSound(m_sound);
 		m_menuState->setSound(m_sound);
 	}
