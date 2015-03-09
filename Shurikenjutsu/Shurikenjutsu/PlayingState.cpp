@@ -109,6 +109,9 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
+	m_startText = new GUIText();
+	m_startText->Initialize("Round started\nFight enemy team!", 70.0f, 0.0f, 0.0f, 0xffffffff);
+
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
 	
@@ -203,6 +206,13 @@ void PlayingState::Shutdown()
 		m_playerManager = nullptr;
 	}
 
+	if (m_startText != nullptr)
+	{
+		m_startText->Shutdown();
+		delete m_startText;
+		m_startText = nullptr;
+	}
+
 	if (m_objectManager != nullptr)
 	{
 		m_objectManager->Shutdown();
@@ -264,6 +274,11 @@ GAMESTATESWITCH PlayingState::Update()
 		return GAMESTATESWITCH_CHOOSENINJA;
 	}
 
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		DecreaseTextOpacity(m_startText);
+	}
+
 	// Update global delta time.
 	double deltaTime = GLOBAL::GetInstance().GetDeltaTime();
 	
@@ -313,6 +328,7 @@ GAMESTATESWITCH PlayingState::Update()
 		// Handle camera input.
 		m_camera->HandleInput();
 	}
+
 	else if (Network::GetInstance()->GetMatchOver())
 	{
 		if (Network::GetInstance()->GetRestartingTimer() <= 7)
@@ -352,6 +368,7 @@ GAMESTATESWITCH PlayingState::Update()
 			m_camera->FollowCharacter(player);
 		}
 	}
+
 	else
 	{
 		m_camera->FollowCharacter(player);
@@ -418,18 +435,6 @@ GAMESTATESWITCH PlayingState::Update()
 		resized = true;
 	} 
 	
-	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
-	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
-	
-	// Keep the the visibility polygon boundries within the maps boundries.
-	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
-	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
-	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
-	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
-
-	// Update the visibility polygon boundries.
-	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
-
 	// Update the countdown.
 	m_countdown->Update();
 
@@ -493,6 +498,8 @@ GAMESTATESWITCH PlayingState::Update()
 	}
 
 	m_camera->Update3DSound(m_sound, player.x, player.y, player.z);
+
+	SSBoundryUpdate(player);
 
 	return GAMESTATESWITCH_NONE;
 }
@@ -577,6 +584,13 @@ void PlayingState::Render()
 		ScoreBoard::GetInstance()->Render();
 	}
 
+	m_startText->Render();
+	if (Network::GetInstance()->GetRoundOver())
+	{
+		m_startText->SetColor(0xffffffff);
+		Network::GetInstance()->RoundOverText();
+	}
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
@@ -646,6 +660,7 @@ void PlayingState::OutliningRays()
 
 	rayPos = m_camera->GetOutliningRayPosition();
 	target = m_camera->GetOutliningRayTarget();
+
 	// Increase height of check
 	target.y += 1;
 
@@ -661,13 +676,6 @@ void PlayingState::OutliningRays()
 			rayDist = ray->m_distance;
 		}
 	}
-
-	/*target.y -= 2;
-
-	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&rayPos)));
-	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
-
-	ray->m_direction = DirectX::XMFLOAT4(rayDir.x, rayDir.y, rayDir.z, 1);*/
 
 	if (CollisionManager::GetInstance()->CalculateRayLength(ray, rayDist))
 	{
@@ -697,12 +705,15 @@ void PlayingState::MinimapUpdatePos(Minimap *p_minimap)
 
 		Player* player = m_playerManager->GetEnemyTeamMember(i);
 
-		if (player && (m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || VisibilityComputer::GetInstance().IsPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
+		if (player && player->GetIsAlive() && !player->IsInvis())
+		{
+			if ((m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || VisibilityComputer::GetInstance().IsPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
 		{
 			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
 			visiblePlayers.push_back(player->GetGuID());
 		}
 	}
+}
 }
 
 ObjectManager* PlayingState::GetObjectManager()
@@ -730,7 +741,7 @@ void PlayingState::OnScreenResize()
 
 	// Update projection matrix.
 	DirectX::XMFLOAT4X4 projection;
-	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 100.0f));
+	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 1000.0f));
 	VisibilityComputer::GetInstance().SetProjectionPolygonMatrix(projection);
 
 	// Tell the graphics engine that changes have been handled.
@@ -740,4 +751,38 @@ void PlayingState::OnScreenResize()
 void PlayingState::SetSound(Sound* p_sound)
 {
 	m_sound = p_sound;
+}
+
+void PlayingState::DecreaseTextOpacity(GUIText* p_text)
+{
+	if (p_text->GetColor() < 16777216)
+	{
+		p_text->SetColor(0);
+	}
+	else
+	{
+		p_text->SetColor(p_text->GetColor() - 16777216);
+	}
+}
+
+void PlayingState::SSBoundryUpdate(DirectX::XMFLOAT3 p_player)
+{
+	float width = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	float height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+
+	// Get the new edges.
+	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
+	DirectX::XMFLOAT3 pickedTopRight = Pick(Point(width, 0.0f));
+	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point(width, height));
+	DirectX::XMFLOAT3 pickedPlayer = Pick(Point(width * 0.5f, height * 0.5f));
+
+	m_quadWidth = pickedPlayer.x - pickedTopLeft.x;
+	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
+	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
+
+	Point topLeft = Point(p_player.x - m_quadWidth - 10.0f, p_player.z + m_quadHeightTop + 10.0f);
+	Point bottomLeft = Point(p_player.x + m_quadWidth + 10.0f, p_player.z - m_quadHeightBottom - 10.0f);
+
+	// Update the visibility polygon boundries.
+	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
 }

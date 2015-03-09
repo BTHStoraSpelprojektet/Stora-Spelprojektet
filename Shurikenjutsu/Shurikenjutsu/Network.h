@@ -132,6 +132,7 @@ public:
 	int GetLastWinningTeam();
 	
 	bool GetMatchOver();
+	bool GetRoundOver();
 	int GetMatchWinningTeam();
 
 	bool CheckIfNaginataStabAttackIsPerformed();
@@ -160,6 +161,8 @@ public:
 	std::string GetPlayerName(RakNet::RakNetGUID p_guid);
 	int GetCharNr(RakNet::RakNetGUID p_guid);
 	void SetVisiblePlayers(std::vector<RakNet::RakNetGUID> p_visiblePlayers);
+
+	void RoundOverText();
 
 private:
 	void ClearListsAtNewRound();
@@ -247,6 +250,7 @@ private:
 	int m_blueTeamScore;
 	int m_lastTeamWon;
 	bool m_matchOver;
+	bool m_roundOver;
 	int m_matchWinningTeam;
 	std::vector<Sound::SoundEmitter*> runeSoundEmitters;
 
