@@ -52,7 +52,7 @@ void Network::InitValues()
 	m_invalidMove = false;
 	m_roundRestarted = false;
 	m_newLevel = false;
-	m_levelName = "";
+	m_levelName = "../Shurikenjutsu/Levels/NightTimeArena.SSPL";
 	m_dashed = false;
 	m_restartingRound = false;
 	m_timeRestarting = 0;
@@ -63,6 +63,7 @@ void Network::InitValues()
 	m_blueTeamScore = 0;
 	m_lastTeamWon = 0;
 	m_matchOver = false;
+	m_roundOver = false;
 	m_matchWinningTeam = 0;
 	m_suddenDeath = false;
 	m_suddenDeathBoxIndex = 99;
@@ -71,6 +72,7 @@ void Network::InitValues()
 	m_shurikensList = std::vector<ShurikenNet>();
 	m_fanList = std::vector<FanNet>();
 	m_visibleEnemies = std::vector<int>();
+	m_teamVisibleEnemies = std::vector<int>();
 
 	m_connectionCount = 0;
 	m_previousCount = 0;
@@ -141,7 +143,7 @@ void Network::Update()
 		}
 
 		// Send visible
-		//SendVisiblePlayers();
+		SendVisiblePlayers();
 
 		m_timeToSendPos = m_posTimer;
 	}
@@ -170,6 +172,19 @@ void Network::ReceviePacket()
 			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
 
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
+
+			break;
+		}
+		case ID_LEVELNAME:
+		{
+			RakNet::RakString levelName;
+
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			bitStream.Read(messageID);
+			bitStream.Read(levelName);
+
+			m_levelName = levelName;
 
 			break;
 		}
@@ -437,6 +452,8 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(winningTeam);
 
+			//m_roundOver = true;
+
 			// Team 1 = red
 			// Team 2 = blue
 			if (winningTeam == 1)
@@ -465,6 +482,7 @@ void Network::ReceviePacket()
 
 			m_roundRestarted = true;
 			m_restartingRound = false;
+			m_roundOver = true;
 			m_timeRestarting = 0;
 			ClearListsAtNewRound();
 
@@ -579,6 +597,7 @@ void Network::ReceviePacket()
 			m_redTeamScore = 0;
 			m_blueTeamScore = 0;
 			m_matchOver = false;
+			m_roundOver = false;
 			m_matchWinningTeam = 0;
 			m_restartingRound = false;
 
@@ -1169,6 +1188,31 @@ void Network::ReceviePacket()
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
 			RunePickedUp(POINTOFINTERESTTYPE_SHIELD, guid);
+			break;
+		}
+		case ID_SEND_VISIBLE_PLAYERS:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			unsigned char size;
+			unsigned char playerID;
+
+			bitStream.Read(messageID);
+			bitStream.Read(size);
+
+			unsigned int uiSize = (unsigned int)size;
+			int iPlayerID;
+			std::vector<int> teamVisiblePlayers = std::vector<int>();
+
+			for (unsigned int i = 0; i < uiSize; i++)
+			{
+				bitStream.Read(playerID);
+				iPlayerID = (int)playerID;
+				teamVisiblePlayers.push_back(iPlayerID);
+			}
+
+			m_teamVisibleEnemies = teamVisiblePlayers;
+
 			break;
 		}
 		case ID_RUNE_SHIELD_CANCEL:
@@ -2048,6 +2092,11 @@ bool Network::GetMatchOver()
 	return m_matchOver;
 }
 
+bool Network::GetRoundOver()
+{
+	return m_roundOver;
+}
+
 int Network::GetMatchWinningTeam()
 {
 	return m_matchWinningTeam;
@@ -2196,6 +2245,11 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 	}
 	//Only support sound for one rune per type for now
 	runeSoundEmitters.push_back(soundEmitter);
+}
+
+void Network::RoundOverText()
+{
+	m_roundOver = false;
 }
 
 void Network::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
@@ -2420,6 +2474,26 @@ void Network::SendVisiblePlayers()
 	{
 		bitStream.Write((unsigned char)m_visibleEnemies[i]);
 	}
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+bool Network::IsEnemyVisible(RakNet::RakNetGUID p_guid)
+{
+	if (p_guid == GetMyGUID())
+	{
+		return true;
+	}
+
+	int id = GUIDToID(p_guid);
+	for (unsigned int i = 0; i < m_teamVisibleEnemies.size(); i++)
+	{
+		if (id == m_teamVisibleEnemies[i])
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void Network::CancelRune(POINTOFINTERESTTYPE p_rune)

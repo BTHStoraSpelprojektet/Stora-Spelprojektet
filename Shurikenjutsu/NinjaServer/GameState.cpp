@@ -304,6 +304,11 @@ void GameState::UserConnected(RakNet::RakNetGUID p_guid)
 	}
 }
 
+void GameState::UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<int> p_visiblePlayers)
+{
+	m_playerManager->UpdateVisiblePlayers(p_guid, p_visiblePlayers);
+}
+
 void GameState::AbilityUsedCancelInvis(RakNet::RakNetGUID p_guid)
 {
 	if (m_playerManager->GetInvis(p_guid))

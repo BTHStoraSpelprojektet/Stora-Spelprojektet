@@ -42,6 +42,7 @@ public:
 	void UserConnected(RakNet::RakNetGUID p_guid);
 
 	void SendSuddenDeathMessage();
+	void UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<int> p_visiblePlayers);
 	void AbilityUsedCancelInvis(RakNet::RakNetGUID p_guid);
 
 protected:

@@ -144,7 +144,6 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 
 	UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
 	m_renderTarget.Initialize(GraphicsEngine::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-	m_minimapTarget.Initialize(GraphicsEngine::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
 	// Setup vertex buffer description.
@@ -220,7 +219,6 @@ void VisibilityComputer::Shutdown()
 	}
 
 	m_renderTarget.Shutdown();
-	m_minimapTarget.Shutdown();
 }
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
@@ -319,9 +317,9 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 
 void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
-	float color[4] = { 0.0f, 0.0f, 0.0f, 0.5f };
-	m_minimapTarget.SetAsRenderTarget(p_context);
-	m_minimapTarget.Clear(p_context, color);
+	float color[4] = {0.0f, 0.0f, 0.0f, 0.5f};
+	m_renderTarget.SetAsRenderTarget(p_context);
+	m_renderTarget.Clear(p_context, color);
 
 	UpdatePolygonMatrices(p_context);
 
@@ -331,18 +329,6 @@ void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext*
 
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
 	p_context->PSSetShader(m_pixelShader, NULL, 0);
-
-	p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
-	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	p_context->IASetInputLayout(m_layout);
-
-	p_context->Draw(m_vertices.size(), 0);
-
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
-
-	color[3] = 0.5f;
-	m_renderTarget.SetAsRenderTarget(p_context);
-	m_renderTarget.Clear(p_context, color);
 
 	p_context->IASetVertexBuffers(0, 1, &m_mesh, &stride, &offset);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -560,9 +546,6 @@ void VisibilityComputer::UpdateTextureSize(int p_width, int p_height)
 {
 	m_renderTarget.Shutdown();
 	m_renderTarget.Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_width, p_height);
-
-	m_minimapTarget.Shutdown();
-	m_minimapTarget.Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_width, p_height);
 }
 
 void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
@@ -670,11 +653,6 @@ DirectX::XMFLOAT4X4 VisibilityComputer::GetProjectionPolygonMatrix()
 ID3D11ShaderResourceView* VisibilityComputer::GetRenderTarget()
 {
 	return m_renderTarget.GetRenderTarget();
-}
-
-ID3D11ShaderResourceView* VisibilityComputer::GetMinimapTarget()
-{
-	return m_minimapTarget.GetRenderTarget();
 }
 
 Point VisibilityComputer::GetLastPosition()
