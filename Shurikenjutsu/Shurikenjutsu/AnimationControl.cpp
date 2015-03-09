@@ -1,5 +1,6 @@
 #include "AnimationControl.h"
 #include "Globals.h"
+#include <iostream>
 
 bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 {
@@ -357,10 +358,59 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p
 
 	float forwardAngle = DirectX::XMVector3AngleBetweenVectors(DirectX::XMLoadFloat3(&m_forwardDirection), DirectX::XMLoadFloat3(&m_ikLegDirection)).m128_f32[0];
 
-	float low = 3.14f * 0.125f;
+	const float low = 3.14f * 0.125f;
 	float lowMid = 3.14f * 0.375f;
-	float highMid = 3.14f * 0.625f;
-	float high = 3.14f * 0.875f;
+	const float highMid = 3.14f * 0.625f;
+	const float high = 3.14f * 0.875f;
+
+	//Turn test!
+	if (DirectX::XMVector3Length(p_direction).m128_f32[0] == 0.0f)
+	{	
+		if (p_cross > 0)
+		{
+			float temp = atan2f(m_forwardDirection.x - m_ikLegDirection.x, m_forwardDirection.z - m_ikLegDirection.z);
+
+			float legTurnAngle = 0.0f;
+			if (temp > -1.57f)
+			{
+				legTurnAngle = m_hipRotation - temp;
+			}				
+			else
+			{
+				legTurnAngle = m_hipRotation - (6.28f - forwardAngle);
+			}				
+			
+			if (legTurnAngle > lowMid || -legTurnAngle > lowMid)
+			{
+				//ChangeLayer(7, 15);
+				m_hipRotation -= 0.01f * legTurnAngle;
+			}			
+		}
+		else
+		{
+			float temp = atan2f(m_forwardDirection.x - m_ikLegDirection.x, m_forwardDirection.z - m_ikLegDirection.z);
+			//float legTurnAngle = m_hipRotation - temp;// forwardAngle;
+
+			float legTurnAngle = 0.0f;
+			if (temp < 1.57f)
+			{
+				legTurnAngle = m_hipRotation - temp;
+			}				
+			else
+			{
+				legTurnAngle = m_hipRotation - forwardAngle;
+			}
+				
+			if (legTurnAngle > lowMid || -legTurnAngle > lowMid)
+			{
+				//ChangeLayer(7, 16);
+				m_hipRotation -= 0.01f * legTurnAngle;
+			}
+		}
+
+		return;
+	}	
+	//
 
 	if (crossD > 0)
 	{
@@ -444,13 +494,13 @@ void AnimationControl::FindAndReferenceLayers()
 	std::string m_animationNames[] = { "RunF", "RunA", "RunB", "RunAB", 
 									   "RunL", "RunR", "IdleL", "IdleA", 
 									   "DeadL", "DeadA", "Melee", "Range",
-									   "Tool", "Spec1", "Spec2"};
+									   "Tool", "Spec1", "Spec2", "TurnR", "TurnL"};
 
 	m_animationStacksArray = new AnimationStack[m_animationStacks.size()];
 
 	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
 	{
-		for (unsigned int j = 0; j < 15; j++)
+		for (unsigned int j = 0; j < 17; j++)
 		{
 			if (strcmp(m_animationStacks[i].m_name, m_animationNames[j].c_str()) == 0)
 			{
