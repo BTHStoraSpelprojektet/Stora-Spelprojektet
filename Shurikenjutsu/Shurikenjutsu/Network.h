@@ -166,6 +166,7 @@ public:
 	void PoiText();
 
 	bool GetPoiSpawned();
+	RakNet::RakNetGUID GetJustJoinedPlayer();
 
 private:
 	void ClearListsAtNewRound();
@@ -177,6 +178,8 @@ private:
 	~Network();
 	
 	static Network* m_instance;
+
+	RakNet::RakNetGUID m_justJoinedPlayer;
 
 	NetworkLogger m_networkLogger;
 

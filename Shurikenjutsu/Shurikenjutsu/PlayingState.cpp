@@ -113,6 +113,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_startText->Initialize("Round started\nFight enemy team!", 70.0f, 0.0f, 0.0f, 0xffffffff);
 	m_poiText = new GUIText();
 	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
+	m_playerJoinedText = new GUIText();
+	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -236,6 +238,13 @@ void PlayingState::Shutdown()
 		m_teamStatusBar = nullptr;
 	}
 
+	if (m_playerJoinedText != nullptr)
+	{
+		m_playerJoinedText->Shutdown();
+		delete m_playerJoinedText;
+		m_playerJoinedText = nullptr;
+	}
+
 	if (m_poiText != nullptr)
 	{
 		m_poiText->Shutdown();
@@ -287,6 +296,7 @@ GAMESTATESWITCH PlayingState::Update()
 	{
 		DecreaseTextOpacity(m_startText);
 		DecreaseTextOpacity(m_poiText);
+		DecreaseTextOpacity(m_playerJoinedText);
 	}
 
 	// Update global delta time.
@@ -609,6 +619,8 @@ void PlayingState::Render()
 		Network::GetInstance()->PoiText();
 	}
 
+	m_playerJoinedText->Render();
+
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
 
@@ -803,4 +815,27 @@ void PlayingState::SSBoundryUpdate(DirectX::XMFLOAT3 p_player)
 
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
+}
+
+void PlayingState::PlayerJoinedText()
+{
+	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
+	players.push_back(Network::GetInstance()->GetMyPlayer());
+
+	for (unsigned int i = 0; i < players.size(); i++)
+	{
+		if (players[i].guid == Network::GetInstance()->GetJustJoinedPlayer())
+		{
+			m_playerJoinedText->SetColor(0xffffffff);
+
+			if (players[i].team == 1)
+			{
+				m_playerJoinedText->SetText(players[i].name.C_String + " has joined the red team");
+			}
+			else if (players[i].team == 2)
+			{
+				m_playerJoinedText->SetText(players[i].name.C_String + " has joined the blue team");
+			}
+		}
+	}
 }

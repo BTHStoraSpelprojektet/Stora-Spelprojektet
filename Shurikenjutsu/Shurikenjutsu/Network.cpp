@@ -201,8 +201,11 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+			RakNet::RakNetGUID guid;
+
 			bitStream.Read(messageID);
 			bitStream.Read(m_connectionCount);
+			bitStream.Read(guid);
 
 			if (m_connectionCount < m_previousCount)
 			{
@@ -211,6 +214,8 @@ void Network::ReceviePacket()
 			else
 			{
 				ConsolePrintSuccess("New client connected.");
+				//Person has joineeeddd
+				m_justJoinedPlayer = guid;
 			}
 
 			ConsolePrintText("Players connected: " + std::to_string(m_connectionCount));
@@ -2430,4 +2435,9 @@ void Network::PoiText()
 bool Network::GetPoiSpawned()
 {
 	return m_poiSpawned;
+}
+
+RakNet::RakNetGUID Network::GetJustJoinedPlayer()
+{
+	return m_justJoinedPlayer;
 }

@@ -67,6 +67,7 @@ void Server::ReceviePacket()
 
 			bitStream.Write((RakNet::MessageID)ID_NR_CONNECTIONS);
 			bitStream.Write(m_nrOfConnections);
+			bitStream.Write(m_packet->guid);
 
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
@@ -91,6 +92,7 @@ void Server::ReceviePacket()
 
 			bitStream.Write((RakNet::MessageID)ID_NR_CONNECTIONS);
 			bitStream.Write(m_nrOfConnections);
+			bitStream.Write(m_packet->guid);
 
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);			
