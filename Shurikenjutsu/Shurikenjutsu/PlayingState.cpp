@@ -22,6 +22,7 @@
 #include "SuddenDeathState.h"
 #include "PointLights.h"
 #include "Sound.h"
+#include "POIGrapichalEffects.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -175,6 +176,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_suddenDeath = new SuddenDeathState();
 	m_suddenDeath->Initialize();
 
+	POIGrapichalEffects::GetInstance().Initialize();
+
 	return true;
 }
 
@@ -277,6 +280,8 @@ void PlayingState::Shutdown()
 	{
 		CollisionManager::GetInstance()->Shutdown();
 	}
+	
+	POIGrapichalEffects::GetInstance().Shutdown();
 }
 
 void PlayingState::ShutdownExit()
@@ -547,6 +552,7 @@ void PlayingState::Render()
 	// Render to the scene normally.
 	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
+	UpdatePOIEffects();
 	m_objectManager->Render();
 	m_playerManager->Render(false);
 	
@@ -858,4 +864,31 @@ void PlayingState::PlayerJoinedText()
 			}
 		}
 	}
+}
+
+void PlayingState::UpdatePOIEffects()
+{
+	if (Network::GetInstance()->GetMyPlayer().invis && Network::GetInstance()->GetMyPlayer().isAlive)
+	{
+		POIGrapichalEffects::GetInstance().RenderStealthEffect();
+	}
+
+	std::vector<PlayerNet> NetworkPlayers = Network::GetInstance()->GetOtherPlayers();
+	NetworkPlayers.push_back(Network::GetInstance()->GetMyPlayer());
+
+	for (unsigned int i = 0; i < NetworkPlayers.size(); i++)
+	{
+		if (NetworkPlayers[i].shield > 0.0f)
+		{
+			DirectX::XMFLOAT3 position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
+			POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+			POIGrapichalEffects::GetInstance().RenderShieldEffect();
+		}
+	}
+
+	DirectX::XMFLOAT3 position = m_playerManager->GetPlayerPosition();
+	position.y = 0.25f;
+	POIGrapichalEffects::GetInstance().StartHealing();
+	POIGrapichalEffects::GetInstance().UpdateHealingEffect(position);
+	POIGrapichalEffects::GetInstance().RenderHealingEffect();
 }

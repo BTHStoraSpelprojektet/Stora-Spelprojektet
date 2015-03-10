@@ -52,6 +52,7 @@ private:
 	void OnScreenResize();
 	void SSBoundryUpdate(DirectX::XMFLOAT3 p_player);
 	void DecreaseTextOpacity(GUIText* p_text);
+	void UpdatePOIEffects();
 
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
@@ -88,6 +89,7 @@ private:
 	float m_quadHeightBottom;
 
 	int m_spectateIndex;
+
 	//Tas bort?
 	float m_spectateCountDown;
 	bool m_inGameMenuIsActive;

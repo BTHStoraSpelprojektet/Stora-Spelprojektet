@@ -277,7 +277,6 @@ void Network::ReceviePacket()
 				bitStream.Read(kills);
 				bitStream.Read(shield);
 
-
 				// (Add and) update players position
 				UpdatePlayerPos(guid, x, y, z);
 				UpdatePlayerDir(guid, dirX, dirY, dirZ);
@@ -1216,9 +1215,12 @@ void Network::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(guid);
 			//bitStream.Read(sound); Add sound
+
+			UpdatePlayerShield(guid, 1.0f);
 			RunePickedUp(POINTOFINTERESTTYPE_SHIELD, guid);
 			break;
 		}
+
 		case ID_SEND_VISIBLE_PLAYERS:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -1253,8 +1255,11 @@ void Network::ReceviePacket()
 			//bitStream.Read(guid);
 
 			CancelRune(POINTOFINTERESTTYPE_SHIELD);
+
+			
 			break;
 		}
+
 		case ID_RUNE_INVIS_CANCEL:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
