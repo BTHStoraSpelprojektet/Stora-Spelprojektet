@@ -1,6 +1,7 @@
 #ifndef GAMESTATE
 #define GAMESTATE
 
+#include <string>
 
 enum GAMESTATESWITCH
 {
@@ -16,6 +17,7 @@ public:
 	GameState();
 	~GameState();
 	virtual bool Initialize();
+	virtual bool Initialize(std::string p_levelName);
 	virtual void Shutdown();	
 	virtual GAMESTATESWITCH Update();
 	virtual void Render();

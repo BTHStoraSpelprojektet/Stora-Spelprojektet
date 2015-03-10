@@ -7,6 +7,10 @@ bool GameState::Initialize()
 	return true;
 }
 
+bool GameState::Initialize(std::string p_levelName){
+	return true;
+}
+
 void GameState::Shutdown(){}
 GAMESTATESWITCH GameState::Update()
 {
