@@ -85,6 +85,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_objectManager = new ObjectManager();
 	m_objectManager->SetSound(m_sound);
 	m_objectManager->Initialize(&level);
+	// Send which runes have spawned
+	Network::GetInstance()->SendSpawnedRunes();
 
 	// Load and place arena walls.
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.GetLevelBoundingBoxes();
@@ -115,6 +117,10 @@ bool PlayingState::Initialize(std::string p_levelName)
 	
 	m_startText = new GUIText();
 	m_startText->Initialize("Round started\nFight enemy team!", 70.0f, 0.0f, 0.0f, 0xffffffff);
+	m_poiText = new GUIText();
+	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
+	m_playerJoinedText = new GUIText();
+	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -238,6 +244,20 @@ void PlayingState::Shutdown()
 		m_teamStatusBar = nullptr;
 	}
 
+	if (m_playerJoinedText != nullptr)
+	{
+		m_playerJoinedText->Shutdown();
+		delete m_playerJoinedText;
+		m_playerJoinedText = nullptr;
+	}
+
+	if (m_poiText != nullptr)
+	{
+		m_poiText->Shutdown();
+		delete m_poiText;
+		m_poiText = nullptr;
+	}
+
 	if (m_countdown != nullptr)
 	{
 		m_countdown->Shutdown();
@@ -281,6 +301,8 @@ GAMESTATESWITCH PlayingState::Update()
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		DecreaseTextOpacity(m_startText);
+		DecreaseTextOpacity(m_poiText);
+		DecreaseTextOpacity(m_playerJoinedText);
 	}
 
 	// Update global delta time.
@@ -423,6 +445,12 @@ GAMESTATESWITCH PlayingState::Update()
 
 	// Update the team status bar.
 	m_teamStatusBar->Update();
+
+	if (Network::GetInstance()->GetNewPlayerJoined())
+	{
+		PlayerJoinedText();
+		Network::GetInstance()->JoinedPlayerText();
+	}
 
 	// Update the directional light camera position.
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
@@ -592,6 +620,16 @@ void PlayingState::Render()
 		m_startText->SetColor(0xffffffff);
 		Network::GetInstance()->RoundOverText();
 	}
+
+	m_poiText->Render();
+	if (Network::GetInstance()->GetPoiSpawned())
+	{
+		m_poiText->SetText("Runes have spawned!");
+		m_poiText->SetColor(0xffffffff);
+		Network::GetInstance()->PoiText();
+	}
+
+	m_playerJoinedText->Render();
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 }
@@ -792,4 +830,31 @@ void PlayingState::SSBoundryUpdate(DirectX::XMFLOAT3 p_player)
 
 	// Update the visibility polygon boundries.
 	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
+}
+
+void PlayingState::PlayerJoinedText()
+{
+	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
+	players.push_back(Network::GetInstance()->GetMyPlayer());
+
+	for (unsigned int i = 0; i < players.size(); i++)
+	{
+		if (players[i].guid == Network::GetInstance()->GetJustJoinedPlayer())
+		{
+			m_playerJoinedText->SetColor(0xffffffff);
+
+			if (players[i].team == 1)
+			{
+				std::string text = players[i].name.C_String();
+				text += " has joined the red team";
+				m_playerJoinedText->SetText(text);
+			}
+			else if (players[i].team == 2)
+			{
+				std::string text = players[i].name.C_String();
+				text += " has joined the blue team";
+				m_playerJoinedText->SetText(text);
+			}
+		}
+	}
 }

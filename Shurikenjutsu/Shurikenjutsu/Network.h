@@ -153,6 +153,7 @@ public:
 	int GetSuddenDeathBoxIndex();
 
 	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound);
 	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
 
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
@@ -165,6 +166,13 @@ public:
 	bool IsEnemyVisible(RakNet::RakNetGUID p_guid);
 
 	void RoundOverText();
+	void SendSpawnedRunes();
+	void PoiText();
+	void JoinedPlayerText();
+
+	bool GetPoiSpawned();
+	bool GetNewPlayerJoined();
+	RakNet::RakNetGUID GetJustJoinedPlayer();
 
 private:
 	void ClearListsAtNewRound();
@@ -176,6 +184,8 @@ private:
 	~Network();
 	
 	static Network* m_instance;
+
+	RakNet::RakNetGUID m_justJoinedPlayer;
 
 	NetworkLogger m_networkLogger;
 
@@ -266,6 +276,9 @@ private:
 
 	double m_timeToPing;
 	double m_pingTimer;
+
+	bool m_poiSpawned;
+	bool m_newPlayerJoined;
 
 	float m_dealtDamage;
 	DirectX::XMFLOAT3 m_dealtDamagePosition;
