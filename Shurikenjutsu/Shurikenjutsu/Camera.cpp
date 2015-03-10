@@ -376,6 +376,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 		UpdateViewMatrix();
 		UpdateProjectionMatrix(false);
 		GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
+		m_oldPosition = position;
 	}	
 
 	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(playerPosition.x, playerPosition.z), GraphicsEngine::GetInstance()->GetDevice());
@@ -500,7 +501,6 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 	position = DirectX::XMFLOAT3(playerPosition.x + moveX, playerPosition.y + 30.0f, playerPosition.z - moveY - 15.0f);
 	target = DirectX::XMFLOAT3(playerPosition.x + moveX, 0, playerPosition.z - moveY);
 
-	//DirectX::XMStoreFloat3(&finalPos, DirectX::XMVectorLerp(DirectX::XMLoadFloat3(&m_oldPosition), DirectX::XMLoadFloat3(&position), 0.001f));
 	DirectX::XMStoreFloat3(&finalPos, SmoothStep(DirectX::XMLoadFloat3(&m_oldPosition), DirectX::XMLoadFloat3(&position), 0.25f));
 	
 	// Set max limits
