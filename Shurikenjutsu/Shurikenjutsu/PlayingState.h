@@ -67,6 +67,10 @@ private:
 	SuddenDeathState* m_suddenDeath;
 
 	GUIText* m_startText;
+	GUIText* m_poiText;
+	GUIText* m_playerJoinedText;
+
+	void PlayerJoinedText();
 
 	const float twoPi = DirectX::XM_PI * 2.0f;
 

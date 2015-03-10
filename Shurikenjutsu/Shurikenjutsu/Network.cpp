@@ -168,9 +168,7 @@ void Network::ReceviePacket()
 			m_networkStatus = NETWORKSTATUS_CONNECTED;
 
 			RakNet::BitStream bitStream;
-
 			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
-
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
 
 			break;
@@ -215,8 +213,11 @@ void Network::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+			RakNet::RakNetGUID guid;
+
 			bitStream.Read(messageID);
 			bitStream.Read(m_connectionCount);
+			bitStream.Read(guid);
 
 			if (m_connectionCount < m_previousCount)
 			{
@@ -225,6 +226,9 @@ void Network::ReceviePacket()
 			else
 			{
 				ConsolePrintSuccess("New client connected.");
+				//Person has joineeeddd
+				m_justJoinedPlayer = guid;
+				m_newPlayerJoined = true;
 			}
 
 			ConsolePrintText("Players connected: " + std::to_string(m_connectionCount));
@@ -1145,7 +1149,32 @@ void Network::ReceviePacket()
 				SpawnRunes(poi_type, x, y, z);
 				//SpawnRunes(0, 0, 0, 10 * i);
 			}
+			
+			//skriva ut på skärmen
+			m_poiSpawned = true;
 
+			break;
+		}
+		case ID_DOWNLOAD_RUNES:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			bool runeSpawned;
+			POINTOFINTERESTTYPE poi_type;
+			float x, y, z;
+			bitStream.Read(messageID);
+			for (int i = 0; i < 3; i++)
+			{
+				bitStream.Read(runeSpawned);
+				bitStream.Read(poi_type);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				if (runeSpawned)
+				{
+					SpawnRunes(poi_type, x, y, z, false);
+				}
+			}
 			break;
 		}
 		case ID_RUNE_PICKED_UP:
@@ -2215,8 +2244,15 @@ void Network::SendLatestDir()
 
 void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
 {
+	SpawnRunes(p_poiType, p_x, p_y, p_z, true);
+}
+
+void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound)
+{
 	m_objectManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
 
+	if (p_makeSound)
+	{
 	Sound::SoundEmitter* soundEmitter = NULL;
 	switch (p_poiType)
 	{
@@ -2245,6 +2281,7 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 	}
 	//Only support sound for one rune per type for now
 	runeSoundEmitters.push_back(soundEmitter);
+}
 }
 
 void Network::RoundOverText()
@@ -2478,6 +2515,31 @@ void Network::SendVisiblePlayers()
 	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, UNRELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
+void Network::PoiText()
+{
+	m_poiSpawned = false;
+}
+
+bool Network::GetPoiSpawned()
+{
+	return m_poiSpawned;
+}
+
+RakNet::RakNetGUID Network::GetJustJoinedPlayer()
+{
+	return m_justJoinedPlayer;
+}
+
+bool Network::GetNewPlayerJoined()
+{
+	return m_newPlayerJoined;
+}
+
+void Network::JoinedPlayerText()
+{
+	m_newPlayerJoined = false;
+}
+
 bool Network::IsEnemyVisible(RakNet::RakNetGUID p_guid)
 {
 	if (p_guid == GetMyGUID())
@@ -2519,4 +2581,11 @@ void Network::CancelRune(POINTOFINTERESTTYPE p_rune)
 	default:
 		break;
 	}
+}
+
+void Network::SendSpawnedRunes()
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_RUNES);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }

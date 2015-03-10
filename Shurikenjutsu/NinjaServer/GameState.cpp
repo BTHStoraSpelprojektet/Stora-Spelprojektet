@@ -316,3 +316,8 @@ void GameState::AbilityUsedCancelInvis(RakNet::RakNetGUID p_guid)
 		m_POIManager->AbilityUsed();
 	}
 }
+
+void GameState::SendCurrentRunes(RakNet::RakNetGUID p_guid)
+{
+	m_POIManager->DownloadRunes(p_guid);
+}
