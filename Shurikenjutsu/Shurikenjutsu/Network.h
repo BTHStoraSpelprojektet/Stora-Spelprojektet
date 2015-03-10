@@ -162,6 +162,8 @@ public:
 	int GetCharNr(RakNet::RakNetGUID p_guid);
 	void SetVisiblePlayers(std::vector<RakNet::RakNetGUID> p_visiblePlayers);
 
+	bool IsEnemyVisible(RakNet::RakNetGUID p_guid);
+
 	void RoundOverText();
 	void PoiText();
 	void JoinedPlayerText();
@@ -215,6 +217,8 @@ private:
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
 	int GUIDToID(RakNet::RakNetGUID p_guid);
 	void SendVisiblePlayers();
+	void Network::CancelRune(POINTOFINTERESTTYPE p_rune);
+
 
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;
@@ -288,5 +292,6 @@ private:
 	std::string m_playerName;
 
 	std::vector<int> m_visibleEnemies;
+	std::vector<int> m_teamVisibleEnemies;
 };
 #endif

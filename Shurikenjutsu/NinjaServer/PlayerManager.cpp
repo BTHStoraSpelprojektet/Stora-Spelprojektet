@@ -43,12 +43,15 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_canSendDotDamage = true;
 	m_haveSentDotDamage = false;
 
-	resetTakenSpawnPoints();
+	m_playerVisibility = std::map<RakNet::RakNetGUID, std::vector<int>>();
+	ResetTakenSpawnPoints();
+
 
 	return true;
 }
 
-void PlayerManager::resetTakenSpawnPoints(){
+void PlayerManager::ResetTakenSpawnPoints()
+{
 	for (unsigned int i = 0; i < m_takenSpawnPoints.size(); i++)
 	{
 		m_takenSpawnPoints[i] = false;
@@ -66,6 +69,9 @@ void PlayerManager::Update(double p_deltaTime)
 		m_lastTimeSent = m_sendIntervall;
 		// Send position and direction of players
 		SendPlayerPosAndDir();
+
+		// Send visible players
+		SendVisiblePlayers();
 	}
 
 	// Timer for dot damage
@@ -918,4 +924,117 @@ void PlayerManager::RuneShieldPickedUp(RakNet::RakNetGUID p_player)
 			m_players[i].shield = 1.0f;
 		}
 	}
+}
+
+void PlayerManager::UpdateVisiblePlayers(RakNet::RakNetGUID p_player, std::vector<int> p_visiblePlayers)
+{
+	m_playerVisibility[p_player] = p_visiblePlayers;
+}
+
+void PlayerManager::SendVisiblePlayers()
+{
+	std::vector<int> redTeamVision = std::vector<int>();
+	std::vector<int> blueTeamVision = std::vector<int>();
+
+	// Update vector with who the team can see
+	for (std::map<RakNet::RakNetGUID, std::vector<int>>::iterator it = m_playerVisibility.begin(); it != m_playerVisibility.end(); it++)
+	{
+		int team = GetTeam(it->first);
+		if (team == 1)
+		{
+			for (unsigned int i = 0; i < it->second.size(); i++)
+			{
+				bool found = false;
+				for (unsigned int j = 0; j < redTeamVision.size(); j++)
+				{
+					if (redTeamVision[j] == it->second[i])
+					{
+						found = true;
+						break;
+					}
+				}
+
+				if (!found)
+				{
+					redTeamVision.push_back(it->second[i]);
+				}
+			}
+}
+		else if (team == 2)
+		{
+			for (unsigned int i = 0; i < it->second.size(); i++)
+			{
+				bool found = false;
+				for (unsigned int j = 0; j < blueTeamVision.size(); j++)
+				{
+					if (blueTeamVision[j] == it->second[i])
+					{
+						found = true;
+						break;
+					}
+				}
+
+				if (!found)
+				{
+					blueTeamVision.push_back(it->second[i]);
+				}
+			}
+		}
+	}
+
+	// Send to players
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		RakNet::BitStream bitStream;
+
+		bitStream.Write((RakNet::MessageID)ID_SEND_VISIBLE_PLAYERS);
+		
+		int team = GetTeam(m_players[i].guid);
+
+		if (team == 1)
+		{
+			bitStream.Write((unsigned char)redTeamVision.size());
+			for (unsigned int j = 0; j < redTeamVision.size(); j++)
+			{
+				bitStream.Write((unsigned char)redTeamVision[j]);
+			}
+		}
+		else if (team == 2)
+		{
+			bitStream.Write((unsigned char)blueTeamVision.size());
+			for (unsigned int j = 0; j < blueTeamVision.size(); j++)
+			{
+				bitStream.Write((unsigned char)blueTeamVision[j]);
+			}
+		}
+
+		m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 1, m_players[i].guid, false);
+	}
+}
+
+int PlayerManager::GetTeam(RakNet::RakNetGUID p_player)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_player)
+		{
+			return m_players[i].team;
+		}
+	}
+	return -1;
+}
+
+bool PlayerManager::GetInvis(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			if (m_players[i].invis)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
 }

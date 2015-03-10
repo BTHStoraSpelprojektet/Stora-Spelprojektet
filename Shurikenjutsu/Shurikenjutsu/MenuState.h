@@ -26,6 +26,7 @@ public:
 	void operator delete(void* p_p);
 
 	bool Initialize();
+	bool Initialize(std::string p_levelName);
 	void Shutdown();
 	void ShutdownExit();
 
