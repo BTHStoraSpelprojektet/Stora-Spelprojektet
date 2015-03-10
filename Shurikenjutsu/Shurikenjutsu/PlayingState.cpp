@@ -101,6 +101,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_playerManager = new PlayerManager();
 	m_playerManager->SetSound(m_sound);
 	m_playerManager->Initialize(false);
+
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
 
 	// Initlialize the frustum.
@@ -119,7 +120,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_poiText = new GUIText();
 	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 	m_playerJoinedText = new GUIText();
-	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
+	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 250.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -353,7 +354,6 @@ GAMESTATESWITCH PlayingState::Update()
 		// Handle camera input.
 		m_camera->HandleInput();
 	}
-
 	else if (Network::GetInstance()->GetMatchOver())
 	{
 		if (Network::GetInstance()->GetRestartingTimer() <= 7)
@@ -379,7 +379,6 @@ GAMESTATESWITCH PlayingState::Update()
 			}
 		}
 	}
-
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE)
 	{
 		std::vector<Player*> tempList = m_playerManager->GetMyTeamPlayers(m_playerManager->GetPlayerTeam());
@@ -450,7 +449,6 @@ GAMESTATESWITCH PlayingState::Update()
 	if (Network::GetInstance()->GetNewPlayerJoined())
 	{
 		PlayerJoinedText();
-		Network::GetInstance()->JoinedPlayerText();
 	}
 
 	// Update the directional light camera position.
@@ -842,6 +840,7 @@ void PlayingState::PlayerJoinedText()
 	{
 		if (players[i].guid == Network::GetInstance()->GetJustJoinedPlayer())
 		{
+			Network::GetInstance()->JoinedPlayerText();
 			m_playerJoinedText->SetColor(0xffffffff);
 
 			if (players[i].team == 1)

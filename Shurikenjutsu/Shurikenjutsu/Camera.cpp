@@ -502,7 +502,19 @@ void Camera::MovingCamera(DirectX::XMFLOAT3 p_pos)
 
 	//DirectX::XMStoreFloat3(&finalPos, DirectX::XMVectorLerp(DirectX::XMLoadFloat3(&m_oldPosition), DirectX::XMLoadFloat3(&position), 0.001f));
 	DirectX::XMStoreFloat3(&finalPos, SmoothStep(DirectX::XMLoadFloat3(&m_oldPosition), DirectX::XMLoadFloat3(&position), 0.25f));
+	
+	// Set max limits
+	if (finalPos.x < -38)
+		finalPos.x = -38;
+	if (finalPos.x > 38)
+		finalPos.x = 38;
+	if (finalPos.z > 35)
+		finalPos.z = 35;
+	if (finalPos.z < -58)
+		finalPos.z = -58;
+
 	target = DirectX::XMFLOAT3(finalPos.x, 0, finalPos.z + 15.0f);
+
 	UpdatePosition(finalPos);
 	UpdateTarget(target);
 	UpdateViewMatrix();
