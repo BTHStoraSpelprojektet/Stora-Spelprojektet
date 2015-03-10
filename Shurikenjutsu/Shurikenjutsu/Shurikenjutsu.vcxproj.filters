@@ -539,6 +539,9 @@
     <ClCompile Include="Settings.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="POIGrapichalEffects.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -894,6 +897,9 @@
     </ClInclude>
     <ClInclude Include="Settings.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="POIGrapichalEffects.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

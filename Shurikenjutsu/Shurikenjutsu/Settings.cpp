@@ -79,7 +79,26 @@ void Settings::SaveSettingsFile()
 
 void Settings::GenerateDefaultSettings()
 {
-	m_name = "UnknownNinja";
+	std::vector<std::string> names;
+	names.push_back("Akira");
+	names.push_back("Kei");
+	names.push_back("Mikoto");
+	names.push_back("Jun");
+	names.push_back("Ryou");
+	names.push_back("Sora");
+	names.push_back("Yuki");
+	names.push_back("Mitsuki");
+	names.push_back("Minato");
+	names.push_back("Hachi");
+	names.push_back("Tamahi");
+	names.push_back("Sakae");
+	names.push_back("Hiromu");
+	names.push_back("Hiakri");
+	names.push_back("Itsuki");
+
+	int random = rand() % names.size();
+	
+	m_name = names[random];
 	m_ip = "194.47.150.130";
 	m_fullscreen = false;
 	m_vsync = false;
