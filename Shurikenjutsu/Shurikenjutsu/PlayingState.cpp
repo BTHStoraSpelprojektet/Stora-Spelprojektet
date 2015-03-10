@@ -63,6 +63,9 @@ void PlayingState::EscapeIsPressed()
 
 bool PlayingState::Initialize(std::string p_levelName)
 {
+	// Set pressed or release
+	GLOBAL::GetInstance().APE_ON = false;
+
 	// Initialize the camera.
 	m_camera = new Camera();
 	m_camera->Initialize();
@@ -265,7 +268,7 @@ void PlayingState::ShutdownExit()
 }
 
 GAMESTATESWITCH PlayingState::Update()
-	{
+{
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{

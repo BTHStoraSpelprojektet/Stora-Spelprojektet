@@ -211,6 +211,8 @@ private:
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
 	int GUIDToID(RakNet::RakNetGUID p_guid);
 	void SendVisiblePlayers();
+	void Network::CancelRune(POINTOFINTERESTTYPE p_rune);
+
 
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;

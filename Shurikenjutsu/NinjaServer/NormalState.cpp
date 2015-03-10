@@ -188,7 +188,7 @@ int NormalState::GetRoundWinningTeam()
 	return -1;
 }
 
-int NormalState::GetTotalWinningTeam()
+int	NormalState::GetTotalWinningTeam()
 {
 	int team = -1;
 	int score = 0;
