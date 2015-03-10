@@ -156,7 +156,7 @@ namespace DLLGraphicsEngine
 		GRAPHICSENGINEDLL_API void AddNewPointLight(PointLight& p_newLight);
 		GRAPHICSENGINEDLL_API void SetViewPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
 		GRAPHICSENGINEDLL_API void SetPointLightLightBuffer(DirectX::XMFLOAT4X4 p_matrix);
-		GRAPHICSENGINEDLL_API void RenderVisibilityPolygon(bool p_isMatchOver);
+		GRAPHICSENGINEDLL_API void RenderVisibilityPolygon(bool p_isMatchOver, ID3D11ShaderResourceView* p_texture);
 		GRAPHICSENGINEDLL_API void UpdateVisibilityMapBoundries(Point p_topLeft, Point p_botLeft);
 		GRAPHICSENGINEDLL_API void SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
 		GRAPHICSENGINEDLL_API void UpdateVisibilityTextureSize(float p_maxScreenWidth, float p_maxScreenHeight);

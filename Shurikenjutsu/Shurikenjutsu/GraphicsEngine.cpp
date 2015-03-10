@@ -2,7 +2,7 @@
 #include "GraphicsEngineDLL.h"
 #include "..\CommonLibs\CommonStructures.h"
 #include "..\CommonLibs\CommonEnums.h"
-
+#include "..\CommonLibs\TextureLibrary.h"
 
 GraphicsEngine* GraphicsEngine::m_instance;
 
@@ -391,11 +391,11 @@ void GraphicsEngine::UpdateVisibilityMapBoundries(Point p_topLeft, Point p_botLe
 }
 void GraphicsEngine::RenderVisibilityPolygon(bool p_isMatchOver)
 {
-	DLLGraphicsEngine::GE::GetInstance()->RenderVisibilityPolygon(p_isMatchOver);
+	DLLGraphicsEngine::GE::GetInstance()->RenderVisibilityPolygon(p_isMatchOver, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/ShadowShapeTexture.png"));
 }
 void GraphicsEngine::SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix)
 {
-	DLLGraphicsEngine::GE::GetInstance()->SetPointLightLightBuffer(p_matrix);
+	DLLGraphicsEngine::GE::GetInstance()->SetVisibilityProjectionPolygonMatrix(p_matrix);
 }
 void GraphicsEngine::UpdateVisibilityTextureSize(float p_maxScreenWidth, float p_maxScreenHeight)
 {

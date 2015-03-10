@@ -16,7 +16,6 @@
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
-//#include "PointLights.h"
 #include "GraphicsEngine.h"
 
 Player::Player(){}

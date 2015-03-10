@@ -212,12 +212,6 @@ void VisibilityComputer::Shutdown()
 		m_matrixBuffer = nullptr;
 	}
 
-	if (m_texture)
-	{
-		m_texture->Release();
-		m_texture = nullptr;
-	}
-
 	m_renderTarget.Shutdown();
 	m_minimapTarget.Shutdown();
 }
@@ -311,7 +305,11 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 
 	// Update the mesh.
 	D3D11_MAPPED_SUBRESOURCE resource;
-	DLLGraphicsEngine::GE::GetInstance()->GetContext()->Map(m_mesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	HRESULT temp = DLLGraphicsEngine::GE::GetInstance()->GetContext()->Map(m_mesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	if (FAILED(temp))
+	{
+		int a = 0;
+	}
 	memcpy(resource.pData, m_vertices.data(), sizeof(DirectX::XMFLOAT3) * m_vertices.size());
 	DLLGraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_mesh, 0);
 }
@@ -422,17 +420,12 @@ inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewe
 	return angles;
 }
 
-void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context, bool p_isMatchOver)
+void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context, bool p_isMatchOver, ID3D11ShaderResourceView* p_texture)
 {
-	if (!m_texture)
-	{
-		//m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/ShadowShapeTexture.png");
-	}
-
 	// Render the quad to reverse project the polygon onto.
 	if (!p_isMatchOver)
 	{
-		DLLGraphicsEngine::GE::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
+		DLLGraphicsEngine::GE::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), p_texture);
 	}
 }
 

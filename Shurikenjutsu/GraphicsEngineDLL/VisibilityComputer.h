@@ -70,7 +70,7 @@ public:
 	void UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device, float p_deltaTime);
 	void UpdateMapBoundries(Point p_topLeft, Point p_bottomRight);
 
-	void RenderVisibilityPolygon(ID3D11DeviceContext* p_context, bool p_isMatchOver);
+	void RenderVisibilityPolygon(ID3D11DeviceContext* p_context, bool p_isMatchOver, ID3D11ShaderResourceView* p_texture);
 
 	bool IsPointVisible(Point p_point);
 

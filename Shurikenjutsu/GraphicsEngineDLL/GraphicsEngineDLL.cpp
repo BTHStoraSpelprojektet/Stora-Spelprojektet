@@ -812,9 +812,9 @@ namespace DLLGraphicsEngine
 	{
 		VisibilityComputer::GetInstance().UpdateMapBoundries(p_topLeft, p_botLeft);
 	}
-	void GE::RenderVisibilityPolygon(bool p_isMatchOver)
+	void GE::RenderVisibilityPolygon(bool p_isMatchOver, ID3D11ShaderResourceView* p_texture)
 	{
-		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GetContext(), p_isMatchOver);
+		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GetContext(), p_isMatchOver, p_texture);
 	}
 	void GE::SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix)
 	{

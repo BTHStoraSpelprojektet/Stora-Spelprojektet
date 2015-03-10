@@ -2,14 +2,12 @@
 #include "CollisionManager.h"
 #include "InputManager.h"
 #include "Collisions.h"
-#include "GraphicsEngine.h"
 #include "PlayerManager.h"
 #include "ObjectManager.h"
 #include "Frustum.h"
 #include "Camera.h"
 #include "Globals.h"
 #include "Minimap.h"
-#include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
 #include "Countdown.h"
 #include "InGameMenu.h"
@@ -19,6 +17,7 @@
 #include "SuddenDeathState.h"
 #include "Sound.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "..\CommonLibs\ModelNames.h"
 
 ParticleEmitter* TEST_POIemitter;
 
