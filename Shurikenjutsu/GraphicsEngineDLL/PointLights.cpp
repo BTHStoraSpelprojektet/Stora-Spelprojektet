@@ -3,7 +3,6 @@
 #include "DirectXTex\DirectXTex\DirectXTex.h"
 
 #include "GraphicsEngineDLL.h"
-using namespace GraphicsEngine;
 
 PointLights* PointLights::m_instance;
 
@@ -41,9 +40,9 @@ bool PointLights::Initialize()
 	lightBufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	lightBufferDesc.StructureByteStride = sizeof(PointLight);
 	
-	GE::GetInstance()->GetDevice()->CreateBuffer(&lightBufferDesc, 0, &m_lightBuffer);
+	DLLGraphicsEngine::GE::GetInstance()->GetDevice()->CreateBuffer(&lightBufferDesc, 0, &m_lightBuffer);
 
-	GE::GetInstance()->GetDevice()->CreateShaderResourceView(m_lightBuffer, 0, &m_lightSRV);
+	DLLGraphicsEngine::GE::GetInstance()->GetDevice()->CreateShaderResourceView(m_lightBuffer, 0, &m_lightSRV);
 
 	return true;
 }
@@ -106,14 +105,14 @@ void PointLights::SetLightBuffer(DirectX::XMFLOAT4X4 p_viewMatrix)
 	if (m_pointLights.size() > 0)
 	{
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		GraphicsEngine::GE::GetInstance()->GetContext()->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		DLLGraphicsEngine::GE::GetInstance()->GetContext()->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		memcpy(mappedResource.pData, &m_pointLights[0], sizeof(PointLight)* m_pointLights.size());
 
-		GraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_lightBuffer, 0);
+		DLLGraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_lightBuffer, 0);
 	}
 
-	GraphicsEngine::GE::GetInstance()->SetLightBuffer(m_lightSRV);
+	DLLGraphicsEngine::GE::GetInstance()->SetLightBuffer(m_lightSRV);
 }
 
 DirectX::XMFLOAT3 PointLights::TransformPosition(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_viewMatrix)

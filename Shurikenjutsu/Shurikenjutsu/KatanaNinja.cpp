@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "AttackPredictionEditor.h"
 #include "ParticleRenderer.h"
+#include "GraphicsEngine.h"
 
 KatanaNinja::KatanaNinja(){}
 KatanaNinja::~KatanaNinja(){}

@@ -147,8 +147,8 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 	UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
-	m_renderTarget.Initialize(GraphicsEngine::GE::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-	m_minimapTarget.Initialize(GraphicsEngine::GE::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+	m_renderTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+	m_minimapTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
 	// Setup vertex buffer description.
@@ -294,7 +294,7 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 	CalculateVisibilityPolygon(p_viewerPosition, p_device);
 
 	// Reverse the polygon.
-	CalculateReversedVisibilityPolygon(GraphicsEngine::GE::GetInstance()->GetContext());
+	CalculateReversedVisibilityPolygon(DLLGraphicsEngine::GE::GetInstance()->GetContext());
 }
 
 void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
@@ -316,9 +316,9 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 
 	// Update the mesh.
 	D3D11_MAPPED_SUBRESOURCE resource;
-	GraphicsEngine::GE::GetInstance()->GetContext()->Map(m_mesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	DLLGraphicsEngine::GE::GetInstance()->GetContext()->Map(m_mesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 	memcpy(resource.pData, m_vertices.data(), sizeof(DirectX::XMFLOAT3) * m_vertices.size());
-	GraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_mesh, 0);
+	DLLGraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_mesh, 0);
 }
 
 void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context)
@@ -342,7 +342,7 @@ void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext*
 
 	p_context->Draw(m_vertices.size(), 0);
 
-	GraphicsEngine::GE::GetInstance()->ResetRenderTarget();
+	DLLGraphicsEngine::GE::GetInstance()->ResetRenderTarget();
 
 	color[3] = 0.5f;
 	m_renderTarget.SetAsRenderTarget(p_context);
@@ -354,7 +354,7 @@ void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext*
 
 	p_context->Draw(m_vertices.size(), 0);
 
-	GraphicsEngine::GE::GetInstance()->ResetRenderTarget();
+	DLLGraphicsEngine::GE::GetInstance()->ResetRenderTarget();
 }
 
 Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segment)
@@ -437,7 +437,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	// Render the quad to reverse project the polygon onto.
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-		GraphicsEngine::GE::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
+		DLLGraphicsEngine::GE::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
 	}
 }
 
@@ -563,10 +563,10 @@ void VisibilityComputer::QuickSortAngles(std::vector<PolygonPoint>& p_list, int 
 void VisibilityComputer::UpdateTextureSize(int p_width, int p_height)
 {
 	m_renderTarget.Shutdown();
-	m_renderTarget.Initialize(GraphicsEngine::GE::GetInstance()->GetDevice(), p_width, p_height);
+	m_renderTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_width, p_height);
 
 	m_minimapTarget.Shutdown();
-	m_minimapTarget.Initialize(GraphicsEngine::GE::GetInstance()->GetDevice(), p_width, p_height);
+	m_minimapTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_width, p_height);
 }
 
 void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
@@ -585,9 +585,9 @@ void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
 	if (m_quadMesh)
 	{
 		D3D11_MAPPED_SUBRESOURCE resource;
-		GraphicsEngine::GE::GetInstance()->GetContext()->Map(m_quadMesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		DLLGraphicsEngine::GE::GetInstance()->GetContext()->Map(m_quadMesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 		memcpy(resource.pData, mesh, sizeof(Vertex) * 6);
-		GraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_quadMesh, 0);
+		DLLGraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_quadMesh, 0);
 	}
 
 	else
@@ -608,7 +608,7 @@ void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
 		vertexData.SysMemSlicePitch = 0;
 
 		// Create the vertex buffer.
-		GraphicsEngine::GE::GetInstance()->GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_quadMesh);
+		DLLGraphicsEngine::GE::GetInstance()->GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_quadMesh);
 	}
 
 	m_topLeft = p_topLeft;
@@ -636,9 +636,9 @@ void VisibilityComputer::UVAnimate()
 	mesh[5] = Vertex(DirectX::XMFLOAT3(m_bottomRight.x, 0.1f, m_bottomRight.y), DirectX::XMFLOAT2(1.0f - m_UVOffset, 1.0f), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	D3D11_MAPPED_SUBRESOURCE resource;
-	GraphicsEngine::GE::GetInstance()->GetContext()->Map(m_quadMesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	DLLGraphicsEngine::GE::GetInstance()->GetContext()->Map(m_quadMesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 	memcpy(resource.pData, mesh, sizeof(Vertex) * 6);
-	GraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_quadMesh, 0);
+	DLLGraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_quadMesh, 0);
 }
 
 void VisibilityComputer::SetWorldPolygonMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

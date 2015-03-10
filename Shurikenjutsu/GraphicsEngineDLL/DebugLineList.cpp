@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "DebugLineList.h"
 #include "GraphicsEngineDLL.h"
-using namespace GraphicsEngine;
-
 void DebugLineList::Initialize(DirectX::XMFLOAT3 p_color)
 {
 	m_lines.clear();
@@ -24,7 +22,7 @@ void DebugLineList::AddLine(DirectX::XMFLOAT3 p_startPoint, DirectX::XMFLOAT3 p_
 	m_lines.push_back(p_startPoint);
 	m_lines.push_back(p_endPoint);
 
-	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GE::GetInstance()->GetDevice(), m_lines);
+	m_mesh = Buffer::CreateLineBuffer(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), m_lines);
 	m_vertices = m_lines.size();
 }
 
@@ -36,7 +34,7 @@ void DebugLineList::RemoveLine(int p_index)
 
 void DebugLineList::Render()
 {
-	GraphicsEngine::GE::GetInstance()->RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
+	DLLGraphicsEngine::GE::GetInstance()->RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
 }
 
 void DebugLineList::UpdateWorldMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

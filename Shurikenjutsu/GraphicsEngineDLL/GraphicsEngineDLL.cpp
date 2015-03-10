@@ -26,7 +26,7 @@
 //#include "..\GraphicsEngineDLL\DirectXTex\WICTextureLoader\WICTextureLoader.h"
 #include "DirectXTex\WICTextureLoader\WICTextureLoader.h"
 
-namespace GraphicsEngine
+namespace DLLGraphicsEngine
 {
 
 	GE* GE::GetInstance()

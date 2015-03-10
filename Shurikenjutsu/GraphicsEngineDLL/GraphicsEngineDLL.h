@@ -32,7 +32,7 @@ struct ID3D11DeviceContext;
 struct ID3D11Buffer;
 
 enum D3D_FEATURE_LEVEL;
-namespace GraphicsEngine
+namespace DLLGraphicsEngine
 {
 
 	class GE

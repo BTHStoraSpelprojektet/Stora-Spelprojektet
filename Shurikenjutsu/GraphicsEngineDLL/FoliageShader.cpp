@@ -5,7 +5,6 @@
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\TextureLibrary.h"
 #include "GraphicsEngineDLL.h"
-using namespace GraphicsEngine;
 
 bool FoliageShader::Initialize(ID3D11Device* p_device)
 {
@@ -206,8 +205,8 @@ bool FoliageShader::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 	
-	m_texture = GraphicsEngine::GE::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/Particles/GrassFoil.png");
-	m_normalMap = GraphicsEngine::GE::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/blanknormalmap_50.png");
+	m_texture = DLLGraphicsEngine::GE::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/Particles/GrassFoil.png");
+	m_normalMap = DLLGraphicsEngine::GE::GetInstance()->Create2DTexture("../Shurikenjutsu/2DTextures/blanknormalmap_50.png");
 	
 	ReadRawFile();
 

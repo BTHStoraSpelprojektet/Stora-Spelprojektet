@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "DebugShape2D.h"
 #include "GraphicsEngineDLL.h"
-using namespace GraphicsEngine;
 
 void DebugShape2D::Initialize(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::XMFLOAT3 p_color)
 {
@@ -16,7 +15,7 @@ void DebugShape2D::Initialize(std::vector<DirectX::XMFLOAT3> p_shape, DirectX::X
 	lines.push_back(p_shape[p_shape.size() - 1]);
 	lines.push_back(p_shape[0]);
 
-	m_mesh = Buffer::CreateLineBuffer(GraphicsEngine::GE::GetInstance()->GetDevice(), lines);
+	m_mesh = Buffer::CreateLineBuffer(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), lines);
 	m_vertices = lines.size(); 
 	m_color = p_color;
 	DirectX::XMStoreFloat4x4(&m_worldMatrix, DirectX::XMMatrixIdentity());
@@ -33,7 +32,7 @@ void DebugShape2D::Shutdown()
 
 void DebugShape2D::Render()
 {
-	GraphicsEngine::GE::GetInstance()->RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
+	DLLGraphicsEngine::GE::GetInstance()->RenderLines(m_mesh, m_vertices, m_color, m_worldMatrix);
 }
 
 void DebugShape2D::UpdateWorldMatrix(DirectX::XMFLOAT4X4 p_worldMatrix)

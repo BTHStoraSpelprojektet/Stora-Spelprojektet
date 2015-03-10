@@ -16,6 +16,7 @@
 #include "VolleyObject.h"
 #include "Sound.h"
 #include "PointOfInterestManager.h"
+#include "GraphicsEngine.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}

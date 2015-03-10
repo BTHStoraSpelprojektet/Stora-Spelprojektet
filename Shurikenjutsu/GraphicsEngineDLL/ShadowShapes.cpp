@@ -145,7 +145,7 @@ void ShadowShapes::AddSmokeBombShape(Point p_center)
 	smokebomb.m_timeToLive = SMOKEBOMB_DURATION + 0.5f;
 
 	m_smokeBombs.push_back(smokebomb);
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), GraphicsEngine::GE::GetInstance()->GetDevice());
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), DLLGraphicsEngine::GE::GetInstance()->GetDevice());
 }
 
 void ShadowShapes::UpdateBoundries(Point p_topLeft, Point p_bottomRight)
@@ -204,9 +204,9 @@ void ShadowShapes::Update()
 
 	if (deletedThisFrame)
 	{
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), GraphicsEngine::GE::GetInstance()->GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), DLLGraphicsEngine::GE::GetInstance()->GetDevice());
 	}
-	GraphicsEngine::GE::GetInstance()->GetDevice();
+	DLLGraphicsEngine::GE::GetInstance()->GetDevice();
 }
 
 std::vector<Line> ShadowShapes::GetBoundryLines()
