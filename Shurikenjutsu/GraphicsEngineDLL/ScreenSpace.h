@@ -3,7 +3,10 @@
 
 #include <D3D11.h>
 #include <vector>
-#include "..\Shurikenjutsu\Structures.h"
+#include <DirectXMath.h>
+#include <Windows.h>
+#include <D3Dcompiler.h>
+#include "..\CommonLibs\CommonStructures.h"
 
 class ScreenSpace
 {

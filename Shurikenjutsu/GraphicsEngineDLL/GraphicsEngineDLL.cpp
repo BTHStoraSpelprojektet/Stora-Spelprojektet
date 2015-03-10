@@ -6,9 +6,9 @@
 #include "stdafx.h"
 
 #include "GraphicsEngineDLL.h"
-#include "..\CommonLibs\CommonEnums.h"
-#include "..\CommonLibs\CommonStructures.h"
-#include "..\CommonLibs\ConsoleFunctions.h"
+//#include "..\CommonLibs\CommonEnums.h"
+//#include "..\CommonLibs\CommonStructures.h"
+//#include "..\CommonLibs\ConsoleFunctions.h"
 #include "ParticleShader.h"
 #include "SceneShader.h"
 #include "GUIShader.h"
@@ -22,13 +22,12 @@
 #include "CustomFont.h"
 #include "DirectX.h"
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
-#include "DirectXTex\DirectXTex\DirectXTex.h"
-//#include "..\GraphicsEngineDLL\DirectXTex\WICTextureLoader\WICTextureLoader.h"
-#include "DirectXTex\WICTextureLoader\WICTextureLoader.h"
+#include "..\CommonLibs\DirectXTex\DirectXTex\DirectXTex.h"
 #include "PointLights.h"
 
 namespace DLLGraphicsEngine
 {
+	GE* GE::m_instance;
 
 	GE* GE::GetInstance()
 	{
@@ -53,10 +52,10 @@ namespace DLLGraphicsEngine
 		if (m_directX->Initialize(p_handle, p_screenMaxHeight, p_screenMaxWidth, p_fullscreen))
 		{
 			m_directX->Present();
-			ConsolePrintSuccess("DirectX initialized successfully.");
+//			ConsolePrintSuccess("DirectX initialized successfully.");
 			std::string version = "DirectX version: " + CreateTitle(m_directX->GetVersion());
-			ConsolePrintText(version);
-			ConsoleSkipLines(1);
+//			ConsolePrintText(version);
+			//ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -67,8 +66,8 @@ namespace DLLGraphicsEngine
 		m_sceneShader = new SceneShader();
 		if (m_sceneShader->Initialize(m_directX->GetDevice(), m_directX->GetContext()))
 		{
-			ConsolePrintSuccess("Scene shader initialized successfully.");
-			ConsoleSkipLines(1);
+//			ConsolePrintSuccess("Scene shader initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -79,8 +78,8 @@ namespace DLLGraphicsEngine
 		m_GUIShader = new GUIShader();
 		if (m_GUIShader->Initialize(m_directX->GetDevice(), m_directX->GetContext()))
 		{
-			ConsolePrintSuccess("GUI 2D shader initialized successfully.");
-			ConsoleSkipLines(1);
+//			ConsolePrintSuccess("GUI 2D shader initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -89,8 +88,8 @@ namespace DLLGraphicsEngine
 
 		if (m_GUIShader->InitializeColorShader(m_directX->GetDevice(), m_directX->GetContext()))
 		{
-			ConsolePrintSuccess("GUI 2D color shader initialized successfully.");
-			ConsoleSkipLines(1);
+	//		ConsolePrintSuccess("GUI 2D color shader initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -101,8 +100,8 @@ namespace DLLGraphicsEngine
 		m_particleShader = new ParticleShader();
 		if (m_particleShader->Initialize(m_directX->GetDevice()))
 		{
-			ConsolePrintSuccess("Particle shader initialized successfully.");
-			ConsoleSkipLines(1);
+//			ConsolePrintSuccess("Particle shader initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -113,8 +112,8 @@ namespace DLLGraphicsEngine
 		m_depthShader = new DepthShader();
 		if (m_depthShader->Initialize(m_directX->GetDevice(), m_directX->GetContext()))
 		{
-			ConsolePrintSuccess("Depth shader initialized successfully.");
-			ConsoleSkipLines(1);
+//			ConsolePrintSuccess("Depth shader initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -125,8 +124,8 @@ namespace DLLGraphicsEngine
 		m_foliageShader = new FoliageShader();
 		if (m_foliageShader->Initialize(m_directX->GetDevice()))
 		{
-			ConsolePrintSuccess("Foliage shader initialized successfully.");
-			ConsoleSkipLines(1);
+//			ConsolePrintSuccess("Foliage shader initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -137,8 +136,8 @@ namespace DLLGraphicsEngine
 		m_screenSpace = new ScreenSpace();
 		if (m_screenSpace->Initialize(m_directX->GetDevice(), m_directX->GetContext()))
 		{
-			ConsolePrintSuccess("Foliage shader initialized successfully.");
-			ConsoleSkipLines(1);
+//			ConsolePrintSuccess("Foliage shader initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -148,8 +147,8 @@ namespace DLLGraphicsEngine
 		// Initialize the visibility computer.
 		if (ShadowShapes::GetInstance().Initialize())
 		{
-			ConsolePrintSuccess("ShadowShapes initialized successfully.");
-			ConsoleSkipLines(1);
+//			ConsolePrintSuccess("ShadowShapes initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -158,8 +157,8 @@ namespace DLLGraphicsEngine
 
 		if (VisibilityComputer::GetInstance().Initialize(GE::GetInstance()->GetDevice(), (int)p_screenCurrentWidth, (int)p_screenCurrentHeight))
 		{
-			ConsolePrintSuccess("VisibilityComputer initialized successfully.");
-			ConsoleSkipLines(1);
+	//		ConsolePrintSuccess("VisibilityComputer initialized successfully.");
+//			ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -170,13 +169,13 @@ namespace DLLGraphicsEngine
 		m_shadowMap = new RenderTarget();
 		if (m_shadowMap->Initialize(m_directX->GetDevice(), (int)p_screenMaxWidth, (int)p_screenMaxHeight))
 		{
-			ConsolePrintSuccess("Shadow map initialized successfully.");
+//			ConsolePrintSuccess("Shadow map initialized successfully.");
 
 			std::string size = "Map size: " + std::to_string(p_screenMaxWidth);
 			size.append("x" + std::to_string(p_screenMaxHeight));
-			ConsolePrintText(size);
+	//		ConsolePrintText(size);
 
-			ConsoleSkipLines(1);
+	//		ConsoleSkipLines(1);
 		}
 		else
 		{
@@ -189,25 +188,25 @@ namespace DLLGraphicsEngine
 		hResult = FW1Factory->CreateFontWrapper(m_directX->GetDevice(), L"Arial", &m_fontWrapper);
 		if (FAILED(hResult))
 		{
-			ConsolePrintError("Failed to create the font wrapper!");
+	//		ConsolePrintError("Failed to create the font wrapper!");
 		}
 		else
 		{
-			ConsolePrintSuccess("Successfully created the font wrapper.");
+//			ConsolePrintSuccess("Successfully created the font wrapper.");
 		}
-		ConsoleSkipLines(1);
+//		ConsoleSkipLines(1);
 
 		// Create text geometry
 		hResult = FW1Factory->CreateTextGeometry(&m_textGeometry);
 		if (FAILED(hResult))
 		{
-			ConsolePrintError("Failed to create the font wrapper!");
+//			ConsolePrintError("Failed to create the font wrapper!");
 		}
 		else
 		{
-			ConsolePrintSuccess("Successfully created the font geometry.");
+//			ConsolePrintSuccess("Successfully created the font geometry.");
 		}
-		ConsoleSkipLines(1);
+//		ConsoleSkipLines(1);
 
 		if (FW1Factory != NULL)
 		{
@@ -224,13 +223,13 @@ namespace DLLGraphicsEngine
 		hResult = writeFactory->RegisterFontCollectionLoader(collectionLoader);
 		if (FAILED(hResult))
 		{
-			ConsolePrintError("Failed to create custom font!");
+	//		ConsolePrintError("Failed to create custom font!");
 		}
 
 		hResult = writeFactory->CreateCustomFontCollection(collectionLoader, NULL, 0, &m_fontCollection);
 		if (FAILED(hResult))
 		{
-			ConsolePrintError("Failed to create custom font collection!");
+	//		ConsolePrintError("Failed to create custom font collection!");
 		}
 
 		writeFactory->UnregisterFontCollectionLoader(collectionLoader);
@@ -344,15 +343,15 @@ namespace DLLGraphicsEngine
 
 		const wchar_t* your_result = wstring.c_str();
 
-		HRESULT hr = DirectX::CreateWICTextureFromFile(m_directX->GetDevice(), m_directX->GetContext(), your_result, nullptr, &textureView, 0);
+		HRESULT hr = DirectX::CreateWICTextureFromFile(GetDevice(), GetContext(), your_result, nullptr, &textureView, 0);
 		if (FAILED(hr))
 		{
 			std::string text = "Filepath: ";
 			text.append("'" + p_filename);
 			text.append("'!");
 
-			ConsolePrintError("Failed to create 2D texture from file! Missing or corrupt file?");
-			ConsolePrintError(text);
+	//		ConsolePrintError("Failed to create 2D texture from file! Missing or corrupt file?");
+	//		ConsolePrintError(text);
 		}
 
 		return textureView;
@@ -450,7 +449,7 @@ namespace DLLGraphicsEngine
 	{
 		if (m_shadowMap->GetRenderTarget() == nullptr)
 		{
-			ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
+	//		ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
 		}
 
 		m_sceneShader->UpdateShadowMap(m_shadowMap->GetRenderTarget());
@@ -543,7 +542,7 @@ namespace DLLGraphicsEngine
 
 		default:
 		{
-			ConsolePrintErrorAndQuit("Creating title from version failed.");
+//			ConsolePrintErrorAndQuit("Creating title from version failed.");
 			return "ERROR";
 		}
 		}
@@ -578,7 +577,7 @@ namespace DLLGraphicsEngine
 		{
 			if (FAILED(m_directX->GetSwapChain()->SetFullscreenState(true, nullptr)))
 			{
-				ConsolePrintErrorAndQuit("Setting fullscreen mode failed.");
+	//			ConsolePrintErrorAndQuit("Setting fullscreen mode failed.");
 				return false;
 			}
 
@@ -593,7 +592,7 @@ namespace DLLGraphicsEngine
 		{
 			if (FAILED(m_directX->GetSwapChain()->SetFullscreenState(false, nullptr)))
 			{
-				ConsolePrintErrorAndQuit("Setting windowed mode failed.");
+	//			ConsolePrintErrorAndQuit("Setting windowed mode failed.");
 				return false;
 			}
 

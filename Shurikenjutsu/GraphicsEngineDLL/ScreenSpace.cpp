@@ -2,10 +2,8 @@
 #include "stdafx.h"
 #include "ScreenSpace.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
-#include <DirectXMath.h>
-#include <Windows.h>
-#include <D3Dcompiler.h>
 #include "PointLights.h"
+#include "..\CommonLibs\DirectXTex\WICTextureLoader\WICTextureLoader.h"
 
 ScreenSpace::ScreenSpace(){}
 ScreenSpace::~ScreenSpace(){}
@@ -423,12 +421,11 @@ bool ScreenSpace::InitializeDOF(ID3D11Device* p_device, ID3D11DeviceContext* p_c
 
 void ScreenSpace::Shutdown()
 {
-#if defined(_DEBUG) || defined(PROFILE)
-	// Only works if device is created with the D3D10 or D3D11 debug layer, or when attached to PIX for Windows
-	const char c_szName[] = "PIXELSHADER.DEBUG";
-	m_pixelShader->SetPrivateData(WKPDID_D3DDebugObjectName,
-		sizeof(c_szName) - 1, c_szName);
-#endif
+//#if defined(_DEBUG) || defined(PROFILE)
+//	// Only works if device is created with the D3D10 or D3D11 debug layer, or when attached to PIX for Windows
+//	const char c_szName[] = "PIXELSHADER.DEBUG";
+//	m_pixelShader->SetPrivateData(WKPDID_D3DDebugObjectName, sizeof(c_szName) - 1, c_szName);
+//#endif
 	if (m_vertexShader)
 	{
 		m_vertexShader->Release();

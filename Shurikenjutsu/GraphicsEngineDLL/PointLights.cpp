@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PointLights.h"
-#include "DirectXTex\DirectXTex\DirectXTex.h"
+#include "..\CommonLibs\DirectXTex\DirectXTex\DirectXTex.h"
 
 #include "GraphicsEngineDLL.h"
 

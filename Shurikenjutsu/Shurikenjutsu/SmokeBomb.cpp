@@ -64,7 +64,7 @@ void SmokeBomb::Update()
 			ResetTimer();
 			m_isThrowing = false;
 			
-			GraphicsEngine::GetInstance()->SS_AddSmokeBomb(Point(m_startPosition.x + x, m_startPosition.z + z), GLOBAL::GetInstance().GetDeltaTime());
+			GraphicsEngine::GetInstance()->SS_AddSmokeBomb(Point(m_startPosition.x + x, m_startPosition.z + z), (float)GLOBAL::GetInstance().GetDeltaTime());
 		}
 	}
 

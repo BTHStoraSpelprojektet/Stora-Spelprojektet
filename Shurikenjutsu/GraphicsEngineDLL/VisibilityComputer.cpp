@@ -2,8 +2,8 @@
 #include "stdafx.h"
 #include "VisibilityComputer.h"
 
-#include "..\CommonLibs\ConsoleFunctions.h"
-#include "..\CommonLibs\TextureLibrary.h"
+//#include "..\CommonLibs\ConsoleFunctions.h"
+//#include "..\CommonLibs\TextureLibrary.h"
 
 #include "GraphicsEngineDLL.h"
 
@@ -37,7 +37,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	{
 		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
 		{
-			ConsolePrintErrorAndQuit("Failed to compile shadow shapes vertex shader from file.");
+			//ConsolePrintErrorAndQuit("Failed to compile shadow shapes vertex shader from file.");
 			return false;
 		}
 
@@ -55,7 +55,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	// Create the vertex shader.
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
-		ConsolePrintErrorAndQuit("Failed to create shadow shapes vertex shader.");
+		//ConsolePrintErrorAndQuit("Failed to create shadow shapes vertex shader.");
 		return false;
 	}
 
@@ -77,12 +77,12 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	// Create the vertex input layout.
 	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
 	{
-		ConsolePrintErrorAndQuit("Failed to create shadow shapes vertex input layout.");
+		//ConsolePrintErrorAndQuit("Failed to create shadow shapes vertex input layout.");
 		return false;
 	}
 
-	ConsolePrintSuccess("Shadow shapes vertex shader compiled successfully.");
-	ConsolePrintText("Shader version: VS " + m_VSVersion);
+	//ConsolePrintSuccess("Shadow shapes vertex shader compiled successfully.");
+	//ConsolePrintText("Shader version: VS " + m_VSVersion);
 
 	// Release useless local shaders.
 	vertexShader->Release();
@@ -97,7 +97,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	{
 		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
 		{
-			ConsolePrintErrorAndQuit("Failed to compile shadow shapes pixel shader from file.");
+			//ConsolePrintErrorAndQuit("Failed to compile shadow shapes pixel shader from file.");
 			return false;
 		}
 
@@ -115,12 +115,12 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	// Create the pixel shader.
 	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
 	{
-		ConsolePrintErrorAndQuit("Failed to create shadow shapes pixel shader");
+		//ConsolePrintErrorAndQuit("Failed to create shadow shapes pixel shader");
 		return false;
 	}
 
-	ConsolePrintSuccess("Shadow shapes pixel shader compiled successfully.");
-	ConsolePrintText("Shader version: PS " + m_PSVersion);
+	//ConsolePrintSuccess("Shadow shapes pixel shader compiled successfully.");
+	//ConsolePrintText("Shader version: PS " + m_PSVersion);
 
 	// Release useless local variables.
 	pixelShader->Release();
@@ -138,7 +138,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	// Create the matrix buffer.
 	if (FAILED(p_device->CreateBuffer(&matrixBuffer, NULL, &m_matrixBuffer)))
 	{
-		ConsolePrintErrorAndQuit("Failed to create shadow shapes matrix buffer.");
+		//ConsolePrintErrorAndQuit("Failed to create shadow shapes matrix buffer.");
 		return false;
 	}
 	UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
@@ -168,8 +168,8 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	m_intersections.clear();
 	m_vertices.clear();
 
-	ConsolePrintSuccess("Visibility computer initialized successfully.");
-	ConsoleSkipLines(1);
+	//ConsolePrintSuccess("Visibility computer initialized successfully.");
+	//ConsoleSkipLines(1);
 
 	return true;
 }
@@ -426,7 +426,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context,
 {
 	if (!m_texture)
 	{
-		m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/ShadowShapeTexture.png");
+		//m_texture = TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/ShadowShapeTexture.png");
 	}
 
 	// Render the quad to reverse project the polygon onto.
@@ -451,7 +451,7 @@ void VisibilityComputer::UpdatePolygonMatrices(ID3D11DeviceContext* p_context)
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
 	if (FAILED(p_context->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
-		ConsolePrintErrorAndQuit("Failed to map shadow shapes matrix buffer.");
+		//ConsolePrintErrorAndQuit("Failed to map shadow shapes matrix buffer.");
 		return;
 	}
 

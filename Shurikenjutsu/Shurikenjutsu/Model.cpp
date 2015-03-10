@@ -25,7 +25,7 @@ bool Model::LoadModel(const char* p_filepath)
 	else
 	{
 		std::vector<Vertex> nullVector;
-		m_mesh = GraphicsEngine::GetInstance()->CreateBuffer(BUFFERTYPE_VERTEX, nullVector, mData.m_verticesAnimated);
+		m_mesh = GraphicsEngine::GetInstance()->CreateBuffer(BUFFERTYPE_VERTEXANIMATED, nullVector, mData.m_verticesAnimated);
 		m_vertexCount = mData.m_verticesAnimated.size();
 	}
 

@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <iostream>
 
+#include "WICTextureLoader.h"
 using namespace std;
 
 class WICTextureLoader;
