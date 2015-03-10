@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "ShadowShapes.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
-#include "..\Shurikenjutsu\Globals.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "VisibilityComputer.h"
 
@@ -125,7 +124,7 @@ void ShadowShapes::AddStaticSquare(Point p_topLeft, Point p_bottomRight)
 	}
 }
 
-void ShadowShapes::AddSmokeBombShape(Point p_center)
+void ShadowShapes::AddSmokeBombShape(Point p_center, float p_deltaTime)
 {
 	SmokeBombShadowShape smokebomb;
 
@@ -145,7 +144,7 @@ void ShadowShapes::AddSmokeBombShape(Point p_center)
 	smokebomb.m_timeToLive = SMOKEBOMB_DURATION + 0.5f;
 
 	m_smokeBombs.push_back(smokebomb);
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), DLLGraphicsEngine::GE::GetInstance()->GetDevice());
+	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_deltaTime);
 }
 
 void ShadowShapes::UpdateBoundries(Point p_topLeft, Point p_bottomRight)
@@ -174,9 +173,9 @@ void ShadowShapes::UpdateBoundries(Point p_topLeft, Point p_bottomRight)
 	m_uniqueBoundryPoints.push_back(left.a);
 }
 
-void ShadowShapes::Update()
+void ShadowShapes::Update(float p_deltaTime)
 {
-	float dt = (float)GLOBAL::GetInstance().GetDeltaTime();
+	float dt = p_deltaTime;
 
 	// Add delta time to all smokebombs.
 	for (unsigned int i = 0; i < m_smokeBombs.size(); i++)
@@ -204,7 +203,7 @@ void ShadowShapes::Update()
 
 	if (deletedThisFrame)
 	{
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), DLLGraphicsEngine::GE::GetInstance()->GetDevice());
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(VisibilityComputer::GetInstance().GetLastPosition(), DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_deltaTime);
 	}
 	DLLGraphicsEngine::GE::GetInstance()->GetDevice();
 }

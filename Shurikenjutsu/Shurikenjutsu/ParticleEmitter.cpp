@@ -5,7 +5,6 @@
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include "ParticleRenderer.h"
-#include "PointLights.h"
 
 ParticleEmitter::ParticleEmitter(){}
 ParticleEmitter::~ParticleEmitter(){}
@@ -577,8 +576,7 @@ void ParticleEmitter::UpdateParticles()
 				fireLight.m_position = DirectX::XMFLOAT3(m_emitterPosition.x, m_emitterPosition.y + 0.2f, m_emitterPosition.z);
 				fireLight.m_range = 7.0f;
 				
-				PointLights::GetInstance()->AddLight(fireLight);
-
+				GraphicsEngine::GetInstance()->AddNewPointLight(fireLight);
 				for (int i = 0; i < m_currentParticles; i++)
 				{
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
@@ -673,7 +671,7 @@ void ParticleEmitter::UpdateParticles()
 				fireLight.m_position = DirectX::XMFLOAT3(m_emitterPosition.x, m_emitterPosition.y + 0.2f, m_emitterPosition.z);
 				fireLight.m_range = 5.0f;
 
-				PointLights::GetInstance()->AddLight(fireLight);
+				GraphicsEngine::GetInstance()->AddNewPointLight(fireLight);
 
 				for (int i = 0; i < m_currentParticles; i++)
 				{

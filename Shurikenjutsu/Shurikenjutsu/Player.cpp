@@ -8,7 +8,6 @@
 #include "AbilityBar.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "AnimationControl.h"
-#include "VisibilityComputer.h"
 #include "StickyTrap.h"
 #include "AttackPredictionEditor.h"
 #include "FloatingText.h"
@@ -17,7 +16,8 @@
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
-#include "PointLights.h"
+//#include "PointLights.h"
+#include "GraphicsEngine.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -223,7 +223,7 @@ void Player::UpdateMe()
 	if (m_updateVisibility)
 	{
 		m_updateVisibility = false;
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+		GraphicsEngine::GetInstance()->UpdateVisibilityPolygon(Point(m_position.x, m_position.z), (float)GLOBAL::GetInstance().GetDeltaTime());
 	}
 
 	// Check values from server
@@ -317,7 +317,7 @@ void Player::UpdateMe()
 			}
 
 			// If we dashed, update shadow shapes.
-			VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+			GraphicsEngine::GetInstance()->UpdateVisibilityPolygon(Point(m_position.x, m_position.z), (float)GLOBAL::GetInstance().GetDeltaTime());
 			// Force network to send pos
 			Network::GetInstance()->SendLatestPos();
 		}
@@ -340,7 +340,8 @@ void Player::UpdateMe()
 		SetCalculatePlayerPosition();
 
 		// If we moved, update shadow shapes.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_position.x, m_position.z), GraphicsEngine::GetInstance()->GetDevice());
+
+		GraphicsEngine::GetInstance()->UpdateVisibilityPolygon(Point(m_position.x, m_position.z), (float)GLOBAL::GetInstance().GetDeltaTime());
 
 		//Update sound (walking)
 	
@@ -1080,7 +1081,7 @@ void Player::Render()
 	newLight.m_position.y += 1.8f;
 	newLight.m_range = 1.5f;
 
-	PointLights::GetInstance()->AddLight(newLight);
+	GraphicsEngine::GetInstance()->AddNewPointLight(newLight);
 
 	AnimatedObject::RenderPlayer(m_team);
 }

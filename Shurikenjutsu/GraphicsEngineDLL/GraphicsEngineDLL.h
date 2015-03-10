@@ -30,8 +30,14 @@ struct ID3D11ShaderResourceView;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11Buffer;
+struct Point;
+struct PointLight;
+struct Vertex;
+struct VertexAnimated;
+struct Line;
 
 enum D3D_FEATURE_LEVEL;
+enum BUFFERTYPE;
 namespace DLLGraphicsEngine
 {
 
@@ -109,45 +115,64 @@ namespace DLLGraphicsEngine
 
 		GRAPHICSENGINEDLL_API int GetNumberOfInstanceBuffer();
 
-		GRAPHICSENGINEDLL_API 	void SetVsync(bool p_state);
+		GRAPHICSENGINEDLL_API void SetVsync(bool p_state);
 
-		GRAPHICSENGINEDLL_API 	void SetOutliningPassOne();
-		GRAPHICSENGINEDLL_API 	void SetOutliningPassTwo();//10
+		GRAPHICSENGINEDLL_API void SetOutliningPassOne();
+		GRAPHICSENGINEDLL_API void SetOutliningPassTwo();//10
 
-		GRAPHICSENGINEDLL_API 	bool InitializeOutling();
-		GRAPHICSENGINEDLL_API 	void ClearOutlining();
+		GRAPHICSENGINEDLL_API bool InitializeOutling();
+		GRAPHICSENGINEDLL_API void ClearOutlining();
 
-		GRAPHICSENGINEDLL_API 	IFW1FontWrapper* GetFontWrapper();
-		GRAPHICSENGINEDLL_API 	IDWriteFontCollection* GetFontCollection();
-		GRAPHICSENGINEDLL_API 	void AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags);
-		GRAPHICSENGINEDLL_API 	void RenderTextGeometry(UINT p_flags);
+		GRAPHICSENGINEDLL_API IFW1FontWrapper* GetFontWrapper();
+		GRAPHICSENGINEDLL_API IDWriteFontCollection* GetFontCollection();
+		GRAPHICSENGINEDLL_API void AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags);
+		GRAPHICSENGINEDLL_API void RenderTextGeometry(UINT p_flags);
 
-		GRAPHICSENGINEDLL_API 	bool HasScreenChanged();
-		GRAPHICSENGINEDLL_API 	void ScreenChangeHandled();
+		GRAPHICSENGINEDLL_API bool HasScreenChanged();
+		GRAPHICSENGINEDLL_API void ScreenChangeHandled();
 
-		GRAPHICSENGINEDLL_API 	void DoReportLiveObjects();
+		GRAPHICSENGINEDLL_API void DoReportLiveObjects();
 
-		GRAPHICSENGINEDLL_API 	ID3D11ShaderResourceView* GetPostProcessingTexture1();//10
-		GRAPHICSENGINEDLL_API 	ID3D11ShaderResourceView* GetPostProcessingTexture2();
+		GRAPHICSENGINEDLL_API ID3D11ShaderResourceView* GetPostProcessingTexture1();//10
+		GRAPHICSENGINEDLL_API ID3D11ShaderResourceView* GetPostProcessingTexture2();
 
-		GRAPHICSENGINEDLL_API 	void ClearRenderTargetsForGBuffers();
-		GRAPHICSENGINEDLL_API 	void SetRenderTargetsForGBuffers();
+		GRAPHICSENGINEDLL_API void ClearRenderTargetsForGBuffers();
+		GRAPHICSENGINEDLL_API void SetRenderTargetsForGBuffers();
 
-		GRAPHICSENGINEDLL_API 	void Composition();
-		GRAPHICSENGINEDLL_API 	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
+		GRAPHICSENGINEDLL_API void Composition();
+		GRAPHICSENGINEDLL_API void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
 
-		GRAPHICSENGINEDLL_API 	void SetForwardRenderTarget();
+		GRAPHICSENGINEDLL_API void SetForwardRenderTarget();
 
-		GRAPHICSENGINEDLL_API 	void RenderSSAO();
-		GRAPHICSENGINEDLL_API 	void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
+		GRAPHICSENGINEDLL_API void RenderSSAO();
+		GRAPHICSENGINEDLL_API void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
 
-		GRAPHICSENGINEDLL_API 	void ApplyDOF();
+		GRAPHICSENGINEDLL_API void ApplyDOF();
+		GRAPHICSENGINEDLL_API std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
+
+
+		GRAPHICSENGINEDLL_API void UpdateVisibilityPolygon(Point p_point, float p_deltaTime);
+		GRAPHICSENGINEDLL_API void AddNewPointLight(PointLight& p_newLight);
+		GRAPHICSENGINEDLL_API void SetViewPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
+		GRAPHICSENGINEDLL_API void SetPointLightLightBuffer(DirectX::XMFLOAT4X4 p_matrix);
+		GRAPHICSENGINEDLL_API void RenderVisibilityPolygon(bool p_isMatchOver);
+		GRAPHICSENGINEDLL_API void UpdateVisibilityMapBoundries(Point p_topLeft, Point p_botLeft);
+		GRAPHICSENGINEDLL_API void SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
+		GRAPHICSENGINEDLL_API void UpdateVisibilityTextureSize(float p_maxScreenWidth, float p_maxScreenHeight);
+		GRAPHICSENGINEDLL_API bool IsVisibilityPointVisible(Point p_point);
+		GRAPHICSENGINEDLL_API ID3D11Buffer* CreateBuffer(BUFFERTYPE p_type, std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated);
+
+		GRAPHICSENGINEDLL_API void SS_AddStaticLine(Line p_line);
+		GRAPHICSENGINEDLL_API void SS_Update(float p_deltaTime);
+		GRAPHICSENGINEDLL_API void SS_DebugRender();
+		GRAPHICSENGINEDLL_API void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
+
+
 	private:
 		static GE* m_instance;
 		GE(){};
 		~GE(){};
 
-		std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
 
 		DirectXWrapper *m_directX;
 

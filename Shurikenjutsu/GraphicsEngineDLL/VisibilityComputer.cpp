@@ -2,13 +2,8 @@
 #include "stdafx.h"
 #include "VisibilityComputer.h"
 
-#include <D3Dcompiler.h>
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\TextureLibrary.h"
-
-#include "..\Shurikenjutsu\Network.h"
-#include "..\Shurikenjutsu\InputManager.h"
-#include "..\Shurikenjutsu\Globals.h"
 
 #include "GraphicsEngineDLL.h"
 
@@ -19,7 +14,7 @@ VisibilityComputer& VisibilityComputer::GetInstance()
 	return instance;
 }
 
-bool VisibilityComputer::Initialize(ID3D11Device* p_device)
+bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenWidth, int p_currentScreenHeight)
 {
 	m_lastPosition = Point(0.0f, 0.0f);
 
@@ -147,8 +142,8 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device)
 		return false;
 	}
 	UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
-	m_renderTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-	m_minimapTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+	m_renderTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_currentScreenWidth, p_currentScreenHeight);
+	m_minimapTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_currentScreenWidth, p_currentScreenHeight);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
 	// Setup vertex buffer description.
@@ -227,7 +222,7 @@ void VisibilityComputer::Shutdown()
 	m_minimapTarget.Shutdown();
 }
 
-void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device)
+void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device, float p_deltaTime)
 {
 	m_lastPosition = p_viewerPosition;
 
@@ -288,7 +283,7 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 		m_intersections.push_back(totalIntersections[i].m_point);
 	}
 
-	UVAnimate();
+	UVAnimate(p_deltaTime);
 
 	// Calculate the polyogn.
 	CalculateVisibilityPolygon(p_viewerPosition, p_device);
@@ -427,7 +422,7 @@ inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewe
 	return angles;
 }
 
-void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
+void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context, bool p_isMatchOver)
 {
 	if (!m_texture)
 	{
@@ -435,7 +430,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context)
 	}
 
 	// Render the quad to reverse project the polygon onto.
-	if (!Network::GetInstance()->GetMatchOver())
+	if (!p_isMatchOver)
 	{
 		DLLGraphicsEngine::GE::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), m_texture);
 	}
@@ -615,9 +610,9 @@ void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
 	m_bottomRight = p_bottomRight;
 }
 
-void VisibilityComputer::UVAnimate()
+void VisibilityComputer::UVAnimate(float p_deltaTime)
 {
-	m_UVOffset += (float)(GLOBAL::GetInstance().GetDeltaTime() * 0.0025f);
+	m_UVOffset += (p_deltaTime * 0.0025f);
 
 	if (m_UVOffset >= 1.0f)
 	{

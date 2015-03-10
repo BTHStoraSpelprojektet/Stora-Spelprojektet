@@ -5,6 +5,7 @@
 #include "AnimationControl.h"
 #include "ShadowShapes.h"
 #include "Globals.h"
+#include "GraphicsEngine.h"
 
 Object::Object(){}
 Object::~Object(){}

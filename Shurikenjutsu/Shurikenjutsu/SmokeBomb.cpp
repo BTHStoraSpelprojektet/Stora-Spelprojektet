@@ -5,7 +5,6 @@
 #include "ParticleEmitter.h"
 #include "Object.h"
 #include "..\CommonLibs\ModelNames.h"
-#include "ShadowShapes.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
@@ -65,7 +64,7 @@ void SmokeBomb::Update()
 			ResetTimer();
 			m_isThrowing = false;
 			
-			ShadowShapes::GetInstance().AddSmokeBombShape(Point(m_startPosition.x + x, m_startPosition.z + z));
+			GraphicsEngine::GetInstance()->SS_AddSmokeBomb(Point(m_startPosition.x + x, m_startPosition.z + z), GLOBAL::GetInstance().GetDeltaTime());
 		}
 	}
 

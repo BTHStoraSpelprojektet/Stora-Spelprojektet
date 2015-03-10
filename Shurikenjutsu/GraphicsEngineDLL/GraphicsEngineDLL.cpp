@@ -25,6 +25,7 @@
 #include "DirectXTex\DirectXTex\DirectXTex.h"
 //#include "..\GraphicsEngineDLL\DirectXTex\WICTextureLoader\WICTextureLoader.h"
 #include "DirectXTex\WICTextureLoader\WICTextureLoader.h"
+#include "PointLights.h"
 
 namespace DLLGraphicsEngine
 {
@@ -155,7 +156,7 @@ namespace DLLGraphicsEngine
 			return false;
 		}
 
-		if (VisibilityComputer::GetInstance().Initialize(GE::GetInstance()->GetDevice()))
+		if (VisibilityComputer::GetInstance().Initialize(GE::GetInstance()->GetDevice(), (int)p_screenCurrentWidth, (int)p_screenCurrentHeight))
 		{
 			ConsolePrintSuccess("VisibilityComputer initialized successfully.");
 			ConsoleSkipLines(1);
@@ -326,6 +327,9 @@ namespace DLLGraphicsEngine
 			delete m_instance;
 			m_instance = nullptr;
 		}
+		PointLights::GetInstance()->Shutdown();
+		ShadowShapes::GetInstance().Shutdown();
+		VisibilityComputer::GetInstance().Shutdown();
 	}
 
 	ID3D11ShaderResourceView* GE::Create2DTexture(std::string p_filename)
@@ -786,6 +790,65 @@ namespace DLLGraphicsEngine
 	void GE::TurnOnBackfaceCulling()
 	{
 		m_sceneShader->TurnOnBackFaceCulling(m_directX->GetContext());
+	}
+
+	void GE::UpdateVisibilityPolygon(Point p_point, float p_deltaTime)
+	{
+		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(p_point, GetDevice(), p_deltaTime);
+	}
+	void GE::AddNewPointLight(PointLight& p_newLight)
+	{
+		PointLights::GetInstance()->AddLight(p_newLight);
+	}
+	void GE::SetViewPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix)
+	{
+		VisibilityComputer::GetInstance().SetViewPolygonMatrix(p_matrix);
+	}
+	void GE::SetPointLightLightBuffer(DirectX::XMFLOAT4X4 p_matrix)
+	{
+		PointLights::GetInstance()->SetLightBuffer(p_matrix);
+	}
+
+	void GE::UpdateVisibilityMapBoundries(Point p_topLeft, Point p_botLeft)
+	{
+		VisibilityComputer::GetInstance().UpdateMapBoundries(p_topLeft, p_botLeft);
+	}
+	void GE::RenderVisibilityPolygon(bool p_isMatchOver)
+	{
+		VisibilityComputer::GetInstance().RenderVisibilityPolygon(GetContext(), p_isMatchOver);
+	}
+	void GE::SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix)
+	{
+		VisibilityComputer::GetInstance().SetProjectionPolygonMatrix(p_matrix);
+	}
+	void GE::UpdateVisibilityTextureSize(float p_maxScreenWidth, float p_maxScreenHeight)
+	{
+		VisibilityComputer::GetInstance().UpdateTextureSize((int)p_maxScreenWidth, (int)p_maxScreenHeight);
+	}
+	bool GE::IsVisibilityPointVisible(Point p_point)
+	{
+		return VisibilityComputer::GetInstance().IsPointVisible(p_point);
+	}
+	ID3D11Buffer* GE::CreateBuffer(BUFFERTYPE p_type,  std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated)
+	{
+		return Buffer::CreateBuffer(p_type, GetDevice(), p_mesh, p_meshAnimated);
+	}
+
+	void GE::SS_AddStaticLine(Line p_line)
+	{
+		ShadowShapes::GetInstance().AddStaticLine(p_line);
+	}
+	void GE::SS_Update(float p_deltaTime)
+	{
+		ShadowShapes::GetInstance().Update(p_deltaTime);
+	}
+	void GE::SS_DebugRender()
+	{
+		ShadowShapes::GetInstance().DebugRender();
+	}
+	void GE::SS_AddSmokeBomb(Point p_point, float p_deltaTime)
+	{
+		ShadowShapes::GetInstance().AddSmokeBombShape(p_point, p_deltaTime);
 	}
 }
 

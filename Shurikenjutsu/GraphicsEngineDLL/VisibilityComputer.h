@@ -5,6 +5,7 @@
 
 #include "ShadowShapes.h"
 #include "RenderTarget.h"
+#include <D3Dcompiler.h>
 
 
 struct Intersection
@@ -62,14 +63,14 @@ class VisibilityComputer
 public:
 	static VisibilityComputer& GetInstance();
 
-	bool Initialize(ID3D11Device* p_device);
+	bool Initialize(ID3D11Device* p_device, int p_currentScreenWidth, int p_currentScreenHeight);
 	void Shutdown();
 
 	void UpdateTextureSize(int p_width, int p_height);
-	void UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device);
+	void UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device, float p_deltaTime);
 	void UpdateMapBoundries(Point p_topLeft, Point p_bottomRight);
 
-	void RenderVisibilityPolygon(ID3D11DeviceContext* p_context);
+	void RenderVisibilityPolygon(ID3D11DeviceContext* p_context, bool p_isMatchOver);
 
 	bool IsPointVisible(Point p_point);
 
@@ -105,7 +106,7 @@ private:
 
 	void UpdatePolygonMatrices(ID3D11DeviceContext* p_context);
 
-	void UVAnimate();
+	void UVAnimate(float p_deltaTime);
 
 	std::vector<Point> m_intersections;
 	std::vector<DirectX::XMFLOAT3> m_vertices;

@@ -14,14 +14,12 @@
 #include "InputManager.h"
 #include "Globals.h"
 #include "..\CommonLibs\TextureLibrary.h"
-#include "VisibilityComputer.h"
 #include "Cursor.h"
 #include "ParticleRenderer.h"
 #include "DeathBoard.h"
 #include "TrailRenderer.h"
 #include "MemoryChecker.h"
 #include "DebugText.h"
-#include "PointLights.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
@@ -202,7 +200,7 @@ void System::Shutdown()
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
 
-	PointLights::GetInstance()->Shutdown();
+
 
 	if (m_sound)
 	{
@@ -220,8 +218,6 @@ void System::Shutdown()
 
 	GUIManager::GetInstance()->Shutdown();
 
-	ShadowShapes::GetInstance().Shutdown();
-	VisibilityComputer::GetInstance().Shutdown();
 
 	//Shutdown current state
 	if (m_menuState != nullptr)

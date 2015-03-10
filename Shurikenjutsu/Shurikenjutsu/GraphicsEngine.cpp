@@ -1,5 +1,7 @@
 #include "GraphicsEngine.h"
 #include "GraphicsEngineDLL.h"
+#include "..\CommonLibs\CommonStructures.h"
+#include "..\CommonLibs\CommonEnums.h"
 
 
 GraphicsEngine* GraphicsEngine::m_instance;
@@ -365,4 +367,61 @@ void GraphicsEngine::TurnOffBackfaceCulling()
 void GraphicsEngine::TurnOnBackfaceCulling()
 {
 	DLLGraphicsEngine::GE::GetInstance()->TurnOnBackfaceCulling();
+}
+
+void GraphicsEngine::UpdateVisibilityPolygon(Point p_point, float p_deltaTime)
+{	
+	DLLGraphicsEngine::GE::GetInstance()->UpdateVisibilityPolygon(p_point, p_deltaTime);
+}
+void GraphicsEngine::AddNewPointLight(PointLight& p_newLight)
+{
+	DLLGraphicsEngine::GE::GetInstance()->AddNewPointLight(p_newLight);
+}
+void GraphicsEngine::SetViewPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix)
+{
+	DLLGraphicsEngine::GE::GetInstance()->SetViewPolygonMatrix(p_matrix);
+}
+void GraphicsEngine::SetPointLightLightBuffer(DirectX::XMFLOAT4X4 p_matrix)
+{
+	DLLGraphicsEngine::GE::GetInstance()->SetPointLightLightBuffer(p_matrix);
+}
+void GraphicsEngine::UpdateVisibilityMapBoundries(Point p_topLeft, Point p_botLeft)
+{
+	DLLGraphicsEngine::GE::GetInstance()->UpdateVisibilityMapBoundries(p_topLeft, p_botLeft);
+}
+void GraphicsEngine::RenderVisibilityPolygon(bool p_isMatchOver)
+{
+	DLLGraphicsEngine::GE::GetInstance()->RenderVisibilityPolygon(p_isMatchOver);
+}
+void GraphicsEngine::SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix)
+{
+	DLLGraphicsEngine::GE::GetInstance()->SetPointLightLightBuffer(p_matrix);
+}
+void GraphicsEngine::UpdateVisibilityTextureSize(float p_maxScreenWidth, float p_maxScreenHeight)
+{
+	DLLGraphicsEngine::GE::GetInstance()->UpdateVisibilityTextureSize(p_maxScreenWidth, p_maxScreenHeight);
+}
+bool GraphicsEngine::IsVisibilityPointVisible(Point p_point)
+{
+	return DLLGraphicsEngine::GE::GetInstance()->IsVisibilityPointVisible(p_point);
+}
+ID3D11Buffer* GraphicsEngine::CreateBuffer(BUFFERTYPE p_type, std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated)
+{
+	return DLLGraphicsEngine::GE::GetInstance()->CreateBuffer(p_type, p_mesh, p_meshAnimated);
+}
+void GraphicsEngine::SS_AddStaticLine(Line p_line)
+{
+	DLLGraphicsEngine::GE::GetInstance()->SS_AddStaticLine(p_line);
+}
+void GraphicsEngine::SS_Update(float p_deltaTime)
+{
+	DLLGraphicsEngine::GE::GetInstance()->SS_Update(p_deltaTime);
+}
+void GraphicsEngine::SS_DebugRender()
+{
+	DLLGraphicsEngine::GE::GetInstance()->SS_DebugRender();
+}
+void GraphicsEngine::SS_AddSmokeBomb(Point p_point, float p_deltaTime)
+{
+	DLLGraphicsEngine::GE::GetInstance()->SS_AddSmokeBomb(p_point, p_deltaTime);
 }

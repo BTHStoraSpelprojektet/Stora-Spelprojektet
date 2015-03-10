@@ -1316,7 +1316,7 @@ void SceneShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	ID3D11Buffer* bufferPointers[2];
 
 	stride[0] = sizeof(Vertex);
-	stride[1] = sizeof(InstancePos);
+	stride[1] = sizeof(DirectX::XMFLOAT4X4);
 
 	offset[0] = 0;
 	offset[1] = 0;

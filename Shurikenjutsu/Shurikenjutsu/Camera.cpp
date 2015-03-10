@@ -6,8 +6,9 @@
 #include "Globals.h"
 #include "InputManager.h"
 #include "GraphicsEngine.h"
-#include "VisibilityComputer.h"
+//#include "VisibilityComputer.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "..\CommonLibs\CommonStructures.h"
 
 bool Camera::Initialize()
 {
@@ -355,7 +356,8 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 	UpdatePosition(position);
 	UpdateTarget(target);
 	UpdateViewMatrix();
-	VisibilityComputer::GetInstance().SetViewPolygonMatrix(GetViewMatrix());
+	GraphicsEngine::GetInstance()->SetViewPolygonMatrix(GetViewMatrix());
+	
 
 	// Lock camera on the player.
 	playerPosition = p_playerPos;
@@ -378,7 +380,7 @@ void Camera::FollowCharacter(DirectX::XMFLOAT3 p_playerPos)
 		GraphicsEngine::GetInstance()->SetViewAndProjection(GetViewMatrix(), GetProjectionMatrix());
 	}	
 
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(playerPosition.x, playerPosition.z), GraphicsEngine::GetInstance()->GetDevice());
+	GraphicsEngine::GetInstance()->UpdateVisibilityPolygon(Point(playerPosition.x, playerPosition.z), (float)GLOBAL::GetInstance().GetDeltaTime());
 }
 
 void Camera::MenuCameraRotation()

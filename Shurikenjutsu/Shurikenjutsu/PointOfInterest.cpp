@@ -1,7 +1,7 @@
 #include "PointOfInterest.h"
 #include "ParticleEmitter.h"
 #include "Globals.h"
-#include "PointLights.h"
+#include "GraphicsEngine.h"
 
 PointOfInterest::PointOfInterest(){}
 PointOfInterest::~PointOfInterest(){}
@@ -95,5 +95,5 @@ void PointOfInterest::SpawnLight()
 	newLight.m_position.y += 1.8f;
 	newLight.m_range = 3.0f;
 
-	PointLights::GetInstance()->AddLight(newLight);
+	GraphicsEngine::GetInstance()->AddNewPointLight(newLight);
 }

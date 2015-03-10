@@ -15,7 +15,6 @@
 #include "Frustum.h"
 #include "Sound.h"
 #include "PlayerManager.h"
-#include "PointLights.h"
 #include "MenuButton.h"
 #include "ScoreBoard.h"
 
@@ -489,8 +488,7 @@ void ChooseState::Render()
 
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
-	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
-
+	GraphicsEngine::GetInstance()->SetPointLightLightBuffer(m_camera->GetViewMatrix());
 	GraphicsEngine::GetInstance()->Composition();
 	GraphicsEngine::GetInstance()->ApplyDOF();
 

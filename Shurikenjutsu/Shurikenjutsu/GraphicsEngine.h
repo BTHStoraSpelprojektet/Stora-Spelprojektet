@@ -22,8 +22,14 @@ struct ID3D11ShaderResourceView;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11Buffer;
+struct Point;
+struct PointLight;
+struct Vertex;
+struct VertexAnimated;
+struct Line;
 
 enum D3D_FEATURE_LEVEL;
+enum BUFFERTYPE;
 
 
 class GraphicsEngine
@@ -138,6 +144,21 @@ public:
 
 	void ApplyDOF();
 
+
+	void UpdateVisibilityPolygon(Point p_point, float p_deltaTime);
+	void AddNewPointLight(PointLight& p_newLight);
+	void SetViewPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
+	void SetPointLightLightBuffer(DirectX::XMFLOAT4X4 p_matrix);
+	void UpdateVisibilityMapBoundries(Point p_topLeft, Point p_botLeft);
+	void RenderVisibilityPolygon(bool p_isMatchOver);
+	void SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
+	void UpdateVisibilityTextureSize(float p_maxScreenWidth, float p_maxScreenHeight);
+	bool IsVisibilityPointVisible(Point p_point);
+	ID3D11Buffer* CreateBuffer(BUFFERTYPE p_type, std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated);
+	void SS_AddStaticLine(Line p_line);
+	void SS_Update(float p_deltaTime);
+	void SS_DebugRender();
+	void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
 private:
 	static GraphicsEngine* m_instance;
 	GraphicsEngine(){};

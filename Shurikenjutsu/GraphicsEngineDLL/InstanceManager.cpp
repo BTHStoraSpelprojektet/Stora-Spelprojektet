@@ -48,15 +48,15 @@ void InstanceManager::UpdateDynamicInstanceBuffer(ID3D11DeviceContext* p_context
 		ConsolePrintErrorAndQuit("Failed to update instance buffer.");
 		return;
 	}
-	std::vector<InstancePos> instances;
+	std::vector<DirectX::XMFLOAT4X4> instances;
 	for (unsigned int i = 0; i < p_matrixList.size(); i++)
 	{
-		InstancePos temp;
-		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrixList[i])));
+		DirectX::XMFLOAT4X4 temp;
+		DirectX::XMStoreFloat4x4(&temp, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrixList[i])));
 		instances.push_back(temp);
 	}
 
-	memcpy(mappedResource.pData, &instances[0], sizeof(InstancePos) *instances.size());
+	memcpy(mappedResource.pData, &instances[0], sizeof(DirectX::XMFLOAT4X4) *instances.size());
 
 	p_context->Unmap(m_instanceBufferList[p_index], 0);
 
@@ -69,17 +69,17 @@ void InstanceManager::InitializeInstanceBuffer(ID3D11Device* p_device, int p_num
 	ID3D11Buffer* instanceBuffer;
 	// Create the instance buffer description.
 	//Calculate position of all instanced objects
-	std::vector<InstancePos> m_instances;
+	std::vector<DirectX::XMFLOAT4X4> m_instances;
 	m_instances.clear();
 	for (int i = 0; i < p_numberOfInstances; i++)
 	{
-		InstancePos temp;
-		DirectX::XMStoreFloat4x4(&temp.position, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
+		DirectX::XMFLOAT4X4 temp;
+		DirectX::XMStoreFloat4x4(&temp, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_matrices[i])));
 		m_instances.push_back(temp);
 	}
 	D3D11_BUFFER_DESC instanceBufferDesc;
 	instanceBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	instanceBufferDesc.ByteWidth = sizeof(InstancePos) * p_numberOfInstances;
+	instanceBufferDesc.ByteWidth = sizeof(DirectX::XMFLOAT4X4) * p_numberOfInstances;
 	instanceBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	instanceBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	instanceBufferDesc.MiscFlags = 0;

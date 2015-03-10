@@ -3,7 +3,6 @@
 #include "Frustum.h"
 #include "Globals.h"
 #include "Minimap.h"
-#include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "KatanaNinja.h"
 #include "TessenNinja.h"
@@ -124,7 +123,7 @@ void PlayerManager::Render(bool p_inMenu)
 		{
 			if (!p_inMenu && !Network::GetInstance()->GetMatchOver())
 			{
-				if (m_enemyList[i]->IsVisible() && VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+				if (m_enemyList[i]->IsVisible() && GraphicsEngine::GetInstance()->IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 				{
 					if (!m_enemyList[i]->IsInvis())
 					{
@@ -156,7 +155,7 @@ void PlayerManager::RenderDepth(bool p_inMenu)
 	{
 		if (!p_inMenu)
 		{
-			if (VisibilityComputer::GetInstance().IsPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			if (GraphicsEngine::GetInstance()->IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 			{
 				if (!m_enemyList[i]->IsInvis())
 				{

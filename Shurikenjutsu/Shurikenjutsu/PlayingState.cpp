@@ -8,20 +8,17 @@
 #include "Frustum.h"
 #include "Camera.h"
 #include "Globals.h"
-#include "ShadowShapes.h"
 #include "Minimap.h"
-#include "VisibilityComputer.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
 #include "Countdown.h"
-#include "..\CommonLibs\ConsoleFunctions.h"
 #include "InGameMenu.h"
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
 #include "ScoreBoard.h"
 #include "SuddenDeathState.h"
-#include "PointLights.h"
 #include "Sound.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -75,7 +72,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)
 	{
-		ShadowShapes::GetInstance().AddStaticLine(lines[i]);
+		GraphicsEngine::GetInstance()->SS_AddStaticLine(lines[i]);
 	}
 
 	// Initialize the object manager.
@@ -143,7 +140,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_mouseY = 0;
 
 	OnScreenResize();
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
+	GraphicsEngine::GetInstance()->UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), (float)GLOBAL::GetInstance().GetDeltaTime());
 
 	m_spectateIndex = -1;
 	m_spectateCountDown = 0.0f;
@@ -428,7 +425,7 @@ GAMESTATESWITCH PlayingState::Update()
 	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
 
 	// Update the visibility polygon boundries.
-	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
+	GraphicsEngine::GetInstance()->UpdateVisibilityMapBoundries(topLeft, bottomLeft);
 
 	// Update the countdown.
 	m_countdown->Update();
@@ -439,11 +436,11 @@ GAMESTATESWITCH PlayingState::Update()
 	if (resized)
 	{
 		// Reupdate the polygon.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(player.x, player.z), GraphicsEngine::GetInstance()->GetDevice());
+		GraphicsEngine::GetInstance()->UpdateVisibilityPolygon(Point(player.x, player.z), (float)GLOBAL::GetInstance().GetDeltaTime());
 	}
 
 	// Update smokebomb shadow shapes.
-	ShadowShapes::GetInstance().Update(); 
+	GraphicsEngine::GetInstance()->SS_Update((float)GLOBAL::GetInstance().GetDeltaTime());
 	
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
@@ -520,7 +517,7 @@ void PlayingState::Render()
 
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
-	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
+	GraphicsEngine::GetInstance()->SetPointLightLightBuffer(m_camera->GetViewMatrix());
 
 	GraphicsEngine::GetInstance()->Composition();
 	GraphicsEngine::GetInstance()->ApplyDOF();
@@ -530,12 +527,12 @@ void PlayingState::Render()
 
 	GraphicsEngine::GetInstance()->ResetRenderTarget();
 	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
-	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
+	GraphicsEngine::GetInstance()->RenderVisibilityPolygon(Network::GetInstance()->GetMatchOver());
 	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
 
 	if (FLAG_DEBUG == 1)
 	{
-		ShadowShapes::GetInstance().DebugRender();	
+		GraphicsEngine::GetInstance()->SS_DebugRender();
 	}	
 
 	// Render the UI.
@@ -696,7 +693,7 @@ void PlayingState::MinimapUpdatePos(Minimap *p_minimap)
 
 		Player* player = m_playerManager->GetEnemyTeamMember(i);
 
-		if (player && (m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || VisibilityComputer::GetInstance().IsPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
+		if (player && (m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || GraphicsEngine::GetInstance()->IsVisibilityPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
 		{
 			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
 		}
@@ -714,7 +711,7 @@ void PlayingState::OnScreenResize()
 	float height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 
 	// Update texture size.
-	VisibilityComputer::GetInstance().UpdateTextureSize((int)width, (int)height);
+	GraphicsEngine::GetInstance()->UpdateVisibilityTextureSize(width, height);
 
 	// Get the new edges.
 	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
@@ -729,8 +726,7 @@ void PlayingState::OnScreenResize()
 	// Update projection matrix.
 	DirectX::XMFLOAT4X4 projection;
 	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 100.0f));
-	VisibilityComputer::GetInstance().SetProjectionPolygonMatrix(projection);
-
+	GraphicsEngine::GetInstance()->SetVisibilityProjectionPolygonMatrix(projection);
 	// Tell the graphics engine that changes have been handled.
 	GraphicsEngine::GetInstance()->ScreenChangeHandled();
 }

@@ -52,7 +52,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
     </ClCompile>
     <Link>
@@ -149,7 +149,6 @@
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="Settings.cpp" />
-    <ClCompile Include="ShadowShapes.cpp" />
     <ClCompile Include="Shuriken.cpp" />
     <ClCompile Include="AnimatedObject.cpp" />
     <ClCompile Include="ShurikenAbility.cpp" />
@@ -171,7 +170,6 @@
     <ClCompile Include="Trail.cpp" />
     <ClCompile Include="TrailRenderer.cpp" />
     <ClCompile Include="VictoryScreenMenu.cpp" />
-    <ClCompile Include="VisibilityComputer.cpp" />
     <ClCompile Include="Volley.cpp" />
     <ClCompile Include="VolleyAbility.cpp" />
     <ClCompile Include="VolleyObject.cpp" />
@@ -241,7 +239,6 @@
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleRenderer.h" />
-    <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayingState.h" />
@@ -250,7 +247,6 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />
     <ClInclude Include="KButtonEvent.h" />
-    <ClInclude Include="ShadowShapes.h" />
     <ClInclude Include="Shuriken.h" />
     <ClInclude Include="AnimatedObject.h" />
     <ClInclude Include="ShurikenAbility.h" />
@@ -271,7 +267,6 @@
     <ClInclude Include="Trail.h" />
     <ClInclude Include="TrailRenderer.h" />
     <ClInclude Include="VictoryScreenMenu.h" />
-    <ClInclude Include="VisibilityComputer.h" />
     <ClInclude Include="Volley.h" />
     <ClInclude Include="VolleyAbility.h" />
     <ClInclude Include="VolleyObject.h" />

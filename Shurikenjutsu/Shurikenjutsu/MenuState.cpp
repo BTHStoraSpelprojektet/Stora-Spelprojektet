@@ -9,7 +9,6 @@
 #include "Frustum.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "MenuItem.h"
-#include "PointLights.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -395,8 +394,8 @@ void MenuState::Render()
 
 	// Composition
 	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
-	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
-
+	GraphicsEngine::GetInstance()->SetPointLightLightBuffer(m_camera->GetViewMatrix());
+	
 	GraphicsEngine::GetInstance()->Composition();
 	GraphicsEngine::GetInstance()->ApplyDOF();
 	GraphicsEngine::GetInstance()->ResetRenderTarget();

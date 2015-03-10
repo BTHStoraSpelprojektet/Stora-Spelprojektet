@@ -28,10 +28,10 @@ public:
 	void AddStaticLine(Line p_line);
 	void AddStaticShape(std::vector<Line> p_shape);
 	void AddStaticSquare(Point p_topLeft, Point p_bottomRight);
-	void AddSmokeBombShape(Point p_center);
+	void AddSmokeBombShape(Point p_center, float p_deltaTime);
 
 	void UpdateBoundries(Point p_topLeft, Point p_bottomRight);
-	void Update();
+	void Update(float p_deltaTime);
 	
 	std::vector<Line> GetStaticLines(Point a, Point b);
 	std::vector<Point> GetUniquePoints(Point a, Point b);
