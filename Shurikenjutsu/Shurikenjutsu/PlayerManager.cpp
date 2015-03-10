@@ -539,3 +539,17 @@ void PlayerManager::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	m_player->SetStickyTrapList(p_stickyTrapList);
 }
+
+std::vector<Player*> PlayerManager::GetEveryPlayer()
+{
+	std::vector<Player*> players;
+
+	for (unsigned int i = 0; i < m_enemyListSize; i++)
+	{
+		players.push_back(m_enemyList[i]);
+	}
+
+	players.push_back(m_player);
+
+	return players;
+}

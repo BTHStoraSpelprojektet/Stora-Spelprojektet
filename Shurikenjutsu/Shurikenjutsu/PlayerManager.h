@@ -53,6 +53,7 @@ public:
 	void SetSound(Sound* p_sound);
 	void SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList);
 	std::vector<Player*> GetMyTeamPlayers(int p_team);
+	std::vector<Player*> GetEveryPlayer();
 
 private:
 	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name);

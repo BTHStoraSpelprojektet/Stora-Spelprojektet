@@ -870,14 +870,14 @@ void PlayingState::UpdatePOIEffects()
 		POIGrapichalEffects::GetInstance().RenderStealthEffect();
 	}
 
-	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
-	players.push_back(Network::GetInstance()->GetMyPlayer());
+	std::vector<PlayerNet> NetworkPlayers = Network::GetInstance()->GetOtherPlayers();
+	NetworkPlayers.push_back(Network::GetInstance()->GetMyPlayer());
 
-	for (unsigned int i = 0; i < players.size(); i++)
+	for (unsigned int i = 0; i < NetworkPlayers.size(); i++)
 	{
-		if (players[i].shield)
+		if (NetworkPlayers[i].shield > 0.0f)
 		{
-			DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(players[i].x, players[i].y, players[i].z);
+			DirectX::XMFLOAT3 position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
 			POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 			POIGrapichalEffects::GetInstance().RenderShieldEffect();
 		}

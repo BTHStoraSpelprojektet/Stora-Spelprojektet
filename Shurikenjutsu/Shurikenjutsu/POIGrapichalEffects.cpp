@@ -28,7 +28,7 @@ bool POIGrapichalEffects::Initialize()
 	m_healingLight.m_range = 7.5f;
 
 	m_stealthOverlay = new GUIElement();
-	m_stealthOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/StealthOverlay.png"));
+	m_stealthOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/StealthOverlay.png"));
 
 	m_shieldOverlay = new GUIElement();
 	m_shieldOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 35.0f, 0.0), 90.0f, 140.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/ShieldOverlay.png"));
