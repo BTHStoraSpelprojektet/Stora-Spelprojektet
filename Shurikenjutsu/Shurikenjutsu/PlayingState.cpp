@@ -450,7 +450,6 @@ GAMESTATESWITCH PlayingState::Update()
 	if (Network::GetInstance()->GetNewPlayerJoined())
 	{
 		PlayerJoinedText();
-		Network::GetInstance()->JoinedPlayerText();
 	}
 
 	// Update the directional light camera position.
@@ -842,6 +841,7 @@ void PlayingState::PlayerJoinedText()
 	{
 		if (players[i].guid == Network::GetInstance()->GetJustJoinedPlayer())
 		{
+			Network::GetInstance()->JoinedPlayerText();
 			m_playerJoinedText->SetColor(0xffffffff);
 
 			if (players[i].team == 1)
