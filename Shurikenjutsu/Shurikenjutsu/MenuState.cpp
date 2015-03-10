@@ -10,6 +10,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "MenuItem.h"
 #include "PointLights.h"
+#include "Settings.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -55,16 +56,18 @@ bool MenuState::Initialize(std::string p_levelName)
 	m_lastvsync = false;
 	m_lastfullscreen = false;
 
+	Settings* settings = Settings::GetInstance();
+
 	// Initialize logo
 	m_logo = new MenuItem();
 	m_logo->Initialize(LOGOPOSX, LOGOPOSY, LOGOWIDTH, LOGOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/Logo_Shurikenjutsu.png"));
 
 	// Initialize options menu
 	m_options = new Menu();
-	m_vsyncIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_VSYNC, false);
+	m_vsyncIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_VSYNC, settings->m_vsync);
 	m_options->AddTexture(-BUTTONWIDTH + VSYNCWIDTH*0.5f, 0.0f, VSYNCWIDTH, VSYNCHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/vs_text.png"));
 
-	m_fullscreenIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - BUTTONOFFSET, MENUACTION_FULLSCREEN, false);
+	m_fullscreenIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - BUTTONOFFSET, MENUACTION_FULLSCREEN, settings->m_fullscreen);
 	m_options->AddTexture(-BUTTONWIDTH + FULLSCREENWIDTH*0.5f, -CHECKBOXSIZE, FULLSCREENWIDTH, FULLSCREENHEIGHT - BUTTONOFFSET, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
 
 	m_options->AddButton(BUTTONWIDTH*0.5f + 10.0f, -3.0f * CHECKBOXSIZE, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
@@ -84,11 +87,11 @@ bool MenuState::Initialize(std::string p_levelName)
 
 	// Initialize play menu
 	m_ipbox = new MenuTextBox();
-	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -67, 394.0f, 67.0f, 15, "194.47.150.130");
+	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -67, 394.0f, 67.0f, 15, settings->m_ip);
 	m_hideIpBox = true;
 
 	m_namebox = new MenuTextBox();
-	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 0, 394.0f, 67.0f, 15, "Name");
+	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 0, 394.0f, 67.0f, 15, settings->m_name);
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/connect.png"), MENUACTION_CONNECT);
@@ -266,6 +269,8 @@ GAMESTATESWITCH MenuState::Update()
 		case MENUACTION_CONNECT:
 			m_menues.push(m_connecting);
 			m_hideIpBox = true;
+			Settings::GetInstance()->m_name = m_namebox->GetText();
+			Settings::GetInstance()->m_ip = m_ipbox->GetText();
 			Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 			Network::GetInstance()->Connect((std::string)m_ipbox->GetText());
 			Network::GetInstance()->SetNetworkStatusConnecting();
@@ -275,10 +280,13 @@ GAMESTATESWITCH MenuState::Update()
 			bool temp = m_options->GetCheckboxState(m_vsyncIndex);
 			m_lastvsync = temp;
 			GraphicsEngine::GetInstance()->SetVsync(temp);
+			Settings::GetInstance()->m_vsync = temp;
 
 			temp = m_options->GetCheckboxState(m_fullscreenIndex);
 			m_lastfullscreen = temp;
-			if (GLOBAL::GetInstance().FULLSCREEN)
+			Settings::GetInstance()->m_fullscreen = temp;
+
+			if (!temp)
 			{
 				GLOBAL::GetInstance().FULLSCREEN = false;
 				GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
@@ -291,6 +299,7 @@ GAMESTATESWITCH MenuState::Update()
 				GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 			}
 			GraphicsEngine::GetInstance()->ToggleFullscreen(temp, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+
 			std::string tempstring = m_ipbox->GetText();
 			m_ipbox->Shutdown();
 			m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -67, 394.0f, 67.0f, 15, tempstring);
@@ -298,8 +307,6 @@ GAMESTATESWITCH MenuState::Update()
 			tempstring = m_namebox->GetText();
 			m_namebox->Shutdown();
 			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 0, 394.0f, 67.0f, 15, tempstring);
-
-
 			break;
 	}
 
