@@ -83,7 +83,6 @@ public:
 	DirectX::XMFLOAT4X4 GetProjectionPolygonMatrix();
 
 	ID3D11ShaderResourceView* GetRenderTarget();
-	ID3D11ShaderResourceView* GetMinimapTarget();
 
 	void RebuildQuad(Point p_topLeft, Point p_bottomRight);
 
@@ -137,7 +136,6 @@ private:
 	};
 
 	RenderTarget m_renderTarget; 
-	RenderTarget m_minimapTarget;
 	ID3D11ShaderResourceView* m_texture;
 
 	Point m_topLeft;

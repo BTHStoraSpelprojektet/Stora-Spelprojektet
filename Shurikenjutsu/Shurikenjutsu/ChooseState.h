@@ -39,6 +39,7 @@ public:
 	void Shutdown();
 	void ShutdownExit();
 	bool Initialize();
+	bool Initialize(std::string p_levelName);
 	ObjectManager* GetObjectManager();
 	GAMESTATESWITCH Update();
 	void Render();

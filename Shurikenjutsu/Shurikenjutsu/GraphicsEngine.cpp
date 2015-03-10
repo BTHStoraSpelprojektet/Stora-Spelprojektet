@@ -413,3 +413,7 @@ void GraphicsEngine::SS_AddSmokeBomb(Point p_point, float p_deltaTime)
 {
 	DLLGraphicsEngine::GE::GetInstance()->SS_AddSmokeBomb(p_point, p_deltaTime);
 }
+void GraphicsEngine::SS_ClearStaticLines()
+{
+	DLLGraphicsEngine::GE::GetInstance()->SS_ClearStaticLines();
+}

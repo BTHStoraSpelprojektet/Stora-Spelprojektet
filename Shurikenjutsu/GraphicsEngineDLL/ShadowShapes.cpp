@@ -50,6 +50,13 @@ void ShadowShapes::AddStaticLine(Line p_line)
 	AddUniquePoints(p_line.b);
 }
 
+void ShadowShapes::clearStaticLines(){
+	m_staticLines.clear();
+	m_uniquePoints.clear();
+	m_staticDebugLines.Shutdown();
+	m_staticDebugLines.Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+}
+
 void ShadowShapes::AddStaticShape(std::vector<Line> p_shape)
 {
 	if (p_shape.size() > 0)

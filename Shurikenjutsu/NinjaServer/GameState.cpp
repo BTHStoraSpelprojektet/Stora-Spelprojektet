@@ -12,13 +12,15 @@
 GameState::GameState(){}
 GameState::~GameState(){}
 
-bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
+bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel)
 {
 	m_serverPeer = p_serverPeer;
+	m_levelsName = p_levelsName;
+	m_currentLevel = p_currentLevel;
 
 	// Initiate playerrs
 	m_playerManager = new PlayerManager();
-	m_playerManager->Initialize(m_serverPeer, p_levelName);
+	m_playerManager->Initialize(m_serverPeer, p_levelsName[p_currentLevel]);
 
 	// Initiate shurikens
 	m_shurikenManager = new ShurikenManager();
@@ -26,7 +28,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 
 	// Initiate map
 	m_mapManager = new MapManager();
-	m_mapManager->Initialize(p_levelName);
+	m_mapManager->Initialize(p_levelsName[p_currentLevel]);
 
 	// Initiate collision manager
 	m_collisionManager = new CollisionManager();
@@ -58,6 +60,8 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 
 	m_roundRestarting = false;
 	m_runesSpawned = false;
+	m_shieldActiveTimer = 0.0f;
+	m_invisActiveTimer = 0.0f;
 
 	m_isSuddenDeath = false;
 	m_suddenDeathTimer = 0.0f;
@@ -65,19 +69,14 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	return true;
 }
 
-bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
-{
-	return Initialize(p_serverPeer, LEVEL_NAME);	
-}
-
-bool GameState::Initialize(std::string p_levelName)
+bool GameState::Initialize(int p_currentLevel)
 {
 	if (m_serverPeer == NULL)
 	{
 		return false;
 	}
 
-	return Initialize(m_serverPeer, p_levelName);
+	return Initialize(m_serverPeer, m_levelsName, p_currentLevel);
 }
 
 void GameState::Shutdown()
@@ -157,7 +156,6 @@ void GameState::Update(double p_deltaTime)
 			m_runesSpawned = true;
 		}
 	}
-
 }
 
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team)
@@ -197,6 +195,7 @@ void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, f
 	m_stickyTrapManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_volleyManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_playerManager->ExecuteAbility(m_deltaTime, p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager, *m_stickyTrapManager, *m_volleyManager);
+	AbilityUsedCancelInvis(p_guid);
 }
 
 void GameState::BroadcastPlayers()
@@ -300,4 +299,22 @@ void GameState::UserConnected(RakNet::RakNetGUID p_guid)
 		bitStream.Write((RakNet::MessageID)ID_RESTARTING_ROUND);
 		m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, p_guid, false);
 	}
+}
+
+void GameState::UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<int> p_visiblePlayers)
+{
+	m_playerManager->UpdateVisiblePlayers(p_guid, p_visiblePlayers);
+}
+
+void GameState::AbilityUsedCancelInvis(RakNet::RakNetGUID p_guid)
+{
+	if (m_playerManager->GetInvis(p_guid))
+	{
+		m_POIManager->AbilityUsed();
+	}
+}
+
+void GameState::SendCurrentRunes(RakNet::RakNetGUID p_guid)
+{
+	m_POIManager->DownloadRunes(p_guid);
 }

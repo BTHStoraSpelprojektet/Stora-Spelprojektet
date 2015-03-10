@@ -34,7 +34,11 @@ void ChooseState::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool ChooseState::Initialize()
+bool ChooseState::Initialize(){
+	return Initialize(LEVEL_NAME);
+}
+
+bool ChooseState::Initialize(std::string p_levelName)
 {
 	m_redTeamScore = new GUIText();
 	m_blueTeamScore = new GUIText();
@@ -140,7 +144,7 @@ bool ChooseState::Initialize()
 	m_camera->ResetCamera();
 
 	// Load the level.
-	Level level(LEVEL_NAME);
+	Level level(p_levelName);
 
 	m_objectManager = new ObjectManager();
 	m_objectManager->SetSound(m_sound);

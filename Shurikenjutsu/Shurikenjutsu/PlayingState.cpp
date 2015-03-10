@@ -16,6 +16,7 @@
 #include "ScoreBoard.h"
 #include "SuddenDeathState.h"
 #include "Sound.h"
+#include "POIGrapichalEffects.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\ModelNames.h"
 
@@ -59,6 +60,9 @@ void PlayingState::EscapeIsPressed()
 
 bool PlayingState::Initialize(std::string p_levelName)
 {
+	// Set pressed or release
+	GLOBAL::GetInstance().APE_ON = false;
+
 	// Initialize the camera.
 	m_camera = new Camera();
 	m_camera->Initialize();
@@ -66,7 +70,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 
 	// Load the level.
 	Level level(p_levelName);
-
+	GraphicsEngine::SS_ClearStaticLines();
 	// Initialize the shadow shapes. 
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)
@@ -78,6 +82,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_objectManager = new ObjectManager();
 	m_objectManager->SetSound(m_sound);
 	m_objectManager->Initialize(&level);
+	// Send which runes have spawned
+	Network::GetInstance()->SendSpawnedRunes();
 
 	// Load and place arena walls.
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.GetLevelBoundingBoxes();
@@ -92,6 +98,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_playerManager = new PlayerManager();
 	m_playerManager->SetSound(m_sound);
 	m_playerManager->Initialize(false);
+
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
 
 	// Initlialize the frustum.
@@ -105,6 +112,13 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_minimap = new Minimap();
 	m_minimap->Initialize();
 	
+	m_startText = new GUIText();
+	m_startText->Initialize("Round started\nFight enemy team!", 70.0f, 0.0f, 0.0f, 0xffffffff);
+	m_poiText = new GUIText();
+	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
+	m_playerJoinedText = new GUIText();
+	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 250.0f, 0xffffffff);
+
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
 	
@@ -157,6 +171,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_suddenDeath = new SuddenDeathState();
 	m_suddenDeath->Initialize();
 
+	POIGrapichalEffects::GetInstance().Initialize();
+
 	return true;
 }
 
@@ -199,6 +215,13 @@ void PlayingState::Shutdown()
 		m_playerManager = nullptr;
 	}
 
+	if (m_startText != nullptr)
+	{
+		m_startText->Shutdown();
+		delete m_startText;
+		m_startText = nullptr;
+	}
+
 	if (m_objectManager != nullptr)
 	{
 		m_objectManager->Shutdown();
@@ -220,6 +243,20 @@ void PlayingState::Shutdown()
 		m_teamStatusBar = nullptr;
 	}
 
+	if (m_playerJoinedText != nullptr)
+	{
+		m_playerJoinedText->Shutdown();
+		delete m_playerJoinedText;
+		m_playerJoinedText = nullptr;
+	}
+
+	if (m_poiText != nullptr)
+	{
+		m_poiText->Shutdown();
+		delete m_poiText;
+		m_poiText = nullptr;
+	}
+
 	if (m_countdown != nullptr)
 	{
 		m_countdown->Shutdown();
@@ -238,6 +275,8 @@ void PlayingState::Shutdown()
 	{
 		CollisionManager::GetInstance()->Shutdown();
 	}
+	
+	POIGrapichalEffects::GetInstance().Shutdown();
 }
 
 void PlayingState::ShutdownExit()
@@ -258,6 +297,13 @@ GAMESTATESWITCH PlayingState::Update()
 		Shutdown();
 
 		return GAMESTATESWITCH_CHOOSENINJA;
+	}
+
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		DecreaseTextOpacity(m_startText);
+		DecreaseTextOpacity(m_poiText);
+		DecreaseTextOpacity(m_playerJoinedText);
 	}
 
 	// Update global delta time.
@@ -334,7 +380,6 @@ GAMESTATESWITCH PlayingState::Update()
 			}
 		}
 	}
-
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE)
 	{
 		std::vector<Player*> tempList = m_playerManager->GetMyTeamPlayers(m_playerManager->GetPlayerTeam());
@@ -348,6 +393,7 @@ GAMESTATESWITCH PlayingState::Update()
 			m_camera->FollowCharacter(player);
 		}
 	}
+
 	else
 	{
 		m_camera->FollowCharacter(player);
@@ -401,6 +447,11 @@ GAMESTATESWITCH PlayingState::Update()
 	// Update the team status bar.
 	m_teamStatusBar->Update();
 
+	if (Network::GetInstance()->GetNewPlayerJoined())
+	{
+		PlayerJoinedText();
+	}
+
 	// Update the directional light camera position.
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	
@@ -414,18 +465,6 @@ GAMESTATESWITCH PlayingState::Update()
 		resized = true;
 	} 
 	
-	Point topLeft = Point(player.x - m_quadWidth, player.z + m_quadHeightTop);
-	Point bottomLeft = Point(player.x + m_quadWidth, player.z - m_quadHeightBottom - 10.0f);
-	
-	// Keep the the visibility polygon boundries within the maps boundries.
-	topLeft.x < -45.0f ? topLeft.x = -45.0f : topLeft.x;
-	topLeft.y > 52.0f ? topLeft.y = 52.0f : topLeft.y;
-	bottomLeft.x > 45.0f ? bottomLeft.x = 45.0f : bottomLeft.x;
-	bottomLeft.y < -52.0f ? bottomLeft.y = -52.0f : bottomLeft.y;
-
-	// Update the visibility polygon boundries.
-	GraphicsEngine::UpdateVisibilityMapBoundries(topLeft, bottomLeft);
-
 	// Update the countdown.
 	m_countdown->Update();
 
@@ -490,6 +529,8 @@ GAMESTATESWITCH PlayingState::Update()
 
 	m_camera->Update3DSound(m_sound, player.x, player.y, player.z);
 
+	SSBoundryUpdate(player);
+
 	return GAMESTATESWITCH_NONE;
 }
 
@@ -506,6 +547,7 @@ void PlayingState::Render()
 	// Render to the scene normally.
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
+	UpdatePOIEffects();
 	m_objectManager->Render();
 	m_playerManager->Render(false);
 	
@@ -572,6 +614,23 @@ void PlayingState::Render()
 	{
 		ScoreBoard::GetInstance()->Render();
 	}
+
+	m_startText->Render();
+	if (Network::GetInstance()->GetRoundOver())
+	{
+		m_startText->SetColor(0xffffffff);
+		Network::GetInstance()->RoundOverText();
+	}
+
+	m_poiText->Render();
+	if (Network::GetInstance()->GetPoiSpawned())
+	{
+		m_poiText->SetText("Runes have spawned!");
+		m_poiText->SetColor(0xffffffff);
+		Network::GetInstance()->PoiText();
+	}
+
+	m_playerJoinedText->Render();
 
 	GraphicsEngine::ResetRenderTarget();
 }
@@ -642,6 +701,7 @@ void PlayingState::OutliningRays()
 
 	rayPos = m_camera->GetOutliningRayPosition();
 	target = m_camera->GetOutliningRayTarget();
+
 	// Increase height of check
 	target.y += 1;
 
@@ -657,13 +717,6 @@ void PlayingState::OutliningRays()
 			rayDist = ray->m_distance;
 		}
 	}
-
-	/*target.y -= 2;
-
-	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&rayPos)));
-	DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
-
-	ray->m_direction = DirectX::XMFLOAT4(rayDir.x, rayDir.y, rayDir.z, 1);*/
 
 	if (CollisionManager::GetInstance()->CalculateRayLength(ray, rayDist))
 	{
@@ -686,16 +739,26 @@ DirectX::XMFLOAT3 PlayingState::NormalizeFloat3(DirectX::XMFLOAT3 p_f)
 
 void PlayingState::MinimapUpdatePos(Minimap *p_minimap)
 {
+	std::vector<RakNet::RakNetGUID> visiblePlayers = std::vector<RakNet::RakNetGUID>();
 	for (unsigned int i = 0; i < 7; i++)
 	{
 		m_minimap->SetPlayerPos(i, DirectX::XMFLOAT3(-1000, -1000, 0));
 
 		Player* player = m_playerManager->GetEnemyTeamMember(i);
 
-		if (player && (m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || GraphicsEngine::IsVisibilityPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
+		if (player && player->GetIsAlive() && !player->IsInvis())
 		{
-			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
+			if ((m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || GraphicsEngine::IsVisibilityPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
+			{
+				p_minimap->UpdatePlayersPositon(i, player->GetPosition());
+				visiblePlayers.push_back(player->GetGuID());
+			}
+			else if (player &&  Network::GetInstance()->IsEnemyVisible(player->GetGuID()))
+			{
+				p_minimap->UpdatePlayersPositon(i, player->GetPosition());
+			}
 		}
+		Network::GetInstance()->SetVisiblePlayers(visiblePlayers);
 	}
 }
 
@@ -733,4 +796,93 @@ void PlayingState::OnScreenResize()
 void PlayingState::SetSound(Sound* p_sound)
 {
 	m_sound = p_sound;
+}
+
+void PlayingState::DecreaseTextOpacity(GUIText* p_text)
+{
+	if (p_text->GetColor() < 16777216)
+	{
+		p_text->SetColor(0);
+	}
+	else
+	{
+		p_text->SetColor(p_text->GetColor() - 16777216);
+	}
+}
+
+void PlayingState::SSBoundryUpdate(DirectX::XMFLOAT3 p_player)
+{
+	float width = (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+	float height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+
+	// Get the new edges.
+	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
+	DirectX::XMFLOAT3 pickedTopRight = Pick(Point(width, 0.0f));
+	DirectX::XMFLOAT3 pickedBottomRight = Pick(Point(width, height));
+	DirectX::XMFLOAT3 pickedPlayer = Pick(Point(width * 0.5f, height * 0.5f));
+
+	m_quadWidth = pickedPlayer.x - pickedTopLeft.x;
+	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
+	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
+
+	Point topLeft = Point(p_player.x - m_quadWidth - 10.0f, p_player.z + m_quadHeightTop + 10.0f);
+	Point bottomLeft = Point(p_player.x + m_quadWidth + 10.0f, p_player.z - m_quadHeightBottom - 10.0f);
+
+	// Update the visibility polygon boundries.
+	GraphicsEngine::UpdateVisibilityMapBoundries(topLeft, bottomLeft);
+}
+
+void PlayingState::PlayerJoinedText()
+{
+	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
+	players.push_back(Network::GetInstance()->GetMyPlayer());
+
+	for (unsigned int i = 0; i < players.size(); i++)
+	{
+		if (players[i].guid == Network::GetInstance()->GetJustJoinedPlayer())
+		{
+			Network::GetInstance()->JoinedPlayerText();
+			m_playerJoinedText->SetColor(0xffffffff);
+
+			if (players[i].team == 1)
+			{
+				std::string text = players[i].name.C_String();
+				text += " has joined the red team";
+				m_playerJoinedText->SetText(text);
+			}
+			else if (players[i].team == 2)
+			{
+				std::string text = players[i].name.C_String();
+				text += " has joined the blue team";
+				m_playerJoinedText->SetText(text);
+			}
+		}
+	}
+}
+
+void PlayingState::UpdatePOIEffects()
+{
+	if (Network::GetInstance()->GetMyPlayer().invis && Network::GetInstance()->GetMyPlayer().isAlive)
+	{
+		POIGrapichalEffects::GetInstance().RenderStealthEffect();
+	}
+
+	std::vector<PlayerNet> NetworkPlayers = Network::GetInstance()->GetOtherPlayers();
+	NetworkPlayers.push_back(Network::GetInstance()->GetMyPlayer());
+
+	for (unsigned int i = 0; i < NetworkPlayers.size(); i++)
+	{
+		if (NetworkPlayers[i].shield > 0.0f)
+		{
+			DirectX::XMFLOAT3 position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
+			POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+			POIGrapichalEffects::GetInstance().RenderShieldEffect();
+		}
+	}
+
+	DirectX::XMFLOAT3 position = m_playerManager->GetPlayerPosition();
+	position.y = 0.25f;
+	POIGrapichalEffects::GetInstance().StartHealing();
+	POIGrapichalEffects::GetInstance().UpdateHealingEffect(position);
+	POIGrapichalEffects::GetInstance().RenderHealingEffect();
 }

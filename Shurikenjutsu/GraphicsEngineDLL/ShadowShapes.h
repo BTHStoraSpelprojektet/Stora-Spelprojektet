@@ -39,6 +39,8 @@ public:
 	std::vector<Point> GetBoundryPoints();
 	std::vector<Line> GetBoundryLines();
 
+	void clearStaticLines();
+
 	void DebugRender();
 
 private:

@@ -20,10 +20,12 @@
 #include "TrailRenderer.h"
 #include "MemoryChecker.h"
 #include "DebugText.h"
+#include "Settings.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
+	Settings::GetInstance()->LoadSettingsFile();
 	// Set default game state.
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
@@ -269,6 +271,9 @@ void System::Shutdown()
 	}
 
 	DebugText::GetInstance()->Shutdown();
+
+	Settings::GetInstance()->SaveSettingsFile();
+	Settings::GetInstance()->Shutdown();
 }
 
 void System::Run()
@@ -358,12 +363,14 @@ void System::Update()
 			GLOBAL::GetInstance().CAMERA_MOVING = false;
 		}
 	}
+	std::string levelName;
 	switch (m_gameState->Update())
 	{
 	case GAMESTATESWITCH_CHOOSENINJA:
 		m_gameState = m_chooseNinjaState;
 		m_gameState->Shutdown();
-		m_gameState->Initialize();
+		levelName = Network::GetInstance()->LevelName();
+		m_gameState->Initialize(levelName);
 		Network::GetInstance()->SetObjectManager(m_chooseNinjaState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->LargeSize();
@@ -372,7 +379,8 @@ void System::Update()
 		m_gameState = m_playingState;
 		m_playingState->SetSound(m_sound);
 		m_playingState->Shutdown();
-		m_gameState->Initialize();
+		levelName = Network::GetInstance()->LevelName();
+		m_gameState->Initialize(levelName);
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
 		m_sound->StopMusic();

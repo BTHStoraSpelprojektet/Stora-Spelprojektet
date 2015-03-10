@@ -68,9 +68,6 @@ void HealthBar::Update(DirectX::XMFLOAT3 p_position, int p_health, int p_maxHeal
 	DirectX::XMFLOAT2 newSize = m_background->GetSize();
 	newSize.x -= newLength;
 	m_foreground->SetSize(newSize);
-
-	
-
 }
 
 void HealthBar::Render()

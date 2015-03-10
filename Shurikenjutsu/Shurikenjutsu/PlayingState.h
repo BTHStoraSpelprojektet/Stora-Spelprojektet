@@ -21,6 +21,7 @@ class DeathBoard;
 class Sound;
 class ScoreBoard;
 class SuddenDeathState;
+class GUIText;
 
 //struct DirectionalLight;
 //struct Point;
@@ -55,6 +56,9 @@ private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);
 	void OnScreenResize();
+	void SSBoundryUpdate(DirectX::XMFLOAT3 p_player);
+	void DecreaseTextOpacity(GUIText* p_text);
+	void UpdatePOIEffects();
 
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
@@ -68,6 +72,12 @@ private:
 	InGameMenu *m_inGameMenu;
 	VictoryScreenMenu* m_victoryMenu;
 	SuddenDeathState* m_suddenDeath;
+
+	GUIText* m_startText;
+	GUIText* m_poiText;
+	GUIText* m_playerJoinedText;
+
+	void PlayerJoinedText();
 
 	const float twoPi = DirectX::XM_PI * 2.0f;
 
@@ -85,6 +95,7 @@ private:
 	float m_quadHeightBottom;
 
 	int m_spectateIndex;
+
 	//Tas bort?
 	float m_spectateCountDown;
 	bool m_inGameMenuIsActive;

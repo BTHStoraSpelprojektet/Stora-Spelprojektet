@@ -167,6 +167,7 @@ namespace DLLGraphicsEngine
 		GRAPHICSENGINEDLL_API void SS_Update(float p_deltaTime);
 		GRAPHICSENGINEDLL_API void SS_DebugRender();
 		GRAPHICSENGINEDLL_API void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
+		GRAPHICSENGINEDLL_API void SS_ClearStaticLines();
 
 
 	private:

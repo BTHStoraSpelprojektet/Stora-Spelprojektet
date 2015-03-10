@@ -91,8 +91,8 @@ void PlayerManager::Update(bool p_inMenu)
 		
 		for (unsigned int i = 0; i < m_enemyListSize; i++)
 		{			
-			m_enemyList[i]->SetPosition(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));				
-			m_enemyList[i]->SetAttackDirection(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
+			m_enemyList[i]->InterpolatePos(DirectX::XMFLOAT3(enemyPlayers[i].x, enemyPlayers[i].y, enemyPlayers[i].z));				
+			m_enemyList[i]->InterpolateAttackDir(DirectX::XMFLOAT3(enemyPlayers[i].dirX, enemyPlayers[i].dirY, enemyPlayers[i].dirZ));
 			m_enemyList[i]->SetHealth(enemyPlayers[i].currentHP);
 			m_enemyList[i]->SetIsAlive(enemyPlayers[i].isAlive);
 			m_enemyList[i]->SetTeam(enemyPlayers[i].team);
@@ -179,114 +179,119 @@ void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XM
 {
 	switch (p_charNr)
 	{
-	case 0:
-	{
-		KatanaNinja *tempPlayer = new KatanaNinja();
-		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
-		m_player = tempPlayer;
-		m_player->SendPosition(m_player->GetPosition());
-		break;
+		case 0:
+		{
+			KatanaNinja *tempPlayer = new KatanaNinja();
+			tempPlayer->SetSound(m_sound);
+			tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
+			m_player = tempPlayer;
+			m_player->SendPosition(m_player->GetPosition());
+			break;
+		}
+
+		case 1:
+		{
+			TessenNinja *tempPlayer = new TessenNinja();
+			tempPlayer->SetSound(m_sound);
+			tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
+			m_player = tempPlayer;
+			m_player->SendPosition(m_player->GetPosition());
+			break;
+		}
+
+		case 2:
+		{
+			NaginataNinja *tempPlayer = new NaginataNinja();
+			tempPlayer->SetSound(m_sound);
+			tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
+			m_player = tempPlayer;
+			m_player->SendPosition(m_player->GetPosition());
+			break;
+		}
+
+		case 3:
+		{
+			// Todo change to ninja 4
+			KatanaNinja *tempPlayer = new KatanaNinja();
+			tempPlayer->SetSound(m_sound);
+			tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
+			m_player = tempPlayer;
+			m_player->SendPosition(m_player->GetPosition());
+			break;
+		}
 	}
-	case 1:
-	{
-		TessenNinja *tempPlayer = new TessenNinja();
-		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
-		m_player = tempPlayer;
-		m_player->SendPosition(m_player->GetPosition());
-		break;
-	}
-	case 2:
-	{
-		// Todo change to ninja 3
-		NaginataNinja *tempPlayer = new NaginataNinja();
-		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
-		m_player = tempPlayer;
-		m_player->SendPosition(m_player->GetPosition());
-		break;
-	}
-	case 3:
-	{
-		// Todo change to ninja 4
-		KatanaNinja *tempPlayer = new KatanaNinja();
-		tempPlayer->SetSound(m_sound);
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xff00ffff);
-		m_player = tempPlayer;
-		m_player->SendPosition(m_player->GetPosition());
-		break;
-	}
-	}
-	
 }
 
 void PlayerManager::AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name)
 {
 	switch (p_charNr)
 	{
-	case 0:
-	{
-		KatanaNinja *tempPlayer = new KatanaNinja();
+		case 0:
+		{
+			KatanaNinja *tempPlayer = new KatanaNinja();
 
-		tempPlayer->SetSound(m_sound);
-		/*tempPlayer->m_soundEmitter.m_playSound = PLAYSOUND_STEPS_LEAVES_SOUND;
-		tempPlayer->m_soundEmitter.m_x = p_pos.x;
-		tempPlayer->m_soundEmitter.m_y = p_pos.y;
-		tempPlayer->m_soundEmitter.m_z = p_pos.z;
-		m_sound->PlayAmbientSound(&tempPlayer->m_soundEmitter);*/
+			tempPlayer->SetSound(m_sound);
+			/*tempPlayer->m_soundEmitter.m_playSound = PLAYSOUND_STEPS_LEAVES_SOUND;
+			tempPlayer->m_soundEmitter.m_x = p_pos.x;
+			tempPlayer->m_soundEmitter.m_y = p_pos.y;
+			tempPlayer->m_soundEmitter.m_z = p_pos.z;
+			m_sound->PlayAmbientSound(&tempPlayer->m_soundEmitter);*/
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
-		tempPlayer->SetGuID(p_guid);
-		tempPlayer->SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
+			tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
+			tempPlayer->SetGuID(p_guid);
+			tempPlayer->SetMaxHealth(CHARACTER_KATANA_SHURIKEN_HEALTH);
 
-		AddEnemyToList(tempPlayer);
-		break;
-	}
-	case 1:
-	{
-		TessenNinja *tempPlayer = new TessenNinja();
+			AddEnemyToList(tempPlayer);
+			break;
+		}
 
-		tempPlayer->SetSound(m_sound);
+		case 1:
+		{
+			TessenNinja *tempPlayer = new TessenNinja();
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
-		tempPlayer->SetGuID(p_guid);
-		tempPlayer->SetMaxHealth(CHARACTER_TESSEN_HEALTH);
+			tempPlayer->SetSound(m_sound);
+
+			tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
+			tempPlayer->SetGuID(p_guid);
+			tempPlayer->SetMaxHealth(CHARACTER_TESSEN_HEALTH);
 		
-		AddEnemyToList(tempPlayer);
-		break;
-	}
-	case 2:
-	{
-		// Todo change to ninja 3
-		NaginataNinja *tempPlayer = new NaginataNinja();
+			AddEnemyToList(tempPlayer);
+			break;
+		}
 
-		tempPlayer->SetSound(m_sound);
+		case 2:
+		{
+			// Todo change to ninja 3
+			NaginataNinja *tempPlayer = new NaginataNinja();
 
-		tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
-		tempPlayer->SetGuID(p_guid);
-		tempPlayer->SetMaxHealth(CHARACTER_NAGINATA_HEALTH);
+			tempPlayer->SetSound(m_sound);
+
+			tempPlayer->Initialize(p_pos, p_direction, p_charNr, p_name, 0xffffffff);
+			tempPlayer->SetGuID(p_guid);
+			tempPlayer->SetMaxHealth(CHARACTER_NAGINATA_HEALTH);
 		
-		AddEnemyToList(tempPlayer);
-		break;
+			AddEnemyToList(tempPlayer);
+			break;
+		}
+
+		case 3:
+		{
+			// Todo change to ninja 4
+			break;
+		}
 	}
-	case 3:
-	{
-		// Todo change to ninja 4
-		break;
-	}
-	}
-	
 }
 
 DirectX::XMFLOAT3 PlayerManager::GetPlayerPosition()
 {
 	return m_player->GetPosition();
 }
+
 DirectX::XMFLOAT3 PlayerManager::GetPlayerDirection()
 {
 	return m_player->GetDirection();
 }
+
 void PlayerManager::SetPlayerDirection(DirectX::XMFLOAT3 p_direction)
 {
 	DirectX::XMVECTOR tempVector = DirectX::XMVectorSet(p_direction.x, p_direction.y, p_direction.z, 0.0f);
@@ -295,18 +300,22 @@ void PlayerManager::SetPlayerDirection(DirectX::XMFLOAT3 p_direction)
 	DirectX::XMStoreFloat3(&tempFloat, tempVector);
 	m_player->SetDirection(tempFloat);
 }
+
 DirectX::XMFLOAT3 PlayerManager::GetFacingDirection()
 {
 	return m_player->GetFacingDirection();
 }
+
 void PlayerManager::SetFacingDirection(DirectX::XMFLOAT3 p_facingDirection)
 {
 	m_player->SetFacingDirection(p_facingDirection);
 }
+
 DirectX::XMFLOAT3 PlayerManager::GetAttackDirection()
 {
 	return m_player->GetAttackDirection();
 }
+
 void PlayerManager::SetAttackDirection(DirectX::XMFLOAT3 p_attackDirection)
 {
 	m_player->SetMyAttackDirection(p_attackDirection);
@@ -520,10 +529,26 @@ int PlayerManager::GetNrOfPlayersInTeam(int p_team)
 	return nrOfTeamMates;
 }
 
-void PlayerManager::SetSound(Sound* p_sound){
+void PlayerManager::SetSound(Sound* p_sound)
+{
 	m_sound = p_sound;
 }
+
 void PlayerManager::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	m_player->SetStickyTrapList(p_stickyTrapList);
+}
+
+std::vector<Player*> PlayerManager::GetEveryPlayer()
+{
+	std::vector<Player*> players;
+
+	for (unsigned int i = 0; i < m_enemyListSize; i++)
+	{
+		players.push_back(m_enemyList[i]);
+	}
+
+	players.push_back(m_player);
+
+	return players;
 }

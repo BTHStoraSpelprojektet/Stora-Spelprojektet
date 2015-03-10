@@ -22,9 +22,8 @@ public:
 	GameState();
 	~GameState();
 
-	virtual bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName);
-	virtual bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
-	virtual bool Initialize(std::string p_levelName);
+	virtual bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel);
+	virtual bool Initialize(int p_currentLevel);
 	virtual void Shutdown();
 	virtual void Update(double p_deltaTime);
 	
@@ -42,6 +41,10 @@ public:
 	void UserConnected(RakNet::RakNetGUID p_guid);
 
 	void SendSuddenDeathMessage();
+	void UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<int> p_visiblePlayers);
+	void AbilityUsedCancelInvis(RakNet::RakNetGUID p_guid);
+
+	void SendCurrentRunes(RakNet::RakNetGUID p_guid);
 
 protected:
 	void UpdateTime(double p_deltaTime);
@@ -70,6 +73,11 @@ protected:
 	float m_suddenDeathMaxBoxExtentZ;
 	bool m_runesSpawned;
 	float m_deltaTime;
+	float m_shieldActiveTimer;
+	float m_invisActiveTimer;
+
+	std::vector<std::string> m_levelsName;
+	unsigned int m_currentLevel;
 };
 
 #endif

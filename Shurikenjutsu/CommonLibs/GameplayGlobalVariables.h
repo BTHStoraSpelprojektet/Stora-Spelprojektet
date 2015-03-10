@@ -3,6 +3,8 @@
 
 const float ALL_AROUND_GLOBAL_COOLDOWN = 0.4f;
 
+const float TICK_RATE = 0.06f;
+
 
 const float ROUND_TIME_LIMIT_MINUTS = 3.0f;
 const float ROUND_TIME_LIMIT_SECONDS = 10.0f;
@@ -179,5 +181,7 @@ const float CHARACTER_ENEMY_BOUNDINGSPHERE = 1.0f;
 
 // Runes
 const float LOTUS_HEALTICK = 10.0f;
+const float SHIELD_TIMER = 20.0f;
+const float INVIS_TIMER = 20.0f;
 
 #endif

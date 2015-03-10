@@ -849,6 +849,12 @@ namespace DLLGraphicsEngine
 	{
 		ShadowShapes::GetInstance().AddSmokeBombShape(p_point, p_deltaTime);
 	}
+
+	void GE::SS_ClearStaticLines()
+	{
+		ShadowShapes::GetInstance().clearStaticLines();
+	}
+
 }
 
 //#endif

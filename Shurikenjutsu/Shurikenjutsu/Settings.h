@@ -2,6 +2,7 @@
 #define SETTINGS_H_
 
 #include <string>
+#include <vector>
 
 class Settings
 {
@@ -10,20 +11,23 @@ public:
 	Settings& operator=(const Settings&) = delete;
 
 	static Settings* GetInstance();
-
+	void LoadSettingsFile();
+	void SaveSettingsFile();
 	void Shutdown();
 
-private:
-	static Settings* m_instance;
+	std::string m_name;
+	std::string m_ip;
+	bool m_vsync;
+	bool m_fullscreen;
 
+private:
+	void GenerateDefaultSettings();
+
+	static Settings* m_instance;
 	Settings();
 	~Settings();
 
-	std::string m_name;
-	bool m_vsync;
-	bool m_fullscreen;
 	
-
 };
 
 #endif

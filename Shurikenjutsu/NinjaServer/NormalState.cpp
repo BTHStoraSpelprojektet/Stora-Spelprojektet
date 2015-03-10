@@ -9,11 +9,11 @@
 NormalState::NormalState(){}
 NormalState::~NormalState(){}
 
-bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
+bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel)
 {
 	bool result;
 
-	result = GameState::Initialize(p_serverPeer);
+	result = GameState::Initialize(p_serverPeer, p_levelsName, p_currentLevel);
 	if (!result)
 	{
 		return false;
@@ -28,11 +28,11 @@ bool NormalState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
 	return true;
 }
 
-bool NormalState::Initialize(std::string p_levelName)
+bool NormalState::Initialize(int p_currentLevel)
 {
 	bool result;
 
-	result = GameState::Initialize(p_levelName);
+	result = GameState::Initialize(p_currentLevel);
 	if (!result)
 	{
 		return false;
@@ -288,15 +288,23 @@ void NormalState::SendRestartingRoundTime(int p_time)
 void NormalState::StartNewLevel()
 {
 	Shutdown();
-	Initialize(LEVEL_NAME);
+	if ((m_currentLevel + 1) < m_levelsName.size()){
+		m_currentLevel++;
+	}
+	else{
+		m_currentLevel = 0;
+	}
+	Initialize(m_currentLevel);
 
 	ConsolePrintSuccess("New level initialized!");
 	ConsoleSkipLines(1);
 
 	RakNet::BitStream bitStream;
 
+	RakNet::RakString levelNames(m_levelsName[m_currentLevel].c_str());
+
 	bitStream.Write((RakNet::MessageID)ID_NEW_LEVEL);
-	bitStream.Write(LEVEL_NAME);
+	bitStream.Write(levelNames);
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

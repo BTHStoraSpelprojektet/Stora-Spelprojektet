@@ -152,6 +152,7 @@ public:
 	static 	void SS_Update(float p_deltaTime);
 	static void SS_DebugRender();
 	static void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
+	static void SS_ClearStaticLines();
 private:
 	//static GraphicsEngine* m_instance;
 	//GraphicsEngine(){};
