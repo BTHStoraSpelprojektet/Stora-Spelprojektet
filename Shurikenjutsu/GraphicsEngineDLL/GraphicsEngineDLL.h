@@ -41,7 +41,7 @@ namespace GraphicsEngine
 		GE(const GE&) = delete;
 		GE& operator=(const GE&) = delete;
 
-		static  GE* GetInstance();
+		static GRAPHICSENGINEDLL_API GE* GetInstance();
 
 
 		GRAPHICSENGINEDLL_API bool Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen);
