@@ -279,6 +279,8 @@ void PlayingState::Shutdown()
 	{
 		CollisionManager::GetInstance()->Shutdown();
 	}
+	
+	POIGrapichalEffects::GetInstance().Shutdown();
 }
 
 void PlayingState::ShutdownExit()
