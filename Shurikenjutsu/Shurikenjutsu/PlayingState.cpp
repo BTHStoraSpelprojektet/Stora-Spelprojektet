@@ -22,6 +22,7 @@
 #include "SuddenDeathState.h"
 #include "PointLights.h"
 #include "Sound.h"
+#include "POIGrapichalEffects.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -172,6 +173,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 
 	m_suddenDeath = new SuddenDeathState();
 	m_suddenDeath->Initialize();
+
+	POIGrapichalEffects::GetInstance().Initialize();
 
 	return true;
 }
@@ -547,6 +550,12 @@ void PlayingState::Render()
 	// Render to the scene normally.
 	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
+
+	if (Network::GetInstance()->GetMyPlayer().invis && Network::GetInstance()->GetMyPlayer().isAlive)
+	{
+		POIGrapichalEffects::GetInstance().RenderStealthEffect();
+	}
+
 	m_objectManager->Render();
 	m_playerManager->Render(false);
 	

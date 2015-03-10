@@ -2,6 +2,8 @@
 #include "GUIElement.h"
 #include "ParticleEmitter.h"
 #include "PointLights.h"
+#include "Globals.h"
+#include "../CommonLibs/TextureLibrary.h"
 
 POIGrapichalEffects& POIGrapichalEffects::GetInstance()
 {
@@ -12,7 +14,8 @@ POIGrapichalEffects& POIGrapichalEffects::GetInstance()
 
 bool POIGrapichalEffects::Initialize()
 {
-	m_healingParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, -10.0f, 0.0), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0), DirectX::XMFLOAT2(1.0f, 1.0f), PARTICLE_PATTERN_HEALING);
+	m_healingParticles = new ParticleEmitter();
+	m_healingParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0), DirectX::XMFLOAT2(1.0f, 1.0f), PARTICLE_PATTERN_HEALING);
 	m_healingParticles->SetEmitParticleState(false);
 	m_heal = false;
 
@@ -23,6 +26,12 @@ bool POIGrapichalEffects::Initialize()
 	m_healingLight.m_position.y = -10.0f;
 	m_healingLight.m_position.z = 0.0f;
 	m_healingLight.m_range = 5.0f;
+
+	m_stealthOverlay = new GUIElement();
+	m_stealthOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/StealthOverlay.png"));
+
+	m_shieldOverlay = new GUIElement();
+	m_shieldOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), 10.0f, 10.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/ShieldOverlay.png"));
 
 	return true;
 }
@@ -63,11 +72,11 @@ void POIGrapichalEffects::StopHealing()
 
 void POIGrapichalEffects::UpdateHealingEffect(DirectX::XMFLOAT3 p_position)
 {
+	m_healingParticles->UpdatePosition(p_position);
+	m_healingParticles->Update();
+
 	if (m_heal)
 	{
-		m_healingParticles->UpdatePosition(p_position);
-		m_healingParticles->Update();
-
 		m_healingLight.m_position = p_position;
 		PointLights::GetInstance()->AddLight(m_healingLight);
 	}
@@ -80,7 +89,7 @@ void POIGrapichalEffects::RenderHealingEffect()
 
 void POIGrapichalEffects::RenderStealthEffect()
 {
-	m_stealthOverlay->Render();
+	m_stealthOverlay->QueueRender();
 }
 
 void POIGrapichalEffects::UpdateShieldEffect(DirectX::XMFLOAT3 p_position)
@@ -90,5 +99,5 @@ void POIGrapichalEffects::UpdateShieldEffect(DirectX::XMFLOAT3 p_position)
 
 void POIGrapichalEffects::RenderShieldEffect()
 {
-	m_shieldOverlay->Render();
+	m_shieldOverlay->QueueRender();
 }
