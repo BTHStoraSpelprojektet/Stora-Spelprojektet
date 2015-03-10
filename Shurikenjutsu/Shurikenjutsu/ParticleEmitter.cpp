@@ -105,6 +105,12 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 			InitParticles(200.0f, 1000, DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f), 0.5f, 1.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/BloodParticle.png"));
 			break;
 		}
+		case(PARTICLE_PATTERN_HEALING) :
+		{
+			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.6f, 0.5f, 0.6f), 3.0f, 1.0f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/HealingSparkle.png"));
+
+			break;
+		}
 		default:
 		{
 			return false;
@@ -499,6 +505,21 @@ void ParticleEmitter::EmitParticles()
 					break;
 				}
 
+				case(PARTICLE_PATTERN_HEALING) :
+				{
+					m_particleList[index].m_position = position;
+					m_particleList[index].m_direction = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = rotation;
+					m_particleList[index].m_opacity = 1.0f;
+
+					break;
+				}
+
 				default:
 				{
 					break;
@@ -726,7 +747,7 @@ void ParticleEmitter::UpdateParticles()
 			break;
 		}
 
-			case(PARTICLE_PATTERN_POI_SPARKLE) :
+		case(PARTICLE_PATTERN_POI_SPARKLE) :
 		{
 			if (m_particleList != nullptr)
 			{
@@ -771,6 +792,23 @@ void ParticleEmitter::UpdateParticles()
 					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
 				}
 			}
+			break;
+		}
+
+		case(PARTICLE_PATTERN_HEALING) :
+		{
+			if (m_particleList != nullptr)
+			{
+				for (int i = 0; i < m_currentParticles; i++)
+				{
+					// Fly upwards.
+					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
+			}
+
 			break;
 		}
 										
@@ -1023,6 +1061,13 @@ void ParticleEmitter::UpdateBuffers()
 			}
 
 			case(PARTICLE_PATTERN_ACERPALMATUM_LEAVES) :
+			{
+				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
+
+				break;
+			}
+
+			case PARTICLE_PATTERN_HEALING:
 			{
 				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
 

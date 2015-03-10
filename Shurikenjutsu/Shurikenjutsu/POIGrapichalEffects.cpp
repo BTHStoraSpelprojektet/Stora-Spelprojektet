@@ -15,17 +15,17 @@ POIGrapichalEffects& POIGrapichalEffects::GetInstance()
 bool POIGrapichalEffects::Initialize()
 {
 	m_healingParticles = new ParticleEmitter();
-	m_healingParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0), DirectX::XMFLOAT2(1.0f, 1.0f), PARTICLE_PATTERN_HEALING);
+	m_healingParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_HEALING);
 	m_healingParticles->SetEmitParticleState(false);
 	m_heal = false;
 
-	m_healingLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	m_healingLight.m_diffuse = DirectX::XMVectorSet(0.2f, 1.5f, 0.2f, 0.0f);
+	m_healingLight.m_ambient = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	m_healingLight.m_diffuse = DirectX::XMVectorSet(0.2f, 2.5f, 0.2f, 0.0f);
 	m_healingLight.m_specular = DirectX::XMVectorSet(0.2f, 1.0f, 0.2f, 0.0f);
 	m_healingLight.m_position.x = 0.0f;
 	m_healingLight.m_position.y = -10.0f;
 	m_healingLight.m_position.z = 0.0f;
-	m_healingLight.m_range = 7.5f;
+	m_healingLight.m_range = 2.0f;
 
 	m_stealthOverlay = new GUIElement();
 	m_stealthOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/StealthOverlay.png"));

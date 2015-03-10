@@ -885,4 +885,10 @@ void PlayingState::UpdatePOIEffects()
 			POIGrapichalEffects::GetInstance().RenderShieldEffect();
 		}
 	}
+
+	DirectX::XMFLOAT3 position = m_playerManager->GetPlayerPosition();
+	position.y = 0.25f;
+	POIGrapichalEffects::GetInstance().StartHealing();
+	POIGrapichalEffects::GetInstance().UpdateHealingEffect(position);
+	POIGrapichalEffects::GetInstance().RenderHealingEffect();
 }
