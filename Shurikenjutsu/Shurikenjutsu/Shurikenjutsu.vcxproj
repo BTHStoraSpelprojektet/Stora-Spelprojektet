@@ -52,7 +52,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
     </ClCompile>
     <Link>
@@ -71,7 +71,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -56,13 +56,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;GRAPHICSENGINEDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\DirectXTex\WICTextureLoader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>D3Dcompiler.lib;FW1FontWrapper.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Shurikenjutsu\DirectXTex\DirectXTex\Bin\Desktop_2013\Win32\Debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DirectXTex.lib;d3d11.lib;D3Dcompiler.lib;FW1FontWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Shurikenjutsu\FW1FontWrapper_1_1\x86;..\Shurikenjutsu\DirectXTex\DirectXTex\Bin\Desktop_2013\Win32\Debug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
