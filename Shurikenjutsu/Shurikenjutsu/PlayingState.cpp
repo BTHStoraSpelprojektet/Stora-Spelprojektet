@@ -75,6 +75,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	// Load the level.
 	Level level(p_levelName);
 
+	ShadowShapes::GetInstance().clearStaticLines();
 	// Initialize the shadow shapes. 
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)

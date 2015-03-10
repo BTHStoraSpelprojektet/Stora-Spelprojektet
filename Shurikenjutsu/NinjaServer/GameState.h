@@ -22,9 +22,8 @@ public:
 	GameState();
 	~GameState();
 
-	virtual bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName);
-	virtual bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
-	virtual bool Initialize(std::string p_levelName);
+	virtual bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel);
+	virtual bool Initialize(int p_currentLevel);
 	virtual void Shutdown();
 	virtual void Update(double p_deltaTime);
 	
@@ -76,6 +75,9 @@ protected:
 	float m_deltaTime;
 	float m_shieldActiveTimer;
 	float m_invisActiveTimer;
+
+	std::vector<std::string> m_levelsName;
+	unsigned int m_currentLevel;
 };
 
 #endif

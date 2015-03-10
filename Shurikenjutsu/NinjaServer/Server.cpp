@@ -8,6 +8,8 @@ bool Server::Initialize()
 {
 	ServerGlobals::IS_SERVER = true;
 
+	ReadLevels();
+
 	m_serverPeer = RakNet::RakPeerInterface::GetInstance();
 	m_socketDesc = RakNet::SocketDescriptor(SERVER_PORT, 0);
 
@@ -25,9 +27,18 @@ bool Server::Initialize()
 
 	// Initiate game state
 	m_gameState = new NormalState();
-	m_gameState->Initialize(m_serverPeer);
+	m_gameState->Initialize(m_serverPeer,m_levels,m_currentLevel);
 
 	return true;
+}
+
+void Server::ReadLevels(){
+	//Read from file
+	m_levels.push_back("../Shurikenjutsu/Levels/NightTimeArena.SSPL");
+	//m_levels.push_back("../Shurikenjutsu/Levels/WaterArena.SSPL");
+
+	//Set start level
+	m_currentLevel = 0;
 }
 
 void Server::Shutdown()
@@ -76,8 +87,8 @@ void Server::ReceviePacket()
 
 			bitStream2.Write((RakNet::MessageID)ID_LEVELNAME);
 			//std::string lev = "../Shurikenjutsu/Levels/WaterArena.SSPL";
-			std::string lev = "../Shurikenjutsu/Levels/NightTimeArena.SSPL";
-			RakNet::RakString levelName(lev.c_str());
+			//std::string lev = "../Shurikenjutsu/Levels/NightTimeArena.SSPL";
+			RakNet::RakString levelName(m_levels[m_currentLevel].c_str());
 			bitStream2.Write(levelName);
 
 			m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
