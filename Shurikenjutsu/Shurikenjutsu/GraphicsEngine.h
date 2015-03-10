@@ -154,9 +154,6 @@ public:
 	static void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
 	static void SS_ClearStaticLines();
 private:
-	//static GraphicsEngine* m_instance;
-	//GraphicsEngine(){};
-	//~GraphicsEngine(){};
 
 	static std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
 };
