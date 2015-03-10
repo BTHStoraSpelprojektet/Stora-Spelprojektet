@@ -442,6 +442,12 @@ GAMESTATESWITCH PlayingState::Update()
 	// Update the team status bar.
 	m_teamStatusBar->Update();
 
+	if (Network::GetInstance()->GetNewPlayerJoined())
+	{
+		PlayerJoinedText();
+		Network::GetInstance()->JoinedPlayerText();
+	}
+
 	// Update the directional light camera position.
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 	
@@ -830,11 +836,15 @@ void PlayingState::PlayerJoinedText()
 
 			if (players[i].team == 1)
 			{
-				m_playerJoinedText->SetText(players[i].name.C_String + " has joined the red team");
+				std::string text = players[i].name.C_String();
+				text += " has joined the red team";
+				m_playerJoinedText->SetText(text);
 			}
 			else if (players[i].team == 2)
 			{
-				m_playerJoinedText->SetText(players[i].name.C_String + " has joined the blue team");
+				std::string text = players[i].name.C_String();
+				text += " has joined the blue team";
+				m_playerJoinedText->SetText(text);
 			}
 		}
 	}

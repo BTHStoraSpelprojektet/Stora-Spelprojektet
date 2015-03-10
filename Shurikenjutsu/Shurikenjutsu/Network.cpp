@@ -216,6 +216,7 @@ void Network::ReceviePacket()
 				ConsolePrintSuccess("New client connected.");
 				//Person has joineeeddd
 				m_justJoinedPlayer = guid;
+				m_newPlayerJoined = true;
 			}
 
 			ConsolePrintText("Players connected: " + std::to_string(m_connectionCount));
@@ -2440,4 +2441,14 @@ bool Network::GetPoiSpawned()
 RakNet::RakNetGUID Network::GetJustJoinedPlayer()
 {
 	return m_justJoinedPlayer;
+}
+
+bool Network::GetNewPlayerJoined()
+{
+	return m_newPlayerJoined;
+}
+
+void Network::JoinedPlayerText()
+{
+	m_newPlayerJoined = false;
 }

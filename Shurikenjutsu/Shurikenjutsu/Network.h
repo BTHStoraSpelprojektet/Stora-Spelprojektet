@@ -164,8 +164,10 @@ public:
 
 	void RoundOverText();
 	void PoiText();
+	void JoinedPlayerText();
 
 	bool GetPoiSpawned();
+	bool GetNewPlayerJoined();
 	RakNet::RakNetGUID GetJustJoinedPlayer();
 
 private:
@@ -270,6 +272,7 @@ private:
 	double m_pingTimer;
 
 	bool m_poiSpawned;
+	bool m_newPlayerJoined;
 
 	float m_dealtDamage;
 	DirectX::XMFLOAT3 m_dealtDamagePosition;
