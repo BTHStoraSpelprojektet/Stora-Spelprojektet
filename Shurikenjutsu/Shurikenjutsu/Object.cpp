@@ -3,7 +3,6 @@
 #include <DirectXCollision.h>
 #include "Model.h"
 #include "AnimationControl.h"
-#include "ShadowShapes.h"
 #include "Globals.h"
 #include "GraphicsEngine.h"
 

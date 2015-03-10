@@ -1,7 +1,6 @@
 #include "Model.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
-#include "Buffer.h"
 #include "..\CommonLibs\ModelImporter.h"
 
 Model::Model(){}

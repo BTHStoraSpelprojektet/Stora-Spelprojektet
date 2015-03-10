@@ -71,7 +71,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -79,7 +79,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;CommonLibs.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DirectXTex.lib;d3d11.lib;D3Dcompiler.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;FW1FontWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FW1FontWrapper.lib;DirectXTex.lib;d3d11.lib;D3Dcompiler.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Shurikenjutsu\FW1FontWrapper_1_1\x86;..\Shurikenjutsu\DirectXTex\DirectXTex\Bin\Desktop_2013\Win32\Debug;..\Shurikenjutsu\FMOD\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>

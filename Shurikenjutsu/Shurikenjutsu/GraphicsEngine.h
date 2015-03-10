@@ -1,7 +1,6 @@
 #ifndef GRAPHICSENGINE_H_
 #define GRAPHICSENGINE_H_
 
-
 #include <DirectXMath.h>
 #include <vector>
 #include <Windows.h>
@@ -37,12 +36,6 @@ class GraphicsEngine
 private:
 
 public:
-
-	//GraphicsEngine(const GraphicsEngine&) = delete;
-	//GraphicsEngine& operator=(const GraphicsEngine&) = delete;
-
-	//static GraphicsEngine* GetInstance();
-
 	static bool Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen);
 	static void Shutdown();
 
