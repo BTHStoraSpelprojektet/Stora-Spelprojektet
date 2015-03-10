@@ -44,6 +44,8 @@ public:
 	void SendSuddenDeathMessage();
 	void UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<int> p_visiblePlayers);
 
+	void SendCurrentRunes(RakNet::RakNetGUID p_guid);
+
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();

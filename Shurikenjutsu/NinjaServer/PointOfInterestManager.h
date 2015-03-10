@@ -25,6 +25,8 @@ public:
 	bool IsRuneActive(int p_index);
 	std::vector<Box> GetBoundingBoxes(POINTOFINTERESTTYPE p_poiType);
 
+	void DownloadRunes(RakNet::RakNetGUID p_guid);
+
 private:
 	RakNet::RakPeerInterface *m_serverPeer;
 	int m_nrOfRunes;

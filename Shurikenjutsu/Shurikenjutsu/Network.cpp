@@ -168,9 +168,7 @@ void Network::ReceviePacket()
 			m_networkStatus = NETWORKSTATUS_CONNECTED;
 
 			RakNet::BitStream bitStream;
-
 			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
-
 			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
 
 			break;
@@ -1146,6 +1144,28 @@ void Network::ReceviePacket()
 				//SpawnRunes(0, 0, 0, 10 * i);
 			}
 
+			break;
+		}
+		case ID_DOWNLOAD_RUNES:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			bool runeSpawned;
+			POINTOFINTERESTTYPE poi_type;
+			float x, y, z;
+			bitStream.Read(messageID);
+			for (int i = 0; i < 3; i++)
+			{
+				bitStream.Read(runeSpawned);
+				bitStream.Read(poi_type);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				if (runeSpawned)
+				{
+					SpawnRunes(poi_type, x, y, z, false);
+				}
+			}
 			break;
 		}
 		case ID_RUNE_PICKED_UP:
@@ -2197,36 +2217,44 @@ void Network::SendLatestDir()
 
 void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
 {
+	SpawnRunes(p_poiType, p_x, p_y, p_z, true);
+}
+
+void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound)
+{
 	m_objectManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
 
-	Sound::SoundEmitter* soundEmitter = NULL;
-	switch (p_poiType)
+	if (p_makeSound)
 	{
-	case POINTOFINTERESTTYPE_HEAL:
-	{
-		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SOUND, p_x, p_y, p_z);
-		break;
+		Sound::SoundEmitter* soundEmitter = NULL;
+		switch (p_poiType)
+		{
+		case POINTOFINTERESTTYPE_HEAL:
+		{
+			m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SPAWN_SOUND, p_x, p_y, p_z);
+			soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SOUND, p_x, p_y, p_z);
+			break;
+		}
+		case POINTOFINTERESTTYPE_SHIELD:
+		{
+			m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND, p_x, p_y, p_z);
+			soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SOUND, p_x, p_y, p_z);
+			break;
+		}
+		case POINTOFINTERESTTYPE_INVISIBLE:
+		{
+			m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND, p_x, p_y, p_z);
+			soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SOUND, p_x, p_y, p_z);
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
+		//Only support sound for one rune per type for now
+		runeSoundEmitters.push_back(soundEmitter);
 	}
-	case POINTOFINTERESTTYPE_SHIELD:
-	{
-		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SOUND, p_x, p_y, p_z);
-		break;
-	}
-	case POINTOFINTERESTTYPE_INVISIBLE:
-	{
-		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SOUND, p_x, p_y, p_z);
-		break;
-	}
-	default:
-	{
-		break;
-	}
-	}
-	//Only support sound for one rune per type for now
-	runeSoundEmitters.push_back(soundEmitter);
 }
 
 void Network::RoundOverText()
@@ -2476,4 +2504,11 @@ bool Network::IsEnemyVisible(RakNet::RakNetGUID p_guid)
 		}
 	}
 	return false;
+}
+
+void Network::SendSpawnedRunes()
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_RUNES);
+	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }

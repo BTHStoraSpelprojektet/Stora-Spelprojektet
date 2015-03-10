@@ -82,6 +82,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_objectManager = new ObjectManager();
 	m_objectManager->SetSound(m_sound);
 	m_objectManager->Initialize(&level);
+	// Send which runes have spawned
+	Network::GetInstance()->SendSpawnedRunes();
 
 	// Load and place arena walls.
 	std::vector<LevelImporter::LevelBoundingBox> temp = level.GetLevelBoundingBoxes();

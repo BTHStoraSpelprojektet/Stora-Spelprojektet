@@ -306,3 +306,8 @@ void GameState::UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<in
 {
 	m_playerManager->UpdateVisiblePlayers(p_guid, p_visiblePlayers);
 }
+
+void GameState::SendCurrentRunes(RakNet::RakNetGUID p_guid)
+{
+	m_POIManager->DownloadRunes(p_guid);
+}
