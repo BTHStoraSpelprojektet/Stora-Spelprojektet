@@ -363,34 +363,35 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p
 	const float highMid = 3.14f * 0.625f;
 	const float high = 3.14f * 0.875f;
 
-	//Turn test!		ChangeLayer(7, 15);
+	//Turn rate! when standing still!
 	if (DirectX::XMVector3Length(p_direction).m128_f32[0] == 0.0f)
 	{	
 		if (p_cross > 0)
 		{
-			int degreeForward = (int)((6.28f - forwardAngle) * (180.0f / 3.14f));
-			int degreeHip = (int)(m_hipRotation * (180.0f / 3.14f));
-			int shortest_angle = ((((degreeForward - degreeHip) % 360) + 540) % 360) - 180;
+			float radianHip = atan2(sin((6.28f - forwardAngle) - m_hipRotation), cos((6.28f - forwardAngle) - m_hipRotation));
 
-			float radianHip = ((float)shortest_angle * (3.14f / 180.0f));
-
-			m_hipRotation += radianHip * 0.1f;
+			if (radianHip > low || radianHip < -low)
+			{
+				m_hipRotation += radianHip * 0.05f;
+				ChangeLayer(7, 15);
+			}			
 		}
 		else
 		{
-			int degreeForward = (int)(forwardAngle * (180.0f / 3.14f));
-			int degreeHip = (int)(m_hipRotation * (180.0f / 3.14f));
-			int shortest_angle = ((((degreeForward - degreeHip) % 360) + 540) % 360) - 180;
+			float radianHip = atan2(sin(forwardAngle - m_hipRotation), cos(forwardAngle - m_hipRotation));
 
-			float radianHip = ((float)shortest_angle * (3.14f / 180.0f));
-
-			m_hipRotation += radianHip * 0.1f;
+			if (radianHip > low || radianHip < -low)
+			{
+				m_hipRotation += radianHip * 0.05f;
+				ChangeLayer(7, 15);
+			}
 		}
 
 		return;
 	}	
 	//
 
+	// Determines which way the legs are turned when running.
 	if (crossD > 0)
 	{
 		if (p_directionAngle < lowMid && p_directionAngle > low && p_cross <= 0)
@@ -473,13 +474,13 @@ void AnimationControl::FindAndReferenceLayers()
 	std::string m_animationNames[] = { "RunF", "RunA", "RunB", "RunAB", 
 									   "RunL", "RunR", "IdleL", "IdleA", 
 									   "DeadL", "DeadA", "Melee", "Range",
-									   "Tool", "Spec1", "Spec2", "TurnR", "TurnL"};
+									   "Tool", "Spec1", "Spec2", "Turn"};
 
 	m_animationStacksArray = new AnimationStack[m_animationStacks.size()];
 
 	for (unsigned int i = 0; i < m_animationStacks.size(); i++)
 	{
-		for (unsigned int j = 0; j < 17; j++)
+		for (unsigned int j = 0; j < 16; j++)
 		{
 			if (strcmp(m_animationStacks[i].m_name, m_animationNames[j].c_str()) == 0)
 			{
