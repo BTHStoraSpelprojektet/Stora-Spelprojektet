@@ -24,6 +24,7 @@ public:
 	bool CAMERA_FLYING;
 	bool CAMERA_MOVING;
 	bool CAMERA_SPECTATE;
+	bool APE_ON;
 
 	void SetDeltaTime(double p_deltaTime);
 	double GetDeltaTime();
