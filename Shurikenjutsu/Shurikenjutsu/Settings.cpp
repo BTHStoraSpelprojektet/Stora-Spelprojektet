@@ -48,10 +48,10 @@ void Settings::LoadSettingsFile()
 		m_ip = line;
 
 		std::getline(myfile, line);
-		m_fullscreen = atoi(line.c_str());
+		m_fullscreen = atoi(line.c_str()) ? 1 : 0;
 
 		std::getline(myfile, line);
-		m_vsync = atoi(line.c_str());
+		m_vsync = atoi(line.c_str()) ? 1 : 0;
 
 		myfile.close();
 	}
