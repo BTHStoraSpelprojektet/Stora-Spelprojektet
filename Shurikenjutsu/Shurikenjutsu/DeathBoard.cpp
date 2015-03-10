@@ -137,7 +137,7 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 	{
 		m_deadGuy[m_nrOfDeaths].SetColor(m_blueColor);
 	}
-	position.x -= (m_deadGuy[m_nrOfDeaths].GetWidth() + 22.5f);
+	position.x -= (m_deadGuy[m_nrOfDeaths].GetWidth() + 30.0f);
 
 	// Ability
 	m_killAbility[m_nrOfDeaths].SetPosition(position);
@@ -157,7 +157,7 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 	}
 
 	// Background
-	DirectX::XMFLOAT2 size = DirectX::XMFLOAT2(m_deadGuy[m_nrOfDeaths].GetWidth() + 70.0f + m_killer[m_nrOfDeaths].GetWidth(), m_background[m_nrOfDeaths].GetSize().y);
+	DirectX::XMFLOAT2 size = DirectX::XMFLOAT2(m_deadGuy[m_nrOfDeaths].GetWidth() + 85.0f + m_killer[m_nrOfDeaths].GetWidth(), m_background[m_nrOfDeaths].GetSize().y);
 	DirectX::XMFLOAT3 pos = position;
 	pos.x = m_originalPos.x - size.x * 0.5f + 10.0f;
 	m_background[m_nrOfDeaths].SetPosition(pos);
