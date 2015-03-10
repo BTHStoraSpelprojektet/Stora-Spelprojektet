@@ -157,6 +157,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayingState.cpp" />
+    <ClCompile Include="POIGrapichalEffects.cpp" />
     <ClCompile Include="PointOfInterest.cpp" />
     <ClCompile Include="PointOfInterestManager.cpp" />
     <ClCompile Include="PointLights.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="CustomFont.h" />
+    <ClInclude Include="POIGrapichalEffects.h" />
     <ClInclude Include="PointOfInterest.h" />
     <ClInclude Include="PointOfInterestManager.h" />
     <ClInclude Include="PointLights.h" />
