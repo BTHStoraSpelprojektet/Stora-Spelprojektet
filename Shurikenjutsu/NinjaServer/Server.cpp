@@ -1,4 +1,6 @@
 #include "Server.h"
+#include <iostream>
+#include <fstream>
 
 Server::Server(){}
 
@@ -34,8 +36,23 @@ bool Server::Initialize()
 
 void Server::ReadLevels(){
 	//Read from file
-	m_levels.push_back("../Shurikenjutsu/Levels/NightTimeArena.SSPL");
-	//m_levels.push_back("../Shurikenjutsu/Levels/WaterArena.SSPL");
+	std::string levelsPath = "../Shurikenjutsu/Levels/";
+	std::string settingFile = "../Shurikenjutsu/Settings/ServerLevels.cfg";
+
+	std::ifstream infile(settingFile, std::ifstream::in);
+	char line[256];
+	while (infile.getline(line,256)){
+		std::string level = levelsPath;
+		level.append(line);
+		if (level.size()>levelsPath.size()){
+			m_levels.push_back(level);
+		}
+	}
+
+	//Set default if file not found
+	if (m_levels.size() == 0){
+		m_levels.push_back("../Shurikenjutsu/Levels/NightTimeArena.SSPL");
+	}
 
 	//Set start level
 	m_currentLevel = 0;
