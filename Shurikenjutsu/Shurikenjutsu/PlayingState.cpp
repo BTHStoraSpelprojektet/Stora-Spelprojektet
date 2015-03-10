@@ -556,6 +556,9 @@ void PlayingState::Render()
 		POIGrapichalEffects::GetInstance().RenderStealthEffect();
 	}
 
+	POIGrapichalEffects::GetInstance().UpdateShieldEffect(m_playerManager->GetPlayerPosition(), m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+	POIGrapichalEffects::GetInstance().RenderShieldEffect();
+
 	m_objectManager->Render();
 	m_playerManager->Render(false);
 	

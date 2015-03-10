@@ -24,7 +24,7 @@ public:
 
 	void RenderStealthEffect();
 
-	void UpdateShieldEffect(DirectX::XMFLOAT3 p_position);
+	void UpdateShieldEffect(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 	void RenderShieldEffect();
 
 private:
@@ -39,6 +39,7 @@ private:
 	GUIElement* m_stealthOverlay;
 
 	GUIElement* m_shieldOverlay;
+	PointLight m_shieldLight;
 };
 
 #endif
