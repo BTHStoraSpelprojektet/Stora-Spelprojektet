@@ -123,7 +123,7 @@ void PlayerManager::Render(bool p_inMenu)
 		{
 			if (!p_inMenu && !Network::GetInstance()->GetMatchOver())
 			{
-				if (m_enemyList[i]->IsVisible() && GraphicsEngine::GetInstance()->IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+				if (m_enemyList[i]->IsVisible() && GraphicsEngine::IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 				{
 					if (!m_enemyList[i]->IsInvis())
 					{
@@ -155,7 +155,7 @@ void PlayerManager::RenderDepth(bool p_inMenu)
 	{
 		if (!p_inMenu)
 		{
-			if (GraphicsEngine::GetInstance()->IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			if (GraphicsEngine::IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
 			{
 				if (!m_enemyList[i]->IsInvis())
 				{

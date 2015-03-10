@@ -469,32 +469,32 @@ void ChooseState::UpdateTeams()
 void ChooseState::Render()
 {
 	// Draw to the shadowmap.
-	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
+	GraphicsEngine::BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
 	m_playerManager->RenderDepth(true);
-	GraphicsEngine::GetInstance()->SetShadowMap();
+	GraphicsEngine::SetShadowMap();
 
-	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
-	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
-	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
+	GraphicsEngine::ClearRenderTargetsForGBuffers();
+	GraphicsEngine::SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 	m_playerManager->Render(true);
 
-	GraphicsEngine::GetInstance()->RenderFoliage();
-	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::GetInstance()->RenderSSAO();
+	GraphicsEngine::RenderFoliage();
+	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::RenderSSAO();
 
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
-	GraphicsEngine::GetInstance()->SetPointLightLightBuffer(m_camera->GetViewMatrix());
-	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->ApplyDOF();
+	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
+	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
+	GraphicsEngine::Composition();
+	GraphicsEngine::ApplyDOF();
 
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+	GraphicsEngine::TurnOnDepthStencil();
 
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::ResetRenderTarget();
 
 	m_tintedBackground->Render();
 	m_chooseNinja->Render();

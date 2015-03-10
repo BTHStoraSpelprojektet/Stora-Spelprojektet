@@ -269,7 +269,7 @@ GAMESTATESWITCH MenuState::Update()
 		case MENUACTION_OPTIONAPPLY:
 			bool temp = m_options->GetCheckboxState(m_vsyncIndex);
 			m_lastvsync = temp;
-			GraphicsEngine::GetInstance()->SetVsync(temp);
+			GraphicsEngine::SetVsync(temp);
 
 			temp = m_options->GetCheckboxState(m_fullscreenIndex);
 			m_lastfullscreen = temp;
@@ -285,7 +285,7 @@ GAMESTATESWITCH MenuState::Update()
 				GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
 				GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 			}
-			GraphicsEngine::GetInstance()->ToggleFullscreen(temp, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+			GraphicsEngine::ToggleFullscreen(temp, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 			std::string tempstring = m_ipbox->GetText();
 			m_ipbox->Shutdown();
 			m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -67, 394.0f, 67.0f, 15, tempstring);
@@ -323,7 +323,7 @@ GAMESTATESWITCH MenuState::Update()
 	m_camera->MenuCameraRotation();
 
 	// Handles screen changes.
-	if (GraphicsEngine::GetInstance()->HasScreenChanged())
+	if (GraphicsEngine::HasScreenChanged())
 	{
 		if (GLOBAL::GetInstance().FULLSCREEN)
 		{
@@ -335,7 +335,7 @@ GAMESTATESWITCH MenuState::Update()
 			m_camera->ToggleFullscreen(false);
 		}
 
-		GraphicsEngine::GetInstance()->ScreenChangeHandled();
+		GraphicsEngine::ScreenChangeHandled();
 	}
 
 	// Update Frustum
@@ -375,31 +375,31 @@ void MenuState::Render()
 
 
 	// Draw to the shadowmap.
-	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
+	GraphicsEngine::BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
 
-	GraphicsEngine::GetInstance()->SetShadowMap();
+	GraphicsEngine::SetShadowMap();
 
-	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
-	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
-	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
+	GraphicsEngine::ClearRenderTargetsForGBuffers();
+	GraphicsEngine::SetRenderTargetsForGBuffers();
 	m_objectManager->Render();
 
-	GraphicsEngine::GetInstance()->RenderFoliage();
+	GraphicsEngine::RenderFoliage();
 
-	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::GetInstance()->RenderSSAO();
+	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::RenderSSAO();
 
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
-	GraphicsEngine::GetInstance()->SetPointLightLightBuffer(m_camera->GetViewMatrix());
+	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
+	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
 	
-	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->ApplyDOF();
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+	GraphicsEngine::Composition();
+	GraphicsEngine::ApplyDOF();
+	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::TurnOnDepthStencil();
 }
 
 void MenuState::EscapeIsPressed()

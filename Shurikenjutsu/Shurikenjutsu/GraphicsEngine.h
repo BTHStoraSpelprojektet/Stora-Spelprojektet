@@ -38,132 +38,132 @@ private:
 
 public:
 
-	GraphicsEngine(const GraphicsEngine&) = delete;
-	GraphicsEngine& operator=(const GraphicsEngine&) = delete;
+	//GraphicsEngine(const GraphicsEngine&) = delete;
+	//GraphicsEngine& operator=(const GraphicsEngine&) = delete;
 
-	static GraphicsEngine* GetInstance();
+	//static GraphicsEngine* GetInstance();
 
-	bool Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen);
-	void Shutdown();
+	static bool Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen);
+	static void Shutdown();
 
-	void SetClearColor(float R, float G, float B, float p_opacity);
-	void Clear();
-	void Present();
+	static void SetClearColor(float R, float G, float B, float p_opacity);
+	static void Clear();
+	static void Present();
 
-	ID3D11Device* GetDevice();
-	ID3D11DeviceContext* GetContext();
-	D3D_FEATURE_LEVEL GetVersion();
+	static ID3D11Device* GetDevice();
+	static ID3D11DeviceContext* GetContext();
+	static D3D_FEATURE_LEVEL GetVersion();
 
-	ID3D11ShaderResourceView* Create2DTexture(std::string p_filename);
+	static ID3D11ShaderResourceView* Create2DTexture(std::string p_filename);
 
-	void RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
-	void RenderSceneForward(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
-	void RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture);
-	void RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
-	void RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
-	void RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
-	void RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-	void RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex);
-	void RenderAnimatedOutliningDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
-	void RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
-	void RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-	void RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
-	void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
-	void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, bool p_isFire);
-	void RenderFoliage();
+	static void RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
+	static void RenderSceneForward(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
+	static void RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture);
+	static void RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
+	static void RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+	static void RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+	static void RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	static void RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex);
+	static void RenderAnimatedOutliningDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+	static void RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+	static void RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+	static void RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
+	static void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
+	static void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, bool p_isFire);
+	static void RenderFoliage();
 
-	void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
-	void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
-	void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
-	void SetSceneDirectionalLight(DirectionalLight& p_dLight);
-	void SetLightBuffer(ID3D11ShaderResourceView* p_lightSRV);
+	static void SetViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
+	static void SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
+	static void SetSceneFog(float p_fogStart, float p_fogEnd, float p_fogDensity);
+	static void SetSceneDirectionalLight(DirectionalLight& p_dLight);
+	static void SetLightBuffer(ID3D11ShaderResourceView* p_lightSRV);
 
-	void UpdateInstanceBuffers(std::vector<DirectX::XMFLOAT4X4> p_matrixList, int p_index);
+	static void UpdateInstanceBuffers(std::vector<DirectX::XMFLOAT4X4> p_matrixList, int p_index);
 
-	void SetShadowMap();
+	static 	void SetShadowMap();
 
-	void TurnOnPointLightAlphaBlending();
-	void TurnOnAlphaBlending();
-	void TurnOffAlphaBlending();
+	static void TurnOnPointLightAlphaBlending();
+	static void TurnOnAlphaBlending();
+	static void TurnOffAlphaBlending();
 
-	void TurnOnBackfaceCulling();
-	void TurnOffBackfaceCulling();
+	static void TurnOnBackfaceCulling();
+	static void TurnOffBackfaceCulling();
 
-	bool ToggleFullscreen(bool p_fullscreen, float p_currentScreenWidth, float p_currentScreenHeight);
+	static bool ToggleFullscreen(bool p_fullscreen, float p_currentScreenWidth, float p_currentScreenHeight);
 
-	void AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position);
+	static 	void AddInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_position);
 
-	HWND GetWindowHandle();
+	static HWND GetWindowHandle();
 
-	void BeginRenderToShadowMap();
-	void ResetRenderTarget();
+	static void BeginRenderToShadowMap();
+	static void ResetRenderTarget();
 
-	ID3D11ShaderResourceView* GetShadowMap();
-	ID3D11ShaderResourceView* GetSceneShaderShadowMap();
+	static ID3D11ShaderResourceView* GetShadowMap();
+	static ID3D11ShaderResourceView* GetSceneShaderShadowMap();
 
-	void SetShadowMapDimensions(float p_width, float p_height);
+	static void SetShadowMapDimensions(float p_width, float p_height);
 
-	void TurnOnDepthStencil();
-	void TurnOffDepthStencil();
+	static void TurnOnDepthStencil();
+	static void TurnOffDepthStencil();
 
-	void SetDepthStateForParticles();
+	static 	void SetDepthStateForParticles();
 
-	int GetNumberOfInstanceBuffer();
+	static int GetNumberOfInstanceBuffer();
 
-	void SetVsync(bool p_state);
+	static void SetVsync(bool p_state);
 
-	void SetOutliningPassOne();
-	void SetOutliningPassTwo();
+	static 	void SetOutliningPassOne();
+	static void SetOutliningPassTwo();
 
-	bool InitializeOutling();
-	void ClearOutlining();
+	static 	bool InitializeOutling();
+	static void ClearOutlining();
 
-	IFW1FontWrapper* GetFontWrapper();
-	IDWriteFontCollection* GetFontCollection();
-	void AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags);
-	void RenderTextGeometry(UINT p_flags);
+	static IFW1FontWrapper* GetFontWrapper();
+	static IDWriteFontCollection* GetFontCollection();
+	static void AnalyzeText(IDWriteTextLayout* p_layout, float p_x, float p_y, UINT32 p_color, UINT p_flags);
+	static void RenderTextGeometry(UINT p_flags);
 
-	bool HasScreenChanged();
-	void ScreenChangeHandled();
+	static bool HasScreenChanged();
+	static void ScreenChangeHandled();
 
-	void DoReportLiveObjects();
+	static void DoReportLiveObjects();
 
-	ID3D11ShaderResourceView* GetPostProcessingTexture1();
-	ID3D11ShaderResourceView* GetPostProcessingTexture2();
+	static ID3D11ShaderResourceView* GetPostProcessingTexture1();
+	static ID3D11ShaderResourceView* GetPostProcessingTexture2();
 
-	void ClearRenderTargetsForGBuffers();
-	void SetRenderTargetsForGBuffers();
+	static void ClearRenderTargetsForGBuffers();
+	static void SetRenderTargetsForGBuffers();
 
-	void Composition();
-	void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
+	static void Composition();
+	static void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
 
-	void SetForwardRenderTarget();
+	static void SetForwardRenderTarget();
 
-	void RenderSSAO();
-	void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
+	static void RenderSSAO();
+	static void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
 
-	void ApplyDOF();
+	static void ApplyDOF();
 
 
-	void UpdateVisibilityPolygon(Point p_point, float p_deltaTime);
-	void AddNewPointLight(PointLight& p_newLight);
-	void SetViewPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
-	void SetPointLightLightBuffer(DirectX::XMFLOAT4X4 p_matrix);
-	void UpdateVisibilityMapBoundries(Point p_topLeft, Point p_botLeft);
-	void RenderVisibilityPolygon(bool p_isMatchOver);
-	void SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
-	void UpdateVisibilityTextureSize(float p_maxScreenWidth, float p_maxScreenHeight);
-	bool IsVisibilityPointVisible(Point p_point);
-	ID3D11Buffer* CreateBuffer(BUFFERTYPE p_type, std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated);
-	void SS_AddStaticLine(Line p_line);
-	void SS_Update(float p_deltaTime);
-	void SS_DebugRender();
-	void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
+	static void UpdateVisibilityPolygon(Point p_point, float p_deltaTime);
+	static void AddNewPointLight(PointLight& p_newLight);
+	static void SetViewPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
+	static void SetPointLightLightBuffer(DirectX::XMFLOAT4X4 p_matrix);
+	static void UpdateVisibilityMapBoundries(Point p_topLeft, Point p_botLeft);
+	static void RenderVisibilityPolygon(bool p_isMatchOver);
+	static void SetVisibilityProjectionPolygonMatrix(DirectX::XMFLOAT4X4 p_matrix);
+	static void UpdateVisibilityTextureSize(float p_maxScreenWidth, float p_maxScreenHeight);
+	static bool IsVisibilityPointVisible(Point p_point);
+	static ID3D11Buffer* CreateBuffer(BUFFERTYPE p_type, std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated);
+	static void SS_AddStaticLine(Line p_line);
+	static 	void SS_Update(float p_deltaTime);
+	static void SS_DebugRender();
+	static void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
 private:
-	static GraphicsEngine* m_instance;
-	GraphicsEngine(){};
-	~GraphicsEngine(){};
+	//static GraphicsEngine* m_instance;
+	//GraphicsEngine(){};
+	//~GraphicsEngine(){};
 
-	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
+	static std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
 };
 #endif //GRAPHICSENGINE_H_

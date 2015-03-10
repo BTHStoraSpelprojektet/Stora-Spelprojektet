@@ -21,7 +21,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos)
 	TransformBoundingBoxes();
 	TransformBoundingSpheres();
 
-	m_InstanceIndex = GraphicsEngine::GetInstance()->GetNumberOfInstanceBuffer();
+	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
 
 	return true;
 }
@@ -39,7 +39,7 @@ bool Object::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	TransformBoundingBoxes();
 	TransformBoundingSpheres();
 
-	m_InstanceIndex = GraphicsEngine::GetInstance()->GetNumberOfInstanceBuffer();
+	m_InstanceIndex = GraphicsEngine::GetNumberOfInstanceBuffer();
 
 	return true;
 }
@@ -55,27 +55,27 @@ void Object::ShutdownGameExit()
 
 void Object::Render()
 {
-	GraphicsEngine::GetInstance()->RenderScene(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+	GraphicsEngine::RenderScene(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
 }
 
 void Object::RenderForward()
 {
-	GraphicsEngine::GetInstance()->RenderSceneForward(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
+	GraphicsEngine::RenderSceneForward(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap());
 }
 
 void Object::RenderDepth()
 {
-	GraphicsEngine::GetInstance()->RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
+	GraphicsEngine::RenderDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture());
 }
 
 void Object::RenderDepthInstanced()
 {
-	GraphicsEngine::GetInstance()->RenderDepthInstanced(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_InstanceIndex);
+	GraphicsEngine::RenderDepthInstanced(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_InstanceIndex);
 }
 
 void Object::RenderInstanced()
 {
-	GraphicsEngine::GetInstance()->RenderInstanced(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_InstanceIndex);
+	GraphicsEngine::RenderInstanced(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_InstanceIndex);
 }
 
 void Object::SetPosition(DirectX::XMFLOAT3 p_pos)
@@ -210,7 +210,7 @@ Sphere Object::GetFrustumSphere()
 
 void Object::CreateInstanceBuffer(int p_numberOfInstances, std::vector<DirectX::XMFLOAT4X4> p_positions)
 {
-	GraphicsEngine::GetInstance()->AddInstanceBuffer(p_numberOfInstances, p_positions);
+	GraphicsEngine::AddInstanceBuffer(p_numberOfInstances, p_positions);
 }
 
 int Object::GetInstanceIndex() const

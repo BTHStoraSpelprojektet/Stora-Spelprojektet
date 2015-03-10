@@ -60,7 +60,7 @@ bool ObjectManager::Initialize(Level* p_level)
 	{		
 		if (prevModelFileName != levelObjects[i].m_filePath)
 		{
-			GraphicsEngine::GetInstance()->AddInstanceBuffer(numberOfSameModel, modelPositions);
+			GraphicsEngine::AddInstanceBuffer(numberOfSameModel, modelPositions);
 			//Reset for new type of model
 			numberOfSameModel = 0;
 			modelPositions.clear();
@@ -105,7 +105,7 @@ bool ObjectManager::Initialize(Level* p_level)
 
 		if (particleLevelEmitter[i].type == EmitterType::EmitterType_BrazierFire)
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SIZE_X, PARTICLE_FIRE_SIZE_Y), PARTICLE_PATTERN_FIRE);
 			//m_sound->PlayAmbientSound(PLAYSOUND_FIRE_SOUND, 0.3f);
@@ -116,14 +116,14 @@ bool ObjectManager::Initialize(Level* p_level)
 
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_FireSpark)
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_SPARK_SIZE_X, PARTICLE_FIRE_SPARK_SIZE_Y), PARTICLE_PATTERN_FIRE_SPARK);
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_TorchFire)
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(PARTICLE_FIRE_TORCH_SIZE_X, PARTICLE_FIRE_TORCH_SIZE_Y), PARTICLE_PATTERN_FIRE_TORCH);
 			//m_sound->PlayAmbientSound(PLAYSOUND_FIRE_SOUND, 0.3f);
@@ -134,28 +134,28 @@ bool ObjectManager::Initialize(Level* p_level)
 
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_LeafSakura)
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_PINKLEAF_SIZE_X, PARTICLE_PINKLEAF_SIZE_Y), PARTICLE_PATTERN_PINK_LEAVES);
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_LeafTree)
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_GREEN_LEAVES);
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_LeafAcerPalmatum)
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_GREENLEAF_SIZE_X, PARTICLE_GREENLEAF_SIZE_Y), PARTICLE_PATTERN_ACERPALMATUM_LEAVES);
 		}
 
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_WorldDust)
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_WORLDDUST_SIZE_X, PARTICLE_WORLDDUST_SIZE_Y), PARTICLE_PATTERN_WORLD_DUST);
 			if (m_sound != NULL){
@@ -165,14 +165,14 @@ bool ObjectManager::Initialize(Level* p_level)
 
 		else if (particleLevelEmitter[i].type == EmitterType::EmitterType_Fireflies)
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0.15f, -1.0f, -0.25f),
 				DirectX::XMFLOAT2(PARTICLE_FIREFLIES_SIZE_X, PARTICLE_FIREFLIES_SIZE_Y), PARTICLE_PATTERN_FIREFLIES);
 		}
 
 		else
 		{
-			particleEmitter->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
+			particleEmitter->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(particleLevelEmitter[i].m_translationX, particleLevelEmitter[i].m_translationY, particleLevelEmitter[i].m_translationZ),
 				DirectX::XMFLOAT3(0, 1, 0),
 				DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 		}
@@ -702,7 +702,7 @@ void ObjectManager::UpdateRenderLists()
 					{
 						matrixList.push_back(tempObjectList[j]->GetWorldMatrix());
 					}
-					GraphicsEngine::GetInstance()->UpdateInstanceBuffers(matrixList, tempObjectList[0]->GetInstanceIndex());
+					GraphicsEngine::UpdateInstanceBuffers(matrixList, tempObjectList[0]->GetInstanceIndex());
 					matrixList.clear();
 				}
 			}
@@ -771,18 +771,18 @@ void ObjectManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_spikeTrapList[i]->GetSpikeSphere(), 2.0f))
 		{
-			GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+			GraphicsEngine::TurnOnAlphaBlending();
 			m_spikeTrapList[i]->Render();
-			GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+			GraphicsEngine::TurnOffAlphaBlending();
 		}
 	}
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_stickyTrapList[i]->GetStickyTrapSphere(), 2.0f))
 		{
-			GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+			GraphicsEngine::TurnOnAlphaBlending();
 			m_stickyTrapList[i]->Render();
-			GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+			GraphicsEngine::TurnOffAlphaBlending();
 		}
 	}
 
@@ -1313,7 +1313,7 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 {
 	ParticleEmitter* temp = new ParticleEmitter();
 	p_pos.y += 2;
-	temp->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
+	temp->Initialize(GraphicsEngine::GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
 	temp->SetEmitParticleState(true);
 	m_bloodParticles.push_back(temp); 
 

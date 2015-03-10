@@ -1,7 +1,7 @@
 #include "AnimatedObject.h"
 #include "..\CommonLibs\TextureLibrary.h"
-#include "Model.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "Model.h"
 #include "Trail.h"
 #include "Globals.h"
 #include "GraphicsEngine.h"
@@ -98,11 +98,11 @@ void AnimatedObject::RenderPlayer(int p_team)
 {
 	if (p_team == 1)
 	{
-		GraphicsEngine::GetInstance()->RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
+		GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 	}
 	else
 	{
-		GraphicsEngine::GetInstance()->RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_texture, m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
+		GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_texture, m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 	}	
 
 	if (m_animationController.ShowTrail())
@@ -122,7 +122,7 @@ void AnimatedObject::RenderPlayer(int p_team)
 
 void AnimatedObject::Render()
 {
-	GraphicsEngine::GetInstance()->RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
+	GraphicsEngine::RenderAnimated(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_model->GetNormalMap(), m_animationController.GetBoneTransforms());
 	
 	if (m_animationController.IsLight())
 	{
@@ -139,29 +139,29 @@ void AnimatedObject::Render()
 
 		newLight.m_range = 5.0f;
 
-		GraphicsEngine::GetInstance()->AddNewPointLight(newLight);
+		GraphicsEngine::AddNewPointLight(newLight);
 
 		newLight.m_ambient = DirectX::XMVectorSet(1.6f, 0.8f, 0.0f, 0.0f);
 		newLight.m_diffuse = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 		newLight.m_specular = DirectX::XMVectorSet(0.8f, 0.4f, 0.0f, 0.0f);
 		newLight.m_range = 0.5f;
-		GraphicsEngine::GetInstance()->AddNewPointLight(newLight);
+		GraphicsEngine::AddNewPointLight(newLight);
 	}
 }
 
 void AnimatedObject::RenderDepth()
 {
-	GraphicsEngine::GetInstance()->RenderAnimatedDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_animationController.UpdateAnimation());
+	GraphicsEngine::RenderAnimatedDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_model->GetTexture(), m_animationController.UpdateAnimation());
 }
 
 void AnimatedObject::RenderDepthOutlining()
 {
-	GraphicsEngine::GetInstance()->RenderAnimatedOutliningDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_animationController.GetBoneTransforms());
+	GraphicsEngine::RenderAnimatedOutliningDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_animationController.GetBoneTransforms());
 }
 
 void AnimatedObject::RenderOutlining()
 {
-	GraphicsEngine::GetInstance()->RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaled(1.05f), m_animationController.GetBoneTransforms());
+	GraphicsEngine::RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaled(1.05f), m_animationController.GetBoneTransforms());
 }
 
 void AnimatedObject::ChangeAnimationState(AnimationState p_newState)

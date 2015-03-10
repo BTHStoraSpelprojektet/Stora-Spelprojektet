@@ -65,7 +65,7 @@ bool Trail::Initialize(float p_pointsPerSecond, float p_timeToLive, float p_trai
 	vertexBufferDescription.StructureByteStride = 0;
 
 	// Create the vertex buffer.
-	if (FAILED(GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDescription, NULL, &m_vertexBuffer)))
+	if (FAILED(GraphicsEngine::GetDevice()->CreateBuffer(&vertexBufferDescription, NULL, &m_vertexBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create trail dynamic vertex buffer.");
 		return false;
@@ -124,20 +124,20 @@ void Trail::Render()
 {
 	if (m_points.size() > 0)
 	{
-		GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
-		GraphicsEngine::GetInstance()->TurnOffBackfaceCulling();
+		GraphicsEngine::TurnOnAlphaBlending();
+		GraphicsEngine::TurnOffBackfaceCulling();
 
 		// Update vertex buffer.
 		D3D11_MAPPED_SUBRESOURCE resource;
-		GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+		GraphicsEngine::GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 		memcpy(resource.pData, m_points.data(), sizeof(TrailPoint) * m_points.size());
-		GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
+		GraphicsEngine::GetContext()->Unmap(m_vertexBuffer, 0);
 
 		// Call render.
 		TrailRenderer::GetInstance().RenderTrail(m_vertexBuffer, m_points.size(), m_texture);
 
-		GraphicsEngine::GetInstance()->TurnOnBackfaceCulling();
-		GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+		GraphicsEngine::TurnOnBackfaceCulling();
+		GraphicsEngine::TurnOffAlphaBlending();
 	}
 }
 

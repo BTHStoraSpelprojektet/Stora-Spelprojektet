@@ -4,17 +4,17 @@
 #include "..\CommonLibs\CommonEnums.h"
 #include "..\CommonLibs\TextureLibrary.h"
 
-GraphicsEngine* GraphicsEngine::m_instance;
-
-GraphicsEngine* GraphicsEngine::GetInstance()
-{
-	if (m_instance == nullptr)
-	{
-		m_instance = new GraphicsEngine();
-	}
-
-	return m_instance;
-}
+//GraphicsEngine* GraphicsEngine::m_instance;
+//
+//GraphicsEngine* GraphicsEngine::GetInstance()
+//{
+//	if (m_instance == nullptr)
+//	{
+//		m_instance = new GraphicsEngine();
+//	}
+//
+//	return m_instance;
+//}
 
 bool GraphicsEngine::Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen)
 {

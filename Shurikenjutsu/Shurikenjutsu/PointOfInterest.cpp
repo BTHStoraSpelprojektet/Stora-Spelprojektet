@@ -14,7 +14,7 @@ bool PointOfInterest::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos
 	m_lightColor = p_lightColor;
 
 	m_sparkles = new ParticleEmitter();
-	m_sparkles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), m_position, m_direction, DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
+	m_sparkles->Initialize(GraphicsEngine::GetDevice(), m_position, m_direction, DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_POI_SPARKLE);
 	SparkleState(true);
 	m_active = false;
 	return true;
@@ -95,5 +95,5 @@ void PointOfInterest::SpawnLight()
 	newLight.m_position.y += 1.8f;
 	newLight.m_range = 3.0f;
 
-	GraphicsEngine::GetInstance()->AddNewPointLight(newLight);
+	GraphicsEngine::AddNewPointLight(newLight);
 }

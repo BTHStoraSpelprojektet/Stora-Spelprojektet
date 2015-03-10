@@ -49,7 +49,7 @@ ID3D11ShaderResourceView* TextureLibrary::GetTexture(std::string p_path)
 
 void TextureLibrary::AddTexture(std::string p_path)
 {
-	m_textures[p_path] = GraphicsEngine::GetInstance()->Create2DTexture(p_path);
+	m_textures[p_path] = GraphicsEngine::Create2DTexture(p_path);
 	
 }
 

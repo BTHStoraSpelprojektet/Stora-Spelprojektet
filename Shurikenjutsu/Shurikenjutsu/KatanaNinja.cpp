@@ -71,7 +71,7 @@ void KatanaNinja::RenderAttackLocations()
 {
 	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
 	{
-		GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+		GraphicsEngine::TurnOnAlphaBlending();
 		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
 			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
@@ -140,6 +140,6 @@ void KatanaNinja::RenderAttackLocations()
 				StillCDText();
 			}
 		}
-		GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+		GraphicsEngine::TurnOffAlphaBlending();
 	}
 }

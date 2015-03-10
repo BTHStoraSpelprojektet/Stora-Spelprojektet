@@ -46,7 +46,7 @@ bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3
 	m_guid = p_guid;
 
 	m_stickyParticles = new ParticleEmitter();
-	m_stickyParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), p_endPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BUBBLES);
+	m_stickyParticles->Initialize(GraphicsEngine::GetDevice(), p_endPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BUBBLES);
 	m_stickyParticles->SetEmitParticleState(true);
 
 	m_trail = new Trail();

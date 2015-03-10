@@ -80,15 +80,15 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	m_window.SetTitle(m_title);
 
 	// Initialize the graphics engine.
-	GraphicsEngine::GetInstance()->Initialize(m_window.GetHandle(), (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, GLOBAL::GetInstance().FULLSCREEN);
-	GraphicsEngine::GetInstance()->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	GraphicsEngine::GetInstance()->SetSceneFog(0.0f, 500.0f, 0.01f);
-	GraphicsEngine::GetInstance()->SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	GraphicsEngine::Initialize(m_window.GetHandle(), (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, GLOBAL::GetInstance().FULLSCREEN);
+	GraphicsEngine::SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
+	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
+	GraphicsEngine::TurnOnAlphaBlending();
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
 	// Initialize the trail renderer.
-	TrailRenderer::GetInstance().Initialize(GraphicsEngine::GetInstance()->GetDevice());
+	TrailRenderer::GetInstance().Initialize(GraphicsEngine::GetDevice());
 
 	// Initialize model library.
 	ConsolePrintText("Loading all models...");
@@ -255,7 +255,7 @@ void System::Shutdown()
 	ModelLibrary::GetInstance()->Shutdown();
 
 	// Shutdown graphics engine.
-	GraphicsEngine::GetInstance()->Shutdown();
+	GraphicsEngine::Shutdown();
 
 	DeathBoard::GetInstance()->Shutdown();
 
@@ -420,21 +420,21 @@ void System::Update()
 void System::Render()
 {
 	// Clear the scene to begin rendering.
-	GraphicsEngine::GetInstance()->Clear();
+	GraphicsEngine::Clear();
 
 	// Render Current GameState
 	m_gameState->Render();
 
 	// Render Particles
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
-	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
+	GraphicsEngine::TurnOnAlphaBlending();
+	GraphicsEngine::SetDepthStateForParticles();
 	ParticleRenderer::GetInstance()->Render();
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	GraphicsEngine::TurnOnAlphaBlending();
 
 	// The need to switch back to the original depth stencil state is not needed yet, since GUI switches it to be completely off
 
 	//Render GUI
-	GraphicsEngine::GetInstance()->TurnOffDepthStencil();
+	GraphicsEngine::TurnOffDepthStencil();
 
 	DebugText::GetInstance()->Render();
 
@@ -442,9 +442,9 @@ void System::Render()
 
 	// Render cursor
 	m_cursor->Render();
-	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+	GraphicsEngine::TurnOffAlphaBlending();
+	GraphicsEngine::TurnOnDepthStencil();
 
 	// Present the result.
-	GraphicsEngine::GetInstance()->Present();
+	GraphicsEngine::Present();
 }
