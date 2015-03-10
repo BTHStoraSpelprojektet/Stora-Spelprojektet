@@ -120,7 +120,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_poiText = new GUIText();
 	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 	m_playerJoinedText = new GUIText();
-	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
+	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 250.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -449,7 +449,6 @@ GAMESTATESWITCH PlayingState::Update()
 	if (Network::GetInstance()->GetNewPlayerJoined())
 	{
 		PlayerJoinedText();
-		Network::GetInstance()->JoinedPlayerText();
 	}
 
 	// Update the directional light camera position.
@@ -841,6 +840,7 @@ void PlayingState::PlayerJoinedText()
 	{
 		if (players[i].guid == Network::GetInstance()->GetJustJoinedPlayer())
 		{
+			Network::GetInstance()->JoinedPlayerText();
 			m_playerJoinedText->SetColor(0xffffffff);
 
 			if (players[i].team == 1)
