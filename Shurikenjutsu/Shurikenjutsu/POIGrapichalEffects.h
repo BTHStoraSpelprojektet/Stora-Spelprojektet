@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include "Structures.h"
+#include "GraphicsEngine.h"
 
 class GUIElement;
 class ParticleEmitter;
@@ -32,7 +33,8 @@ private:
 	void operator=(POIGrapichalEffects const&);
 
 	ParticleEmitter* m_healingParticles;
-	PointLight* m_healingLight;
+	PointLight m_healingLight;
+	bool m_heal;
 
 	GUIElement* m_stealthOverlay;
 

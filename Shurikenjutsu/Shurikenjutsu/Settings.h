@@ -2,6 +2,7 @@
 #define SETTINGS_H_
 
 #include <string>
+#include <vector>
 
 class Settings
 {
