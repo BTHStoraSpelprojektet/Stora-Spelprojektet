@@ -6,15 +6,10 @@
 #include <vector>
 #include <Windows.h>
 
+#pragma comment(lib, "GraphicsEngineDLL.lib")
+
+
 class WICTextureLoader;
-class GUIShader;
-class DepthShader;
-class RenderTarget;
-class ParticleShader;
-class SceneShader;
-class FoliageShader;
-class ScreenSpace;
-class InstanceManager;
 class DirectXWrapper;
 
 struct IFW1FontWrapper;
@@ -33,7 +28,10 @@ enum D3D_FEATURE_LEVEL;
 
 class GraphicsEngine
 {
+private:
+
 public:
+
 	GraphicsEngine(const GraphicsEngine&) = delete;
 	GraphicsEngine& operator=(const GraphicsEngine&) = delete;
 
@@ -45,11 +43,11 @@ public:
 	void SetClearColor(float R, float G, float B, float p_opacity);
 	void Clear();
 	void Present();
-	///
+
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContext();
 	D3D_FEATURE_LEVEL GetVersion();
-	
+
 	ID3D11ShaderResourceView* Create2DTexture(std::string p_filename);
 
 	void RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
@@ -146,28 +144,5 @@ private:
 	~GraphicsEngine(){};
 
 	std::string CreateTitle(D3D_FEATURE_LEVEL p_version);
-
-	DirectXWrapper *m_directX;
-
-	SceneShader* m_sceneShader;
-	GUIShader* m_GUIShader;
-	DepthShader* m_depthShader;
-	ParticleShader* m_particleShader;
-	FoliageShader* m_foliageShader;
-	ScreenSpace* m_screenSpace;
-
-	HWND m_windowHandle;
-
-	RenderTarget *m_shadowMap;
-
-	IFW1FontWrapper* m_fontWrapper;
-	IFW1TextGeometry* m_textGeometry;
-	IDWriteFontCollection* m_fontCollection;
-	InstanceManager* m_instanceManager;
-
-	bool m_screenChanged;
-
-	float m_currentScreenWidth;
-	float m_currentScreenHeight;
 };
 #endif //GRAPHICSENGINE_H_

@@ -1,6 +1,7 @@
 #include "GraphicsEngine.h"
 #include "GraphicsEngineDLL.h"
 
+
 GraphicsEngine* GraphicsEngine::m_instance;
 
 GraphicsEngine* GraphicsEngine::GetInstance()
@@ -15,6 +16,7 @@ GraphicsEngine* GraphicsEngine::GetInstance()
 
 bool GraphicsEngine::Initialize(HWND p_handle, float p_screenCurrentWidth, float p_screenCurrentHeight, float p_screenMaxWidth, float p_screenMaxHeight, bool p_fullscreen)
 {
+	
 	return DLLGraphicsEngine::GE::GetInstance()->Initialize(p_handle, p_screenCurrentWidth, p_screenCurrentHeight, p_screenMaxWidth, p_screenMaxHeight, p_fullscreen);
 }
 

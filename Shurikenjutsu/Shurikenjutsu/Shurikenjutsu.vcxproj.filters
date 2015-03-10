@@ -440,9 +440,6 @@
     <ClCompile Include="ToolTipPopUp.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="ScreenSpace.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
     <ClCompile Include="ScoreBoard.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
