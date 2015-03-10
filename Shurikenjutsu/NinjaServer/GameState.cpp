@@ -12,13 +12,15 @@
 GameState::GameState(){}
 GameState::~GameState(){}
 
-bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
+bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel)
 {
 	m_serverPeer = p_serverPeer;
+	m_levelsName = p_levelsName;
+	m_currentLevel = p_currentLevel;
 
 	// Initiate playerrs
 	m_playerManager = new PlayerManager();
-	m_playerManager->Initialize(m_serverPeer, p_levelName);
+	m_playerManager->Initialize(m_serverPeer, p_levelsName[p_currentLevel]);
 
 	// Initiate shurikens
 	m_shurikenManager = new ShurikenManager();
@@ -26,7 +28,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 
 	// Initiate map
 	m_mapManager = new MapManager();
-	m_mapManager->Initialize(p_levelName);
+	m_mapManager->Initialize(p_levelsName[p_currentLevel]);
 
 	// Initiate collision manager
 	m_collisionManager = new CollisionManager();
@@ -67,19 +69,14 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p
 	return true;
 }
 
-bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
-{
-	return Initialize(p_serverPeer, LEVEL_NAME);	
-}
-
-bool GameState::Initialize(std::string p_levelName)
+bool GameState::Initialize(int p_currentLevel)
 {
 	if (m_serverPeer == NULL)
 	{
 		return false;
 	}
 
-	return Initialize(m_serverPeer, p_levelName);
+	return Initialize(m_serverPeer, m_levelsName, p_currentLevel);
 }
 
 void GameState::Shutdown()

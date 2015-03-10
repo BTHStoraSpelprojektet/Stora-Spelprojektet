@@ -9,11 +9,12 @@ public:
 	NormalState();
 	~NormalState();
 
-	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
-	bool Initialize(std::string p_levelName);
+	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel);
+	bool Initialize(int p_currentLevel);
 	bool Initialize();
 	void Shutdown();
 	void Update(double p_deltaTime);
+	void setLevels(std::vector<std::string> levels);
 
 // public for testing with Google test
 public:
