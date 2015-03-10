@@ -549,15 +549,7 @@ void PlayingState::Render()
 	// Render to the scene normally.
 	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
 	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
-
-	if (Network::GetInstance()->GetMyPlayer().invis && Network::GetInstance()->GetMyPlayer().isAlive)
-	{
-		POIGrapichalEffects::GetInstance().RenderStealthEffect();
-	}
-
-	POIGrapichalEffects::GetInstance().UpdateShieldEffect(m_playerManager->GetPlayerPosition(), m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
-	POIGrapichalEffects::GetInstance().RenderShieldEffect();
-
+	UpdatePOIEffects();
 	m_objectManager->Render();
 	m_playerManager->Render(false);
 	
@@ -867,6 +859,27 @@ void PlayingState::PlayerJoinedText()
 				text += " has joined the blue team";
 				m_playerJoinedText->SetText(text);
 			}
+		}
+	}
+}
+
+void PlayingState::UpdatePOIEffects()
+{
+	if (Network::GetInstance()->GetMyPlayer().invis && Network::GetInstance()->GetMyPlayer().isAlive)
+	{
+		POIGrapichalEffects::GetInstance().RenderStealthEffect();
+	}
+
+	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
+	players.push_back(Network::GetInstance()->GetMyPlayer());
+
+	for (unsigned int i = 0; i < players.size(); i++)
+	{
+		if (players[i].shield)
+		{
+			DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(players[i].x, players[i].y, players[i].z);
+			POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+			POIGrapichalEffects::GetInstance().RenderShieldEffect();
 		}
 	}
 }
