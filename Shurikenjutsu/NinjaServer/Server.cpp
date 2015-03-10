@@ -151,6 +151,11 @@ void Server::ReceviePacket()
 			m_gameState->BroadcastPlayers();
 			break;
 		}
+		case ID_DOWNLOAD_RUNES:
+		{
+			m_gameState->SendCurrentRunes(m_packet->guid);
+			break;
+		}
 		case ID_ABILITY:
 		{
 			RakNet::BitStream rBitStream(m_packet->data, m_packet->length, false);

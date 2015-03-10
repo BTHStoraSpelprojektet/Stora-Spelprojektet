@@ -82,7 +82,7 @@ void PointOfInterestManager::Update(double p_deltaTime)
 			canceledInvis = true;
 		}
 	}
-
+	
 	// Do same update for shield
 	if (m_shieldActiveTimer > 0.0f)
 	{
@@ -94,7 +94,7 @@ void PointOfInterestManager::Update(double p_deltaTime)
 		{
 			CancelRune(POINTOFINTERESTTYPE_SHIELD);
 			canceledShield = true;
-		}
+}
 	}
 }
 
@@ -116,7 +116,7 @@ void PointOfInterestManager::SpawnRunes()
 		bitStream.Write(m_POISpawnPoints[i].m_translationZ);
 
 	}
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 void PointOfInterestManager::PickUpRunes(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
@@ -223,4 +223,36 @@ void PointOfInterestManager::CancelRune(POINTOFINTERESTTYPE p_runeType)
 void PointOfInterestManager::AbilityUsed()
 {
 	CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
+}
+
+void PointOfInterestManager::DownloadRunes(RakNet::RakNetGUID p_guid)
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_RUNES);
+
+	// 0 = lotus
+	// 1 = invis
+	// 2 = shield
+	for (int i = 0; i < 3; i++)
+	{
+		if (i == 0)
+		{
+			bitStream.Write(m_lotusActive);
+		}
+		else if (i == 1)
+		{
+			bitStream.Write(m_invisActive);
+		}
+		else if (i == 2)
+		{
+			bitStream.Write(m_shieldActive);
+		}
+		bitStream.Write(m_POISpawnPoints[i].type);
+		bitStream.Write(m_POISpawnPoints[i].m_translationX);
+		bitStream.Write(m_POISpawnPoints[i].m_translationY);
+		bitStream.Write(m_POISpawnPoints[i].m_translationZ);
+	}
+
+	
+	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 1, p_guid, false);
 }

@@ -26,6 +26,8 @@ public:
 	std::vector<Box> GetBoundingBoxes(POINTOFINTERESTTYPE p_poiType);
 	void AbilityUsed();
 
+	void DownloadRunes(RakNet::RakNetGUID p_guid);
+
 private:
 	void CancelRune(POINTOFINTERESTTYPE p_runeType);
 
