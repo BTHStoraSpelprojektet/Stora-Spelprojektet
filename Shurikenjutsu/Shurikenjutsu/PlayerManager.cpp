@@ -11,7 +11,6 @@
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
-
 bool PlayerManager::Initialize(bool p_inMenu)
 {
 	m_enemyListSize = 0;

@@ -102,6 +102,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_playerManager = new PlayerManager();
 	m_playerManager->SetSound(m_sound);
 	m_playerManager->Initialize(false);
+
 	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
 
 	// Initlialize the frustum.
@@ -356,7 +357,6 @@ GAMESTATESWITCH PlayingState::Update()
 		// Handle camera input.
 		m_camera->HandleInput();
 	}
-
 	else if (Network::GetInstance()->GetMatchOver())
 	{
 		if (Network::GetInstance()->GetRestartingTimer() <= 7)
@@ -382,7 +382,6 @@ GAMESTATESWITCH PlayingState::Update()
 			}
 		}
 	}
-
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE)
 	{
 		std::vector<Player*> tempList = m_playerManager->GetMyTeamPlayers(m_playerManager->GetPlayerTeam());
