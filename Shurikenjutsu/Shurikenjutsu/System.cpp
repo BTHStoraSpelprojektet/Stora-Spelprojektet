@@ -22,10 +22,12 @@
 #include "MemoryChecker.h"
 #include "DebugText.h"
 #include "PointLights.h"
+#include "Settings.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
+	Settings::GetInstance()->LoadSettingsFile();
 	// Set default game state.
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
@@ -273,6 +275,9 @@ void System::Shutdown()
 	}
 
 	DebugText::GetInstance()->Shutdown();
+
+	Settings::GetInstance()->SaveSettingsFile();
+	Settings::GetInstance()->Shutdown();
 }
 
 void System::Run()
