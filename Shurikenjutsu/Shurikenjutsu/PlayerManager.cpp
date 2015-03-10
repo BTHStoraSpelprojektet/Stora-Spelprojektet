@@ -11,6 +11,7 @@
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}
+
 bool PlayerManager::Initialize(bool p_inMenu)
 {
 	m_enemyListSize = 0;
@@ -521,9 +522,11 @@ int PlayerManager::GetNrOfPlayersInTeam(int p_team)
 	return nrOfTeamMates;
 }
 
-void PlayerManager::SetSound(Sound* p_sound){
+void PlayerManager::SetSound(Sound* p_sound)
+{
 	m_sound = p_sound;
 }
+
 void PlayerManager::SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList)
 {
 	m_player->SetStickyTrapList(p_stickyTrapList);

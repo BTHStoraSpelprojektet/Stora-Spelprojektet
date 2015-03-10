@@ -47,7 +47,11 @@ void MenuState::operator delete(void* p_p)
 	_mm_free(p_p);
 }
 
-bool MenuState::Initialize()
+bool MenuState::Initialize(){
+	return Initialize(LEVEL_NAME);
+}
+
+bool MenuState::Initialize(std::string p_levelName)
 {
 	m_lastvsync = false;
 	m_lastfullscreen = false;
@@ -105,7 +109,7 @@ bool MenuState::Initialize()
 	m_camera->ResetCamera();
 
 	// Load the level.
-	Level level(LEVEL_NAME);
+	Level level(p_levelName);
 
 	// Initialize the objectmanager.
 	m_objectManager = new ObjectManager();

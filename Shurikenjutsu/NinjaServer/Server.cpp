@@ -67,9 +67,20 @@ void Server::ReceviePacket()
 
 			bitStream.Write((RakNet::MessageID)ID_NR_CONNECTIONS);
 			bitStream.Write(m_nrOfConnections);
+			bitStream.Write(m_packet->guid);
 
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+			RakNet::BitStream bitStream2;
+
+			bitStream2.Write((RakNet::MessageID)ID_LEVELNAME);
+			//std::string lev = "../Shurikenjutsu/Levels/WaterArena.SSPL";
+			std::string lev = "../Shurikenjutsu/Levels/NightTimeArena.SSPL";
+			RakNet::RakString levelName(lev.c_str());
+			bitStream2.Write(levelName);
+
+			m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
 
 			break;
 		}
@@ -91,6 +102,7 @@ void Server::ReceviePacket()
 
 			bitStream.Write((RakNet::MessageID)ID_NR_CONNECTIONS);
 			bitStream.Write(m_nrOfConnections);
+			bitStream.Write(m_packet->guid);
 
 			// Broadcast the nr of connections to all clients
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);			
@@ -137,6 +149,11 @@ void Server::ReceviePacket()
 		case ID_DOWNLOAD_PLAYERS:
 		{
 			m_gameState->BroadcastPlayers();
+			break;
+		}
+		case ID_DOWNLOAD_RUNES:
+		{
+			m_gameState->SendCurrentRunes(m_packet->guid);
 			break;
 		}
 		case ID_ABILITY:
@@ -225,17 +242,19 @@ void Server::ReceviePacket()
 			bitStream.Read(messageID);
 			bitStream.Read(size);
 
-			unsigned int iSize = (unsigned int)size;
+			unsigned int uiSize = (unsigned int)size;
 			int iId;
+			std::vector<int> visiblePlayers = std::vector<int>();
 
-			for (unsigned int i = 0; i < size; i++)
+			for (unsigned int i = 0; i < uiSize; i++)
 			{
 				bitStream.Read(id);
 				iId = (int)id;
 
-				// Todo
-				// playerManager->UpdateVisibleThingymabob
+				visiblePlayers.push_back(iId);
 			}
+
+			m_gameState->UpdatePlayerVisibility(m_packet->guid, visiblePlayers);
 
 			break;
 		}

@@ -24,8 +24,13 @@ public:
 	void SpawnRunes();
 	bool IsRuneActive(int p_index);
 	std::vector<Box> GetBoundingBoxes(POINTOFINTERESTTYPE p_poiType);
+	void AbilityUsed();
+
+	void DownloadRunes(RakNet::RakNetGUID p_guid);
 
 private:
+	void CancelRune(POINTOFINTERESTTYPE p_runeType);
+
 	RakNet::RakPeerInterface *m_serverPeer;
 	int m_nrOfRunes;
 
@@ -37,6 +42,9 @@ private:
 	bool m_lotusActive;
 	bool m_shieldActive;
 	bool m_invisActive;
-
+	bool canceledShield;
+	bool canceledInvis;
+	float m_invisActiveTimer;
+	float m_shieldActiveTimer;
 };
 #endif // !POINTOFINTERESTMANAGER_H_

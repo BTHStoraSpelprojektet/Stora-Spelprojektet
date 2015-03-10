@@ -161,5 +161,7 @@ protected:
 	DirectX::XMFLOAT3 m_interpolatingAttackDir;
 	float m_interpolatigAttackDirSpeed;
 	bool m_interpolateAttackDir;
+
+	bool m_onPressed;
 };
 #endif PLAYER

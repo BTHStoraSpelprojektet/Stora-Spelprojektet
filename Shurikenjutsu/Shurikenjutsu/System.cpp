@@ -367,12 +367,14 @@ void System::Update()
 			GLOBAL::GetInstance().CAMERA_MOVING = false;
 		}
 	}
+	std::string levelName;
 	switch (m_gameState->Update())
 	{
 	case GAMESTATESWITCH_CHOOSENINJA:
 		m_gameState = m_chooseNinjaState;
 		m_gameState->Shutdown();
-		m_gameState->Initialize();
+		levelName = Network::GetInstance()->LevelName();
+		m_gameState->Initialize(levelName);
 		Network::GetInstance()->SetObjectManager(m_chooseNinjaState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
 		m_cursor->LargeSize();
@@ -381,7 +383,8 @@ void System::Update()
 		m_gameState = m_playingState;
 		m_playingState->SetSound(m_sound);
 		m_playingState->Shutdown();
-		m_gameState->Initialize();
+		levelName = Network::GetInstance()->LevelName();
+		m_gameState->Initialize(levelName);
 		Network::GetInstance()->SetObjectManager(m_playingState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
 		m_sound->StopMusic();

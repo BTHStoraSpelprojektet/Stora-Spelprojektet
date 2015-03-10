@@ -132,6 +132,7 @@ public:
 	int GetLastWinningTeam();
 	
 	bool GetMatchOver();
+	bool GetRoundOver();
 	int GetMatchWinningTeam();
 
 	bool CheckIfNaginataStabAttackIsPerformed();
@@ -152,6 +153,7 @@ public:
 	int GetSuddenDeathBoxIndex();
 
 	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound);
 	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
 
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
@@ -160,6 +162,17 @@ public:
 	std::string GetPlayerName(RakNet::RakNetGUID p_guid);
 	int GetCharNr(RakNet::RakNetGUID p_guid);
 	void SetVisiblePlayers(std::vector<RakNet::RakNetGUID> p_visiblePlayers);
+
+	bool IsEnemyVisible(RakNet::RakNetGUID p_guid);
+
+	void RoundOverText();
+	void SendSpawnedRunes();
+	void PoiText();
+	void JoinedPlayerText();
+
+	bool GetPoiSpawned();
+	bool GetNewPlayerJoined();
+	RakNet::RakNetGUID GetJustJoinedPlayer();
 
 private:
 	void ClearListsAtNewRound();
@@ -171,6 +184,8 @@ private:
 	~Network();
 	
 	static Network* m_instance;
+
+	RakNet::RakNetGUID m_justJoinedPlayer;
 
 	NetworkLogger m_networkLogger;
 
@@ -204,6 +219,8 @@ private:
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
 	int GUIDToID(RakNet::RakNetGUID p_guid);
 	void SendVisiblePlayers();
+	void Network::CancelRune(POINTOFINTERESTTYPE p_rune);
+
 
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;
@@ -247,6 +264,7 @@ private:
 	int m_blueTeamScore;
 	int m_lastTeamWon;
 	bool m_matchOver;
+	bool m_roundOver;
 	int m_matchWinningTeam;
 	std::vector<Sound::SoundEmitter*> runeSoundEmitters;
 
@@ -258,6 +276,9 @@ private:
 
 	double m_timeToPing;
 	double m_pingTimer;
+
+	bool m_poiSpawned;
+	bool m_newPlayerJoined;
 
 	float m_dealtDamage;
 	DirectX::XMFLOAT3 m_dealtDamagePosition;
@@ -273,5 +294,6 @@ private:
 	std::string m_playerName;
 
 	std::vector<int> m_visibleEnemies;
+	std::vector<int> m_teamVisibleEnemies;
 };
 #endif
