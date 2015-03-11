@@ -691,7 +691,6 @@ void Network::ReceviePacket()
 				m_justJoinedPlayerTeam = team;
 				m_newPlayerJoined = true;
 
-
 				break;
 			}
 			case ID_FAN_THROWN:
