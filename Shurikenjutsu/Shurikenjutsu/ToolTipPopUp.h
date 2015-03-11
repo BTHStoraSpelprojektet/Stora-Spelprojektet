@@ -11,7 +11,7 @@ class ToolTipPopUp
 public:
 	ToolTipPopUp();
 	~ToolTipPopUp();
-	void Initialize(float p_xPos, float p_yPos, std::string p_text, float p_size);
+	void Initialize(float p_xPos, float p_yPos, std::string p_text, float p_size, float p_backGroundWidth, float p_backGroundHeight, float p_bgOffset);
 	void Render();
 	void Update();
 	void Shutdown();

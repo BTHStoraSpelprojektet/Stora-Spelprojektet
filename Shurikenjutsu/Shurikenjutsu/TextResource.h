@@ -3,43 +3,43 @@
 
 #include <string>
 const std::string KATANA_PRIMARY_ATTACK = 
-"By clicking the left Mouse Button the character performs a close range attack in its facing direction.";
+"By clicking the left Mouse Button the character\n performs a close range attack in its facing direction.";
 const std::string KATANA_SECONDARY_ATTACK = 
-"By pressing the Q button the character performs a dash in the its facing direction of a maximum of 10 units.";
+"By pressing the Q button the character performs\n a dash in the its facing direction of a maximum of 10 units.";
 
 const std::string SHURIKEN_PRIMARY_ATTACK = 
-"By pressing the right Mouse Button the character throws a shuriken in the facing direction. The character has a maximum of 3 stacks, that gets replenished over time.";
+"By pressing the right Mouse Button the character\n throws a shuriken in the facing direction. \nThe character has a maximum of 3 stacks, \nthat gets replenished over time.";
 const std::string SHURIKEN_SECONDARY_ATTACK = 
-"By pressong the E button the character throws an extra large shuriken, in the facing direction, that does extra damage";
+"By pressong the E button the character throws\n an extra large shuriken, in the facing direction,\n that does extra damage";
 
 const std::string TESSEN_PRIMARY_ATTACK =
-"By pressing the left Mouse Button the character performs a close range attack in its facing direction.";
+"By pressing the left Mouse Button the character\n performs a close range attack in \nits facing direction.";
 const std::string TESSEN_SECONDARY_ATTACK = 
-"By pressing the Q button the character throws a fan in its facing direction. This fan will return if it hits an object or reaches its max distance, not when hitting another player, and return to the character. It will disappear if it hits an object on the way back";
+"By pressing the Q button the character throws a\n fan in its facing direction. This fan will \nreturn if it hits an object or reaches its\n max distance, not when hitting another player, \nand return to the character.\n It will disappear if it hits an object on the way back";
 
 const std::string WHIP_PRIMARY_ATTACK = 
-"By pressing the the Right Mouse Button the character performs a whip in its facing direction.";
+"By pressing the the Right Mouse Button the\n character performs a whip in its facing direction.";
 const std::string WHIP_SECONDARY_ATTACK = 
-"By pressing the E Button the character performs a spin with its whip damaging everyone that is within the whips range.";
+"By pressing the E Button the character performs\n a spin with its whip damaging everyone that\n is within the whips range.";
 
 const std::string NAGINATA_PRIMARY_ATTACK =
-"By clicking the left Mouse Button the character performs a close range attack in its facing direction.";
+"By clicking the left Mouse Button the character \nperforms a close range attack in its\n facing direction.";
 const std::string NAGINATA_SECONDARY_ATTACK = 
-"By pressing the Q Button the character performs stabb infront of him for 1.5 seconds.";
+"By pressing the Q Button the character performs \nstabb infront of him for 1.5 seconds.";
 
 const std::string KUNAI_PRIMARY_ATTACK = 
-"By pressing the Right Mouse Button the character throws a Kunai in its facing direction.";
+"By pressing the Right Mouse Button the character\n throws a Kunai in its facing direction.";
 const std::string KUNAI_SECONDARY_ATTACK = 
-"By pressing the E Button throws several Kunai up in the air and landing in the location of the mouse damaging enemies in a ring around the hit location.";
+"By pressing the E Button throws several Kunai up\n in the air and landing in the location of \nthe mouse damaging enemies in a ring around the hit location.";
 
 
 const std::string SMOKEBOMB_DESCRIPTION =
-"By pressing the R Button throws a Smokebomb at the mouse location. The SmokeBomb obscures the view of all characters.";
+"By pressing the R Button throws a Smokebomb at\n the mouse location. The SmokeBomb obscures \nthe view of all characters.";
 
 const std::string SPIKES_DESCRIPTION =
-"By pressing the R Button throws a bag full of caltrops, at the mouse location, damaging all enemies that stand in it's radius.";
+"By pressing the R Button throws a bag full of \ncaltrops, at the mouse location, damaging\n all enemies that stand in it's radius.";
 const std::string STICKY_DESCRIPTION =
-"By pressing the R Button throws a vial of sticky fluids on the ground, at the mouse location. This liquid will slow all players within the its radius.";
+"By pressing the R Button throws a vial of sticky\n fluids on the ground, at the mouse location.\n This liquid will slow all players within the its radius.";
 
 
 
