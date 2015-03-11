@@ -221,6 +221,7 @@ void NormalState::SetTeamWon(int p_winningTeam)
 
 void NormalState::RespawnAllPlayers()
 {
+	m_playerManager->ResetTakenSpawnPoints();
 	std::vector<PlayerNet> players = m_playerManager->GetPlayers();
 	for each (PlayerNet player in players)
 	{
