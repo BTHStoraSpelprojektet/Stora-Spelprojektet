@@ -117,7 +117,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_poiText = new GUIText();
 	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 	m_playerJoinedText = new GUIText();
-	m_playerJoinedText->Initialize(" Apo", 50.0f, 0.0f, 250.0f, 0xffffffff);
+	m_playerJoinedText->Initialize("", 50.0f, 0.0f, 250.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();

@@ -680,7 +680,6 @@ void Network::ReceviePacket()
 			case ID_CONNECTION_NOTIFICATION:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
 				RakNet::RakString name;
 				int team;
 

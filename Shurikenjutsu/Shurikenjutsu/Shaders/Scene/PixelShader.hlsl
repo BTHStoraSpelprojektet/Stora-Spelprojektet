@@ -27,13 +27,8 @@ struct Input
 	float4 m_positionHomogenous : SV_POSITION;
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
-	float3 m_normal : NORMAL;
-	float3 m_tangent : TANGENT;
 
 	float3x3 m_tBN : TBN;
-
-	float m_fogFactor : FOG;
-
 	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
@@ -55,33 +50,17 @@ void main(Input p_input , out gBuffer p_output)
 	// Set fog color.
 	float4 fogColor = float4(0.5f, 0.5f, 0.5f, 1.0f);
 
-	// Calculate light
-	//Material material;
-	//material.m_ambient = float4(1.0f, 1.0f, 1.0f, 1.0f);
-	//material.m_diffuse = float4(1.0f, 1.0f, 1.0f, 1.0f);
-
-	//float4 A = m_directionalLight.m_ambient;
-	//float4 D = 0.0f;
-	//float4 S = 0.0f;
-
 	// Sample NormalMap.
 	float4 normalMapSample = m_normalMap.Sample(m_sampler, p_input.m_textureCoordinate).rgba;
-	//material.m_specular = float4(normalMapSample.a, normalMapSample.a, normalMapSample.a, normalMapSample.a * 255.0f);
 
 	// Uncompress NormalMap - to get it into the right range.
 	float3 normalT = 2.0f * normalMapSample.xyz - 1.0f;
 
-	// Transforms from tangetspace to world space.
+	// Transforms from tangetspace to view space.
 	float3 bumpedNormalW = mul(normalT, p_input.m_tBN);
 
 	// Normalize normals.
 	float3 normal = normalize(bumpedNormalW);
-
-	// Calculate the vector to the camera.
-	//float3 toCamera = normalize(m_directionalLight.m_cameraPosition.xyz - p_input.m_positionWorld.xyz);
-
-	// Compute directional light
-	//ComputeDirectionalLight(material, m_directionalLight, normal, toCamera, A, D, S);
 
 	// Calculate projected shadow map coordinates.
 	float2 shadowMapCoordinates;
@@ -134,12 +113,6 @@ void main(Input p_input , out gBuffer p_output)
 		shadowSum += lightDepth < depth[16];
 		shadowSum = shadowSum / 17.0f;
 	}
-
-	// Add light.
-	//textureColor.xyz = textureColor.xyz*((A.xyz + D.xyz * shadowSum) + S.xyz * shadowSum);
-	
-	// Add fog.
-	//float4 coloredPixel = p_input.m_fogFactor * textureColor + (1.0f - p_input.m_fogFactor) * fogColor;
 
 	// Return shaded pixel.
 	normal = 0.5f * normal + 0.5f;

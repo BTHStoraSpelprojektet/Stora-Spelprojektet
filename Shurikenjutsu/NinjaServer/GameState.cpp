@@ -51,7 +51,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<s
 	m_volleyManager = new VolleyManager();
 	m_volleyManager->Initialize(m_serverPeer);
 	m_POIManager = new PointOfInterestManager();
-	m_POIManager->Initialize(m_serverPeer);
+	m_POIManager->Initialize(m_serverPeer, p_levelsName, p_currentLevel);
 	m_winningTeams = std::map<int, int>();
 
 	// Time
