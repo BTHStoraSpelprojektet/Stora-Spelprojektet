@@ -1271,15 +1271,15 @@ void Network::ReceviePacket()
 
 			case ID_POI_HEALING_BOOL:
 			{
-				RakNet::RakNetGUID guid;
+				RakNet::RakNetGUID healingGuid;
 				bool value;
 
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 				bitStream.Read(messageID);
-				bitStream.Read(guid);
+				bitStream.Read(healingGuid);
 				bitStream.Read(value);
 
-				HandleHealingPOIBool(guid, value);
+				HandleHealingPOIBool(healingGuid, value);
 
 				break;
 			}
@@ -2616,16 +2616,20 @@ void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 {
 	POIGrapichalEffects::GetInstance().SetEmit(p_value);
 
-	if (m_myPlayer.guid == p_guid)
-	{
-		m_myPlayer.hasHealPOI = p_value;
-	}
-
 	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 	{
 		if (m_enemyPlayers[i].guid == p_guid)
 		{
 			m_enemyPlayers[i].hasHealPOI = p_value;
+
+			return;
 		}
+	}
+
+	if (m_myPlayer.guid == p_guid)
+	{
+		m_myPlayer.hasHealPOI = p_value;
+
+		return;
 	}
 }
