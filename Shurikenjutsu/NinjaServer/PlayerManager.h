@@ -71,6 +71,8 @@ public:
 
 	void ResetTakenSpawnPoints();
 	bool GetInvis(RakNet::RakNetGUID p_guid);
+
+	void ResetPOIEffects();
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(RakNet::RakNetGUID p_guid, int p_team);

@@ -22,6 +22,7 @@ public:
 	void RoundRestart();
 	void PickUpRunes(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
 	void SpawnRunes();
+	void DespawnRunes();
 	bool IsRuneActive(int p_index);
 	std::vector<Box> GetBoundingBoxes(POINTOFINTERESTTYPE p_poiType);
 	void AbilityUsed();

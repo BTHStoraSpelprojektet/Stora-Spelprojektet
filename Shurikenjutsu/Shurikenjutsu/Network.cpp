@@ -1151,7 +1151,6 @@ void Network::ReceviePacket()
 			case ID_SPAWN_RUNES:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-				RakNet::RakNetGUID guid;
 				POINTOFINTERESTTYPE poi_type;
 				float x, y, z;
 				bitStream.Read(messageID);
@@ -1167,6 +1166,18 @@ void Network::ReceviePacket()
 			
 				//skriva ut på skärmen
 				m_poiSpawned = true;
+
+				break;
+			}
+			case ID_DESPAWN_RUNE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				POINTOFINTERESTTYPE poi_type;
+
+				bitStream.Read(messageID);
+				bitStream.Read(poi_type);
+
+				DespawnRunes(poi_type);
 
 				break;
 			}
@@ -2291,35 +2302,40 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 
 	if (p_makeSound)
 	{
-	Sound::SoundEmitter* soundEmitter = NULL;
-	switch (p_poiType)
-	{
-	case POINTOFINTERESTTYPE_HEAL:
-	{
-		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SOUND, p_x, p_y, p_z);
-		break;
+		Sound::SoundEmitter* soundEmitter = NULL;
+		switch (p_poiType)
+		{
+			case POINTOFINTERESTTYPE_HEAL:
+			{
+				m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SPAWN_SOUND, p_x, p_y, p_z);
+				soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_HEAL_SOUND, p_x, p_y, p_z);
+				break;
+			}
+			case POINTOFINTERESTTYPE_SHIELD:
+			{
+				m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND, p_x, p_y, p_z);
+				soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SOUND, p_x, p_y, p_z);
+				break;
+			}
+			case POINTOFINTERESTTYPE_INVISIBLE:
+			{
+				m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND, p_x, p_y, p_z);
+				soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SOUND, p_x, p_y, p_z);
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+		//Only support sound for one rune per type for now
+		runeSoundEmitters.push_back(soundEmitter);
 	}
-	case POINTOFINTERESTTYPE_SHIELD:
-	{
-		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_SHIELD_SOUND, p_x, p_y, p_z);
-		break;
-	}
-	case POINTOFINTERESTTYPE_INVISIBLE:
-	{
-		m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SPAWN_SOUND, p_x, p_y, p_z);
-		soundEmitter = m_sound->CreateDefaultSound(PLAYSOUND_RUNE_INVISIBLE_SOUND, p_x, p_y, p_z);
-		break;
-	}
-	default:
-	{
-		break;
-	}
-	}
-	//Only support sound for one rune per type for now
-	runeSoundEmitters.push_back(soundEmitter);
 }
+
+void Network::DespawnRunes(POINTOFINTERESTTYPE p_poiType)
+{
+	m_objectManager->DespawnRunes(p_poiType);
 }
 
 void Network::RoundOverText()

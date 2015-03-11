@@ -53,11 +53,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 void PlayerManager::ResetTakenSpawnPoints()
 {
 	m_takenSpawnPoints.clear();
-	//for (unsigned int i = 0; i < m_takenSpawnPoints.size(); i++)
-	//{
-	//	m_takenSpawnPoints[i] = false;
-	//}
-	}
+}
 
 void PlayerManager::Shutdown(){}
 
@@ -1113,4 +1109,16 @@ void PlayerManager::SendHasPOIHealing(RakNet::RakNetGUID p_guid)
 		}
 	}
 	
+}
+
+void PlayerManager::ResetPOIEffects()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		m_players[i].shield = false;
+		m_players[i].invis = false;
+		m_players[i].hasHealPOI = false;
+
+		SendHasPOIHealing(m_players[i].guid);
+	}
 }

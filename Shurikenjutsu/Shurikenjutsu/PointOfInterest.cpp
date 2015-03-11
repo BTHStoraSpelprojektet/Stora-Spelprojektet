@@ -6,10 +6,11 @@
 PointOfInterest::PointOfInterest(){}
 PointOfInterest::~PointOfInterest(){}
 
-bool PointOfInterest::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, DirectX::XMFLOAT3 p_lightColor)
+bool PointOfInterest::Initialize(POINTOFINTERESTTYPE p_type, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, DirectX::XMFLOAT3 p_lightColor)
 {
 	MovingObject::Initialize(p_filepath, p_pos, p_dir, p_speed);
 
+	m_type = p_type;
 	m_positionLight = p_pos;
 	m_lightColor = p_lightColor;
 
@@ -96,4 +97,9 @@ void PointOfInterest::SpawnLight()
 	newLight.m_range = 3.0f;
 
 	GraphicsEngine::AddNewPointLight(newLight);
+}
+
+POINTOFINTERESTTYPE PointOfInterest::GetType()
+{
+	return m_type;
 }
