@@ -12,7 +12,7 @@ public:
 	PointOfInterest();
 	~PointOfInterest();
 
-	bool Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, DirectX::XMFLOAT3 p_lightColor);
+	bool Initialize(POINTOFINTERESTTYPE p_type, const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, DirectX::XMFLOAT3 p_lightColor);
 	void Shutdown();
 	void Update();
 	void Render();
@@ -22,6 +22,8 @@ public:
 	void SetActive(bool p_active);
 	void SpawnLight();
 	void PickedUp();
+
+	POINTOFINTERESTTYPE GetType();
 private:
 	void Sparkle();
 
@@ -30,5 +32,7 @@ private:
 
 	DirectX::XMFLOAT3 m_positionLight;
 	DirectX::XMFLOAT3 m_lightColor;
+
+	POINTOFINTERESTTYPE m_type;
 };
 #endif // !POINTOFINTEREST_H_

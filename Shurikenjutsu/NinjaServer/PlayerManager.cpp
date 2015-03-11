@@ -53,11 +53,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 void PlayerManager::ResetTakenSpawnPoints()
 {
 	m_takenSpawnPoints.clear();
-	//for (unsigned int i = 0; i < m_takenSpawnPoints.size(); i++)
-	//{
-	//	m_takenSpawnPoints[i] = false;
-	//}
-	}
+}
 
 void PlayerManager::Shutdown(){}
 
@@ -251,6 +247,13 @@ void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
 
 			ConsolePrintError("A player disconnected.");
 			BroadcastPlayers();
+
+			RakNet::BitStream bitStream2;
+			bitStream2.Write((RakNet::MessageID)ID_CONNECTION_NOTIFICATION);
+			bitStream2.Write(m_players[i].name);
+			bitStream2.Write(3);
+
+			m_serverPeer->Send(&bitStream2, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 			i--;
 			break;
@@ -1113,4 +1116,16 @@ void PlayerManager::SendHasPOIHealing(RakNet::RakNetGUID p_guid)
 		}
 	}
 	
+}
+
+void PlayerManager::ResetPOIEffects()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		m_players[i].shield = false;
+		m_players[i].invis = false;
+		m_players[i].hasHealPOI = false;
+
+		SendHasPOIHealing(m_players[i].guid);
+	}
 }

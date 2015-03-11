@@ -152,10 +152,6 @@ public:
 	bool IsSuddenDeath();
 	int GetSuddenDeathBoxIndex();
 
-	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
-	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound);
-	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
-
 	void RuneInvisPickedUp(RakNet::RakNetGUID p_player);
 
 	void SetPlayerName(std::string p_playerName);
@@ -223,6 +219,10 @@ private:
 	void SendVisiblePlayers();
 	void CancelRune(POINTOFINTERESTTYPE p_rune);
 	void HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value);
+	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound);
+	void DespawnRunes(POINTOFINTERESTTYPE p_poiType);
+	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
 
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;

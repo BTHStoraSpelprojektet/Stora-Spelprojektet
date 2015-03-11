@@ -856,6 +856,12 @@ void PlayingState::PlayerJoinedText()
 		text += " has joined the blue team";
 		m_playerJoinedText->SetText(text);
 	}
+	else if (Network::GetInstance()->GetJustJoinedPlayerTeam() == 3)
+	{
+		std::string text = Network::GetInstance()->GetJustJoinedPlayerName();
+		text += " has left the game";
+		m_playerJoinedText->SetText(text);
+	}
 }
 
 void PlayingState::UpdatePOIEffects()

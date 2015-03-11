@@ -229,11 +229,12 @@ void GameState::UpdateTime(double p_deltaTime)
 
 	if (m_timeSec > 0.9f && (redTeam == 0 || bluTeam == 0))
 	{
-		m_timeSec = 0.0f;
-		m_timeMin = 0.0f;
+		ResetTime();
+		m_POIManager->DespawnRunes();
+		m_playerManager->ResetPOIEffects();
 		for (unsigned int i = 0; i < playerList.size(); i++)
 		{
-			SyncTime(playerList[i].guid);
+			SyncTime(playerList[i].guid);			
 		}
 	}
 

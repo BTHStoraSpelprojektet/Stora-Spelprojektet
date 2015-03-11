@@ -7,7 +7,6 @@ GUIAbility::~GUIAbility(){}
 
 bool GUIAbility::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p_height, ID3D11ShaderResourceView* p_texture, std::string p_hotKey)
 {
-	m_border.Initialize(p_position, p_width, p_height, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 	m_ability.Initialize(p_position, p_width - 4.0f, p_height - 4.0f, p_texture);
 	m_cooldown.Initialize(p_position, 0, 0, TextureLibrary::GetInstance()->GetTexture(ABILITY_CD_TEXTURE));
 	m_stacks.Initialize("", 25.0f, p_position.x, p_position.y + 36.0f, 0xff071e31);
@@ -62,7 +61,6 @@ void GUIAbility::Update(float p_currentCooldown, float p_maxCooldown, int p_stac
 
 void GUIAbility::Render()
 {
-	//m_border.QueueRender();
 	m_ability.QueueRender();
 	m_cooldown.QueueRender();
 	m_stacks.Render();
