@@ -2619,8 +2619,6 @@ void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 	if (m_myPlayer.guid == p_guid)
 	{
 		m_myPlayer.hasHealPOI = p_value;
-
-		return;
 	}
 
 	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
@@ -2628,8 +2626,6 @@ void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 		if (m_enemyPlayers[i].guid == p_guid)
 		{
 			m_enemyPlayers[i].hasHealPOI = p_value;
-
-			return;
 		}
 	}
 }
