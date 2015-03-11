@@ -433,11 +433,12 @@ void System::Render()
 	// Render Current GameState
 	m_gameState->Render();
 
+	TrailRenderer::GetInstance().RenderTrails();
+
 	// Render Particles
 	GraphicsEngine::TurnOnAlphaBlending();
 	GraphicsEngine::SetDepthStateForParticles();
-	ParticleRenderer::GetInstance()->Render();
-	GraphicsEngine::TurnOnAlphaBlending();
+	ParticleRenderer::GetInstance()->Render();	
 
 	// The need to switch back to the original depth stencil state is not needed yet, since GUI switches it to be completely off
 

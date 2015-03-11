@@ -713,11 +713,6 @@ void ObjectManager::UpdateRenderLists()
 
 void ObjectManager::Render()
 {
-	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
-	{
-		m_objectsToInstanceRender[i]->RenderInstanced();
-	}
-
 	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
 	{
 		m_objectsToSingleRender[i]->Render();
@@ -786,14 +781,6 @@ void ObjectManager::Render()
 		}
 	}
 
-	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
-	{
-		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 7.0f))
-		{
-			m_animatedObjects[i]->Render();
-		}
-	}
-
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
 		m_worldParticles[i]->Render();
@@ -820,15 +807,26 @@ void ObjectManager::Render()
 	}
 
 	m_POIManager->Render();
+
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	{
+		m_objectsToInstanceRender[i]->RenderInstanced();
+	}
+}
+
+void ObjectManager::RenderAnimated()
+{
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 7.0f))
+		{
+			m_animatedObjects[i]->Render();
+		}
+	}
 }
 
 void ObjectManager::RenderDepth()
 {
-	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
-	{
-		m_objectsToInstanceRender[i]->RenderDepthInstanced();
-	}
-
 	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
 	{
 		m_objectsToSingleRender[i]->RenderDepth();
@@ -875,13 +873,6 @@ void ObjectManager::RenderDepth()
 		}
 	}
 
-	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
-	{
-		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 1.0f))
-		{
-			m_animatedObjects[i]->RenderDepth();
-		}		
-	}
 	for (unsigned int i = 0; i < m_volleys.size(); i++)
 	{
 		m_volleys[i]->RenderDepth();
@@ -889,6 +880,22 @@ void ObjectManager::RenderDepth()
 
 	m_POIManager->RenderDepth();
 
+	GraphicsEngine::PrepareRenderDepthInstanced();
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	{
+		m_objectsToInstanceRender[i]->RenderDepthInstanced();
+	}
+}
+
+void ObjectManager::RenderAnimatedDepth()
+{
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_animatedObjects[i]->GetFrustumSphere(), 3.0f))
+		{
+			m_animatedObjects[i]->RenderDepth();
+		}
+	}
 }
 
 void ObjectManager::AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID)

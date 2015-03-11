@@ -24,6 +24,9 @@ public:
 	bool IsTrailDead();
 
 	void ChangeColor(DirectX::XMFLOAT4 p_color);
+	ID3D11ShaderResourceView* GetTexture();
+	ID3D11Buffer* GetBuffer();
+	unsigned int GetSize();
 
 private:
 	void EmitPoint(DirectX::XMFLOAT3 p_position, float p_angle);

@@ -477,7 +477,11 @@ void ChooseState::Render()
 {
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
+	GraphicsEngine::PrepareRenderDepth();
 	m_objectManager->RenderDepth();
+
+	GraphicsEngine::PrepareRenderAnimatedDepth();
+	m_objectManager->RenderAnimatedDepth();
 	m_playerManager->RenderDepth(true);
 	GraphicsEngine::SetShadowMap();
 
@@ -486,7 +490,11 @@ void ChooseState::Render()
 	// Render to the scene normally.
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
+	GraphicsEngine::PrepareRenderScene();
 	m_objectManager->Render();
+
+	GraphicsEngine::PrepareRenderAnimated();
+	m_objectManager->RenderAnimated();
 	m_playerManager->Render(true);
 
 	GraphicsEngine::RenderFoliage();

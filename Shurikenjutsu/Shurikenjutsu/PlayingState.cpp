@@ -539,7 +539,11 @@ void PlayingState::Render()
 {
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
+	GraphicsEngine::PrepareRenderDepth();
 	m_objectManager->RenderDepth();
+
+	GraphicsEngine::PrepareRenderAnimatedDepth();
+	m_objectManager->RenderAnimatedDepth();
 	m_playerManager->RenderDepth(false);
 	GraphicsEngine::SetShadowMap();
 
@@ -549,7 +553,11 @@ void PlayingState::Render()
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 	UpdatePOIEffects();
+	GraphicsEngine::PrepareRenderScene();
 	m_objectManager->Render();
+
+	GraphicsEngine::PrepareRenderAnimated();
+	m_objectManager->RenderAnimated();
 	m_playerManager->Render(false);
 	
 	GraphicsEngine::RenderFoliage();
@@ -864,10 +872,21 @@ void PlayingState::UpdatePOIEffects()
 	{
 		if (!NetworkPlayers[i].invis)
 		{
-			DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(NetworkPlayers[i].x, NetworkPlayers[i].y, NetworkPlayers[i].z);
+			DirectX::XMFLOAT3 position;
+
+			if (NetworkPlayers.size() == m_playerManager->GetEveryPlayer().size())
+			{
+				position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
+			}
+
+			else
+			{
+				position = DirectX::XMFLOAT3(NetworkPlayers[i].x, NetworkPlayers[i].y, NetworkPlayers[i].z);
+			}
 
 			if (NetworkPlayers[i].shield > 0.0f)
 			{
+
 				POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 				POIGrapichalEffects::GetInstance().RenderShieldEffect();
 			}
@@ -879,5 +898,6 @@ void PlayingState::UpdatePOIEffects()
 				POIGrapichalEffects::GetInstance().RenderHealingEffect();
 			}
 		}
+		
 	}
 }

@@ -356,6 +356,11 @@ namespace DLLGraphicsEngine
 		return textureView;
 	}
 
+	void GE::PrepareRenderScene()
+	{
+		m_sceneShader->PrepareRender(m_directX->GetContext());
+	}
+
 	void GE::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
 	{
 		m_sceneShader->Render(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
@@ -375,6 +380,11 @@ namespace DLLGraphicsEngine
 		m_sceneShader->RenderInstance(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
 	}
 
+	void GE::PrepareRenderAnimated()
+	{
+		m_sceneShader->PrepareRenderAnimated(m_directX->GetContext());
+	}
+
 	void GE::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 	{
 		m_sceneShader->RenderAnimated(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
@@ -390,14 +400,29 @@ namespace DLLGraphicsEngine
 		m_sceneShader->RenderAnimatedOutlining(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
 	}
 
+	void GE::PrepareRenderDepth()
+	{
+		m_depthShader->PrepareRender(m_directX->GetContext());
+	}
+
 	void GE::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 	{
 		m_depthShader->Render(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 	}
 
+	void GE::PrepareRenderDepthInstanced()
+	{
+		m_depthShader->PrepareRenderInstanced(m_directX->GetContext());
+	}
+
 	void GE::RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 	{
 		m_depthShader->RenderInstance(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex, m_instanceManager);
+	}
+
+	void GE::PrepareRenderAnimatedDepth()
+	{
+		m_depthShader->PrepareRenderAnimated(m_directX->GetContext());
 	}
 
 	void GE::RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)

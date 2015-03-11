@@ -5,6 +5,8 @@
 #include <DirectXMath.h>
 #include <vector>
 
+class Trail;
+
 struct TrailPoint
 {
 	DirectX::XMFLOAT3 m_position;
@@ -23,7 +25,8 @@ public:
 	bool Initialize(ID3D11Device* p_device);
 	void Shutdown();
 
-	void RenderTrail(ID3D11Buffer* p_vertexBuffer, unsigned int p_points, ID3D11ShaderResourceView* p_texture);
+	void AddTrail(Trail* p_trail);
+	void RenderTrails();
 
 	void SetWorldMatrix(DirectX::XMFLOAT4X4 p_worldMatrix);
 	void SetViewMatrix(DirectX::XMFLOAT4X4 p_viewMatrix);
@@ -55,6 +58,8 @@ private:
 	DirectX::XMFLOAT4X4 m_worldMatrix;
 	DirectX::XMFLOAT4X4 m_viewMatrix;
 	DirectX::XMFLOAT4X4 m_projectionMatrix;
+
+	std::vector<Trail*> m_trails;
 
 	struct MatrixBuffer
 	{
