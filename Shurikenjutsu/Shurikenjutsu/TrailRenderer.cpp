@@ -279,7 +279,7 @@ void TrailRenderer::Shutdown()
 void TrailRenderer::RenderTrail(ID3D11Buffer* p_vertexBuffer, unsigned int p_points, ID3D11ShaderResourceView* p_texture)
 {
 	// Set vertex buffer stride and offset.
-	ID3D11DeviceContext* context = GraphicsEngine::GetInstance()->GetContext();
+	ID3D11DeviceContext* context = GraphicsEngine::GetContext();
 	unsigned int stride = sizeof(TrailPoint);
 	unsigned int offset = 0;
 
@@ -348,7 +348,7 @@ void TrailRenderer::UpdateMatrixes()
 
 	// Lock matrix buffer so that it can be written to.
 	D3D11_MAPPED_SUBRESOURCE mappedBuffer;
-	if (FAILED(GraphicsEngine::GetInstance()->GetContext()->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
+	if (FAILED(GraphicsEngine::GetContext()->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedBuffer)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map particle matrix buffer.");
 		return;
@@ -363,5 +363,5 @@ void TrailRenderer::UpdateMatrixes()
 	matrixBuffer->m_projectionMatrix = projectionMatrix;
 
 	// Unlock the buffer.
-	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_matrixBuffer, 0);
+	GraphicsEngine::GetContext()->Unmap(m_matrixBuffer, 0);
 }

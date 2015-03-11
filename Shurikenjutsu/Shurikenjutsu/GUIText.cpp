@@ -10,12 +10,12 @@ GUIText::~GUIText(){}
 bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
 {
 	IDWriteFactory* wf = NULL;
-	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
+	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
 	//IDWriteFontCollection* collection;
 
 	wf->CreateTextFormat(
 		L"RagingRedLotus BB",
-		GraphicsEngine::GetInstance()->GetFontCollection(),
+		GraphicsEngine::GetFontCollection(),
 		DWRITE_FONT_WEIGHT_BOLD,
 		DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
@@ -36,7 +36,7 @@ bool GUIText::Initialize(std::string p_text, float p_size, float p_x, float p_y,
 bool GUIText::InitializeCalibri(std::string p_text, float p_size, float p_x, float p_y, UINT32 p_color)
 {
 	IDWriteFactory* wf = NULL;
-	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
+	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
 	//IDWriteFontCollection* collection;
 
 	wf->CreateTextFormat(
@@ -92,7 +92,7 @@ void GUIText::SetText(std::string p_text)
 	m_textLength = p_text.size();
 
 	IDWriteFactory* wf = NULL;
-	GraphicsEngine::GetInstance()->GetFontWrapper()->GetDWriteFactory(&wf);
+	GraphicsEngine::GetFontWrapper()->GetDWriteFactory(&wf);
 	
 	if (m_layouts.size() > 0)
 	{

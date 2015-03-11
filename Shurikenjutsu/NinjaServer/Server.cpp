@@ -1,4 +1,6 @@
 #include "Server.h"
+#include <iostream>
+#include <fstream>
 
 Server::Server(){}
 
@@ -7,6 +9,8 @@ Server::~Server(){}
 bool Server::Initialize()
 {
 	ServerGlobals::IS_SERVER = true;
+
+	ReadLevels();
 
 	m_serverPeer = RakNet::RakPeerInterface::GetInstance();
 	m_socketDesc = RakNet::SocketDescriptor(SERVER_PORT, 0);
@@ -25,9 +29,33 @@ bool Server::Initialize()
 
 	// Initiate game state
 	m_gameState = new NormalState();
-	m_gameState->Initialize(m_serverPeer);
+	m_gameState->Initialize(m_serverPeer,m_levels,m_currentLevel);
 
 	return true;
+}
+
+void Server::ReadLevels(){
+	//Read from file
+	std::string levelsPath = "../Shurikenjutsu/Levels/";
+	std::string settingFile = "../Shurikenjutsu/Settings/ServerLevels.cfg";
+
+	std::ifstream infile(settingFile, std::ifstream::in);
+	char line[256];
+	while (infile.getline(line,256)){
+		std::string level = levelsPath;
+		level.append(line);
+		if (level.size()>levelsPath.size()){
+			m_levels.push_back(level);
+		}
+	}
+
+	//Set default if file not found
+	if (m_levels.size() == 0){
+		m_levels.push_back("../Shurikenjutsu/Levels/NightTimeArena.SSPL");
+	}
+
+	//Set start level
+	m_currentLevel = 0;
 }
 
 void Server::Shutdown()
@@ -76,8 +104,8 @@ void Server::ReceviePacket()
 
 			bitStream2.Write((RakNet::MessageID)ID_LEVELNAME);
 			//std::string lev = "../Shurikenjutsu/Levels/WaterArena.SSPL";
-			std::string lev = "../Shurikenjutsu/Levels/NightTimeArena.SSPL";
-			RakNet::RakString levelName(lev.c_str());
+			//std::string lev = "../Shurikenjutsu/Levels/NightTimeArena.SSPL";
+			RakNet::RakString levelName(m_levels[m_currentLevel].c_str());
 			bitStream2.Write(levelName);
 
 			m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);

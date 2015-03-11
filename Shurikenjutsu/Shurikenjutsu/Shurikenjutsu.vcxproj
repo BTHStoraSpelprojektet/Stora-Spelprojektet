@@ -52,7 +52,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
     </ClCompile>
     <Link>
@@ -71,7 +71,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\DirectXTex;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OutDir)..\GraphicsEngineDLL;..\Shurikenjutsu\FW1FontWrapper_1_1;..\Shurikenjutsu\DirectXTex\WICTextureLoader;..\Shurikenjutsu\FMOD\inc;$(OutDir)..\Physics;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -79,7 +79,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>d3d11.lib;D3Dcompiler.lib;CommonLibs.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>DirectXTex.lib;d3d11.lib;D3Dcompiler.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;FW1FontWrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>FW1FontWrapper.lib;DirectXTex.lib;d3d11.lib;D3Dcompiler.lib;fmod_vc.lib;fmodL_vc.lib;fmod64_vc.lib;fmodL64_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Shurikenjutsu\FW1FontWrapper_1_1\x86;..\Shurikenjutsu\DirectXTex\DirectXTex\Bin\Desktop_2013\Win32\Debug;..\Shurikenjutsu\FMOD\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -88,7 +88,6 @@
     <ClCompile Include="AbilityBar.cpp" />
     <ClCompile Include="AnimationControl.cpp" />
     <ClCompile Include="AttackPredictionEditor.cpp" />
-    <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterAbilityDescription.cpp" />
     <ClCompile Include="ChooseState.cpp" />
@@ -101,11 +100,9 @@
     <ClCompile Include="FanBoomerang.cpp" />
     <ClCompile Include="FanBoomerangAbility.cpp" />
     <ClCompile Include="FloatingText.cpp" />
-    <ClCompile Include="FoliageShader.cpp" />
     <ClCompile Include="GUIElementColor.cpp" />
     <ClCompile Include="GUIText.cpp" />
     <ClCompile Include="InGameMenu.cpp" />
-    <ClCompile Include="InstanceManager.cpp" />
     <ClCompile Include="KatanaNinja.cpp" />
     <ClCompile Include="KunaiAbility.cpp" />
     <ClCompile Include="MemoryChecker.cpp" />
@@ -113,27 +110,17 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Collisions.cpp" />
     <ClCompile Include="Dash.cpp" />
-    <ClCompile Include="DebugBox.cpp" />
-    <ClCompile Include="DebugDot.cpp" />
-    <ClCompile Include="DebugLineList.cpp" />
-    <ClCompile Include="DebugRectangle.cpp" />
-    <ClCompile Include="DebugShape2D.cpp" />
-    <ClCompile Include="DebugShape3D.cpp" />
-    <ClCompile Include="DepthShader.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GUIAbility.cpp" />
     <ClCompile Include="GUIElement.cpp" />
     <ClCompile Include="GUIManager.cpp" />
-    <ClCompile Include="GUIShader.cpp" />
     <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="ButtonEvent.cpp" />
     <ClCompile Include="KButtonEvent.cpp" />
-    <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="GraphicsEngine.cpp" />
     <ClCompile Include="MegaShuriken.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -153,23 +140,17 @@
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="ParticleRenderer.cpp" />
-    <ClCompile Include="ParticleShader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerManager.cpp" />
     <ClCompile Include="PlayingState.cpp" />
+    <ClCompile Include="POIGrapichalEffects.cpp" />
     <ClCompile Include="PointOfInterest.cpp" />
     <ClCompile Include="PointOfInterestManager.cpp" />
-    <ClCompile Include="PointLights.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="QuadTree.cpp" />
-    <ClCompile Include="SceneShader.cpp" />
-    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="ScoreBoard.cpp" />
-    <ClCompile Include="ScreenSpace.cpp" />
     <ClCompile Include="Settings.cpp" />
-    <ClCompile Include="ShadowShapes.cpp" />
     <ClCompile Include="Shuriken.cpp" />
-    <ClCompile Include="DebugCircle.cpp" />
     <ClCompile Include="AnimatedObject.cpp" />
     <ClCompile Include="ShurikenAbility.cpp" />
     <ClCompile Include="SmokeBomb.cpp" />
@@ -190,7 +171,6 @@
     <ClCompile Include="Trail.cpp" />
     <ClCompile Include="TrailRenderer.cpp" />
     <ClCompile Include="VictoryScreenMenu.cpp" />
-    <ClCompile Include="VisibilityComputer.cpp" />
     <ClCompile Include="Volley.cpp" />
     <ClCompile Include="VolleyAbility.cpp" />
     <ClCompile Include="VolleyObject.cpp" />
@@ -203,7 +183,6 @@
     <ClInclude Include="AbilityBar.h" />
     <ClInclude Include="AnimationControl.h" />
     <ClInclude Include="AttackPredictionEditor.h" />
-    <ClInclude Include="Buffer.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterAbilityDescription.h" />
     <ClInclude Include="ChooseState.h" />
@@ -216,13 +195,12 @@
     <ClInclude Include="FanBoomerang.h" />
     <ClInclude Include="FanBoomerangAbility.h" />
     <ClInclude Include="FloatingText.h" />
-    <ClInclude Include="FoliageShader.h" />
     <ClInclude Include="GUIElementColor.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="CustomFont.h" />
+    <ClInclude Include="POIGrapichalEffects.h" />
     <ClInclude Include="PointOfInterest.h" />
     <ClInclude Include="PointOfInterestManager.h" />
-    <ClInclude Include="PointLights.h" />
     <ClInclude Include="MemoryChecker.h" />
     <ClInclude Include="ScoreBoard.h" />
     <ClInclude Include="Settings.h" />
@@ -230,20 +208,12 @@
     <ClInclude Include="TeamTable.h" />
     <ClInclude Include="TextResource.h" />
     <ClInclude Include="InGameMenu.h" />
-    <ClInclude Include="InstanceManager.h" />
     <ClInclude Include="KatanaNinja.h" />
     <ClInclude Include="KunaiAbility.h" />
     <ClInclude Include="MenuCheckbox.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Dash.h" />
-    <ClInclude Include="DebugBox.h" />
-    <ClInclude Include="DebugCircle.h" />
-    <ClInclude Include="DebugDot.h" />
-    <ClInclude Include="DebugLineList.h" />
-    <ClInclude Include="DebugShape2D.h" />
-    <ClInclude Include="DebugShape3D.h" />
-    <ClInclude Include="DepthShader.h" />
     <ClInclude Include="DirectX.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameState.h" />
@@ -252,9 +222,7 @@
     <ClInclude Include="GUIAbility.h" />
     <ClInclude Include="GUIElement.h" />
     <ClInclude Include="GUIManager.h" />
-    <ClInclude Include="GUIShader.h" />
     <ClInclude Include="HealthBar.h" />
-    <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="MegaShuriken.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MenuButton.h" />
@@ -271,23 +239,16 @@
     <ClInclude Include="Network.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectManager.h" />
-    <ClInclude Include="OutlingShader.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="ParticleRenderer.h" />
-    <ClInclude Include="ParticleShader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayingState.h" />
-    <ClInclude Include="DebugRectangle.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="QuadTree.h" />
-    <ClInclude Include="SceneShader.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />
     <ClInclude Include="KButtonEvent.h" />
-    <ClInclude Include="RenderTarget.h" />
-    <ClInclude Include="ScreenSpace.h" />
-    <ClInclude Include="ShadowShapes.h" />
     <ClInclude Include="Shuriken.h" />
     <ClInclude Include="AnimatedObject.h" />
     <ClInclude Include="ShurikenAbility.h" />
@@ -308,7 +269,6 @@
     <ClInclude Include="Trail.h" />
     <ClInclude Include="TrailRenderer.h" />
     <ClInclude Include="VictoryScreenMenu.h" />
-    <ClInclude Include="VisibilityComputer.h" />
     <ClInclude Include="Volley.h" />
     <ClInclude Include="VolleyAbility.h" />
     <ClInclude Include="VolleyObject.h" />
@@ -580,6 +540,9 @@
     <None Include="Shaders\Scene\LightCalculation.hlsli" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GraphicsEngineDLL\GraphicsEngineDLL.vcxproj">
+      <Project>{79d94755-24ec-4add-816e-e26287dbcc02}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Physics\Physics.vcxproj">
       <Project>{097e6f6b-bac8-441e-858c-ca9fab82c07a}</Project>
     </ProjectReference>

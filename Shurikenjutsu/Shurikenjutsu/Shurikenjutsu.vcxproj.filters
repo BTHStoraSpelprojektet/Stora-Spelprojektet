@@ -69,9 +69,6 @@
     <Filter Include="Source Files\Utility\DebugDraw">
       <UniqueIdentifier>{6ca99271-27a1-4224-a30f-02cd00536f35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Graphics\Shader Bridges">
-      <UniqueIdentifier>{1e8c5c16-9775-4b31-9ab3-cd6c5d58c7e1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Particle">
       <UniqueIdentifier>{f17db6bb-41a5-4400-9258-b0dd33a5820f}</UniqueIdentifier>
     </Filter>
@@ -111,17 +108,8 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{203b4b95-7f00-4e34-8b05-e5a4d9f26b8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Graphics\Shader Bridges">
-      <UniqueIdentifier>{e86672ab-06e6-4a96-bb09-b0d6d418edff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Graphics\Particles">
       <UniqueIdentifier>{01ad842d-b4f3-45e1-bdc7-5998ba973ad9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ShadowShapes">
-      <UniqueIdentifier>{c449bf99-5482-450e-ac14-ce80ce1dda45}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ShadowShapes">
-      <UniqueIdentifier>{1e2f7e8c-669b-4324-b30a-ec7677dd4f88}</UniqueIdentifier>
     </Filter>
     <Filter Include="Shaders\ShadowShapes">
       <UniqueIdentifier>{944e469a-b192-4ce9-abb6-7205312b24bf}</UniqueIdentifier>
@@ -206,13 +194,7 @@
     <ClCompile Include="Collisions.cpp">
       <Filter>Source Files\Physics</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="GraphicsEngine.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Buffer.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
@@ -251,33 +233,6 @@
     <ClCompile Include="Network.cpp">
       <Filter>Source Files\Network</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTarget.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugDraw.cpp">
-      <Filter>Source Files\Utility\DebugDraw</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugRectangle.cpp">
-      <Filter>Source Files\Utility\DebugDraw</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugLineList.cpp">
-      <Filter>Source Files\Utility\DebugDraw</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugShape2D.cpp">
-      <Filter>Source Files\Utility\DebugDraw</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugShape3D.cpp">
-      <Filter>Source Files\Utility\DebugDraw</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugBox.cpp">
-      <Filter>Source Files\Utility\DebugDraw</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugCircle.cpp">
-      <Filter>Source Files\Utility\DebugDraw</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugDot.cpp">
-      <Filter>Source Files\Utility\DebugDraw</Filter>
-    </ClCompile>
     <ClCompile Include="AnimatedObject.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
@@ -287,20 +242,8 @@
     <ClCompile Include="AnimationControl.cpp">
       <Filter>Source Files\Models</Filter>
     </ClCompile>
-    <ClCompile Include="DepthShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
-    <ClCompile Include="GUIShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleEmitter.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp">
       <Filter>Source Files\Physics</Filter>
@@ -380,14 +323,8 @@
     <ClCompile Include="GUIText.cpp">
       <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
-    <ClCompile Include="ShadowShapes.cpp">
-      <Filter>Source Files\ShadowShapes</Filter>
-    </ClCompile>
     <ClCompile Include="Minimap.cpp">
       <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="VisibilityComputer.cpp">
-      <Filter>Source Files\ShadowShapes</Filter>
     </ClCompile>
     <ClCompile Include="SpikeAbility.cpp">
       <Filter>Source Files\Core\Abilities</Filter>
@@ -452,12 +389,6 @@
     <ClCompile Include="Spikes.cpp">
       <Filter>Source Files\Object\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="InstanceManager.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
-    <ClCompile Include="FoliageShader.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
     <ClCompile Include="Volley.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
@@ -472,9 +403,6 @@
     </ClCompile>
     <ClCompile Include="AttackPredictionEditor.cpp">
       <Filter>Source Files\Ninjas</Filter>
-    </ClCompile>
-    <ClCompile Include="ScreenSpace.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
     </ClCompile>
     <ClCompile Include="FloatingText.cpp">
       <Filter>Source Files\GUI</Filter>
@@ -499,12 +427,6 @@
     </ClCompile>
     <ClCompile Include="ToolTipPopUp.cpp">
       <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="ScreenSpace.cpp">
-      <Filter>Source Files\Graphics\Shader Bridges</Filter>
-    </ClCompile>
-    <ClCompile Include="PointLights.cpp">
-      <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="ScoreBoard.cpp">
       <Filter>Source Files\GUI</Filter>
@@ -539,6 +461,9 @@
     <ClCompile Include="Settings.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
+    <ClCompile Include="POIGrapichalEffects.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -560,9 +485,6 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsEngine.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Buffer.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
@@ -604,33 +526,6 @@
     <ClInclude Include="GameState.h">
       <Filter>Header Files\GameState</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTarget.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugDraw.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugRectangle.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugLineList.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugShape2D.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugShape3D.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugBox.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugCircle.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugDot.h">
-      <Filter>Header Files\Utility\DebugDraw</Filter>
-    </ClInclude>
     <ClInclude Include="AnimatedObject.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
@@ -639,18 +534,6 @@
     </ClInclude>
     <ClInclude Include="AnimationControl.h">
       <Filter>Header Files\Models</Filter>
-    </ClInclude>
-    <ClInclude Include="DepthShader.h">
-      <Filter>Header Files\Graphics\Shader Bridges</Filter>
-    </ClInclude>
-    <ClInclude Include="GUIShader.h">
-      <Filter>Header Files\Graphics\Shader Bridges</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneShader.h">
-      <Filter>Header Files\Graphics\Shader Bridges</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleShader.h">
-      <Filter>Header Files\Graphics\Particles</Filter>
     </ClInclude>
     <ClInclude Include="ParticleEmitter.h">
       <Filter>Header Files\Graphics\Particles</Filter>
@@ -733,20 +616,11 @@
     <ClInclude Include="GUIText.h">
       <Filter>Header Files\GUI\Internal</Filter>
     </ClInclude>
-    <ClInclude Include="ShadowShapes.h">
-      <Filter>Header Files\ShadowShapes</Filter>
-    </ClInclude>
     <ClInclude Include="Minimap.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="VisibilityComputer.h">
-      <Filter>Header Files\ShadowShapes</Filter>
-    </ClInclude>
     <ClInclude Include="SpikeAbility.h">
       <Filter>Header Files\Abilities</Filter>
-    </ClInclude>
-    <ClInclude Include="OutlingShader.h">
-      <Filter>Header Files\Graphics\Shader Bridges</Filter>
     </ClInclude>
     <ClInclude Include="KatanaNinja.h">
       <Filter>Header Files\Ninjas</Filter>
@@ -787,12 +661,6 @@
     <ClInclude Include="TeamStatusBar.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="InstanceManager.h">
-      <Filter>Header Files\Graphics\Shader Bridges</Filter>
-    </ClInclude>
-    <ClInclude Include="FoliageShader.h">
-      <Filter>Header Files\Graphics\Shader Bridges</Filter>
-    </ClInclude>
     <ClInclude Include="StickyTrapAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
@@ -826,9 +694,6 @@
     <ClInclude Include="AttackPredictionEditor.h">
       <Filter>Header Files\Ninjas</Filter>
     </ClInclude>
-    <ClInclude Include="ScreenSpace.h">
-      <Filter>Header Files\Graphics\Shader Bridges</Filter>
-    </ClInclude>
     <ClInclude Include="FloatingText.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -855,9 +720,6 @@
     </ClInclude>
     <ClInclude Include="ToolTipPopUp.h">
       <Filter>Header Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="PointLights.h">
-      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="VictoryScreenMenu.h">
       <Filter>Header Files\GUI\Menu</Filter>
@@ -894,6 +756,9 @@
     </ClInclude>
     <ClInclude Include="Settings.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="POIGrapichalEffects.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -33,6 +33,9 @@ private:
 
 	int m_nrOfConnections;
 	GameState* m_gameState;
+	int m_currentLevel;
+	std::vector<std::string> m_levels;
+	void Server::ReadLevels();
 
 	NetworkLogger m_networkLogger;
 };

@@ -2,8 +2,11 @@
 #define PLAYINGSTATE
 #define WIN32_LEAN_AND_MEAN
 
+#include <string>
+#include <DirectXMath.h>
 #include "GameState.h"
-#include "DebugDraw.h"
+
+#include "..\CommonLibs\CommonStructures.h"
 
 class PlayerManager;
 class ObjectManager;
@@ -19,6 +22,9 @@ class Sound;
 class ScoreBoard;
 class SuddenDeathState;
 class GUIText;
+
+//struct DirectionalLight;
+//struct Point;
 
 class PlayingState : public GameState
 {
@@ -52,6 +58,7 @@ private:
 	void OnScreenResize();
 	void SSBoundryUpdate(DirectX::XMFLOAT3 p_player);
 	void DecreaseTextOpacity(GUIText* p_text);
+	void UpdatePOIEffects();
 
 	DirectX::XMFLOAT3 NormalizeFloat3(DirectX::XMFLOAT3 p_f);
 
@@ -88,6 +95,7 @@ private:
 	float m_quadHeightBottom;
 
 	int m_spectateIndex;
+
 	//Tas bort?
 	float m_spectateCountDown;
 	bool m_inGameMenuIsActive;

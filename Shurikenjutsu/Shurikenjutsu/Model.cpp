@@ -1,19 +1,10 @@
 #include "Model.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
-#include "Buffer.h"
 #include "..\CommonLibs\ModelImporter.h"
 
-Model::Model()
-{
-
-}
-
-Model::Model(Model &other)
-{
-
-}
-
+Model::Model(){}
+Model::Model(Model &other){}
 Model::~Model(){}
 
 bool Model::LoadModel(const char* p_filepath)
@@ -27,13 +18,13 @@ bool Model::LoadModel(const char* p_filepath)
 	if (!mData.m_animated)
 	{
 		std::vector<VertexAnimated> nullVector;
-		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEX, GraphicsEngine::GetInstance()->GetDevice(), mData.m_vertices, nullVector);
+		m_mesh = GraphicsEngine::CreateBuffer(BUFFERTYPE_VERTEX, mData.m_vertices, nullVector);
 		m_vertexCount = mData.m_vertices.size();
 	}
 	else
 	{
 		std::vector<Vertex> nullVector;
-		m_mesh = Buffer::CreateBuffer(BUFFERTYPE_VERTEXANIMATED, GraphicsEngine::GetInstance()->GetDevice(), nullVector, mData.m_verticesAnimated);
+		m_mesh = GraphicsEngine::CreateBuffer(BUFFERTYPE_VERTEXANIMATED, nullVector, mData.m_verticesAnimated);
 		m_vertexCount = mData.m_verticesAnimated.size();
 	}
 
@@ -84,7 +75,7 @@ ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int 
 		data.SysMemSlicePitch = 0;
 
 		ID3D11Texture2D* texture = NULL;
-		hr = GraphicsEngine::GetInstance()->GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
+		hr = GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
 		if (FAILED(hr))
 		{
 			ConsolePrintError("Falied create texture loadtexture - model");
@@ -95,7 +86,7 @@ ID3D11ShaderResourceView* Model::LoadTexture(unsigned int p_width, unsigned int 
 		sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 		sRVDesc.Texture2D.MostDetailedMip = 0;
-		hr = GraphicsEngine::GetInstance()->GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+		hr = GraphicsEngine::GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
 		if (FAILED(hr))
 		{
 			ConsolePrintError("Failed create shader resource loadtexture - model");

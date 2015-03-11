@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "AttackPredictionEditor.h"
 #include "ParticleRenderer.h"
+#include "GraphicsEngine.h"
 
 KatanaNinja::KatanaNinja(){}
 KatanaNinja::~KatanaNinja(){}
@@ -70,7 +71,7 @@ void KatanaNinja::RenderAttackLocations()
 {
 	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
 	{
-		GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+		GraphicsEngine::TurnOnAlphaBlending();
 		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
 			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
@@ -139,6 +140,6 @@ void KatanaNinja::RenderAttackLocations()
 				StillCDText();
 			}
 		}
-		GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+		GraphicsEngine::TurnOffAlphaBlending();
 	}
 }

@@ -4,11 +4,11 @@
 DebugState::DebugState(){}
 DebugState::~DebugState(){}
 
-bool DebugState::Initialize(RakNet::RakPeerInterface *p_serverPeer)
+bool DebugState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel)
 {
 	bool result;
 
-	result = GameState::Initialize(p_serverPeer);
+	result = GameState::Initialize(p_serverPeer, p_levelsName, p_currentLevel);
 	if (!result)
 	{
 		return false;

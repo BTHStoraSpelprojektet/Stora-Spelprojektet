@@ -1,20 +1,12 @@
 #include "Minimap.h"
 #include "Globals.h"
 #include "..\CommonLibs\ModelNames.h"
-#include "VisibilityComputer.h"
 
 #define MAPSIZEX 43
 #define MAPSIZEY 50
 
-Minimap::Minimap()
-{
-
-}
-
-Minimap::~Minimap()
-{
-
-}
+Minimap::Minimap(){}
+Minimap::~Minimap(){}
 
 bool Minimap::Initialize()
 {

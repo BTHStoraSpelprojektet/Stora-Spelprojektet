@@ -6,6 +6,7 @@
 #include "DeathBoard.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "ScoreBoard.h"
+#include "POIGrapichalEffects.h"
 
 Network* Network::m_instance;
 
@@ -159,1113 +160,1134 @@ void Network::ReceviePacket()
 	{
 		switch (m_packet->data[0])
 		{
-		case ID_CONNECTION_REQUEST_ACCEPTED:
-		{
-			ConsolePrintSuccess("Connected to the server.");
-			ConsoleSkipLines(1);
-
-			m_connected = true;
-			m_networkStatus = NETWORKSTATUS_CONNECTED;
-
-			RakNet::BitStream bitStream;
-			bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
-			m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
-
-			break;
-		}
-		case ID_LEVELNAME:
-		{
-			RakNet::RakString levelName;
-
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			bitStream.Read(messageID);
-			bitStream.Read(levelName);
-
-			m_levelName = levelName;
-
-			break;
-		}
-		case ID_CONNECTION_ATTEMPT_FAILED:
-		{
-			ConsolePrintError("Connection to server failed.");
-			m_networkStatus = NETWORKSTATUS_TIMEOUT;
-			//m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
-			break;
-		}
-		case ID_DISCONNECTION_NOTIFICATION:
-		{
-			ConsolePrintError("Server shut down.");
-			m_networkStatus = NETWORKSTATUS_LOST;
-			ConsoleSkipLines(1);
-
-			break;
-		}
-		case ID_CONNECTION_LOST:
-		{
-			ConsolePrintError("Lost connection to server.");
-			m_networkStatus = NETWORKSTATUS_LOST;
-			ConsoleSkipLines(1);
-
-			break;
-		}
-		case ID_NR_CONNECTIONS:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-
-			bitStream.Read(messageID);
-			bitStream.Read(m_connectionCount);
-			bitStream.Read(guid);
-
-			if (m_connectionCount < m_previousCount)
+			case ID_CONNECTION_REQUEST_ACCEPTED:
 			{
-				ConsolePrintError("Client disconnected.");
+				ConsolePrintSuccess("Connected to the server.");
+				ConsoleSkipLines(1);
+
+				m_connected = true;
+				m_networkStatus = NETWORKSTATUS_CONNECTED;
+
+				RakNet::BitStream bitStream;
+				bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
+				m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, m_packet->guid, false);
+
+				break;
 			}
-			else
+			case ID_LEVELNAME:
 			{
-				ConsolePrintSuccess("New client connected.");
-				//Person has joineeeddd
-				m_justJoinedPlayer = guid;
-				m_newPlayerJoined = true;
+				RakNet::RakString levelName;
+
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				bitStream.Read(messageID);
+				bitStream.Read(levelName);
+
+				m_levelName = levelName;
+
+				break;
 			}
-
-			ConsolePrintText("Players connected: " + std::to_string(m_connectionCount));
-			ConsoleSkipLines(1);
-
-			m_previousCount = m_connectionCount;
-
-			break;
-		}
-		case ID_DOWNLOAD_PLAYERS:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakString name;
-			int nrOfPlayers = 0;
-			float x, y, z;
-			float dirX, dirY, dirZ;
-			float maxHP, currentHP, shield;
-			int team, charNr, toolNr, kills, deaths;
-			bool isAlive, invis;
-			RakNet::RakNetGUID guid;
-			int id;
-			std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
-			bitStream.Read(messageID);
-			bitStream.Read(nrOfPlayers);
-
-			for (int i = 0; i < nrOfPlayers; i++)
+			case ID_CONNECTION_ATTEMPT_FAILED:
 			{
+				ConsolePrintError("Connection to server failed.");
+				m_networkStatus = NETWORKSTATUS_TIMEOUT;
+				//m_clientPeer->Connect(SERVER_ADDRESS, SERVER_PORT, 0, 0);
+				break;
+			}
+			case ID_DISCONNECTION_NOTIFICATION:
+			{
+				ConsolePrintError("Server shut down.");
+				m_networkStatus = NETWORKSTATUS_LOST;
+				ConsoleSkipLines(1);
+
+				break;
+			}
+			case ID_CONNECTION_LOST:
+			{
+				ConsolePrintError("Lost connection to server.");
+				m_networkStatus = NETWORKSTATUS_LOST;
+				ConsoleSkipLines(1);
+
+				break;
+			}
+			case ID_NR_CONNECTIONS:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+
+				bitStream.Read(messageID);
+				bitStream.Read(m_connectionCount);
 				bitStream.Read(guid);
-				bitStream.Read(id);
-				bitStream.Read(name);
+
+				if (m_connectionCount < m_previousCount)
+				{
+					ConsolePrintError("Client disconnected.");
+				}
+				else
+				{
+					ConsolePrintSuccess("New client connected.");
+					//Person has joineeeddd
+					m_justJoinedPlayer = guid;
+					m_newPlayerJoined = true;
+				}
+
+				ConsolePrintText("Players connected: " + std::to_string(m_connectionCount));
+				ConsoleSkipLines(1);
+
+				m_previousCount = m_connectionCount;
+
+				break;
+			}
+			case ID_DOWNLOAD_PLAYERS:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakString name;
+				int nrOfPlayers = 0;
+				float x, y, z;
+				float dirX, dirY, dirZ;
+				float maxHP, currentHP, shield;
+				int team, charNr, toolNr, kills, deaths;
+				bool isAlive, invis;
+				RakNet::RakNetGUID guid;
+				int id;
+				std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
+				bitStream.Read(messageID);
+				bitStream.Read(nrOfPlayers);
+
+				for (int i = 0; i < nrOfPlayers; i++)
+				{
+					bitStream.Read(guid);
+					bitStream.Read(id);
+					bitStream.Read(name);
+					bitStream.Read(x);
+					bitStream.Read(y);
+					bitStream.Read(z);
+					bitStream.Read(dirX);
+					bitStream.Read(dirY);
+					bitStream.Read(dirZ);
+					bitStream.Read(team);
+					bitStream.Read(charNr);
+					bitStream.Read(maxHP);
+					bitStream.Read(currentHP);
+					bitStream.Read(isAlive);
+					bitStream.Read(invis);
+					bitStream.Read(toolNr);
+					bitStream.Read(deaths);
+					bitStream.Read(kills);
+					bitStream.Read(shield);
+
+					// (Add and) update players position
+					UpdatePlayerPos(guid, x, y, z);
+					UpdatePlayerDir(guid, dirX, dirY, dirZ);
+					UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
+					UpdatePlayerTeam(guid, team);
+					UpdatePlayerChar(guid, charNr, toolNr);
+					UpdatePlayerID(guid, id);
+					UpdatePlayerKD(guid, deaths, kills);
+					UpdatePlayerInvis(guid, invis);
+					UpdatePlayerShield(guid, shield);
+					UpdatePlayerName(guid, name);
+
+					playerGuids.push_back(guid);
+				}
+
+				// Check for removed players
+				CheckForRemovedPlayers(playerGuids);
+
+				m_newOrRemovedPlayers = true;
+
+				break;
+			}
+
+			case ID_PLAYER_MOVED:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				float x, y, z;
+
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				UpdatePlayerPos(guid, x, y, z);
+				break;
+			}
+			case ID_PLAYER_ROTATED:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				float dirX, dirY, dirZ;
+
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				bitStream.Read(dirX);
+				bitStream.Read(dirY);
+				bitStream.Read(dirZ);
+
+				UpdatePlayerDir(guid, dirX, dirY, dirZ);
+				break;
+			}
+			case ID_SHURIKEN_THROWN:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				float x, y, z;
+				float dirX, dirY, dirZ;
+				unsigned int shurikenID;
+				float speed;
+				bool megaShuriken;
+
+				bitStream.Read(messageID);
 				bitStream.Read(x);
 				bitStream.Read(y);
 				bitStream.Read(z);
 				bitStream.Read(dirX);
 				bitStream.Read(dirY);
 				bitStream.Read(dirZ);
-				bitStream.Read(team);
-				bitStream.Read(charNr);
-				bitStream.Read(maxHP);
-				bitStream.Read(currentHP);
-				bitStream.Read(isAlive);
-				bitStream.Read(invis);
-				bitStream.Read(toolNr);
-				bitStream.Read(deaths);
-				bitStream.Read(kills);
-				bitStream.Read(shield);
+				bitStream.Read(shurikenID);
+				bitStream.Read(guid);
+				bitStream.Read(speed);
+				bitStream.Read(megaShuriken);
 
-
-				// (Add and) update players position
-				UpdatePlayerPos(guid, x, y, z);
-				UpdatePlayerDir(guid, dirX, dirY, dirZ);
-				UpdatePlayerHP(guid, maxHP, currentHP, isAlive);
-				UpdatePlayerTeam(guid, team);
-				UpdatePlayerChar(guid, charNr, toolNr);
-				UpdatePlayerID(guid, id);
-				UpdatePlayerKD(guid, deaths, kills);
-				UpdatePlayerInvis(guid, invis);
-				UpdatePlayerShield(guid, shield);
-				UpdatePlayerName(guid, name);
-
-				playerGuids.push_back(guid);
+				UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed, megaShuriken);
+				break;
 			}
-
-			// Check for removed players
-			CheckForRemovedPlayers(playerGuids);
-
-			m_newOrRemovedPlayers = true;
-
-			break;
-		}
-
-		case ID_PLAYER_MOVED:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float x, y, z;
-
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-
-			UpdatePlayerPos(guid, x, y, z);
-			break;
-		}
-		case ID_PLAYER_ROTATED:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float dirX, dirY, dirZ;
-
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			bitStream.Read(dirX);
-			bitStream.Read(dirY);
-			bitStream.Read(dirZ);
-
-			UpdatePlayerDir(guid, dirX, dirY, dirZ);
-			break;
-		}
-		case ID_SHURIKEN_THROWN:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float x, y, z;
-			float dirX, dirY, dirZ;
-			unsigned int shurikenID;
-			float speed;
-			bool megaShuriken;
-
-			bitStream.Read(messageID);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-			bitStream.Read(dirX);
-			bitStream.Read(dirY);
-			bitStream.Read(dirZ);
-			bitStream.Read(shurikenID);
-			bitStream.Read(guid);
-			bitStream.Read(speed);
-			bitStream.Read(megaShuriken);
-
-			UpdateShurikens(x, y, z, dirX, dirY, dirZ, shurikenID, guid, speed, megaShuriken);
-			break;
-		}
-		case ID_SHURIKEN_REMOVE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned int shurikenId;
-			bitStream.Read(messageID);
-			bitStream.Read(shurikenId);
-
-			RemoveShuriken(shurikenId);
-
-			break;
-		}
-		case ID_PROJECTILE_THROWN:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float x, y, z;
-			float dirX, dirY, dirZ;
-			unsigned int uniqueId;
-			int projType;
-			float speed;
-
-			bitStream.Read(messageID);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-			bitStream.Read(dirX);
-			bitStream.Read(dirY);
-			bitStream.Read(dirZ);
-			bitStream.Read(projType);
-			bitStream.Read(uniqueId);
-			bitStream.Read(guid);
-			bitStream.Read(speed);
-
-			ProjectileThrown(x, y, z, dirX, dirY, dirZ, uniqueId, guid, speed, projType);
-			break;
-		}
-		case ID_PROJECTILE_REMOVE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned int uniqueId;
-			bitStream.Read(messageID);
-			bitStream.Read(uniqueId);
-
-			RemoveProjectile(uniqueId);
-
-			break;
-		}
-		case ID_RESPAWN_PLAYER:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			float x, y, z;
-			bitStream.Read(messageID);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-
-			RespawnPlayer(x, y, z);
-			UpdatePlayerInvisAll(false);
-
-			break;
-		}
-		case ID_PLAYER_INVALID_MOVE:
-		{
-			m_invalidMove = true;
-			break;
-		}
-		case ID_PLAYER_HP_CHANGED:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float currentHP;
-			bool isAlive;
-
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			bitStream.Read(currentHP);
-			bitStream.Read(isAlive);
-
-			UpdatePlayerHP(guid, currentHP, isAlive);
-			UpdatePlayerInvis(guid, false);
-			SpawnBloodParticles(guid);
-			break;
-		}
-		case ID_ROUND_OVER:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			int winningTeam;
-
-			bitStream.Read(messageID);
-			bitStream.Read(winningTeam);
-
-			//m_roundOver = true;
-
-			// Team 1 = red
-			// Team 2 = blue
-			if (winningTeam == 1)
+			case ID_SHURIKEN_REMOVE:
 			{
-				m_redTeamScore++;
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-				ConsolePrintText("The red team won this round!");
-				ConsoleSkipLines(1);
+				unsigned int shurikenId;
+				bitStream.Read(messageID);
+				bitStream.Read(shurikenId);
+
+				RemoveShuriken(shurikenId);
+
+				break;
 			}
-			else if (winningTeam == 2)
+			case ID_PROJECTILE_THROWN:
 			{
-				m_blueTeamScore++;
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-				ConsolePrintText("The blue team won this round!");
-				ConsoleSkipLines(1);
-			}
-			m_lastTeamWon = winningTeam;
+				RakNet::RakNetGUID guid;
+				float x, y, z;
+				float dirX, dirY, dirZ;
+				unsigned int uniqueId;
+				int projType;
+				float speed;
 
-			break;
-		}
-		case ID_RESTARTED_ROUND:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			bitStream.Read(messageID);
-
-			m_roundRestarted = true;
-			m_restartingRound = false;
-			m_roundOver = true;
-			m_timeRestarting = 0;
-			ClearListsAtNewRound();
-
-			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
-
-			//Reset Rune Sounds
-			for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
-			{
-				m_sound->StopAmbientSound(runeSoundEmitters[i]);
-				runeSoundEmitters.clear();
-			}
-
-			ConsolePrintSuccess("A new round has started!");
-			ConsoleSkipLines(1);
-			break;
-
-		}
-		case ID_RESTARTING_ROUND:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			bitStream.Read(messageID);
-			m_restartingRound = true;
-			
-			ConsolePrintText("Next round starts in: ");
-			ConsoleSkipLines(1);
-			m_suddenDeath = false;
-			break;
-		}
-		case ID_RESTARTING_ROUND_TIMER:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			int time;
-
-			bitStream.Read(messageID);
-			bitStream.Read(time);
-
-			m_timeRestarting = time;
-
-			if (time <= 5 && time != 0){
-				m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_BEEP_SOUND, 0, 0, 0);
-			}
-			ConsolePrintText(std::to_string(time) + "...");
-			break;
-		}
-		case ID_SMOKEBOMB_THROW:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned int smokebombId;
-			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
-			bitStream.Read(messageID);
-			bitStream.Read(smokebombId);
-			bitStream.Read(startPosX);
-			bitStream.Read(startPosZ);
-			bitStream.Read(endPosX);
-			bitStream.Read(endPosZ);
-			bitStream.Read(lifetime);
-
-			UpdateSmokeBomb(smokebombId, startPosX, startPosZ, endPosX, endPosZ, lifetime);
-			break;
-		}
-		case ID_SMOKEBOMB_REMOVE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned int smokeBombID;
-			bitStream.Read(messageID);
-			bitStream.Read(smokeBombID);
-
-			RemoveSmokeBomb(smokeBombID);
-			break;
-		}
-		case ID_MATCH_OVER:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			int winningTeam;
-
-			bitStream.Read(messageID);
-			bitStream.Read(winningTeam);
-
-			m_matchOver = true;
-			m_matchWinningTeam = winningTeam;
-
-			if (winningTeam == 1)
-			{
-				ConsolePrintText("The red team won this match!");
-				ConsoleSkipLines(1);
-			}
-
-			else
-			{
-				ConsolePrintText("The blue team won this match!");
-				ConsoleSkipLines(1);
-			}
-
-			break;
-		}
-		case ID_NEW_LEVEL:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakString levelName;
-
-			bitStream.Read(messageID);
-			bitStream.Read(levelName);
-
-			m_newLevel = true;
-			m_levelName = levelName;
-			m_redTeamScore = 0;
-			m_blueTeamScore = 0;
-			m_matchOver = false;
-			m_roundOver = false;
-			m_matchWinningTeam = 0;
-			m_restartingRound = false;
-
-			RakNet::BitStream wBitStream;
-			wBitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
-			m_clientPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 0, m_packet->guid, false);
-
-			m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
-			ConsolePrintSuccess("Starting a new match.");
-			ConsoleSkipLines(1);
-			break;
-		}
-		case ID_PLAYER_ANIMATION_CHANGED:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			AnimationState state;
-
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			bitStream.Read(state);
-
-			// TODO, update local player animation.
-			m_playerAnimations[guid] = state;
-			break;
-		}
-		case ID_SPIKETRAP_THROW:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			unsigned int spikeTrapId;
-			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
-			int team;
-			bitStream.Read(messageID);
-			bitStream.Read(spikeTrapId);
-			bitStream.Read(startPosX);
-			bitStream.Read(startPosZ);
-			bitStream.Read(endPosX);
-			bitStream.Read(endPosZ);
-			bitStream.Read(lifetime);
-			bitStream.Read(guid);
-			bitStream.Read(team);
-
-
-			UpdateSpikeTrap(guid, spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime, team);
-			break;
-		}
-		case ID_SPIKETRAP_REMOVE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned int spikeTrapId;
-			bitStream.Read(messageID);
-			bitStream.Read(spikeTrapId);
-
-			RemoveSpikeTrap(spikeTrapId);
-			break;
-		}
-		case ID_DASH_TO_LOCATION:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			float x, y, z;
-
-			bitStream.Read(messageID);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-
-			m_dashLocation = DirectX::XMFLOAT3(x, y, z);
-
-			m_dashed = true;
-			break;
-		}
-		case ID_FAN_THROWN:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float x, y, z;
-			float dirX, dirY, dirZ;
-			unsigned int id;
-			float speed;
-
-			bitStream.Read(messageID);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-			bitStream.Read(dirX);
-			bitStream.Read(dirY);
-			bitStream.Read(dirZ);
-			bitStream.Read(id);
-			bitStream.Read(guid);
-			bitStream.Read(speed);
-
-			AddFans(x, y, z, dirX, dirY, dirZ, id, guid, speed);
-			break;
-		}
-		case ID_FAN_UPDATE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			float x, z;
-			unsigned int id;
-			int nrOfFans;
-
-			bitStream.Read(messageID);
-			bitStream.Read(nrOfFans);
-
-			for (int i = 0; i < nrOfFans; i++)
-			{
-				bitStream.Read(id);
+				bitStream.Read(messageID);
 				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+				bitStream.Read(dirX);
+				bitStream.Read(dirY);
+				bitStream.Read(dirZ);
+				bitStream.Read(projType);
+				bitStream.Read(uniqueId);
+				bitStream.Read(guid);
+				bitStream.Read(speed);
+
+				ProjectileThrown(x, y, z, dirX, dirY, dirZ, uniqueId, guid, speed, projType);
+				break;
+			}
+			case ID_PROJECTILE_REMOVE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned int uniqueId;
+				bitStream.Read(messageID);
+				bitStream.Read(uniqueId);
+
+				RemoveProjectile(uniqueId);
+
+				break;
+			}
+			case ID_RESPAWN_PLAYER:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				float x, y, z;
+				bitStream.Read(messageID);
+				bitStream.Read(x);
+				bitStream.Read(y);
 				bitStream.Read(z);
 
-				for (unsigned int j = 0; j < m_fanList.size(); j++)
-				{
-					if (m_fanList[j].id == id)
-					{
-						m_fanList[j].x = x;
-						m_fanList[j].z = z;
-						break;
-					}
-				}
+				RespawnPlayer(x, y, z);
+				UpdatePlayerInvisAll(false);
+
+				break;
 			}
-			break;
-		}
-		case ID_FAN_REMOVE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned int fanId;
-			bitStream.Read(messageID);
-			bitStream.Read(fanId);
-			RemoveFan(fanId);
-			break;
-		}
-		case ID_FAN_DEAD_UPDATE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			float lifeTime;
-			unsigned int id;
-			bitStream.Read(messageID);
-			bitStream.Read(id);
-			bitStream.Read(lifeTime);
-
-			UpdateFanLifeTime(id, lifeTime);
-			break;
-		}
-		case ID_TIMER_SYNC:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			double sec, min;
-			bitStream.Read(messageID);
-			bitStream.Read(min);
-			bitStream.Read(sec);
-
-			m_timerSynced = true;
-			m_timerMin = min;
-			m_timerSec = sec;
-			break;
-		}
-		case ID_STICKYTRAP_THROW:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID guid;
-			unsigned int stickyTrapID;
-			float startPosX, startPosZ, endPosX, endPosZ, lifetime;
-			bitStream.Read(messageID);
-			bitStream.Read(stickyTrapID);
-			bitStream.Read(startPosX);
-			bitStream.Read(startPosZ);
-			bitStream.Read(endPosX);
-			bitStream.Read(endPosZ);
-			bitStream.Read(lifetime);
-			bitStream.Read(guid);
-
-
-			UpdateStickyTrap(guid, stickyTrapID, startPosX, startPosZ, endPosX, endPosZ, lifetime);
-			break;
-		}
-		case ID_STICKYTRAP_REMOVE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned int stickyTrapID;
-			bitStream.Read(messageID);
-			bitStream.Read(stickyTrapID);
-
-			RemoveStickyTrap(stickyTrapID);
-			break;
-		}
-		case ID_SEND_TEAM_SCORE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			m_redTeamScore = 0;
-			m_blueTeamScore = 0;
-
-			unsigned int size;
-			int team, score;
-
-			bitStream.Read(messageID);
-			bitStream.Read(size);
-
-			for (unsigned int i = 0; i < size; i++)
+			case ID_PLAYER_INVALID_MOVE:
 			{
-				bitStream.Read(team);
-				bitStream.Read(score);
+				m_invalidMove = true;
+				break;
+			}
+			case ID_PLAYER_HP_CHANGED:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				float currentHP;
+				bool isAlive;
+
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				bitStream.Read(currentHP);
+				bitStream.Read(isAlive);
+
+				UpdatePlayerHP(guid, currentHP, isAlive);
+				UpdatePlayerInvis(guid, false);
+				SpawnBloodParticles(guid);
+				break;
+			}
+			case ID_ROUND_OVER:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				int winningTeam;
+
+				bitStream.Read(messageID);
+				bitStream.Read(winningTeam);
+
+				//m_roundOver = true;
 
 				// Team 1 = red
 				// Team 2 = blue
-				if (team == 1)
+				if (winningTeam == 1)
 				{
-					m_redTeamScore = score;
+					m_redTeamScore++;
+
+					ConsolePrintText("The red team won this round!");
+					ConsoleSkipLines(1);
 				}
-				else if (team == 2)
+				else if (winningTeam == 2)
 				{
-					m_blueTeamScore = score;
+					m_blueTeamScore++;
+
+					ConsolePrintText("The blue team won this round!");
+					ConsoleSkipLines(1);
 				}
+				m_lastTeamWon = winningTeam;
+
+				break;
 			}
-			break;
-		}
-		case ID_NAGINATA_STAB_HAS_OCCURED:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			//TODO: Implement set cooldown for player;
-
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-
-			if (m_myPlayer.guid == guid)
+			case ID_RESTARTED_ROUND:
 			{
-				m_NaginataStabPerformed = true;
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				bitStream.Read(messageID);
+
+				m_roundRestarted = true;
+				m_restartingRound = false;
+				m_roundOver = true;
+				m_timeRestarting = 0;
+				ClearListsAtNewRound();
+
+				m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
+
+				//Reset Rune Sounds
+				for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
+				{
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+					runeSoundEmitters.clear();
+				}
+
+				ConsolePrintSuccess("A new round has started!");
+				ConsoleSkipLines(1);
+				break;
+
 			}
+			case ID_RESTARTING_ROUND:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-			break;
-		}
-		case ID_VOLLEY_THROWN:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			unsigned int id;
-			float startX, startZ, endX, endZ;
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(id);
-			bitStream.Read(startX);
-			bitStream.Read(startZ);
-			bitStream.Read(endX);
-			bitStream.Read(endZ);
-			bitStream.Read(guid);
-
-			AddVolley(id, startX, startZ, endX, endZ, guid);
-			break;
-		}
-		case ID_HAS_INFLICTED_DAMAGE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			float damage, x,y,z;
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			bitStream.Read(damage);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-
-			m_dealtDamage = damage;
-			m_dealtDamagePosition = DirectX::XMFLOAT3(x, y, z);
-			break;
-		}		
-		case ID_PLAYER_MOVE_AND_ROTATE:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned char id;
-			signed short mantissa1;
-			signed char mantissa2;
-			signed char exp;
-			float posX, posZ;
-			float dirX, dirZ;
-
-			bitStream.Read(messageID);
-			bitStream.Read(id);
-
-			// pos x
-			bitStream.Read(mantissa1);
-			bitStream.Read(exp);
-			posX = ((float)mantissa1 / 10000.0f) * powf(2.0f, (float)exp);
-
-			// pos z
-			bitStream.Read(mantissa1);
-			bitStream.Read(exp);
-			posZ = ((float)mantissa1 / 10000.0f) * powf(2.0f, (float)exp);
-
-			// dir x
-			bitStream.Read(mantissa2);
-			bitStream.Read(exp);
-			dirX = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
-
-			// dir z
-			bitStream.Read(mantissa2);
-			bitStream.Read(exp);
-			dirZ = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
-
-			UpdatePlayerPos((int)id, posX, 0.0f, posZ);
-			UpdatePlayerDir((int)id, dirX, 0.0f, dirZ);
-			break;
-		}
-		case ID_DEATHBOARDKILL:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID takerNinja, killerNinja;
-			ABILITIES murderWeapon;
-
-			bitStream.Read(messageID);
-			bitStream.Read(takerNinja);
-			bitStream.Read(killerNinja);
-			bitStream.Read(murderWeapon);
-
-			DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
-
-			break;
-		}
-		case ID_PLAY_SOUND_ABILITY:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				bitStream.Read(messageID);
+				m_restartingRound = true;
 			
-			ABILITIES ability;
-			float x, y, z;
+				ConsolePrintText("Next round starts in: ");
+				ConsoleSkipLines(1);
+				m_suddenDeath = false;
+				break;
+			}
+			case ID_RESTARTING_ROUND_TIMER:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-			bitStream.Read(messageID);
-			bitStream.Read(ability); 
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
+				int time;
 
-			//float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x) + (m_myPlayer.z - z)*(m_myPlayer.z - z)));
-			//float soundDistanceGain = 4.0f;
+				bitStream.Read(messageID);
+				bitStream.Read(time);
 
-			//Hit sounds
-			switch (ability)
-			{
-			case ABILITIES::ABILITIES_SHURIKEN:
-			{
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, x, y, z);
+				m_timeRestarting = time;
+
+				if (time <= 5 && time != 0){
+					m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_BEEP_SOUND, 0, 0, 0);
+				}
+				ConsolePrintText(std::to_string(time) + "...");
 				break;
 			}
-			case ABILITIES::ABILITIES_MEGASHURIKEN:
+			case ID_SMOKEBOMB_THROW:
 			{
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_SOUND, x, y, z);
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned int smokebombId;
+				float startPosX, startPosZ, endPosX, endPosZ, lifetime;
+				bitStream.Read(messageID);
+				bitStream.Read(smokebombId);
+				bitStream.Read(startPosX);
+				bitStream.Read(startPosZ);
+				bitStream.Read(endPosX);
+				bitStream.Read(endPosZ);
+				bitStream.Read(lifetime);
+
+				UpdateSmokeBomb(smokebombId, startPosX, startPosZ, endPosX, endPosZ, lifetime);
 				break;
 			}
-			case ABILITIES::ABILITIES_KUNAI:
+			case ID_SMOKEBOMB_REMOVE:
 			{
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND, x, y, z);
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned int smokeBombID;
+				bitStream.Read(messageID);
+				bitStream.Read(smokeBombID);
+
+				RemoveSmokeBomb(smokeBombID);
 				break;
 			}
-			case ABILITIES::ABILITIES_MELEESWING:
+			case ID_MATCH_OVER:
 			{
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, x, y, z);
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				int winningTeam;
+
+				bitStream.Read(messageID);
+				bitStream.Read(winningTeam);
+
+				m_matchOver = true;
+				m_matchWinningTeam = winningTeam;
+
+				if (winningTeam == 1)
+				{
+					ConsolePrintText("The red team won this match!");
+					ConsoleSkipLines(1);
+				}
+
+				else
+				{
+					ConsolePrintText("The blue team won this match!");
+					ConsoleSkipLines(1);
+				}
+
 				break;
 			}
-			case ABILITIES::ABILITIES_WHIP_PRIMARY:
+			case ID_NEW_LEVEL:
 			{
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, x, y, z);
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakString levelName;
+
+				bitStream.Read(messageID);
+				bitStream.Read(levelName);
+
+				m_newLevel = true;
+				m_levelName = levelName;
+				m_redTeamScore = 0;
+				m_blueTeamScore = 0;
+				m_matchOver = false;
+				m_roundOver = false;
+				m_matchWinningTeam = 0;
+				m_restartingRound = false;
+
+				RakNet::BitStream wBitStream;
+				wBitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
+				m_clientPeer->Send(&wBitStream, HIGH_PRIORITY, RELIABLE, 0, m_packet->guid, false);
+
+				m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
+				ConsolePrintSuccess("Starting a new match.");
+				ConsoleSkipLines(1);
 				break;
 			}
-			case ABILITIES::ABILITIES_WHIP_SECONDARY:
+			case ID_PLAYER_ANIMATION_CHANGED:
 			{
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, x, y, z);
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				AnimationState state;
+
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				bitStream.Read(state);
+
+				// TODO, update local player animation.
+				m_playerAnimations[guid] = state;
 				break;
 			}
-			case ABILITIES::ABILITIES_NAGINATASLASH:
+			case ID_SPIKETRAP_THROW:
 			{
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, x, y, z);
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				unsigned int spikeTrapId;
+				float startPosX, startPosZ, endPosX, endPosZ, lifetime;
+				int team;
+				bitStream.Read(messageID);
+				bitStream.Read(spikeTrapId);
+				bitStream.Read(startPosX);
+				bitStream.Read(startPosZ);
+				bitStream.Read(endPosX);
+				bitStream.Read(endPosZ);
+				bitStream.Read(lifetime);
+				bitStream.Read(guid);
+				bitStream.Read(team);
+
+
+				UpdateSpikeTrap(guid, spikeTrapId, startPosX, startPosZ, endPosX, endPosZ, lifetime, team);
 				break;
 			}
-			case ABILITIES::ABILITIES_NAGAINATASTAB:
+			case ID_SPIKETRAP_REMOVE:
 			{
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, x, y, z);
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned int spikeTrapId;
+				bitStream.Read(messageID);
+				bitStream.Read(spikeTrapId);
+
+				RemoveSpikeTrap(spikeTrapId);
 				break;
 			}
-			case ABILITIES::ABILITIES_VOLLEY:
+			case ID_DASH_TO_LOCATION:
 			{
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_VOLLEY_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_VOLLEY_HIT_SOUND, x, y, z);
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				float x, y, z;
+
+				bitStream.Read(messageID);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				m_dashLocation = DirectX::XMFLOAT3(x, y, z);
+
+				m_dashed = true;
 				break;
 			}
-			case ABILITIES::ABILITIES_FANBOOMERANG:
+			case ID_FAN_THROWN:
 			{
-				//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
-				m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, x, y, z);
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				float x, y, z;
+				float dirX, dirY, dirZ;
+				unsigned int id;
+				float speed;
+
+				bitStream.Read(messageID);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+				bitStream.Read(dirX);
+				bitStream.Read(dirY);
+				bitStream.Read(dirZ);
+				bitStream.Read(id);
+				bitStream.Read(guid);
+				bitStream.Read(speed);
+
+				AddFans(x, y, z, dirX, dirY, dirZ, id, guid, speed);
 				break;
 			}
+			case ID_FAN_UPDATE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				float x, z;
+				unsigned int id;
+				int nrOfFans;
+
+				bitStream.Read(messageID);
+				bitStream.Read(nrOfFans);
+
+				for (int i = 0; i < nrOfFans; i++)
+				{
+					bitStream.Read(id);
+					bitStream.Read(x);
+					bitStream.Read(z);
+
+					for (unsigned int j = 0; j < m_fanList.size(); j++)
+					{
+						if (m_fanList[j].id == id)
+						{
+							m_fanList[j].x = x;
+							m_fanList[j].z = z;
+							break;
+						}
+					}
+				}
+				break;
+			}
+			case ID_FAN_REMOVE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned int fanId;
+				bitStream.Read(messageID);
+				bitStream.Read(fanId);
+				RemoveFan(fanId);
+				break;
+			}
+			case ID_FAN_DEAD_UPDATE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				float lifeTime;
+				unsigned int id;
+				bitStream.Read(messageID);
+				bitStream.Read(id);
+				bitStream.Read(lifeTime);
+
+				UpdateFanLifeTime(id, lifeTime);
+				break;
+			}
+			case ID_TIMER_SYNC:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				double sec, min;
+				bitStream.Read(messageID);
+				bitStream.Read(min);
+				bitStream.Read(sec);
+
+				m_timerSynced = true;
+				m_timerMin = min;
+				m_timerSec = sec;
+				break;
+			}
+			case ID_STICKYTRAP_THROW:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID guid;
+				unsigned int stickyTrapID;
+				float startPosX, startPosZ, endPosX, endPosZ, lifetime;
+				bitStream.Read(messageID);
+				bitStream.Read(stickyTrapID);
+				bitStream.Read(startPosX);
+				bitStream.Read(startPosZ);
+				bitStream.Read(endPosX);
+				bitStream.Read(endPosZ);
+				bitStream.Read(lifetime);
+				bitStream.Read(guid);
+
+
+				UpdateStickyTrap(guid, stickyTrapID, startPosX, startPosZ, endPosX, endPosZ, lifetime);
+				break;
+			}
+			case ID_STICKYTRAP_REMOVE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned int stickyTrapID;
+				bitStream.Read(messageID);
+				bitStream.Read(stickyTrapID);
+
+				RemoveStickyTrap(stickyTrapID);
+				break;
+			}
+			case ID_SEND_TEAM_SCORE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				m_redTeamScore = 0;
+				m_blueTeamScore = 0;
+
+				unsigned int size;
+				int team, score;
+
+				bitStream.Read(messageID);
+				bitStream.Read(size);
+
+				for (unsigned int i = 0; i < size; i++)
+				{
+					bitStream.Read(team);
+					bitStream.Read(score);
+
+					// Team 1 = red
+					// Team 2 = blue
+					if (team == 1)
+					{
+						m_redTeamScore = score;
+					}
+					else if (team == 2)
+					{
+						m_blueTeamScore = score;
+					}
+				}
+				break;
+			}
+			case ID_NAGINATA_STAB_HAS_OCCURED:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				//TODO: Implement set cooldown for player;
+
+				RakNet::RakNetGUID guid;
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+
+				if (m_myPlayer.guid == guid)
+				{
+					m_NaginataStabPerformed = true;
+				}
+
+				break;
+			}
+			case ID_VOLLEY_THROWN:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				unsigned int id;
+				float startX, startZ, endX, endZ;
+				RakNet::RakNetGUID guid;
+				bitStream.Read(messageID);
+				bitStream.Read(id);
+				bitStream.Read(startX);
+				bitStream.Read(startZ);
+				bitStream.Read(endX);
+				bitStream.Read(endZ);
+				bitStream.Read(guid);
+
+				AddVolley(id, startX, startZ, endX, endZ, guid);
+				break;
+			}
+			case ID_HAS_INFLICTED_DAMAGE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				float damage, x,y,z;
+				RakNet::RakNetGUID guid;
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				bitStream.Read(damage);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				m_dealtDamage = damage;
+				m_dealtDamagePosition = DirectX::XMFLOAT3(x, y, z);
+				break;
+			}		
+			case ID_PLAYER_MOVE_AND_ROTATE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned char id;
+				signed short mantissa1;
+				signed char mantissa2;
+				signed char exp;
+				float posX, posZ;
+				float dirX, dirZ;
+
+				bitStream.Read(messageID);
+				bitStream.Read(id);
+
+				// pos x
+				bitStream.Read(mantissa1);
+				bitStream.Read(exp);
+				posX = ((float)mantissa1 / 10000.0f) * powf(2.0f, (float)exp);
+
+				// pos z
+				bitStream.Read(mantissa1);
+				bitStream.Read(exp);
+				posZ = ((float)mantissa1 / 10000.0f) * powf(2.0f, (float)exp);
+
+				// dir x
+				bitStream.Read(mantissa2);
+				bitStream.Read(exp);
+				dirX = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
+
+				// dir z
+				bitStream.Read(mantissa2);
+				bitStream.Read(exp);
+				dirZ = ((float)mantissa2 / 100.0f) * powf(2.0f, (float)exp);
+
+				UpdatePlayerPos((int)id, posX, 0.0f, posZ);
+				UpdatePlayerDir((int)id, dirX, 0.0f, dirZ);
+				break;
+			}
+			case ID_DEATHBOARDKILL:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID takerNinja, killerNinja;
+				ABILITIES murderWeapon;
+
+				bitStream.Read(messageID);
+				bitStream.Read(takerNinja);
+				bitStream.Read(killerNinja);
+				bitStream.Read(murderWeapon);
+
+				DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
+
+				break;
+			}
+			case ID_PLAY_SOUND_ABILITY:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+			
+				ABILITIES ability;
+				float x, y, z;
+
+				bitStream.Read(messageID);
+				bitStream.Read(ability); 
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				//float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x) + (m_myPlayer.z - z)*(m_myPlayer.z - z)));
+				//float soundDistanceGain = 4.0f;
+
+				//Hit sounds
+				switch (ability)
+				{
+				case ABILITIES::ABILITIES_SHURIKEN:
+				{
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, x, y, z);
+					break;
+				}
+				case ABILITIES::ABILITIES_MEGASHURIKEN:
+				{
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_MEGA_SHURIKEN_HIT_SOUND, x, y, z);
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					break;
+				}
+				case ABILITIES::ABILITIES_KUNAI:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KUNAI_HIT_SOUND, x, y, z);
+					break;
+				}
+				case ABILITIES::ABILITIES_MELEESWING:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, x, y, z);
+					break;
+				}
+				case ABILITIES::ABILITIES_WHIP_PRIMARY:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, x, y, z);
+					break;
+				}
+				case ABILITIES::ABILITIES_WHIP_SECONDARY:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, x, y, z);
+					break;
+				}
+				case ABILITIES::ABILITIES_NAGINATASLASH:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, x, y, z);
+					break;
+				}
+				case ABILITIES::ABILITIES_NAGAINATASTAB:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_NAGINATA_HIT_SOUND, x, y, z);
+					break;
+				}
+				case ABILITIES::ABILITIES_VOLLEY:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_VOLLEY_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_VOLLEY_HIT_SOUND, x, y, z);
+					break;
+				}
+				case ABILITIES::ABILITIES_FANBOOMERANG:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_SHURIKEN_HIT_SOUND, x, y, z);
+					break;
+				}
+				default:
+				{
+					break;
+				}
+				}
+
+				//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
+
+				break;
+			}
+			case ID_PLAY_SOUND:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				PLAYSOUND sound;
+				float x, y, z;
+
+				bitStream.Read(messageID);
+				bitStream.Read(sound);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				/*float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x)) + ((m_myPlayer.z - z)*(m_myPlayer.z - z)));
+				float soundDistanceGain = 4.0f;
+			
+				//Hit sounds
+				if (distance == 0){
+					m_sound->PlaySound(sound, 1.0f);
+				}
+				else{
+					m_sound->PlaySound(sound, 1.0f / (distance / soundDistanceGain));
+				}*/
+
+				if (m_sound != NULL){
+				m_sound->CreateDefaultSound(sound, x, y, z);
+				}
+
+				//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
+
+				break;
+			}
+
+			case ID_PLAY_AMBIENT_SOUND:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				PLAYSOUND sound;
+				float x, y, z;
+
+				bitStream.Read(messageID);
+				bitStream.Read(sound);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+				Sound::SoundEmitter* soundEmitter;
+
+				if (m_sound != NULL){
+					soundEmitter = m_sound->CreateAmbientSound(sound, x, y, z);
+				}
+				break;
+			}
+
+			case ID_STOP_AMBIENT_SOUND:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				PLAYSOUND sound;
+				float x, y, z;
+
+				bitStream.Read(messageID);
+				bitStream.Read(sound);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+
+				if (m_sound != NULL){
+					m_sound->CreateAmbientSound(sound, x, y, z);
+				}
+
+				break;
+			}
+
+			case ID_SCOREBOARDKILL:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakNetGUID takerNinja, killerNinja;
+				int kills, deaths;
+
+				bitStream.Read(messageID);
+				bitStream.Read(takerNinja);
+				bitStream.Read(killerNinja);
+				bitStream.Read(deaths);
+				bitStream.Read(kills);
+
+				ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja, deaths, kills);
+
+				break;
+			}
+
+			case ID_START_SUDDEN_DEATH:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				bitStream.Read(messageID);
+				m_suddenDeath = true;
+
+				break;
+			}
+			case ID_INITIATE_SUDDEN_DEATH_BOX:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				int boxIndex = 0;
+				bitStream.Read(messageID);
+				bitStream.Read(boxIndex);
+				m_suddenDeathBoxIndex = boxIndex;
+
+				break;
+			}
+			case ID_SPAWN_RUNES:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				RakNet::RakNetGUID guid;
+				POINTOFINTERESTTYPE poi_type;
+				float x, y, z;
+				bitStream.Read(messageID);
+				for (int i = 0; i < 3; i++)
+				{
+					bitStream.Read(poi_type);
+					bitStream.Read(x);
+					bitStream.Read(y);
+					bitStream.Read(z);
+					SpawnRunes(poi_type, x, y, z);
+					//SpawnRunes(0, 0, 0, 10 * i);
+				}
+			
+				//skriva ut på skärmen
+				m_poiSpawned = true;
+
+				break;
+			}
+			case ID_DOWNLOAD_RUNES:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				bool runeSpawned;
+				POINTOFINTERESTTYPE poi_type;
+				float x, y, z;
+				bitStream.Read(messageID);
+				for (int i = 0; i < 3; i++)
+				{
+					bitStream.Read(runeSpawned);
+					bitStream.Read(poi_type);
+					bitStream.Read(x);
+					bitStream.Read(y);
+					bitStream.Read(z);
+
+					if (runeSpawned)
+					{
+						SpawnRunes(poi_type, x, y, z, false);
+					}
+				}
+				break;
+			}
+			case ID_RUNE_PICKED_UP:
+			{
+				/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				RakNet::RakNetGUID guid;
+				bitStream.Read(messageID);
+				bitStream.Read(sound);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);*/
+				break;
+			}
+			case ID_LOTUS_PICKED_UP:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				RakNet::RakNetGUID guid;
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				//bitStream.Read(sound); Add sound
+				RunePickedUp(POINTOFINTERESTTYPE_HEAL, guid);
+				break;
+			}
+			case ID_INVIS_PICKED_UP:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				RakNet::RakNetGUID guid;
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				//bitStream.Read(sound); Add sound
+				RunePickedUp(POINTOFINTERESTTYPE_INVISIBLE, guid);
+				RuneInvisPickedUp(guid);
+				break;
+			}
+			case ID_SHIELD_PICKED_UP:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				RakNet::RakNetGUID guid;
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				//bitStream.Read(sound); Add sound
+
+				UpdatePlayerShield(guid, 1.0f);
+				RunePickedUp(POINTOFINTERESTTYPE_SHIELD, guid);
+				break;
+			}
+
+			case ID_SEND_VISIBLE_PLAYERS:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned char size;
+				unsigned char playerID;
+
+				bitStream.Read(messageID);
+				bitStream.Read(size);
+
+				unsigned int uiSize = (unsigned int)size;
+				int iPlayerID;
+				std::vector<int> teamVisiblePlayers = std::vector<int>();
+
+				for (unsigned int i = 0; i < uiSize; i++)
+				{
+					bitStream.Read(playerID);
+					iPlayerID = (int)playerID;
+					teamVisiblePlayers.push_back(iPlayerID);
+				}
+
+				m_teamVisibleEnemies = teamVisiblePlayers;
+
+				break;
+			}
+			case ID_RUNE_SHIELD_CANCEL:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				//RakNet::RakNetGUID guid;
+			
+				bitStream.Read(messageID); 
+				//bitStream.Read(guid);
+
+				CancelRune(POINTOFINTERESTTYPE_SHIELD);
+
+			
+				break;
+			}
+
+			case ID_RUNE_INVIS_CANCEL:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				bitStream.Read(messageID);
+				CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
+				break;
+			}
+
+			case ID_POI_HEALING_BOOL:
+			{
+				RakNet::RakNetGUID healingGuid;
+				bool value;
+
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				bitStream.Read(messageID);
+				bitStream.Read(healingGuid);
+				bitStream.Read(value);
+
+				HandleHealingPOIBool(healingGuid, value);
+
+				break;
+			}
+
 			default:
 			{
 				break;
 			}
-			}
-
-			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
-
-			break;
-		}
-		case ID_PLAY_SOUND:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			PLAYSOUND sound;
-			float x, y, z;
-
-			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-
-			/*float distance = sqrtf(((m_myPlayer.x - x)*(m_myPlayer.x - x)) + ((m_myPlayer.z - z)*(m_myPlayer.z - z)));
-			float soundDistanceGain = 4.0f;
-			
-			//Hit sounds
-			if (distance == 0){
-				m_sound->PlaySound(sound, 1.0f);
-			}
-			else{
-				m_sound->PlaySound(sound, 1.0f / (distance / soundDistanceGain));
-			}*/
-
-			if (m_sound != NULL){
-			m_sound->CreateDefaultSound(sound, x, y, z);
-			}
-
-			//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
-
-			break;
-		}
-
-		case ID_PLAY_AMBIENT_SOUND:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			PLAYSOUND sound;
-			float x, y, z;
-
-			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-			Sound::SoundEmitter* soundEmitter;
-
-			if (m_sound != NULL){
-				soundEmitter = m_sound->CreateAmbientSound(sound, x, y, z);
-			}
-			break;
-		}
-
-		case ID_STOP_AMBIENT_SOUND:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			PLAYSOUND sound;
-			float x, y, z;
-
-			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);
-
-			if (m_sound != NULL){
-				m_sound->CreateAmbientSound(sound, x, y, z);
-			}
-
-			break;
-		}
-
-		case ID_SCOREBOARDKILL:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			RakNet::RakNetGUID takerNinja, killerNinja;
-			int kills, deaths;
-
-			bitStream.Read(messageID);
-			bitStream.Read(takerNinja);
-			bitStream.Read(killerNinja);
-			bitStream.Read(deaths);
-			bitStream.Read(kills);
-
-			ScoreBoard::GetInstance()->KillDeathRatio(killerNinja, takerNinja, deaths, kills);
-
-			break;
-		}
-
-		case ID_START_SUDDEN_DEATH:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			bitStream.Read(messageID);
-			m_suddenDeath = true;
-
-			break;
-		}
-		case ID_INITIATE_SUDDEN_DEATH_BOX:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			int boxIndex = 0;
-			bitStream.Read(messageID);
-			bitStream.Read(boxIndex);
-			m_suddenDeathBoxIndex = boxIndex;
-
-			break;
-		}
-		case ID_SPAWN_RUNES:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			RakNet::RakNetGUID guid;
-			POINTOFINTERESTTYPE poi_type;
-			float x, y, z;
-			bitStream.Read(messageID);
-			for (int i = 0; i < 3; i++)
-			{
-				bitStream.Read(poi_type);
-				bitStream.Read(x);
-				bitStream.Read(y);
-				bitStream.Read(z);
-				SpawnRunes(poi_type, x, y, z);
-				//SpawnRunes(0, 0, 0, 10 * i);
-			}
-			
-			//skriva ut på skärmen
-			m_poiSpawned = true;
-
-			break;
-		}
-		case ID_DOWNLOAD_RUNES:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			bool runeSpawned;
-			POINTOFINTERESTTYPE poi_type;
-			float x, y, z;
-			bitStream.Read(messageID);
-			for (int i = 0; i < 3; i++)
-			{
-				bitStream.Read(runeSpawned);
-				bitStream.Read(poi_type);
-				bitStream.Read(x);
-				bitStream.Read(y);
-				bitStream.Read(z);
-
-				if (runeSpawned)
-				{
-					SpawnRunes(poi_type, x, y, z, false);
-				}
-			}
-			break;
-		}
-		case ID_RUNE_PICKED_UP:
-		{
-			/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(sound);
-			bitStream.Read(x);
-			bitStream.Read(y);
-			bitStream.Read(z);*/
-			break;
-		}
-		case ID_LOTUS_PICKED_UP:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			//bitStream.Read(sound); Add sound
-			RunePickedUp(POINTOFINTERESTTYPE_HEAL, guid);
-			break;
-		}
-		case ID_INVIS_PICKED_UP:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			//bitStream.Read(sound); Add sound
-			RunePickedUp(POINTOFINTERESTTYPE_INVISIBLE, guid);
-			RuneInvisPickedUp(guid);
-			break;
-		}
-		case ID_SHIELD_PICKED_UP:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			RakNet::RakNetGUID guid;
-			bitStream.Read(messageID);
-			bitStream.Read(guid);
-			//bitStream.Read(sound); Add sound
-			RunePickedUp(POINTOFINTERESTTYPE_SHIELD, guid);
-			break;
-		}
-		case ID_SEND_VISIBLE_PLAYERS:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
-			unsigned char size;
-			unsigned char playerID;
-
-			bitStream.Read(messageID);
-			bitStream.Read(size);
-
-			unsigned int uiSize = (unsigned int)size;
-			int iPlayerID;
-			std::vector<int> teamVisiblePlayers = std::vector<int>();
-
-			for (unsigned int i = 0; i < uiSize; i++)
-			{
-				bitStream.Read(playerID);
-				iPlayerID = (int)playerID;
-				teamVisiblePlayers.push_back(iPlayerID);
-			}
-
-			m_teamVisibleEnemies = teamVisiblePlayers;
-
-			break;
-		}
-		case ID_RUNE_SHIELD_CANCEL:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			//RakNet::RakNetGUID guid;
-			
-			bitStream.Read(messageID); 
-			//bitStream.Read(guid);
-
-			CancelRune(POINTOFINTERESTTYPE_SHIELD);
-			break;
-		}
-		case ID_RUNE_INVIS_CANCEL:
-		{
-			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-			bitStream.Read(messageID);
-			CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
-			break;
-		}
-		default:
-		{
-			break;
-		}
 		}
 	}
 }
@@ -2588,4 +2610,26 @@ void Network::SendSpawnedRunes()
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_DOWNLOAD_RUNES);
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
+{
+	POIGrapichalEffects::GetInstance().SetEmit(p_value);
+
+	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+	{
+		if (m_enemyPlayers[i].guid == p_guid)
+		{
+			m_enemyPlayers[i].hasHealPOI = p_value;
+
+			return;
+		}
+	}
+
+	if (m_myPlayer.guid == p_guid)
+	{
+		m_myPlayer.hasHealPOI = p_value;
+
+		return;
+	}
 }

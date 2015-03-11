@@ -4,7 +4,6 @@
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include "ParticleRenderer.h"
-#include "PointLights.h"
 
 ParticleEmitter::ParticleEmitter(){}
 ParticleEmitter::~ParticleEmitter(){}
@@ -103,6 +102,12 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_BLOODHIT) :
 		{
 			InitParticles(200.0f, 1000, DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f), 0.5f, 1.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/BloodParticle.png"));
+			break;
+		}
+		case(PARTICLE_PATTERN_HEALING) :
+		{
+			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.6f, 0.5f, 0.6f), 3.0f, 1.0f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/HealingSparkle.png"));
+
 			break;
 		}
 		default:
@@ -499,6 +504,21 @@ void ParticleEmitter::EmitParticles()
 					break;
 				}
 
+				case(PARTICLE_PATTERN_HEALING) :
+				{
+					m_particleList[index].m_position = position;
+					m_particleList[index].m_direction = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = rotation;
+					m_particleList[index].m_opacity = 1.0f;
+
+					break;
+				}
+
 				default:
 				{
 					break;
@@ -577,8 +597,7 @@ void ParticleEmitter::UpdateParticles()
 				fireLight.m_position = DirectX::XMFLOAT3(m_emitterPosition.x, m_emitterPosition.y + 0.2f, m_emitterPosition.z);
 				fireLight.m_range = 7.0f;
 				
-				PointLights::GetInstance()->AddLight(fireLight);
-
+				GraphicsEngine::AddNewPointLight(fireLight);
 				for (int i = 0; i < m_currentParticles; i++)
 				{
 					float timeToDirectionChange = m_particleList[i].m_timeToLive / 4.0f;
@@ -673,7 +692,7 @@ void ParticleEmitter::UpdateParticles()
 				fireLight.m_position = DirectX::XMFLOAT3(m_emitterPosition.x, m_emitterPosition.y + 0.2f, m_emitterPosition.z);
 				fireLight.m_range = 5.0f;
 
-				PointLights::GetInstance()->AddLight(fireLight);
+				GraphicsEngine::AddNewPointLight(fireLight);
 
 				for (int i = 0; i < m_currentParticles; i++)
 				{
@@ -726,7 +745,7 @@ void ParticleEmitter::UpdateParticles()
 			break;
 		}
 
-			case(PARTICLE_PATTERN_POI_SPARKLE) :
+		case(PARTICLE_PATTERN_POI_SPARKLE) :
 		{
 			if (m_particleList != nullptr)
 			{
@@ -771,6 +790,23 @@ void ParticleEmitter::UpdateParticles()
 					m_particleList[i].m_position.z = m_particleList[i].m_position.z + (m_particleList[i].m_direction.z * m_particleList[i].m_velocity) * (float)GLOBAL::GetInstance().GetDeltaTime();
 				}
 			}
+			break;
+		}
+
+		case(PARTICLE_PATTERN_HEALING) :
+		{
+			if (m_particleList != nullptr)
+			{
+				for (int i = 0; i < m_currentParticles; i++)
+				{
+					// Fly upwards.
+					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
+			}
+
 			break;
 		}
 										
@@ -1029,6 +1065,13 @@ void ParticleEmitter::UpdateBuffers()
 				break;
 			}
 
+			case PARTICLE_PATTERN_HEALING:
+			{
+				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
+
+				break;
+			}
+
 			default:
 			{
 				m_particleList[i].m_opacity = 1.0f;
@@ -1043,7 +1086,7 @@ void ParticleEmitter::UpdateBuffers()
 	}
 
 	// Lock the dynamic vertex buffer.
-	if (FAILED(GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
+	if (FAILED(GraphicsEngine::GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource)))
 	{
 		ConsolePrintErrorAndQuit("Failed to map particle buffer.");
 		return;
@@ -1056,7 +1099,7 @@ void ParticleEmitter::UpdateBuffers()
 	memcpy(vertex, (void*)m_mesh, (sizeof(ParticleVertex) * m_vertices));
 
 	// Unlock the vertex buffer.
-	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
+	GraphicsEngine::GetContext()->Unmap(m_vertexBuffer, 0);
 }
 
 ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, unsigned int p_height, unsigned int p_depth, char* p_pixels)
@@ -1086,7 +1129,7 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 		data.SysMemSlicePitch = 0;
 
 		ID3D11Texture2D* texture = NULL;
-		hr = GraphicsEngine::GetInstance()->GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
+		hr = GraphicsEngine::GetDevice()->CreateTexture2D(&textureDesc, &data, &texture);
 		if (FAILED(hr))
 		{
 			ConsolePrintError("Failed creating CreateTexture2D - particleemmiter");
@@ -1097,7 +1140,7 @@ ID3D11ShaderResourceView* ParticleEmitter::LoadTexture(unsigned int p_width, uns
 		sRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		sRVDesc.Texture2D.MipLevels = textureDesc.MipLevels;
 		sRVDesc.Texture2D.MostDetailedMip = 0;
-		hr = GraphicsEngine::GetInstance()->GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
+		hr = GraphicsEngine::GetDevice()->CreateShaderResourceView(texture, &sRVDesc, &textureSRV);
 		if (FAILED(hr))
 		{
 			ConsolePrintError("Failed creating shaderresource - particleemmiter");

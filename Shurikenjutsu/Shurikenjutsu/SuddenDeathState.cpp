@@ -168,7 +168,7 @@ void SuddenDeathState::Initialize()
 	vertexData.SysMemSlicePitch = 0;
 
 	// Create the vertex buffer.
-	GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_vertexBuffer);
+	GraphicsEngine::GetDevice()->CreateBuffer(&vertexBuffer, &vertexData, &m_vertexBuffer);
 
 	// Setup matrices.
 	MatrixBuffer* matrices = new MatrixBuffer();
@@ -202,7 +202,7 @@ void SuddenDeathState::Initialize()
 	matrices = nullptr;
 
 	// Create the matrix buffer.
-	GraphicsEngine::GetInstance()->GetDevice()->CreateBuffer(&matrixBuffer, &matrixData, &m_matrixBuffer);
+	GraphicsEngine::GetDevice()->CreateBuffer(&matrixBuffer, &matrixData, &m_matrixBuffer);
 
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
@@ -228,7 +228,7 @@ void SuddenDeathState::Initialize()
 	}
 
 	// Create the vertex shader.
-	if (FAILED(GraphicsEngine::GetInstance()->GetDevice()->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	if (FAILED(GraphicsEngine::GetDevice()->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create sudden death vertex shader.");
 	}
@@ -257,7 +257,7 @@ void SuddenDeathState::Initialize()
 	size = sizeof(layout) / sizeof(layout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(GraphicsEngine::GetInstance()->GetDevice()->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	if (FAILED(GraphicsEngine::GetDevice()->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create sudden death vertex input layout.");
 	}
@@ -293,7 +293,7 @@ void SuddenDeathState::Initialize()
 	}
 
 	// Create the pixel shader.
-	if (FAILED(GraphicsEngine::GetInstance()->GetDevice()->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	if (FAILED(GraphicsEngine::GetDevice()->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create sudden death pixel shader");
 	}
@@ -393,15 +393,15 @@ void SuddenDeathState::Update()
 
 	// Update buffer.
 	D3D11_MAPPED_SUBRESOURCE resource;
-	GraphicsEngine::GetInstance()->GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
+	GraphicsEngine::GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
 	memcpy(resource.pData, m_mesh, sizeof(SuddenDeathVertex) * NUMBER_OF_VERTICES);
-	GraphicsEngine::GetInstance()->GetContext()->Unmap(m_vertexBuffer, 0);
+	GraphicsEngine::GetContext()->Unmap(m_vertexBuffer, 0);
 }
 
 void SuddenDeathState::Render(Camera* p_camera)
 {
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
-	GraphicsEngine::GetInstance()->TurnOffBackfaceCulling();
+	GraphicsEngine::TurnOnAlphaBlending();
+	GraphicsEngine::TurnOffBackfaceCulling();
 
 	// Render the sudden death warning.
 	m_title->Render();
@@ -410,7 +410,7 @@ void SuddenDeathState::Render(Camera* p_camera)
 	unsigned int stride = sizeof(SuddenDeathVertex);
 	const unsigned int offset = 0;
 
-	ID3D11DeviceContext* context = GraphicsEngine::GetInstance()->GetContext();
+	ID3D11DeviceContext* context = GraphicsEngine::GetContext();
 
 	context->VSSetShader(m_vertexShader, NULL, 0);
 	context->PSSetShader(m_pixelShader, NULL, 0);
@@ -450,6 +450,6 @@ void SuddenDeathState::Render(Camera* p_camera)
 
 	context->Draw(NUMBER_OF_VERTICES, 0);
 
-	GraphicsEngine::GetInstance()->TurnOnBackfaceCulling();
-	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+	GraphicsEngine::TurnOnBackfaceCulling();
+	GraphicsEngine::TurnOffAlphaBlending();
 }
