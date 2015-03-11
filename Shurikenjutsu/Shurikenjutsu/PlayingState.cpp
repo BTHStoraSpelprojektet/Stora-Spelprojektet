@@ -874,7 +874,7 @@ void PlayingState::UpdatePOIEffects()
 	{
 		if (!NetworkPlayers[i].invis)
 		{
-			DirectX::XMFLOAT3 position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
+			DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(NetworkPlayers[i].x, NetworkPlayers[i].y, NetworkPlayers[i].z);
 
 			if (NetworkPlayers[i].shield > 0.0f)
 			{
