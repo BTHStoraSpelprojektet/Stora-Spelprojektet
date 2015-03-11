@@ -835,6 +835,7 @@ void PlayingState::SSBoundryUpdate(DirectX::XMFLOAT3 p_player)
 void PlayingState::PlayerJoinedText()
 {
 	m_playerJoinedText->SetColor(0xffffffff);
+	Network::GetInstance()->JoinedPlayerText();
 	if (Network::GetInstance()->GetJustJoinedPlayerTeam() == 1)
 	{
 		std::string text = Network::GetInstance()->GetJustJoinedPlayerName();
@@ -847,30 +848,6 @@ void PlayingState::PlayerJoinedText()
 		text += " has joined the blue team";
 		m_playerJoinedText->SetText(text);
 	}
-	/*std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
-	players.push_back(Network::GetInstance()->GetMyPlayer());
-
-	for (unsigned int i = 0; i < players.size(); i++)
-	{
-		if (players[i].guid == Network::GetInstance()->GetJustJoinedPlayer())
-		{
-			Network::GetInstance()->JoinedPlayerText();
-			m_playerJoinedText->SetColor(0xffffffff);
-
-			if (players[i].team == 1)
-			{
-				std::string text = players[i].name.C_String();
-				text += " has joined the red team";
-				m_playerJoinedText->SetText(text);
-			}
-			else if (players[i].team == 2)
-			{
-				std::string text = players[i].name.C_String();
-				text += " has joined the blue team";
-				m_playerJoinedText->SetText(text);
-			}
-		}
-	}*/
 }
 
 void PlayingState::UpdatePOIEffects()
