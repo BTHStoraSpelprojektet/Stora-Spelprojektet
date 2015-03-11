@@ -15,9 +15,8 @@ public:
 
 	bool Initialize();
 	void Shutdown();
-
-	void StartHealing();
-	void StopHealing();
+	
+	void SetEmit(bool p_value);
 	void UpdateHealingEffect(DirectX::XMFLOAT3 p_position);
 	void RenderHealingEffect();
 

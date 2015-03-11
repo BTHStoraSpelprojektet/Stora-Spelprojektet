@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "PointLights.h"
 #include "..\CommonLibs\DirectXTex\DirectXTex\DirectXTex.h"
-
 #include "GraphicsEngineDLL.h"
+#include "..\CommonLibs\CommonStructures.h"
 
 PointLights* PointLights::m_instance;
 

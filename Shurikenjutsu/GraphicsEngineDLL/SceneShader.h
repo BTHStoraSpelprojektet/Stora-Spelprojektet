@@ -2,14 +2,11 @@
 #define SCENESHADER
 
 #include <D3D11.h>
-#include <vector>
-#include <DirectXMath.h>
 #include <Windows.h>
 #include <D3Dcompiler.h>
 #include "..\CommonLibs\CommonStructures.h"
 
 class InstanceManager;
-
 class SceneShader
 {
 public:
@@ -139,10 +136,5 @@ private:
 	{
 		DirectX::XMFLOAT4 m_color;
 	};
-
-	////Instancing
-	//std::vector<ID3D11Buffer*> m_instanceBufferList;
-	//std::vector<int> m_numberOfInstanceList;
-
 };
 #endif

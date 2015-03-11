@@ -3,10 +3,12 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include "ShadowShapes.h"
-#include "RenderTarget.h"
+#include <d3d11.h>
 #include <D3Dcompiler.h>
+#include "..\CommonLibs\CommonStructures.h"
+#include "ShadowShapes.h"
 
+class RenderTarget;
 
 struct Intersection
 {
@@ -135,7 +137,7 @@ private:
 		DirectX::XMMATRIX m_projectionMatrix;
 	};
 
-	RenderTarget m_renderTarget; 
+	RenderTarget *m_renderTarget; 
 	ID3D11ShaderResourceView* m_texture;
 
 	Point m_topLeft;

@@ -67,13 +67,13 @@ void PointOfInterestManager::Shutdown()
 
 void PointOfInterestManager::Update(double p_deltaTime)
 {
-	// check if invis is picked up and have been held for to loong
+	// check if invis is picked up and have been held for to long
 	if (m_invisActiveTimer > 0.0f)
 	{
 		m_invisActiveTimer -= (float)p_deltaTime;
 	}
-	// If timer is zero and runed is pickedup(active=false)
-	// Send cancel rune
+
+	// If timer is zero and runed is pickedup(active=false) send cancel rune
 	else if (!m_invisActive)
 	{
 		if (!canceledInvis)
@@ -88,13 +88,14 @@ void PointOfInterestManager::Update(double p_deltaTime)
 	{
 		m_shieldActiveTimer -= (float)p_deltaTime;
 	}
+
 	else if (!m_shieldActive)
 	{
 		if (!canceledShield)
 		{
 			CancelRune(POINTOFINTERESTTYPE_SHIELD);
 			canceledShield = true;
-}
+		}
 	}
 }
 
@@ -105,7 +106,7 @@ void PointOfInterestManager::SpawnRunes()
 	m_invisActive = true;
 	canceledInvis = false;
 	canceledShield = false;
-	// Todo add runes
+
 	RakNet::BitStream bitStream;
 	bitStream.Write((RakNet::MessageID)ID_SPAWN_RUNES);
 	for (int i = 0; i < 3; i++)

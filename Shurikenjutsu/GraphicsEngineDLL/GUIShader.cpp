@@ -2,7 +2,7 @@
 #include "GUIShader.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include <D3Dcompiler.h>
-#include <DirectXMath.h>
+#include "..\CommonLibs\CommonStructures.h"
 
 bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {

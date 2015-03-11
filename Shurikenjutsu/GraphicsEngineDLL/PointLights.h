@@ -3,8 +3,9 @@
 
 #include <D3D11.h>
 #include <vector>
-#include "..\Shurikenjutsu\Structures.h"
+#include <DirectXMath.h>
 
+struct PointLight;
 
 class PointLights
 {
