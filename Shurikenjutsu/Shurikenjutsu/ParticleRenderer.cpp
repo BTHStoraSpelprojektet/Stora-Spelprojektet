@@ -55,14 +55,14 @@ void ParticleRenderer::Render()
 	{
 		if (m_renderQueue[i]->IsFire())
 		{
-			GraphicsEngine::GetInstance()->TurnOnPointLightAlphaBlending();
+			GraphicsEngine::TurnOnPointLightAlphaBlending();
 		}
 		else
 		{
-			GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+			GraphicsEngine::TurnOnAlphaBlending();
 		}
 
-		GraphicsEngine::GetInstance()->RenderParticles(m_renderQueue[i]->GetVertexBuffer(), m_renderQueue[i]->GetVertices(), m_renderQueue[i]->GetWorldMatrix(), m_renderQueue[i]->GetParticleTexture(), m_renderQueue[i]->IsFire());
+		GraphicsEngine::RenderParticles(m_renderQueue[i]->GetVertexBuffer(), m_renderQueue[i]->GetVertices(), m_renderQueue[i]->GetWorldMatrix(), m_renderQueue[i]->GetParticleTexture(), m_renderQueue[i]->IsFire());
 	}
 
 	m_renderQueue.clear();

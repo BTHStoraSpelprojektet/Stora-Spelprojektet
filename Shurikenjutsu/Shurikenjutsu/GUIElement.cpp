@@ -60,5 +60,5 @@ void GUIElement::SetTexture(ID3D11ShaderResourceView* p_texture)
 // For cursor :)
 void GUIElement::Render()
 {
-	GraphicsEngine::GetInstance()->RenderGUI(GetWorldMatrix(), m_texture);
+	GraphicsEngine::RenderGUI(GetWorldMatrix(), m_texture);
 }

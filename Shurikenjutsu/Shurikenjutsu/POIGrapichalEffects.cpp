@@ -1,9 +1,9 @@
 #include "POIGrapichalEffects.h"
 #include "GUIElement.h"
 #include "ParticleEmitter.h"
-#include "PointLights.h"
 #include "Globals.h"
 #include "../CommonLibs/TextureLibrary.h"
+#include "GraphicsEngine.h"
 
 POIGrapichalEffects& POIGrapichalEffects::GetInstance()
 {
@@ -15,7 +15,7 @@ POIGrapichalEffects& POIGrapichalEffects::GetInstance()
 bool POIGrapichalEffects::Initialize()
 {
 	m_healingParticles = new ParticleEmitter();
-	m_healingParticles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_HEALING);
+	m_healingParticles->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_HEALING);
 	m_healingParticles->SetEmitParticleState(false);
 	m_heal = false;
 
@@ -88,7 +88,7 @@ void POIGrapichalEffects::UpdateHealingEffect(DirectX::XMFLOAT3 p_position)
 		m_healingLight.m_position.x = p_position.x;
 		m_healingLight.m_position.y = 1.0f;
 		m_healingLight.m_position.z = p_position.z;
-		PointLights::GetInstance()->AddLight(m_healingLight);
+		GraphicsEngine::AddNewPointLight(m_healingLight);
 	}
 }
 
@@ -116,7 +116,7 @@ void POIGrapichalEffects::UpdateShieldEffect(DirectX::XMFLOAT3 p_position, Direc
 	m_shieldLight.m_position.x = p_position.x;
 	m_shieldLight.m_position.y = 1.0f;
 	m_shieldLight.m_position.z = p_position.z;
-	PointLights::GetInstance()->AddLight(m_shieldLight);
+	GraphicsEngine::AddNewPointLight(m_shieldLight);
 }
 
 void POIGrapichalEffects::RenderShieldEffect()

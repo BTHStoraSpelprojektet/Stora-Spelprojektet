@@ -5,7 +5,6 @@
 #include "ParticleEmitter.h"
 #include "Object.h"
 #include "..\CommonLibs\ModelNames.h"
-#include "ShadowShapes.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
@@ -14,7 +13,7 @@ bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 
 	m_bomb->Initialize(SMOKE_BOMB, p_startPosition);
 
 	m_particles = new ParticleEmitter();
-	m_particles->Initialize(GraphicsEngine::GetInstance()->GetDevice(), DirectX::XMFLOAT3(p_endPosition.x, SMOKEBOMB_POSITION_Y, p_endPosition.z),
+	m_particles->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(p_endPosition.x, SMOKEBOMB_POSITION_Y, p_endPosition.z),
 	DirectX::XMFLOAT3(SMOKEBOMB_DIRECTION_X, SMOKEBOMB_DIRECTION_Y, SMOKEBOMB_DIRECTION_Z),
 	DirectX::XMFLOAT2(SMOKEBOMB_SIZE_X, SMOKEBOMB_SIZE_Y), PARTICLE_PATTERN_SMOKE);
 	m_particles->SetColor(DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f));
@@ -65,7 +64,7 @@ void SmokeBomb::Update()
 			ResetTimer();
 			m_isThrowing = false;
 			
-			ShadowShapes::GetInstance().AddSmokeBombShape(Point(m_startPosition.x + x, m_startPosition.z + z));
+			GraphicsEngine::SS_AddSmokeBomb(Point(m_startPosition.x + x, m_startPosition.z + z), (float)GLOBAL::GetInstance().GetDeltaTime());
 		}
 	}
 

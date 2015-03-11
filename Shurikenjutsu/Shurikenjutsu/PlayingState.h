@@ -2,8 +2,11 @@
 #define PLAYINGSTATE
 #define WIN32_LEAN_AND_MEAN
 
+#include <string>
+#include <DirectXMath.h>
 #include "GameState.h"
-#include "DebugDraw.h"
+
+#include "..\CommonLibs\CommonStructures.h"
 
 class PlayerManager;
 class ObjectManager;
@@ -19,6 +22,9 @@ class Sound;
 class ScoreBoard;
 class SuddenDeathState;
 class GUIText;
+
+//struct DirectionalLight;
+//struct Point;
 
 class PlayingState : public GameState
 {

@@ -5,7 +5,6 @@
 #include <DirectXMath.h>
 #include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonStructures.h"
-#include "DebugDraw.h"
 
 class Model;
 

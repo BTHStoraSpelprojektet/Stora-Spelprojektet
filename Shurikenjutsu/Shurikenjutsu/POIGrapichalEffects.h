@@ -3,7 +3,6 @@
 
 #include <DirectXMath.h>
 #include "Structures.h"
-#include "GraphicsEngine.h"
 
 class GUIElement;
 class ParticleEmitter;

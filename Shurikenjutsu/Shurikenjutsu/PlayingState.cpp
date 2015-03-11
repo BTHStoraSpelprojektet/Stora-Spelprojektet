@@ -2,27 +2,23 @@
 #include "CollisionManager.h"
 #include "InputManager.h"
 #include "Collisions.h"
-#include "GraphicsEngine.h"
 #include "PlayerManager.h"
 #include "ObjectManager.h"
 #include "Frustum.h"
 #include "Camera.h"
 #include "Globals.h"
-#include "ShadowShapes.h"
 #include "Minimap.h"
-#include "VisibilityComputer.h"
-#include "..\CommonLibs\ModelNames.h"
 #include "TeamStatusBar.h"
 #include "Countdown.h"
-#include "..\CommonLibs\ConsoleFunctions.h"
 #include "InGameMenu.h"
 #include "VictoryScreenMenu.h"
 #include "DeathBoard.h"
 #include "ScoreBoard.h"
 #include "SuddenDeathState.h"
-#include "PointLights.h"
 #include "Sound.h"
 #include "POIGrapichalEffects.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
+#include "..\CommonLibs\ModelNames.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -74,13 +70,12 @@ bool PlayingState::Initialize(std::string p_levelName)
 
 	// Load the level.
 	Level level(p_levelName);
-
-	ShadowShapes::GetInstance().clearStaticLines();
+	GraphicsEngine::SS_ClearStaticLines();
 	// Initialize the shadow shapes. 
 	std::vector<Line> lines = level.GetShadowsShapes();
 	for (unsigned int i = 0; i < lines.size(); i++)
 	{
-		ShadowShapes::GetInstance().AddStaticLine(lines[i]);
+		GraphicsEngine::SS_AddStaticLine(lines[i]);
 	}
 
 	// Initialize the object manager.
@@ -158,7 +153,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_mouseY = 0;
 
 	OnScreenResize();
-	VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), GraphicsEngine::GetInstance()->GetDevice());
+	GraphicsEngine::UpdateVisibilityPolygon(Point(m_playerManager->GetPlayerPosition().x, m_playerManager->GetPlayerPosition().z), (float)GLOBAL::GetInstance().GetDeltaTime());
 
 	m_spectateIndex = -1;
 	m_spectateCountDown = 0.0f;
@@ -293,7 +288,7 @@ void PlayingState::ShutdownExit()
 }
 
 GAMESTATESWITCH PlayingState::Update()
-{
+	{
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -464,7 +459,7 @@ GAMESTATESWITCH PlayingState::Update()
 
 	// Check if the screen changed.
 	bool resized = false;
-	if (GraphicsEngine::GetInstance()->HasScreenChanged())
+	if (GraphicsEngine::HasScreenChanged())
 	{
 		OnScreenResize();
 		resized = true;
@@ -479,11 +474,11 @@ GAMESTATESWITCH PlayingState::Update()
 	if (resized)
 	{
 		// Reupdate the polygon.
-		VisibilityComputer::GetInstance().UpdateVisibilityPolygon(Point(player.x, player.z), GraphicsEngine::GetInstance()->GetDevice());
+		GraphicsEngine::UpdateVisibilityPolygon(Point(player.x, player.z), (float)GLOBAL::GetInstance().GetDeltaTime());
 	}
 
 	// Update smokebomb shadow shapes.
-	ShadowShapes::GetInstance().Update(); 
+	GraphicsEngine::SS_Update((float)GLOBAL::GetInstance().GetDeltaTime());
 	
 	// Set have updated network stuff last in the update.
 	Network::GetInstance()->SetHaveUpdatedAfterRestartedRound();
@@ -542,43 +537,43 @@ GAMESTATESWITCH PlayingState::Update()
 void PlayingState::Render()
 {
 	// Draw to the shadowmap.
-	GraphicsEngine::GetInstance()->BeginRenderToShadowMap();
+	GraphicsEngine::BeginRenderToShadowMap();
 	m_objectManager->RenderDepth();
 	m_playerManager->RenderDepth(false);
-	GraphicsEngine::GetInstance()->SetShadowMap();
+	GraphicsEngine::SetShadowMap();
 
-	GraphicsEngine::GetInstance()->SetSceneDirectionalLight(m_directionalLight);
+	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
 
 	// Render to the scene normally.
-	GraphicsEngine::GetInstance()->ClearRenderTargetsForGBuffers();
-	GraphicsEngine::GetInstance()->SetRenderTargetsForGBuffers();
+	GraphicsEngine::ClearRenderTargetsForGBuffers();
+	GraphicsEngine::SetRenderTargetsForGBuffers();
 	UpdatePOIEffects();
 	m_objectManager->Render();
 	m_playerManager->Render(false);
 	
-	GraphicsEngine::GetInstance()->RenderFoliage();
+	GraphicsEngine::RenderFoliage();
 	
-	GraphicsEngine::GetInstance()->SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::GetInstance()->RenderSSAO();
+	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::RenderSSAO();
 
 	// Composition
-	GraphicsEngine::GetInstance()->SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
-	PointLights::GetInstance()->SetLightBuffer(m_camera->GetViewMatrix());
+	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
+	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
 
-	GraphicsEngine::GetInstance()->Composition();
-	GraphicsEngine::GetInstance()->ApplyDOF();
+	GraphicsEngine::Composition();
+	GraphicsEngine::ApplyDOF();
 
-	GraphicsEngine::GetInstance()->SetForwardRenderTarget();
-	GraphicsEngine::GetInstance()->TurnOnAlphaBlending();
+	GraphicsEngine::SetForwardRenderTarget();
+	GraphicsEngine::TurnOnAlphaBlending();
 
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
-	GraphicsEngine::GetInstance()->SetDepthStateForParticles();
-	VisibilityComputer::GetInstance().RenderVisibilityPolygon(GraphicsEngine::GetInstance()->GetContext());
-	GraphicsEngine::GetInstance()->TurnOnDepthStencil();
+	GraphicsEngine::ResetRenderTarget();
+	GraphicsEngine::SetDepthStateForParticles();
+	GraphicsEngine::RenderVisibilityPolygon(Network::GetInstance()->GetMatchOver());
+	GraphicsEngine::TurnOnDepthStencil();
 
 	if (FLAG_DEBUG == 1)
 	{
-		ShadowShapes::GetInstance().DebugRender();	
+		GraphicsEngine::SS_DebugRender();
 	}	
 
 	// Render the UI.
@@ -593,7 +588,7 @@ void PlayingState::Render()
 	m_countdown->Render();
 	DeathBoard::GetInstance()->Render();
 
-	GraphicsEngine::GetInstance()->TurnOffAlphaBlending();
+	GraphicsEngine::TurnOffAlphaBlending();
 
 	if (Network::GetInstance()->IsSuddenDeath())
 	{
@@ -603,10 +598,10 @@ void PlayingState::Render()
 	// Render character outlining.
 	if (m_renderOutlining)
 	{
-		GraphicsEngine::GetInstance()->ClearOutlining();
-		GraphicsEngine::GetInstance()->SetOutliningPassOne();
+		GraphicsEngine::ClearOutlining();
+		GraphicsEngine::SetOutliningPassOne();
 		m_playerManager->RenderOutliningPassOne();
-		GraphicsEngine::GetInstance()->SetOutliningPassTwo();
+		GraphicsEngine::SetOutliningPassTwo();
 		m_playerManager->RenderOutliningPassTwo();
 	}
 
@@ -637,7 +632,7 @@ void PlayingState::Render()
 
 	m_playerJoinedText->Render();
 
-	GraphicsEngine::GetInstance()->ResetRenderTarget();
+	GraphicsEngine::ResetRenderTarget();
 }
 
 void PlayingState::ToggleFullscreen(bool p_fullscreen)
@@ -753,18 +748,18 @@ void PlayingState::MinimapUpdatePos(Minimap *p_minimap)
 
 		if (player && player->GetIsAlive() && !player->IsInvis())
 		{
-			if ((m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || VisibilityComputer::GetInstance().IsPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
-		{
-			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
-			visiblePlayers.push_back(player->GetGuID());
+			if ((m_playerManager->GetPlayerTeam() == m_playerManager->GetEnemyTeam(i) || GraphicsEngine::IsVisibilityPointVisible(Point(player->GetPosition().x, player->GetPosition().z))))
+			{
+				p_minimap->UpdatePlayersPositon(i, player->GetPosition());
+				visiblePlayers.push_back(player->GetGuID());
+			}
+			else if (player &&  Network::GetInstance()->IsEnemyVisible(player->GetGuID()))
+			{
+				p_minimap->UpdatePlayersPositon(i, player->GetPosition());
+			}
 		}
-		else if (player &&  Network::GetInstance()->IsEnemyVisible(player->GetGuID()))
-		{
-			p_minimap->UpdatePlayersPositon(i, player->GetPosition());
-		}
+		Network::GetInstance()->SetVisiblePlayers(visiblePlayers);
 	}
-	Network::GetInstance()->SetVisiblePlayers(visiblePlayers);
-}
 }
 
 ObjectManager* PlayingState::GetObjectManager()
@@ -778,7 +773,7 @@ void PlayingState::OnScreenResize()
 	float height = (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
 
 	// Update texture size.
-	VisibilityComputer::GetInstance().UpdateTextureSize((int)width, (int)height);
+	GraphicsEngine::UpdateVisibilityTextureSize(width, height);
 
 	// Get the new edges.
 	DirectX::XMFLOAT3 pickedTopLeft = Pick(Point(0.0f, 0.0f));
@@ -792,11 +787,10 @@ void PlayingState::OnScreenResize()
 
 	// Update projection matrix.
 	DirectX::XMFLOAT4X4 projection;
-	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 1000.0f));
-	VisibilityComputer::GetInstance().SetProjectionPolygonMatrix(projection);
-
+	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 100.0f));
+	GraphicsEngine::SetVisibilityProjectionPolygonMatrix(projection);
 	// Tell the graphics engine that changes have been handled.
-	GraphicsEngine::GetInstance()->ScreenChangeHandled();
+	GraphicsEngine::ScreenChangeHandled();
 }
 
 void PlayingState::SetSound(Sound* p_sound)
@@ -835,7 +829,7 @@ void PlayingState::SSBoundryUpdate(DirectX::XMFLOAT3 p_player)
 	Point bottomLeft = Point(p_player.x + m_quadWidth + 10.0f, p_player.z - m_quadHeightBottom - 10.0f);
 
 	// Update the visibility polygon boundries.
-	VisibilityComputer::GetInstance().UpdateMapBoundries(topLeft, bottomLeft);
+	GraphicsEngine::UpdateVisibilityMapBoundries(topLeft, bottomLeft);
 }
 
 void PlayingState::PlayerJoinedText()

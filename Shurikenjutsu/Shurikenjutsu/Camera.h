@@ -1,7 +1,6 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include "GraphicsEngine.h"
 #include "Sound.h"
 #include <DirectXMath.h>
 
