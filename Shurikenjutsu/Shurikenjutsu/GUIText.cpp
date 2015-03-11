@@ -51,6 +51,7 @@ bool GUIText::InitializeCalibri(std::string p_text, float p_size, float p_x, flo
 
 	wf->Release();
 
+	SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
 	SetText(p_text);
 	SetSize(p_size);
 	SetPosition(p_x, p_y);

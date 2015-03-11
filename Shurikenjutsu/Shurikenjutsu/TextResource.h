@@ -3,9 +3,9 @@
 
 #include <string>
 const std::string KATANA_PRIMARY_ATTACK = 
-"By clicking the left Mouse Button the character\n performs a close range attack in its facing direction.";
+"By clicking the left Mouse Button the character\n performs a close range attack in its \nfacing direction.";
 const std::string KATANA_SECONDARY_ATTACK = 
-"By pressing the Q button the character performs\n a dash in the its facing direction of a maximum of 10 units.";
+"By pressing the Q button the character performs\n a dash in the its facing direction of a maximum \nof 10 units.";
 
 const std::string SHURIKEN_PRIMARY_ATTACK = 
 "By pressing the right Mouse Button the character\n throws a shuriken in the facing direction. \nThe character has a maximum of 3 stacks, \nthat gets replenished over time.";
@@ -15,7 +15,7 @@ const std::string SHURIKEN_SECONDARY_ATTACK =
 const std::string TESSEN_PRIMARY_ATTACK =
 "By pressing the left Mouse Button the character\n performs a close range attack in \nits facing direction.";
 const std::string TESSEN_SECONDARY_ATTACK = 
-"By pressing the Q button the character throws a\n fan in its facing direction. This fan will \nreturn if it hits an object or reaches its\n max distance, not when hitting another player, \nand return to the character.\n It will disappear if it hits an object on the way back";
+"By pressing the Q button the character throws a fan in\n its facing direction. This fan will returnif it hits\n  an object or reaches its max distance, not when\n hitting another player, and return to the character.\n It will disappear if it hits an object on the way back";
 
 const std::string WHIP_PRIMARY_ATTACK = 
 "By pressing the the Right Mouse Button the\n character performs a whip in its facing direction.";
@@ -30,7 +30,7 @@ const std::string NAGINATA_SECONDARY_ATTACK =
 const std::string KUNAI_PRIMARY_ATTACK = 
 "By pressing the Right Mouse Button the character\n throws a Kunai in its facing direction.";
 const std::string KUNAI_SECONDARY_ATTACK = 
-"By pressing the E Button throws several Kunai up\n in the air and landing in the location of \nthe mouse damaging enemies in a ring around the hit location.";
+"By pressing the E Button throws several Kunai up\n in the air and landing in the location of the mouse \ndamaging enemies in a ring around the hit location.";
 
 
 const std::string SMOKEBOMB_DESCRIPTION =
