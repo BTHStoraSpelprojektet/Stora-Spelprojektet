@@ -11,7 +11,8 @@ ToolTipPopUp::~ToolTipPopUp(){}
 void ToolTipPopUp::Initialize(float p_xPos, float p_yPos, std::string p_text , float p_size, float p_backGroundWidth, float p_backGroundHeight ,float p_bgOffset)
 {
 	m_text = new GUIText();
-	m_text->Initialize(p_text, 25.0f, p_xPos, p_yPos + p_size, 0xff000000);
+	
+	m_text->InitializeCalibri(p_text, 20.0f, p_xPos, p_yPos + p_size, 0xff000000);
 	m_visible = false;
 	
 

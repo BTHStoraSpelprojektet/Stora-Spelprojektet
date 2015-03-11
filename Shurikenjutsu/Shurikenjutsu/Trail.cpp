@@ -124,9 +124,6 @@ void Trail::Render()
 {
 	if (m_points.size() > 0)
 	{
-		GraphicsEngine::TurnOnAlphaBlending();
-		GraphicsEngine::TurnOffBackfaceCulling();
-
 		// Update vertex buffer.
 		D3D11_MAPPED_SUBRESOURCE resource;
 		GraphicsEngine::GetContext()->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
@@ -134,10 +131,7 @@ void Trail::Render()
 		GraphicsEngine::GetContext()->Unmap(m_vertexBuffer, 0);
 
 		// Call render.
-		TrailRenderer::GetInstance().RenderTrail(m_vertexBuffer, m_points.size(), m_texture);
-
-		GraphicsEngine::TurnOnBackfaceCulling();
-		GraphicsEngine::TurnOffAlphaBlending();
+		TrailRenderer::GetInstance().AddTrail(this);
 	}
 }
 
@@ -235,4 +229,19 @@ void Trail::ClearOldPoints()
 void Trail::ChangeColor(DirectX::XMFLOAT4 p_color)
 {
 	m_color = p_color;
+}
+
+ID3D11ShaderResourceView* Trail::GetTexture()
+{
+	return m_texture;
+}
+
+ID3D11Buffer* Trail::GetBuffer()
+{
+	return m_vertexBuffer;
+}
+
+unsigned int Trail::GetSize()
+{
+	return m_points.size();
 }
