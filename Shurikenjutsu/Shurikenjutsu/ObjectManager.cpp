@@ -1353,6 +1353,11 @@ void ObjectManager::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p
 	m_POIManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
 }
 
+void ObjectManager::DespawnRunes(POINTOFINTERESTTYPE p_poiType)
+{
+	m_POIManager->DespawnRunes(p_poiType);
+}
+
 void ObjectManager::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
 {
 	m_POIManager->RunePickedUp(p_poiType);

@@ -20,6 +20,7 @@ public:
 	void RoundRestart();
 	void RunePickedUp(POINTOFINTERESTTYPE p_poiType);
 	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void DespawnRunes(POINTOFINTERESTTYPE p_poiType);
 	void CollisionCheck();
 private:
 

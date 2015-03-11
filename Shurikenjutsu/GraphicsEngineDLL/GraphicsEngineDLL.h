@@ -78,7 +78,7 @@ namespace DLLGraphicsEngine
 		GRAPHICSENGINEDLL_API void PrepareRenderAnimatedDepth();
 		GRAPHICSENGINEDLL_API void RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
 		GRAPHICSENGINEDLL_API void RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
-		GRAPHICSENGINEDLL_API void RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color);
+		GRAPHICSENGINEDLL_API void PrepareRenderGUI();
 		GRAPHICSENGINEDLL_API void RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix);
 		GRAPHICSENGINEDLL_API void RenderParticles(ID3D11Buffer* p_mesh, int p_vertexCount, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, bool p_isFire);
 		GRAPHICSENGINEDLL_API void RenderFoliage();

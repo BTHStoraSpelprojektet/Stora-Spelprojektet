@@ -26,6 +26,7 @@
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 {
 	Settings::GetInstance()->LoadSettingsFile();
+	Settings* temp = Settings::GetInstance();
 	// Set default game state.
 	m_chooseNinjaState = new ChooseState();
 	m_menuState = new MenuState();
@@ -34,7 +35,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Set starting window values.
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
-	GLOBAL::GetInstance().FULLSCREEN = false;
+	GLOBAL::GetInstance().FULLSCREEN = Settings::GetInstance()->m_fullscreen;
 	GLOBAL::GetInstance().MAX_SCREEN_WIDTH = GetSystemMetrics(SM_CXSCREEN);
 	GLOBAL::GetInstance().MAX_SCREEN_HEIGHT = GetSystemMetrics(SM_CYSCREEN);
 	GLOBAL::GetInstance().MIN_SCREEN_WIDTH = 1280;
@@ -87,6 +88,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
 	GraphicsEngine::TurnOnAlphaBlending();
+	GraphicsEngine::SetVsync(Settings::GetInstance()->m_vsync);
 	GLOBAL::GetInstance().SWITCHING_SCREEN_MODE = false;
 
 	// Initialize the trail renderer.
@@ -446,7 +448,7 @@ void System::Render()
 	GraphicsEngine::TurnOffDepthStencil();
 
 	DebugText::GetInstance()->Render();
-
+	GraphicsEngine::PrepareRenderGUI();
 	GUIManager::GetInstance()->Render();
 
 	// Render cursor
