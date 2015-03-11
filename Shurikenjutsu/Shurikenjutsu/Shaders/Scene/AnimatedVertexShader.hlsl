@@ -41,13 +41,8 @@ struct Output
 	float4 m_positionHomogenous : SV_POSITION;
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
-	float3 m_normal : NORMAL;
-	float3 m_tangent : TANGENT;
 
 	float3x3 m_tBN : TBN;
-
-	float m_fogFactor : FOG;
-
 	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
@@ -90,15 +85,15 @@ Output main(Input p_input)
 	output.m_textureCoordinate = p_input.m_textureCoordinate;
 
 	// Transform  the normals.
-	output.m_normal = mul(float4(normalAnimated, 0.0f), m_worldMatrix).xyz;
-	output.m_normal = mul(output.m_normal, (float3x3)m_viewMatrix).xyz;
+	normalAnimated = mul(float4(normalAnimated, 0.0f), m_worldMatrix).xyz;
+	normalAnimated = mul(normalAnimated, (float3x3)m_viewMatrix).xyz;
 
-	output.m_tangent = mul(float4(tangentAnimated, 0.0f), m_worldMatrix).xyz;
-	output.m_tangent = mul(output.m_tangent, (float3x3)m_viewMatrix).xyz;
+	tangentAnimated = mul(float4(tangentAnimated, 0.0f), m_worldMatrix).xyz;
+	tangentAnimated = mul(tangentAnimated, (float3x3)m_viewMatrix).xyz;
 
 	// Normalmap TBN matrix.
-	float3 N = output.m_normal;
-	float3 T = -normalize(output.m_tangent - dot(output.m_tangent, N)*N);
+	float3 N = normalAnimated;
+	float3 T = -normalize(tangentAnimated - dot(tangentAnimated, N)*N);
 	float3 B = cross(N, T);
 
 	output.m_tBN = float3x3(T, B, N);
@@ -109,7 +104,7 @@ Output main(Input p_input)
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
 	// No fog.
-	output.m_fogFactor = 1.0f;
+	//output.m_fogFactor = 1.0f;
 
 	// Calculate linear fog.    
 	//output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));

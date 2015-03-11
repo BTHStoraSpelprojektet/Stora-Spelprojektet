@@ -244,10 +244,14 @@ void Server::ReceviePacket()
 			bitStream.Read(toolNr);
 			bitStream.Read(team);
 
+
+
 			if (m_gameState->GetPlayerIndex(m_packet->guid) == -1)
 			{
 				m_gameState->AddPlayer(m_packet->guid, name, charNr, toolNr, team);
 			}
+
+
 			break;
 		}
 		case ID_TIMER_SYNC:

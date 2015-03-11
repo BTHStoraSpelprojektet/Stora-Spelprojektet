@@ -27,13 +27,8 @@ struct Input
 	float4 m_positionHomogenous : SV_POSITION;
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
-	float3 m_normal : NORMAL;
-	float3 m_tangent : TANGENT;
 
 	float3x3 m_tBN : TBN;
-
-	float m_fogFactor : FOG;
-
 	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 

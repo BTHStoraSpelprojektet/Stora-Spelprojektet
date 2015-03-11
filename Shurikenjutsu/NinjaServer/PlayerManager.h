@@ -73,7 +73,7 @@ public:
 	bool GetInvis(RakNet::RakNetGUID p_guid);
 private:	
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
-	LevelImporter::SpawnPoint GetSpawnPoint(int p_team);
+	LevelImporter::SpawnPoint GetSpawnPoint(RakNet::RakNetGUID p_guid, int p_team);
 	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive);
 	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive, bool p_sendReliable);
 	
@@ -82,6 +82,8 @@ private:
 
 	void SendVisiblePlayers();
 	int GetTeam(RakNet::RakNetGUID p_player);
+
+	void SendHasPOIHealing(RakNet::RakNetGUID p_guid);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 
@@ -112,7 +114,7 @@ private:
 
 	std::map<RakNet::RakNetGUID, std::vector<int>> m_playerVisibility;
 
-	std::map<int, bool> m_takenSpawnPoints;
+	std::map<RakNet::RakNetGUID, int> m_takenSpawnPoints;
 };
 
 #endif
