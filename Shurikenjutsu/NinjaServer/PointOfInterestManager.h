@@ -15,7 +15,7 @@ public:
 	PointOfInterestManager();
 	~PointOfInterestManager();
 
-	bool Initialize(RakNet::RakPeerInterface *p_serverPeer);
+	bool Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel);
 	void Shutdown();
 	void Update(double p_deltaTime);
 

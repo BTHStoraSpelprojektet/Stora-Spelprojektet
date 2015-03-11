@@ -18,11 +18,11 @@ PointOfInterestManager::~PointOfInterestManager()
 }
 
 
-bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer)
+bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel)
 {
 	m_serverPeer = p_serverPeer;
 
-	Level level(LEVEL_NAME);
+	Level level(p_levelsName[p_currentLevel]);
 	m_POISpawnPoints = level.GetPOIPoints();
 	m_lotusActive = false;
 	m_shieldActive = false;

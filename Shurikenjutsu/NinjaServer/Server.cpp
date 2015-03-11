@@ -51,7 +51,7 @@ void Server::ReadLevels(){
 
 	//Set default if file not found
 	if (m_levels.size() == 0){
-		m_levels.push_back("../Shurikenjutsu/Levels/NightTimeArena.SSPL");
+		m_levels.push_back(LEVEL_NAME);
 	}
 
 	//Set start level
