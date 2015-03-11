@@ -51,7 +51,7 @@ void Server::ReadLevels(){
 
 	//Set default if file not found
 	if (m_levels.size() == 0){
-		m_levels.push_back("../Shurikenjutsu/Levels/NightTimeArena.SSPL");
+		m_levels.push_back(LEVEL_NAME);
 	}
 
 	//Set start level
@@ -244,10 +244,14 @@ void Server::ReceviePacket()
 			bitStream.Read(toolNr);
 			bitStream.Read(team);
 
+
+
 			if (m_gameState->GetPlayerIndex(m_packet->guid) == -1)
 			{
 				m_gameState->AddPlayer(m_packet->guid, name, charNr, toolNr, team);
 			}
+
+
 			break;
 		}
 		case ID_TIMER_SYNC:

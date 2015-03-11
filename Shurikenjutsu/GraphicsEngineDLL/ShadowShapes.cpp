@@ -3,13 +3,21 @@
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "VisibilityComputer.h"
-
+#include "buffer.h"
+#include "DebugLineList.h"
+#include "DebugDraw.h"
+#include "..\CommonLibs\CommonStructures.h"
 #include "GraphicsEngineDLL.h"
-ShadowShapes& ShadowShapes::GetInstance()
-{
-	static ShadowShapes instance;
 
-	return instance;
+ShadowShapes* ShadowShapes::m_instance;
+ShadowShapes* ShadowShapes::GetInstance()
+{
+	if (m_instance == nullptr)
+	{
+		m_instance = new ShadowShapes();
+	}
+
+	return m_instance;
 }
 
 bool ShadowShapes::Initialize()
@@ -19,7 +27,8 @@ bool ShadowShapes::Initialize()
 	m_uniquePoints.clear();
 	m_uniqueBoundryPoints.clear();
 
-	m_staticDebugLines.Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+	m_staticDebugLines = new DebugLineList();
+	m_staticDebugLines->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 
 	return true;
 }
@@ -31,7 +40,16 @@ void ShadowShapes::Shutdown()
 	m_uniquePoints.clear();
 	m_uniqueBoundryPoints.clear();
 
-	m_staticDebugLines.Shutdown();
+	if (m_staticDebugLines != nullptr)
+	{
+		m_staticDebugLines->Shutdown();
+		delete m_staticDebugLines;
+	}
+	if (m_instance)
+	{
+		delete m_instance;
+		m_instance = nullptr;
+	}
 }
 
 void ShadowShapes::AddStaticLine(Line p_line)
@@ -53,8 +71,8 @@ void ShadowShapes::AddStaticLine(Line p_line)
 void ShadowShapes::clearStaticLines(){
 	m_staticLines.clear();
 	m_uniquePoints.clear();
-	m_staticDebugLines.Shutdown();
-	m_staticDebugLines.Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
+	m_staticDebugLines->Shutdown();
+	m_staticDebugLines->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 1.0f));
 }
 
 void ShadowShapes::AddStaticShape(std::vector<Line> p_shape)
@@ -255,13 +273,13 @@ std::vector<Line> ShadowShapes::GetStaticLines(Point a, Point b)
 void ShadowShapes::DebugRender()
 {
 	// Render every static line.
-	m_staticDebugLines.Render();
+	m_staticDebugLines->Render();
 }
 
 void ShadowShapes::AddDebugLines(Point p_a, Point p_b)
 {
 	// Add line to debug.
-	m_staticDebugLines.AddLine(DirectX::XMFLOAT3(p_a.x, 0.2f, p_a.y), DirectX::XMFLOAT3(p_b.x, 0.2f, p_b.y));
+	m_staticDebugLines->AddLine(DirectX::XMFLOAT3(p_a.x, 0.2f, p_a.y), DirectX::XMFLOAT3(p_b.x, 0.2f, p_b.y));
 }
 
 inline void ShadowShapes::AddUniquePoints(Point p_point)

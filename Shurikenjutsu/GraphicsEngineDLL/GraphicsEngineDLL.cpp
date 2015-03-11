@@ -6,9 +6,6 @@
 #include "stdafx.h"
 
 #include "GraphicsEngineDLL.h"
-//#include "..\CommonLibs\CommonEnums.h"
-//#include "..\CommonLibs\CommonStructures.h"
-//#include "..\CommonLibs\ConsoleFunctions.h"
 #include "ParticleShader.h"
 #include "SceneShader.h"
 #include "GUIShader.h"
@@ -24,6 +21,8 @@
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include "..\CommonLibs\DirectXTex\DirectXTex\DirectXTex.h"
 #include "PointLights.h"
+#include "buffer.h"
+#include "WICTextureLoader.h"
 
 namespace DLLGraphicsEngine
 {
@@ -135,7 +134,7 @@ namespace DLLGraphicsEngine
 		}
 
 		// Initialize the visibility computer.
-		if (ShadowShapes::GetInstance().Initialize())
+		if (ShadowShapes::GetInstance()->Initialize())
 		{
 //			ConsolePrintSuccess("ShadowShapes initialized successfully.");
 //			ConsoleSkipLines(1);
@@ -310,15 +309,15 @@ namespace DLLGraphicsEngine
 			delete m_directX;
 			m_directX = nullptr;
 		}
+		PointLights::GetInstance()->Shutdown();
+		ShadowShapes::GetInstance()->Shutdown();
+		VisibilityComputer::GetInstance().Shutdown();
 
 		if (m_instance)
 		{
 			delete m_instance;
 			m_instance = nullptr;
 		}
-		PointLights::GetInstance()->Shutdown();
-		ShadowShapes::GetInstance().Shutdown();
-		VisibilityComputer::GetInstance().Shutdown();
 	}
 
 	ID3D11ShaderResourceView* GE::Create2DTexture(std::string p_filename)
@@ -347,6 +346,11 @@ namespace DLLGraphicsEngine
 		return textureView;
 	}
 
+	void GE::PrepareRenderScene()
+	{
+		m_sceneShader->PrepareRender(m_directX->GetContext());
+	}
+
 	void GE::RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
 	{
 		m_sceneShader->Render(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap);
@@ -366,6 +370,11 @@ namespace DLLGraphicsEngine
 		m_sceneShader->RenderInstance(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_instanceIndex, m_instanceManager);
 	}
 
+	void GE::PrepareRenderAnimated()
+	{
+		m_sceneShader->PrepareRenderAnimated(m_directX->GetContext());
+	}
+
 	void GE::RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 	{
 		m_sceneShader->RenderAnimated(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_normalMap, p_boneTransforms);
@@ -381,14 +390,29 @@ namespace DLLGraphicsEngine
 		m_sceneShader->RenderAnimatedOutlining(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
 	}
 
+	void GE::PrepareRenderDepth()
+	{
+		m_depthShader->PrepareRender(m_directX->GetContext());
+	}
+
 	void GE::RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 	{
 		m_depthShader->Render(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture);
 	}
 
+	void GE::PrepareRenderDepthInstanced()
+	{
+		m_depthShader->PrepareRenderInstanced(m_directX->GetContext());
+	}
+
 	void GE::RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex)
 	{
 		m_depthShader->RenderInstance(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_instanceIndex, m_instanceManager);
+	}
+
+	void GE::PrepareRenderAnimatedDepth()
+	{
+		m_depthShader->PrepareRenderAnimated(m_directX->GetContext());
 	}
 
 	void GE::RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
@@ -825,24 +849,24 @@ namespace DLLGraphicsEngine
 
 	void GE::SS_AddStaticLine(Line p_line)
 	{
-		ShadowShapes::GetInstance().AddStaticLine(p_line);
+		ShadowShapes::GetInstance()->AddStaticLine(p_line);
 	}
 	void GE::SS_Update(float p_deltaTime)
 	{
-		ShadowShapes::GetInstance().Update(p_deltaTime);
+		ShadowShapes::GetInstance()->Update(p_deltaTime);
 	}
 	void GE::SS_DebugRender()
 	{
-		ShadowShapes::GetInstance().DebugRender();
+		ShadowShapes::GetInstance()->DebugRender();
 	}
 	void GE::SS_AddSmokeBomb(Point p_point, float p_deltaTime)
 	{
-		ShadowShapes::GetInstance().AddSmokeBombShape(p_point, p_deltaTime);
+		ShadowShapes::GetInstance()->AddSmokeBombShape(p_point, p_deltaTime);
 	}
 
 	void GE::SS_ClearStaticLines()
 	{
-		ShadowShapes::GetInstance().clearStaticLines();
+		ShadowShapes::GetInstance()->clearStaticLines();
 	}
 
 }

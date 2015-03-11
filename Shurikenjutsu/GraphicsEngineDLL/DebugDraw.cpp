@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "DebugDraw.h"
 #include "GraphicsEngineDLL.h"
+#include "Buffer.h"
+
 
 DebugDraw& DebugDraw::GetInstance()
 {

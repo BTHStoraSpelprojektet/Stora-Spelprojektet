@@ -34,7 +34,7 @@ const float KUNAI_SPEED = 50.0f;
 //Whip
 const float WHIP_DAMAGE = 15.0f;
 const float WHIP_COOLDOWN = 2.0f;
-const float WHIP_RANGE = 15.0f;
+const float WHIP_RANGE = 9.0f;
 
 //Whip special attack
 const float WHIP_SP_DAMAGE = 25.0f;

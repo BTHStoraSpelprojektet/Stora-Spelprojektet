@@ -99,7 +99,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_playerManager->SetSound(m_sound);
 	m_playerManager->Initialize(false);
 
-	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
+	CollisionManager::GetInstance()->SetOuterWallList(wallList);
 
 	// Initlialize the frustum.
 	m_frustum = new Frustum();
@@ -117,7 +117,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_poiText = new GUIText();
 	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 	m_playerJoinedText = new GUIText();
-	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 250.0f, 0xffffffff);
+	m_playerJoinedText->Initialize("", 50.0f, 0.0f, 250.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -449,6 +449,7 @@ GAMESTATESWITCH PlayingState::Update()
 
 	if (Network::GetInstance()->GetNewPlayerJoined())
 	{
+		
 		PlayerJoinedText();
 	}
 
@@ -538,7 +539,11 @@ void PlayingState::Render()
 {
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
+	GraphicsEngine::PrepareRenderDepth();
 	m_objectManager->RenderDepth();
+
+	GraphicsEngine::PrepareRenderAnimatedDepth();
+	m_objectManager->RenderAnimatedDepth();
 	m_playerManager->RenderDepth(false);
 	GraphicsEngine::SetShadowMap();
 
@@ -548,7 +553,11 @@ void PlayingState::Render()
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 	UpdatePOIEffects();
+	GraphicsEngine::PrepareRenderScene();
 	m_objectManager->Render();
+
+	GraphicsEngine::PrepareRenderAnimated();
+	m_objectManager->RenderAnimated();
 	m_playerManager->Render(false);
 	
 	GraphicsEngine::RenderFoliage();
@@ -834,29 +843,18 @@ void PlayingState::SSBoundryUpdate(DirectX::XMFLOAT3 p_player)
 
 void PlayingState::PlayerJoinedText()
 {
-	std::vector<PlayerNet> players = Network::GetInstance()->GetOtherPlayers();
-	players.push_back(Network::GetInstance()->GetMyPlayer());
-
-	for (unsigned int i = 0; i < players.size(); i++)
+	m_playerJoinedText->SetColor(0xffffffff);
+	if (Network::GetInstance()->GetJustJoinedPlayerTeam() == 1)
 	{
-		if (players[i].guid == Network::GetInstance()->GetJustJoinedPlayer())
-		{
-			Network::GetInstance()->JoinedPlayerText();
-			m_playerJoinedText->SetColor(0xffffffff);
-
-			if (players[i].team == 1)
-			{
-				std::string text = players[i].name.C_String();
-				text += " has joined the red team";
-				m_playerJoinedText->SetText(text);
-			}
-			else if (players[i].team == 2)
-			{
-				std::string text = players[i].name.C_String();
-				text += " has joined the blue team";
-				m_playerJoinedText->SetText(text);
-			}
-		}
+		std::string text = Network::GetInstance()->GetJustJoinedPlayerName();
+		text += " has joined the red team";
+		m_playerJoinedText->SetText(text);
+	}
+	else if (Network::GetInstance()->GetJustJoinedPlayerTeam() == 2)
+	{
+		std::string text = Network::GetInstance()->GetJustJoinedPlayerName();
+		text += " has joined the blue team";
+		m_playerJoinedText->SetText(text);
 	}
 }
 
@@ -872,17 +870,34 @@ void PlayingState::UpdatePOIEffects()
 
 	for (unsigned int i = 0; i < NetworkPlayers.size(); i++)
 	{
-		if (NetworkPlayers[i].shield > 0.0f)
+		if (!NetworkPlayers[i].invis)
 		{
-			DirectX::XMFLOAT3 position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
-			POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
-			POIGrapichalEffects::GetInstance().RenderShieldEffect();
-		}
-	}
+			DirectX::XMFLOAT3 position;
 
-	DirectX::XMFLOAT3 position = m_playerManager->GetPlayerPosition();
-	position.y = 0.25f;
-	POIGrapichalEffects::GetInstance().StartHealing();
-	POIGrapichalEffects::GetInstance().UpdateHealingEffect(position);
-	POIGrapichalEffects::GetInstance().RenderHealingEffect();
+			if (NetworkPlayers.size() == m_playerManager->GetEveryPlayer().size())
+			{
+				position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
+			}
+
+			else
+			{
+				position = DirectX::XMFLOAT3(NetworkPlayers[i].x, NetworkPlayers[i].y, NetworkPlayers[i].z);
+			}
+
+			if (NetworkPlayers[i].shield > 0.0f)
+			{
+
+				POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+				POIGrapichalEffects::GetInstance().RenderShieldEffect();
+			}
+
+			if (NetworkPlayers[i].hasHealPOI)
+			{
+				position.y = 0.25f;
+				POIGrapichalEffects::GetInstance().UpdateHealingEffect(position);
+				POIGrapichalEffects::GetInstance().RenderHealingEffect();
+			}
+		}
+		
+	}
 }

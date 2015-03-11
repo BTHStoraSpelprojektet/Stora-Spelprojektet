@@ -35,12 +35,6 @@ void System::Run()
 
 		else
 		{
-			// Update();
-			if (GetAsyncKeyState(VK_ESCAPE))
-			{
-				message.message = WM_QUIT;
-			}
-
 			Update();
 		}
 	}

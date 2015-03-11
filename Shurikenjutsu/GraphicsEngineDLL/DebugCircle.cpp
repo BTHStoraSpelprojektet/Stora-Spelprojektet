@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DebugCircle.h"
 #include "GraphicsEngineDLL.h"
+#include "Buffer.h"
 
 void DebugCircle::Initialize(DirectX::XMFLOAT3 p_centrum, float p_radius, int p_resolution, DirectX::XMFLOAT3 p_color)
 {

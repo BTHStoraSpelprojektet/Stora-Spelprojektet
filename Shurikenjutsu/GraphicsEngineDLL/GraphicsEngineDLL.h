@@ -7,8 +7,6 @@
 #include <stdexcept>
 #include <iostream>
 
-#include "WICTextureLoader.h"
-using namespace std;
 
 class WICTextureLoader;
 class GUIShader;
@@ -39,6 +37,7 @@ struct Line;
 
 enum D3D_FEATURE_LEVEL;
 enum BUFFERTYPE;
+
 namespace DLLGraphicsEngine
 {
 
@@ -63,15 +62,20 @@ namespace DLLGraphicsEngine
 		GRAPHICSENGINEDLL_API D3D_FEATURE_LEVEL GetVersion();
 
 		GRAPHICSENGINEDLL_API ID3D11ShaderResourceView* Create2DTexture(std::string p_filename);
+		GRAPHICSENGINEDLL_API void PrepareRenderScene();
 		GRAPHICSENGINEDLL_API void RenderScene(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
 		GRAPHICSENGINEDLL_API void RenderSceneForward(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap);
 		GRAPHICSENGINEDLL_API void RenderReversedShadows(ID3D11Buffer* p_mesh, int p_numberOfVertices, ID3D11ShaderResourceView* p_visibilityMap, ID3D11ShaderResourceView* p_texture);
 		GRAPHICSENGINEDLL_API void RenderInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, int p_instanceIndex);
+		GRAPHICSENGINEDLL_API void PrepareRenderAnimated();
 		GRAPHICSENGINEDLL_API void RenderAnimated(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
 		GRAPHICSENGINEDLL_API void RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+		GRAPHICSENGINEDLL_API void PrepareRenderDepth();
 		GRAPHICSENGINEDLL_API void RenderDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
+		GRAPHICSENGINEDLL_API void PrepareRenderDepthInstanced();
 		GRAPHICSENGINEDLL_API void RenderDepthInstanced(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex);
 		GRAPHICSENGINEDLL_API void RenderAnimatedOutliningDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
+		GRAPHICSENGINEDLL_API void PrepareRenderAnimatedDepth();
 		GRAPHICSENGINEDLL_API void RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms);
 		GRAPHICSENGINEDLL_API void RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture);
 		GRAPHICSENGINEDLL_API void PrepareRenderGUI();
@@ -169,12 +173,10 @@ namespace DLLGraphicsEngine
 		GRAPHICSENGINEDLL_API void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
 		GRAPHICSENGINEDLL_API void SS_ClearStaticLines();
 
-
 	private:
 		static GE* m_instance;
 		GE(){};
 		~GE(){};
-
 
 		DirectXWrapper *m_directX;
 
@@ -198,6 +200,5 @@ namespace DLLGraphicsEngine
 
 		float m_currentScreenWidth;
 		float m_currentScreenHeight;
-
 	};
 }

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "SceneShader.h"
-#include "..\CommonLibs\ConsoleFunctions.h"
 #include "InstanceManager.h"
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\DirectXTex\WICTextureLoader\WICTextureLoader.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
@@ -860,6 +860,18 @@ void SceneShader::Shutdown()
 	}
 }
 
+void SceneShader::PrepareRender(ID3D11DeviceContext* p_context)
+{
+	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
+
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
+	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
+	p_context->IASetInputLayout(m_layout);
+
+	p_context->VSSetShader(m_vertexShader, NULL, 0);
+	p_context->PSSetShader(m_pixelShader, NULL, 0);
+}
+
 void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
 {
 	// Set parameters and then render.
@@ -869,18 +881,9 @@ void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetShaderResources(1, 1, &p_normalMap);
-	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
-
-	p_context->PSSetSamplers(0, 1, &m_samplerState);
-	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
+	p_context->PSSetShaderResources(1, 1, &p_normalMap);	
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
-	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	p_context->IASetInputLayout(m_layout);
-
-	p_context->VSSetShader(m_vertexShader, NULL, 0);
-	p_context->PSSetShader(m_pixelShader, NULL, 0);
 	
 	p_context->Draw(p_numberOfVertices, 0);
 }
@@ -931,6 +934,12 @@ void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Bu
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
+void SceneShader::PrepareRenderAnimated(ID3D11DeviceContext* p_context)
+{
+	p_context->IASetInputLayout(m_animatedLayout);
+	p_context->VSSetShader(m_animatedVertexShader, NULL, 0);
+}
+
 void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	// Set parameters and then render.
@@ -941,17 +950,9 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetShaderResources(1, 1, &p_normalMap);
-	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
-	p_context->PSSetSamplers(0, 1, &m_samplerState);
-	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
+	p_context->PSSetShaderResources(1, 1, &p_normalMap);	
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
-	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	p_context->IASetInputLayout(m_animatedLayout);
-
-	p_context->VSSetShader(m_animatedVertexShader, NULL, 0);
-	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
 	p_context->Draw(p_numberOfVertices, 0);
 }
