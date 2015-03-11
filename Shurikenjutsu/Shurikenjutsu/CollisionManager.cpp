@@ -7,26 +7,26 @@ CollisionManager* CollisionManager::m_instance;
 CollisionManager::CollisionManager(){}
 CollisionManager::~CollisionManager(){}
 
-void CollisionManager::Initialize(std::vector<Object> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList)
+void CollisionManager::SetOuterWallList(std::vector<Box> p_outerWallList)
 {
-	m_staticBoxList = std::vector<OBB>();
-	m_staticSphereList = std::vector<Sphere>();
-	SetLists(p_StaticObjectList, p_animatedObjectList, p_outerWallList);
+	m_outerWallList = p_outerWallList;
 }
 
-void CollisionManager::SetLists(std::vector<Object> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList)
+void CollisionManager::SetLists(std::vector<Object*> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList)
 {
-	m_staticBoxList.push_back(OBB(p_outerWallList[0]));
-	m_staticBoxList.push_back(OBB(p_outerWallList[1]));
+	m_staticBoxList.clear();
+	m_staticSphereList.clear();
 
-	m_staticBoxList.push_back(OBB(p_outerWallList[2]));
-	m_staticBoxList.push_back(OBB(p_outerWallList[3]));
+	for (unsigned int i = 0; i < p_outerWallList.size(); i++)
+	{
+		m_staticBoxList.push_back(OBB(p_outerWallList[i]));
+	}
 
 	// Go through all objects
 	for (unsigned int i = 0; i < p_StaticObjectList.size(); i++)
 	{
-		std::vector<OBB> tempBoxList = p_StaticObjectList[i].GetBoundingBoxes();
-		std::vector<Sphere> tempSphereList = p_StaticObjectList[i].GetBoundingSpheres();
+		std::vector<OBB> tempBoxList = p_StaticObjectList[i]->GetBoundingBoxes();
+		std::vector<Sphere> tempSphereList = p_StaticObjectList[i]->GetBoundingSpheres();
 
 		for (unsigned int j = 0; j < tempBoxList.size(); j++)
 		{ 
@@ -371,4 +371,9 @@ float CollisionManager::AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_pl
 		}
 	}
 	return returnValue;
+}
+
+void CollisionManager::SetObjectsInFrustumList(std::vector<Object*> p_objectsInFrustumList, std::vector<AnimatedObject*> p_animatedObjectList)
+{
+	SetLists(p_objectsInFrustumList, p_animatedObjectList, m_outerWallList);
 }

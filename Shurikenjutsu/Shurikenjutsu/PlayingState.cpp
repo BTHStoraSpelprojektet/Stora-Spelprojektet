@@ -99,7 +99,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_playerManager->SetSound(m_sound);
 	m_playerManager->Initialize(false);
 
-	CollisionManager::GetInstance()->Initialize(m_objectManager->GetStaticObjectList(), m_objectManager->GetAnimatedObjectList(), wallList);
+	CollisionManager::GetInstance()->SetOuterWallList(wallList);
 
 	// Initlialize the frustum.
 	m_frustum = new Frustum();

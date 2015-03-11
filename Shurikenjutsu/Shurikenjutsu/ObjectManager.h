@@ -42,8 +42,8 @@ public:
 	void AddStickyTrap(float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, unsigned int p_spikeTrapID, RakNet::RakNetGUID p_guid);
 	void AddVolley(unsigned int p_id, float p_startX, float p_startZ, float p_endX, float p_endZ, RakNet::RakNetGUID p_guid);
 	void AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_id, RakNet::RakNetGUID p_owner);
-	void AddStaticObject(Object p_object);
-	std::vector<Object> GetStaticObjectList()const;
+	void AddStaticObject(Object *p_object);
+	std::vector<Object*> GetStaticObjectList()const;
 	std::vector<AnimatedObject*> GetAnimatedObjectList()const;
 	
 	void UpdateFrustum(Frustum* p_frustum);
@@ -75,7 +75,7 @@ private:
 	std::vector<Shuriken*> m_shurikens;
 	std::vector<Projectile*> m_projectiles;
 	std::vector<FanBoomerang*> m_fans;
-	std::vector<Object> m_staticObjects;
+	std::vector<Object*> m_staticObjects;
 	std::vector<AnimatedObject*> m_animatedObjects;
 	std::vector<ParticleEmitter*> m_worldParticles;
 	std::vector<Object*> m_objectsToInstanceRender;
@@ -102,5 +102,7 @@ private:
 	std::vector<std::vector<Trail*>> m_volleyTrails;
 
 	PointOfInterestManager* m_POIManager;
+
+	std::vector<Object*> m_objectsInFrustumList;
 };
 #endif
