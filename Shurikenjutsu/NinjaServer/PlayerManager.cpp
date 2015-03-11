@@ -52,11 +52,12 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 
 void PlayerManager::ResetTakenSpawnPoints()
 {
-	for (unsigned int i = 0; i < m_takenSpawnPoints.size(); i++)
-	{
-		m_takenSpawnPoints[i] = false;
+	m_takenSpawnPoints.clear();
+	//for (unsigned int i = 0; i < m_takenSpawnPoints.size(); i++)
+	//{
+	//	m_takenSpawnPoints[i] = false;
+	//}
 	}
-}
 
 void PlayerManager::Shutdown(){}
 
@@ -157,7 +158,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_nam
 		}
 	}
 	player.charNr = p_charNr;
-	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.team);
+	LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(player.guid, player.team);
 	player.x = spawnPoint.m_translationX;
 	player.y = spawnPoint.m_translationY;
 	player.z = spawnPoint.m_translationZ;
@@ -181,6 +182,13 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_nam
 
 	// Broadcast new player
 	BroadcastPlayers();
+
+	RakNet::BitStream bitStream2;
+	bitStream2.Write((RakNet::MessageID)ID_CONNECTION_NOTIFICATION);
+	bitStream2.Write(player.name);
+	bitStream2.Write(player.team);
+
+	m_serverPeer->Send(&bitStream2, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 bool PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
@@ -238,7 +246,7 @@ void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			m_takenSpawnPoints[i] = false;
+			m_takenSpawnPoints.erase(m_players[i].guid);
 			m_players.erase(m_players.begin() + i);
 
 			ConsolePrintError("A player disconnected.");
@@ -293,7 +301,7 @@ void PlayerManager::RespawnPlayer(RakNet::RakNetGUID p_guid)
 		if (m_players[i].guid == p_guid)
 		{
 			// Reset position
-			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(m_players[i].team);
+			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(m_players[i].guid, m_players[i].team);
 			m_players[i].x = spawnPoint.m_translationX;
 			m_players[i].y = spawnPoint.m_translationY;
 			m_players[i].z = spawnPoint.m_translationZ;
@@ -338,13 +346,27 @@ void PlayerManager::SendInvalidMessage(RakNet::RakNetGUID p_guid)
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 1, p_guid, false);
 }
 
-LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(int p_team)
+LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(RakNet::RakNetGUID p_guid, int p_team)
 {
 	for (unsigned int i = 0; i < m_spawnPoints.size(); i++)
 	{
-		if (m_spawnPoints[i].m_team == p_team && !m_takenSpawnPoints[i])
+		if (m_spawnPoints[i].m_team == p_team)
 		{
-			m_takenSpawnPoints[i] = true;
+			bool taken = false;
+			for (std::map<RakNet::RakNetGUID, int>::iterator it = m_takenSpawnPoints.begin(); it != m_takenSpawnPoints.end(); it++)
+			{
+				if (it->second == i)
+				{
+					taken = true;
+					break;
+				}
+			}
+
+			if (taken)
+		{
+				continue;
+			}
+			m_takenSpawnPoints[p_guid] = i;
 			return m_spawnPoints[i];
 		}
 	}

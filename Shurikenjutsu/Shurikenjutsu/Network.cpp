@@ -692,6 +692,7 @@ void Network::ReceviePacket()
 				m_justJoinedPlayerTeam = team;
 				m_newPlayerJoined = true;
 
+
 				break;
 			}
 			case ID_FAN_THROWN:
@@ -2575,7 +2576,9 @@ int Network::GetJustJoinedPlayerTeam()
 
 bool Network::GetNewPlayerJoined()
 {
-	return m_newPlayerJoined;
+	bool temp = m_newPlayerJoined;
+	m_newPlayerJoined = false;
+	return temp;
 }
 
 void Network::JoinedPlayerText()
