@@ -621,14 +621,23 @@ void PlayerManager::HealPlayer()
 		{
 			if (m_players[i].hotHeal > 0.0)
 			{
-					m_players[i].currentHP += m_players[i].hotHeal;
-					if (m_players[i].currentHP > m_players[i].maxHP)
-					{
-						m_players[i].currentHP = m_players[i].maxHP;
-						m_players[i].hotHeal = 0.0;
-					}
-					UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
-					m_haveSentHotDamage = true;
+				m_players[i].currentHP += m_players[i].hotHeal;
+
+				if (m_players[i].currentHP > m_players[i].maxHP)
+				{
+					m_players[i].currentHP = m_players[i].maxHP;
+					m_players[i].hotHeal = 0.0;
+					m_players[i].hasHealPOI = false;
+
+					RakNet::BitStream stream;
+					stream.Write((RakNet::MessageID)ID_POI_HEALING_BOOL);
+					stream.Write(m_players[i].guid);
+					stream.Write(false);
+					m_serverPeer->Send(&stream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+				}
+
+				UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
+				m_haveSentHotDamage = true;
 			}
 		}
 	}
@@ -900,6 +909,13 @@ void PlayerManager::RuneLotusPickedUp(RakNet::RakNetGUID p_player)
 		if (m_players[i].guid == p_player)
 		{
 			m_players[i].hotHeal = LOTUS_HEALTICK;
+			m_players[i].hasHealPOI = true;
+
+			RakNet::BitStream stream;
+			stream.Write((RakNet::MessageID)ID_POI_HEALING_BOOL);
+			stream.Write(m_players[i].guid);
+			stream.Write(true);
+			m_serverPeer->Send(&stream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 		}
 	}
 }
