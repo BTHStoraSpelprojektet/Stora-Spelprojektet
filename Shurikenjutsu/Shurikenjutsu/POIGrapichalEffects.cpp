@@ -66,16 +66,10 @@ void POIGrapichalEffects::Shutdown()
 	}
 }
 
-void POIGrapichalEffects::StartHealing()
+void POIGrapichalEffects::SetEmit(bool p_value)
 {
-	m_healingParticles->SetEmitParticleState(true);
-	m_heal = true;
-}
-
-void POIGrapichalEffects::StopHealing()
-{
-	m_healingParticles->SetEmitParticleState(false);
-	m_heal = false;
+	m_healingParticles->SetEmitParticleState(p_value);
+	m_heal = p_value;
 }
 
 void POIGrapichalEffects::UpdateHealingEffect(DirectX::XMFLOAT3 p_position)

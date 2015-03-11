@@ -872,17 +872,19 @@ void PlayingState::UpdatePOIEffects()
 
 	for (unsigned int i = 0; i < NetworkPlayers.size(); i++)
 	{
-		if (NetworkPlayers[i].shield > 0.0f)
+		if (NetworkPlayers[i].shield > 0.0f && !NetworkPlayers[i].invis)
 		{
 			DirectX::XMFLOAT3 position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
 			POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 			POIGrapichalEffects::GetInstance().RenderShieldEffect();
 		}
-	}
 
-	DirectX::XMFLOAT3 position = m_playerManager->GetPlayerPosition();
-	position.y = 0.25f;
-	POIGrapichalEffects::GetInstance().StartHealing();
-	POIGrapichalEffects::GetInstance().UpdateHealingEffect(position);
-	POIGrapichalEffects::GetInstance().RenderHealingEffect();
+		if (NetworkPlayers[i].hasHealPOI && !NetworkPlayers[i].invis)
+		{
+			DirectX::XMFLOAT3 position = m_playerManager->GetPlayerPosition();
+			position.y = 0.25f;
+			POIGrapichalEffects::GetInstance().UpdateHealingEffect(position);
+			POIGrapichalEffects::GetInstance().RenderHealingEffect();
+		}
+	}
 }
