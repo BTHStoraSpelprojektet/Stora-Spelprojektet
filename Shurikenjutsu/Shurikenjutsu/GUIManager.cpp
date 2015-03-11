@@ -1,6 +1,5 @@
 #include "GUIManager.h"
 #include "GUIText.h"
-#include "GUIElementColor.h"
 #include "GUIElement.h"
 #include "GraphicsEngine.h"
 #include "FW1FontWrapper.h"
@@ -27,11 +26,6 @@ void GUIManager::Render()
 		GraphicsEngine::RenderGUI(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetTexture());
 	}
 
-	for (unsigned int i = 0; i < m_elementsColor.size(); i++)
-	{
-		GraphicsEngine::RenderGUIColor(m_elementsColor[i]->GetWorldMatrix(), m_elementsColor[i]->GetColor());
-	}
-
 	if (m_texts.size() > 0)
 	{
 		for (unsigned int i = 0; i < m_texts.size(); i++)
@@ -44,18 +38,12 @@ void GUIManager::Render()
 	}
 
 	m_elements.clear();
-	m_elementsColor.clear();
 	m_texts.clear();
 }
 
 void GUIManager::AddToRenderQueue(GUIElement* p_element)
 {
 	m_elements.push_back(p_element);
-}
-
-void GUIManager::AddToRenderQueueColor(GUIElementColor* p_element)
-{
-	m_elementsColor.push_back(p_element);
 }
 
 void GUIManager::AddToRenderQueue(GUIText* p_text)
