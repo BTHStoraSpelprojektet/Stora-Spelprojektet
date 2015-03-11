@@ -226,9 +226,6 @@ void Network::ReceviePacket()
 			else
 			{
 				ConsolePrintSuccess("New client connected.");
-				//Person has joineeeddd
-				m_justJoinedPlayer = guid;
-				m_newPlayerJoined = true;
 			}
 
 			ConsolePrintText("Players connected: " + std::to_string(m_connectionCount));
@@ -933,6 +930,20 @@ void Network::ReceviePacket()
 
 			break;
 		}
+		case ID_CONNECTION_NOTIFICATION:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			RakNet::RakString name;
+			int team;
+
+			bitStream.Read(messageID);
+			bitStream.Read(name);
+			bitStream.Read(team);
+
+
+			break;
+		}
 		case ID_PLAY_SOUND_ABILITY:
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -1305,6 +1316,8 @@ void Network::ChooseChar(int p_charNr, int p_toolNr, int p_team)
 	bitStream.Write(p_charNr);
 	bitStream.Write(p_toolNr);
 	bitStream.Write(p_team);
+
+	m_newPlayerJoined = true;
 
 	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 
@@ -2530,9 +2543,14 @@ bool Network::GetPoiSpawned()
 	return m_poiSpawned;
 }
 
-RakNet::RakNetGUID Network::GetJustJoinedPlayer()
+RakNet::RakString Network::GetJustJoinedPlayerName()
 {
-	return m_justJoinedPlayer;
+	return m_justJoinedPlayerName;
+}
+
+int Network::GetJustJoinedPlayerTeam()
+{
+	return m_justJoinedPlayerTeam;
 }
 
 bool Network::GetNewPlayerJoined()

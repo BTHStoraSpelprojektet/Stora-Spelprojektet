@@ -172,7 +172,8 @@ public:
 
 	bool GetPoiSpawned();
 	bool GetNewPlayerJoined();
-	RakNet::RakNetGUID GetJustJoinedPlayer();
+	RakNet::RakString GetJustJoinedPlayerName();
+	int GetJustJoinedPlayerTeam();
 
 private:
 	void ClearListsAtNewRound();
@@ -185,7 +186,8 @@ private:
 	
 	static Network* m_instance;
 
-	RakNet::RakNetGUID m_justJoinedPlayer;
+	RakNet::RakString m_justJoinedPlayerName;
+	int m_justJoinedPlayerTeam;
 
 	NetworkLogger m_networkLogger;
 
