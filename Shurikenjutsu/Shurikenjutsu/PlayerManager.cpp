@@ -141,7 +141,8 @@ void PlayerManager::Render(bool p_inMenu)
 
 void PlayerManager::RenderOutliningPassOne()
 {
-	m_player->RenderDepthOutlining();
+	if (m_renderOutlingingEnemies)
+		m_player->RenderDepthOutlining();
 }
 
 void PlayerManager::RenderDepth(bool p_inMenu)
@@ -443,6 +444,16 @@ Sphere PlayerManager::GetPlayerSphere()
 	return m_player->GetSphere();
 }
 
+std::vector<OBB> PlayerManager::GetEnemyPlayerBoundingBoxes()
+{
+	std::vector<OBB> returnList;
+	for (int i = 0; i < m_enemyListSize; i++)
+	{
+		returnList.push_back(m_enemyList[i]->GetOBB());
+	}
+	return returnList;
+}
+
 void PlayerManager::AddEnemyToList(Player* p_enemy)
 {
 	Player** newList = new Player*[m_enemyListSize + 1];
@@ -551,4 +562,9 @@ std::vector<Player*> PlayerManager::GetEveryPlayer()
 	players.push_back(m_player);
 
 	return players;
+}
+
+void PlayerManager::SetOutliningPerEnemy(bool* p_renderOutlingingEnemies)
+{
+	m_renderOutlingingEnemies = p_renderOutlingingEnemies;
 }

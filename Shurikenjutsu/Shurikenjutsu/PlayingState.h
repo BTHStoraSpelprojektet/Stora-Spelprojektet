@@ -84,6 +84,7 @@ private:
 	bool m_updateFrustum;
 
 	bool m_renderOutlining;
+	bool* m_renderOutlingingEnemies;
 
 	float m_mouseX;
 	float m_mouseY;

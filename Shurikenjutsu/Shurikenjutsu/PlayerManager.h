@@ -34,6 +34,7 @@ public:
 
 	OBB GetPlayerBoundingBox();
 	Sphere GetPlayerSphere();
+	std::vector<OBB> PlayerManager::GetEnemyPlayerBoundingBoxes();
 
 	void UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
@@ -55,6 +56,7 @@ public:
 	std::vector<Player*> GetMyTeamPlayers(int p_team);
 	std::vector<Player*> GetEveryPlayer();
 
+	void PlayerManager::SetOutliningPerEnemy(bool* p_renderOutlingingEnemies);
 private:
 	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name);
 	void AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name);
@@ -76,6 +78,8 @@ private:
 	Frustum* m_frustum;
 
 	Sound* m_sound;
+
+	bool* m_renderOutlingingEnemies;
 
 	//std::vector < Sound::SoundEmitter > soundPlayerEmitter;
 };
