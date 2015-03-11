@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 256
+Number of objects: 257
 Number of bounding boxes: 4
 LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_13 -58.2989 0 0 0 0 0 60 8.5 15
@@ -25,6 +25,7 @@ Deco_smallBush_01_22 23.5531 0 37.7745 0 2.53073 0
 Deco_smallBush_01_23 38.5902 0 34.7596 0 2.53073 0
 Deco_smallBush_01_24 32.2262 0 32.0897 0 2.53073 0
 Deco_smallBush_01_3 33.8626 0 -14.4172 0 0.698132 0
+POI_Heal_1 -1.57094 0 -7.59168 0 0 0
 POI_Invisible_1 29.0323 0 36.0899 0 0 0
 POI_Shield_1 -28.86 0 -35.9027 0 0 0
 ParticleEmitter_BrazierFire_5 -30.812 1.79524 -37.7466 0 2.35619 0
