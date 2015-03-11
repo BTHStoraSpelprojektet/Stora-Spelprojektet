@@ -3,11 +3,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <vector>
-#include "Shuriken.h"
-#include "AnimatedObject.h"
 #include "..\CommonLibs\Level.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
-#include "Trail.h"
+
 
 class Volley;
 class Frustum;
@@ -19,6 +17,10 @@ class StickyTrap;
 class ParticleEmitter;
 class Sound;
 class PointOfInterestManager;
+class Shuriken;
+class AnimatedObject;
+class Object;
+class Trail;
 
 class ObjectManager
 {

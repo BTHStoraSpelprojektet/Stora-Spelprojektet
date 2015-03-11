@@ -19,6 +19,7 @@
 #include "POIGrapichalEffects.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "TrailRenderer.h"
 
 ParticleEmitter* TEST_POIemitter;
 

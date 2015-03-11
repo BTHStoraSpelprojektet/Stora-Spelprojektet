@@ -3,10 +3,11 @@
 
 #include "Structures.h"
 #include "../CommonLibs/RakNet/RakNetTypes.h"
-#include "Trail.h"
 
 class Object;
 class ParticleEmitter;
+class Trail;
+
 class StickyTrap
 {
 public:

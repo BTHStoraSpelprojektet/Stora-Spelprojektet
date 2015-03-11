@@ -18,6 +18,9 @@
 #include "PointOfInterestManager.h"
 #include "GraphicsEngine.h"
 #include "CollisionManager.h"
+#include "Shuriken.h"
+#include "AnimatedObject.h"
+#include "Trail.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}

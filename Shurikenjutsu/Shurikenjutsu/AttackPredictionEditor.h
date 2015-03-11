@@ -1,7 +1,9 @@
 #ifndef AWTTACKPREDICTIONEDITOR_H_
 #define AWTTACKPREDICTIONEDITOR_H_
 
-#include "Object.h"
+#include <DirectXMath.h>
+class Object;
+
 class AttackPredictionEditor
 {
 public:
