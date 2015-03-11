@@ -117,7 +117,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_poiText = new GUIText();
 	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 	m_playerJoinedText = new GUIText();
-	m_playerJoinedText->Initialize(" ", 50.0f, 0.0f, 250.0f, 0xffffffff);
+	m_playerJoinedText->Initialize(" Apo", 50.0f, 0.0f, 250.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -449,6 +449,7 @@ GAMESTATESWITCH PlayingState::Update()
 
 	if (Network::GetInstance()->GetNewPlayerJoined())
 	{
+		
 		PlayerJoinedText();
 	}
 
@@ -835,7 +836,6 @@ void PlayingState::SSBoundryUpdate(DirectX::XMFLOAT3 p_player)
 void PlayingState::PlayerJoinedText()
 {
 	m_playerJoinedText->SetColor(0xffffffff);
-	Network::GetInstance()->JoinedPlayerText();
 	if (Network::GetInstance()->GetJustJoinedPlayerTeam() == 1)
 	{
 		std::string text = Network::GetInstance()->GetJustJoinedPlayerName();

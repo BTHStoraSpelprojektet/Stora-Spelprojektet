@@ -244,17 +244,14 @@ void Server::ReceviePacket()
 			bitStream.Read(toolNr);
 			bitStream.Read(team);
 
-			RakNet::BitStream bitStream2;
-			bitStream2.Write((RakNet::MessageID)ID_CONNECTION_NOTIFICATION);
-			bitStream2.Write(name);
-			bitStream2.Write(team);
 
-			m_serverPeer->Send(&bitStream2, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 			if (m_gameState->GetPlayerIndex(m_packet->guid) == -1)
 			{
 				m_gameState->AddPlayer(m_packet->guid, name, charNr, toolNr, team);
 			}
+
+
 			break;
 		}
 		case ID_TIMER_SYNC:

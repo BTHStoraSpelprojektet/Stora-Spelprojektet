@@ -181,6 +181,13 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_nam
 
 	// Broadcast new player
 	BroadcastPlayers();
+
+	RakNet::BitStream bitStream2;
+	bitStream2.Write((RakNet::MessageID)ID_CONNECTION_NOTIFICATION);
+	bitStream2.Write(player.name);
+	bitStream2.Write(player.team);
+
+	m_serverPeer->Send(&bitStream2, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
 bool PlayerManager::MovePlayer(RakNet::RakNetGUID p_guid, float p_x, float p_y, float p_z, int p_nrOfConnections, bool p_dashed)
