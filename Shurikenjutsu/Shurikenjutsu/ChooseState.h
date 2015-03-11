@@ -92,6 +92,8 @@ private:
 	float m_nextHeight;
 	float m_toolWidth;
 	float m_toolHeight;
+
+	int m_prevRandomNumber;
 };
 
 

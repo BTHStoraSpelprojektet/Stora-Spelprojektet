@@ -227,9 +227,6 @@ void Network::ReceviePacket()
 				else
 				{
 					ConsolePrintSuccess("New client connected.");
-					//Person has joineeeddd
-					m_justJoinedPlayer = guid;
-					m_newPlayerJoined = true;
 				}
 
 				ConsolePrintText("Players connected: " + std::to_string(m_connectionCount));
@@ -498,8 +495,8 @@ void Network::ReceviePacket()
 				for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
 				{
 					m_sound->StopAmbientSound(runeSoundEmitters[i]);
-					runeSoundEmitters.clear();
 				}
+				runeSoundEmitters.clear();
 
 				ConsolePrintSuccess("A new round has started!");
 				ConsoleSkipLines(1);
@@ -680,6 +677,23 @@ void Network::ReceviePacket()
 				m_dashed = true;
 				break;
 			}
+			case ID_CONNECTION_NOTIFICATION:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				RakNet::RakString name;
+				int team;
+
+				bitStream.Read(messageID);
+				bitStream.Read(name);
+				bitStream.Read(team);
+
+				m_justJoinedPlayerName = name;
+				m_justJoinedPlayerTeam = team;
+				m_newPlayerJoined = true;
+
+				break;
+			}
 			case ID_FAN_THROWN:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -707,7 +721,6 @@ void Network::ReceviePacket()
 			case ID_FAN_UPDATE:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-
 				RakNet::RakNetGUID guid;
 				float x, z;
 				unsigned int id;
@@ -2550,9 +2563,14 @@ bool Network::GetPoiSpawned()
 	return m_poiSpawned;
 }
 
-RakNet::RakNetGUID Network::GetJustJoinedPlayer()
+RakNet::RakString Network::GetJustJoinedPlayerName()
 {
-	return m_justJoinedPlayer;
+	return m_justJoinedPlayerName;
+}
+
+int Network::GetJustJoinedPlayerTeam()
+{
+	return m_justJoinedPlayerTeam;
 }
 
 bool Network::GetNewPlayerJoined()

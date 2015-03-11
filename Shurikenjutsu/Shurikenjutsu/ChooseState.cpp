@@ -65,6 +65,7 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_currentNinja = 0;
 	m_nrOfTools = 3;
 	m_currentTool = 0;
+	m_prevRandomNumber = 0;
 	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
 	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
 		
@@ -125,13 +126,15 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_tools[1]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_SmokeBomb.png"));
 	m_tools[2]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_StickyTARP.png"));
 
+	float bgWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.0f;
+	float bgHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 6.83f;
 	m_toolDescription[0] = new ToolTipPopUp();
 	m_toolDescription[1] = new ToolTipPopUp();
 	m_toolDescription[2] = new ToolTipPopUp();
-	m_toolDescription[0]->Initialize(0.0f, toolCycleHeight, SPIKES_DESCRIPTION, m_toolHeight);
-	m_toolDescription[1]->Initialize(0.0f, toolCycleHeight, SMOKEBOMB_DESCRIPTION, m_toolHeight);
-	m_toolDescription[2]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight);
-
+	m_toolDescription[0]->Initialize(0.0f, toolCycleHeight, SPIKES_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
+	m_toolDescription[1]->Initialize(0.0f, toolCycleHeight, SMOKEBOMB_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
+	m_toolDescription[2]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
+	
 	m_abilityDescription[0] = new CharacterAbilityDescription();
 	m_abilityDescription[1] = new CharacterAbilityDescription();
 	m_abilityDescription[2] = new CharacterAbilityDescription();
@@ -563,7 +566,56 @@ void ChooseState::EscapeIsPressed()
 
 void ChooseState::RandomNinja()
 {
-	std::srand((unsigned int)std::time(NULL));
-	m_currentTool = std::rand() % 3;
-	m_currentNinja = std::rand() % 3;
+	std::srand((unsigned int)std::time(0));
+	int randomNumber = std::rand() % 9;
+	while (m_prevRandomNumber == randomNumber)
+	{
+		randomNumber = std::rand() % 9;
+	}
+	if (randomNumber == 0)
+	{
+		m_currentNinja = 0;
+		m_currentTool = 0;
+	}
+	else if (randomNumber == 1)
+	{
+		m_currentNinja = 0;
+		m_currentTool = 1;
+	}
+	else if (randomNumber == 2)
+	{
+		m_currentNinja = 0;
+		m_currentTool = 2;
+	}
+	else if (randomNumber == 3)
+	{
+		m_currentNinja = 1;
+		m_currentTool = 0;
+	}
+	else if (randomNumber == 4)
+	{
+		m_currentNinja = 1;
+		m_currentTool = 1;
+	}
+	else if (randomNumber == 5)
+	{
+		m_currentNinja = 1;
+		m_currentTool = 2;
+	}
+	else if (randomNumber == 6)
+	{
+		m_currentNinja = 2;
+		m_currentTool = 0;
+	}
+	else if (randomNumber == 7)
+	{
+		m_currentNinja = 2;
+		m_currentTool = 1;
+	}
+	else if (randomNumber == 8)
+	{
+		m_currentNinja = 2;
+		m_currentTool = 2;
+	}
+	m_prevRandomNumber = randomNumber;
 }
