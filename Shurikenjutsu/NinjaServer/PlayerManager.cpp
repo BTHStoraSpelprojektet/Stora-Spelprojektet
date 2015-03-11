@@ -242,18 +242,18 @@ void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
 	{
 		if (m_players[i].guid == p_guid)
 		{
-			m_takenSpawnPoints.erase(m_players[i].guid);
-			m_players.erase(m_players.begin() + i);
-
-			ConsolePrintError("A player disconnected.");
-			BroadcastPlayers();
-
 			RakNet::BitStream bitStream2;
 			bitStream2.Write((RakNet::MessageID)ID_CONNECTION_NOTIFICATION);
 			bitStream2.Write(m_players[i].name);
 			bitStream2.Write(3);
 
 			m_serverPeer->Send(&bitStream2, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+			m_takenSpawnPoints.erase(m_players[i].guid);
+			m_players.erase(m_players.begin() + i);
+
+			ConsolePrintError("A player disconnected.");
+			BroadcastPlayers();
 
 			i--;
 			break;
