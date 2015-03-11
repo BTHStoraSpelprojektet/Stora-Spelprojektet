@@ -5,7 +5,6 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "Buffer.h"
 
 class DebugShape2D
 {

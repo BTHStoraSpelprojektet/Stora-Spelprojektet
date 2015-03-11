@@ -1,4 +1,6 @@
 #include "Server.h"
+#include <iostream>
+#include <fstream>
 
 Server::Server(){}
 
@@ -34,8 +36,23 @@ bool Server::Initialize()
 
 void Server::ReadLevels(){
 	//Read from file
-	m_levels.push_back("../Shurikenjutsu/Levels/NightTimeArena.SSPL");
-	//m_levels.push_back("../Shurikenjutsu/Levels/WaterArena.SSPL");
+	std::string levelsPath = "../Shurikenjutsu/Levels/";
+	std::string settingFile = "../Shurikenjutsu/Settings/ServerLevels.cfg";
+
+	std::ifstream infile(settingFile, std::ifstream::in);
+	char line[256];
+	while (infile.getline(line,256)){
+		std::string level = levelsPath;
+		level.append(line);
+		if (level.size()>levelsPath.size()){
+			m_levels.push_back(level);
+		}
+	}
+
+	//Set default if file not found
+	if (m_levels.size() == 0){
+		m_levels.push_back("../Shurikenjutsu/Levels/NightTimeArena.SSPL");
+	}
 
 	//Set start level
 	m_currentLevel = 0;
@@ -226,6 +243,13 @@ void Server::ReceviePacket()
 			bitStream.Read(charNr);
 			bitStream.Read(toolNr);
 			bitStream.Read(team);
+
+			RakNet::BitStream bitStream2;
+			bitStream2.Write((RakNet::MessageID)ID_CONNECTION_NOTIFICATION);
+			bitStream2.Write(name);
+			bitStream2.Write(team);
+
+			m_serverPeer->Send(&bitStream2, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
 
 			if (m_gameState->GetPlayerIndex(m_packet->guid) == -1)
 			{

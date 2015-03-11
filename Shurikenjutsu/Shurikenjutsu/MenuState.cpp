@@ -231,6 +231,7 @@ GAMESTATESWITCH MenuState::Update()
 		m_ipbox->Update();
 		m_namebox->Update();
 	}
+
 	// Check buttons
 	switch (action.m_action)
 	{

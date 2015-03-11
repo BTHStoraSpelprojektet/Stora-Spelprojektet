@@ -1,12 +1,9 @@
 #include "stdafx.h"
 #include "DebugBox.h"
-
+#include "Buffer.h"
 #include "GraphicsEngineDLL.h"
-DebugBox::DebugBox()
-{
-	
-}
 
+DebugBox::DebugBox(){}
 bool DebugBox::Initialize(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, float p_height, DirectX::XMFLOAT3 p_color)
 {
 	std::vector<DirectX::XMFLOAT3> lines;

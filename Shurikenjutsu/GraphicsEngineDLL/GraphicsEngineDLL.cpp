@@ -6,9 +6,6 @@
 #include "stdafx.h"
 
 #include "GraphicsEngineDLL.h"
-//#include "..\CommonLibs\CommonEnums.h"
-//#include "..\CommonLibs\CommonStructures.h"
-//#include "..\CommonLibs\ConsoleFunctions.h"
 #include "ParticleShader.h"
 #include "SceneShader.h"
 #include "GUIShader.h"
@@ -24,6 +21,8 @@
 #include "FW1FontWrapper_1_1\FW1FontWrapper.h"
 #include "..\CommonLibs\DirectXTex\DirectXTex\DirectXTex.h"
 #include "PointLights.h"
+#include "buffer.h"
+#include "WICTextureLoader.h"
 
 namespace DLLGraphicsEngine
 {
@@ -145,7 +144,7 @@ namespace DLLGraphicsEngine
 		}
 
 		// Initialize the visibility computer.
-		if (ShadowShapes::GetInstance().Initialize())
+		if (ShadowShapes::GetInstance()->Initialize())
 		{
 //			ConsolePrintSuccess("ShadowShapes initialized successfully.");
 //			ConsoleSkipLines(1);
@@ -320,15 +319,15 @@ namespace DLLGraphicsEngine
 			delete m_directX;
 			m_directX = nullptr;
 		}
+		PointLights::GetInstance()->Shutdown();
+		ShadowShapes::GetInstance()->Shutdown();
+		VisibilityComputer::GetInstance().Shutdown();
 
 		if (m_instance)
 		{
 			delete m_instance;
 			m_instance = nullptr;
 		}
-		PointLights::GetInstance()->Shutdown();
-		ShadowShapes::GetInstance().Shutdown();
-		VisibilityComputer::GetInstance().Shutdown();
 	}
 
 	ID3D11ShaderResourceView* GE::Create2DTexture(std::string p_filename)
@@ -860,24 +859,24 @@ namespace DLLGraphicsEngine
 
 	void GE::SS_AddStaticLine(Line p_line)
 	{
-		ShadowShapes::GetInstance().AddStaticLine(p_line);
+		ShadowShapes::GetInstance()->AddStaticLine(p_line);
 	}
 	void GE::SS_Update(float p_deltaTime)
 	{
-		ShadowShapes::GetInstance().Update(p_deltaTime);
+		ShadowShapes::GetInstance()->Update(p_deltaTime);
 	}
 	void GE::SS_DebugRender()
 	{
-		ShadowShapes::GetInstance().DebugRender();
+		ShadowShapes::GetInstance()->DebugRender();
 	}
 	void GE::SS_AddSmokeBomb(Point p_point, float p_deltaTime)
 	{
-		ShadowShapes::GetInstance().AddSmokeBombShape(p_point, p_deltaTime);
+		ShadowShapes::GetInstance()->AddSmokeBombShape(p_point, p_deltaTime);
 	}
 
 	void GE::SS_ClearStaticLines()
 	{
-		ShadowShapes::GetInstance().clearStaticLines();
+		ShadowShapes::GetInstance()->clearStaticLines();
 	}
 
 }

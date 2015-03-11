@@ -2,10 +2,9 @@
 #include "stdafx.h"
 #include "InstanceManager.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
-#include <DirectXMath.h>
+#include "..\CommonLibs\CommonStructures.h"
 #include <Windows.h>
 #include <D3Dcompiler.h>
-#include "..\CommonLibs\CommonStructures.h"
 InstanceManager::InstanceManager(){}
 InstanceManager::~InstanceManager(){}
 void InstanceManager::Shutdown()

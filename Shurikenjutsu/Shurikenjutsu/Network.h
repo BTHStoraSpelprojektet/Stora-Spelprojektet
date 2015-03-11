@@ -172,7 +172,8 @@ public:
 
 	bool GetPoiSpawned();
 	bool GetNewPlayerJoined();
-	RakNet::RakNetGUID GetJustJoinedPlayer();
+	RakNet::RakString GetJustJoinedPlayerName();
+	int GetJustJoinedPlayerTeam();
 
 private:
 	void ClearListsAtNewRound();
@@ -185,7 +186,8 @@ private:
 	
 	static Network* m_instance;
 
-	RakNet::RakNetGUID m_justJoinedPlayer;
+	RakNet::RakString m_justJoinedPlayerName;
+	int m_justJoinedPlayerTeam;
 
 	NetworkLogger m_networkLogger;
 
@@ -219,8 +221,8 @@ private:
 	void RemoveSmokeBomb(unsigned int p_smokeBombID);
 	int GUIDToID(RakNet::RakNetGUID p_guid);
 	void SendVisiblePlayers();
-	void Network::CancelRune(POINTOFINTERESTTYPE p_rune);
-
+	void CancelRune(POINTOFINTERESTTYPE p_rune);
+	void HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value);
 
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;

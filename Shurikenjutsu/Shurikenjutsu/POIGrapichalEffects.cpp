@@ -41,6 +41,8 @@ bool POIGrapichalEffects::Initialize()
 	m_shieldLight.m_position.z = 0.0f;
 	m_shieldLight.m_range = 1.95f;
 
+	SetEmit(true);
+
 	return true;
 }
 
@@ -66,16 +68,10 @@ void POIGrapichalEffects::Shutdown()
 	}
 }
 
-void POIGrapichalEffects::StartHealing()
+void POIGrapichalEffects::SetEmit(bool p_value)
 {
-	m_healingParticles->SetEmitParticleState(true);
-	m_heal = true;
-}
-
-void POIGrapichalEffects::StopHealing()
-{
-	m_healingParticles->SetEmitParticleState(false);
-	m_heal = false;
+	m_healingParticles->SetEmitParticleState(p_value);
+	m_heal = p_value;
 }
 
 void POIGrapichalEffects::UpdateHealingEffect(DirectX::XMFLOAT3 p_position)

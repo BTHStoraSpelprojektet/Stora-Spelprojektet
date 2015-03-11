@@ -5,16 +5,6 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "Buffer.h"
-
-#include "DebugBox.h"
-#include "DebugLineList.h"
-#include "DebugRectangle.h"
-#include "DebugShape2D.h"
-#include "DebugShape3D.h"
-#include "DebugCircle.h"
-#include "DebugDot.h"
-
 class DebugDraw
 {
 public:

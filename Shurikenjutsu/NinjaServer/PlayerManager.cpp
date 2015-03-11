@@ -280,6 +280,7 @@ void PlayerManager::BroadcastPlayers()
 		bitStream.Write(m_players[i].deaths);
 		bitStream.Write(m_players[i].kills);
 		bitStream.Write(m_players[i].shield);
+		bitStream.Write(m_players[i].hasHealPOI);
 	}
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
@@ -291,6 +292,7 @@ void PlayerManager::RespawnPlayer(RakNet::RakNetGUID p_guid)
 	{
 		if (m_players[i].guid == p_guid)
 		{
+			// Reset position
 			LevelImporter::SpawnPoint spawnPoint = GetSpawnPoint(m_players[i].team);
 			m_players[i].x = spawnPoint.m_translationX;
 			m_players[i].y = spawnPoint.m_translationY;
@@ -304,6 +306,11 @@ void PlayerManager::RespawnPlayer(RakNet::RakNetGUID p_guid)
 			bitStream.Write(m_players[i].z);
 
 			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 2, p_guid, false);
+
+			// Reset hot effect
+			m_players[i].hasHealPOI = false;
+			SendHasPOIHealing(m_players[i].guid);
+
 			break;
 		}
 	}
@@ -562,24 +569,36 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 	{
 		if (m_players[i].guid == p_defendingGuid)
 		{
+			// STop healing POI, and send message to stop effect.
 			m_players[i].hotHeal = 0.0f;
+			if (m_players[i].hasHealPOI)
+			{
+				m_players[i].hasHealPOI = false;
+				SendHasPOIHealing(m_players[i].guid);
+			}
+
 			if (m_players[i].shield > 0.0f)
 			{
 				// Shield active
 				// Play Shield sound, now it will play hurt sound
 				m_players[i].shield = 0.0f;
-				
 			}
+
 			else
 			{
 				m_players[i].currentHP -= p_damage;
+
 				if (m_players[i].currentHP <= 0)
 				{
 					m_players[i].isAlive = false;
-					if (m_players[i].charNr == 1){
+
+					if (m_players[i].charNr == 1)
+					{
 						SendPlaySound(PLAYSOUND_FEMALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
 					}
-					else{
+
+					else
+					{
 						SendPlaySound(PLAYSOUND_MALE_DEATH_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
 					}
 
@@ -590,23 +609,32 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 						{
 							// Send to deathboard
 							DeathBoard(m_players[i].guid, m_players[j].guid, p_usedAbility);
+
 							// Send to scoreboard
 							ScoreBoard(m_players[i].guid, m_players[j].guid);
+
 							break;
 						}
 					}
 				}
+
 				UpdateHealth(p_defendingGuid, m_players[i].currentHP, m_players[i].isAlive);
 			}
+
 			if (!p_suddenDeathDamage)
 			{
 				SendDealtDamage(p_attackingGuid, p_damage, m_players[i].x, m_players[i].y, m_players[i].z);
 			}
+
 			SendPlaySound(p_usedAbility, m_players[i].x, m_players[i].y, m_players[i].z);
-			if (m_players[i].charNr == 1){
+
+			if (m_players[i].charNr == 1)
+			{
 				SendPlaySound(PLAYSOUND_FEMALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
 			}
-			else{
+
+			else
+			{
 				SendPlaySound(PLAYSOUND_MALE_HURT_SOUND, m_players[i].x, m_players[i].y, m_players[i].z);
 			}
 		}
@@ -621,14 +649,19 @@ void PlayerManager::HealPlayer()
 		{
 			if (m_players[i].hotHeal > 0.0)
 			{
-					m_players[i].currentHP += m_players[i].hotHeal;
-					if (m_players[i].currentHP > m_players[i].maxHP)
-					{
-						m_players[i].currentHP = m_players[i].maxHP;
-						m_players[i].hotHeal = 0.0;
-					}
-					UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
-					m_haveSentHotDamage = true;
+				m_players[i].currentHP += m_players[i].hotHeal;
+
+				if (m_players[i].currentHP > m_players[i].maxHP)
+				{
+					m_players[i].currentHP = m_players[i].maxHP;
+					m_players[i].hotHeal = 0.0;
+					m_players[i].hasHealPOI = false;
+
+					SendHasPOIHealing(m_players[i].guid);
+				}
+
+				UpdateHealth(m_players[i].guid, m_players[i].currentHP, m_players[i].isAlive);
+				m_haveSentHotDamage = true;
 			}
 		}
 	}
@@ -900,6 +933,9 @@ void PlayerManager::RuneLotusPickedUp(RakNet::RakNetGUID p_player)
 		if (m_players[i].guid == p_player)
 		{
 			m_players[i].hotHeal = LOTUS_HEALTICK;
+			m_players[i].hasHealPOI = true;
+
+			SendHasPOIHealing(m_players[i].guid);
 		}
 	}
 }
@@ -1037,4 +1073,22 @@ bool PlayerManager::GetInvis(RakNet::RakNetGUID p_guid)
 		}
 	}
 	return false;
+}
+
+void PlayerManager::SendHasPOIHealing(RakNet::RakNetGUID p_guid)
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		if (m_players[i].guid == p_guid)
+		{
+			RakNet::BitStream stream;
+			stream.Write((RakNet::MessageID)ID_POI_HEALING_BOOL);
+			stream.Write(m_players[i].guid);
+			stream.Write(m_players[i].hasHealPOI);
+			m_serverPeer->Send(&stream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
+			break;
+		}
+	}
+	
 }

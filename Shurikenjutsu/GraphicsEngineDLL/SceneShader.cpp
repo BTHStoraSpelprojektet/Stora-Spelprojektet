@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "SceneShader.h"
-#include "..\CommonLibs\ConsoleFunctions.h"
 #include "InstanceManager.h"
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\DirectXTex\WICTextureLoader\WICTextureLoader.h"
+#include "..\CommonLibs\ConsoleFunctions.h"
 
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {

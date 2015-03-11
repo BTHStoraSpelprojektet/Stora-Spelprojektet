@@ -25,6 +25,7 @@ struct PlayerNet
 	int kills;
 	int deaths;
 	float shield;
+	bool hasHealPOI;
 };
 
 struct ShurikenNet
@@ -119,6 +120,7 @@ enum Messages
 	ID_SPIKETRAP_REMOVE,
 	ID_DASH_TO_LOCATION,
 	ID_CHOOSE_CHAR,
+	ID_CONNECTION_NOTIFICATION,
 	ID_FAN_THROWN,
 	ID_FAN_REMOVE,
 	ID_FAN_UPDATE,
@@ -147,7 +149,8 @@ enum Messages
 	ID_INVIS_PICKED_UP,
 	ID_RUNE_SHIELD_CANCEL,
 	ID_RUNE_INVIS_CANCEL,
-	ID_SEND_VISIBLE_PLAYERS
+	ID_SEND_VISIBLE_PLAYERS,
+	ID_POI_HEALING_BOOL
 };
 
 #endif

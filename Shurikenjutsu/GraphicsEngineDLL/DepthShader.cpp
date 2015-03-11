@@ -5,6 +5,7 @@
 #include <D3Dcompiler.h>
 #include <DirectXMath.h>
 #include "InstanceManager.h"
+#include "..\CommonLibs\CommonStructures.h"
 
 bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {

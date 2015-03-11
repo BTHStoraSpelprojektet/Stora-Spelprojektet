@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Buffer.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\CommonStructures.h"
 ID3D11Buffer* Buffer::CreateBuffer(BUFFERTYPE P_type, ID3D11Device* p_device, std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated)
 {
 	ID3D11Buffer* buffer = NULL;

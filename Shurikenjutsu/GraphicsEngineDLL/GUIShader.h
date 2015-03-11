@@ -4,8 +4,8 @@
 #include <D3D11.h>
 #include <Windows.h>
 #include <vector>
+#include <DirectXMath.h>
 
-#include "..\Shurikenjutsu\Structures.h"
 class GUIShader
 {
 public:
