@@ -1,11 +1,8 @@
 
 #include "stdafx.h"
 #include "VisibilityComputer.h"
-
-//#include "..\CommonLibs\ConsoleFunctions.h"
-//#include "..\CommonLibs\TextureLibrary.h"
-
 #include "GraphicsEngineDLL.h"
+#include "RenderTarget.h"
 
 VisibilityComputer& VisibilityComputer::GetInstance()
 {
@@ -142,7 +139,8 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 		return false;
 	}
 	UpdateMapBoundries(Point(-1.0f, 1.0f), Point(1.0f, -1.0f));
-	m_renderTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_currentScreenWidth, p_currentScreenHeight);
+	m_renderTarget = new RenderTarget();
+	m_renderTarget->Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_currentScreenWidth, p_currentScreenHeight);
 	RebuildQuad(Point(-45.0f, 52.0f), Point(45.0f, -52.0f));
 
 	// Setup vertex buffer description.
@@ -210,8 +208,12 @@ void VisibilityComputer::Shutdown()
 		m_matrixBuffer->Release();
 		m_matrixBuffer = nullptr;
 	}
-
-	m_renderTarget.Shutdown();
+	if (m_renderTarget != nullptr)
+	{
+		m_renderTarget->Shutdown();
+		delete m_renderTarget;
+		m_renderTarget = nullptr;
+	}
 }
 
 void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11Device* p_device, float p_deltaTime)
@@ -222,7 +224,7 @@ void VisibilityComputer::UpdateVisibilityPolygon(Point p_viewerPosition, ID3D11D
 	std::vector<PolygonPoint> totalIntersections;
 
 	std::vector<float> uniqueAngles = GetUniquePointAngles(p_viewerPosition);
-	std::vector<Line> segments = ShadowShapes::GetInstance().GetStaticLines(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
+	std::vector<Line> segments = ShadowShapes::GetInstance()->GetStaticLines(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
 	PolygonPoint polygonPoint = PolygonPoint();
 
 	for (unsigned int i = 0; i < uniqueAngles.size(); i++)
@@ -315,8 +317,8 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 void VisibilityComputer::CalculateReversedVisibilityPolygon(ID3D11DeviceContext* p_context)
 {
 	float color[4] = {0.0f, 0.0f, 0.0f, 0.5f};
-	m_renderTarget.SetAsRenderTarget(p_context);
-	m_renderTarget.Clear(p_context, color);
+	m_renderTarget->SetAsRenderTarget(p_context);
+	m_renderTarget->Clear(p_context, color);
 
 	UpdatePolygonMatrices(p_context);
 
@@ -388,7 +390,7 @@ Intersection VisibilityComputer::GetIntertersectionPoint(Line p_ray, Line p_segm
 inline std::vector<float> VisibilityComputer::GetUniquePointAngles(Point p_viewerPoint)
 {
 	std::vector<float> angles;
-	std::vector<Point> list = ShadowShapes::GetInstance().GetUniquePoints(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
+	std::vector<Point> list = ShadowShapes::GetInstance()->GetUniquePoints(m_boundingBox.m_topLeft, m_boundingBox.m_bottomRight);
 
 	// Get the angles to all of the unique points.
 	for (unsigned int i = 0; i < list.size(); i++)
@@ -411,7 +413,7 @@ void VisibilityComputer::RenderVisibilityPolygon(ID3D11DeviceContext* p_context,
 	// Render the quad to reverse project the polygon onto.
 	if (!p_isMatchOver)
 	{
-		DLLGraphicsEngine::GE::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget.GetRenderTarget(), p_texture);
+		DLLGraphicsEngine::GE::GetInstance()->RenderReversedShadows(m_quadMesh, 6, m_renderTarget->GetRenderTarget(), p_texture);
 	}
 }
 
@@ -482,7 +484,7 @@ bool VisibilityComputer::IsPointInPolygon(Point p_point, std::vector<Point> p_po
 
 void VisibilityComputer::UpdateMapBoundries(Point p_topLeft, Point p_bottomRight)
 {
-	ShadowShapes::GetInstance().UpdateBoundries(p_topLeft, p_bottomRight);
+	ShadowShapes::GetInstance()->UpdateBoundries(p_topLeft, p_bottomRight);
 
 	m_boundingBox.m_topLeft = p_topLeft;
 	m_boundingBox.m_bottomRight = p_bottomRight;
@@ -536,8 +538,8 @@ void VisibilityComputer::QuickSortAngles(std::vector<PolygonPoint>& p_list, int 
 
 void VisibilityComputer::UpdateTextureSize(int p_width, int p_height)
 {
-	m_renderTarget.Shutdown();
-	m_renderTarget.Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_width, p_height);
+	m_renderTarget->Shutdown();
+	m_renderTarget->Initialize(DLLGraphicsEngine::GE::GetInstance()->GetDevice(), p_width, p_height);
 }
 
 void VisibilityComputer::RebuildQuad(Point p_topLeft, Point p_bottomRight)
@@ -644,7 +646,7 @@ DirectX::XMFLOAT4X4 VisibilityComputer::GetProjectionPolygonMatrix()
 
 ID3D11ShaderResourceView* VisibilityComputer::GetRenderTarget()
 {
-	return m_renderTarget.GetRenderTarget();
+	return m_renderTarget->GetRenderTarget();
 }
 
 Point VisibilityComputer::GetLastPosition()

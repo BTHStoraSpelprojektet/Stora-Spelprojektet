@@ -1,9 +1,8 @@
 #ifndef SHADOWSHAPES
 #define SHADOWSHAPES
 
-#include "DebugDraw.h"
-#include "..\shurikenjutsu\Structures.h"
-
+#include "..\CommonLibs\CommonStructures.h"
+class DebugLineList;
 
 
 struct SmokeBombShadowShape
@@ -20,7 +19,7 @@ struct SmokeBombShadowShape
 class ShadowShapes
 {
 public:
-	static ShadowShapes& GetInstance();
+	static ShadowShapes* GetInstance();
 
 	bool Initialize();
 	void Shutdown();
@@ -44,6 +43,8 @@ public:
 	void DebugRender();
 
 private:
+
+	static ShadowShapes* m_instance;
 	ShadowShapes() {};
 	ShadowShapes(ShadowShapes const&);
 	void operator=(ShadowShapes const&);
@@ -57,6 +58,6 @@ private:
 	std::vector<Point> m_uniqueBoundryPoints;
 	std::vector<SmokeBombShadowShape> m_smokeBombs;
 	
-	DebugLineList m_staticDebugLines;
+	DebugLineList *m_staticDebugLines;
 };
 #endif

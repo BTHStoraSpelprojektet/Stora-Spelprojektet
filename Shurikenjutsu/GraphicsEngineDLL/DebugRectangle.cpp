@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "DebugRectangle.h"
 #include "GraphicsEngineDLL.h"
+#include "Buffer.h"
 
-DebugRectangle::DebugRectangle()
-{}
+
+DebugRectangle::DebugRectangle(){}
 
 bool DebugRectangle::Initialize(DirectX::XMFLOAT3 p_centrum, float p_width, float p_depth, DirectX::XMFLOAT3 p_color)
 {

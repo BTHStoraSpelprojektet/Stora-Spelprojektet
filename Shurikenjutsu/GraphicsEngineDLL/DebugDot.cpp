@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DebugDot.h"
 #include "GraphicsEngineDLL.h"
+#include "Buffer.h"
 
 void DebugDot::Initialize(DirectX::XMFLOAT3 p_centrum, int p_resolution, DirectX::XMFLOAT3 p_color)
 {
