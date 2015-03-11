@@ -172,6 +172,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_nam
 	player.kills = 0;
 	player.deaths = 0;
 	player.shield = 0.0f;
+	player.hasHealPOI = false;
 	m_players.push_back(player);
 	
 	ConsolePrintText("New player joined.");
