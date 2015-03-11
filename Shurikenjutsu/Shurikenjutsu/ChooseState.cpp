@@ -17,6 +17,7 @@
 #include "PlayerManager.h"
 #include "MenuButton.h"
 #include "ScoreBoard.h"
+#include "TeamTable.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
