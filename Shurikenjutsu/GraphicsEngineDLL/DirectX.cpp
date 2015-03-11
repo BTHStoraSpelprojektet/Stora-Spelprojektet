@@ -730,7 +730,7 @@ bool DirectXWrapper::InitializeGBuffer()
 	textureDesc.Height = (unsigned int)m_maxWindowHeight;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -881,7 +881,7 @@ bool DirectXWrapper::InitializePP()
 	textureDesc.Height = (unsigned int)m_maxWindowHeight / 2;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	textureDesc.Format = DXGI_FORMAT_R16_FLOAT;
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -1010,7 +1010,7 @@ bool DirectXWrapper::InitializeComposition()
 	textureDesc.Height = (unsigned int)m_maxWindowHeight;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
