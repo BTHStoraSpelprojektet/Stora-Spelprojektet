@@ -881,7 +881,7 @@ void PlayingState::UpdatePOIEffects()
 
 		if (NetworkPlayers[i].hasHealPOI && !NetworkPlayers[i].invis)
 		{
-			DirectX::XMFLOAT3 position = m_playerManager->GetPlayerPosition();
+			DirectX::XMFLOAT3 position = m_playerManager->GetEveryPlayer()[i]->GetPosition();
 			position.y = 0.25f;
 			POIGrapichalEffects::GetInstance().UpdateHealingEffect(position);
 			POIGrapichalEffects::GetInstance().RenderHealingEffect();
