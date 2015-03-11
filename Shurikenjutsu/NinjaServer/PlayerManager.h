@@ -83,6 +83,8 @@ private:
 	void SendVisiblePlayers();
 	int GetTeam(RakNet::RakNetGUID p_player);
 
+	void SendHasPOIHealing(RakNet::RakNetGUID p_guid);
+
 	RakNet::RakPeerInterface *m_serverPeer;
 
 	std::vector<PlayerNet> m_players;

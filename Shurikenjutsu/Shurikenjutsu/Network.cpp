@@ -249,7 +249,7 @@ void Network::ReceviePacket()
 				float dirX, dirY, dirZ;
 				float maxHP, currentHP, shield;
 				int team, charNr, toolNr, kills, deaths;
-				bool isAlive, invis;
+				bool isAlive, invis, hasPOIHealing;
 				RakNet::RakNetGUID guid;
 				int id;
 				std::vector<RakNet::RakNetGUID> playerGuids = std::vector<RakNet::RakNetGUID>();
@@ -277,6 +277,7 @@ void Network::ReceviePacket()
 					bitStream.Read(deaths);
 					bitStream.Read(kills);
 					bitStream.Read(shield);
+					bitStream.Read(hasPOIHealing);
 
 					// (Add and) update players position
 					UpdatePlayerPos(guid, x, y, z);
@@ -289,6 +290,7 @@ void Network::ReceviePacket()
 					UpdatePlayerInvis(guid, invis);
 					UpdatePlayerShield(guid, shield);
 					UpdatePlayerName(guid, name);
+					HandleHealingPOIBool(guid, hasPOIHealing);
 
 					playerGuids.push_back(guid);
 				}
@@ -1891,6 +1893,7 @@ void Network::RespawnPlayer(float p_x, float p_y, float p_z)
 	m_myPlayer.x = p_x;
 	m_myPlayer.y = p_y;
 	m_myPlayer.z = p_z;
+	m_myPlayer.hasHealPOI = false;
 	m_respawned = true;
 }
 
@@ -2623,7 +2626,6 @@ void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 			m_enemyPlayers[i].hasHealPOI = !p_value;
 		}
 	}
-
 	else
 	{
 		m_myPlayer.hasHealPOI = !p_value;
