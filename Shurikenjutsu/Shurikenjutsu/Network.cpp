@@ -496,8 +496,8 @@ void Network::ReceviePacket()
 				for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
 				{
 					m_sound->StopAmbientSound(runeSoundEmitters[i]);
-					runeSoundEmitters.clear();
 				}
+				runeSoundEmitters.clear();
 
 				ConsolePrintSuccess("A new round has started!");
 				ConsoleSkipLines(1);
