@@ -34,13 +34,8 @@ struct Output
 	float4 m_positionHomogenous : SV_POSITION;
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
-	float3 m_normal : NORMAL;
-	float3 m_tangent : TANGENT;
 
 	float3x3 m_tBN : TBN;
-
-	float m_fogFactor : FOG;
-
 	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
@@ -73,22 +68,22 @@ Output main(Input p_input)
 	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
 
 	// Pass on tangent.
-	output.m_tangent = mul(float4(p_input.m_tangent, 0.0f), p_input.m_instancePosition).xyz;
-	output.m_tangent = mul(output.m_tangent, (float3x3)m_viewMatrix).xyz;
+	float3 tangent = mul(float4(p_input.m_tangent, 0.0f), p_input.m_instancePosition).xyz;
+	tangent = mul(tangent, (float3x3)m_viewMatrix).xyz;
 
 	// Transform  the normals.
-	output.m_normal = mul(float4(p_input.m_normal, 0.0f), p_input.m_instancePosition).xyz;
-	output.m_normal = mul(output.m_normal, (float3x3)m_viewMatrix).xyz;
+	float3 normal = mul(float4(p_input.m_normal, 0.0f), p_input.m_instancePosition).xyz;
+	normal = mul(normal, (float3x3)m_viewMatrix).xyz;
 
 	// Normalmap TBN matrix.
-	float3 N = output.m_normal;
-	float3 T = -normalize(output.m_tangent - dot(output.m_tangent, N)*N);
+	float3 N = normal;
+	float3 T = -normalize(tangent - dot(tangent, N)*N);
 	float3 B = cross(N, T);
 
 	output.m_tBN = float3x3(T, B, N);
 
 	// Calculate linear fog.    
-	output.m_fogFactor = 1.0f;// saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
+	//output.m_fogFactor = 1.0f;// saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
 
 	// Calculate exponential fog.
 	//output.m_fogFactor = saturate(1.0 / pow(2.71828, (cameraPosition.z * m_fogDensity)));
