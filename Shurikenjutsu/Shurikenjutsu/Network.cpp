@@ -2617,26 +2617,42 @@ void Network::SendSpawnedRunes()
 
 void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 {
-	if (m_myPlayer.guid == p_guid)
+	if (p_value == false)
 	{
-		m_myPlayer.hasHealPOI = p_value;
-
 		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 		{
-			m_enemyPlayers[i].hasHealPOI = !p_value;
+			m_enemyPlayers[i].hasHealPOI = false;
 		}
+
+		m_myPlayer.hasHealPOI = false;
 	}
+
 	else
 	{
-		m_myPlayer.hasHealPOI = !p_value;
-
-		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		if (m_myPlayer.guid == p_guid)
 		{
-			m_enemyPlayers[i].hasHealPOI = !p_value;
+			m_myPlayer.hasHealPOI = true;
 
-			if (m_enemyPlayers[i].guid == p_guid)
+			for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 			{
-				m_enemyPlayers[i].hasHealPOI = p_value;
+				m_enemyPlayers[i].hasHealPOI = false;
+			}
+
+			return;
+		}
+
+		else
+		{
+			m_myPlayer.hasHealPOI = false;
+
+			for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+			{
+				m_enemyPlayers[i].hasHealPOI = false;
+
+				if (m_enemyPlayers[i].guid == p_guid)
+				{
+					m_enemyPlayers[i].hasHealPOI = true;
+				}
 			}
 		}
 	}
