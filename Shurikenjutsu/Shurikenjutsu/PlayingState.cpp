@@ -538,7 +538,11 @@ void PlayingState::Render()
 {
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
+	GraphicsEngine::PrepareRenderDepth();
 	m_objectManager->RenderDepth();
+
+	GraphicsEngine::PrepareRenderAnimatedDepth();
+	m_objectManager->RenderAnimatedDepth();
 	m_playerManager->RenderDepth(false);
 	GraphicsEngine::SetShadowMap();
 
@@ -548,7 +552,11 @@ void PlayingState::Render()
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 	UpdatePOIEffects();
+	GraphicsEngine::PrepareRenderScene();
 	m_objectManager->Render();
+
+	GraphicsEngine::PrepareRenderAnimated();
+	m_objectManager->RenderAnimated();
 	m_playerManager->Render(false);
 	
 	GraphicsEngine::RenderFoliage();

@@ -344,6 +344,16 @@ void DepthShader::Shutdown()
 	}
 }
 
+void DepthShader::PrepareRender(ID3D11DeviceContext* p_context)
+{
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
+	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	p_context->IASetInputLayout(m_layout);
+
+	p_context->VSSetShader(m_vertexShader, NULL, 0);
+	p_context->PSSetShader(m_pixelShader, NULL, 0);
+}
+
 void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture)
 {
 	// Set parameters and then render.
@@ -351,16 +361,8 @@ void DepthShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, i
 	const unsigned int offset = 0;
 
 	UpdateWorldMatrix(p_context, p_worldMatrix);
-
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetSamplers(0, 1, &m_samplerState);
-
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
-	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	p_context->IASetInputLayout(m_layout);
-
-	p_context->VSSetShader(m_vertexShader, NULL, 0);
-	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
 	p_context->Draw(p_numberOfVertices, 0);
 }
@@ -405,6 +407,12 @@ void DepthShader::UpdateWorldMatrix(ID3D11DeviceContext* p_context, DirectX::XMF
 	p_context->VSSetConstantBuffers(0, 1, &m_matrixBuffer);
 }
 
+void DepthShader::PrepareRenderInstanced(ID3D11DeviceContext* p_context)
+{
+	p_context->IASetInputLayout(m_instanceLayout);
+	p_context->VSSetShader(m_instanceShader, NULL, 0);
+}
+
 ///Instancing
 void DepthShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, int p_instanceIndex, InstanceManager* p_instanceManager)
 {
@@ -425,14 +433,8 @@ void DepthShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	UpdateWorldMatrix(p_context, p_worldMatrix);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetSamplers(0, 1, &m_samplerState);
 
 	p_context->IASetVertexBuffers(0, 2, bufferPointers, stride, offset);
-	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	p_context->IASetInputLayout(m_instanceLayout);
-
-	p_context->VSSetShader(m_instanceShader, NULL, 0);
-	p_context->PSSetShader(m_pixelShader, NULL, 0);
 
 	p_context->DrawInstanced(p_numberOfVertices, p_instanceManager->GetNumberOfInstances(p_instanceIndex), 0, 0);
 }
@@ -536,6 +538,12 @@ bool DepthShader::InitializeAnimatedDepth(ID3D11Device* p_device, ID3D11DeviceCo
 	return true;
 }
 
+void DepthShader::PrepareRenderAnimated(ID3D11DeviceContext* p_context)
+{
+	p_context->IASetInputLayout(m_animatedLayout);
+	p_context->VSSetShader(m_animatedVertexShader, NULL, 0);
+}
+
 void DepthShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4& p_worldMatrix, ID3D11ShaderResourceView* p_texture, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
 {
 	// Set parameters and then render.
@@ -546,14 +554,7 @@ void DepthShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->PSSetShaderResources(0, 1, &p_texture);
-	p_context->PSSetSamplers(0, 1, &m_samplerState);
-
-	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
-	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	p_context->IASetInputLayout(m_animatedLayout);
-
-	p_context->VSSetShader(m_animatedVertexShader, NULL, 0);
-	p_context->PSSetShader(m_pixelShader, NULL, 0);
+	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);	
 
 	p_context->Draw(p_numberOfVertices, 0);
 }

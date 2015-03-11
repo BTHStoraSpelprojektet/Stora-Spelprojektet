@@ -3,6 +3,7 @@
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
 #include <D3Dcompiler.h>
+#include "Trail.h"
 
 TrailRenderer& TrailRenderer::GetInstance()
 {
@@ -276,10 +277,18 @@ void TrailRenderer::Shutdown()
 	}
 }
 
-void TrailRenderer::RenderTrail(ID3D11Buffer* p_vertexBuffer, unsigned int p_points, ID3D11ShaderResourceView* p_texture)
+void TrailRenderer::AddTrail(Trail* p_trail)
 {
-	// Set vertex buffer stride and offset.
+	m_trails.push_back(p_trail);
+}
+
+void TrailRenderer::RenderTrails()
+{
 	ID3D11DeviceContext* context = GraphicsEngine::GetContext();
+
+	GraphicsEngine::TurnOffBackfaceCulling();
+
+	// Set vertex buffer stride and offset.		
 	unsigned int stride = sizeof(TrailPoint);
 	unsigned int offset = 0;
 
@@ -288,17 +297,26 @@ void TrailRenderer::RenderTrail(ID3D11Buffer* p_vertexBuffer, unsigned int p_poi
 	context->GSSetShader(m_geometryShader, NULL, 0);
 	context->PSSetShader(m_pixelShader, NULL, 0);
 
-	context->PSSetShaderResources(0, 1, &p_texture);
 	context->PSSetSamplers(0, 1, &m_samplerState);
-	context->GSSetConstantBuffers(0, 1, &m_matrixBuffer);
-
-	context->IASetVertexBuffers(0, 1, &p_vertexBuffer, &stride, &offset);
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	context->IASetInputLayout(m_layout);
 
-	// Render the polygons.
-	context->Draw(p_points, 0);
+	for (unsigned int i = 0; i < m_trails.size(); i++)
+	{
+		ID3D11ShaderResourceView* tempSRV = m_trails[i]->GetTexture();
+		context->PSSetShaderResources(0, 1, &tempSRV);		
+		context->GSSetConstantBuffers(0, 1, &m_matrixBuffer);
 
+		ID3D11Buffer* tempBuffer = m_trails[i]->GetBuffer();
+		context->IASetVertexBuffers(0, 1, &tempBuffer, &stride, &offset);
+
+		// Render the polygons.
+		context->Draw(m_trails[i]->GetSize(), 0);
+	}
+
+	GraphicsEngine::TurnOnBackfaceCulling();
+
+	m_trails.clear();
 	context->GSSetShader(NULL, NULL, 0);
 }
 
