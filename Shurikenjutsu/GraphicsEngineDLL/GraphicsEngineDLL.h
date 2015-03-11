@@ -7,8 +7,6 @@
 #include <stdexcept>
 #include <iostream>
 
-#include "WICTextureLoader.h"
-using namespace std;
 
 class WICTextureLoader;
 class GUIShader;
@@ -39,6 +37,7 @@ struct Line;
 
 enum D3D_FEATURE_LEVEL;
 enum BUFFERTYPE;
+
 namespace DLLGraphicsEngine
 {
 
@@ -169,12 +168,10 @@ namespace DLLGraphicsEngine
 		GRAPHICSENGINEDLL_API void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
 		GRAPHICSENGINEDLL_API void SS_ClearStaticLines();
 
-
 	private:
 		static GE* m_instance;
 		GE(){};
 		~GE(){};
-
 
 		DirectXWrapper *m_directX;
 
@@ -198,6 +195,5 @@ namespace DLLGraphicsEngine
 
 		float m_currentScreenWidth;
 		float m_currentScreenHeight;
-
 	};
 }

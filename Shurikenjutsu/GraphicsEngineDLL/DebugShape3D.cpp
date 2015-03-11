@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "DebugShape3D.h"
-
+#include "Buffer.h"
 #include "GraphicsEngineDLL.h"
 
 void DebugShape3D::Initialize(std::vector<DirectX::XMFLOAT3> p_shape, float p_height, DirectX::XMFLOAT3 p_color)

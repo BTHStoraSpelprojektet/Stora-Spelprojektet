@@ -3,9 +3,11 @@
 
 #include <d3d11.h>
 #include <vector>
-#include "..\Shurikenjutsu\Structures.h"
-#include "..\CommonLibs\CommonEnums.h"
+#include <DirectXMath.h>
 
+struct Vertex;
+struct VertexAnimated;
+enum BUFFERTYPE;
 class Buffer
 {
 public:

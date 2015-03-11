@@ -1,10 +1,12 @@
 #ifndef DEPTHSHADER
 #define DEPTHSHADER
 
+
 #include <D3D11.h>
 #include <Windows.h>
-
-#include "..\Shurikenjutsu\Structures.h"
+#include <DirectXMath.h>
+#include <string>
+#include <vector>
 
 class InstanceManager;
 

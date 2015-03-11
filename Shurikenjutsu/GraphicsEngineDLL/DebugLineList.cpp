@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "DebugLineList.h"
 #include "GraphicsEngineDLL.h"
+#include "Buffer.h"
+
 void DebugLineList::Initialize(DirectX::XMFLOAT3 p_color)
 {
 	m_lines.clear();
