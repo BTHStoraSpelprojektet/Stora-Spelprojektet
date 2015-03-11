@@ -32,19 +32,14 @@ const std::string KUNAI_PRIMARY_ATTACK =
 const std::string KUNAI_SECONDARY_ATTACK = 
 "By pressing the E Button throws several Kunai up\n in the air and landing in the location of the mouse \ndamaging enemies in a ring around the hit location.";
 
-
 const std::string SMOKEBOMB_DESCRIPTION =
 "By pressing the R Button throws a Smokebomb at\n the mouse location. The SmokeBomb obscures \nthe view of all characters.";
-
 const std::string SPIKES_DESCRIPTION =
 "By pressing the R Button throws a bag full of \ncaltrops, at the mouse location, damaging\n all enemies that stand in it's radius.";
 const std::string STICKY_DESCRIPTION =
 "By pressing the R Button throws a vial of sticky\n fluids on the ground, at the mouse location.\n This liquid will slow all players within the its radius.";
 
-
-
-const std::string CREDITS_DEVELOPERS =
-"Developers: \n Alexander Petrini \n Johan Almeflo \n Henrik Forslin\n Jonas Axelsson \n Viktor Lundkvist \n Gustav During\n Anna Olsson\n Michael Jansson \n Cecilia Carlsson";
+const std::string CREDITS_DEVELOPERS = "Developers: \n Alexander Petrini \n Johan Almeflo \n Henrik Forslin\n Jonas Axelsson \n Viktor Lundkvist \n Gustav During\n Anna Olsson\n Michael Jansson \n Cecilia Carlsson";
 const std::string CREDITS_MUSIC_TITLE = "Music: \n ";
 const std::string CREDITS_MUSIC_1 = "Sakura No Seishin from Creation of the World by Antti Martikainen \n www.jamendo.com/en/track/1046723/sakura-no-seishin \n\n";
 const std::string CREDITS_AUDIO_TITLE = "Audio: \n ";
@@ -74,12 +69,4 @@ const std::string CREDITS_MUSIC_23 = "Step on dead leaf by nextmaking\n www.free
 const std::string CREDITS_MUSIC = CREDITS_MUSIC_TITLE + CREDITS_MUSIC_1 + CREDITS_AUDIO_TITLE + CREDITS_MUSIC_2 + CREDITS_MUSIC_3 + CREDITS_MUSIC_4 + CREDITS_MUSIC_5 + CREDITS_MUSIC_6 + CREDITS_MUSIC_7 +
 CREDITS_MUSIC_8 + CREDITS_MUSIC_9 + CREDITS_MUSIC_10 + CREDITS_MUSIC_11 + CREDITS_MUSIC_12 + CREDITS_MUSIC_13 + CREDITS_MUSIC_14 + CREDITS_MUSIC_15 + CREDITS_MUSIC_16 + CREDITS_MUSIC_17 + 
 CREDITS_MUSIC_18 + CREDITS_MUSIC_19 + CREDITS_MUSIC_20 + CREDITS_MUSIC_21 + CREDITS_MUSIC_22 + CREDITS_MUSIC_23;
-
-
-
-
-
-
-
-
 #endif

@@ -85,16 +85,6 @@ namespace DLLGraphicsEngine
 			return false;
 		}
 
-		if (m_GUIShader->InitializeColorShader(m_directX->GetDevice(), m_directX->GetContext()))
-		{
-	//		ConsolePrintSuccess("GUI 2D color shader initialized successfully.");
-//			ConsoleSkipLines(1);
-		}
-		else
-		{
-			return false;
-		}
-
 		// Initialize the particle shader.
 		m_particleShader = new ParticleShader();
 		if (m_particleShader->Initialize(m_directX->GetDevice()))
@@ -435,9 +425,9 @@ namespace DLLGraphicsEngine
 		m_GUIShader->Render(m_directX->GetContext(), p_worldMatrix, p_texture, m_currentScreenWidth, m_currentScreenHeight);
 	}
 
-	void GE::RenderGUIColor(DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color)
+	void GE::PrepareRenderGUI()
 	{
-		m_GUIShader->RenderColor(m_directX->GetContext(), p_worldMatrix, p_color, m_currentScreenWidth, m_currentScreenHeight);
+		m_GUIShader->PrepareRender(m_directX->GetContext());
 	}
 
 	void GE::RenderLines(ID3D11Buffer* p_mesh, int p_number, DirectX::XMFLOAT3 p_color, DirectX::XMFLOAT4X4 p_worldMatrix)
