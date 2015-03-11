@@ -2614,22 +2614,28 @@ void Network::SendSpawnedRunes()
 
 void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 {
-	POIGrapichalEffects::GetInstance().SetEmit(p_value);
-
-	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-	{
-		if (m_enemyPlayers[i].guid == p_guid)
-		{
-			m_enemyPlayers[i].hasHealPOI = p_value;
-
-			return;
-		}
-	}
-
 	if (m_myPlayer.guid == p_guid)
 	{
 		m_myPlayer.hasHealPOI = p_value;
 
-		return;
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			m_enemyPlayers[i].hasHealPOI = !p_value;
+		}
+	}
+
+	else
+	{
+		m_myPlayer.hasHealPOI = !p_value;
+
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			m_enemyPlayers[i].hasHealPOI = !p_value;
+
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				m_enemyPlayers[i].hasHealPOI = p_value;
+			}
+		}
 	}
 }

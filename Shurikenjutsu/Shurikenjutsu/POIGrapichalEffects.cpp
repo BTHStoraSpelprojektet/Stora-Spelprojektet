@@ -41,6 +41,8 @@ bool POIGrapichalEffects::Initialize()
 	m_shieldLight.m_position.z = 0.0f;
 	m_shieldLight.m_range = 1.95f;
 
+	SetEmit(true);
+
 	return true;
 }
 
