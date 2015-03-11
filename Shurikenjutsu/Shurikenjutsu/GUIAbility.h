@@ -1,7 +1,6 @@
 #ifndef GUIABILITY_H_
 #define GUIABILITY_H_
 
-#include "GUIElementColor.h"
 #include "GUIElement.h"
 #include "GUIText.h"
 class GUIAbility
@@ -16,7 +15,6 @@ public:
 
 private:
 	
-	GUIElementColor m_border;
 	GUIElement m_ability;
 	GUIElement m_cooldown;
 	GUIText m_stacks;

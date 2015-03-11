@@ -17,6 +17,7 @@
 #include "Sound.h"
 #include "PointOfInterestManager.h"
 #include "GraphicsEngine.h"
+#include "CollisionManager.h"
 
 ObjectManager::ObjectManager(){}
 ObjectManager::~ObjectManager(){}
@@ -44,18 +45,19 @@ bool ObjectManager::Initialize(Level* p_level)
 	int numberOfSameModel = 0;
 	std::string prevModelFileName = levelObjects[0].m_filePath;
 
-	Object object;
-	object.Initialize(levelObjects[0].m_filePath.c_str(),
+	Object *obj;
+	obj = new Object();
+	obj->Initialize(levelObjects[0].m_filePath.c_str(),
 		DirectX::XMFLOAT3(levelObjects[0].m_translationX, levelObjects[0].m_translationY, levelObjects[0].m_translationZ),
 		DirectX::XMFLOAT3(levelObjects[0].m_rotationX, levelObjects[0].m_rotationY, levelObjects[0].m_rotationZ),
 		DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	AddStaticObject(object);
+	AddStaticObject(obj);
 	
 	
 	
 
 	numberOfSameModel++;	//Räknar antaler modeller...
-	modelPositions.push_back(m_staticObjects[0].GetWorldMatrix());		//Pushbackar antalet positioner
+	modelPositions.push_back(m_staticObjects[0]->GetWorldMatrix());		//Pushbackar antalet positioner
 	for (unsigned int i = 1; i < levelObjects.size(); i++)
 	{		
 		if (prevModelFileName != levelObjects[i].m_filePath)
@@ -66,8 +68,9 @@ bool ObjectManager::Initialize(Level* p_level)
 			modelPositions.clear();
 		}
 
-		Object object;
-		object.Initialize(levelObjects[i].m_filePath.c_str(),
+		Object *object;
+		object = new Object();
+		object->Initialize(levelObjects[i].m_filePath.c_str(),
 			DirectX::XMFLOAT3(levelObjects[i].m_translationX, levelObjects[i].m_translationY, levelObjects[i].m_translationZ),
 			DirectX::XMFLOAT3(levelObjects[i].m_rotationX, levelObjects[i].m_rotationY, levelObjects[i].m_rotationZ),
 			DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
@@ -75,10 +78,10 @@ bool ObjectManager::Initialize(Level* p_level)
 
 		numberOfSameModel++;//Räknar antaler modeller...		
 		prevModelFileName = levelObjects[i].m_filePath;//Tar nästa filväg inför nästa jämnförelse
-		modelPositions.push_back(m_staticObjects[i].GetWorldMatrix());//Pushbackar antalet positioner
+		modelPositions.push_back(m_staticObjects[i]->GetWorldMatrix());//Pushbackar antalet positioner
 	}
 
-	m_staticObjects[m_staticObjects.size()-1].CreateInstanceBuffer(numberOfSameModel, modelPositions);
+	m_staticObjects[m_staticObjects.size()-1]->CreateInstanceBuffer(numberOfSameModel, modelPositions);
 
 	m_animatedObjects.clear();
 	for (unsigned int i = 0; i < animatedLevelObjects.size(); i++)
@@ -207,7 +210,12 @@ void ObjectManager::Shutdown()
 
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		m_staticObjects[i].Shutdown();
+		if (m_staticObjects[i] != nullptr)
+		{
+			m_staticObjects[i]->Shutdown();
+			delete m_staticObjects[i];
+			m_staticObjects[i] = nullptr;
+		}
 	}
 	m_staticObjects.clear();
 
@@ -339,8 +347,8 @@ void ObjectManager::ShutdownExit()
 {
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		m_staticObjects[i].Shutdown();
-		m_staticObjects[i].ShutdownGameExit();
+		m_staticObjects[i]->Shutdown();
+		m_staticObjects[i]->ShutdownGameExit();
 	}
 	m_staticObjects.clear();
 
@@ -663,39 +671,52 @@ void ObjectManager::Update()
 
 void ObjectManager::UpdateRenderLists()
 {
-	std::vector<Object*> objectsInFrustumList;
 	m_objectsToInstanceRender.clear();
 	m_objectsToSingleRender.clear();
-	objectsInFrustumList.clear();
+	m_objectsInFrustumList.clear();
+
+	std::vector<AnimatedObject*> animatedObjectList;
 
 	for (unsigned int i = 0; i < m_staticObjects.size(); i++)
 	{
-		Sphere sphere = m_staticObjects[i].GetFrustumSphere();
+		Sphere sphere = m_staticObjects[i]->GetFrustumSphere();
 		sphere.m_position.x -= 3.0f;
 		sphere.m_position.z -= 3.0f;
 		if (m_frustum->CheckSphere(sphere, 10.0f))
 		{
-			m_staticObjects[i].UpdateRotation();
-			objectsInFrustumList.push_back(&m_staticObjects[i]);
+			m_staticObjects[i]->UpdateRotation();
+			m_objectsInFrustumList.push_back(m_staticObjects[i]);
+		}
+	}
+	for (unsigned int i = 0; i < m_animatedObjects.size(); i++)
+	{
+		Sphere sphere = m_animatedObjects[i]->GetFrustumSphere();
+		sphere.m_position.x -= 3.0f;
+		sphere.m_position.z -= 3.0f;
+		if (m_frustum->CheckSphere(sphere, 10.0f))
+		{
+			animatedObjectList.push_back(m_animatedObjects[i]);
 		}
 	}
 
+	CollisionManager::GetInstance()->SetObjectsInFrustumList(m_objectsInFrustumList, animatedObjectList);
+
 	std::vector<Object*>  tempObjectList;
-	Object* prevObject = &m_staticObjects[m_staticObjects.size() - 1];
-	for (unsigned int i = 0; i < objectsInFrustumList.size(); i++)
+	Object* prevObject = m_staticObjects[m_staticObjects.size() - 1];
+	for (unsigned int i = 0; i < m_objectsInFrustumList.size(); i++)
 	{
-		tempObjectList = CheckAmountOfSameModels(objectsInFrustumList[i], objectsInFrustumList);// Return vector med de ombjekt som finns i templist som är lika dana
+		tempObjectList = CheckAmountOfSameModels(m_objectsInFrustumList[i], m_objectsInFrustumList);// Return vector med de ombjekt som finns i templist som är lika dana
 		if (prevObject->GetModel() != tempObjectList[0]->GetModel())
 		{
 			if (tempObjectList.size() == 1)
 			{
-				m_objectsToSingleRender.push_back(objectsInFrustumList[i]);
+				m_objectsToSingleRender.push_back(m_objectsInFrustumList[i]);
 			}
 			else
 			{
-				if (!CheckIfObjectIsInList(objectsInFrustumList[i], m_objectsToInstanceRender))
+				if (!CheckIfObjectIsInList(m_objectsInFrustumList[i], m_objectsToInstanceRender))
 				{
-					m_objectsToInstanceRender.push_back(objectsInFrustumList[i]);
+					m_objectsToInstanceRender.push_back(m_objectsInFrustumList[i]);
 
 					std::vector<DirectX::XMFLOAT4X4>  matrixList;
 					for (unsigned int j = 0; j < tempObjectList.size(); j++)
@@ -952,7 +973,7 @@ float ObjectManager::CheckStickyTrapYPosition()
 	return returnValue;
 }
 
-void ObjectManager::AddStaticObject(Object p_object)
+void ObjectManager::AddStaticObject(Object *p_object)
 {
 	m_staticObjects.push_back(p_object);
 }
@@ -1045,7 +1066,7 @@ bool ObjectManager::IsShurikenInNetworkList(unsigned int p_shurikenId)
 	return false;
 }
 
-std::vector<Object> ObjectManager::GetStaticObjectList()const
+std::vector<Object*> ObjectManager::GetStaticObjectList()const
 {
 	return m_staticObjects;
 }
