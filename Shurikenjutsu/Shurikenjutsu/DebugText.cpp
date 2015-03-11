@@ -23,7 +23,10 @@ bool DebugText::Initialize()
 {
 	m_originPos = DirectX::XMFLOAT3((-(float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH + 100.0f) * 0.5f, ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT - 20.0f) * 0.5f, 1.0f);
 	m_size = 20.0f;
-	m_renderText = true;
+	m_renderText = false;
+	#ifdef _DEBUG
+		m_renderText = true;
+	#endif
 
 	m_fpsText = new GUIText();
 	m_fpsText->InitializeCalibri("0 fps", m_size, m_originPos.x, m_originPos.y, 0xFFFFFFFF);
