@@ -16,8 +16,8 @@ bool POIGrapichalEffects::Initialize()
 {
 	m_healingParticles = new ParticleEmitter();
 	m_healingParticles->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), DirectX::XMFLOAT3(0.0f, 1.0f, 0.0), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_HEALING);
-	m_healingParticles->SetEmitParticleState(false);
-	m_heal = false;
+	m_healingParticles->SetEmitParticleState(true);
+	m_heal = true;
 
 	m_healingLight.m_ambient = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	m_healingLight.m_diffuse = DirectX::XMVectorSet(0.2f, 2.5f, 0.2f, 0.0f);
@@ -26,22 +26,24 @@ bool POIGrapichalEffects::Initialize()
 	m_healingLight.m_position.y = -10.0f;
 	m_healingLight.m_position.z = 0.0f;
 	m_healingLight.m_range = 2.0f;
-
+	
 	m_stealthOverlay = new GUIElement();
 	m_stealthOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/StealthOverlay.png"));
 
-	m_shieldOverlay = new GUIElement();
-	m_shieldOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 35.0f, 0.0), 90.0f, 140.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/ShieldOverlay.png"));
+	m_shieldParticles = new ParticleEmitter();
+	m_shieldParticles->Initialize(GraphicsEngine::GetDevice(), DirectX::XMFLOAT3(2.0f, 1.5f, 2.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), DirectX::XMFLOAT2(0.025f, 0.025f), PARTICLE_PATTERN_SHIELD);
+	m_shieldParticles->SetEmitParticleState(true);
 
-	m_shieldLight.m_ambient = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	m_shieldLight.m_diffuse = DirectX::XMVectorSet(5.0f, 5.0f, 5.0f, 0.0f);
-	m_shieldLight.m_specular = DirectX::XMVectorSet(1.5f, 1.5f, 1.5f, 0.0f);
+	m_shieldOverlay = new GUIElement();
+	m_shieldOverlay->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0), 90.0f, 140.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/Particles/ShieldOverlay3.png"));
+
+	m_shieldLight.m_ambient = DirectX::XMVectorSet(1.0f, 1.0f, 1.0f, 0.0f);
+	m_shieldLight.m_diffuse = DirectX::XMVectorSet(10.0f, 10.0f, 5.0f, 0.0f);
+	m_shieldLight.m_specular = DirectX::XMVectorSet(2.5f, 2.5f, 2.5f, 0.0f);
 	m_shieldLight.m_position.x = 0.0f;
 	m_shieldLight.m_position.y = -10.0f;
 	m_shieldLight.m_position.z = 0.0f;
-	m_shieldLight.m_range = 1.95f;
-
-	SetEmit(true);
+	m_shieldLight.m_range = 1.6f;
 
 	return true;
 }
@@ -66,12 +68,24 @@ void POIGrapichalEffects::Shutdown()
 		delete m_shieldOverlay;
 		m_shieldOverlay = nullptr;
 	}
+
+	if (m_shieldParticles != nullptr)
+	{
+		m_shieldParticles->Shutdown();
+		delete m_shieldParticles;
+		m_shieldParticles = nullptr;
+	}
 }
 
-void POIGrapichalEffects::SetEmit(bool p_value)
+void POIGrapichalEffects::SetHealEmit(bool p_value)
 {
 	m_healingParticles->SetEmitParticleState(p_value);
 	m_heal = p_value;
+}
+
+void POIGrapichalEffects::SetShieldEmit(bool p_value)
+{
+	m_shieldParticles->SetEmitParticleState(p_value);
 }
 
 void POIGrapichalEffects::UpdateHealingEffect(DirectX::XMFLOAT3 p_position)
@@ -100,6 +114,9 @@ void POIGrapichalEffects::RenderStealthEffect()
 
 void POIGrapichalEffects::UpdateShieldEffect(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
+	m_shieldParticles->UpdatePosition(DirectX::XMFLOAT3(p_position.x, p_position.y + 1.5f, p_position.z));
+	m_shieldParticles->Update();
+
 	DirectX::XMFLOAT4X4 vp;
 	DirectX::XMStoreFloat4x4(&vp, DirectX::XMLoadFloat4x4(&p_view) * DirectX::XMLoadFloat4x4(&p_projection));
 	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_position.x, p_position.y + 1.1f, p_position.z);
@@ -117,5 +134,6 @@ void POIGrapichalEffects::UpdateShieldEffect(DirectX::XMFLOAT3 p_position, Direc
 
 void POIGrapichalEffects::RenderShieldEffect()
 {
+	m_shieldParticles->Render();
 	m_shieldOverlay->QueueRender();
 }

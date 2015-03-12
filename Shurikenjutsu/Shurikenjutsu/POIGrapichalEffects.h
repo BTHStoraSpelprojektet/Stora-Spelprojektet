@@ -16,12 +16,13 @@ public:
 	bool Initialize();
 	void Shutdown();
 	
-	void SetEmit(bool p_value);
+	void SetHealEmit(bool p_value);
 	void UpdateHealingEffect(DirectX::XMFLOAT3 p_position);
 	void RenderHealingEffect();
 
 	void RenderStealthEffect();
 
+	void SetShieldEmit(bool p_value);
 	void UpdateShieldEffect(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 	void RenderShieldEffect();
 
@@ -36,6 +37,7 @@ private:
 
 	GUIElement* m_stealthOverlay;
 
+	ParticleEmitter* m_shieldParticles;
 	GUIElement* m_shieldOverlay;
 	PointLight m_shieldLight;
 };
