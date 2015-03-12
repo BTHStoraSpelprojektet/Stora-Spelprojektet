@@ -6,17 +6,10 @@
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\TextureLibrary.h"
 #include "Camera.h"
+#include <vector>
 
-SuddenDeathState::SuddenDeathState()
-{
-
-}
-
-SuddenDeathState::~SuddenDeathState()
-{
-
-}
-
+SuddenDeathState::SuddenDeathState(){}
+SuddenDeathState::~SuddenDeathState(){}
 void SuddenDeathState::Initialize()
 {
 	m_UVForward = false;

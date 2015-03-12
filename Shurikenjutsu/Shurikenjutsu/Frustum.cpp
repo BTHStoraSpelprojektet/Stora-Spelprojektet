@@ -1,6 +1,6 @@
 #include "Frustum.h"
 
-#include <DirectXMath.h>
+#include "..\CommonLibs\CommonStructures.h"
 
 Frustum::Frustum(){}
 Frustum::Frustum(const Frustum&){}

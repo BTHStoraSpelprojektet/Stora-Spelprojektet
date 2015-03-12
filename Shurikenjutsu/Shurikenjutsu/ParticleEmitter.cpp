@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include "ParticleRenderer.h"
+#include "..\CommonLibs\CommonEnums.h"
+#include "../CommonLibs/ModelImporter.h"
 
 ParticleEmitter::ParticleEmitter(){}
 ParticleEmitter::~ParticleEmitter(){}

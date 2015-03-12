@@ -3,6 +3,8 @@
 #include "fmod_errors.h"
 #include "Globals.h"
 #include "../CommonLibs/CommonStructures.h"
+#include "..\CommonLibs\CommonEnums.h"
+
 Sound::Sound(){}
 Sound::~Sound(){}
 

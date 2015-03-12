@@ -23,8 +23,6 @@ class ScoreBoard;
 class SuddenDeathState;
 class GUIText;
 
-//struct DirectionalLight;
-//struct Point;
 
 class PlayingState : public GameState
 {
