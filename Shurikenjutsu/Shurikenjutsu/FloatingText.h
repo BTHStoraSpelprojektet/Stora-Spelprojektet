@@ -1,8 +1,8 @@
 #ifndef FLOATINGTEXT_H_
 #define FLOATINGTEXT_H_
 
-#include "GUIText.h"
-#include "Structures.h"
+#include <DirectXMath.h>
+class GUIText;
 
 class FloatingText
 {

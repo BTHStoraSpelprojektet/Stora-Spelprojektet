@@ -1,9 +1,9 @@
 #ifndef MENUITEM_H_
 #define MENUITEM_H_
 
-#include "DirectX.h"
-
 class GUIElement;
+struct ID3D11ShaderResourceView;
+
 enum MENUACTION
 {
 	MENUACTION_BACK,

@@ -1,7 +1,7 @@
 #ifndef INGAMEMENU_H_
 #define INGAMEMENU_H_
 
-#include "Menu.h"
+class Menu;
 
 const float BUTTONWIDTH = 301.0f;
 const float BUTTONHEIGHT = 98.0f;

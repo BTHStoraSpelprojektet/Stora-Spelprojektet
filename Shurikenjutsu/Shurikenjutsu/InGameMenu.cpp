@@ -1,5 +1,7 @@
 #include "InGameMenu.h"
 #include "..\CommonLibs\TextureLibrary.h"
+#include "MenuItem.h"
+#include "Menu.h"
 
 InGameMenu::InGameMenu(){}
 InGameMenu::~InGameMenu(){}
