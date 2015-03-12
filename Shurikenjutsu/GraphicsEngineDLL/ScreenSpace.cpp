@@ -567,8 +567,8 @@ void ScreenSpace::RenderSSAO(ID3D11DeviceContext* p_context, ID3D11ShaderResourc
 	textures[2] = m_randomVectors;
 
 	p_context->PSSetShaderResources(3, 3, &textures[0]);
-	p_context->PSSetSamplers(0, 1, &m_samplerDepth);
-	p_context->PSSetSamplers(1, 1, &m_samplerRandom);
+	p_context->PSSetSamplers(2, 1, &m_samplerDepth);
+	p_context->PSSetSamplers(3, 1, &m_samplerRandom);
 	p_context->IASetVertexBuffers(0, 0, 0, 0, 0);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	p_context->IASetInputLayout(0);
@@ -587,7 +587,7 @@ void ScreenSpace::BlurImage(ID3D11DeviceContext* p_context, ID3D11ShaderResource
 	textures[2] = p_normal;
 
 	p_context->PSSetShaderResources(3, 3, &textures[0]);
-	p_context->PSSetSamplers(0, 1, &m_samplerBlur);
+	p_context->PSSetSamplers(4, 1, &m_samplerBlur);
 	p_context->IASetVertexBuffers(0, 0, 0, 0, 0);
 	p_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	p_context->IASetInputLayout(0);
@@ -631,6 +631,12 @@ void ScreenSpace::DOF(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* 
 	p_context->Draw(3, 0);
 }
 
+void ScreenSpace::UpdateLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
+{
+	m_lightViewMatrix = p_viewMatrix;
+	m_lightProjectionMatrix = p_projectionMatrix;
+}
+
 void ScreenSpace::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view)
 {	
 	// Lock the "every frame" constant buffer so it can be written to.
@@ -654,6 +660,10 @@ void ScreenSpace::UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalL
 	frameBuffer->m_directionalLight.m_direction = DirectX::XMVector3Normalize(frameBuffer->m_directionalLight.m_direction);
 
 	DirectX::XMStoreFloat4x4(&frameBuffer->m_projection, DirectX::XMMatrixTranspose(DirectX::XMLoadFloat4x4(&p_projection)));
+
+	DirectX::XMMATRIX viewInverse = DirectX::XMMatrixInverse(&DirectX::XMMatrixDeterminant(DirectX::XMLoadFloat4x4(&p_view)), DirectX::XMLoadFloat4x4(&p_view));
+	DirectX::XMMATRIX projectedLightSpace = DirectX::XMMatrixMultiply(DirectX::XMMatrixMultiply(viewInverse, DirectX::XMLoadFloat4x4(&m_lightViewMatrix)), DirectX::XMLoadFloat4x4(&m_lightProjectionMatrix));
+	DirectX::XMStoreFloat4x4(&frameBuffer->m_projectedLightSpace, DirectX::XMMatrixTranspose(projectedLightSpace));
 
 	// Unlock the constant buffer.
 	p_context->Unmap(m_frameBuffer, 0);

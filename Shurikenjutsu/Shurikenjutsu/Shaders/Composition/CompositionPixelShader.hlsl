@@ -4,11 +4,13 @@ cbuffer FrameBuffer : register(b0)
 {
 	DirectionalLight m_directionalLight;
 	matrix m_projectionMatrix;
+	matrix m_projectedLightSpace;
 };
 
+Texture2D m_shadowMap : register(t2);
 Texture2D m_textures[4] : register(t3);
 
-StructuredBuffer<PointLight> m_pointLights : register(t7);
+SamplerState m_samplerShadowMap  : register(s1);
 
 struct Input
 {
@@ -24,6 +26,22 @@ float3 ComputePositionViewFromZ(float2 positionScreen, float viewSpaceZ)
 	positionView.xy = screenSpaceRay.xy * positionView.z;
 
 	return positionView;
+}
+
+float ReadShadowMap(float3 positionView)
+{
+	positionView.xy = positionView.xy * 0.5f + 0.5f;
+
+	float4 projectedCameraDir = mul(float4(positionView, 1.0f), m_projectedLightSpace);
+	projectedCameraDir.xy /= projectedCameraDir.w;
+
+	float2 textureCoordinates;
+	textureCoordinates.x = (projectedCameraDir.x * 0.5f + 0.5f);
+	textureCoordinates.y = (-projectedCameraDir.y * 0.5f + 0.5f);
+
+	const float bias = 0.0001f;
+	float depthValue = m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates).r - bias;
+	return projectedCameraDir.z < depthValue;
 }
 
 float4 main(Input p_input) : SV_Target
@@ -58,6 +76,7 @@ float4 main(Input p_input) : SV_Target
 	float4 D = 0.0f;
 	float4 S = 0.0f;
 
+	shadowSum = ReadShadowMap(positionView);
 	float3 toCamera = normalize(-positionView);
 
 	ComputeDirectionalLight(material, m_directionalLight, normal.xyz, toCamera, A, D, S);
@@ -65,5 +84,7 @@ float4 main(Input p_input) : SV_Target
 	albedo.xyz = albedo.xyz*((A.xyz + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum)*ssao;
 	albedo.w = 1.0f;
 
+	//return mul(m_projectedLightSpace, float4(positionView, 1.0f));
+	//return mul(float4(positionView, 1.0f), m_projectedLightSpace);
 	return float4(albedo.xyz, 1.0f);
 }

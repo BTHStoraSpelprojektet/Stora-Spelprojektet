@@ -15,7 +15,7 @@ cbuffer cbSettings : register(b13)
 
 Texture2D m_textures[2] : register(t3);
 
-SamplerState m_sampler : register(s1);
+SamplerState m_sampler : register(s4);
 
 struct Input
 {
