@@ -732,6 +732,14 @@ void ObjectManager::UpdateRenderLists()
 	}
 }
 
+void ObjectManager::RenderInstanced()
+{
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	{
+		m_objectsToInstanceRender[i]->RenderInstanced();
+	}
+}
+
 void ObjectManager::Render()
 {
 	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
@@ -828,11 +836,6 @@ void ObjectManager::Render()
 	}
 
 	m_POIManager->Render();
-
-	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
-	{
-		m_objectsToInstanceRender[i]->RenderInstanced();
-	}
 }
 
 void ObjectManager::RenderAnimated()

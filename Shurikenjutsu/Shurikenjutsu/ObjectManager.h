@@ -32,6 +32,7 @@ public:
 
 	void Update();
 	void Render();
+	void RenderInstanced();
 	void RenderAnimated();
 	void RenderDepth();
 	void RenderAnimatedDepth();
