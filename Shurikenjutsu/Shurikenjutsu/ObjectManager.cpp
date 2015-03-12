@@ -1352,14 +1352,14 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 	m_bloodParticlesTimer.push_back(0.5f);
 }
 
-void ObjectManager::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
+void ObjectManager::SpawnRune(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
 {
-	m_POIManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
+	m_POIManager->SpawnRune(p_poiType, p_x, p_y, p_z);
 }
 
-void ObjectManager::DespawnRunes(POINTOFINTERESTTYPE p_poiType)
+void ObjectManager::DespawnRune(POINTOFINTERESTTYPE p_poiType)
 {
-	m_POIManager->DespawnRunes(p_poiType);
+	m_POIManager->DespawnRune(p_poiType);
 }
 
 void ObjectManager::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)

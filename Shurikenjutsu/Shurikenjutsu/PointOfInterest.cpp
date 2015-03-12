@@ -57,6 +57,16 @@ void PointOfInterest::Render()
 	m_sparkles->Render();
 }
 
+void PointOfInterest::SetPosition(DirectX::XMFLOAT3 p_pos)
+{
+	Object::SetPosition(p_pos);
+
+	if (m_sparkles != nullptr)
+	{
+		m_sparkles->SetPosition(p_pos);
+	}
+}
+
 void PointOfInterest::Sparkle()
 {
 	m_sparkles->Update();

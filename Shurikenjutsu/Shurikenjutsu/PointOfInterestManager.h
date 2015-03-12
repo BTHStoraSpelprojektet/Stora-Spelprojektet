@@ -2,8 +2,9 @@
 #define POINTOFINTERESTMANAGER_H_
 
 #include <vector>
-#include "../CommonLibs/CommonStructures.h"
-#include "PointOfInterest.h"
+
+class PointOfInterest;
+enum POINTOFINTERESTTYPE;
 
 class PointOfInterestManager
 {
@@ -19,13 +20,13 @@ public:
 
 	void RoundRestart();
 	void RunePickedUp(POINTOFINTERESTTYPE p_poiType);
-	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
-	void DespawnRunes(POINTOFINTERESTTYPE p_poiType);
+	void SpawnRune(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void DespawnRune(POINTOFINTERESTTYPE p_poiType);
 	void CollisionCheck();
 private:
 
 	int m_nrOfRunes;
-	std::vector<PointOfInterest> m_runes;
+	std::vector<PointOfInterest*> m_runes;
 
 };
 #endif // !POINTOFINTERESTMANAGER_H_
