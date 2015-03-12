@@ -1,5 +1,9 @@
 #include "InputManager.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "Windowsx.h"
+#include "Windows.h"
+#include "KButtonEvent.h"
+#include "ButtonEvent.h"
 
 InputManager* InputManager::m_instance;
 
@@ -17,9 +21,25 @@ InputManager* InputManager::GetInstance()
 	return m_instance;
 }
 
+void InputManager::Initialize()
+{
+
+	m_leftMouseB = new ButtonEvent;
+	m_rightMouseB = new ButtonEvent;
+}
 void InputManager::Shutdown()
 {
+	for (unsigned int i = 0; i < m_events.size(); i++)
+	{
+		delete m_events[i];
+	}
 	m_events.clear();
+
+
+	delete m_leftMouseB;
+	m_leftMouseB = nullptr;
+	delete m_rightMouseB;
+	m_rightMouseB = nullptr;
 	delete m_instance;
 	m_instance = nullptr;
 }
@@ -34,18 +54,18 @@ void InputManager::UpdateInput(UINT p_message, WPARAM p_wParam, LPARAM p_lParam)
 		{
 			case WM_KEYDOWN:
 			{
-				if (m_events[i].GetButton() == p_wParam)
+				if (m_events[i]->GetButton() == p_wParam)
 				{
-					m_events[i].SetState(BUTTON_EVENT_STATE_PRESSED);
+					m_events[i]->SetState(BUTTON_EVENT_STATE_PRESSED);
 				}
 				break;
 			}
 
 			case WM_KEYUP:
 			{
-				if (m_events[i].GetButton() == p_wParam)
+				if (m_events[i]->GetButton() == p_wParam)
 				{
-					m_events[i].SetState(BUTTON_EVENT_STATE_CLICKED);
+					m_events[i]->SetState(BUTTON_EVENT_STATE_CLICKED);
 				}
 				break;
 			}
@@ -65,25 +85,25 @@ void InputManager::UpdateInput(UINT p_message, WPARAM p_wParam, LPARAM p_lParam)
 
 		case WM_LBUTTONDOWN:
 		{
-			m_leftMouseB.SetState(BUTTON_EVENT_STATE_PRESSED);
+			m_leftMouseB->SetState(BUTTON_EVENT_STATE_PRESSED);
 			break;
 		}
 
 		case WM_LBUTTONUP:
 		{
-			m_leftMouseB.SetState(BUTTON_EVENT_STATE_CLICKED);
+			m_leftMouseB->SetState(BUTTON_EVENT_STATE_CLICKED);
 			break;
 		}
 
 		case WM_RBUTTONDOWN:
 		{
-			m_rightMouseB.SetState(BUTTON_EVENT_STATE_PRESSED);
+			m_rightMouseB->SetState(BUTTON_EVENT_STATE_PRESSED);
 			break;
 		}
 
 		case WM_RBUTTONUP:
 		{
-			m_rightMouseB.SetState(BUTTON_EVENT_STATE_CLICKED);
+			m_rightMouseB->SetState(BUTTON_EVENT_STATE_CLICKED);
 			break;
 		}
 
@@ -97,21 +117,21 @@ void InputManager::UpdateInput(UINT p_message, WPARAM p_wParam, LPARAM p_lParam)
 
 void InputManager::ClearInput()
 {
-	if (m_leftMouseB.IsClicked())
+	if (m_leftMouseB->IsClicked())
 	{
-		m_leftMouseB.SetState(BUTTON_EVENT_STATE_NONE);
+		m_leftMouseB->SetState(BUTTON_EVENT_STATE_NONE);
 	}
 
-	if (m_rightMouseB.IsClicked())
+	if (m_rightMouseB->IsClicked())
 	{
-		m_rightMouseB.SetState(BUTTON_EVENT_STATE_NONE);
+		m_rightMouseB->SetState(BUTTON_EVENT_STATE_NONE);
 	}
 
 	for (unsigned int i = 0; i < m_events.size(); i++)
 	{
-		if (m_events[i].IsClicked())
+		if (m_events[i]->IsClicked())
 		{
-			m_events[i].SetState(BUTTON_EVENT_STATE_NONE);
+			m_events[i]->SetState(BUTTON_EVENT_STATE_NONE);
 		}
 	}
 	m_lastCharRead = '\0';
@@ -122,9 +142,9 @@ bool InputManager::IsKeyClicked(int p_vkey) const
 {
 	for (unsigned int i = 0; i < m_events.size(); i++)
 	{
-		if (m_events[i].GetButton() == p_vkey)
+		if (m_events[i]->GetButton() == p_vkey)
 		{
-			return m_events[i].IsClicked();
+			return m_events[i]->IsClicked();
 		}
 	}
 
@@ -135,9 +155,9 @@ bool InputManager::IsKeyPressed(int p_vkey) const
 {
 	for (unsigned int i = 0; i < m_events.size(); i++)
 	{
-		if (m_events[i].GetButton() == p_vkey)
+		if (m_events[i]->GetButton() == p_vkey)
 		{
-			return m_events[i].IsPressed();
+			return m_events[i]->IsPressed();
 		}
 	}
 
@@ -148,14 +168,14 @@ void InputManager::RegisterKey(int p_vkey)
 {
 	for (unsigned int i = 0; i < m_events.size(); i++)
 	{
-		if (m_events[i].GetButton() == p_vkey)
+		if (m_events[i]->GetButton() == p_vkey)
 		{
 			return;
 		}
 	}
 
-	KButtonEvent key;
-	key.Initialize(p_vkey);
+	KButtonEvent *key = new KButtonEvent();
+	key->Initialize(p_vkey);
 
 	m_events.push_back(key);
 }
@@ -182,22 +202,22 @@ int InputManager::GetMousePositionY_prev() const
 
 bool InputManager::IsLeftMousePressed() const
 {
-	return m_leftMouseB.IsPressed();
+	return m_leftMouseB->IsPressed();
 }
 
 bool InputManager::IsLeftMouseClicked() const
 {
-	return m_leftMouseB.IsClicked();
+	return m_leftMouseB->IsClicked();
 }
 
 bool InputManager::IsRightMousePressed() const
 {
-	return m_rightMouseB.IsPressed();
+	return m_rightMouseB->IsPressed();
 }
 
 bool InputManager::IsRightMouseClicked() const
 {
-	return m_rightMouseB.IsClicked();
+	return m_rightMouseB->IsClicked();
 }
 
 char InputManager::GetLastCharRead() const

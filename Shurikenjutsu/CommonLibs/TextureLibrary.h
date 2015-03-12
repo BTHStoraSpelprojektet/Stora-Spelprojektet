@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <unordered_map>
 #include <string>
-#include "..\Shurikenjutsu\DirectX.h"
+#include <d3d11.h>
 
 class TextureLibrary
 {

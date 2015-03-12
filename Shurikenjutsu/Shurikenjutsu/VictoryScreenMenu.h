@@ -1,9 +1,9 @@
 #ifndef VICTORYSCREENMENU_H_
 #define VICTORYSCREENMENU_H_
 
-#include "Menu.h"
-#include "InGameMenu.h"
-
+enum IN_GAME_MENU_ACTION;
+class Menu;
+class GUIElement;
 
 class VictoryScreenMenu
 {

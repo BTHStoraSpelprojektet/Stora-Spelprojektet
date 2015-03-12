@@ -2,7 +2,9 @@
 #define WINDOW
 
 #include <Windows.h>
-#include "Structures.h"
+#include <string>
+
+struct WindowRectangle;
 
 class Window
 {

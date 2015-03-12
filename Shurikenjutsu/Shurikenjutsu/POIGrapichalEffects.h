@@ -2,7 +2,7 @@
 #define POIGRAPICHALEFFECTS_H_
 
 #include <DirectXMath.h>
-#include "Structures.h"
+#include "..\CommonLibs\CommonStructures.h"
 
 class GUIElement;
 class ParticleEmitter;

@@ -1,7 +1,9 @@
 #ifndef FRUSTUM_H_
 #define FRUSTUM_H_
 
-#include "..\CommonLibs\CommonStructures.h"
+#include <DirectXMath.h>
+
+struct Sphere;
 
 class Frustum
 {

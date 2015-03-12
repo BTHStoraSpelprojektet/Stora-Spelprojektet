@@ -472,9 +472,6 @@
     <ClInclude Include="Collisions.h">
       <Filter>Header Files\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="DirectX.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="GraphicsEngine.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>

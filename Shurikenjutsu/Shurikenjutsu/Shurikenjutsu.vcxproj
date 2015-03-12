@@ -211,7 +211,6 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Dash.h" />
-    <ClInclude Include="DirectX.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Globals.h" />

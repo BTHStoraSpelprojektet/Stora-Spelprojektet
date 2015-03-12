@@ -1,10 +1,13 @@
 #ifndef MENU_H_
 #define MENU_H_
 
-#include "MenuButton.h"
-#include "MenuCheckbox.h"
-#include "MenuTextBox.h"
 #include <vector>
+
+class MenuButton;
+class MenuCheckbox;
+class MenuItem;
+enum MENUACTION;
+struct ID3D11ShaderResourceView;
 
 struct MenuActionData
 {

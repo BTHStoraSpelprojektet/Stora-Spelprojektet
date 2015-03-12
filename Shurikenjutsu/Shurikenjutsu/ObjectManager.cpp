@@ -352,6 +352,7 @@ void ObjectManager::ShutdownExit()
 	{
 		m_staticObjects[i]->Shutdown();
 		m_staticObjects[i]->ShutdownGameExit();
+		delete m_staticObjects[i];
 	}
 	m_staticObjects.clear();
 

@@ -6,7 +6,7 @@
 #include "GameState.h"
 #include <stack>
 #include <vector>
-#include "Structures.h"
+#include "..\CommonLibs\CommonStructures.h"
 
 class Menu;
 class MenuItem;

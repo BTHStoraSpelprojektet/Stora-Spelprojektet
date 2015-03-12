@@ -2,7 +2,7 @@
 #include "GUIText.h"
 #include "Globals.h"
 #include "TextResource.h"
-
+#include "Menu.h"
 
 CreaditsScreen::CreaditsScreen(){}
 CreaditsScreen::~CreaditsScreen(){}
