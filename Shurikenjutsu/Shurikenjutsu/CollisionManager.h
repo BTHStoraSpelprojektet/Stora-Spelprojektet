@@ -1,9 +1,15 @@
 #ifndef COLLISIONMANAGER_H
 #define COLLISIONMANAGER_H
 
-#include "AnimatedObject.h"
-#include "Object.h"
+#include <vector>
+#include <DirectXMath.h>
+class Object;
+class AnimatedObject;
 
+struct OBB;
+struct Box;
+struct Sphere;
+struct Ray;
 
 class CollisionManager
 {
