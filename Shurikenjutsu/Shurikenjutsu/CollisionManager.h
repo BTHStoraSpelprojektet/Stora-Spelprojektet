@@ -10,6 +10,7 @@ struct OBB;
 struct Box;
 struct Sphere;
 struct Ray;
+
 class CollisionManager
 {
 public:
