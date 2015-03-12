@@ -120,6 +120,37 @@ void PointOfInterestManager::SpawnRunes()
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
+void PointOfInterestManager::DespawnRunes()
+{
+	m_lotusActive = false;
+	m_shieldActive = false;
+	m_invisActive = false;
+	canceledInvis = false;
+	canceledShield = false;
+
+	// Lotus
+	RakNet::BitStream bitStream0;
+	bitStream0.Write((RakNet::MessageID)ID_DESPAWN_RUNE);
+	bitStream0.Write(m_POISpawnPoints[0].type);
+	m_serverPeer->Send(&bitStream0, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	//CancelRune(POINTOFINTERESTTYPE_HEAL);  // UNCOMMETING THIS CRASH THE PROGRAM (BUT MAYBE NEED TO BE ADDED LATER)
+
+	// Invis
+	RakNet::BitStream bitStream1;
+	bitStream1.Write((RakNet::MessageID)ID_DESPAWN_RUNE);
+	bitStream1.Write(m_POISpawnPoints[1].type);
+	m_serverPeer->Send(&bitStream1, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
+
+	// Shield
+	RakNet::BitStream bitStream2;
+	bitStream2.Write((RakNet::MessageID)ID_DESPAWN_RUNE);
+	bitStream2.Write(m_POISpawnPoints[2].type);
+	m_serverPeer->Send(&bitStream2, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+	CancelRune(POINTOFINTERESTTYPE_SHIELD);
+
+}
+
 void PointOfInterestManager::PickUpRunes(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)
 {
 	RakNet::BitStream bitStream;

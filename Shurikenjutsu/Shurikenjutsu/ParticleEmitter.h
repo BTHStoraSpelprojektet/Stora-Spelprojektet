@@ -4,8 +4,8 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 
-#include "..\CommonLibs\CommonEnums.h"
-#include "../CommonLibs/ModelImporter.h"
+
+enum PARTICLE_PATTERN;
 
 class ParticleEmitter
 {

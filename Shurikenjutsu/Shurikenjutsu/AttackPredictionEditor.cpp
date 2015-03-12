@@ -1,6 +1,7 @@
 #include "AttackPredictionEditor.h"
 #include "InputManager.h"
 #include "CollisionManager.h"
+#include "Object.h"
 
 void AttackPredictionEditor::NormalMeleeAttackCone(Object *p_object, DirectX::XMFLOAT3 p_attackDirection, DirectX::XMFLOAT3 p_playerPosition, float p_range)
 {

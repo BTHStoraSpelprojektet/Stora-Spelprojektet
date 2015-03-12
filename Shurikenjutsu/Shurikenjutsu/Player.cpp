@@ -17,6 +17,8 @@
 #include "SpikeAbility.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
+#include "Network.h"
+#include "Trail.h"
 
 Player::Player(){}
 Player::~Player(){}

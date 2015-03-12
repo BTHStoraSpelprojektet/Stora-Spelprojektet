@@ -3,6 +3,7 @@
 #include "GUIElement.h"
 #include "InputManager.h"
 #include "GUIElement.h"
+#include "DirectX.h"
 
 MenuItem::MenuItem(){}
 MenuItem::~MenuItem(){}

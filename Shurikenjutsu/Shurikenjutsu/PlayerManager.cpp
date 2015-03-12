@@ -7,6 +7,8 @@
 #include "KatanaNinja.h"
 #include "TessenNinja.h"
 #include "NaginataNinja.h"
+#include "Network.h"
+#include "GraphicsEngine.h"
 
 PlayerManager::PlayerManager(){}
 PlayerManager::~PlayerManager(){}

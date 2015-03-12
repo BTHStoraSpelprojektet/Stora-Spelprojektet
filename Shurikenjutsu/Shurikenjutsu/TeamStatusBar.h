@@ -4,9 +4,12 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <map>
-#include "Network.h"
-#include "GUIElement.h"
-#include "GUIText.h"
+#include <vector>
+#include <DirectXMath.h>
+#include "..\CommonLibs\RakNet\RakNetTypes.h"
+
+class GUIElement;
+class GUIText;
 
 class TeamStatusBar
 {
@@ -20,12 +23,12 @@ public:
 	void Update();
 	void Render();
 private:
-	std::map<RakNet::RakNetGUID, GUIElement> m_redColorPlayers;
-	std::map<RakNet::RakNetGUID, GUIElement> m_blueColorPlayers;
-	std::vector<GUIElement> m_redSquares;
-	std::vector<GUIElement> m_blueSquares;
-	GUIElement m_background;
-	GUIElement m_frame;
+	std::map<RakNet::RakNetGUID, GUIElement*> m_redColorPlayers;
+	std::map<RakNet::RakNetGUID, GUIElement*> m_blueColorPlayers;
+	std::vector<GUIElement*> m_redSquares;
+	std::vector<GUIElement*> m_blueSquares;
+	GUIElement* m_background;
+	GUIElement* m_frame;
 
 
 	void ResizeRedColorList();
@@ -42,12 +45,12 @@ private:
 	bool m_addedMyself;
 	int m_myTeam;
 
-	GUIText m_redScore;
-	GUIText m_blueScore;
+	GUIText* m_redScore;
+	GUIText* m_blueScore;
 
 	double m_timeSec;
 	double m_timeMin;
-	GUIText m_timerText;
+	GUIText* m_timerText;
 };
 
 #endif

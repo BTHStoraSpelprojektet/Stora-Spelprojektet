@@ -3,11 +3,10 @@
 #include <vector>
 class ParticleEmitter;
 class Object;
+
 class ParticleRenderer
 {
 public:
-	
-
 	ParticleRenderer(const ParticleRenderer&) = delete;
 	ParticleRenderer& operator=(const ParticleRenderer&) = delete;
 

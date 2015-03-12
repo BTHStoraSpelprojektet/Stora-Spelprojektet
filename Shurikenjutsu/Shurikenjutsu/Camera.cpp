@@ -6,9 +6,9 @@
 #include "Globals.h"
 #include "InputManager.h"
 #include "GraphicsEngine.h"
-//#include "VisibilityComputer.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\CommonStructures.h"
+#include "Sound.h"
 
 bool Camera::Initialize()
 {

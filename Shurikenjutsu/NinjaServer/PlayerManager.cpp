@@ -53,11 +53,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 void PlayerManager::ResetTakenSpawnPoints()
 {
 	m_takenSpawnPoints.clear();
-	//for (unsigned int i = 0; i < m_takenSpawnPoints.size(); i++)
-	//{
-	//	m_takenSpawnPoints[i] = false;
-	//}
-	}
+}
 
 void PlayerManager::Shutdown(){}
 
@@ -176,6 +172,7 @@ void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_nam
 	player.kills = 0;
 	player.deaths = 0;
 	player.shield = 0.0f;
+	player.hasHealPOI = false;
 	m_players.push_back(player);
 	
 	ConsolePrintText("New player joined.");
@@ -246,6 +243,13 @@ void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
 	{
 		if (m_players[i].guid == p_guid)
 		{
+			RakNet::BitStream bitStream2;
+			bitStream2.Write((RakNet::MessageID)ID_CONNECTION_NOTIFICATION);
+			bitStream2.Write(m_players[i].name);
+			bitStream2.Write(3);
+
+			m_serverPeer->Send(&bitStream2, MEDIUM_PRIORITY, RELIABLE, 0, RakNet::UNASSIGNED_RAKNET_GUID, true);
+
 			m_takenSpawnPoints.erase(m_players[i].guid);
 			m_players.erase(m_players.begin() + i);
 
@@ -1113,4 +1117,16 @@ void PlayerManager::SendHasPOIHealing(RakNet::RakNetGUID p_guid)
 		}
 	}
 	
+}
+
+void PlayerManager::ResetPOIEffects()
+{
+	for (unsigned int i = 0; i < m_players.size(); i++)
+	{
+		m_players[i].shield = false;
+		m_players[i].invis = false;
+		m_players[i].hasHealPOI = false;
+
+		SendHasPOIHealing(m_players[i].guid);
+	}
 }

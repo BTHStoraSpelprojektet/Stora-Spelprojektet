@@ -1,10 +1,10 @@
 #ifndef MINIMAP_H_
 #define MINIMAP_H_
 
-#include "GraphicsEngine.h"
-#include "..\CommonLibs\TextureLibrary.h"
-#include "GUIElement.h"
+#include <DirectXMath.h>
 
+struct ID3D11ShaderResourceView;
+class GUIElement;
 
 class Minimap
 {

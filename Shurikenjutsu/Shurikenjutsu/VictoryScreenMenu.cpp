@@ -2,6 +2,9 @@
 #include "..\CommonLibs\TextureLibrary.h"
 #include "GUIElement.h"
 #include "Globals.h"
+#include "InGameMenu.h"
+#include "Menu.h"
+#include "MenuItem.h"
 
 VictoryScreenMenu::VictoryScreenMenu(){}
 VictoryScreenMenu::~VictoryScreenMenu(){}

@@ -1,8 +1,9 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include "Sound.h"
 #include <DirectXMath.h>
+
+class Sound;
 
 class Camera
 {

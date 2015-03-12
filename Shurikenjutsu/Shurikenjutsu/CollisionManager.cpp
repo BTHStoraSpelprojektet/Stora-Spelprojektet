@@ -3,6 +3,10 @@
 #include "Collisions.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "Globals.h"
+#include "Object.h"
+#include "AnimatedObject.h"
+#include "..\CommonLibs\CommonStructures.h"
+
 CollisionManager* CollisionManager::m_instance;
 CollisionManager::CollisionManager(){}
 CollisionManager::~CollisionManager(){}

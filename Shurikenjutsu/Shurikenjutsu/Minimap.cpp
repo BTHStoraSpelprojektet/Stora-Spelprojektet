@@ -1,6 +1,9 @@
 #include "Minimap.h"
 #include "Globals.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "GUIElement.h"
+#include "GraphicsEngine.h"
+#include "..\CommonLibs\TextureLibrary.h"
 
 #define MAPSIZEX 43
 #define MAPSIZEY 50

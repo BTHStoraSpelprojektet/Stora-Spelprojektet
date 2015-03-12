@@ -10,6 +10,8 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "MenuItem.h"
 #include "Settings.h"
+#include "CreaditsScreen.h"
+#include "Network.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;

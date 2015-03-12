@@ -1,6 +1,7 @@
 #include "ScoreBoard.h"
 #include "Globals.h"
 #include "..\CommonLibs\ModelNames.h"
+#include <dwrite.h>
 
 ScoreBoard* ScoreBoard::m_instance;
 
@@ -41,8 +42,8 @@ bool ScoreBoard::Initialize()
 	m_background.Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), m_boardWidth, m_boardHeight, TextureLibrary::GetInstance()->GetTexture(SCOREBOARD_BACKGROUND));
 
 	// Initialize lists
-	m_redColorPlayers = std::map<RakNet::RakNetGUID, Ninja>();//std::map<RakNet::RakNetGUID, GUIElement>();
-	m_blueColorPlayers = std::map<RakNet::RakNetGUID, Ninja>();;//std::map<RakNet::RakNetGUID, GUIElement>();
+	m_redColorPlayers = std::map<RakNet::RakNetGUID, Ninja>();
+	m_blueColorPlayers = std::map<RakNet::RakNetGUID, Ninja>();
 
 	return true;
 }
@@ -73,7 +74,7 @@ void ScoreBoard::Update()
 		if (player.team == 1)
 		{
 			// Initialize text
-			m_redColorPlayers[player.guid].name.Initialize(player.name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+			m_redColorPlayers[player.guid].name.Initialize(player.name.C_String(), 25.0f, (-m_boardWidth / 2) + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
 			m_redColorPlayers[player.guid].name.SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 			m_redColorPlayers[player.guid].name.SetText(player.name.C_String());
 			m_redColorPlayers[player.guid].death = player.deaths;
@@ -91,7 +92,7 @@ void ScoreBoard::Update()
 		else if (player.team == 2)
 		{
 			// Initialize text
-			m_blueColorPlayers[player.guid].name.Initialize(player.name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+			m_blueColorPlayers[player.guid].name.Initialize(player.name.C_String(), 25.0f, (-m_boardWidth / 2) + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
 			m_blueColorPlayers[player.guid].name.SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 			m_blueColorPlayers[player.guid].name.SetText(player.name.C_String());
 			m_blueColorPlayers[player.guid].death = player.deaths;
@@ -137,7 +138,7 @@ void ScoreBoard::Update()
 			if (m_redColorPlayers.find(players[i].guid) == m_redColorPlayers.end())
 			{
 				//Initialize text
-				m_redColorPlayers[players[i].guid].name.Initialize(players[i].name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
+				m_redColorPlayers[players[i].guid].name.Initialize(players[i].name.C_String(), 25.0f, (-m_boardWidth / 2) + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * m_redColorPlayers.size()), 0xff000000);
 				m_redColorPlayers[players[i].guid].name.SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 				m_redColorPlayers[players[i].guid].name.SetText(players[i].name.C_String());
 				m_redColorPlayers[players[i].guid].death = players[i].deaths;
@@ -161,7 +162,7 @@ void ScoreBoard::Update()
 			if (m_blueColorPlayers.find(players[i].guid) == m_blueColorPlayers.end())
 			{
 				//Initialize text
-				m_blueColorPlayers[players[i].guid].name.Initialize(players[i].name.C_String(), 25.0f, -m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
+				m_blueColorPlayers[players[i].guid].name.Initialize(players[i].name.C_String(), 25.0f, (-m_boardWidth / 2) + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * m_blueColorPlayers.size()), 0xff000000);
 				m_blueColorPlayers[players[i].guid].name.SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 				m_blueColorPlayers[players[i].guid].name.SetText(players[i].name.C_String());
 				m_blueColorPlayers[players[i].guid].death = players[i].deaths;
@@ -219,7 +220,7 @@ void ScoreBoard::ResizeBlueColorList()
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
 	{
 		m_blueColorPlayers[it->first].portrait.SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index), 0.0f));
-		m_blueColorPlayers[it->first].name.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index));
+		m_blueColorPlayers[it->first].name.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index));
 		m_blueColorPlayers[it->first].ninjaText.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index));
 		index++;
 	}
@@ -231,7 +232,7 @@ void ScoreBoard::ResizeRedColorList()
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
 	{
 		m_redColorPlayers[it->first].portrait.SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * (index)), 0.0f));
-		m_redColorPlayers[it->first].name.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 100.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * index));
+		m_redColorPlayers[it->first].name.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * index));
 		m_redColorPlayers[it->first].ninjaText.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * index));
 		index++;
 	}
