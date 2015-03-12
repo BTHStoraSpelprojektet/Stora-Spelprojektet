@@ -14,6 +14,7 @@
 #include "Network.h"
 #include <shellapi.h>
 #include <Windows.h>
+#include "..\CommonLibs\Flags.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -101,7 +102,7 @@ bool MenuState::Initialize(std::string p_levelName)
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/connect.png"), MENUACTION_CONNECT);
 	m_play->AddButton(0.0f, -3.0f * BUTTONHEIGHT - 4.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
-	m_play->AddButton(400.0f, -BUTTONOFFSET, BUTTONWIDTH * 0.5f, BUTTONHEIGHT* 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/play.png"), MENUACTION_HOST_SERVER);
+	m_play->AddButton(400.0f, -BUTTONOFFSET, BUTTONWIDTH * 0.5f, BUTTONHEIGHT* 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/host.png"), MENUACTION_HOST_SERVER);
 
 	// Initialize connecting menu;
 	m_connecting = new Menu();
@@ -285,11 +286,26 @@ GAMESTATESWITCH MenuState::Update()
 		case MENUACTION_HOST_SERVER:
 			if (StartLocalServer())
 			{
-				m_ipbox->GetText();
-			}
-			else
-			{
-
+				if (!GLOBAL::GetInstance().FULLSCREEN)
+				{
+					m_menues.push(m_connecting);
+					m_hideIpBox = true;
+					Settings::GetInstance()->m_name = m_namebox->GetText();
+					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
+					Network::GetInstance()->Connect("127.0.0.1");
+					Network::GetInstance()->SetNetworkStatusConnecting();
+				}
+				else
+				{
+					GraphicsEngine::ToggleFullscreen(false, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+					m_menues.push(m_connecting);
+					m_hideIpBox = true;
+					Settings::GetInstance()->m_name = m_namebox->GetText();
+					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
+					Network::GetInstance()->Connect("127.0.0.1");
+					Network::GetInstance()->SetNetworkStatusConnecting();
+					GraphicsEngine::ToggleFullscreen(true, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+				}
 			}
 			break;
 		case MENUACTION_OPTIONAPPLY:
@@ -454,15 +470,27 @@ void MenuState::InitializeCreditScreen(){}
 
 bool MenuState::StartLocalServer()
 {
-	char szPath[] = "..\\Debug\\NinjaServer.exe";
-
-	HINSTANCE hRet = ShellExecute(
-		HWND_DESKTOP, //Parent window
-		"open",       //Operation to perform
-		szPath,       //Path to program
-		NULL,         //Parameters
-		NULL,         //Default directory
-		SW_SHOW);     //How to open
+	HINSTANCE hRet;
+	if (FLAG_DEBUG == 1)
+	{
+		hRet = ShellExecute(
+			HWND_DESKTOP, //Parent window
+			"open",       //Operation to perform
+			"..\\Debug\\NinjaServer.exe",       //Path to program
+			NULL,         //Parameters
+			NULL,         //Default directory
+			SW_SHOW);     //How to open
+	}
+	else
+	{
+		hRet = ShellExecute(
+			HWND_DESKTOP, //Parent window
+			"open",       //Operation to perform
+			"..\\Release\\NinjaServer.exe",       //Path to program
+			NULL,         //Parameters
+			NULL,         //Default directory
+			SW_SHOW);     //How to open
+	}
 
 	/*
 	The function returns a HINSTANCE (not really useful in this case)
