@@ -27,6 +27,7 @@ public:
 	std::vector<Sphere> CalculateLocalPlayerCollisionWithStaticSpheres(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction);
 	float CalculateDashLength(Ray* p_ray);
 	bool CalculateRayLength(Ray* p_ray, float p_rayDistance);
+	float CalculateRayLengthFloat(Ray* p_ray);
 	float CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos);
 	bool CheckCollisionWithAllStaticObjects(Sphere p_sphere);
 	float CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer, bool p_throwStuff);

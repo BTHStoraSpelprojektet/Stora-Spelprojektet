@@ -34,6 +34,7 @@ public:
 
 	OBB GetPlayerBoundingBox();
 	Sphere GetPlayerSphere();
+	std::vector<OBB> PlayerManager::GetEnemyPlayerBoundingBoxes();
 
 	void UpdateHealthbars(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 
@@ -54,6 +55,9 @@ public:
 	void SetStickyTrapList(std::vector<StickyTrap*> p_stickyTrapList);
 	std::vector<Player*> GetMyTeamPlayers(int p_team);
 	std::vector<Player*> GetEveryPlayer();
+
+	void PlayerManager::SetOutliningPerEnemy(bool p_renderOutlingingEnemies, int p_index);
+	void PlayerManager::SetPlayerOutliningRender(bool p_state);
 
 private:
 	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name);
@@ -77,6 +81,8 @@ private:
 
 	Sound* m_sound;
 
+	bool m_renderOutlingingEnemies[7];
+	bool m_renderOutliningPlayer;
 	//std::vector < Sound::SoundEmitter > soundPlayerEmitter;
 };
 

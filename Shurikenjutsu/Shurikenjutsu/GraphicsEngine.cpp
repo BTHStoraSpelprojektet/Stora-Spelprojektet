@@ -59,9 +59,9 @@ void GraphicsEngine::RenderAnimatedOutliningDepth(ID3D11Buffer* p_mesh, int p_nu
 	DLLGraphicsEngine::GE::GetInstance()->RenderAnimatedOutliningDepth(p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
 }
 
-void GraphicsEngine::RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+void GraphicsEngine::RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms, DirectX::XMFLOAT4 p_color)
 {
-	DLLGraphicsEngine::GE::GetInstance()->RenderAnimatedOutlining(p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
+	DLLGraphicsEngine::GE::GetInstance()->RenderAnimatedOutlining(p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms, p_color);
 }
 
 void GraphicsEngine::PrepareRenderDepth()

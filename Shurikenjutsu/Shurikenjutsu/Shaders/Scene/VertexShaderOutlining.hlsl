@@ -3,6 +3,7 @@ cbuffer MatrixBufferOutlining : register(b0)
 	matrix m_worldMatrix;
 	matrix m_viewMatrix;
 	matrix m_projectionMatrix;
+	float3 m_color;
 };
 
 // Animation matrix buffer.
@@ -21,6 +22,7 @@ struct VS_INPUT
 struct PS_INPUT
 {
 	float4 Pos : SV_POSITION;
+	float4 color : COLOR;
 };
 
 PS_INPUT main( VS_INPUT input )
@@ -43,6 +45,7 @@ PS_INPUT main( VS_INPUT input )
 	output.Pos = mul(output.Pos, m_worldMatrix);
 	output.Pos = mul(output.Pos, m_viewMatrix);
 	output.Pos = mul(output.Pos, m_projectionMatrix);
+	output.color = float4(m_color, 1.0f);
 
 	return output;
 }

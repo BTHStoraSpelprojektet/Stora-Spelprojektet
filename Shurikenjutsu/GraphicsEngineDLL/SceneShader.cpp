@@ -957,13 +957,13 @@ void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 	p_context->Draw(p_numberOfVertices, 0);
 }
 
-void SceneShader::RenderAnimatedOutlining(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+void SceneShader::RenderAnimatedOutlining(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms, DirectX::XMFLOAT4 p_color)
 {
 	// Set parameters and then render.
 	unsigned int stride = sizeof(VertexAnimated);
 	const unsigned int offset = 0;
 
-	UpdateWorldMatrixOutlining(p_context, p_worldMatrix);
+	UpdateWorldMatrixOutlining(p_context, p_worldMatrix, p_color);
 	UpdateAnimatedBuffer(p_context, p_boneTransforms);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);
@@ -1171,7 +1171,7 @@ void SceneShader::UpdateColorBuffer(ID3D11DeviceContext* p_context, float R, flo
 	p_context->VSSetConstantBuffers(3, 1, &m_colorBuffer);
 }
 
-void SceneShader::UpdateWorldMatrixOutlining(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix)
+void SceneShader::UpdateWorldMatrixOutlining(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, DirectX::XMFLOAT4 p_color)
 {
 	DirectX::XMFLOAT4X4 worldMatrix = p_worldMatrix;
 	DirectX::XMFLOAT4X4 viewMatrix = m_viewMatrix;
@@ -1197,6 +1197,7 @@ void SceneShader::UpdateWorldMatrixOutlining(ID3D11DeviceContext* p_context, Dir
 	matrixBuffer->m_worldMatrix = DirectX::XMLoadFloat4x4(&worldMatrix);
 	matrixBuffer->m_viewMatrix = DirectX::XMLoadFloat4x4(&viewMatrix);
 	matrixBuffer->m_projectionMatrix = DirectX::XMLoadFloat4x4(&projectionMatrix);
+	matrixBuffer->m_color = p_color;
 
 	// Unlock the matrix buffer after it has been written to.
 	p_context->Unmap(m_matrixBufferOutlining, 0);
