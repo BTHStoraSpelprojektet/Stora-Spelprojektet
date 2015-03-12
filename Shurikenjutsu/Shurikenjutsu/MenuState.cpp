@@ -12,6 +12,9 @@
 #include "Settings.h"
 #include "CreaditsScreen.h"
 #include "Network.h"
+#include <shellapi.h>
+#include <Windows.h>
+#include "..\CommonLibs\Flags.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -82,7 +85,7 @@ bool MenuState::Initialize(std::string p_levelName)
 	m_main->AddButton(0.0f, -1.0f * BUTTONHEIGHT - 2.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/options.png"), MENUACTION_OPTIONS);
 	m_main->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/credits.png"), MENUACTION_CREDITS);
 	m_main->AddButton(0.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/quit.png"), MENUACTION_BACK);
-	
+
 	// Initialize creditsCreen
 	m_creditScreen = new CreaditsScreen();
 	m_creditScreen->Initialize();
@@ -99,6 +102,7 @@ bool MenuState::Initialize(std::string p_levelName)
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -2.0f * BUTTONHEIGHT - 3.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/connect.png"), MENUACTION_CONNECT);
 	m_play->AddButton(0.0f, -3.0f * BUTTONHEIGHT - 4.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
+	m_play->AddButton(400.0f, -BUTTONOFFSET, BUTTONWIDTH * 0.5f, BUTTONHEIGHT* 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/host.png"), MENUACTION_HOST_SERVER);
 
 	// Initialize connecting menu;
 	m_connecting = new Menu();
@@ -279,7 +283,31 @@ GAMESTATESWITCH MenuState::Update()
 			Network::GetInstance()->Connect((std::string)m_ipbox->GetText());
 			Network::GetInstance()->SetNetworkStatusConnecting();
 			break;
-
+		case MENUACTION_HOST_SERVER:
+			if (StartLocalServer())
+			{
+				if (!GLOBAL::GetInstance().FULLSCREEN)
+				{
+					m_menues.push(m_connecting);
+					m_hideIpBox = true;
+					Settings::GetInstance()->m_name = m_namebox->GetText();
+					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
+					Network::GetInstance()->Connect("127.0.0.1");
+					Network::GetInstance()->SetNetworkStatusConnecting();
+				}
+				else
+				{
+					GraphicsEngine::ToggleFullscreen(false, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+					m_menues.push(m_connecting);
+					m_hideIpBox = true;
+					Settings::GetInstance()->m_name = m_namebox->GetText();
+					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
+					Network::GetInstance()->Connect("127.0.0.1");
+					Network::GetInstance()->SetNetworkStatusConnecting();
+					GraphicsEngine::ToggleFullscreen(true, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+				}
+			}
+			break;
 		case MENUACTION_OPTIONAPPLY:
 			bool temp = m_options->GetCheckboxState(m_vsyncIndex);
 			m_lastvsync = temp;
@@ -311,6 +339,7 @@ GAMESTATESWITCH MenuState::Update()
 			m_namebox->Shutdown();
 			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 0, 394.0f, 67.0f, 15, tempstring);
 			break;
+
 	}
 
 	// Check network status
@@ -437,6 +466,42 @@ void MenuState::setSound(Sound* p_sound){
 	m_sound = p_sound;
 }
 
-void MenuState::InitializeCreditScreen()
+void MenuState::InitializeCreditScreen(){}
+
+bool MenuState::StartLocalServer()
 {
+	HINSTANCE hRet;
+	if (FLAG_DEBUG == 1)
+	{
+		hRet = ShellExecute(
+			HWND_DESKTOP, //Parent window
+			"open",       //Operation to perform
+			"..\\Debug\\NinjaServer.exe",       //Path to program
+			NULL,         //Parameters
+			NULL,         //Default directory
+			SW_SHOW);     //How to open
+	}
+	else
+	{
+		hRet = ShellExecute(
+			HWND_DESKTOP, //Parent window
+			"open",       //Operation to perform
+			"..\\Release\\NinjaServer.exe",       //Path to program
+			NULL,         //Parameters
+			NULL,         //Default directory
+			SW_SHOW);     //How to open
+	}
+
+	/*
+	The function returns a HINSTANCE (not really useful in this case)
+	So therefore, to test its result, we cast it to a LONG.
+	Any value over 32 represents success!
+	*/
+
+	if ((LONG)hRet <= 32)
+	{
+		MessageBox(HWND_DESKTOP, "Unable to start program", "", MB_OK);
+		return false;
+	}
+	return true;
 }

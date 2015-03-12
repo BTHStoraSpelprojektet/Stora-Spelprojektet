@@ -87,6 +87,7 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(
 		return CollisionList;
 	}
 	Sphere playerSphere = Sphere(p_playerBox.m_center, p_playerBox.m_radius);
+	playerSphere.m_position.y = 0.0f;
 	float speedXDeltaTime = p_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 	if (m_staticBoxList.size() > 0)
 	{
