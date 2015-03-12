@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 #include <D3D11.h>
-#include "FW1FontWrapper.h"
+//#include "FW1FontWrapper.h"
 
-//enum DWRITE_TEXT_ALIGNMENT;
-//struct IDWriteTextLayout;
-//struct IDWriteTextFormat;
+enum DWRITE_TEXT_ALIGNMENT;
+struct IDWriteTextLayout;
+struct IDWriteTextFormat;
 class GUIText
 {
 public:

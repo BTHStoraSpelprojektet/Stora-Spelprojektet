@@ -7,6 +7,8 @@
 #include "Network.h"
 #include "GUIElement.h"
 #include "GUIText.h"
+#include "FW1FontWrapper.h"
+#include <dwrite.h>
 
 DeathBoard* DeathBoard::m_instance;
 

@@ -1,6 +1,7 @@
 #include "ScoreBoard.h"
 #include "Globals.h"
 #include "..\CommonLibs\ModelNames.h"
+#include <dwrite.h>
 
 ScoreBoard* ScoreBoard::m_instance;
 
