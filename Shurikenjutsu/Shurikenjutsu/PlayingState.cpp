@@ -36,6 +36,11 @@ void PlayingState::operator delete(void* p)
 
 bool PlayingState::Initialize()
 {
+	for (int i = 0; i < 7; i++)
+	{
+		m_renderOutlingingEnemies[i] = false;
+	}
+
 	return Initialize(LEVEL_NAME);
 }
 
@@ -605,14 +610,11 @@ void PlayingState::Render()
 	}
 
 	// Render character outlining.
-	if (true)//(m_renderOutlining)
-	{
-		GraphicsEngine::ClearOutlining();
-		GraphicsEngine::SetOutliningPassOne();
-		m_playerManager->RenderOutliningPassOne();
-		GraphicsEngine::SetOutliningPassTwo();
-		m_playerManager->RenderOutliningPassTwo();
-	}
+	GraphicsEngine::ClearOutlining();
+	GraphicsEngine::SetOutliningPassOne();
+	m_playerManager->RenderOutliningPassOne();
+	GraphicsEngine::SetOutliningPassTwo();
+	m_playerManager->RenderOutliningPassTwo();
 
 	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
@@ -717,29 +719,7 @@ void PlayingState::OutliningRays()
 	DirectX::XMStoreFloat3(&rayDir,	DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
 
 	Ray* ray = new Ray(rayPos, rayDir);
-
-	std::vector<OBB> enemiesBoundingBoxes;
-	enemiesBoundingBoxes = m_playerManager->GetEnemyPlayerBoundingBoxes();
-
 	rayDistObjects = CollisionManager::GetInstance()->CalculateRayLengthFloat(ray);
-
-	for (int i = 0; i < enemiesBoundingBoxes.size(); i++)
-	{
-		m_renderOutlingingEnemies[i] = false;
-
-		if (Collisions::RayOBBCollision(ray, enemiesBoundingBoxes[i]))
-		{
-			if (ray->m_distance != 0)
-			{
-				rayDist = ray->m_distance;
-				if (rayDist > rayDistObjects)
-				{
-					m_renderOutlingingEnemies[i] = true;
-				}
-			}
-		}
-	}
-
 	if (Collisions::RayOBBCollision(ray, m_playerManager->GetPlayerBoundingBox()))
 	{
 		if (ray->m_distance != 0)
@@ -747,27 +727,42 @@ void PlayingState::OutliningRays()
 			rayDist = ray->m_distance;
 			if (rayDist > rayDistObjects)
 			{
-				m_renderOutlining = true;
+				m_playerManager->SetPlayerOutliningRender(true);
 			}
 			else
 			{
-				m_renderOutlining = false;
+				m_playerManager->SetPlayerOutliningRender(false);
 			}
 		}
 	}
 
-	m_playerManager->SetOutliningPerEnemy(m_renderOutlingingEnemies);
+	std::vector<OBB> enemiesBoundingBoxes;
+	enemiesBoundingBoxes = m_playerManager->GetEnemyPlayerBoundingBoxes();
 
 
-	/*if (CollisionManager::GetInstance()->CalculateRayLength(ray, rayDist))
+	for (unsigned int i = 0; i < enemiesBoundingBoxes.size(); i++)
 	{
-		m_renderOutlining = true;
+		DirectX::XMStoreFloat3(&rayDir, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&enemiesBoundingBoxes[i].m_center), DirectX::XMLoadFloat3(&rayPos)));
+		DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
+		ray->m_direction = DirectX::XMFLOAT4(rayDir.x, rayDir.y, rayDir.z, 1);
+		rayDistObjects = CollisionManager::GetInstance()->CalculateRayLengthFloat(ray);
+		if (Collisions::RayOBBCollision(ray, enemiesBoundingBoxes[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayDist = ray->m_distance;
+				if (rayDist > rayDistObjects)
+				{
+					m_playerManager->SetOutliningPerEnemy(true, i);
+				}
+				else
+				{
+					m_playerManager->SetOutliningPerEnemy(false, i);
+				}
+			}
+		}
 	}
-	else
-	{
-		m_renderOutlining = false;
-	}*/
-	
+
 	delete ray;
 }
 

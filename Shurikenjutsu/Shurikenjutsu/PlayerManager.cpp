@@ -14,6 +14,12 @@ bool PlayerManager::Initialize(bool p_inMenu)
 {
 	m_enemyListSize = 0;
 	m_enemyList = NULL;
+	m_renderOutliningPlayer = false;
+	for (int i = 0; i < 7; i++)
+	{
+		m_renderOutlingingEnemies[i] = false;
+	}
+
 	if (!p_inMenu)
 	{
 		AddPlayer(Network::GetInstance()->GetMyPlayer().charNr, DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), Network::GetInstance()->GetMyPlayer().name.C_String());
@@ -141,8 +147,21 @@ void PlayerManager::Render(bool p_inMenu)
 
 void PlayerManager::RenderOutliningPassOne()
 {
-	if (m_renderOutlingingEnemies)
+	for (unsigned int i = 0; i < m_enemyListSize; i++)
+	{
+		if (m_renderOutlingingEnemies[i])
+		{
+			if (GraphicsEngine::IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			{				
+				m_enemyList[i]->RenderDepthOutlining();
+			}
+		}
+	}
+
+	if (m_renderOutliningPlayer)
+	{
 		m_player->RenderDepthOutlining();
+	}
 }
 
 void PlayerManager::RenderDepth(bool p_inMenu)
@@ -173,7 +192,50 @@ void PlayerManager::RenderDepth(bool p_inMenu)
 
 void PlayerManager::RenderOutliningPassTwo()
 {
-	m_player->RenderOutlining();
+	DirectX::XMFLOAT4 color = DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	for (unsigned int i = 0; i < m_enemyListSize; i++)
+	{
+		if (m_renderOutlingingEnemies[i])
+		{
+			switch (m_enemyList[i]->GetTeam())
+			{
+			case 1:
+				color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+				break;
+			case 2:
+				color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+				break;
+			default:
+				break;
+			}
+
+			if (GraphicsEngine::IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+			{
+				m_enemyList[i]->RenderOutlining(color);
+			}
+		}
+	}
+
+	switch (m_player->GetTeam())
+	{
+	case 1:
+		color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+		break;
+	case 2:
+		color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+		break;
+	default:
+		break;
+	}
+
+	if (m_renderOutliningPlayer)
+	{
+		m_player->RenderOutlining(color);
+	}
+}
+void PlayerManager::SetPlayerOutliningRender(bool p_state)
+{
+	m_renderOutliningPlayer = p_state;
 }
 
 void PlayerManager::AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name)
@@ -447,7 +509,7 @@ Sphere PlayerManager::GetPlayerSphere()
 std::vector<OBB> PlayerManager::GetEnemyPlayerBoundingBoxes()
 {
 	std::vector<OBB> returnList;
-	for (int i = 0; i < m_enemyListSize; i++)
+	for (unsigned int i = 0; i < m_enemyListSize; i++)
 	{
 		returnList.push_back(m_enemyList[i]->GetOBB());
 	}
@@ -564,7 +626,7 @@ std::vector<Player*> PlayerManager::GetEveryPlayer()
 	return players;
 }
 
-void PlayerManager::SetOutliningPerEnemy(bool* p_renderOutlingingEnemies)
+void PlayerManager::SetOutliningPerEnemy(bool p_renderOutlingingEnemies, int p_index)
 {
-	m_renderOutlingingEnemies = p_renderOutlingingEnemies;
+	m_renderOutlingingEnemies[p_index] = p_renderOutlingingEnemies;
 }

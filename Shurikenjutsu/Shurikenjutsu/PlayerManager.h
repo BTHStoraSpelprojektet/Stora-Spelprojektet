@@ -56,7 +56,9 @@ public:
 	std::vector<Player*> GetMyTeamPlayers(int p_team);
 	std::vector<Player*> GetEveryPlayer();
 
-	void PlayerManager::SetOutliningPerEnemy(bool* p_renderOutlingingEnemies);
+	void PlayerManager::SetOutliningPerEnemy(bool p_renderOutlingingEnemies, int p_index);
+	void PlayerManager::SetPlayerOutliningRender(bool p_state);
+
 private:
 	void AddPlayer(int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name);
 	void AddEnemy(RakNet::RakNetGUID p_guid, int p_charNr, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, std::string p_name);
@@ -79,8 +81,8 @@ private:
 
 	Sound* m_sound;
 
-	bool* m_renderOutlingingEnemies;
-
+	bool m_renderOutlingingEnemies[7];
+	bool m_renderOutliningPlayer;
 	//std::vector < Sound::SoundEmitter > soundPlayerEmitter;
 };
 
