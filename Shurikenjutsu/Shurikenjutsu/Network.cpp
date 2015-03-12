@@ -2334,7 +2334,10 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 
 void Network::DespawnRunes(POINTOFINTERESTTYPE p_poiType)
 {
-	m_objectManager->DespawnRunes(p_poiType);
+	if (m_objectManager != nullptr)
+	{
+		m_objectManager->DespawnRunes(p_poiType);
+	}
 }
 
 void Network::RoundOverText()
