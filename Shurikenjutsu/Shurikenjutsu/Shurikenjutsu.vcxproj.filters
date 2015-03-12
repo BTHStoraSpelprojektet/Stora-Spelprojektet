@@ -458,6 +458,9 @@
     <ClCompile Include="POIGrapichalEffects.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="FlashBang.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -741,6 +744,9 @@
     </ClInclude>
     <ClInclude Include="POIGrapichalEffects.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="FlashBang.h">
+      <Filter>Header Files\Object\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
