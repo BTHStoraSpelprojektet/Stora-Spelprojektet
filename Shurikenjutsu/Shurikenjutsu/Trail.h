@@ -5,7 +5,8 @@
 #include <DirectXMath.h>
 #include <string>
 #include <vector>
-#include "TrailRenderer.h"
+
+struct TrailPoint;
 
 class Trail
 {

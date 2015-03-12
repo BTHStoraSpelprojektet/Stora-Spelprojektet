@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "../CommonLibs/TextureLibrary.h"
 #include "GraphicsEngine.h"
+#include "..\CommonLibs\CommonEnums.h"
 
 POIGrapichalEffects& POIGrapichalEffects::GetInstance()
 {

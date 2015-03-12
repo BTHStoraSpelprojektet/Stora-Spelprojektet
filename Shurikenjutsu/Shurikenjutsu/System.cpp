@@ -21,6 +21,7 @@
 #include "MemoryChecker.h"
 #include "DebugText.h"
 #include "Settings.h"
+#include "Window.h"
 //#include <vld.h>
 
 bool System::Initialize(int p_argc, _TCHAR* p_argv[])
@@ -71,7 +72,8 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Initialize the window.
 	WindowRectangle window = WindowRectangle(0, 0, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-	m_window.Initialize(window);
+	m_window = new Window();
+	m_window->Initialize(window);
 	ConsolePrintSuccess("Window created successfully.");
 	std::string size = "Window size: " + std::to_string(window.width);
 	size.append("x" + std::to_string(window.height));
@@ -80,10 +82,10 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Update window title.
 	m_title = "Shurikenjutsu";
-	m_window.SetTitle(m_title);
+	m_window->SetTitle(m_title);
 
 	// Initialize the graphics engine.
-	GraphicsEngine::Initialize(m_window.GetHandle(), (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, GLOBAL::GetInstance().FULLSCREEN);
+	GraphicsEngine::Initialize(m_window->GetHandle(), (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT, (float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT, GLOBAL::GetInstance().FULLSCREEN);
 	GraphicsEngine::SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	GraphicsEngine::SetSceneFog(0.0f, 500.0f, 0.01f);
 	GraphicsEngine::SetShadowMapDimensions((float)GLOBAL::GetInstance().MAX_SCREEN_WIDTH, (float)GLOBAL::GetInstance().MAX_SCREEN_HEIGHT);
@@ -134,6 +136,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 
 	// Input: Register keys
 	ConsolePrintText("Registering all input keys...");
+	InputManager::GetInstance()->Initialize();
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('w'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('a'));
 	InputManager::GetInstance()->RegisterKey(VkKeyScan('s'));
@@ -276,6 +279,11 @@ void System::Shutdown()
 
 	Settings::GetInstance()->SaveSettingsFile();
 	Settings::GetInstance()->Shutdown();
+	if (m_window != nullptr)
+	{
+		delete m_window;
+		m_window = nullptr;
+	}
 }
 
 void System::Run()
@@ -337,9 +345,9 @@ void System::Update()
 
 	// Update border size
 	RECT windowRect;
-	GetWindowRect(m_window.GetHandle(), &windowRect);
+	GetWindowRect(m_window->GetHandle(), &windowRect);
 	RECT clientRect;
-	GetClientRect(m_window.GetHandle(), &clientRect);
+	GetClientRect(m_window->GetHandle(), &clientRect);
 	GLOBAL::GetInstance().BORDER_SIZE = (float)((windowRect.right - windowRect.left) - (clientRect.right - clientRect.left)) * 0.5f;
 	GLOBAL::GetInstance().TITLE_BORDER_SIZE = (float)((windowRect.bottom - windowRect.top) - (clientRect.bottom - clientRect.top)) - 2.0f * GLOBAL::GetInstance().BORDER_SIZE;
 

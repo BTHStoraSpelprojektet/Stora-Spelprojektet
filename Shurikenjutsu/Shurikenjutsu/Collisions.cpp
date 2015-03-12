@@ -1,4 +1,5 @@
 #include "Collisions.h"
+#include "..\CommonLibs\CommonStructures.h"
 
 
 bool Collisions::SphereSphereCollision(Sphere p_sphere1, Sphere p_sphere2)
