@@ -41,6 +41,11 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		damage = KATANA_DAMAGE;
 		attackAngle = 0.9f;
 		break;
+	case ABILITIES_FANMELEE:
+		range = FANMELEE_RANGE;
+		damage = FANMELEE_DAMAGE;
+		attackAngle = 0.9f;
+		break;
 	case ABILITIES_NAGINATASLASH:
 		range = NAGINATA_RANGE;
 		damage = NAGINATA_DAMAGE;
