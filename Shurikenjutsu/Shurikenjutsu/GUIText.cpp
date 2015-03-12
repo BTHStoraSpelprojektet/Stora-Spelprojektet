@@ -3,6 +3,7 @@
 #include "GraphicsEngine.h"
 #include "Globals.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "FW1FontWrapper.h"
 
 GUIText::GUIText(){}
 GUIText::~GUIText(){}

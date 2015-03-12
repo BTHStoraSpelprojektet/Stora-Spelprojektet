@@ -40,6 +40,8 @@ void MemoryChecker::Update(double p_deltaTime)
 		SIZE_T pkbmu = (physMemUsedByMe / (SIZE_T)1024.0); // physical KB memory used
 		SIZE_T pmbmu = (pkbmu / (SIZE_T)1024.0); // physical MB memory used
 
-		std::cout << "RAM: " << (int)pmbmu << " MB   VRAM: " << (int)vmbmu << " MB\n";
+		#ifdef _DEBUG
+			std::cout << "RAM: " << (int)pmbmu << " MB   VRAM: " << (int)vmbmu << " MB\n";
+		#endif
 	}
 }

@@ -893,7 +893,6 @@ void PlayingState::UpdatePOIEffects()
 
 			if (NetworkPlayers[i].shield > 0.0f)
 			{
-
 				POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 				POIGrapichalEffects::GetInstance().RenderShieldEffect();
 			}

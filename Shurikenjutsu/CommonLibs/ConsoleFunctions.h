@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "Flags.h"
+#include "Windows.h"
 
 const static void ConsolePrintSuccess(std::string p_message)
 {

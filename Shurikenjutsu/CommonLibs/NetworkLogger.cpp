@@ -23,7 +23,9 @@ void NetworkLogger::Update(double p_deltaTime)
 		double bytesPerSecOut = (m_frameBitsOut / 8) / m_time;
 		if (ServerGlobals::IS_SERVER)
 		{
-			std::cout << "In: " << (int)bytesPerSecIn << "  Out: " << (int)bytesPerSecOut << std::endl;
+			#ifdef _DEBUG
+				std::cout << "In: " << (int)bytesPerSecIn << "  Out: " << (int)bytesPerSecOut << std::endl;
+			#endif			
 		}
 		ServerGlobals::BYTES_IN = (int)bytesPerSecIn;
 		ServerGlobals::BYTES_OUT = (int)bytesPerSecOut;

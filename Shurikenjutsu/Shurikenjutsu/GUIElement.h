@@ -2,7 +2,7 @@
 #define GUIELEMENT_H_
 
 #include <DirectXMath.h>
-#include "DirectX.h"
+#include <d3d11.h>
 
 class GUIElement
 {

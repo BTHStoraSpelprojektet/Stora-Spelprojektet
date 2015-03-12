@@ -1,6 +1,6 @@
 #include "FloatingText.h"
 #include "Globals.h"
-
+#include "GUIText.h"
 
 void FloatingText::Initialize()
 {
