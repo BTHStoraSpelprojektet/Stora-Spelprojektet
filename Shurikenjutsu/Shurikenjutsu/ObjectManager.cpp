@@ -742,11 +742,6 @@ void ObjectManager::RenderInstanced()
 
 void ObjectManager::Render()
 {
-	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
-	{
-		m_objectsToSingleRender[i]->Render();
-	}
-
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_shurikens[i]->GetFrustumSphere(), 1.0f))
@@ -800,15 +795,6 @@ void ObjectManager::Render()
 			GraphicsEngine::TurnOffAlphaBlending();
 		}
 	}
-	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
-	{
-		if (m_frustum->CheckSphere(m_stickyTrapList[i]->GetStickyTrapSphere(), 2.0f))
-		{
-			GraphicsEngine::TurnOnAlphaBlending();
-			m_stickyTrapList[i]->Render();
-			GraphicsEngine::TurnOffAlphaBlending();
-		}
-	}
 
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
@@ -826,7 +812,6 @@ void ObjectManager::Render()
 		m_bloodParticles[i]->Render();
 	}
 
-
 	for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
 	{
 		for (unsigned int j = 0; j < 9; j++)
@@ -836,6 +821,21 @@ void ObjectManager::Render()
 	}
 
 	m_POIManager->Render();
+
+	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
+	{
+		m_objectsToSingleRender[i]->Render();
+	}
+
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_stickyTrapList[i]->GetStickyTrapSphere(), 2.0f))
+		{
+			GraphicsEngine::TurnOnAlphaBlending();
+			m_stickyTrapList[i]->Render();
+			GraphicsEngine::TurnOffAlphaBlending();
+		}
+	}
 }
 
 void ObjectManager::RenderAnimated()
