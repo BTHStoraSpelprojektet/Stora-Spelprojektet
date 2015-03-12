@@ -6,10 +6,9 @@ const float ALL_AROUND_GLOBAL_COOLDOWN = 0.4f;
 const float TICK_RATE = 0.06f;
 
 
-const float ROUND_TIME_LIMIT_MINUTS = 3.0f;
+const float ROUND_TIME_LIMIT_MINUTS = 2.0f;
 const float ROUND_TIME_LIMIT_SECONDS = 10.0f;
 const float SUDDEN_DEATH_DAMAGE = 5.0f;
-const float TIME_UNTIL_NEXT_SUDDEN_DEATH_BOX = 1.0f;
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
 //Shuriken
@@ -87,7 +86,7 @@ const float DASH_SPEED = 8.0f;
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 // Naginata stab
 const float NAGINATASTAB_DAMAGE = 20.0f;
-const float NAGINATASTAB_RANGE = 5.0f;
+const float NAGINATASTAB_RANGE = 3.0f;
 const float NAGINATASTAB_COOLDOWN = 2.0f;
 const float NAGINATASTAB_GLOBAL_COOLDOWN = 1.5f;
 const float NAGINATASTAB_DURATION = 1.5f;
@@ -130,7 +129,7 @@ const float STICKY_TRAP_RANGE = 15.0f;
 const float STICKY_TRAP_DURATION = 20.0f;
 const float STICKY_TRAP_SPEED = 30.0f;
 const float STICKY_TRAP_SIZE_X = 3.0f;
-const float STICKY_TRAP_RADIUS = 1.5f;
+const float STICKY_TRAP_RADIUS = 2.0f;
 const float STICKY_TRAP_SLOW_PRECENTAGE = 0.5f;
 
 ////////////////////////////////////////////////////////////////Special Abilities
