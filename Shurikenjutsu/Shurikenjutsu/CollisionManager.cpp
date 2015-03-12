@@ -111,10 +111,6 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(
 			}
 			if (Collisions::OBBSphereCollision(box, playerSphere))
 			{
-				if (box.m_center.y > 2.0f)
-				{
-					continue;
-				}
 				CollisionList.push_back(box);
 			}
 		}
