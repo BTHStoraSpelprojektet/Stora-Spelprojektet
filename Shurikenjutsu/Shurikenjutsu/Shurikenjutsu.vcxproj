@@ -146,7 +146,6 @@
     <ClCompile Include="PointOfInterest.cpp" />
     <ClCompile Include="PointOfInterestManager.cpp" />
     <ClCompile Include="Projectile.cpp" />
-    <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="ScoreBoard.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Shuriken.cpp" />
@@ -243,7 +242,6 @@
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PlayingState.h" />
     <ClInclude Include="Projectile.h" />
-    <ClInclude Include="QuadTree.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="ButtonEvent.h" />
     <ClInclude Include="KButtonEvent.h" />
@@ -258,7 +256,6 @@
     <ClInclude Include="StatusEffect.h" />
     <ClInclude Include="StickyTrap.h" />
     <ClInclude Include="StickyTrapAbility.h" />
-    <ClInclude Include="Structures.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TeamStatusBar.h" />
     <ClInclude Include="TessenNinja.h" />
