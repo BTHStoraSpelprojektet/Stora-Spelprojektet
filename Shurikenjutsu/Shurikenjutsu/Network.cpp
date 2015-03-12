@@ -2652,16 +2652,21 @@ void Network::SendSpawnedRunes()
 
 void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 {
-	if (p_value == false)
+	if (!p_value)
 	{
-		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		if (p_guid == m_myPlayer.guid)
 		{
-			m_enemyPlayers[i].hasHealPOI = false;
+			m_myPlayer.hasHealPOI = false;
 		}
 
-		m_myPlayer.hasHealPOI = false;
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (p_guid == m_enemyPlayers[i].guid)
+			{
+				m_enemyPlayers[i].hasHealPOI = false;
+			}
+		}		
 	}
-
 	else
 	{
 		if (m_myPlayer.guid == p_guid)

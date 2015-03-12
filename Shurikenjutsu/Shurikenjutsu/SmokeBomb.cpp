@@ -6,6 +6,7 @@
 #include "Object.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "Trail.h"
 
 bool SmokeBomb::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_smokeBombID)
 {

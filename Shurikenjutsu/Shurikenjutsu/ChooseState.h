@@ -6,7 +6,6 @@
 #include "GameState.h"
 #include <stack>
 #include <vector>
-#include "TeamTable.h"
 #include "Structures.h"
 
 class Menu;
@@ -20,6 +19,7 @@ class ObjectManager;
 class Frustum;
 class Sound;
 class PlayerManager;
+class TeamTable;
 
 enum CurrentTeam
 {

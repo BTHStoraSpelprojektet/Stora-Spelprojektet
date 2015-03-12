@@ -2,10 +2,10 @@
 #define SMOKEBOMB_H
 
 #include "Structures.h"
-#include "Trail.h"
 
 class ParticleEmitter;
 class Object;
+class Trail;
 
 class SmokeBomb
 {

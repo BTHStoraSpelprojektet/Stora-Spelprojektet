@@ -5,6 +5,7 @@
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "PointOfInterestManager.h"
 
 NormalState::NormalState(){}
 NormalState::~NormalState(){}
@@ -87,6 +88,8 @@ void NormalState::Update(double p_deltaTime)
 			RespawnAllPlayers();
 			ResetTime();
 			ClearAllListAtRoundRestart();
+			m_POIManager->DespawnRunes();
+			m_playerManager->ResetPOIEffects();
 		}
 	}
 	// Check if all rounds have been played and the match is over
