@@ -13,10 +13,14 @@ CollisionManager::~CollisionManager(){}
 
 void CollisionManager::SetOuterWallList(std::vector<Box> p_outerWallList)
 {
-	m_outerWallList = p_outerWallList;
+
+	for (unsigned int i = 0; i < p_outerWallList.size(); i++)
+	{
+		m_outerWallList.push_back(OBB(p_outerWallList[i]));
+	}
 }
 
-void CollisionManager::SetLists(std::vector<Object*> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList)
+void CollisionManager::SetLists(std::vector<Object*> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<OBB> p_outerWallList)
 {
 	m_staticBoxList.clear();
 	m_staticSphereList.clear();
@@ -25,7 +29,7 @@ void CollisionManager::SetLists(std::vector<Object*> p_StaticObjectList, std::ve
 
 	for (unsigned int i = 0; i < p_outerWallList.size(); i++)
 	{
-		m_staticBoxList.push_back(OBB(p_outerWallList[i]));
+		m_staticBoxList.push_back(p_outerWallList[i]);
 	}
 
 	// Go through all objects
@@ -347,6 +351,15 @@ float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_pla
 	float x = m_pickedLocation.x - p_playerPos.x;
 	float y = m_pickedLocation.y - p_playerPos.z;
 	float temp = sqrt((x*x) + (y*y));
+
+
+	float checkWithouterWalls = CalculatThrowDistanceChekcingOuterWalls(&Ray(p_playerPos, DirectX::XMFLOAT3(x/temp, 0.0f, y/temp)));
+
+	if (temp > checkWithouterWalls)
+	{
+		temp = checkWithouterWalls;
+	}
+
 	return temp;
 }
 
@@ -467,4 +480,34 @@ float CollisionManager::AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_pl
 void CollisionManager::SetObjectsInFrustumList(std::vector<Object*> p_objectsInFrustumList, std::vector<AnimatedObject*> p_animatedObjectList)
 {
 	SetLists(p_objectsInFrustumList, p_animatedObjectList, m_outerWallList);
+}
+
+float CollisionManager::CalculatThrowDistanceChekcingOuterWalls(Ray* p_ray)
+{
+	Ray* ray = p_ray;
+	float rayLength = 100.0f;
+	std::vector<float> rayLengths;
+
+	// Check all boxes, houses
+	for (unsigned int i = 0; i < m_outerWallList.size(); i++)
+	{
+		if (Collisions::RayOBBCollision(ray, m_outerWallList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+
+	// If collision with ray check distanse, go throu get shortest length
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
+	{
+		if (rayLengths[i] < rayLength)
+		{
+			rayLength = rayLengths[i];
+		}
+	}
+
+	return rayLength;
 }
