@@ -71,8 +71,8 @@ const float KATANA_RANGE = 2.0f;
 const float KATANA_COOLDOWN = 0.5f;
 
 // Fan
-const float FANMELEE_DAMAGE = 50.0f;
-const float FANMELEE_RANGE = 4.0f;
+const float FANMELEE_DAMAGE = 25.0f;
+const float FANMELEE_RANGE = 2.0f;
 const float FANMELEE_COOLDOWN = 0.5f;
 
 // Naginata
@@ -90,7 +90,7 @@ const float DASH_SPEED = 8.0f;
 
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 // Naginata stab
-const float NAGINATASTAB_DAMAGE = 20.0f;
+const float NAGINATASTAB_DAMAGE = 40.0f;
 const float NAGINATASTAB_RANGE = 3.0f;
 const float NAGINATASTAB_COOLDOWN = 2.0f;
 const float NAGINATASTAB_GLOBAL_COOLDOWN = 1.5f;
@@ -144,10 +144,10 @@ const float CHARACTER_KATANA_SHURIKEN_HEALTH = 100.0f;
 const float CHARACTER_KATANA_SHURIKEN_SPEED = 10.0f;
 
 const float CHARACTER_TESSEN_HEALTH = 110.0f;
-const float CHARACTER_TESSEN_SPEED = 12.0f;
+const float CHARACTER_TESSEN_SPEED = 11.0f;
 
 const float CHARACTER_NAGINATA_HEALTH = 115.0f;
-const float CHARACTER_NAGINATA_SPEED = 11.0f;
+const float CHARACTER_NAGINATA_SPEED = 10.5f;
 
 ////////////////////////////////////////////////////////////////Character Variables
 ////////////////////////////////////////////////////////////////World Particles
