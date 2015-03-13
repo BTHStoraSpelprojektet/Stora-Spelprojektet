@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 762
+Number of objects: 760
 Number of bounding boxes: 4
 LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_12 58.349 0 0 0 0 0 60 8.5 15
@@ -34,7 +34,6 @@ AcerPalmatum_2 22.0787 0 -40.2816 0 -1.43659 0
 AcerPalmatum_3 -21.6514 0 40.438 0 1.705 0
 BigBird_Animated_3 -3.77315 7.58108 18.947 0 3.27931 0
 BigBird_Animated_4 4.80109 7.9186 -33.032 0 4.94058 0
-BoundingSphere_1 0 0 0 0 0 0
 Brazier_1 -5.35181 0 5.042 0 0 0
 Brazier_5 -30.812 0 -37.7466 0 2.35619 0
 Brazier_6 30.812 0 37.7466 0 -0.785398 0
@@ -426,7 +425,6 @@ dirtPile__02 37.76 0.01 -42.832 0 0.707068 0
 grass_tile_2 0 0 0 0 0 0
 groundTorch__1 -32.511 0.455909 37.9776 0.244535 -0.90166 2.23724e-017
 groundTorch__2 32.9684 0.455909 -36.2018 0.228841 2.02875 0
-outsideNightArena_BoundingSphere_1 0 0 0 0 0 0
 path_dirtISemi__ 15 0.01 7.5 0 0 0
 path_dirtISemi__1 -15 0.01 -7.5 0 3.14159 0
 path_dirtISemi__10 -15 0.01 7.5 0 3.14159 0
