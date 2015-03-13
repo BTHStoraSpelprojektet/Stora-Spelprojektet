@@ -1,5 +1,5 @@
 Map size: 100 100
-Number of objects: 761
+Number of objects: 765
 Number of bounding boxes: 4
 LevelBoundingBox_10 0 0 65.1372 0 0 0 15 8.5 60
 LevelBoundingBox_12 58.349 0 0 0 0 0 60 8.5 15
@@ -454,6 +454,10 @@ pillar_2 32.2262 0 39.1608 0 0.785398 0
 sakuraTree_ 13.5 0 28 0 0.349066 0
 sakuraTree_1 -13.5 0 -28 0 5.93412 0
 sakuraTree_2 -29.0922 0 -44.446 0 5.93412 0
+shrineLantern_Animated_01 4.51179 3.084 18.8594 0 0 0
+shrineLantern_Animated_02 -4.512 3.084 18.8594 0 0 0
+shrineLantern_Animated_03 -4.512 3.084 -18.859 0 0 0
+shrineLantern_Animated_04 4.512 3.084 -18.859 0 0 0
 spawnPoint_1_team_1 -40.4168 0 38.0826 0 0 0
 spawnPoint_1_team_2 40.4168 0 -38.0826 0 0 0
 spawnPoint_2_team_1 -37.7553 0 41.4886 0 0 0
