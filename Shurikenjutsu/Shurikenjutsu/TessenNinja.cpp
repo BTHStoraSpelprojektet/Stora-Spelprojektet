@@ -1,7 +1,7 @@
 #include "TessenNinja.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
-#include "MeleeSwing.h"
+#include "FanMelee.h"
 #include "Dash.h"
 #include "WhipPrimaryAttackAbility.h"
 #include "WhipSecondaryAttackAbility.h"
@@ -36,7 +36,7 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 
 	SetSpeed(CHARACTER_TESSEN_SPEED);
 
-	m_meleeAttack = new MeleeSwing();
+	m_meleeAttack = new FanMelee();
 	m_meleeAttack->Initialize();
 
 	m_meleeSpecialAttack = new FanBoomerangAbility();
@@ -47,9 +47,6 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 
 	m_rangeSpecialAttack = new WhipSecondaryAttackAbility();
 	m_rangeSpecialAttack->Initialize();
-
-	/*m_toolAbility = new SpikeAbility();
-	m_toolAbility->Initialize();*/
 
 	SetOriginalSpeed(GetSpeed());
 	SetHealth(CHARACTER_TESSEN_HEALTH);
