@@ -20,6 +20,7 @@ public:
 	void Render(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_normal, ID3D11ShaderResourceView* p_color, ID3D11ShaderResourceView* p_depth, ID3D11ShaderResourceView* p_ssao);
 	void RenderLights(ID3D11DeviceContext* p_context);
 	void RenderSSAO(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_normal, ID3D11ShaderResourceView* p_depth);
+	void BlurShadowMap(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_texture, bool p_horizontal);
 	void BlurImage(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_depth, ID3D11ShaderResourceView* p_normal, bool p_horizontal);
 
 	void DOF(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_depth, bool p_horizontal);
@@ -82,6 +83,5 @@ private:
 	// DOF
 	ID3D11PixelShader* m_pixelShaderDOFBlurH;
 	ID3D11PixelShader* m_pixelShaderDOFBlurV;
-
 };
 #endif

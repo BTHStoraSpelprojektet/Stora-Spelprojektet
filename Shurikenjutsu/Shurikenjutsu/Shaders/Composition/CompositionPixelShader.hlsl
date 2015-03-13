@@ -39,7 +39,34 @@ float ReadShadowMap(float3 positionView)
 
 	const float bias = 0.0001f;
 	float depthValue = m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates).r;
-	return projectedCameraDir.z - bias < depthValue;
+
+	float lightDepth = projectedCameraDir.z - bias;
+	float shadowSum = 0.0f;
+
+	float2 textureDimensions; //
+	m_shadowMap.GetDimensions(textureDimensions.x, textureDimensions.y); //
+	float2 offset = float2(1.0f / textureDimensions.x, 1.0f / textureDimensions.y);
+
+	shadowSum += lightDepth < depthValue;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(0.0f, offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(offset.x, offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(offset.x, 0.0f)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(offset.x, -offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(0.0f, -offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(-offset.x, -offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(-offset.x, 0.0f)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(-offset.x, offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(0.0f, 2.0f * offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(2.0f * offset.x, 2.0f * offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(2.0f * offset.x, 0.0f)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(2.0f * offset.x, -2.0f * offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(0.0f, -2.0f * offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(-2.0f * offset.x, -2.0f * offset.y)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(-2.0f * offset.x, 0.0f)).r;
+	shadowSum += lightDepth < m_shadowMap.Sample(m_samplerShadowMap, textureCoordinates + float2(-2.0f * offset.x, 2.0f * offset.y)).r;
+	shadowSum = shadowSum / 17.0f;
+	
+	return shadowSum;// projectedCameraDir.z - bias < depthValue;
 }
 
 float4 main(Input p_input) : SV_Target
