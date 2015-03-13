@@ -4,6 +4,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "GraphicsEngine.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "Trail.h"
 
 bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_spikeBombID, int p_team)
 {

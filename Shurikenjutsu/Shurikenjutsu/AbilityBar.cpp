@@ -56,6 +56,7 @@ void AbilityBar::Shutdown()
 {
 	for (unsigned int i = 0; i < m_abilities.size(); i++)
 	{
+		m_abilities[i]->Shutdown();
 		delete m_abilities[i];
 		m_abilities[i] = 0;
 	}

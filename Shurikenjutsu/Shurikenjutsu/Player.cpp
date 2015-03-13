@@ -17,6 +17,8 @@
 #include "SpikeAbility.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
+#include "Network.h"
+#include "Trail.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -1207,11 +1209,11 @@ void Player::RenderDepthOutlining()
 	AnimatedObject::RenderDepthOutlining();
 }
 
-void Player::RenderOutlining()
+void Player::RenderOutlining(DirectX::XMFLOAT4 p_color)
 {
 	if (m_isAlive)
 	{
-		AnimatedObject::RenderOutlining();
+		AnimatedObject::RenderOutlining(p_color);
 	}
 }
 

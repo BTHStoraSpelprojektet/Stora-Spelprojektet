@@ -3,8 +3,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "AnimatedObject.h"
-#include "Network.h"
-#include "Trail.h"
+#include "../CommonLibs/RakNet/RakNetTypes.h"
 #include "Sound.h"
 
 class Ability;
@@ -34,7 +33,7 @@ public:
 	virtual void RenderAttackLocations();
 	void RenderDepth();
 	void RenderDepthOutlining();
-	void RenderOutlining();
+	void RenderOutlining(DirectX::XMFLOAT4 p_color);
 	void RenderAbilityBar();
 	//void SetDamage(float p_damage);
 	//float GetDamage() const;	

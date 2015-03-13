@@ -16,6 +16,7 @@ public:
 	void Shutdown();
 	void Update();
 	void Render();
+	void SetPosition(DirectX::XMFLOAT3 p_pos);
 
 	void SparkleState(bool p_stateOn);
 	bool IsActive();

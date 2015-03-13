@@ -520,8 +520,8 @@ void ChooseState::Render()
 	m_ninjas[m_currentNinja]->Render();
 	m_tools[m_currentTool]->Render();
 	m_abilityDescription[m_currentNinja]->Render();
-	m_redTeamScore->Render();
-	m_blueTeamScore->Render();
+	//m_redTeamScore->Render();
+	//m_blueTeamScore->Render();
 	m_redTeam->Render();
 	m_blueTeam->Render();
 	m_questionMark->Render();

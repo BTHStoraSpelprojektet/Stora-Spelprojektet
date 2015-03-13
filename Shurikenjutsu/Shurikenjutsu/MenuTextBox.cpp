@@ -5,6 +5,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "GUIText.h"
+#include <dwrite.h>
 
 MenuTextBox::MenuTextBox(){}
 MenuTextBox::~MenuTextBox(){}

@@ -2,9 +2,9 @@
 #define SPIKES_H
 
 #include "Structures.h"
-#include "Trail.h"
 
 class Object;
+class Trail;
 
 class Spikes
 {

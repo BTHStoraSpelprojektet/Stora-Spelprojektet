@@ -4,7 +4,6 @@
 //#define WIN32_LEAN_AND_MEAN
 
 #include "Network.h"
-#include "Window.h"
 
 class MemoryChecker;
 class Sound;
@@ -15,6 +14,7 @@ class MenuState;
 class PlayingState;
 class GameState;
 class Cursor;
+class Window;
 
 class System
 {
@@ -28,7 +28,7 @@ private:
 	void Update();
 	void Render();
 
-	Window m_window;
+	Window *m_window;
 	Timer* m_timer;
 
 	std::string m_title;

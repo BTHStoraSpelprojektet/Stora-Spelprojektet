@@ -2,9 +2,13 @@
 #define INPUTMANAGER_H_
 
 #include <vector>
-#include "Windows.h"
-#include "Windowsx.h"
-#include "KButtonEvent.h"
+class KButtonEvent;
+class ButtonEvent;
+
+typedef _W64 unsigned int UINT_PTR;
+typedef long LPARAM;
+typedef UINT_PTR WPARAM;
+typedef unsigned int UINT;
 
 class InputManager
 {
@@ -14,6 +18,7 @@ public:
 
 	static InputManager* GetInstance();
 
+	void Initialize();
 	void Shutdown();
 
 	void UpdateInput(UINT p_message, WPARAM p_wParam, LPARAM p_lParam);
@@ -46,10 +51,10 @@ private:
 	InputManager();
 	~InputManager();
 
-	std::vector<KButtonEvent> m_events; // Keyboard buttons
+	std::vector<KButtonEvent*> m_events; // Keyboard buttons
 
-	ButtonEvent m_leftMouseB;
-	ButtonEvent m_rightMouseB;
+	ButtonEvent *m_leftMouseB;
+	ButtonEvent *m_rightMouseB;
 
 	int m_mousePositionX;
 	int m_mousePositionY;

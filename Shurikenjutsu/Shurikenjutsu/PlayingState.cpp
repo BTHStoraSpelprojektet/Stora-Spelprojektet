@@ -19,6 +19,7 @@
 #include "POIGrapichalEffects.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\ModelNames.h"
+#include "TrailRenderer.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -36,6 +37,11 @@ void PlayingState::operator delete(void* p)
 
 bool PlayingState::Initialize()
 {
+	for (int i = 0; i < 7; i++)
+	{
+		m_renderOutlingingEnemies[i] = false;
+	}
+
 	return Initialize(LEVEL_NAME);
 }
 
@@ -607,14 +613,11 @@ void PlayingState::Render()
 	}
 
 	// Render character outlining.
-	if (m_renderOutlining)
-	{
-		GraphicsEngine::ClearOutlining();
-		GraphicsEngine::SetOutliningPassOne();
-		m_playerManager->RenderOutliningPassOne();
-		GraphicsEngine::SetOutliningPassTwo();
-		m_playerManager->RenderOutliningPassTwo();
-	}
+	GraphicsEngine::ClearOutlining();
+	GraphicsEngine::SetOutliningPassOne();
+	m_playerManager->RenderOutliningPassOne();
+	GraphicsEngine::SetOutliningPassTwo();
+	m_playerManager->RenderOutliningPassTwo();
 
 	if (m_inGameMenuIsActive && !Network::GetInstance()->GetMatchOver())
 	{
@@ -709,10 +712,9 @@ void PlayingState::OutliningRays()
 	DirectX::XMFLOAT3 rayPos = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
 	float rayDist = 0;
 	float collisionDist = 0;
-
+	float rayDistObjects = 0;
 	rayPos = m_camera->GetOutliningRayPosition();
 	target = m_camera->GetOutliningRayTarget();
-
 	// Increase height of check
 	target.y += 1;
 
@@ -720,24 +722,50 @@ void PlayingState::OutliningRays()
 	DirectX::XMStoreFloat3(&rayDir,	DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
 
 	Ray* ray = new Ray(rayPos, rayDir);
-
+	rayDistObjects = CollisionManager::GetInstance()->CalculateRayLengthFloat(ray);
 	if (Collisions::RayOBBCollision(ray, m_playerManager->GetPlayerBoundingBox()))
 	{
 		if (ray->m_distance != 0)
 		{
 			rayDist = ray->m_distance;
+			if (rayDist > rayDistObjects)
+			{
+				m_playerManager->SetPlayerOutliningRender(true);
+			}
+			else
+			{
+				m_playerManager->SetPlayerOutliningRender(false);
+			}
 		}
 	}
 
-	if (CollisionManager::GetInstance()->CalculateRayLength(ray, rayDist))
+	std::vector<OBB> enemiesBoundingBoxes;
+	enemiesBoundingBoxes = m_playerManager->GetEnemyPlayerBoundingBoxes();
+
+
+	for (unsigned int i = 0; i < enemiesBoundingBoxes.size(); i++)
 	{
-		m_renderOutlining = true;
+		DirectX::XMStoreFloat3(&rayDir, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&enemiesBoundingBoxes[i].m_center), DirectX::XMLoadFloat3(&rayPos)));
+		DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
+		ray->m_direction = DirectX::XMFLOAT4(rayDir.x, rayDir.y, rayDir.z, 1);
+		rayDistObjects = CollisionManager::GetInstance()->CalculateRayLengthFloat(ray);
+		if (Collisions::RayOBBCollision(ray, enemiesBoundingBoxes[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayDist = ray->m_distance;
+				if (rayDist > rayDistObjects)
+				{
+					m_playerManager->SetOutliningPerEnemy(true, i);
+				}
+				else
+				{
+					m_playerManager->SetOutliningPerEnemy(false, i);
+				}
+			}
+		}
 	}
-	else
-	{
-		m_renderOutlining = false;
-	}
-	
+
 	delete ray;
 }
 
@@ -894,7 +922,6 @@ void PlayingState::UpdatePOIEffects()
 
 			if (NetworkPlayers[i].shield > 0.0f)
 			{
-
 				POIGrapichalEffects::GetInstance().UpdateShieldEffect(position, m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 				POIGrapichalEffects::GetInstance().RenderShieldEffect();
 			}

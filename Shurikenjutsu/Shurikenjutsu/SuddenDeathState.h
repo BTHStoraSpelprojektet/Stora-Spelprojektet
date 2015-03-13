@@ -1,9 +1,10 @@
 #ifndef SUDDENDEATH_H_
 #define SUDDENDEATH_H_
 
-#include <vector>
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <string>
+
 
 class GUIText;
 class Camera;

@@ -6,6 +6,7 @@
 #include "PlayerManager.h"
 #include "ParticleEmitter.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "Trail.h"
 
 bool StickyTrap::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_stickyTrapID, RakNet::RakNetGUID p_guid)
 {

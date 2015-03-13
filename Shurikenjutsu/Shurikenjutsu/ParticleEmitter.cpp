@@ -4,6 +4,8 @@
 #include "Globals.h"
 #include "GraphicsEngine.h"
 #include "ParticleRenderer.h"
+#include "..\CommonLibs\CommonEnums.h"
+#include "../CommonLibs/ModelImporter.h"
 
 ParticleEmitter::ParticleEmitter(){}
 ParticleEmitter::~ParticleEmitter(){}
@@ -107,6 +109,12 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		case(PARTICLE_PATTERN_HEALING) :
 		{
 			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.6f, 0.5f, 0.6f), 3.0f, 1.0f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/HealingSparkle.png"));
+
+			break;
+		}
+		case(PARTICLE_PATTERN_SHIELD) :
+		{
+			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.0f, 0.5f, 0.0f), 2.5f, 0.5f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/ShieldParticle.png"));
 
 			break;
 		}
@@ -519,6 +527,25 @@ void ParticleEmitter::EmitParticles()
 					break;
 				}
 
+				case(PARTICLE_PATTERN_SHIELD) :
+				{
+					// Set a random direction in xz.
+					float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
+					DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
+
+					m_particleList[index].m_position = position;
+					m_particleList[index].m_direction = direction;
+					m_particleList[index].m_color = m_color;
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = 0.0f;
+					m_particleList[index].m_opacity = 1.0f;
+
+					break;
+				}
+
 				default:
 				{
 					break;
@@ -538,7 +565,8 @@ void ParticleEmitter::UpdateParticles()
 		// Smoke moves outwards in a circle.
 		case(PARTICLE_PATTERN_SMOKE) :
 		{
-			if (m_particleList != nullptr){
+			if (m_particleList != nullptr)
+			{
 				for (int i = 0; i < m_currentParticles; i++)
 				{
 					float halfTime = m_particleList[i].m_timeToLive / 2.0f;
@@ -809,6 +837,25 @@ void ParticleEmitter::UpdateParticles()
 
 			break;
 		}
+
+		case(PARTICLE_PATTERN_SHIELD) :
+		{
+			if (m_particleList != nullptr)
+			{
+				for (int i = 0; i < m_currentParticles; i++)
+				{
+					// Fly in the given xz direction.
+					m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
+					m_particleList[i].m_position.y = m_particleList[i].m_position.y + m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime();
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
+
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
+			}
+
+			break;
+		}
 										
 		default:
 		{
@@ -1066,6 +1113,13 @@ void ParticleEmitter::UpdateBuffers()
 			}
 
 			case PARTICLE_PATTERN_HEALING:
+			{
+				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
+
+				break;
+			}
+
+			case PARTICLE_PATTERN_SHIELD:
 			{
 				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
 

@@ -5,6 +5,10 @@
 #include "../CommonLibs/ModelNames.h"
 #include "../CommonLibs/CommonEnums.h"
 #include "Network.h"
+#include "GUIElement.h"
+#include "GUIText.h"
+#include "FW1FontWrapper.h"
+#include <dwrite.h>
 
 DeathBoard* DeathBoard::m_instance;
 
@@ -33,6 +37,11 @@ bool DeathBoard::Initialize()
 
 	DirectX::XMFLOAT3 position = m_originalPos;
 
+	m_background = new GUIElement[5];
+	m_deadGuy = new GUIText[5];
+	m_killAbility = new GUIElement[5];
+	m_killer = new GUIText[5];
+
 	for (int i = 0; i < 5; i++)
 	{
 		// Background
@@ -54,8 +63,6 @@ bool DeathBoard::Initialize()
 		m_killer[i] = GUIText();
 		m_killer[i].Initialize("Name", 35.0f, position.x, position.y, 0xFFFFFFFF);
 		m_killer[i].SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
-
-
 	}
 	m_nrOfDeaths = -1;
 
@@ -64,12 +71,43 @@ bool DeathBoard::Initialize()
 
 void DeathBoard::Shutdown()
 {
+	if (m_killer != nullptr)
+	{
+		for (unsigned int i = 0; i < 5; i++)
+		{
+			m_killer[i].Shutdown();
+		}
+		delete[] m_killer;
+		m_killer = nullptr;
+	}
+
+	if (m_deadGuy != nullptr)
+	{
+		for (unsigned int i = 0; i < 5; i++)
+		{
+			m_deadGuy[i].Shutdown();
+		}
+		delete[] m_deadGuy;
+		m_deadGuy = nullptr;
+	}
+
+	if (m_killAbility != nullptr)
+	{
+		delete[] m_killAbility;
+		m_killAbility = nullptr;
+	}
+
+	if (m_background != nullptr)
+	{
+		delete[] m_background;
+		m_background = nullptr;
+	}
+
 	if (m_instance != nullptr)
 	{
 		delete m_instance;
 		m_instance = nullptr;
 	}
-
 }
 
 void DeathBoard::Update()
