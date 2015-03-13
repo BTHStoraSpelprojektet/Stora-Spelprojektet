@@ -65,7 +65,9 @@ void FloatingText::Render()
 	RenderText(m_receivedDamageText);
 	RenderText(m_dealtDamageText);
 	RenderText(m_healingText);
-	RenderText(m_cantUseAbilityText);
+	if (GLOBAL::GetInstance().APE_ON){
+		RenderText(m_cantUseAbilityText);
+	}
 }
 void FloatingText::DecreaseTextOpacity(GUIText* p_text)
 {

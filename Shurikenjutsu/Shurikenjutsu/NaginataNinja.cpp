@@ -9,6 +9,7 @@
 #include "VolleyAbility.h"
 #include "AttackPredictionEditor.h"
 #include "ParticleRenderer.h"
+#include "Globals.h"
 
 
 NaginataNinja::NaginataNinja(){}
@@ -68,7 +69,7 @@ void NaginataNinja::RenderAttackLocations()
 	{
 		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
-			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, NAGINATA_RANGE);
 
@@ -81,7 +82,7 @@ void NaginataNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsRightMousePressed())
 		{
-			if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+			if ((m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1) && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
@@ -95,7 +96,7 @@ void NaginataNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 		{
-			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThickRectanglePrediction(m_aimPole, m_attackDir, m_position, NAGINATASTAB_RANGE * 2);
 
@@ -108,7 +109,7 @@ void NaginataNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 		{
-			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThrowSphere(m_aimSphere, m_position, 3.5f, VOLLEY_RANGE);
 				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
@@ -120,7 +121,7 @@ void NaginataNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
 		{
-			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThrowSphere(m_aimSphere, m_position, 7.0f, STICKY_TRAP_RANGE);
 				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);

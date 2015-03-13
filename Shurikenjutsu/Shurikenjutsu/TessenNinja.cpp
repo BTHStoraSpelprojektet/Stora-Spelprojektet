@@ -10,6 +10,7 @@
 #include "InputManager.h"
 #include "AttackPredictionEditor.h"
 #include "ParticleRenderer.h"
+#include "Globals.h"
 
 TessenNinja::TessenNinja(){}
 TessenNinja::~TessenNinja(){}
@@ -65,7 +66,7 @@ void TessenNinja::RenderAttackLocations()
 	{
 		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
-			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
 
@@ -78,7 +79,7 @@ void TessenNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsRightMousePressed())
 		{
-			if ((float)m_rangeAttack->GetCooldown() <= 0.0f)
+			if ((float)m_rangeAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThinRectanglePrediction(m_aimPole, m_attackDir, m_position, WHIP_RANGE);
 
@@ -91,7 +92,7 @@ void TessenNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 		{
-			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
@@ -105,7 +106,7 @@ void TessenNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 		{
-			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->SpinAttackBigSphere(m_aimSphere, m_position, 16.0f);
 				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
@@ -117,7 +118,7 @@ void TessenNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
 		{
-			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThrowSphere(m_aimSphere, m_position, 5.0f, SPIKE_RANGE);
 				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
