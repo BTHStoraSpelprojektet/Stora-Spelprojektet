@@ -20,6 +20,8 @@ void CollisionManager::SetLists(std::vector<Object*> p_StaticObjectList, std::ve
 {
 	m_staticBoxList.clear();
 	m_staticSphereList.clear();
+	m_treeTopBoxList.clear();
+	m_treeTopSphereList.clear();
 
 	for (unsigned int i = 0; i < p_outerWallList.size(); i++)
 	{
@@ -35,11 +37,26 @@ void CollisionManager::SetLists(std::vector<Object*> p_StaticObjectList, std::ve
 		for (unsigned int j = 0; j < tempBoxList.size(); j++)
 		{ 
 			tempBoxList[j].CalculateRadius();
-			m_staticBoxList.push_back(tempBoxList[j]);
+			if (tempBoxList[j].m_center.y > 6.0f)
+			{
+				m_treeTopBoxList.push_back(tempBoxList[j]);
+			}
+			else
+			{
+				m_staticBoxList.push_back(tempBoxList[j]);
+			}
 		}
 		for (unsigned int j = 0; j < tempSphereList.size(); j++)
 		{
-			m_staticSphereList.push_back(tempSphereList[j]);
+			//m_staticSphereList.push_back(tempSphereList[j]);
+			if (tempSphereList[j].m_position.y > 6.0f)
+			{
+				m_treeTopSphereList.push_back(tempSphereList[j]);
+			}
+			else
+			{
+				m_staticSphereList.push_back(tempSphereList[j]);
+			}
 		}
 	}
 
@@ -165,12 +182,12 @@ std::vector<Sphere> CollisionManager::CalculateLocalPlayerCollisionWithStaticSph
 		playerSphere.m_position.z = p_playerSphere.m_position.z + p_direction.z * speedXDeltaTime;
 
 
-		//// Check so they will collide in y, othersize put both at y:0
-		//if ((staticSphere.m_position.y + staticSphere.m_radius) <= (playerSphere.m_position.y - playerSphere.m_radius) || (playerSphere.m_position.y + playerSphere.m_radius) <= (staticSphere.m_position.y + staticSphere.m_radius))
-		//{
-		//	staticSphere.m_position.y = 0;
-		//	playerSphere.m_position.y = 0;
-		//}
+		// Check so they will collide in y, othersize put both at y:0
+		if ((staticSphere.m_position.y + staticSphere.m_radius) <= (playerSphere.m_position.y - playerSphere.m_radius) || (playerSphere.m_position.y + playerSphere.m_radius) <= (staticSphere.m_position.y + staticSphere.m_radius))
+		{
+			staticSphere.m_position.y = 0;
+			playerSphere.m_position.y = 0;
+		}
 
 
 		if (Collisions::SphereSphereCollision(staticSphere, playerSphere))
@@ -182,32 +199,32 @@ std::vector<Sphere> CollisionManager::CalculateLocalPlayerCollisionWithStaticSph
 	return collisionList;
 }
 
-float CollisionManager::CalculateDashLength(Ray* p_ray)
-{
-	Ray* ray = p_ray;
-	float dashLength = 10.0f;
-	std::vector<float> rayLengths;
-
-	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
-	{
-		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
-		{
-			if (ray->m_distance != 0)
-			{
-				rayLengths.push_back(ray->m_distance);
-			}
-		}
-	}
-	for (unsigned int i = 0; i < rayLengths.size(); i++)
-	{
-		if (rayLengths[i] < dashLength)
-		{
-			dashLength = rayLengths[i];
-		}
-	}
-
-	return dashLength;
-}
+//float CollisionManager::CalculateDashLength(Ray* p_ray)
+//{
+//	Ray* ray = p_ray;
+//	float dashLength = 10.0f;
+//	std::vector<float> rayLengths;
+//
+//	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+//	{
+//		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
+//		{
+//			if (ray->m_distance != 0)
+//			{
+//				rayLengths.push_back(ray->m_distance);
+//			}
+//		}
+//	}
+//	for (unsigned int i = 0; i < rayLengths.size(); i++)
+//	{
+//		if (rayLengths[i] < dashLength)
+//		{
+//			dashLength = rayLengths[i];
+//		}
+//	}
+//
+//	return dashLength;
+//}
 
 bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 {
@@ -256,7 +273,7 @@ bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 	return false;
 }
 
-float CollisionManager::CalculateRayLengthFloat(Ray* p_ray)
+float CollisionManager::CalculateOutliningRayDistance(Ray* p_ray)
 {
 	Ray* ray = p_ray;
 	float rayLength = 100.0f;
@@ -285,6 +302,32 @@ float CollisionManager::CalculateRayLengthFloat(Ray* p_ray)
 			}
 		}
 	}
+//////////////////////////////////////////////////////////////////////
+	// Check all boxes, houses
+	for (unsigned int i = 0; i < m_treeTopBoxList.size(); i++)
+	{
+		if (Collisions::RayOBBCollision(ray, m_treeTopBoxList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+
+	// Check all spheres in the map, trees
+	for (unsigned int i = 0; i < m_treeTopSphereList.size(); i++)
+	{
+		if (Collisions::RaySphereCollision(ray, m_treeTopSphereList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+/////////////////////////////////////////////////////////////////
+
 
 	// If collision with ray check distanse, go throu get shortest length
 	for (unsigned int i = 0; i < rayLengths.size(); i++)
