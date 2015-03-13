@@ -575,6 +575,10 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 				for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
 				{
 					Sphere sphere = m_staticSphereList[k];
+					if (sphere.m_position.y > 6.0f)
+					{
+						continue;
+					}
 					if (sphere.m_position.y + sphere.m_radius < fanBoundingBoxes[j].m_center.y - fanBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > fanBoundingBoxes[j].m_center.y + fanBoundingBoxes[j].m_extents.y)
 					{
 						sphere.m_position.y = fanBoundingBoxes[j].m_center.y;
@@ -623,6 +627,10 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 				for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
 				{
 					Sphere sphere = m_staticSphereList[k];
+					if (sphere.m_position.y > 6.0f)
+					{
+						continue;
+					}
 					if (sphere.m_position.y + sphere.m_radius < fanBoundingBoxes[j].m_center.y - fanBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > fanBoundingBoxes[j].m_center.y + fanBoundingBoxes[j].m_extents.y)
 					{
 						sphere.m_position.y = fanBoundingBoxes[j].m_center.y;
