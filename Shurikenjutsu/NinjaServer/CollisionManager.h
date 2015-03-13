@@ -46,6 +46,9 @@ public:
 	void POICollisionChecks(PointOfInterestManager* p_POIManager, PlayerManager* p_playerManager);
 
 private:
+	bool CheckIfPlayerIsConnected(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager);
+
+
 	bool OBBOBBTest(OBB p_OBB1, OBB p_OBB2);
 	bool BoxBoxTest(Box p_box1, Box p_box2);
 	bool SphereSphereTest(Sphere p_spikeTrap, Sphere p_player);
