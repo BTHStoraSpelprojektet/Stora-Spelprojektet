@@ -487,6 +487,7 @@ void Network::ReceviePacket()
 				m_restartingRound = false;
 				m_roundOver = true;
 				m_timeRestarting = 0;
+				m_suddenDeath = false;
 				ClearListsAtNewRound();
 
 				m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
@@ -512,7 +513,7 @@ void Network::ReceviePacket()
 			
 				ConsolePrintText("Next round starts in: ");
 				ConsoleSkipLines(1);
-				m_suddenDeath = false;
+				
 				break;
 			}
 			case ID_RESTARTING_ROUND_TIMER:
@@ -1127,12 +1128,15 @@ void Network::ReceviePacket()
 				break;
 			}
 
-			case ID_START_SUDDEN_DEATH:
+			case ID_SEND_SUDDEN_DEATH:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+				bool isSuddenDeath;
 				bitStream.Read(messageID);
-				m_suddenDeath = true;
+				bitStream.Read(isSuddenDeath);
+
+				m_suddenDeath = isSuddenDeath;
 
 				break;
 			}
