@@ -20,11 +20,19 @@ void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sp
 
 	for (unsigned int i = 0; i < p_staticBoxList.size(); i++)
 	{
+		if (p_staticBoxList[i].m_center.y > 6.0f)
+		{
+			continue;
+		}
 		m_staticBoxList.push_back(p_staticBoxList[i]);
 	}
 
 	for (unsigned int i = 0; i < p_staticSphereList.size(); i++)
 	{
+		if (m_staticSphereList[i].m_position.y > 6.0f)
+		{
+			continue;
+		}
 		m_staticSphereList.push_back(p_staticSphereList[i]);
 	}
 }
