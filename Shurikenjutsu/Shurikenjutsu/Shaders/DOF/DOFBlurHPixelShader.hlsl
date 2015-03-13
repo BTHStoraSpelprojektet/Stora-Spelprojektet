@@ -33,9 +33,21 @@ float4 main(Input p_input) : SV_Target
 	load.y = p_input.m_position.y / textureDimensions.y;
 
 	float totalWeight = 0.0;
+	float2 offset = float2(1.0f / textureDimensions.x, 1.0f / textureDimensions.y);
 
 	float4 color = float4(0, 0, 0, 0);
-	float depth = m_textures[1].Sample(m_sampler, load).x;
+	float depth[9];
+	depth[0] = m_textures[1].Sample(m_sampler, load + float2(-offset.x	, -offset.y)).x;
+	depth[1] = m_textures[1].Sample(m_sampler, load + float2(		0	, -offset.y)).x;
+	depth[2] = m_textures[1].Sample(m_sampler, load + float2( offset.x	, -offset.y)).x;
+	depth[3] = m_textures[1].Sample(m_sampler, load + float2(-offset.x	,	0)).x;
+	depth[4] = m_textures[1].Sample(m_sampler, load + float2(		0	,	0)).x;
+	depth[5] = m_textures[1].Sample(m_sampler, load + float2( offset.x	,	0)).x;
+	depth[6] = m_textures[1].Sample(m_sampler, load + float2(-offset.x	, offset.y)).x;
+	depth[7] = m_textures[1].Sample(m_sampler, load + float2(		0	, offset.y)).x;
+	depth[8] = m_textures[1].Sample(m_sampler, load + float2( offset.x	, offset.y)).x;
+
+	float averageDepth = (depth[0] + depth[1] + depth[2] + depth[3] + depth[4] + depth[5] + depth[6] + depth[7] + depth[8])/9.0f;
 
 	[unroll]
 	for (int i = -m_blurRadius; i <= m_blurRadius; ++i)
@@ -52,7 +64,7 @@ float4 main(Input p_input) : SV_Target
 	}
 	color /= totalWeight;
 
-	float z_n = 2.0 * depth - 1.0;
+	float z_n = 2.0 * averageDepth - 1.0;
 	float z_e = 2.0 * 0.1f * 1000.0f / (1000.0f + 0.1f - z_n * (1000.0f - 0.1f));
 
 	float asd = (p_input.m_position.y - textureDimensions.y*0.5f) / textureDimensions.y;
