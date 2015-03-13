@@ -103,7 +103,7 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_BLOODHIT) :
 		{
-			InitParticles(200.0f, 1000, DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f), 0.5f, 1.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/BloodParticle.png"));
+			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f), 0.5f, 1.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/BloodParticle.png"));
 			break;
 		}
 		case(PARTICLE_PATTERN_HEALING) :
@@ -508,7 +508,7 @@ void ParticleEmitter::EmitParticles()
 					m_particleList[index].m_timeToLive = m_timeToLive;
 					m_particleList[index].m_timePassed = 0.0f;
 					m_particleList[index].m_rotation = 0.0f;
-					m_particleList[index].m_opacity = 0.0f;
+					m_particleList[index].m_opacity = 1.0f;
 					break;
 				}
 
