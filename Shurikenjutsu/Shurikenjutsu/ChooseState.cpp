@@ -127,6 +127,9 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_tools[1]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_SmokeBomb.png"));
 	m_tools[2]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_StickyTARP.png"));
 
+	m_ninjaPortBorder = new MenuItem();
+	m_ninjaPortBorder->Initialize(0.0f, portraitYPos, 240, 240, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/portBG.png"));
+
 	float bgWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.0f;
 	float bgHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 6.83f;
 	m_toolDescription[0] = new ToolTipPopUp();
@@ -278,6 +281,13 @@ void ChooseState::Shutdown()
 			delete m_tools[i];
 			m_tools[i] = nullptr;
 		}
+	}
+
+	if (m_ninjaPortBorder != nullptr)
+	{
+		m_ninjaPortBorder->Shutdown();
+		delete m_ninjaPortBorder;
+		m_ninjaPortBorder = nullptr;
 	}
 
 	for (unsigned int i = 0; i < 4; i++)
@@ -519,6 +529,7 @@ void ChooseState::Render()
 
 	m_ninjas[m_currentNinja]->Render();
 	m_tools[m_currentTool]->Render();
+	m_ninjaPortBorder->Render();
 	m_abilityDescription[m_currentNinja]->Render();
 	//m_redTeamScore->Render();
 	//m_blueTeamScore->Render();
