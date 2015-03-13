@@ -24,16 +24,22 @@ void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sp
 		{
 			continue;
 		}
-		m_staticBoxList.push_back(p_staticBoxList[i]);
+		else
+		{
+			m_staticBoxList.push_back(p_staticBoxList[i]);
+		}
 	}
 
 	for (unsigned int i = 0; i < p_staticSphereList.size(); i++)
 	{
-		if (m_staticSphereList[i].m_position.y > 6.0f)
+		if (p_staticSphereList[i].m_position.y > 5.0f)
 		{
 			continue;
 		}
-		m_staticSphereList.push_back(p_staticSphereList[i]);
+		else
+		{
+			m_staticSphereList.push_back(p_staticSphereList[i]);
+		}
 	}
 }
 
@@ -238,6 +244,10 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
 			{
 				Sphere sphere = m_staticSphereList[k];
+				if (sphere.m_position.y > 6.0f)
+				{
+					continue;
+				}
 				if (sphere.m_position.y + sphere.m_radius < shurikenBoundingBoxes[j].m_center.y - shurikenBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > shurikenBoundingBoxes[j].m_center.y + shurikenBoundingBoxes[j].m_extents.y)
 				{
 					sphere.m_position.y = shurikenBoundingBoxes[j].m_center.y;
