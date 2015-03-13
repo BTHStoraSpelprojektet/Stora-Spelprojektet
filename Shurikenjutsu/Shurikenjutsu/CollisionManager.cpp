@@ -352,12 +352,14 @@ float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_pla
 	float y = m_pickedLocation.y - p_playerPos.z;
 	float temp = sqrt((x*x) + (y*y));
 
-
-	float checkWithouterWalls = CalculatThrowDistanceChekcingOuterWalls(&Ray(p_playerPos, DirectX::XMFLOAT3(x/temp, 0.0f, y/temp)));
-
-	if (temp > checkWithouterWalls)
+	if (x != 0 && y != 0)
 	{
-		temp = checkWithouterWalls;
+		float checkWithouterWalls = CalculatThrowDistanceChekcingOuterWalls(&Ray(p_playerPos, DirectX::XMFLOAT3(x / temp, 0.0f, y / temp)));
+
+		if (temp > checkWithouterWalls)
+		{
+			temp = checkWithouterWalls;
+		}
 	}
 
 	return temp;
@@ -489,7 +491,7 @@ float CollisionManager::CalculatThrowDistanceChekcingOuterWalls(Ray* p_ray)
 	std::vector<float> rayLengths;
 
 	// Check all boxes, houses
-	for (unsigned int i = 0; i < m_outerWallList.size(); i++)
+ 	for (unsigned int i = 0; i < m_outerWallList.size(); i++)
 	{
 		if (Collisions::RayOBBCollision(ray, m_outerWallList[i]))
 		{
