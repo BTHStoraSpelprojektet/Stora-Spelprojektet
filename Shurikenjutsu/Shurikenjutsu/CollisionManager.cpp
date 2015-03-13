@@ -148,7 +148,7 @@ bool CollisionManager::CheckCollisionWithAllStaticObjects(Sphere p_sphere)
 		}
 	}
 	return false;
-}
+} 
 
 std::vector<Sphere> CollisionManager::CalculateLocalPlayerCollisionWithStaticSpheres(Sphere p_playerSphere, float p_speed, DirectX::XMFLOAT3 p_direction)
 {
@@ -165,12 +165,12 @@ std::vector<Sphere> CollisionManager::CalculateLocalPlayerCollisionWithStaticSph
 		playerSphere.m_position.z = p_playerSphere.m_position.z + p_direction.z * speedXDeltaTime;
 
 
-		// Check so they will collide in y, othersize put both at y:0
-		if ((staticSphere.m_position.y + staticSphere.m_radius) <= (playerSphere.m_position.y - playerSphere.m_radius) || (playerSphere.m_position.y + playerSphere.m_radius) <= (staticSphere.m_position.y + staticSphere.m_radius))
-		{
-			staticSphere.m_position.y = 0;
-			playerSphere.m_position.y = 0;
-		}
+		//// Check so they will collide in y, othersize put both at y:0
+		//if ((staticSphere.m_position.y + staticSphere.m_radius) <= (playerSphere.m_position.y - playerSphere.m_radius) || (playerSphere.m_position.y + playerSphere.m_radius) <= (staticSphere.m_position.y + staticSphere.m_radius))
+		//{
+		//	staticSphere.m_position.y = 0;
+		//	playerSphere.m_position.y = 0;
+		//}
 
 
 		if (Collisions::SphereSphereCollision(staticSphere, playerSphere))
@@ -275,16 +275,16 @@ float CollisionManager::CalculateRayLengthFloat(Ray* p_ray)
 	}
 
 	// Check all spheres in the map, trees
-	/*for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
 	{
-	if (Collisions::RaySphereCollision(ray, m_staticSphereList[i]))
-	{
-	if (ray->m_distance != 0)
-	{
-	rayLengths.push_back(ray->m_distance);
+		if (Collisions::RaySphereCollision(ray, m_staticSphereList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
 	}
-	}
-	}*/
 
 	// If collision with ray check distanse, go throu get shortest length
 	for (unsigned int i = 0; i < rayLengths.size(); i++)
