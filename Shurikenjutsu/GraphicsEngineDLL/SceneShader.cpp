@@ -9,6 +9,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 {
 	// Set variables to initial values.
 	ID3D10Blob*	vertexShader = 0;
+	ID3D10Blob*	sSReverseVertexShader = 0;
 	ID3D10Blob*	animatedVertexShader = 0;
 	ID3D10Blob*	vertexShaderOutlining = 0;
 	ID3D10Blob*	instanceShader = 0;
@@ -35,6 +36,31 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	// Create the vertex shader.
 	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	{
+		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
+		return false;
+	}
+
+	// Compile the vertex shader.
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReverseVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &sSReverseVertexShader, &errorMessage)))
+	{
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReverseVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &sSReverseVertexShader, &errorMessage)))
+		{
+			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
+			return false;
+		}
+		else
+		{
+			m_VSVersion = "4.0";
+		}
+	}
+	else
+	{
+		m_VSVersion = "5.0";
+	}
+
+	// Create the vertex shader.
+	if (FAILED(p_device->CreateVertexShader(sSReverseVertexShader->GetBufferPointer(), sSReverseVertexShader->GetBufferSize(), NULL, &m_reversedShadowVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
 		return false;
@@ -457,9 +483,9 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	}
 
 	// Compile the reversed shadow pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReveresePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
+	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReversePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
 	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReveresePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
+		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReversePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
 		{
 			ConsolePrintErrorAndQuit("Failed to compile reversed shadow pixel shader from file.");
 			return false;
@@ -709,6 +735,12 @@ void SceneShader::Shutdown()
 		m_vertexShader = 0;
 	}
 
+	if (m_reversedShadowVertexShader)
+	{
+		m_reversedShadowVertexShader->Release();
+		m_reversedShadowVertexShader = 0;
+	}
+
 	if (m_instanceShader)
 	{
 		m_instanceShader->Release();
@@ -919,7 +951,7 @@ void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Bu
 	unsigned int stride = sizeof(Vertex);
 	const unsigned int offset = 0;
 
-	p_context->VSSetShader(m_vertexShader, NULL, 0);
+	p_context->VSSetShader(m_reversedShadowVertexShader, NULL, 0);
 	p_context->PSSetShader(m_reversedShadowPixelShader, NULL, 0);
 
 	p_context->IASetVertexBuffers(0, 1, &p_mesh, &stride, &offset);

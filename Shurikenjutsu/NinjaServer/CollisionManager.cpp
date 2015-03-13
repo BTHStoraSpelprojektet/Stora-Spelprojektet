@@ -1241,7 +1241,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 		{
 			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 			{
-				if (p_POIManager->IsRuneActive(0))
+				if (p_POIManager->IsRuneActive(POINTOFINTERESTTYPE_HEAL))
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], lotusBBox[k]))
 					{
@@ -1258,7 +1258,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 		{
 			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 			{
-				if (p_POIManager->IsRuneActive(1))
+				if (p_POIManager->IsRuneActive(POINTOFINTERESTTYPE_INVISIBLE))
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], invisBBox[k]))
 					{
@@ -1275,7 +1275,7 @@ void CollisionManager::POICollisionChecks(PointOfInterestManager* p_POIManager, 
 		{
 			for (unsigned int l = 0; l < playerBoundingBoxes.size(); l++)
 			{
-				if (p_POIManager->IsRuneActive(2))
+				if (p_POIManager->IsRuneActive(POINTOFINTERESTTYPE_SHIELD))
 				{
 					if (BoxBoxTest(playerBoundingBoxes[l], shieldBBox[k]))
 					{

@@ -469,11 +469,17 @@
     <ClInclude Include="Window.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Structures.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Collisions.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsEngine.h">
       <Filter>Header Files\Graphics</Filter>
@@ -594,6 +600,9 @@
     </ClInclude>
     <ClInclude Include="ChooseState.h">
       <Filter>Header Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
       <Filter>Header Files\Graphics</Filter>
@@ -822,9 +831,6 @@
     <FxCompile Include="Shaders\Foliage\FoliageVertexShader.hlsl">
       <Filter>Shaders\Foliage</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
-      <Filter>Shaders\ShadowShapes</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\Trails\TrailGeometryShader.hlsl">
       <Filter>Shaders\Trail</Filter>
     </FxCompile>
@@ -884,6 +890,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\Particle\ParticlePixelShaderNotFire.hlsl">
       <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReverseVertexShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReversePixelShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

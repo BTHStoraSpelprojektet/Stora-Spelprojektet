@@ -41,9 +41,7 @@ struct Output
 	float4 m_positionHomogenous : SV_POSITION;
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
-
 	float3x3 m_tBN : TBN;
-	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
 // Vertex shader
@@ -71,14 +69,8 @@ Output main(Input p_input)
 	output.m_positionWorld.w = 1.0f;
 	output.m_positionWorld = mul(output.m_positionWorld, m_worldMatrix);
 
-	output.m_lightPositionHomogenous.xyz = positionAnimated;
-	output.m_lightPositionHomogenous.w = 1.0f;
-
 	// Transform vertex position to homogenous clip space.
-	output.m_positionHomogenous = float4(positionAnimated, 1.0f);
-	output.m_positionHomogenous.w = 1.0f;
-	output.m_positionHomogenous = mul(output.m_positionHomogenous, m_worldMatrix);
-	output.m_positionHomogenous = mul(output.m_positionHomogenous, m_viewMatrix);
+	output.m_positionHomogenous = mul(output.m_positionWorld, m_viewMatrix);
 	output.m_positionHomogenous = mul(output.m_positionHomogenous, m_projectionMatrix);
 
 	// Pass along the texture coordinates.
@@ -97,23 +89,6 @@ Output main(Input p_input)
 	float3 B = cross(N, T);
 
 	output.m_tBN = float3x3(T, B, N);
-
-	// Calculate the position of the vertice as viewed by the light source.
-	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_worldMatrix);
-	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightViewMatrix);
-	output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
-
-	// No fog.
-	//output.m_fogFactor = 1.0f;
-
-	// Calculate linear fog.    
-	//output.m_fogFactor = saturate((m_fogEnd - cameraPosition.z) / (m_fogEnd - m_fogStart));
-
-	// Calculate exponential fog.    
-	//output.m_fogFactor = saturate(1.0 / pow(2.71828, (cameraPosition.z * m_fogDensity)));
-
-	// Calculate exponential 2 fog.    
-	//output.m_fogFactor = saturate(1.0 / pow(2.71828, ((cameraPosition.z * m_fogDensity) * (cameraPosition.z * m_fogDensity))));
 
 	// Return output.
 	return output;

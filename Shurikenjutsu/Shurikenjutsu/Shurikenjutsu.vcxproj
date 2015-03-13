@@ -213,6 +213,7 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Collisions.h" />
     <ClInclude Include="Dash.h" />
+    <ClInclude Include="DirectX.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Globals.h" />
@@ -257,6 +258,7 @@
     <ClInclude Include="StatusEffect.h" />
     <ClInclude Include="StickyTrap.h" />
     <ClInclude Include="StickyTrapAbility.h" />
+    <ClInclude Include="Structures.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="TeamStatusBar.h" />
     <ClInclude Include="TessenNinja.h" />
@@ -465,10 +467,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
+    <FxCompile Include="Shaders\ShadowShapes\SSReversePixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReverseVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Shaders\ShadowShapes\SSVertexShader.hlsl">

@@ -491,6 +491,8 @@ void ChooseState::Render()
 	// Render to the scene normally.
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
+
+	m_objectManager->RenderInstanced();
 	GraphicsEngine::PrepareRenderScene();
 	m_objectManager->Render();
 

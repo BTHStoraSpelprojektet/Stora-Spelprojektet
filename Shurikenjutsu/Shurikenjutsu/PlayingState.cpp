@@ -559,6 +559,8 @@ void PlayingState::Render()
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 	UpdatePOIEffects();
+
+	m_objectManager->RenderInstanced();
 	GraphicsEngine::PrepareRenderScene();
 	m_objectManager->Render();
 

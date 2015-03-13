@@ -736,13 +736,16 @@ void ObjectManager::UpdateRenderLists()
 	}
 }
 
+void ObjectManager::RenderInstanced()
+{
+	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	{
+		m_objectsToInstanceRender[i]->RenderInstanced();
+	}
+}
+
 void ObjectManager::Render()
 {
-	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
-	{
-		m_objectsToSingleRender[i]->Render();
-	}
-
 	for (unsigned int i = 0; i < m_shurikens.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_shurikens[i]->GetFrustumSphere(), 1.0f))
@@ -791,20 +794,9 @@ void ObjectManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_spikeTrapList[i]->GetSpikeSphere(), 2.0f))
 		{
-			GraphicsEngine::TurnOnAlphaBlending();
 			m_spikeTrapList[i]->Render();
-			GraphicsEngine::TurnOffAlphaBlending();
 		}
-	}
-	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
-	{
-		if (m_frustum->CheckSphere(m_stickyTrapList[i]->GetStickyTrapSphere(), 2.0f))
-		{
-			GraphicsEngine::TurnOnAlphaBlending();
-			m_stickyTrapList[i]->Render();
-			GraphicsEngine::TurnOffAlphaBlending();
 		}
-	}
 
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
@@ -822,7 +814,6 @@ void ObjectManager::Render()
 		m_bloodParticles[i]->Render();
 	}
 
-
 	for (unsigned int i = 0; i < m_volleyTrails.size(); i++)
 	{
 		for (unsigned int j = 0; j < 9; j++)
@@ -833,9 +824,19 @@ void ObjectManager::Render()
 
 	m_POIManager->Render();
 
-	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
+	for (unsigned int i = 0; i < m_objectsToSingleRender.size(); i++)
 	{
-		m_objectsToInstanceRender[i]->RenderInstanced();
+		m_objectsToSingleRender[i]->Render();
+	}
+
+	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
+	{
+		if (m_frustum->CheckSphere(m_stickyTrapList[i]->GetStickyTrapSphere(), 2.0f))
+	{
+			GraphicsEngine::TurnOnAlphaBlending();
+			m_stickyTrapList[i]->Render();
+			GraphicsEngine::TurnOffAlphaBlending();
+		}
 	}
 }
 
@@ -1352,14 +1353,14 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 	m_bloodParticlesTimer.push_back(0.5f);
 }
 
-void ObjectManager::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
+void ObjectManager::SpawnRune(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
 {
-	m_POIManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
+	m_POIManager->SpawnRune(p_poiType, p_x, p_y, p_z);
 }
 
-void ObjectManager::DespawnRunes(POINTOFINTERESTTYPE p_poiType)
+void ObjectManager::DespawnRune(POINTOFINTERESTTYPE p_poiType)
 {
-	m_POIManager->DespawnRunes(p_poiType);
+	m_POIManager->DespawnRune(p_poiType);
 }
 
 void ObjectManager::RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid)

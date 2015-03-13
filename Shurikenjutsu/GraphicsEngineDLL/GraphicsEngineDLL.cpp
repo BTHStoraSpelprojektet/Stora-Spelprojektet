@@ -454,6 +454,7 @@ namespace DLLGraphicsEngine
 
 	void GE::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 	{
+		m_screenSpace->UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 		m_sceneShader->UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 		m_depthShader->UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 		m_foliageShader->UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
