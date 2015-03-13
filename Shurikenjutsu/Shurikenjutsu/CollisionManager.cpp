@@ -351,6 +351,15 @@ float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_pla
 	float x = m_pickedLocation.x - p_playerPos.x;
 	float y = m_pickedLocation.y - p_playerPos.z;
 	float temp = sqrt((x*x) + (y*y));
+
+
+	float checkWithouterWalls = CalculatThrowDistanceChekcingOuterWalls(&Ray(p_playerPos, DirectX::XMFLOAT3(x/temp, 0.0f, y/temp)));
+
+	if (temp > checkWithouterWalls)
+	{
+		temp = checkWithouterWalls;
+	}
+
 	return temp;
 }
 

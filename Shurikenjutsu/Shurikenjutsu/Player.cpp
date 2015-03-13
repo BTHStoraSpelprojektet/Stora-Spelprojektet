@@ -393,6 +393,7 @@ void Player::UpdateMe()
 	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan(VK_SPACE)))
 	{
 		m_onPressed = !m_onPressed;
+		GLOBAL::GetInstance().APE_ON = !m_onPressed;
 	}
 
 	m_ability = m_noAbility;
