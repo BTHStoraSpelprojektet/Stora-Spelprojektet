@@ -40,6 +40,9 @@ private:
 	ParticleEmitter* m_shieldParticles;
 	GUIElement* m_shieldOverlay;
 	PointLight m_shieldLight;
+
+	bool m_renderHeal;
+	bool m_renderShield;
 };
 
 #endif
