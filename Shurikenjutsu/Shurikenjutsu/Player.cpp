@@ -277,6 +277,9 @@ void Player::UpdateMe()
 		UpdateAbilities();
 		UpdateAbilityBar();
 		AnimatedObject::ChangeAnimationState(AnimationState::None);
+		if (m_sound != nullptr && m_soundEmitter != nullptr){
+			m_sound->StopAmbientSound(m_soundEmitter);
+		}
 
 		return;
 	}
