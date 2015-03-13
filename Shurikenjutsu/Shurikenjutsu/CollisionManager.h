@@ -31,6 +31,7 @@ public:
 	float CalculateAttackPredictionRange(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer, bool p_throwStuff);
 	void SetObjectsInFrustumList(std::vector<Object*> p_objectsInFrustumList, std::vector<AnimatedObject*> p_animatedObjectList);
 	float CalculateOutliningRayDistance(Ray* p_ray);
+	float CalculatThrowDistanceChekcingOuterWalls(Ray* p_ray);
 
 private:
 	//float CalculateDashLength(Ray* p_ray);
@@ -39,14 +40,14 @@ private:
 	CollisionManager();
 	~CollisionManager();
 	static CollisionManager* m_instance;
-	void SetLists(std::vector<Object*> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<Box> p_outerWallList);
+	void SetLists(std::vector<Object*> p_StaticObjectList, std::vector<AnimatedObject*> p_animatedObjectList, std::vector<OBB> p_outerWallList);
 
 	std::vector<OBB> m_staticBoxList;
 	std::vector<OBB> m_treeTopBoxList;
 	std::vector<Sphere> m_treeTopSphereList;
 	std::vector<Sphere> m_staticSphereList;
 	DirectX::XMFLOAT2 m_pickedLocation;
-	std::vector<Box> m_outerWallList;
+	std::vector<OBB> m_outerWallList;
 };
 
 #endif

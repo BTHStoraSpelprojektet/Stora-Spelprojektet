@@ -111,6 +111,13 @@ void AttackPredictionEditor::ThrowSphere(Object *p_object, DirectX::XMFLOAT3 p_p
 	DirectX::XMFLOAT3 vectorToMouse = DirectX::XMFLOAT3(mousePos3D.x - p_playerPosition.x, 0.03f, mousePos3D.z - p_playerPosition.z);
 	float distance = sqrt(vectorToMouse.x * vectorToMouse.x + vectorToMouse.z * vectorToMouse.z);
 	DirectX::XMFLOAT3 vectorToMouseNorm = DirectX::XMFLOAT3(vectorToMouse.x / distance, 0.03f, vectorToMouse.z / distance);
+
+	float distanceToClosestWall = CollisionManager::GetInstance()->CalculatThrowDistanceChekcingOuterWalls(&Ray(p_playerPosition,vectorToMouseNorm));
+
+	if (distance > distanceToClosestWall)
+	{
+		distance = distanceToClosestWall;
+	}
 	if (distance > p_maxRange)
 	{
 		distance = p_maxRange;
