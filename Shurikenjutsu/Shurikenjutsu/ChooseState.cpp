@@ -58,8 +58,8 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_portraitWidth = 200.0f;
 	m_buttonWidth = 300.0f;
 	m_buttonHeight = 100.0f; 
-	m_nextWidth = 100.0f;
-	m_nextHeight = 100.0f;
+	m_nextWidth = 50.0f;
+	m_nextHeight = 200.0f;
 	m_toolWidth = 50.0f;
 	m_toolHeight = 50.0f;
 	m_nrOfNinjas = 3;
@@ -71,9 +71,9 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
 		
 	float offset = 30.0f;
-	float ninjaCycleHeight = -m_buttonHeight*0.5f + offset;
+	float ninjaCycleHeight = -m_buttonHeight*0.5f +offset;
 	float toolCycleHeight = m_toolHeight*0.5f - m_buttonHeight*0.5f- 150.0f;
-	float portraitYPos = ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
+	float portraitYPos = ninjaCycleHeight;//ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
 	float toolButtonSize = m_screenHeight / 20.48f;
 	float toolButtonXPos = m_screenHeight / 18.29f;
 
@@ -102,10 +102,10 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/randomButton.png"), MENUACTION_RANDOM_NINJA);
 
 	// Next ninja, right button
-	m_chooseNinja->AddButton(m_buttonWidth*0.5f + m_nextWidth*0.5f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/right.png"), MENUACTION_NEXTNINJA);
+	m_chooseNinja->AddButton(/*m_buttonWidth*0.5f + */m_nextWidth*0.5f + 120.0f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/thinarrow_right.png"), MENUACTION_NEXTNINJA);
 
 	// Prev ninja, left button
-	m_chooseNinja->AddButton(-m_buttonWidth*0.5f - m_nextWidth*0.5f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/left.png"), MENUACTION_PREVNINJA);
+	m_chooseNinja->AddButton(/*-m_buttonWidth*0.5f -*/-m_nextWidth*0.5f - 120.0f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/thinarrow_left.png"), MENUACTION_PREVNINJA);
 
 	//Prev tool, left button
 	m_chooseNinja->AddButton(-toolButtonXPos, toolCycleHeight, toolButtonSize, toolButtonSize, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/left.png"), MENUACTION_PREVTOOL);
