@@ -458,7 +458,7 @@ void ObjectManager::Update()
 					Trail* trail = new Trail();
 
 					DirectX::XMFLOAT4 color;
-					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
+					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL;
 					
 					if (!trail->Initialize(100.0f, 0.50f, 0.60f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 					{
@@ -475,7 +475,7 @@ void ObjectManager::Update()
 					Trail* trail = new Trail();
 
 					DirectX::XMFLOAT4 color;
-					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
+					Network::GetInstance()->GetTeam(tempNetShurikens[i].guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL;
 
 					if (!trail->Initialize(50.0f, 0.2f, 0.1f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 					{
@@ -995,7 +995,7 @@ void ObjectManager::AddFan(const char* p_filepath, DirectX::XMFLOAT3 p_pos, Dire
 	Trail* trail = new Trail();
 
 	DirectX::XMFLOAT4 color;
-	Network::GetInstance()->GetTeam(p_owner) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
+	Network::GetInstance()->GetTeam(p_owner) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL;
 
 	if (!trail->Initialize(100.0f, 0.5f, 0.2f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 	{
@@ -1163,7 +1163,7 @@ void ObjectManager::AddProjectile(float p_x, float p_y, float p_z, float p_dirX,
 	Trail* trail = new Trail();
 
 	DirectX::XMFLOAT4 color;
-	Network::GetInstance()->GetTeam(p_guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
+	Network::GetInstance()->GetTeam(p_guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL;
 
 	if (!trail->Initialize(50.0f, 0.15f, 0.1f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 	{
@@ -1208,7 +1208,7 @@ void ObjectManager::AddVolley(unsigned int p_id, float p_startX, float p_startZ,
 
 	// Add trails.
 	DirectX::XMFLOAT4 color;
-	Network::GetInstance()->GetTeam(p_guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
+	Network::GetInstance()->GetTeam(p_guid) == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL;
 
 	std::vector<Trail*> vector;
 	vector.clear();

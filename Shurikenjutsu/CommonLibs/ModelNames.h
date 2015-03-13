@@ -38,19 +38,19 @@
 #define ABILITY_SHURIKEN_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N1_Ranged.png"
 #define ABILITY_MEGA_SHURIKEN_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N1_E.png"
 #define ABILITY_DASH_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N1_Q.png"
-#define ABILITY_SMOKE_BOMB_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_SmokeBomb.png"
+#define ABILITY_SMOKE_BOMB_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_T_SmokeBomb.png"
 
 #define ABILITY_TESSEN_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N2_Melee.png"
 #define ABILITY_TESSEN_THROWING_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N2_Q.png"
 #define ABILITY_WHIP_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N2_Ranged.png"
 #define ABILITY_WHIP_SPECIAL_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N2_E.png"
-#define ABILITY_CALTROP_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_Caltrops.png"
+#define ABILITY_CALTROP_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_T_Caltrops.png"
 
 #define ABILITY_NAGINATA_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N3_Melee.png"
 #define ABILITY_NAGINATA_STAB_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N3_Q.png"
 #define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N3_Ranged.png"
 #define ABILITY_KUNAI_VOLLEY_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N3_E.png"
-#define ABILITY_STICKY_TRAP_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_StickyTARP.png"
+#define ABILITY_STICKY_TRAP_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_T_StickyTARP.png"
 
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/Ninjas/"

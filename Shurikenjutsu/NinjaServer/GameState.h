@@ -40,7 +40,7 @@ public:
 	void SendCurrentTeamScore(RakNet::RakNetGUID p_guid);
 	void UserConnected(RakNet::RakNetGUID p_guid);
 
-	void SendSuddenDeathMessage();
+
 	void UpdatePlayerVisibility(RakNet::RakNetGUID p_guid, std::vector<int> p_visiblePlayers);
 	void AbilityUsedCancelInvis(RakNet::RakNetGUID p_guid);
 
@@ -49,6 +49,8 @@ public:
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();
+
+	void SendSuddenDeathMessage(bool p_isSuddenDeath);
 
 	RakNet::RakPeerInterface* m_serverPeer;
 	PlayerManager* m_playerManager;
