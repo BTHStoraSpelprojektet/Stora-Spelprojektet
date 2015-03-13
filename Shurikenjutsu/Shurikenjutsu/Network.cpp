@@ -990,6 +990,12 @@ void Network::ReceviePacket()
 					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, x, y, z);
 					break;
 				}
+				case ABILITIES::ABILITIES_FANMELEE:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, x, y, z);
+					break;
+				}
 				case ABILITIES::ABILITIES_WHIP_PRIMARY:
 				{
 					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));

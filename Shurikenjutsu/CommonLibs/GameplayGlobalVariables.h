@@ -70,11 +70,16 @@ const float KATANA_DAMAGE = 25.0f;
 const float KATANA_RANGE = 2.0f;
 const float KATANA_COOLDOWN = 0.5f;
 
-////////////////////////////////////////////////////////////////Melee Attacks
+// Fan
+const float FANMELEE_DAMAGE = 50.0f;
+const float FANMELEE_RANGE = 4.0f;
+const float FANMELEE_COOLDOWN = 0.5f;
+
 // Naginata
 const float NAGINATA_DAMAGE = 30.0f;
 const float NAGINATA_RANGE = 3.0f;
 const float NAGINATA_COOLDOWN = 0.5f;
+
 
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 //Dash
