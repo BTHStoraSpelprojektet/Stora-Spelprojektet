@@ -794,11 +794,9 @@ void ObjectManager::Render()
 	{
 		if (m_frustum->CheckSphere(m_spikeTrapList[i]->GetSpikeSphere(), 2.0f))
 		{
-			GraphicsEngine::TurnOnAlphaBlending();
 			m_spikeTrapList[i]->Render();
-			GraphicsEngine::TurnOffAlphaBlending();
 		}
-	}
+		}
 
 	for (unsigned int i = 0; i < m_worldParticles.size(); i++)
 	{
@@ -834,7 +832,7 @@ void ObjectManager::Render()
 	for (unsigned int i = 0; i < m_stickyTrapList.size(); i++)
 	{
 		if (m_frustum->CheckSphere(m_stickyTrapList[i]->GetStickyTrapSphere(), 2.0f))
-		{
+	{
 			GraphicsEngine::TurnOnAlphaBlending();
 			m_stickyTrapList[i]->Render();
 			GraphicsEngine::TurnOffAlphaBlending();
