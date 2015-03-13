@@ -13,7 +13,7 @@ ID3D11Buffer* Buffer::CreateBuffer(BUFFERTYPE P_type, ID3D11Device* p_device, st
 		{
 			// Setup vertex buffer description.
 			D3D11_BUFFER_DESC vertexBuffer;
-			vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
+			vertexBuffer.Usage = D3D11_USAGE_IMMUTABLE;
 			vertexBuffer.ByteWidth = sizeof(Vertex) * p_mesh.size();
 			vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 			vertexBuffer.CPUAccessFlags = 0;
@@ -36,7 +36,7 @@ ID3D11Buffer* Buffer::CreateBuffer(BUFFERTYPE P_type, ID3D11Device* p_device, st
 		{
 			// Setup vertex buffer description.
 			D3D11_BUFFER_DESC vertexBuffer;
-			vertexBuffer.Usage = D3D11_USAGE_DEFAULT;
+			vertexBuffer.Usage = D3D11_USAGE_IMMUTABLE;
 			vertexBuffer.ByteWidth = sizeof(VertexAnimated) * p_meshAnimated.size();
 			vertexBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 			vertexBuffer.CPUAccessFlags = 0;

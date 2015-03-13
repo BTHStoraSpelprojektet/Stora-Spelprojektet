@@ -77,15 +77,15 @@ void TeamTable::AddTeamMate(int p_ninja, int p_tool)
 	}
 	if (p_tool == 0)
 	{
-		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_Caltrops.png"));
+		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_Caltrops.png"));
 	}
 	else if (p_tool == 1)
 	{
-		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_SmokeBomb.png"));
+		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_SmokeBomb.png"));
 	}
 	else
 	{
-		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_StickyTARP.png"));
+		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_StickyTARP.png"));
 	}
 
 	m_startYPos -= PORTRAITHEIGHT * 1.1f;

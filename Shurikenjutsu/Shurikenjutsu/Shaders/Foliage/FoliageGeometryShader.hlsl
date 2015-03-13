@@ -24,14 +24,7 @@ struct GeometryOutput
 	float4 m_position : SV_POSITION;
 	float4 m_positionWorld : POSITION;
 	float2 m_uv : TEXCOORD0;
-	float3 m_normal : NORMAL;
-	float3 m_tangent : TANGENT;
-
 	float3x3 m_tBN : TBN;
-
-	float m_fogFactor : FOG;
-
-	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
 [maxvertexcount(6)]
@@ -88,19 +81,9 @@ void main(point GeometryInput p_input[1], inout TriangleStream<GeometryOutput> p
 	{
 		output.m_position = mul(position[i], m_viewMatrix);
 		output.m_position = mul(output.m_position, m_projectionMatrix);
-
 		output.m_positionWorld = position[i];
-
-		output.m_lightPositionHomogenous = mul(position[i], m_lightViewMatrix);
-		output.m_lightPositionHomogenous = mul(output.m_lightPositionHomogenous, m_lightProjectionMatrix);
-
 		output.m_uv = uv[i];
-		output.m_normal = normal;
-		output.m_tangent = tangent;
-
 		output.m_tBN = float3x3(T, B, normal);
-
-		output.m_fogFactor = 0.0f;
 
 		p_output.Append(output);
 	}

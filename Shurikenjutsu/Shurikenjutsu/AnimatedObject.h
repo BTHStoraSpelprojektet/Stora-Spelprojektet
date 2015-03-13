@@ -27,7 +27,7 @@ public:
 	void Render();
 	void RenderDepth();
 	void RenderDepthOutlining();
-	void RenderOutlining();
+	void RenderOutlining(DirectX::XMFLOAT4 p_color);
 	void ChangeAnimationState(AnimationState p_newState);
 	void HandleInput(DirectX::XMFLOAT3 p_dir);
 	void NetworkInput(DirectX::XMFLOAT3 p_dir);

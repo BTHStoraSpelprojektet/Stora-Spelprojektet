@@ -487,6 +487,7 @@ void Network::ReceviePacket()
 				m_restartingRound = false;
 				m_roundOver = true;
 				m_timeRestarting = 0;
+				m_suddenDeath = false;
 				ClearListsAtNewRound();
 
 				m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
@@ -512,7 +513,7 @@ void Network::ReceviePacket()
 			
 				ConsolePrintText("Next round starts in: ");
 				ConsoleSkipLines(1);
-				m_suddenDeath = false;
+				
 				break;
 			}
 			case ID_RESTARTING_ROUND_TIMER:
@@ -603,6 +604,12 @@ void Network::ReceviePacket()
 				m_roundOver = false;
 				m_matchWinningTeam = 0;
 				m_restartingRound = false;
+
+				for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
+				{
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				}
+				runeSoundEmitters.clear();
 
 				RakNet::BitStream wBitStream;
 				wBitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
@@ -990,6 +997,12 @@ void Network::ReceviePacket()
 					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, x, y, z);
 					break;
 				}
+				case ABILITIES::ABILITIES_FANMELEE:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, x, y, z);
+					break;
+				}
 				case ABILITIES::ABILITIES_WHIP_PRIMARY:
 				{
 					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
@@ -1127,12 +1140,15 @@ void Network::ReceviePacket()
 				break;
 			}
 
-			case ID_START_SUDDEN_DEATH:
+			case ID_SEND_SUDDEN_DEATH:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+				bool isSuddenDeath;
 				bitStream.Read(messageID);
-				m_suddenDeath = true;
+				bitStream.Read(isSuddenDeath);
+
+				m_suddenDeath = isSuddenDeath;
 
 				break;
 			}
@@ -1147,7 +1163,7 @@ void Network::ReceviePacket()
 
 				break;
 			}
-			case ID_SPAWN_RUNES:
+			case ID_SPAWN_3_RUNES:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 				POINTOFINTERESTTYPE poi_type;
@@ -1159,13 +1175,26 @@ void Network::ReceviePacket()
 					bitStream.Read(x);
 					bitStream.Read(y);
 					bitStream.Read(z);
-					SpawnRunes(poi_type, x, y, z);
-					//SpawnRunes(0, 0, 0, 10 * i);
+					SpawnRune(poi_type, x, y, z);
 				}
 			
 				//skriva ut på skärmen
 				m_poiSpawned = true;
 
+				break;
+			}
+			case ID_SPAWN_SINGLE_RUNE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				POINTOFINTERESTTYPE poi_type;
+				float x, y, z;
+				
+				bitStream.Read(messageID);
+				bitStream.Read(poi_type);
+				bitStream.Read(x);
+				bitStream.Read(y);
+				bitStream.Read(z);
+				SpawnRune(poi_type, x, y, z);
 				break;
 			}
 			case ID_DESPAWN_RUNE:
@@ -1176,7 +1205,7 @@ void Network::ReceviePacket()
 				bitStream.Read(messageID);
 				bitStream.Read(poi_type);
 
-				DespawnRunes(poi_type);
+				DespawnRune(poi_type);
 
 				break;
 			}
@@ -1197,20 +1226,9 @@ void Network::ReceviePacket()
 
 					if (runeSpawned)
 					{
-						SpawnRunes(poi_type, x, y, z, false);
+						SpawnRune(poi_type, x, y, z, false);
 					}
 				}
-				break;
-			}
-			case ID_RUNE_PICKED_UP:
-			{
-				/*RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-				RakNet::RakNetGUID guid;
-				bitStream.Read(messageID);
-				bitStream.Read(sound);
-				bitStream.Read(x);
-				bitStream.Read(y);
-				bitStream.Read(z);*/
 				break;
 			}
 			case ID_LOTUS_PICKED_UP:
@@ -2290,14 +2308,14 @@ void Network::SendLatestDir()
 	m_clientPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 2, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
 
-void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
+void Network::SpawnRune(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z)
 {
-	SpawnRunes(p_poiType, p_x, p_y, p_z, true);
+	SpawnRune(p_poiType, p_x, p_y, p_z, true);
 }
 
-void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound)
+void Network::SpawnRune(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound)
 {
-	m_objectManager->SpawnRunes(p_poiType, p_x, p_y, p_z);
+	m_objectManager->SpawnRune(p_poiType, p_x, p_y, p_z);
 
 	if (p_makeSound)
 	{
@@ -2332,9 +2350,12 @@ void Network::SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, fl
 	}
 }
 
-void Network::DespawnRunes(POINTOFINTERESTTYPE p_poiType)
+void Network::DespawnRune(POINTOFINTERESTTYPE p_poiType)
 {
-	m_objectManager->DespawnRunes(p_poiType);
+	if (m_objectManager != nullptr)
+	{
+		m_objectManager->DespawnRune(p_poiType);
+	}
 }
 
 void Network::RoundOverText()
@@ -2652,47 +2673,18 @@ void Network::SendSpawnedRunes()
 
 void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 {
-	if (!p_value)
+	if (m_myPlayer.guid == p_guid)
 	{
-		if (p_guid == m_myPlayer.guid)
-		{
-			m_myPlayer.hasHealPOI = false;
-		}
-
+		m_myPlayer.hasHealPOI = p_value;
+	}
+	else
+	{
 		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
 		{
 			if (p_guid == m_enemyPlayers[i].guid)
 			{
-				m_enemyPlayers[i].hasHealPOI = false;
-			}
-		}		
-	}
-	else
-	{
-		if (m_myPlayer.guid == p_guid)
-		{
-			m_myPlayer.hasHealPOI = true;
-
-			for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-			{
-				m_enemyPlayers[i].hasHealPOI = false;
-			}
-
-			return;
-		}
-
-		else
-		{
-			m_myPlayer.hasHealPOI = false;
-
-			for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-			{
-				m_enemyPlayers[i].hasHealPOI = false;
-
-				if (m_enemyPlayers[i].guid == p_guid)
-				{
-					m_enemyPlayers[i].hasHealPOI = true;
-				}
+				m_enemyPlayers[i].hasHealPOI = p_value;
+				break;
 			}
 		}
 	}

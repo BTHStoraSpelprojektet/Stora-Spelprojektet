@@ -60,6 +60,7 @@ bool GameState::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<s
 
 	m_roundRestarting = false;
 	m_runesSpawned = false;
+	m_runeRespawn = false;
 	m_shieldActiveTimer = 0.0f;
 	m_invisActiveTimer = 0.0f;
 
@@ -148,12 +149,22 @@ void GameState::Update(double p_deltaTime)
 		}
 	}
 
-	if ((m_timeSec >= 20 && m_timeSec <= 21) && m_timeMin == 0)
+	// Spawn rune
+	if (m_timeMin == 0 && m_timeSec >= 30)
 	{
 		if (!m_runesSpawned)
 		{
 			m_POIManager->SpawnRunes();
 			m_runesSpawned = true;
+		}
+	}
+	// Respawn healing rune
+	if (m_timeMin == 1 && m_timeSec >= 30)
+	{
+		if (!m_runeRespawn)
+		{
+			m_POIManager->SpawnRune(POINTOFINTERESTTYPE_HEAL);
+			m_runeRespawn = true;
 		}
 	}
 }
@@ -242,15 +253,16 @@ void GameState::UpdateTime(double p_deltaTime)
 	{
 		m_isSuddenDeath = true;
 
-		SendSuddenDeathMessage();
+		SendSuddenDeathMessage(m_isSuddenDeath);
 	}
 }
 
-void GameState::SendSuddenDeathMessage()
+void GameState::SendSuddenDeathMessage(bool p_isSuddenDeath)
 {
 	RakNet::BitStream bitStream;
 
-	bitStream.Write((RakNet::MessageID)ID_START_SUDDEN_DEATH);
+	bitStream.Write((RakNet::MessageID)ID_SEND_SUDDEN_DEATH);
+	bitStream.Write(p_isSuddenDeath);
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
@@ -261,7 +273,10 @@ void GameState::ResetTime()
 	m_timeMin = 0;
 	m_isSuddenDeath = false;
 	m_runesSpawned = false;
+	m_runeRespawn = false;
 	m_suddenDeathTimer = 0.0f;
+
+	SendSuddenDeathMessage(m_isSuddenDeath);
 }
 
 void GameState::SyncTime(RakNet::RakNetGUID p_guid)

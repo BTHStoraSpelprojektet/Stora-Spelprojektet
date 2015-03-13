@@ -33,7 +33,10 @@ public:
 	float TITLE_BORDER_SIZE;
 
 	DirectX::XMFLOAT4 TEAMCOLOR_BLUE = DirectX::XMFLOAT4(0.0f, 0.07f, 0.71f, 1.0f);
-	DirectX::XMFLOAT4 TEAMCOLOR_RED = DirectX::XMFLOAT4(0.71f, 0.0f, 0.03f, 1.0f);;
+	DirectX::XMFLOAT4 TEAMCOLOR_RED = DirectX::XMFLOAT4(0.71f, 0.0f, 0.03f, 1.0f);
+
+	DirectX::XMFLOAT4 TEAMCOLOR_BLUE_TRAIL = DirectX::XMFLOAT4(0.0f, 0.07f, 0.41f, 1.0f);
+	DirectX::XMFLOAT4 TEAMCOLOR_RED_TRAIL = DirectX::XMFLOAT4(0.31f, 0.0f, 0.03f, 1.0f);
 
 	std::string FPS;
 

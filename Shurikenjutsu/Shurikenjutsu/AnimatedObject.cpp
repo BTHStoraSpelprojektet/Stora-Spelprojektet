@@ -159,9 +159,9 @@ void AnimatedObject::RenderDepthOutlining()
 	GraphicsEngine::RenderAnimatedOutliningDepth(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrix(), m_animationController.GetBoneTransforms());
 }
 
-void AnimatedObject::RenderOutlining()
+void AnimatedObject::RenderOutlining(DirectX::XMFLOAT4 p_color)
 {
-	GraphicsEngine::RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaled(1.05f), m_animationController.GetBoneTransforms());
+	GraphicsEngine::RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaled(1.05f), m_animationController.GetBoneTransforms(), p_color);
 }
 
 void AnimatedObject::ChangeAnimationState(AnimationState p_newState)
@@ -199,10 +199,10 @@ void AnimatedObject::ChangeTrailColor(int p_team)
 {
 	if (p_team == 1)
 	{
-		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL);
 	}
 	else
 	{
-		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL);
 	}
 }

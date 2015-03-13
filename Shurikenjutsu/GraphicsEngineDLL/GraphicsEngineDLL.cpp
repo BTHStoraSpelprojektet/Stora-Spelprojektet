@@ -385,9 +385,9 @@ namespace DLLGraphicsEngine
 		m_sceneShader->RenderAnimatedOutliningDepth(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
 	}
 
-	void GE::RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
+	void GE::RenderAnimatedOutlining(ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms, DirectX::XMFLOAT4 p_color)
 	{
-		m_sceneShader->RenderAnimatedOutlining(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms);
+		m_sceneShader->RenderAnimatedOutlining(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_boneTransforms, p_color);
 	}
 
 	void GE::PrepareRenderDepth()
@@ -454,6 +454,7 @@ namespace DLLGraphicsEngine
 
 	void GE::SetLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix)
 	{
+		m_screenSpace->UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 		m_sceneShader->UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);
 		m_depthShader->UpdateViewAndProjection(p_viewMatrix, p_projectionMatrix);
 		m_foliageShader->UpdateLightViewAndProjection(p_viewMatrix, p_projectionMatrix);

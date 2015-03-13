@@ -46,6 +46,9 @@ bool POIGrapichalEffects::Initialize()
 	m_shieldLight.m_position.z = 0.0f;
 	m_shieldLight.m_range = 1.6f;
 
+	m_renderHeal = false;
+	m_renderShield = false;
+
 	return true;
 }
 
@@ -91,10 +94,11 @@ void POIGrapichalEffects::SetShieldEmit(bool p_value)
 
 void POIGrapichalEffects::UpdateHealingEffect(DirectX::XMFLOAT3 p_position)
 {
+	m_renderHeal = GraphicsEngine::IsVisibilityPointVisible(Point(p_position.x, p_position.z));
 	m_healingParticles->UpdatePosition(p_position);
 	m_healingParticles->Update();
 
-	if (m_heal)
+	if (m_heal && m_renderHeal)
 	{
 		m_healingLight.m_position.x = p_position.x;
 		m_healingLight.m_position.y = 1.0f;
@@ -105,7 +109,10 @@ void POIGrapichalEffects::UpdateHealingEffect(DirectX::XMFLOAT3 p_position)
 
 void POIGrapichalEffects::RenderHealingEffect()
 {
-	m_healingParticles->Render();
+	if (m_renderHeal)
+	{
+		m_healingParticles->Render();
+	}
 }
 
 void POIGrapichalEffects::RenderStealthEffect()
@@ -115,6 +122,7 @@ void POIGrapichalEffects::RenderStealthEffect()
 
 void POIGrapichalEffects::UpdateShieldEffect(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
 {
+	m_renderShield = GraphicsEngine::IsVisibilityPointVisible(Point(p_position.x, p_position.z));
 	m_shieldParticles->UpdatePosition(DirectX::XMFLOAT3(p_position.x, p_position.y + 1.5f, p_position.z));
 	m_shieldParticles->Update();
 
@@ -127,14 +135,20 @@ void POIGrapichalEffects::UpdateShieldEffect(DirectX::XMFLOAT3 p_position, Direc
 	position.z = 0.0f;
 	m_shieldOverlay->SetPosition(position);
 
-	m_shieldLight.m_position.x = p_position.x;
-	m_shieldLight.m_position.y = 1.0f;
-	m_shieldLight.m_position.z = p_position.z;
-	GraphicsEngine::AddNewPointLight(m_shieldLight);
+	if (m_renderShield)
+	{
+		m_shieldLight.m_position.x = p_position.x;
+		m_shieldLight.m_position.y = 1.0f;
+		m_shieldLight.m_position.z = p_position.z;
+		GraphicsEngine::AddNewPointLight(m_shieldLight);
+	}
 }
 
 void POIGrapichalEffects::RenderShieldEffect()
 {
-	m_shieldParticles->Render();
-	m_shieldOverlay->QueueRender();
+	if (m_renderShield)
+	{
+		m_shieldParticles->Render();
+		m_shieldOverlay->QueueRender();
+	}
 }

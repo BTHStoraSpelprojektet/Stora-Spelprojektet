@@ -7,16 +7,8 @@
 #include "PlayerManager.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 
-PointOfInterestManager::PointOfInterestManager()
-{
-	
-}
-
-
-PointOfInterestManager::~PointOfInterestManager()
-{
-}
-
+PointOfInterestManager::PointOfInterestManager(){}
+PointOfInterestManager::~PointOfInterestManager(){}
 
 bool PointOfInterestManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::vector<std::string> p_levelsName, int p_currentLevel)
 {
@@ -72,7 +64,6 @@ void PointOfInterestManager::Update(double p_deltaTime)
 	{
 		m_invisActiveTimer -= (float)p_deltaTime;
 	}
-
 	// If timer is zero and runed is pickedup(active=false) send cancel rune
 	else if (!m_invisActive)
 	{
@@ -88,7 +79,6 @@ void PointOfInterestManager::Update(double p_deltaTime)
 	{
 		m_shieldActiveTimer -= (float)p_deltaTime;
 	}
-
 	else if (!m_shieldActive)
 	{
 		if (!canceledShield)
@@ -108,7 +98,7 @@ void PointOfInterestManager::SpawnRunes()
 	canceledShield = false;
 
 	RakNet::BitStream bitStream;
-	bitStream.Write((RakNet::MessageID)ID_SPAWN_RUNES);
+	bitStream.Write((RakNet::MessageID)ID_SPAWN_3_RUNES);
 	for (int i = 0; i < 3; i++)
 	{
 		bitStream.Write(m_POISpawnPoints[i].type);
@@ -120,13 +110,47 @@ void PointOfInterestManager::SpawnRunes()
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
+void PointOfInterestManager::SpawnRune(POINTOFINTERESTTYPE p_poiType)
+{
+	RakNet::BitStream bitStream;
+	switch (p_poiType)
+	{
+		case POINTOFINTERESTTYPE_HEAL:
+		{
+			m_lotusActive = true;
+			
+			for (unsigned int i = 0; i < m_POISpawnPoints.size(); i++)
+			{
+				if (m_POISpawnPoints[i].type == p_poiType)
+				{
+					bitStream.Write((RakNet::MessageID)ID_SPAWN_SINGLE_RUNE);
+					bitStream.Write(m_POISpawnPoints[i].type);
+					bitStream.Write(m_POISpawnPoints[i].m_translationX);
+					bitStream.Write(m_POISpawnPoints[i].m_translationY);
+					bitStream.Write(m_POISpawnPoints[i].m_translationZ);
+					m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+				}
+			}
+			break;
+		}
+		case POINTOFINTERESTTYPE_INVISIBLE:
+		{
+			break;
+		}
+		case POINTOFINTERESTTYPE_SHIELD:
+		{
+			break;
+		}
+	}
+}
+
 void PointOfInterestManager::DespawnRunes()
 {
 	m_lotusActive = false;
 	m_shieldActive = false;
 	m_invisActive = false;
-	canceledInvis = false;
-	canceledShield = false;
+	canceledInvis = true;
+	canceledShield = true;
 
 	// Lotus
 	RakNet::BitStream bitStream0;
@@ -211,21 +235,18 @@ std::vector<Box> PointOfInterestManager::GetBoundingBoxes(POINTOFINTERESTTYPE p_
 	return m_lotusBoundingBoxes;
 }
 
-bool PointOfInterestManager::IsRuneActive(int p_index)
+bool PointOfInterestManager::IsRuneActive(POINTOFINTERESTTYPE p_poiType)
 {
-	switch (p_index)
+	switch (p_poiType)
 	{
-	case 0:
+	case POINTOFINTERESTTYPE_HEAL:
 		return m_lotusActive;
 		break;
-	case 1:
+	case POINTOFINTERESTTYPE_INVISIBLE:
 		return m_invisActive;
 		break;
-	case 2:
+	case POINTOFINTERESTTYPE_SHIELD:
 		return m_shieldActive;
-		break;
-	default:
-		return false;
 		break;
 	}
 	return false;

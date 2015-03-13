@@ -277,6 +277,9 @@ void Player::UpdateMe()
 		UpdateAbilities();
 		UpdateAbilityBar();
 		AnimatedObject::ChangeAnimationState(AnimationState::None);
+		if (m_sound != nullptr && m_soundEmitter != nullptr){
+			m_sound->StopAmbientSound(m_soundEmitter);
+		}
 
 		return;
 	}
@@ -1209,11 +1212,11 @@ void Player::RenderDepthOutlining()
 	AnimatedObject::RenderDepthOutlining();
 }
 
-void Player::RenderOutlining()
+void Player::RenderOutlining(DirectX::XMFLOAT4 p_color)
 {
 	if (m_isAlive)
 	{
-		AnimatedObject::RenderOutlining();
+		AnimatedObject::RenderOutlining(p_color);
 	}
 }
 
@@ -1250,12 +1253,12 @@ void Player::SetTeam(int p_team)
 
 	if (m_team == 1)
 	{
-		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL);
 		AnimatedObject::ChangeTrailColor(1);
 	}
 	else
 	{
-		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL);
 		AnimatedObject::ChangeTrailColor(0);
 	}
 }

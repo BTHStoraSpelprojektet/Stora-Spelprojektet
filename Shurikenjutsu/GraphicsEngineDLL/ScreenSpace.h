@@ -23,6 +23,7 @@ public:
 	void BlurImage(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_depth, ID3D11ShaderResourceView* p_normal, bool p_horizontal);
 
 	void DOF(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_depth, bool p_horizontal);
+	void UpdateLightViewAndProjection(DirectX::XMFLOAT4X4 p_viewMatrix, DirectX::XMFLOAT4X4 p_projectionMatrix);
 	void UpdateFrameBuffer(ID3D11DeviceContext* p_context, DirectionalLight& p_dlight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
 	void UpdateSSAOBuffer(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_projection);
 	void SetLightBuffer(ID3D11DeviceContext* p_context, ID3D11ShaderResourceView* p_lightSRV);
@@ -45,11 +46,15 @@ private:
 	std::string m_GSVersion;
 	std::string m_PSVersion;
 
+	DirectX::XMFLOAT4X4 m_lightViewMatrix;
+	DirectX::XMFLOAT4X4 m_lightProjectionMatrix;
+
 	ID3D11Buffer* m_frameBuffer;
 	struct FrameBuffer
 	{
 		DirectionalLight m_directionalLight;
 		DirectX::XMFLOAT4X4 m_projection;
+		DirectX::XMFLOAT4X4 m_projectedLightSpace;
 	};
 
 	// SSAO

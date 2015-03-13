@@ -39,6 +39,7 @@ public:
 	void setSound(Sound* p_sound);
 private:
 	void InitializeCreditScreen();
+	bool StartLocalServer();
 
 
 	std::stack<Menu*> m_menues;

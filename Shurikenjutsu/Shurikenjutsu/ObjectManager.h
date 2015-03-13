@@ -34,6 +34,7 @@ public:
 
 	void Update();
 	void Render();
+	void RenderInstanced();
 	void RenderAnimated();
 	void RenderDepth();
 	void RenderAnimatedDepth();
@@ -61,8 +62,8 @@ public:
 	
 	void SetSound(Sound* p_sound);
 
-	void SpawnRunes(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
-	void DespawnRunes(POINTOFINTERESTTYPE p_poiType);
+	void SpawnRune(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z);
+	void DespawnRune(POINTOFINTERESTTYPE p_poiType);
 	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
 	void RunesRestartRound();
 

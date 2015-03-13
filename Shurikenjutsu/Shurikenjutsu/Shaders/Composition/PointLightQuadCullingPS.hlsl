@@ -33,7 +33,6 @@ float4 main(Input p_input) : SV_Target
 
 	float4 normal = m_textures[0].Load(load).xyzw; //
 	normal.xyz = normalize((normal.xyz * 2.0f) - 1.0f); //
-	float shadowSum = normal.w;
 
 	float3 albedo = m_textures[1].Load(load).xyz; //
 	float specularPower = m_textures[1].Load(load).w; //
@@ -65,7 +64,7 @@ float4 main(Input p_input) : SV_Target
 	ComputePointLight(material, m_pointLights[p_input.lightIndex.x], positionView, normal.xyz, toCamera, A, D, S);
 
 	float4 light;
-	light.xyz = albedo.xyz * ((A.xyz + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum) * ssao;
+	light.xyz = albedo.xyz * ((A.xyz + D.xyz) + S.xyz) * ssao;
 	light.w = D.w;
 
 	return light;

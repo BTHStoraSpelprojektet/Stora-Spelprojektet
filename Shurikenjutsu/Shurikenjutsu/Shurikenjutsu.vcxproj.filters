@@ -159,9 +159,6 @@
     <Filter Include="Header Files\Utility\DebugDraw">
       <UniqueIdentifier>{96101049-4da0-49c8-8a50-c8a5514b56e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Core\Abilities">
-      <UniqueIdentifier>{b0c8a535-7d03-4685-94fc-456b01c98d3c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders\Trail">
       <UniqueIdentifier>{e70e4063-628a-4b59-b9c0-d9a393c5e931}</UniqueIdentifier>
     </Filter>
@@ -176,6 +173,9 @@
     </Filter>
     <Filter Include="Shaders\SuddenDeath">
       <UniqueIdentifier>{6bc18550-8554-4bff-a1bb-1e2c952770c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Abilities">
+      <UniqueIdentifier>{b0c8a535-7d03-4685-94fc-456b01c98d3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -267,19 +267,19 @@
       <Filter>Source Files\GUI\Internal</Filter>
     </ClCompile>
     <ClCompile Include="Dash.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="Ability.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="StatusEffect.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="MeleeSwing.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="ShurikenAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="AbilityBar.cpp">
       <Filter>Source Files\GUI</Filter>
@@ -288,10 +288,10 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="MegaShuriken.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="SmokeBombAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="MenuCheckbox.cpp">
       <Filter>Source Files\GUI\Menu\Menu Items</Filter>
@@ -321,7 +321,7 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="SpikeAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="KatanaNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
@@ -330,19 +330,19 @@
       <Filter>Source Files\Ninjas</Filter>
     </ClCompile>
     <ClCompile Include="WhipPrimaryAttackAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="WhipSecondaryAttackAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="FanBoomerang.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="FanBoomerangAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="NaginataSlash.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="NaginataNinja.cpp">
       <Filter>Source Files\Ninjas</Filter>
@@ -351,19 +351,19 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="KunaiAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="Projectile.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="NaginataStab.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="TeamStatusBar.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="StickyTrapAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="NaginataStab.cpp">
       <Filter>Source Files\Abilities</Filter>
@@ -390,7 +390,7 @@
       <Filter>Source Files\Object</Filter>
     </ClCompile>
     <ClCompile Include="VolleyAbility.cpp">
-      <Filter>Source Files\Core\Abilities</Filter>
+      <Filter>Source Files\Abilities</Filter>
     </ClCompile>
     <ClCompile Include="ParticleRenderer.cpp">
       <Filter>Source Files\Graphics\Particles</Filter>
@@ -461,6 +461,9 @@
     <ClCompile Include="FlashBang.cpp">
       <Filter>Source Files\Object\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="FanMelee.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -469,11 +472,17 @@
     <ClInclude Include="Window.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Structures.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
     <ClInclude Include="Timer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Collisions.h">
       <Filter>Header Files\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectX.h">
+      <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsEngine.h">
       <Filter>Header Files\Graphics</Filter>
@@ -594,6 +603,9 @@
     </ClInclude>
     <ClInclude Include="ChooseState.h">
       <Filter>Header Files\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTree.h">
+      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
       <Filter>Header Files\Graphics</Filter>
@@ -748,6 +760,9 @@
     <ClInclude Include="FlashBang.h">
       <Filter>Header Files\Object\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="FanMelee.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -822,9 +837,6 @@
     <FxCompile Include="Shaders\Foliage\FoliageVertexShader.hlsl">
       <Filter>Shaders\Foliage</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\ShadowShapes\SSReveresePixelShader.hlsl">
-      <Filter>Shaders\ShadowShapes</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\Trails\TrailGeometryShader.hlsl">
       <Filter>Shaders\Trail</Filter>
     </FxCompile>
@@ -884,6 +896,12 @@
     </FxCompile>
     <FxCompile Include="Shaders\Particle\ParticlePixelShaderNotFire.hlsl">
       <Filter>Shaders\Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReverseVertexShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSReversePixelShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

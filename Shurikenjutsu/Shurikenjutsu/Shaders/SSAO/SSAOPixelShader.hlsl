@@ -7,8 +7,8 @@ cbuffer cbPerFrame : register(b4)
 
 Texture2D m_textures[3] : register(t3);
 
-SamplerState samDepth : register(s0);
-SamplerState samRandom : register(s1);
+SamplerState samDepth : register(s2);
+SamplerState samRandom : register(s3);
 
 struct Input
 {
