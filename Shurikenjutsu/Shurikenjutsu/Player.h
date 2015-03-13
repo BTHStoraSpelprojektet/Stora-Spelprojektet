@@ -33,7 +33,7 @@ public:
 	virtual void RenderAttackLocations();
 	void RenderDepth();
 	void RenderDepthOutlining();
-	void RenderOutlining();
+	void RenderOutlining(DirectX::XMFLOAT4 p_color);
 	void RenderAbilityBar();
 	//void SetDamage(float p_damage);
 	//float GetDamage() const;	

@@ -2,6 +2,8 @@
 #include "Network.h"
 #include "Globals.h"
 #include "..\CommonLibs\TextureLibrary.h"
+#include "GUIText.h"
+#include "GUIElement.h"
 
 Countdown::Countdown(){}
 Countdown::~Countdown(){}
@@ -15,14 +17,14 @@ bool Countdown::Initialize()
 	m_redColor = 0xff0700B6;
 	m_blueColor = 0xffB71300;
 
-	m_cdText = GUIText();
-	m_cdText.Initialize("", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, m_redColor);
+	m_cdText = new GUIText();
+	m_cdText->Initialize("", 50.0f, 0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, m_redColor);
 
-	m_roundTeamText = GUIText();
-	m_roundTeamText.Initialize("", 50.0f, 0.0f, -(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f), 0xffffffff);
+	m_roundTeamText = new GUIText();
+	m_roundTeamText->Initialize("", 50.0f, 0.0f, -(GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f), 0xffffffff);
 
-	m_victDefTexture = GUIElement();
-	m_victDefTexture.Initialize(DirectX::XMFLOAT3(0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0.0f), 340.0f, 125.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/victory.png"));
+	m_victDefTexture = new GUIElement();
+	m_victDefTexture->Initialize(DirectX::XMFLOAT3(0.0f, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.25f, 0.0f), 340.0f, 125.0f, TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/victory.png"));
 
 	m_renderCd = true;
 	m_renderRoundTeam = false;
@@ -31,8 +33,25 @@ bool Countdown::Initialize()
 
 void Countdown::Shutdown()
 {
-	m_cdText.Shutdown();
-	m_roundTeamText.Shutdown();
+	if (m_cdText != nullptr)
+	{
+		m_cdText->Shutdown();
+		delete m_cdText;
+		m_cdText = nullptr;
+	}
+
+	if (m_roundTeamText != nullptr)
+	{
+		m_roundTeamText->Shutdown();
+		delete m_roundTeamText;
+		m_roundTeamText = nullptr;
+	}
+
+	if (m_victDefTexture != nullptr)
+	{
+		delete m_victDefTexture;
+		m_victDefTexture = nullptr;
+	}
 }
 
 void Countdown::Update()
@@ -42,16 +61,16 @@ void Countdown::Update()
 	{
 		int lastTeamWon = Network::GetInstance()->GetLastWinningTeam();
 		// Red victory
-		if (lastTeamWon == 1 && m_roundTeamText.GetColor() != m_redColor)
+		if (lastTeamWon == 1 && m_roundTeamText->GetColor() != m_redColor)
 		{
-			m_roundTeamText.SetText("Red team won this round!");
-			m_roundTeamText.SetColor(m_redColor);
+			m_roundTeamText->SetText("Red team won this round!");
+			m_roundTeamText->SetColor(m_redColor);
 		}
 		// Blue victory
-		else if (lastTeamWon == 2 && m_roundTeamText.GetColor() != m_blueColor)
+		else if (lastTeamWon == 2 && m_roundTeamText->GetColor() != m_blueColor)
 		{
-			m_roundTeamText.SetText("Blue team won this round!");
-			m_roundTeamText.SetColor(m_blueColor);
+			m_roundTeamText->SetText("Blue team won this round!");
+			m_roundTeamText->SetColor(m_blueColor);
 		}
 		m_renderRoundTeam = true;
 	}
@@ -69,17 +88,17 @@ void Countdown::Update()
 		{
 			// Check who won and set color depending on team
 			int lastTeamWon = Network::GetInstance()->GetLastWinningTeam();
-			if (lastTeamWon == 1 && m_cdText.GetColor() != m_redColor)
+			if (lastTeamWon == 1 && m_cdText->GetColor() != m_redColor)
 			{
-				m_cdText.SetColor(m_redColor);
+				m_cdText->SetColor(m_redColor);
 			}
-			else if (lastTeamWon == 2 && m_cdText.GetColor() != m_blueColor)
+			else if (lastTeamWon == 2 && m_cdText->GetColor() != m_blueColor)
 			{
-				m_cdText.SetColor(m_blueColor);
+				m_cdText->SetColor(m_blueColor);
 			}
 			m_currentSize = m_minSize;
-			m_cdText.SetSize(m_currentSize);
-			m_cdText.SetText(std::to_string(time));
+			m_cdText->SetSize(m_currentSize);
+			m_cdText->SetText(std::to_string(time));
 		}
 		else
 		{
@@ -89,7 +108,7 @@ void Countdown::Update()
 			{
 				m_currentSize = m_maxSize;
 			}
-			m_cdText.SetSize(m_currentSize);
+			m_cdText->SetSize(m_currentSize);
 		}
 		// Just so it dont render the first frame
 		if (m_prevTime == -1)
@@ -105,12 +124,12 @@ void Countdown::Update()
 		if (Network::GetInstance()->GetMatchWinningTeam() == Network::GetInstance()->GetMyPlayer().team)
 		{
 			// Victory
-			m_victDefTexture.SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/victory.png"));
+			m_victDefTexture->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/victory.png"));
 		}
 		else
 		{
 			// Defeat
-			m_victDefTexture.SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/defeat.png"));
+			m_victDefTexture->SetTexture(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/defeat.png"));
 		}
 	}
 	else
@@ -124,16 +143,16 @@ void Countdown::Render()
 {
 	if (m_renderCd)
 	{
-		m_cdText.Render();
+		m_cdText->Render();
 	}
 
 	if (m_renderRoundTeam)
 	{
-		m_roundTeamText.Render();
+		m_roundTeamText->Render();
 	}
 
 	if (Network::GetInstance()->GetMatchOver())
 	{
-		m_victDefTexture.QueueRender();
+		m_victDefTexture->QueueRender();
 	}
 }

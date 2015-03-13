@@ -4,9 +4,8 @@
 
 #include "GameState.h"
 #include <stack>
-#include "Network.h"
+#include "..\CommonLibs\CommonStructures.h"
 
-#include "CreaditsScreen.h"
 class GUIText;
 class Menu;
 class MenuTextBox;
@@ -14,6 +13,8 @@ class ObjectManager;
 class Frustum;
 class Camera;
 class MenuItem;
+class CreaditsScreen;
+class Sound;
 
 
 class MenuState : public GameState
@@ -38,6 +39,7 @@ public:
 	void setSound(Sound* p_sound);
 private:
 	void InitializeCreditScreen();
+	bool StartLocalServer();
 
 
 	std::stack<Menu*> m_menues;

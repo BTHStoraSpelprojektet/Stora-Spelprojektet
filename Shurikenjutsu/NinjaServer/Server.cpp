@@ -31,6 +31,16 @@ bool Server::Initialize()
 	m_gameState = new NormalState();
 	m_gameState->Initialize(m_serverPeer,m_levels,m_currentLevel);
 
+	RakNet::SystemAddress systemAdress = m_serverPeer->GetSystemAddressFromGuid(m_serverPeer->GetMyGUID());
+	std::string ip1 = std::to_string(systemAdress.address.addr4.sin_addr.S_un.S_un_b.s_b1);
+	std::string ip2 = std::to_string(systemAdress.address.addr4.sin_addr.S_un.S_un_b.s_b2);
+	std::string ip3 = std::to_string(systemAdress.address.addr4.sin_addr.S_un.S_un_b.s_b3);
+	std::string ip4 = std::to_string(systemAdress.address.addr4.sin_addr.S_un.S_un_b.s_b4);
+	std::string ip = ip1 + "." + ip2 + "." + ip3 + "." + ip4;
+
+	std::cout << "IP: " << ip << std::endl;;
+	std::cout << "PORT: " << systemAdress.debugPort << std::endl << std::endl;
+
 	return true;
 }
 
@@ -232,7 +242,7 @@ void Server::ReceviePacket()
 		{
 			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
-			std::cout << "Connection " << m_packet->guid.ToString() << " have choosen a character\n";
+			std::cout << "Connection " << m_packet->systemAddress.ToString() << " have choosen a character\n";
 
 			RakNet::RakString name;
 			int charNr;

@@ -3,6 +3,10 @@
 #include "Collisions.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "Globals.h"
+#include "Object.h"
+#include "AnimatedObject.h"
+#include "..\CommonLibs\CommonStructures.h"
+
 CollisionManager* CollisionManager::m_instance;
 CollisionManager::CollisionManager(){}
 CollisionManager::~CollisionManager(){}
@@ -83,6 +87,7 @@ std::vector<OBB> CollisionManager::CalculateLocalPlayerCollisionWithStaticBoxes(
 		return CollisionList;
 	}
 	Sphere playerSphere = Sphere(p_playerBox.m_center, p_playerBox.m_radius);
+	playerSphere.m_position.y = 0.0f;
 	float speedXDeltaTime = p_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
 	if (m_staticBoxList.size() > 0)
 	{
@@ -223,7 +228,7 @@ bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 	}
 
 	// Check all spheres in the map, trees
-	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	/*for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
 	{
 		if (Collisions::RaySphereCollision(ray, m_staticSphereList[i]))
 		{
@@ -232,7 +237,7 @@ bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 				rayLengths.push_back(ray->m_distance);
 			}
 		}
-	}
+	}*/
 	
 	// If collision with ray check distanse, go throu get shortest length
 	for (unsigned int i = 0; i < rayLengths.size(); i++)
@@ -250,6 +255,49 @@ bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 	}
 	return false;
 }
+
+float CollisionManager::CalculateRayLengthFloat(Ray* p_ray)
+{
+	Ray* ray = p_ray;
+	float rayLength = 100.0f;
+	std::vector<float> rayLengths;
+
+	// Check all boxes, houses
+	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+	{
+		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
+		{
+			if (ray->m_distance != 0)
+			{
+				rayLengths.push_back(ray->m_distance);
+			}
+		}
+	}
+
+	// Check all spheres in the map, trees
+	/*for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	{
+	if (Collisions::RaySphereCollision(ray, m_staticSphereList[i]))
+	{
+	if (ray->m_distance != 0)
+	{
+	rayLengths.push_back(ray->m_distance);
+	}
+	}
+	}*/
+
+	// If collision with ray check distanse, go throu get shortest length
+	for (unsigned int i = 0; i < rayLengths.size(); i++)
+	{
+		if (rayLengths[i] < rayLength)
+		{
+			rayLength = rayLengths[i];
+		}
+	}
+
+	return rayLength;
+}
+
 
 float CollisionManager::CalculateMouseDistanceFromPlayer(DirectX::XMFLOAT3 p_playerPos)
 {

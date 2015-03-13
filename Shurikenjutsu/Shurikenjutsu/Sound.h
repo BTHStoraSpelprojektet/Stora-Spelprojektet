@@ -2,8 +2,9 @@
 #define SOUND_H_
 
 #include "FMOD\inc\fmod.hpp"
-#include "..\CommonLibs\CommonEnums.h"
 #include <vector>
+
+enum PLAYSOUND;
 
 class Sound
 {

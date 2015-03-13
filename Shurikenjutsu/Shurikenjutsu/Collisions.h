@@ -1,8 +1,12 @@
 #pragma once
 #include <DirectXCollision.h>
-#include "Structures.h"
 #pragma comment(lib, "PhysicsDll.lib")
 #include "PhysicsDll.h"
+
+struct OBB;
+struct Box;
+struct Sphere;
+struct Ray;
 
 class Collisions
 {

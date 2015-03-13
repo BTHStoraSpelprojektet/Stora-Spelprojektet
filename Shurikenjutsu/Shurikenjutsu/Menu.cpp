@@ -1,4 +1,7 @@
 #include "Menu.h"
+#include "MenuButton.h"
+#include "MenuCheckbox.h"
+#include "MenuTextBox.h"
 
 Menu::Menu(){}
 Menu::~Menu(){}
