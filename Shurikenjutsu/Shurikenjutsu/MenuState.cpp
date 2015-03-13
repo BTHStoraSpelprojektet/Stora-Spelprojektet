@@ -297,14 +297,14 @@ GAMESTATESWITCH MenuState::Update()
 				}
 				else
 				{
-					GraphicsEngine::ToggleFullscreen(false, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+					GraphicsEngine::ToggleFullscreen(false, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 					m_menues.push(m_connecting);
 					m_hideIpBox = true;
 					Settings::GetInstance()->m_name = m_namebox->GetText();
 					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 					Network::GetInstance()->Connect("127.0.0.1");
 					Network::GetInstance()->SetNetworkStatusConnecting();
-					GraphicsEngine::ToggleFullscreen(true, GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+					GraphicsEngine::ToggleFullscreen(true, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 				}
 			}
 			break;
