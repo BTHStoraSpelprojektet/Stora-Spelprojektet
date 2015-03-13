@@ -905,7 +905,10 @@ void ObjectManager::RenderDepth()
 	}
 
 	m_POIManager->RenderDepth();
+}
 
+void ObjectManager::RenderInstancedDepth()
+{
 	GraphicsEngine::PrepareRenderDepthInstanced();
 	for (unsigned int i = 0; i < m_objectsToInstanceRender.size(); i++)
 	{

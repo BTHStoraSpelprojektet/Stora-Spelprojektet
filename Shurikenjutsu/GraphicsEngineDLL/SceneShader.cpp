@@ -896,14 +896,8 @@ void SceneShader::Shutdown()
 
 void SceneShader::PrepareRender(ID3D11DeviceContext* p_context)
 {
-	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
-
-	p_context->PSSetSamplers(0, 1, &m_samplerState);
-	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
 	p_context->IASetInputLayout(m_layout);
-
 	p_context->VSSetShader(m_vertexShader, NULL, 0);
-	p_context->PSSetShader(m_pixelShader, NULL, 0);
 }
 
 void SceneShader::Render(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap)
@@ -970,8 +964,13 @@ void SceneShader::RenderReversedShadows(ID3D11DeviceContext* p_context, ID3D11Bu
 
 void SceneShader::PrepareRenderAnimated(ID3D11DeviceContext* p_context)
 {
+	p_context->PSSetShaderResources(2, 1, &m_shadowMap);
+	p_context->PSSetSamplers(0, 1, &m_samplerState);
+	p_context->PSSetSamplers(1, 1, &m_samplerShadowMapState);
+
 	p_context->IASetInputLayout(m_animatedLayout);
 	p_context->VSSetShader(m_animatedVertexShader, NULL, 0);
+	p_context->PSSetShader(m_pixelShader, NULL, 0);
 }
 
 void SceneShader::RenderAnimated(ID3D11DeviceContext* p_context, ID3D11Buffer* p_mesh, int p_numberOfVertices, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, ID3D11ShaderResourceView* p_normalMap, std::vector<DirectX::XMFLOAT4X4> p_boneTransforms)
