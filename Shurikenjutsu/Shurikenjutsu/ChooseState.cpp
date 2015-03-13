@@ -123,9 +123,9 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_tools[0] = new MenuItem();
 	m_tools[1] = new MenuItem();
 	m_tools[2] = new MenuItem();
-	m_tools[0]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_Caltrops.png"));
-	m_tools[1]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_SmokeBomb.png"));
-	m_tools[2]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_StickyTARP.png"));
+	m_tools[0]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_Caltrops.png"));
+	m_tools[1]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_SmokeBomb.png"));
+	m_tools[2]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_StickyTARP.png"));
 
 	float bgWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.0f;
 	float bgHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 6.83f;

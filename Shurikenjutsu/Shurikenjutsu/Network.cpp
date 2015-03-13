@@ -487,6 +487,7 @@ void Network::ReceviePacket()
 				m_restartingRound = false;
 				m_roundOver = true;
 				m_timeRestarting = 0;
+				m_suddenDeath = false;
 				ClearListsAtNewRound();
 
 				m_sound->CreateDefaultSound(PLAYSOUND_COUNTDOWN_GONG_SOUND, 0, 0, 0);
@@ -512,7 +513,7 @@ void Network::ReceviePacket()
 			
 				ConsolePrintText("Next round starts in: ");
 				ConsoleSkipLines(1);
-				m_suddenDeath = false;
+				
 				break;
 			}
 			case ID_RESTARTING_ROUND_TIMER:
@@ -603,6 +604,12 @@ void Network::ReceviePacket()
 				m_roundOver = false;
 				m_matchWinningTeam = 0;
 				m_restartingRound = false;
+
+				for (unsigned int i = 0; i < runeSoundEmitters.size(); i++)
+				{
+					m_sound->StopAmbientSound(runeSoundEmitters[i]);
+				}
+				runeSoundEmitters.clear();
 
 				RakNet::BitStream wBitStream;
 				wBitStream.Write((RakNet::MessageID)ID_DOWNLOAD_PLAYERS);
@@ -990,6 +997,12 @@ void Network::ReceviePacket()
 					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, x, y, z);
 					break;
 				}
+				case ABILITIES::ABILITIES_FANMELEE:
+				{
+					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
+					m_sound->CreateDefaultSound(PLAYSOUND::PLAYSOUND_KATANA_HIT_SOUND, x, y, z);
+					break;
+				}
 				case ABILITIES::ABILITIES_WHIP_PRIMARY:
 				{
 					//m_sound->PlaySound(PLAYSOUND::PLAYSOUND_WHIP_HIT_SOUND, 1.0f / (distance / soundDistanceGain));
@@ -1127,12 +1140,15 @@ void Network::ReceviePacket()
 				break;
 			}
 
-			case ID_START_SUDDEN_DEATH:
+			case ID_SEND_SUDDEN_DEATH:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
 
+				bool isSuddenDeath;
 				bitStream.Read(messageID);
-				m_suddenDeath = true;
+				bitStream.Read(isSuddenDeath);
+
+				m_suddenDeath = isSuddenDeath;
 
 				break;
 			}

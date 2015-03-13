@@ -253,15 +253,16 @@ void GameState::UpdateTime(double p_deltaTime)
 	{
 		m_isSuddenDeath = true;
 
-		SendSuddenDeathMessage();
+		SendSuddenDeathMessage(m_isSuddenDeath);
 	}
 }
 
-void GameState::SendSuddenDeathMessage()
+void GameState::SendSuddenDeathMessage(bool p_isSuddenDeath)
 {
 	RakNet::BitStream bitStream;
 
-	bitStream.Write((RakNet::MessageID)ID_START_SUDDEN_DEATH);
+	bitStream.Write((RakNet::MessageID)ID_SEND_SUDDEN_DEATH);
+	bitStream.Write(p_isSuddenDeath);
 
 	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 4, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
@@ -274,6 +275,8 @@ void GameState::ResetTime()
 	m_runesSpawned = false;
 	m_runeRespawn = false;
 	m_suddenDeathTimer = 0.0f;
+
+	SendSuddenDeathMessage(m_isSuddenDeath);
 }
 
 void GameState::SyncTime(RakNet::RakNetGUID p_guid)

@@ -199,10 +199,10 @@ void AnimatedObject::ChangeTrailColor(int p_team)
 {
 	if (p_team == 1)
 	{
-		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED);
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL);
 	}
 	else
 	{
-		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE);
+		m_trail->ChangeColor(GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL);
 	}
 }

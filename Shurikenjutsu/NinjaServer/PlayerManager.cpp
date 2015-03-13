@@ -464,6 +464,12 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 			p_collisionManager.NormalMeleeAttack(p_guid, this, p_readAbility);
 			break;
 		}
+		case ABILITIES_FANMELEE:
+		{
+			SendPlaySound(PLAYSOUND::PLAYSOUND_AIR_CUT_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
+			p_collisionManager.NormalMeleeAttack(p_guid, this, p_readAbility);
+			break;
+		}
 
 		case ABILITIES_MEGASHURIKEN:
 		{
