@@ -27,9 +27,7 @@ struct Input
 	float4 m_positionHomogenous : SV_POSITION;
 	float4 m_positionWorld : POSITION;
 	float2 m_textureCoordinate : TEXCOORD0;
-
 	float3x3 m_tBN : TBN;
-	float4 m_lightPositionHomogenous : TEXCOORD1;
 };
 
 // Pixel shader function.

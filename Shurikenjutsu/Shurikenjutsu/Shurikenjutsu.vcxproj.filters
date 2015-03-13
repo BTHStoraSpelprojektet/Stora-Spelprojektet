@@ -891,6 +891,9 @@
     <FxCompile Include="Shaders\Particle\ParticlePixelShaderNotFire.hlsl">
       <Filter>Shaders\Particle</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\ShadowShapes\SSRevereseVertexShader.hlsl">
+      <Filter>Shaders\ShadowShapes</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Scene\LightCalculation.hlsli">
