@@ -390,9 +390,6 @@ GAMESTATESWITCH MenuState::Update()
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 
 	// Update every object.
-	m_objectManager->UpdateRenderLists();
-
-	// Update every object.
 	m_objectManager->Update();
 
 	return GAMESTATESWITCH_NONE;
