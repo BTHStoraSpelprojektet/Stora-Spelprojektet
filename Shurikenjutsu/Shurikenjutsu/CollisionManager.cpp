@@ -13,7 +13,6 @@ CollisionManager::~CollisionManager(){}
 
 void CollisionManager::SetOuterWallList(std::vector<Box> p_outerWallList)
 {
-
 	for (unsigned int i = 0; i < p_outerWallList.size(); i++)
 	{
 		m_outerWallList.push_back(OBB(p_outerWallList[i]));
@@ -491,7 +490,7 @@ float CollisionManager::CalculatThrowDistanceChekcingOuterWalls(Ray* p_ray)
 	std::vector<float> rayLengths;
 
 	// Check all boxes, houses
- 	for (unsigned int i = 0; i < m_outerWallList.size(); i++)
+	for (unsigned int i = 0; i < m_outerWallList.size(); i++)
 	{
 		if (Collisions::RayOBBCollision(ray, m_outerWallList[i]))
 		{

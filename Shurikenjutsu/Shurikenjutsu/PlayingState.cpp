@@ -123,7 +123,9 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_poiText = new GUIText();
 	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 	m_playerJoinedText = new GUIText();
-	m_playerJoinedText->Initialize("", 50.0f, 0.0f, 250.0f, 0xffffffff);
+	m_playerJoinedText->Initialize("", 50.0f, 0.0f, 250.0f, 0xffffffff); 
+	m_spectateText = new GUIText();
+	m_spectateText->Initialize("", 50.0f, 0.0f, 250.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -179,6 +181,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 
 	POIGrapichalEffects::GetInstance().Initialize();
 
+	m_refreshSpectateText = false;
 	return true;
 }
 
@@ -255,6 +258,12 @@ void PlayingState::Shutdown()
 		delete m_playerJoinedText;
 		m_playerJoinedText = nullptr;
 	}
+	if (m_spectateText != nullptr)
+	{
+		m_spectateText->Shutdown();
+		delete m_spectateText;
+		m_spectateText = nullptr;
+	}
 
 	if (m_poiText != nullptr)
 	{
@@ -308,8 +317,9 @@ GAMESTATESWITCH PlayingState::Update()
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		DecreaseTextOpacity(m_startText);
-		DecreaseTextOpacity(m_poiText);
+		DecreaseTextOpacity(m_poiText); 
 		DecreaseTextOpacity(m_playerJoinedText);
+		DecreaseTextOpacity(m_spectateText);
 	}
 
 	// Update global delta time.
@@ -398,6 +408,13 @@ GAMESTATESWITCH PlayingState::Update()
 			player = tempList[m_spectateIndex]->GetPosition();
 			m_camera->FollowCharacter(player);
 		}
+		if (m_refreshSpectateText)
+		{
+			std::string tempString = "Sprectating " + tempList[m_spectateIndex]->GetName();
+			m_spectateText->SetText(tempString);
+			m_spectateText->SetColor(0xffffffff);
+			m_refreshSpectateText = false;
+		}
 	}
 
 	else
@@ -408,6 +425,7 @@ GAMESTATESWITCH PlayingState::Update()
 	if (InputManager::GetInstance()->IsLeftMouseClicked() && GLOBAL::GetInstance().CAMERA_SPECTATE)
 	{
 		m_spectateIndex += 1;
+		m_refreshSpectateText = true;
 	}
 
 	// Update every scene object.
@@ -545,12 +563,13 @@ void PlayingState::Render()
 {
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
-	GraphicsEngine::PrepareRenderDepth();
-	m_objectManager->RenderDepth();
-
 	GraphicsEngine::PrepareRenderAnimatedDepth();
 	m_objectManager->RenderAnimatedDepth();
 	m_playerManager->RenderDepth(false);
+
+	m_objectManager->RenderInstancedDepth();
+	GraphicsEngine::PrepareRenderDepth();
+	m_objectManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
@@ -560,13 +579,13 @@ void PlayingState::Render()
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 	UpdatePOIEffects();
 
-	m_objectManager->RenderInstanced();
-	GraphicsEngine::PrepareRenderScene();
-	m_objectManager->Render();
-
 	GraphicsEngine::PrepareRenderAnimated();
 	m_objectManager->RenderAnimated();
 	m_playerManager->Render(false);
+
+	m_objectManager->RenderInstanced();
+	GraphicsEngine::PrepareRenderScene();
+	m_objectManager->Render();
 	
 	GraphicsEngine::RenderFoliage();
 	
@@ -645,6 +664,7 @@ void PlayingState::Render()
 	}
 
 	m_playerJoinedText->Render();
+	m_spectateText->Render();
 
 	GraphicsEngine::ResetRenderTarget();
 }

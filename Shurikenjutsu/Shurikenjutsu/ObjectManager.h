@@ -37,6 +37,7 @@ public:
 	void RenderInstanced();
 	void RenderAnimated();
 	void RenderDepth();
+	void RenderInstancedDepth();
 	void RenderAnimatedDepth();
 
 	void AddShuriken(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_dir, float p_speed, unsigned int p_shurikenID);

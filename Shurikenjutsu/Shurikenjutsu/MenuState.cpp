@@ -391,9 +391,6 @@ GAMESTATESWITCH MenuState::Update()
 	m_directionalLight.m_cameraPosition = DirectX::XMLoadFloat3(&m_camera->GetPosition());
 
 	// Update every object.
-	m_objectManager->UpdateRenderLists();
-
-	// Update every object.
 	m_objectManager->Update();
 
 	return GAMESTATESWITCH_NONE;
@@ -421,10 +418,11 @@ void MenuState::Render()
 
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
-	GraphicsEngine::PrepareRenderDepth();
-	m_objectManager->RenderDepth();
 	GraphicsEngine::PrepareRenderAnimatedDepth();
 	m_objectManager->RenderAnimatedDepth();
+	m_objectManager->RenderInstancedDepth();
+	GraphicsEngine::PrepareRenderDepth();
+	m_objectManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
@@ -433,12 +431,12 @@ void MenuState::Render()
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 
+	GraphicsEngine::PrepareRenderAnimated();
+	m_objectManager->RenderAnimated();
+
 	m_objectManager->RenderInstanced();
 	GraphicsEngine::PrepareRenderScene();
 	m_objectManager->Render();
-
-	GraphicsEngine::PrepareRenderAnimated();
-	m_objectManager->RenderAnimated();
 
 	GraphicsEngine::RenderFoliage();
 
