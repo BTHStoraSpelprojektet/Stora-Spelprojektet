@@ -131,8 +131,9 @@ public:
 	void SetSound(Sound* p_sound);
 
 	void SpawnBloodParticles(RakNet::RakNetGUID p_guid);
-	std::vector<DirectX::XMFLOAT3*> BloodParticlesLocations();
-	bool IsBloodParticlesUpdated();
+	void SpawnBloodParticlesOnPlayers(RakNet::RakNetGUID p_guid);
+	std::vector<int> GetBloodParticlesOnPlayers();
+
 	bool IsSuddenDeath();
 	int GetSuddenDeathBoxIndex();
 
@@ -284,5 +285,7 @@ private:
 
 	std::vector<int> m_visibleEnemies;
 	std::vector<int> m_teamVisibleEnemies;
+
+	std::vector<int> m_bloodParticlesIndex;
 };
 #endif

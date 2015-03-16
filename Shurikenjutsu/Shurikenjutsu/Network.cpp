@@ -2248,7 +2248,7 @@ void Network::UpdateFanLifeTime(unsigned int p_id, float p_lifeTime)
 
 void Network::SpawnBloodParticles(RakNet::RakNetGUID p_guid)
 {
-	// Check if spawn blood on player or enemies
+	/*// Check if spawn blood on player or enemies
 	if (m_myPlayer.guid == p_guid)
 	{
 		m_objectManager->AddBloodSpots(DirectX::XMFLOAT3(m_myPlayer.x, m_myPlayer.y, m_myPlayer.z));
@@ -2262,8 +2262,9 @@ void Network::SpawnBloodParticles(RakNet::RakNetGUID p_guid)
 				m_objectManager->AddBloodSpots(DirectX::XMFLOAT3(m_enemyPlayers[i].x, m_enemyPlayers[i].y, m_enemyPlayers[i].z));
 			} 
 		}
-	}
+	}*/
 }
+
 
 int Network::GetTeam(RakNet::RakNetGUID p_guid)
 {
