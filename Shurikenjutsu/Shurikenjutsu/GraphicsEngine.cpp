@@ -94,9 +94,9 @@ void GraphicsEngine::RenderAnimatedDepth(ID3D11Buffer* p_mesh, int p_numberOfVer
 	DLLGraphicsEngine::GE::GetInstance()->RenderAnimatedDepth(p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_boneTransforms);
 }
 
-void GraphicsEngine::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+void GraphicsEngine::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, float p_opacity)
 {
-	DLLGraphicsEngine::GE::GetInstance()->RenderGUI(p_worldMatrix, p_texture);
+	DLLGraphicsEngine::GE::GetInstance()->RenderGUI(p_worldMatrix, p_texture, p_opacity);
 }
 
 void GraphicsEngine::PrepareRenderGUI()

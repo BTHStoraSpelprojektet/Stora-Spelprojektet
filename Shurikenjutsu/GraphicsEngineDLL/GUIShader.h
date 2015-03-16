@@ -13,7 +13,7 @@ public:
 
 	void Shutdown();
 
-	void Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, float p_currentScreenWidth, float p_currentScreenHeight);
+	void Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, float p_currentScreenWidth, float p_currentScreenHeight, float p_opacity);
 	void PrepareRender(ID3D11DeviceContext* p_context);
 
 private:
@@ -31,6 +31,8 @@ private:
 	{
 		DirectX::XMFLOAT4X4 m_worldMatrix;
 		DirectX::XMFLOAT4X4 m_projectionMatrix;
+		float m_opacity;
+		DirectX::XMFLOAT3 m_padding;
 	};
 
 	ID3D11Buffer* m_quadBuffer;

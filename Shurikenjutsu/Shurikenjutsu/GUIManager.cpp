@@ -23,7 +23,7 @@ void GUIManager::Render()
 {
 	for (unsigned int i = 0; i < m_elements.size(); i++)
 	{
-		GraphicsEngine::RenderGUI(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetTexture());
+		GraphicsEngine::RenderGUI(m_elements[i]->GetWorldMatrix(), m_elements[i]->GetTexture(), m_elements[i]->GetOpacity());
 	}
 
 	if (m_texts.size() > 0)

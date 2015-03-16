@@ -20,6 +20,7 @@
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "TrailRenderer.h"
+#include "FlashBang.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -183,6 +184,9 @@ bool PlayingState::Initialize(std::string p_levelName)
 
 	m_refreshSpectateText = false;
 	m_spectateTimer = 2.0f;
+
+	FlashBang::GetInstance().Initialize();
+
 	return true;
 }
 
@@ -304,7 +308,7 @@ void PlayingState::ShutdownExit()
 }
 
 GAMESTATESWITCH PlayingState::Update()
-	{
+{
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -444,6 +448,15 @@ GAMESTATESWITCH PlayingState::Update()
 	TrailRenderer::GetInstance().SetProjectionMatrix(m_camera->GetProjectionMatrix());
 	m_objectManager->Update();
 	OBB playerOBB = m_playerManager->GetPlayerBoundingBox();
+
+	// Update flash bangs.
+	if (GetAsyncKeyState(VK_DELETE))
+	{
+		FlashBang::GetInstance().GetFlashed();
+	}
+
+	FlashBang::GetInstance().UpdateFlashBangs();
+	FlashBang::GetInstance().UpdateEffect(m_playerManager->GetPlayerPosition(), m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
 	// Update health bars.
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
@@ -588,6 +601,7 @@ void PlayingState::Render()
 	// Render to the scene normally.
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
+	FlashBang::GetInstance().RenderEffect();
 	UpdatePOIEffects();
 
 	GraphicsEngine::PrepareRenderAnimated();

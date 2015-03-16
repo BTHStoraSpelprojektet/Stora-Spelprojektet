@@ -5,10 +5,10 @@
 
 class GUIElement;
 
-class FalshBang
+class FlashBang
 {
 public:
-	static FalshBang& GetInstance();
+	static FlashBang& GetInstance();
 
 	bool Initialize();
 	void Shutdown();
@@ -18,17 +18,19 @@ public:
 
 	void GetFlashed();
 	void InterruptFlash();
-	void UpdateEffect();
+	void UpdateEffect(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
 	void RenderEffect();
 
 private:
-	FalshBang(){};
-	FalshBang(FalshBang const&);
-	void operator=(FalshBang const&);
+	FlashBang(){};
+	FlashBang(FlashBang const&);
+	void operator=(FlashBang const&);
 
 	bool m_flashed;
 	float m_opacity;
 	float m_holdTime;
+	float m_sizeVariation;
+	float m_sizeDirection;
 	enum OPACITY_STATE
 	{
 		OPACITY_INCREASE, 
