@@ -182,7 +182,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	POIGrapichalEffects::GetInstance().Initialize();
 
 	m_refreshSpectateText = false;
-	m_spectateTimer = 1.5f;
+	m_spectateTimer = 2.0f;
 	return true;
 }
 
