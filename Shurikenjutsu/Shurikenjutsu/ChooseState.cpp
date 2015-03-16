@@ -70,22 +70,22 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
 	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
 	
-	GUIText temp;
-	temp.Initialize("M1", 25.0f, -126.0f, -50.0f, 0xff000000);
+	GUIText* temp = new GUIText();
+	temp->Initialize("M1", 25.0f, -126.0f, -80.0f, 0xff000000);
 	m_keyBinds.push_back(temp);
-	GUIText temp2;
-	temp.Initialize("M2", 25.0f, -42.0f, -50.0f, 0xff000000);
+	GUIText* temp2 = new GUIText();
+	temp2->Initialize("M2", 25.0f, -42.0f, -80.0f, 0xff000000);
 	m_keyBinds.push_back(temp2);
-	GUIText temp3;
-	temp.Initialize("Q", 25.0f, 42.0f, -50.0f, 0xff000000);
+	GUIText* temp3 = new GUIText();
+	temp3->Initialize("Q", 25.0f, 42.0f, -80.0f, 0xff000000);
 	m_keyBinds.push_back(temp3);
-	GUIText temp4;
-	temp.Initialize("E", 25.0f, 126.0f, -50.0f, 0xff000000);
+	GUIText* temp4 = new GUIText();
+	temp4->Initialize("E", 25.0f, 126.0f, -80.0f, 0xff000000);
 	m_keyBinds.push_back(temp4);
 
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f +offset;
-	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-120.0f;
+	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-140.0f;
 	float portraitYPos = 110.0f;//ninjaCycleHeight;//ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
 	float toolButtonSize = 60.0f;//m_screenHeight / 20.48f;
 	float toolButtonXPos = 70.0f;
@@ -275,6 +275,16 @@ void ChooseState::Shutdown()
 			m_ninjas[i]->Shutdown();
 			delete m_ninjas[i];
 			m_ninjas[i] = nullptr;
+		}
+	}
+
+	for (unsigned int i = 0; i < m_keyBinds.size(); i++)
+	{
+		if (m_keyBinds[i] != nullptr)
+		{
+			m_keyBinds[i]->Shutdown();
+			delete m_keyBinds[i];
+			m_keyBinds[i] = nullptr;
 		}
 	}
 
@@ -560,10 +570,10 @@ void ChooseState::Render()
 	m_redTeam->Render();
 	m_blueTeam->Render();
 	m_questionMark->Render();
-	/*for (unsigned int i = 0; i < m_keyBinds.size(); i++)
+	for (unsigned int i = 0; i < m_keyBinds.size(); i++)
 	{
-	m_keyBinds[i].Render();
-	}*/
+		m_keyBinds[i]->Render();
+	}
 	m_toolDescription[m_currentTool]->Render();
 	m_title->Render();
 

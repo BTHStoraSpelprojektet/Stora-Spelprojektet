@@ -68,7 +68,7 @@ private:
 	CharacterAbilityDescription *m_abilityDescription[4];
 	GUIText* m_redTeamScore;
 	GUIText* m_blueTeamScore;
-	std::vector<GUIText> m_keyBinds;
+	std::vector<GUIText*> m_keyBinds;
 	int m_currentNinja;
 	int m_nrOfNinjas;
 	int m_currentTool;
