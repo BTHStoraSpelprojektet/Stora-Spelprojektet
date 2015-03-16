@@ -15,6 +15,7 @@
 #include <shellapi.h>
 #include <Windows.h>
 #include "..\CommonLibs\Flags.h"
+#include "ObjectManager.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
@@ -93,11 +94,11 @@ bool MenuState::Initialize(std::string p_levelName)
 
 	// Initialize play menu
 	m_ipbox = new MenuTextBox();
-	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, 0.0f, 394.0f, 67.0f, 15, settings->m_ip);
+	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -15.0f, 394.0f, 67.0f, 15, settings->m_ip);
 	m_hideIpBox = true;
 
 	m_namebox = new MenuTextBox();
-	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 57, 394.0f, 67.0f, 15, settings->m_name);
+	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 57.0f, 394.0f, 67.0f, 15, settings->m_name);
 
 	m_play = new Menu();
 	m_play->AddButton(0.0f, -1.0f * BUTTONHEIGHT - 2.0f * BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/connect.png"), MENUACTION_CONNECT);
@@ -333,11 +334,11 @@ GAMESTATESWITCH MenuState::Update()
 			GraphicsEngine::ToggleFullscreen(temp, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 			std::string tempstring = m_ipbox->GetText();
 			m_ipbox->Shutdown();
-			m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, 10, 394.0f, 67.0f, 15, tempstring);
+			m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -15.0f, 394.0f, 67.0f, 15, tempstring);
 			m_hideIpBox = true;
 			tempstring = m_namebox->GetText();
 			m_namebox->Shutdown();
-			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 57, 394.0f, 67.0f, 15, tempstring);
+			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 57.0f, 394.0f, 67.0f, 15, tempstring);
 			break;
 
 	}

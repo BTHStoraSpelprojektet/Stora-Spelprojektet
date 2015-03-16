@@ -15,30 +15,14 @@
 #include "..\CommonLibs\ReplicaManager.h"
 #include "..\CommonLibs\ServerMessages.h"
 #include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\CommonStructures.h"
 #include "..\CommonLibs\NetworkLogger.h"
 #include <vector>
 #include <map>
 #include <DirectXMath.h>
-#include "ObjectManager.h"
 #include "Sound.h"
 
-
-enum NETWORKSTATUS
-{
-	NETWORKSTATUS_CONNECTING,
-	NETWORKSTATUS_CONNECTED,
-	NETWORKSTATUS_LOST,
-	NETWORKSTATUS_TIMEOUT,
-	NETWORKSTATUS_NONE
-};
-
 class ObjectManager;
-
-struct DealtDamageStruct
-{
-	float m_damage;
-	DirectX::XMFLOAT3 m_position;
-};
 
 class Network
 {
