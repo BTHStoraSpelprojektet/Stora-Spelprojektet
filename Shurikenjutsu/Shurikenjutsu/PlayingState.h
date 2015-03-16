@@ -104,5 +104,6 @@ private:
 	Sound* m_sound;
 
 	bool m_scoreBoardIsActive;
+	float m_spectateTimer;
 };
 #endif PLAYINGSTATE
