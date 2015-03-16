@@ -62,11 +62,13 @@ private:
 	MenuItem *m_title;
 	MenuItem *m_tintedBackground;
 	MenuItem *m_ninjaPortBorder;
+	MenuItem *m_backgroundFrame;
 	ToolTipPopUp* m_toolDescription[3];
 	MenuItem *m_questionMark;
 	CharacterAbilityDescription *m_abilityDescription[4];
 	GUIText* m_redTeamScore;
 	GUIText* m_blueTeamScore;
+	std::vector<GUIText> m_keyBinds;
 	int m_currentNinja;
 	int m_nrOfNinjas;
 	int m_currentTool;

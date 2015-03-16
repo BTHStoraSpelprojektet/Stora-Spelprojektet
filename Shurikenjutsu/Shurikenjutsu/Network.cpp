@@ -84,7 +84,7 @@ void Network::InitValues()
 	m_timeToPing = m_pingTimer;
 	m_dealtDamage = 0;
 
-	m_posTimer = 0.02;
+	m_posTimer = 0.04;
 	m_timeToSendPos = 0.0;
 }
 
@@ -2688,4 +2688,24 @@ void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 			}
 		}
 	}
+}
+
+PlayerNet Network::GetPlayer(RakNet::RakNetGUID p_guid)
+{
+	if (p_guid == GetMyGUID())
+	{
+		return m_myPlayer;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				return m_enemyPlayers[i];
+			}
+		}
+	}
+
+	return PlayerNet();
 }
