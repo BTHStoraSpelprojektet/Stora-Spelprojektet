@@ -491,7 +491,7 @@ float CollisionManager::CalculatThrowDistanceChekcingOuterWalls(Ray* p_ray)
 	std::vector<float> rayLengths;
 
 	// Check all boxes, houses
- 	for (unsigned int i = 0; i < m_outerWallList.size(); i++)
+	for (unsigned int i = 0; i < m_outerWallList.size(); i++)
 	{
 		if (Collisions::RayOBBCollision(ray, m_outerWallList[i]))
 		{
