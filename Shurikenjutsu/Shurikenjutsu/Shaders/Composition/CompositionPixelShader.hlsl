@@ -108,5 +108,10 @@ float4 main(Input p_input) : SV_Target
 	albedo.xyz = albedo.xyz*((A.xyz + D.xyz * (shadowSum*0.5f + 0.5f)) + S.xyz * shadowSum)*ssao;
 	albedo.w = 1.0f;
 
-	return float4(albedo.xyz, 1.0f);
+	//return float4(albedo.xyz, 1.0f);
+	float2 vtc = float2(positionScreen * 0.5f);
+	float vignette = pow(1 - (dot(vtc, vtc) * 1.0), 2.0);
+	float4 exposed = 1.0 - pow(2.71, -(vignette * albedo * 2.0f));
+
+	return float4(exposed.xyz, 1.0f);
 }

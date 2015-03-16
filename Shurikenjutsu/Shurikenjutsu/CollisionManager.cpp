@@ -13,7 +13,6 @@ CollisionManager::~CollisionManager(){}
 
 void CollisionManager::SetOuterWallList(std::vector<Box> p_outerWallList)
 {
-
 	for (unsigned int i = 0; i < p_outerWallList.size(); i++)
 	{
 		m_outerWallList.push_back(OBB(p_outerWallList[i]));

@@ -135,12 +135,21 @@ bool DirectXWrapper::Initialize(HWND p_handle, float p_maxWindowHeight,	float p_
 	};
 	m_version = versions[0];
 
+#ifdef _DEBUG
 	// Create the swap chain and device.
 	if (FAILED(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_DEBUG, versions, ARRAYSIZE(versions), D3D11_SDK_VERSION, &swapChainDescription, &m_swapChain, &m_device, &m_version, &m_context)))
 	{
 		ConsolePrintErrorAndQuit("DirectX swap chain and device failed to create.");
 		return false;
 	}
+#else
+	// Create the swap chain and device.
+	if (FAILED(D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, versions, ARRAYSIZE(versions), D3D11_SDK_VERSION, &swapChainDescription, &m_swapChain, &m_device, &m_version, &m_context)))
+	{
+		ConsolePrintErrorAndQuit("DirectX swap chain and device failed to create.");
+		return false;
+	}
+#endif
 
 	IDXGIDevice* device = NULL;
 	m_device->QueryInterface(__uuidof(IDXGIDevice), (void **)&device);
