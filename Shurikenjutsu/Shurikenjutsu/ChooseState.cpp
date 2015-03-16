@@ -130,6 +130,9 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_ninjaPortBorder = new MenuItem();
 	m_ninjaPortBorder->Initialize(0.0f, portraitYPos, 240, 240, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/portBG.png"));
 
+	m_backgroundFrame = new MenuItem();
+	m_backgroundFrame->Initialize(0.0f, 0.0f, 410, 440, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/lobby_bg.png"));
+
 	float bgWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.0f;
 	float bgHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 6.83f;
 	m_toolDescription[0] = new ToolTipPopUp();
@@ -288,6 +291,13 @@ void ChooseState::Shutdown()
 		m_ninjaPortBorder->Shutdown();
 		delete m_ninjaPortBorder;
 		m_ninjaPortBorder = nullptr;
+	}
+
+	if (m_backgroundFrame != nullptr)
+	{
+		m_backgroundFrame->Shutdown();
+		delete m_backgroundFrame;
+		m_backgroundFrame = nullptr;
 	}
 
 	for (unsigned int i = 0; i < 4; i++)
@@ -525,6 +535,7 @@ void ChooseState::Render()
 	GraphicsEngine::ResetRenderTarget();
 
 	m_tintedBackground->Render();
+	m_backgroundFrame->Render();
 	m_chooseNinja->Render();
 
 	m_ninjas[m_currentNinja]->Render();
