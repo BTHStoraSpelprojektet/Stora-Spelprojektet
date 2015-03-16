@@ -90,6 +90,7 @@ void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 		m_FourthText->Initialize(ability4.x, ability4.y, KUNAI_SECONDARY_ATTACK, 50.0f, bgWidth, bgHeight, 0.0f);
 		m_FourthPic->Initialize(ability4.x, ability4.y, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N3_E.png"));
 	}
+	m_renderKeybinds = true;
 }
 
 void CharacterAbilityDescription::Update()
@@ -169,9 +170,12 @@ void CharacterAbilityDescription::Shutdown()
 void CharacterAbilityDescription::Render()
 {
 	//m_abilityBarBG->Render();
-	for (unsigned int i = 0; i < m_keyBinds.size(); i++)
+	if (m_renderKeybinds)
 	{
-		m_keyBinds[i]->Render();
+		for (unsigned int i = 0; i < m_keyBinds.size(); i++)
+		{
+			m_keyBinds[i]->Render();
+		}
 	}
 	m_FirstPic->Render();
 	m_SecondPic->Render();
@@ -181,4 +185,9 @@ void CharacterAbilityDescription::Render()
 	m_SecondText->Render();
 	m_ThirdText->Render();
 	m_FourthText->Render();
+}
+
+void CharacterAbilityDescription::SetRenderKeybinds(bool p_yesRender)
+{
+	m_renderKeybinds = p_yesRender;
 }

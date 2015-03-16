@@ -335,6 +335,25 @@ ObjectManager* ChooseState::GetObjectManager()
 
 GAMESTATESWITCH ChooseState::Update()
 {
+	float xPos = (float)InputManager::GetInstance()->GetMousePositionX();
+	float yPos = (float)InputManager::GetInstance()->GetMousePositionY();
+
+	//+((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f)
+	//	- ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f)
+	
+	if (xPos > (m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) || xPos < (-m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) ||
+		yPos >(m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 120.0f || yPos < (-m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 120.0f)
+	{
+		m_abilityDescription[0]->SetRenderKeybinds(true);
+		m_abilityDescription[1]->SetRenderKeybinds(true);
+		m_abilityDescription[2]->SetRenderKeybinds(true);
+	}
+	else
+	{
+		m_abilityDescription[0]->SetRenderKeybinds(false);
+		m_abilityDescription[1]->SetRenderKeybinds(false);
+		m_abilityDescription[2]->SetRenderKeybinds(false);
+	}
 	// Update Camera position
 	m_camera->MenuCameraRotation();
 
@@ -542,11 +561,8 @@ void ChooseState::Render()
 	m_ninjas[m_currentNinja]->Render();
 	m_tools[m_currentTool]->Render();
 	//m_ninjaPortBorder->Render();
-	if (InputManager::GetInstance()->GetMousePositionX() > m_toolWidth * 0.5f || InputManager::GetInstance()->GetMousePositionX() < -m_toolWidth * 0.5f
-		|| InputManager::GetInstance()->GetMousePositionY() > m_toolHeight * 0.5f || InputManager::GetInstance()->GetMousePositionY() < -m_toolHeight * 0.5f)
-	{
-		m_abilityDescription[m_currentNinja]->Render();
-	}
+
+	m_abilityDescription[m_currentNinja]->Render();
 	//m_redTeamScore->Render();
 	//m_blueTeamScore->Render();
 	m_redTeam->Render();
