@@ -27,8 +27,16 @@ private:
 	void operator=(FalshBang const&);
 
 	bool m_flashed;
-	bool m_increasingOpacity;
 	float m_opacity;
+	float m_holdTime;
+	enum OPACITY_STATE
+	{
+		OPACITY_INCREASE, 
+		OPACITY_HOLD,
+		OPACITY_DECREASE,
+		OPACITY_NONE
+	};
+	OPACITY_STATE m_opacityState;
 
 	GUIElement* m_flashEffect;
 };
