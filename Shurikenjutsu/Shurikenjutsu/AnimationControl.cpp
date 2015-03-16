@@ -203,6 +203,22 @@ void AnimationControl::CombineMatrices(int* p_index, BoneFrame* p_jointArms, Bon
 			m_showTrail = true;
 		}
 	}
+	else if (m_state == AnimationState::Melee || m_state == AnimationState::Special1)
+	{
+		if (strcmp(p_jointArms->m_name, "trailJoint") == 0)
+		{
+			m_trailPosition = DirectX::XMFLOAT3(jointTranslation.m128_f32[0], jointTranslation.m128_f32[1], jointTranslation.m128_f32[2]);
+			DirectX::XMFLOAT3 lastPos = DirectX::XMFLOAT3(m_boneTransforms[*p_index]._14, m_boneTransforms[*p_index]._24, m_boneTransforms[*p_index]._34);
+
+			DirectX::XMFLOAT3 weaponDirection;
+			weaponDirection.x = m_trailPosition.x - lastPos.x;
+			weaponDirection.y = m_trailPosition.y - lastPos.y;
+			weaponDirection.z = m_trailPosition.z - lastPos.z;
+
+			m_trailAngle = atan2(weaponDirection.z, weaponDirection.x);
+			m_showTrail = true;
+		}
+	}
 	else
 	{
 		m_showTrail = false;
@@ -372,7 +388,7 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p
 
 			if (radianHip > low || radianHip < -low)
 			{
-				m_hipRotation += radianHip * 0.05f;
+				m_hipRotation += radianHip * (float)GLOBAL::GetInstance().GetDeltaTime() * 4.0f;
 				ChangeLayer(7, 15);
 			}			
 		}
@@ -382,7 +398,7 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p
 
 			if (radianHip > low || radianHip < -low)
 			{
-				m_hipRotation += radianHip * 0.05f;
+				m_hipRotation += radianHip * (float)GLOBAL::GetInstance().GetDeltaTime() * 4.0f; // 0.05f
 				ChangeLayer(7, 15);
 			}
 		}

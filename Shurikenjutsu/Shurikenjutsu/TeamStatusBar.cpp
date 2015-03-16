@@ -40,6 +40,10 @@ bool TeamStatusBar::Initialize()
 	m_frame = new GUIElement();
 	m_frame->Initialize(DirectX::XMFLOAT3(m_originPos.x, m_originPos.y - 12.5f, m_originPos.z), 570.0f, 80.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_FRAME));
 
+	// Deadplayer
+	m_deadBluePlayer = std::vector<GUIElement*>();
+	m_deadRedPlayer = std::vector<GUIElement*>();
+
 	// Score text
 	m_redScore = new GUIText();
 	m_redScore->Initialize("0", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13.0f, 0xff0700B6);
@@ -114,6 +118,18 @@ void TeamStatusBar::Shutdown()
 		delete m_frame;
 		m_frame = nullptr;
 	}
+
+	for (unsigned int i = 0; i < m_deadBluePlayer.size(); i++)
+	{
+		delete m_deadBluePlayer[i];
+	}
+	m_deadBluePlayer.clear();
+
+	for (unsigned int i = 0; i < m_deadRedPlayer.size(); i++)
+	{
+		delete m_deadRedPlayer[i];
+	}
+	m_deadRedPlayer.clear();
 }
 
 void TeamStatusBar::Update()
@@ -164,25 +180,11 @@ void TeamStatusBar::Update()
 	{
 		if (player.team == 1)
 		{
-			if (player.isAlive)
-			{
-				m_redColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
-			}
-			else
-			{
-				m_redColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
-			}
+			m_redColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 		}
 		else if(player.team == 2)
 		{
-			if (player.isAlive)
-			{
-				m_blueColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
-			}
-			else
-			{
-				m_blueColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
-			}
+			m_blueColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 		}
 		
 	}
@@ -199,14 +201,7 @@ void TeamStatusBar::Update()
 		{
 			if (m_redColorPlayers.find(players[i].guid) != m_redColorPlayers.end())
 			{
-				if (players[i].isAlive)
-				{
-					m_redColorPlayers[players[i].guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
-				}
-				else
-				{
-					m_redColorPlayers[players[i].guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
-				}
+				m_redColorPlayers[players[i].guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 			}
 			else
 			{
@@ -230,14 +225,7 @@ void TeamStatusBar::Update()
 		{
 			if (m_blueColorPlayers.find(players[i].guid) != m_blueColorPlayers.end())
 			{
-				if (players[i].isAlive)
-				{
-					m_blueColorPlayers[players[i].guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
-				}
-				else
-				{
-					m_blueColorPlayers[players[i].guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
-				}
+				m_blueColorPlayers[players[i].guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 			}
 			else
 			{
@@ -270,6 +258,9 @@ void TeamStatusBar::Update()
 
 			delete m_redSquares[m_redSquares.size() - 1];
 			m_redSquares.pop_back();
+
+			delete m_deadRedPlayer[m_deadRedPlayer.size() - 1];
+			m_deadRedPlayer.pop_back();
 		}
 		else
 		{
@@ -290,6 +281,9 @@ void TeamStatusBar::Update()
 
 			delete m_blueSquares[m_blueSquares.size() - 1];
 			m_blueSquares.pop_back();
+
+			delete m_deadBluePlayer[m_deadBluePlayer.size() - 1];
+			m_deadBluePlayer.pop_back();
 		}
 		else
 		{
@@ -365,6 +359,12 @@ void TeamStatusBar::Render()
 			m_redSquares[index]->QueueRender();
 		}
 		it->second->QueueRender();
+		
+		if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
+		{
+			m_deadRedPlayer[index]->SetPosition(it->second->GetPosition());
+			m_deadRedPlayer[index]->QueueRender();
+		}
 		index++;
 	}
 	index = 0;
@@ -376,6 +376,12 @@ void TeamStatusBar::Render()
 			m_blueSquares[index]->QueueRender();
 		}
 		it->second->QueueRender();
+
+		if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
+		{
+			m_deadBluePlayer[index]->SetPosition(it->second->GetPosition());
+			m_deadBluePlayer[index]->QueueRender();
+		}
 		index++;
 	}
 
@@ -441,6 +447,10 @@ void TeamStatusBar::AddRedSquare()
 	GUIElement* square = new GUIElement();
 	square->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), m_dotSize + 5, m_dotSize + 5, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_RED_PLAYER));
 	m_redSquares.push_back(square);
+
+	GUIElement* deadSquare = new GUIElement();
+	deadSquare->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+	m_deadRedPlayer.push_back(deadSquare);
 }
 
 void TeamStatusBar::AddBlueSquare()
@@ -448,4 +458,8 @@ void TeamStatusBar::AddBlueSquare()
 	GUIElement* square = new GUIElement();
 	square->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), m_dotSize + 5, m_dotSize + 5, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_BLUE_PLAYER));
 	m_blueSquares.push_back(square);
+
+	GUIElement* deadSquare = new GUIElement();
+	deadSquare->Initialize(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+	m_deadBluePlayer.push_back(deadSquare);
 }

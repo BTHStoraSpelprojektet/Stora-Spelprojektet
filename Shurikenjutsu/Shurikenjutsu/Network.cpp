@@ -1303,7 +1303,6 @@ void Network::ReceviePacket()
 			
 				break;
 			}
-
 			case ID_RUNE_INVIS_CANCEL:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -1311,7 +1310,6 @@ void Network::ReceviePacket()
 				CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
 				break;
 			}
-
 			case ID_POI_HEALING_BOOL:
 			{
 				RakNet::RakNetGUID healingGuid;
@@ -1326,7 +1324,20 @@ void Network::ReceviePacket()
 
 				break;
 			}
+			case ID_SHIELD_UPDATE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				RakNet::RakNetGUID guid;
+				float shieldValue;
 
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				bitStream.Read(shieldValue);
+
+				UpdateShieldValue(guid, shieldValue);
+
+				break;
+			}
 			default:
 			{
 				break;
@@ -2690,7 +2701,7 @@ void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 	}
 }
 
-PlayerNet Network::GetPlayer(RakNet::RakNetGUID p_guid)
+PlayerNet Network::GetPlayerByGuid(RakNet::RakNetGUID p_guid)
 {
 	if (p_guid == GetMyGUID())
 	{
@@ -2708,4 +2719,22 @@ PlayerNet Network::GetPlayer(RakNet::RakNetGUID p_guid)
 	}
 
 	return PlayerNet();
+}
+
+void Network::UpdateShieldValue(RakNet::RakNetGUID p_guid, float p_shieldValue)
+{
+	if (p_guid == GetMyGUID())
+	{
+		m_myPlayer.shield = p_shieldValue;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				m_enemyPlayers[i].shield = p_shieldValue;
+			}
+		}
+	}
 }

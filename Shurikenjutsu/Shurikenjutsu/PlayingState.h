@@ -49,6 +49,8 @@ public:
 
 	void EscapeIsPressed();
 
+	void ResetValuesAtRoundRestart();
+
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);
