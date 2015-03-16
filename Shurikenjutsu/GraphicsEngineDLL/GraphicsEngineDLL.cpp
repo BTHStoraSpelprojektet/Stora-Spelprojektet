@@ -462,11 +462,6 @@ namespace DLLGraphicsEngine
 
 	void GE::SetShadowMap()
 	{
-		if (m_shadowMap->GetRenderTarget() == nullptr)
-		{
-	//		ConsolePrintErrorAndQuit("Shadow map is a null pointer.");
-		}
-
 		m_sceneShader->UpdateShadowMap(m_shadowMap->GetRenderTarget());
 	}
 

@@ -388,4 +388,10 @@ struct PointLight
 	DirectX::XMFLOAT3 m_position;
 	float m_range;
 };
+
+struct DealtDamageStruct
+{
+	float m_damage;
+	DirectX::XMFLOAT3 m_position;
+};
 #endif

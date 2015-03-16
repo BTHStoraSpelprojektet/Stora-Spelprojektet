@@ -20,12 +20,26 @@ void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sp
 
 	for (unsigned int i = 0; i < p_staticBoxList.size(); i++)
 	{
-		m_staticBoxList.push_back(p_staticBoxList[i]);
+		if (p_staticBoxList[i].m_center.y > 6.0f)
+		{
+			continue;
+		}
+		else
+		{
+			m_staticBoxList.push_back(p_staticBoxList[i]);
+		}
 	}
 
 	for (unsigned int i = 0; i < p_staticSphereList.size(); i++)
 	{
-		m_staticSphereList.push_back(p_staticSphereList[i]);
+		if (p_staticSphereList[i].m_position.y > 5.0f)
+		{
+			continue;
+		}
+		else
+		{
+			m_staticSphereList.push_back(p_staticSphereList[i]);
+		}
 	}
 }
 
@@ -230,6 +244,10 @@ void CollisionManager::ShurikenCollisionChecks(ShurikenManager* p_shurikenManage
 			for (unsigned int k = 0; k < m_staticSphereList.size(); k++)
 			{
 				Sphere sphere = m_staticSphereList[k];
+				if (sphere.m_position.y > 6.0f)
+				{
+					continue;
+				}
 				if (sphere.m_position.y + sphere.m_radius < shurikenBoundingBoxes[j].m_center.y - shurikenBoundingBoxes[j].m_extents.y || sphere.m_position.y - sphere.m_radius > shurikenBoundingBoxes[j].m_center.y + shurikenBoundingBoxes[j].m_extents.y)
 				{
 					sphere.m_position.y = shurikenBoundingBoxes[j].m_center.y;
@@ -436,6 +454,14 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 	std::vector<FanNet>fanList = p_fanBoomerangManager->GetObjects();
 	for (unsigned int i = 0; i < fanList.size(); i++)
 	{
+
+		if (!CheckIfPlayerIsConnected(fanList[i].guid, p_playerManager))
+		{
+			p_fanBoomerangManager->Remove(fanList[i].id);
+			fanList.erase(fanList.begin() + i);
+			i--;
+			continue;
+		}
 		bool collisionFound = false;
 		// Get the fans position
 		float newPosX = p_fanBoomerangManager->GetPosX(i);
@@ -973,6 +999,19 @@ void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_player
 }
 
 //Private
+bool CollisionManager::CheckIfPlayerIsConnected(RakNet::RakNetGUID p_guid, PlayerManager* p_playerManager)
+{
+	std::vector<PlayerNet> playerList =  p_playerManager->GetPlayers();
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		if (playerList[i].guid == p_guid)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
 bool CollisionManager::DoesIndexExistInList(int p_index, std::vector<int> p_list)
 {
 	for (unsigned int i = 0; i < p_list.size(); i++)

@@ -24,7 +24,9 @@ struct Input
 float main(Input p_input) : SV_Target
 {
 	float2 textureDimensions;
+	float2 fullSizeDimensions;
 	m_textures[0].GetDimensions(textureDimensions.x, textureDimensions.y);
+	m_textures[1].GetDimensions(fullSizeDimensions.x, fullSizeDimensions.y);
 	float2 texOffset = float2(1.0f / textureDimensions.x, 0.0f);
 
 	float2 load;
@@ -34,7 +36,7 @@ float main(Input p_input) : SV_Target
 	float color = 0;
 	float totalWeight = 0;
 
-	float depth = m_textures[1].Sample(m_sampler, load*2).x;
+	float depth = m_textures[1].Sample(m_sampler, load*(fullSizeDimensions.x / textureDimensions.x)).x;
 	
 	//float3 normal = m_textures[2].Sample(m_sampler, load).xyz;
 	//normal = (normal * 2.0f) - 1.0f;

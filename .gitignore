@@ -185,3 +185,6 @@ FakesAssemblies/
 # Project specific files
 *.db
 *.cfg
+Shurikenjutsu/Shurikenjutsu/Settings/Settings.cfg
+*.cfg
+Shurikenjutsu/Shurikenjutsu/Settings/Settings.cfg

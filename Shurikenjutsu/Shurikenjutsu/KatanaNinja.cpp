@@ -10,6 +10,7 @@
 #include "AttackPredictionEditor.h"
 #include "ParticleRenderer.h"
 #include "GraphicsEngine.h"
+#include "Globals.h"
 
 KatanaNinja::KatanaNinja(){}
 KatanaNinja::~KatanaNinja(){}
@@ -74,7 +75,7 @@ void KatanaNinja::RenderAttackLocations()
 		GraphicsEngine::TurnOnAlphaBlending();
 		if (InputManager::GetInstance()->IsLeftMousePressed())
 		{
-			if ((float)m_meleeAttack->GetCooldown() <= 0.0f)
+			if ((float)m_meleeAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
 
@@ -87,7 +88,7 @@ void KatanaNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsRightMousePressed())
 		{
-			if (m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1)
+			if ((m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1) && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
@@ -101,7 +102,7 @@ void KatanaNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
 		{
-			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, DASH_MAX_RANGE, false);
 
@@ -115,7 +116,7 @@ void KatanaNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
 		{
-			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
@@ -129,7 +130,7 @@ void KatanaNinja::RenderAttackLocations()
 		}
 		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
 		{
-			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
 				m_ape->ThrowSphere(m_aimSphere, m_position, 7.0f, SMOKEBOMB_RANGE);
 				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);

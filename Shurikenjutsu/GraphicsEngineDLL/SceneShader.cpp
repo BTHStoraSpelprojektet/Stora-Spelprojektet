@@ -412,6 +412,8 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	// Release useless local shaders.
 	vertexShader->Release();
 	vertexShader = 0;
+	sSReverseVertexShader->Release();
+	sSReverseVertexShader = 0;
 	instanceShader->Release();
 	instanceShader = 0;
 	animatedVertexShader->Release();
