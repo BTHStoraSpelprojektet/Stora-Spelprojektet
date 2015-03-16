@@ -420,9 +420,9 @@ namespace DLLGraphicsEngine
 		m_depthShader->RenderAnimated(m_directX->GetContext(), p_mesh, p_numberOfVertices, p_worldMatrix, p_texture, p_boneTransforms);
 	}
 
-	void GE::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture)
+	void GE::RenderGUI(DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, float p_opacity)
 	{
-		m_GUIShader->Render(m_directX->GetContext(), p_worldMatrix, p_texture, m_currentScreenWidth, m_currentScreenHeight);
+		m_GUIShader->Render(m_directX->GetContext(), p_worldMatrix, p_texture, m_currentScreenWidth, m_currentScreenHeight, p_opacity);
 	}
 
 	void GE::PrepareRenderGUI()

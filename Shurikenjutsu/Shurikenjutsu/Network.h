@@ -156,6 +156,8 @@ public:
 	RakNet::RakString GetJustJoinedPlayerName();
 	int GetJustJoinedPlayerTeam();
 
+	PlayerNet GetPlayerByGuid(RakNet::RakNetGUID p_guid);
+
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
@@ -208,6 +210,7 @@ private:
 	void SpawnRune(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound);
 	void DespawnRune(POINTOFINTERESTTYPE p_poiType);
 	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
+	void UpdateShieldValue(RakNet::RakNetGUID p_guid, float p_shieldValue);
 
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;

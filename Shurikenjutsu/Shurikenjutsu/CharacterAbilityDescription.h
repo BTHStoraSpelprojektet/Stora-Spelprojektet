@@ -1,7 +1,9 @@
 #ifndef CHARACHTERABILITYDESCRIPTION_H_
 #define CHARACHTERABILITYDESCRIPTION_H_
+#include <vector>
 
 class MenuItem;
+class GUIText;
 class ToolTipPopUp;
 class CharacterAbilityDescription
 {
@@ -13,6 +15,7 @@ public:
 	void Update();
 	void Shutdown();
 	void Render();
+	void SetRenderKeybinds(bool p_yesRender);
 private:
 	ToolTipPopUp* m_FirstText;
 	ToolTipPopUp* m_SecondText;
@@ -23,6 +26,9 @@ private:
 	MenuItem* m_ThirdPic;
 	MenuItem* m_FourthPic;
 	MenuItem *m_abilityBarBG;
+	std::vector<GUIText*> m_keyBinds;
+
+	bool m_renderKeybinds;
 };
 
 #endif
