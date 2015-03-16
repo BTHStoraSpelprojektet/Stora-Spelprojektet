@@ -18,7 +18,7 @@ public:
 
 	void GetFlashed();
 	void InterruptFlash();
-	void UpdateEffect(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
+	void UpdateEffect();
 	void RenderEffect();
 
 private:

@@ -59,7 +59,7 @@ void FlashBang::InterruptFlash()
 	m_opacity = 0.0f;
 }
 
-void FlashBang::UpdateEffect(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection)
+void FlashBang::UpdateEffect()
 {
 	if (GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH != m_flashEffect->GetSize().x)
 	{
@@ -68,15 +68,6 @@ void FlashBang::UpdateEffect(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT4X4 p
 
 	if (m_flashed)
 	{
-		/*DirectX::XMFLOAT4X4 vp;
-		DirectX::XMStoreFloat4x4(&vp, DirectX::XMLoadFloat4x4(&p_view) * DirectX::XMLoadFloat4x4(&p_projection));
-		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(p_position.x, p_position.y + 1.5f, p_position.z);
-		DirectX::XMStoreFloat3(&position, DirectX::XMVector3TransformCoord(DirectX::XMLoadFloat3(&position), DirectX::XMLoadFloat4x4(&vp)));
-		position.x *= GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 2.0f;
-		position.y *= position.z * GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 2.0f;
-		position.z = 0.0f;
-		m_flashEffect->SetPosition(position);*/
-
 		switch (m_opacityState)
 		{
 			case(OPACITY_INCREASE) :

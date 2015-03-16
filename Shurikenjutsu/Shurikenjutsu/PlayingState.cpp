@@ -456,7 +456,7 @@ GAMESTATESWITCH PlayingState::Update()
 	}
 
 	FlashBang::GetInstance().UpdateFlashBangs();
-	FlashBang::GetInstance().UpdateEffect(m_playerManager->GetPlayerPosition(), m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
+	FlashBang::GetInstance().UpdateEffect();
 
 	// Update health bars.
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
