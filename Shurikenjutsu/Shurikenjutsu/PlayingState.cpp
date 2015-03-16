@@ -456,11 +456,6 @@ GAMESTATESWITCH PlayingState::Update()
 	OBB playerOBB = m_playerManager->GetPlayerBoundingBox();
 
 	// Update flash bangs.
-	if (GetAsyncKeyState(VK_DELETE))
-	{
-		FlashBang::GetInstance().GetFlashed();
-	}
-
 	FlashBang::GetInstance().UpdateFlashBangs();
 	FlashBang::GetInstance().UpdateEffect();
 
@@ -478,6 +473,11 @@ GAMESTATESWITCH PlayingState::Update()
 		if (GetAsyncKeyState(VK_BACK))
 		{
 			m_updateFrustum = true;
+		}
+
+		if (GetAsyncKeyState(VK_DELETE))
+		{
+			FlashBang::GetInstance().GetFlashed();
 		}
 	}
 
