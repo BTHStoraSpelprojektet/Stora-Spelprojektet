@@ -372,7 +372,7 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p
 
 			if (radianHip > low || radianHip < -low)
 			{
-				m_hipRotation += radianHip * 0.05f;
+				m_hipRotation += radianHip * (float)GLOBAL::GetInstance().GetDeltaTime() * 4.0f;
 				ChangeLayer(7, 15);
 			}			
 		}
@@ -382,7 +382,7 @@ void AnimationControl::ApplyLegDirection(DirectX::XMVECTOR& p_direction, float p
 
 			if (radianHip > low || radianHip < -low)
 			{
-				m_hipRotation += radianHip * 0.05f;
+				m_hipRotation += radianHip * (float)GLOBAL::GetInstance().GetDeltaTime() * 4.0f; // 0.05f
 				ChangeLayer(7, 15);
 			}
 		}
