@@ -58,8 +58,8 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_portraitWidth = 200.0f;
 	m_buttonWidth = 300.0f;
 	m_buttonHeight = 100.0f; 
-	m_nextWidth = 100.0f;
-	m_nextHeight = 100.0f;
+	m_nextWidth = 50.0f;
+	m_nextHeight = 200.0f;
 	m_toolWidth = 50.0f;
 	m_toolHeight = 50.0f;
 	m_nrOfNinjas = 3;
@@ -69,16 +69,29 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_prevRandomNumber = 0;
 	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
 	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
-		
-	float offset = 30.0f;
-	float ninjaCycleHeight = -m_buttonHeight*0.5f + offset;
-	float toolCycleHeight = m_toolHeight*0.5f - m_buttonHeight*0.5f- 150.0f;
-	float portraitYPos = ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
-	float toolButtonSize = m_screenHeight / 20.48f;
-	float toolButtonXPos = m_screenHeight / 18.29f;
+	
+	GUIText temp;
+	temp.Initialize("M1", 25.0f, -126.0f, -50.0f, 0xff000000);
+	m_keyBinds.push_back(temp);
+	GUIText temp2;
+	temp.Initialize("M2", 25.0f, -42.0f, -50.0f, 0xff000000);
+	m_keyBinds.push_back(temp2);
+	GUIText temp3;
+	temp.Initialize("Q", 25.0f, 42.0f, -50.0f, 0xff000000);
+	m_keyBinds.push_back(temp3);
+	GUIText temp4;
+	temp.Initialize("E", 25.0f, 126.0f, -50.0f, 0xff000000);
+	m_keyBinds.push_back(temp4);
 
-	m_redTeam->Initialize(-m_screenWidth * 0.5f, m_screenHeight * 0.33f, 1);
-	m_blueTeam->Initialize(m_screenWidth * 0.5f, m_screenHeight * 0.33f, 2);
+	float offset = 30.0f;
+	float ninjaCycleHeight = -m_buttonHeight*0.5f +offset;
+	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-120.0f;
+	float portraitYPos = 110.0f;//ninjaCycleHeight;//ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
+	float toolButtonSize = 60.0f;//m_screenHeight / 20.48f;
+	float toolButtonXPos = 70.0f;
+
+	m_redTeam->Initialize(-m_screenWidth * 0.5f, /*m_screenHeight * 0.33f*/270.0f, 1);
+	m_blueTeam->Initialize(m_screenWidth * 0.5f, /*m_screenHeight * 0.33f*/270.0f, 2);
 	m_tintedBackground->Initialize(0.0f, 0.0f, m_screenWidth, m_screenHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/bgTint.png"));
 	m_title->Initialize(0.0f, m_screenHeight / 2.0f - m_buttonHeight * 0.5f, m_buttonWidth * 2.0f, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/chooseButton.png"));
 	
@@ -86,10 +99,10 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_questionMark->Initialize(0.0f, 0.0f, m_screenHeight / 13.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Ninjas/pickChara.png"));
 
 	// pick red team
-	m_chooseNinja->AddButton(-m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/redTeamLobby.png"), MENUACTION_PICK_RED_TEAM);
+	m_chooseNinja->AddButton(-m_screenWidth / 3.0f, 30.0f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/redTeamLobby.png"), MENUACTION_PICK_RED_TEAM);
 
 	// pick blue team
-	m_chooseNinja->AddButton(m_screenWidth / 3.0f, m_screenHeight * 0.1f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/blueTeamLobby.png"), MENUACTION_PICK_BLUE_TEAM);
+	m_chooseNinja->AddButton(m_screenWidth / 3.0f, 30.0f, m_screenWidth / 4.0f, m_screenHeight / 1.7f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/blueTeamLobby.png"), MENUACTION_PICK_BLUE_TEAM);
 	
 	// back button
 	m_chooseNinja->AddButton(-m_screenWidth * 0.5f + m_buttonWidth * 0.5f + offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
@@ -102,10 +115,10 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/randomButton.png"), MENUACTION_RANDOM_NINJA);
 
 	// Next ninja, right button
-	m_chooseNinja->AddButton(m_buttonWidth*0.5f + m_nextWidth*0.5f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/right.png"), MENUACTION_NEXTNINJA);
+	m_chooseNinja->AddButton(m_nextWidth*0.5f + 120.0f, portraitYPos, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/thinarrow_right.png"), MENUACTION_NEXTNINJA);
 
 	// Prev ninja, left button
-	m_chooseNinja->AddButton(-m_buttonWidth*0.5f - m_nextWidth*0.5f, ninjaCycleHeight, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/left.png"), MENUACTION_PREVNINJA);
+	m_chooseNinja->AddButton(-m_nextWidth*0.5f - 120.0f, portraitYPos, m_nextWidth, m_nextHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/thinarrow_left.png"), MENUACTION_PREVNINJA);
 
 	//Prev tool, left button
 	m_chooseNinja->AddButton(-toolButtonXPos, toolCycleHeight, toolButtonSize, toolButtonSize, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/left.png"), MENUACTION_PREVTOOL);
@@ -129,6 +142,9 @@ bool ChooseState::Initialize(std::string p_levelName)
 
 	m_ninjaPortBorder = new MenuItem();
 	m_ninjaPortBorder->Initialize(0.0f, portraitYPos, 240, 240, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/portBG.png"));
+
+	m_backgroundFrame = new MenuItem();
+	m_backgroundFrame->Initialize(0.0f, 30.0f, 410, 440, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/lobby_bg.png"));
 
 	float bgWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.0f;
 	float bgHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 6.83f;
@@ -272,7 +288,6 @@ void ChooseState::Shutdown()
 		}
 	}
 
-	//needs fixin'
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		if (m_tools[i] != nullptr)
@@ -288,6 +303,13 @@ void ChooseState::Shutdown()
 		m_ninjaPortBorder->Shutdown();
 		delete m_ninjaPortBorder;
 		m_ninjaPortBorder = nullptr;
+	}
+
+	if (m_backgroundFrame != nullptr)
+	{
+		m_backgroundFrame->Shutdown();
+		delete m_backgroundFrame;
+		m_backgroundFrame = nullptr;
 	}
 
 	for (unsigned int i = 0; i < 4; i++)
@@ -526,17 +548,22 @@ void ChooseState::Render()
 	GraphicsEngine::ResetRenderTarget();
 
 	m_tintedBackground->Render();
+	m_backgroundFrame->Render();
 	m_chooseNinja->Render();
 
 	m_ninjas[m_currentNinja]->Render();
 	m_tools[m_currentTool]->Render();
-	m_ninjaPortBorder->Render();
+	//m_ninjaPortBorder->Render();
 	m_abilityDescription[m_currentNinja]->Render();
 	//m_redTeamScore->Render();
 	//m_blueTeamScore->Render();
 	m_redTeam->Render();
 	m_blueTeam->Render();
 	m_questionMark->Render();
+	/*for (unsigned int i = 0; i < m_keyBinds.size(); i++)
+	{
+	m_keyBinds[i].Render();
+	}*/
 	m_toolDescription[m_currentTool]->Render();
 	m_title->Render();
 
