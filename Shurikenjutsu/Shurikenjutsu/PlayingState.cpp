@@ -305,6 +305,11 @@ void PlayingState::ShutdownExit()
 
 GAMESTATESWITCH PlayingState::Update()
 	{
+	if (Network::GetInstance()->RoundRestarted())
+	{
+		ResetValuesAtRoundRestart();
+	}
+
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -421,6 +426,7 @@ GAMESTATESWITCH PlayingState::Update()
 					m_refreshSpectateText = false;
 				}
 			}
+			
 		}
 		else
 		{
@@ -966,4 +972,9 @@ void PlayingState::UpdatePOIEffects()
 		}
 		
 	}
+}
+void PlayingState::ResetValuesAtRoundRestart()
+{
+	m_refreshSpectateText = false;
+	m_spectateTimer = 2.0f;
 }
