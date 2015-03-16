@@ -40,6 +40,7 @@ public:
 private:
 	void InitializeCreditScreen();
 	bool StartLocalServer();
+	void OptionsApply();
 
 
 	std::stack<Menu*> m_menues;
@@ -53,10 +54,14 @@ private:
 	MenuTextBox* m_namebox;
 	bool m_hideIpBox;
 
-	bool m_lastvsync;
-	bool m_lastfullscreen;
+	// Checkbox Indexes
 	int m_vsyncIndex;
 	int m_fullscreenIndex;
+	int m_dofIndex;
+	int m_ssaoIndex;
+	int m_soundMuteIndex;
+	int m_cameraModeIndex;
+	int m_apeMode;
 
 	//Background
 	ObjectManager* m_objectManager;

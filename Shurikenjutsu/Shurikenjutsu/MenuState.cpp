@@ -58,9 +58,6 @@ bool MenuState::Initialize(){
 
 bool MenuState::Initialize(std::string p_levelName)
 {
-	m_lastvsync = false;
-	m_lastfullscreen = false;
-
 	Settings* settings = Settings::GetInstance();
 
 	// Initialize logo
@@ -69,12 +66,11 @@ bool MenuState::Initialize(std::string p_levelName)
 
 	// Initialize options menu
 	m_options = new Menu();
+	
 	m_vsyncIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_VSYNC, settings->m_vsync);
-	m_lastvsync = settings->m_vsync;
 	m_options->AddTexture(-BUTTONWIDTH + VSYNCWIDTH*0.5f, 0.0f, VSYNCWIDTH, VSYNCHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/vs_text.png"));
 
 	m_fullscreenIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - BUTTONOFFSET, MENUACTION_FULLSCREEN, settings->m_fullscreen);
-	m_lastfullscreen = settings->m_fullscreen;
 	m_options->AddTexture(-BUTTONWIDTH + FULLSCREENWIDTH*0.5f, -CHECKBOXSIZE, FULLSCREENWIDTH, FULLSCREENHEIGHT - BUTTONOFFSET, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
 
 	m_options->AddButton(BUTTONWIDTH*0.5f + 10.0f, -3.0f * CHECKBOXSIZE, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
@@ -234,6 +230,7 @@ void MenuState::ShutdownExit()
 
 GAMESTATESWITCH MenuState::Update()
 {
+	Settings* settings = Settings::GetInstance();
 	MenuActionData action = m_menues.top()->Update();
 	if (!m_hideIpBox)
 	{
@@ -271,15 +268,15 @@ GAMESTATESWITCH MenuState::Update()
 
 		case MENUACTION_OPTIONS:
 			m_menues.push(m_options);
-			m_options->SetCheckboxState(m_vsyncIndex, m_lastvsync);
-			m_options->SetCheckboxState(m_fullscreenIndex, m_lastfullscreen);
+			m_options->SetCheckboxState(m_vsyncIndex, settings->m_vsync);
+			m_options->SetCheckboxState(m_fullscreenIndex, settings->m_fullscreen);
 			break;
 
 		case MENUACTION_CONNECT:
 			m_menues.push(m_connecting);
 			m_hideIpBox = true;
-			Settings::GetInstance()->m_name = m_namebox->GetText();
-			Settings::GetInstance()->m_ip = m_ipbox->GetText();
+			settings->m_name = m_namebox->GetText();
+			settings->m_ip = m_ipbox->GetText();
 			Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 			Network::GetInstance()->Connect((std::string)m_ipbox->GetText());
 			Network::GetInstance()->SetNetworkStatusConnecting();
@@ -291,7 +288,7 @@ GAMESTATESWITCH MenuState::Update()
 				{
 					m_menues.push(m_connecting);
 					m_hideIpBox = true;
-					Settings::GetInstance()->m_name = m_namebox->GetText();
+					settings->m_name = m_namebox->GetText();
 					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 					Network::GetInstance()->Connect("127.0.0.1");
 					Network::GetInstance()->SetNetworkStatusConnecting();
@@ -301,7 +298,7 @@ GAMESTATESWITCH MenuState::Update()
 					GraphicsEngine::ToggleFullscreen(false, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 					m_menues.push(m_connecting);
 					m_hideIpBox = true;
-					Settings::GetInstance()->m_name = m_namebox->GetText();
+					settings->m_name = m_namebox->GetText();
 					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 					Network::GetInstance()->Connect("127.0.0.1");
 					Network::GetInstance()->SetNetworkStatusConnecting();
@@ -310,35 +307,7 @@ GAMESTATESWITCH MenuState::Update()
 			}
 			break;
 		case MENUACTION_OPTIONAPPLY:
-			bool temp = m_options->GetCheckboxState(m_vsyncIndex);
-			m_lastvsync = temp;
-			GraphicsEngine::SetVsync(temp);
-			Settings::GetInstance()->m_vsync = temp;
-
-			temp = m_options->GetCheckboxState(m_fullscreenIndex);
-			m_lastfullscreen = temp;
-			Settings::GetInstance()->m_fullscreen = temp;
-
-			if (!temp)
-			{
-				GLOBAL::GetInstance().FULLSCREEN = false;
-				GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
-				GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
-			}
-			else
-			{
-				GLOBAL::GetInstance().FULLSCREEN = true;
-				GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-				GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-			}
-			GraphicsEngine::ToggleFullscreen(temp, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-			std::string tempstring = m_ipbox->GetText();
-			m_ipbox->Shutdown();
-			m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -15.0f, 394.0f, 67.0f, 15, tempstring);
-			m_hideIpBox = true;
-			tempstring = m_namebox->GetText();
-			m_namebox->Shutdown();
-			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 57.0f, 394.0f, 67.0f, 15, tempstring);
+			OptionsApply();
 			break;
 
 	}
@@ -505,4 +474,37 @@ bool MenuState::StartLocalServer()
 		return false;
 	}
 	return true;
+}
+
+void MenuState::OptionsApply()
+{
+	Settings* settings = Settings::GetInstance();
+
+	bool temp = m_options->GetCheckboxState(m_vsyncIndex);
+	GraphicsEngine::SetVsync(temp);
+	settings->m_vsync = temp;
+
+	temp = m_options->GetCheckboxState(m_fullscreenIndex);
+	settings->m_fullscreen = temp;
+
+	if (!temp)
+	{
+		GLOBAL::GetInstance().FULLSCREEN = false;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
+	}
+	else
+	{
+		GLOBAL::GetInstance().FULLSCREEN = true;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	}
+	GraphicsEngine::ToggleFullscreen(temp, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+	std::string tempstring = m_ipbox->GetText();
+	m_ipbox->Shutdown();
+	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -15.0f, 394.0f, 67.0f, 15, tempstring);
+	m_hideIpBox = true;
+	tempstring = m_namebox->GetText();
+	m_namebox->Shutdown();
+	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 57.0f, 394.0f, 67.0f, 15, tempstring);
 }
