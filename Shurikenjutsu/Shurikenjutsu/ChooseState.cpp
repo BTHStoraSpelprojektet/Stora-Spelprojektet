@@ -18,6 +18,7 @@
 #include "MenuButton.h"
 #include "ScoreBoard.h"
 #include "TeamTable.h"
+#include "InputManager.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -499,11 +500,11 @@ void ChooseState::Render()
 	GraphicsEngine::BeginRenderToShadowMap();
 	GraphicsEngine::PrepareRenderAnimatedDepth();
 	m_objectManager->RenderAnimatedDepth();
-	m_playerManager->RenderDepth(true);	
+	m_playerManager->RenderDepth(true);
 
 	m_objectManager->RenderInstancedDepth();
 	GraphicsEngine::PrepareRenderDepth();
-	m_objectManager->RenderDepth();	
+	m_objectManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
@@ -518,7 +519,7 @@ void ChooseState::Render()
 
 	m_objectManager->RenderInstanced();
 	GraphicsEngine::PrepareRenderScene();
-	m_objectManager->Render();	
+	m_objectManager->Render();
 
 	GraphicsEngine::RenderFoliage();
 	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
@@ -541,7 +542,11 @@ void ChooseState::Render()
 	m_ninjas[m_currentNinja]->Render();
 	m_tools[m_currentTool]->Render();
 	//m_ninjaPortBorder->Render();
-	m_abilityDescription[m_currentNinja]->Render();
+	if (InputManager::GetInstance()->GetMousePositionX() > m_toolWidth * 0.5f || InputManager::GetInstance()->GetMousePositionX() < -m_toolWidth * 0.5f
+		|| InputManager::GetInstance()->GetMousePositionY() > m_toolHeight * 0.5f || InputManager::GetInstance()->GetMousePositionY() < -m_toolHeight * 0.5f)
+	{
+		m_abilityDescription[m_currentNinja]->Render();
+	}
 	//m_redTeamScore->Render();
 	//m_blueTeamScore->Render();
 	m_redTeam->Render();
