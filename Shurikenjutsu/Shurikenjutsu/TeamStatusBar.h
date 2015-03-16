@@ -29,7 +29,7 @@ private:
 	std::vector<GUIElement*> m_blueSquares;
 	GUIElement* m_background;
 	GUIElement* m_frame;
-
+	GUIElement* m_deadPlayer;
 
 	void ResizeRedColorList();
 	void ResizeBlueColorList();

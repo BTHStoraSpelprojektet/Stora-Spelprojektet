@@ -40,6 +40,10 @@ bool TeamStatusBar::Initialize()
 	m_frame = new GUIElement();
 	m_frame->Initialize(DirectX::XMFLOAT3(m_originPos.x, m_originPos.y - 12.5f, m_originPos.z), 570.0f, 80.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_FRAME));
 
+	// Deadplayer
+	m_deadPlayer = new GUIElement();
+	m_deadPlayer->Initialize(m_originPos, m_dotSize, m_dotSize, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+
 	// Score text
 	m_redScore = new GUIText();
 	m_redScore->Initialize("0", 25.0f, m_originPos.x - 20.0f, m_originPos.y - 13.0f, 0xff0700B6);
@@ -114,6 +118,12 @@ void TeamStatusBar::Shutdown()
 		delete m_frame;
 		m_frame = nullptr;
 	}
+
+	if (m_deadPlayer != nullptr)
+	{
+		delete m_deadPlayer;
+		m_deadPlayer = nullptr;
+	}
 }
 
 void TeamStatusBar::Update()
@@ -170,7 +180,6 @@ void TeamStatusBar::Update()
 			}
 			else
 			{
-				m_redColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 				m_redColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
 			}
 		}
@@ -182,7 +191,6 @@ void TeamStatusBar::Update()
 			}
 			else
 			{
-				m_blueColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 				m_blueColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
 			}
 		}
