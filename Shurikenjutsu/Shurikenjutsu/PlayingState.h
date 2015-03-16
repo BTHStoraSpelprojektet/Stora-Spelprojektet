@@ -23,7 +23,6 @@ class ScoreBoard;
 class SuddenDeathState;
 class GUIText;
 
-
 class PlayingState : public GameState
 {
 public:

@@ -25,6 +25,9 @@ public:
 	ID3D11ShaderResourceView* GetTexture()const;
 	void SetTexture(ID3D11ShaderResourceView* p_texture);
 
+	void SetOpacity(float p_opacity);
+	float GetOpacity();
+
 	// For cursor
 	void Render();
 
@@ -32,6 +35,7 @@ private:
 	DirectX::XMFLOAT2 m_size;
 	DirectX::XMFLOAT3 m_position;
 	ID3D11ShaderResourceView* m_texture;
+	float m_opacity;
 };
 
 #endif

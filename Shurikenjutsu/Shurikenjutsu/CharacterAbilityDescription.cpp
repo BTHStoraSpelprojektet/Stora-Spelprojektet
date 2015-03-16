@@ -2,9 +2,10 @@
 #include "MenuItem.h"
 #include "Globals.h"
 #include "TextResource.h"
-#include "Structures.h"
+#include "..\CommonLibs\CommonStructures.h"
 #include "..\CommonLibs\TextureLibrary.h"
 #include "ToolTipPopUp.h"
+#include "GUIText.h"
 
 CharacterAbilityDescription::CharacterAbilityDescription(){}
 CharacterAbilityDescription::~CharacterAbilityDescription(){}
@@ -13,6 +14,19 @@ void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 {
 	float quarterHeight = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT / 3.3f;
 	float quarterWidth = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH / 3.3f;
+
+	GUIText* temp = new GUIText();
+	temp->Initialize("M1", 25.0f, -126.0f, -80.0f, 0xff000000);
+	m_keyBinds.push_back(temp);
+	GUIText* temp2 = new GUIText();
+	temp2->Initialize("M2", 25.0f, -42.0f, -80.0f, 0xff000000);
+	m_keyBinds.push_back(temp2);
+	GUIText* temp3 = new GUIText();
+	temp3->Initialize("Q", 25.0f, 42.0f, -80.0f, 0xff000000);
+	m_keyBinds.push_back(temp3);
+	GUIText* temp4 = new GUIText();
+	temp4->Initialize("E", 25.0f, 126.0f, -80.0f, 0xff000000);
+	m_keyBinds.push_back(temp4);
 
 	m_FirstText = new ToolTipPopUp();
 	m_FirstPic = new MenuItem();
@@ -76,6 +90,7 @@ void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 		m_FourthText->Initialize(ability4.x, ability4.y, KUNAI_SECONDARY_ATTACK, 50.0f, bgWidth, bgHeight, 0.0f);
 		m_FourthPic->Initialize(ability4.x, ability4.y, 50.0f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_N3_E.png"));
 	}
+	m_renderKeybinds = true;
 }
 
 void CharacterAbilityDescription::Update()
@@ -98,6 +113,16 @@ void CharacterAbilityDescription::Shutdown()
 		m_FirstText->Shutdown();
 		delete m_FirstText;
 		m_FirstText = nullptr;
+	}
+
+	for (unsigned int i = 0; i < m_keyBinds.size(); i++)
+	{
+		if (m_keyBinds[i] != nullptr)
+		{
+			m_keyBinds[i]->Shutdown();
+			delete m_keyBinds[i];
+			m_keyBinds[i] = nullptr;
+		}
 	}
 	if (m_SecondText != nullptr)
 	{
@@ -145,6 +170,13 @@ void CharacterAbilityDescription::Shutdown()
 void CharacterAbilityDescription::Render()
 {
 	//m_abilityBarBG->Render();
+	if (m_renderKeybinds)
+	{
+		for (unsigned int i = 0; i < m_keyBinds.size(); i++)
+		{
+			m_keyBinds[i]->Render();
+		}
+	}
 	m_FirstPic->Render();
 	m_SecondPic->Render();
 	m_ThirdPic->Render();
@@ -153,4 +185,9 @@ void CharacterAbilityDescription::Render()
 	m_SecondText->Render();
 	m_ThirdText->Render();
 	m_FourthText->Render();
+}
+
+void CharacterAbilityDescription::SetRenderKeybinds(bool p_yesRender)
+{
+	m_renderKeybinds = p_yesRender;
 }

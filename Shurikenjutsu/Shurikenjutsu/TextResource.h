@@ -3,41 +3,41 @@
 
 #include <string>
 const std::string KATANA_PRIMARY_ATTACK = 
-"By clicking the left Mouse Button the character\n performs a close range attack in its \nfacing direction.";
+"The character\n performs a close range attack in his \nfacing direction.";
 const std::string KATANA_SECONDARY_ATTACK = 
-"By pressing the Q button the character performs\n a dash in the its facing direction of a maximum \nof 10 units.";
+"The character performs\n a dash in the his facing direction of a maximum \nof 10 units.";
 
 const std::string SHURIKEN_PRIMARY_ATTACK = 
-"By pressing the right Mouse Button the character\n throws a shuriken in the facing direction. \nThe character has a maximum of 3 stacks, \nthat gets replenished over time.";
+"The character\n throws a shuriken in his facing direction. \nHe has a maximum of 3 stacks, \nthat gets replenished over time.";
 const std::string SHURIKEN_SECONDARY_ATTACK = 
-"By pressong the E button the character throws\n an extra large shuriken, in the facing direction,\n that does extra damage";
+"The character throws\n an extra large shuriken, in his facing direction,\n that does extra damage";
 
 const std::string TESSEN_PRIMARY_ATTACK =
-"By pressing the left Mouse Button the character\n performs a close range attack in \nits facing direction.";
+"The character\n performs a close range attack in \nher facing direction.";
 const std::string TESSEN_SECONDARY_ATTACK = 
-"By pressing the Q button the character throws a fan in\n its facing direction. This fan will returnif it hits\n  an object or reaches its max distance, not when\n hitting another player, and return to the character.\n It will disappear if it hits an object on the way back";
+"The character throws a fan in\n her facing direction. This fan will return if it hits\n  an object or a player, or reaches its max distance.\n It will disappear if it hits an object on the way back";
 
 const std::string WHIP_PRIMARY_ATTACK = 
-"By pressing the the Right Mouse Button the\n character performs a whip in its facing direction.";
+"The\n character performs a whip in her facing direction.";
 const std::string WHIP_SECONDARY_ATTACK = 
-"By pressing the E Button the character performs\n a spin with its whip damaging everyone that\n is within the whips range.";
+"The character performs\n a spin with her whip damaging everyone that\n is within the whips range.";
 
 const std::string NAGINATA_PRIMARY_ATTACK =
-"By clicking the left Mouse Button the character \nperforms a close range attack in its\n facing direction.";
+"The character \nperforms a close range attack in his\n facing direction.";
 const std::string NAGINATA_SECONDARY_ATTACK = 
-"By pressing the Q Button the character performs \nstabb infront of him for 1.5 seconds.";
+"The character performs \nstab infront of him for 1.5 seconds.";
 
 const std::string KUNAI_PRIMARY_ATTACK = 
-"By pressing the Right Mouse Button the character\n throws a Kunai in its facing direction.";
+"The character\n throws a Kunai in his facing direction.";
 const std::string KUNAI_SECONDARY_ATTACK = 
-"By pressing the E Button throws several Kunai up\n in the air and landing in the location of the mouse \ndamaging enemies in a ring around the hit location.";
+"The character throws several Kunai up\n in the air which land in the location of the mouse \ndamaging enemies in a ring around the hit location.";
 
 const std::string SMOKEBOMB_DESCRIPTION =
-"By pressing the R Button throws a Smokebomb at\n the mouse location. The SmokeBomb obscures \nthe view of all characters.";
+"The character throws a smokebomb at\n the mouse location. The smokebomb obscures \nthe view of all characters.";
 const std::string SPIKES_DESCRIPTION =
-"By pressing the R Button throws a bag full of \ncaltrops, at the mouse location, damaging\n all enemies that stand in it's radius.";
+"The character throws a bag full of \ncaltrops, at the mouse location, damaging\n all enemies that stand in it's radius.";
 const std::string STICKY_DESCRIPTION =
-"By pressing the R Button throws a vial of sticky\n fluids on the ground, at the mouse location.\n This liquid will slow all players within the its radius.";
+"The character throws a vial of sticky\n fluids on the ground, at the mouse location.\n This liquid will slow all players within the its radius.";
 
 const std::string CREDITS_DEVELOPERS = "Developers: \n Alexander Petrini \n Johan Almeflo \n Henrik Forslin\n Jonas Axelsson \n Viktor Lundkvist \n Gustav During\n Anna Olsson\n Michael Jansson \n Cecilia Carlsson";
 const std::string CREDITS_MUSIC_TITLE = "Music: \n ";
