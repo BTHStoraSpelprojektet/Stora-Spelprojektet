@@ -182,6 +182,7 @@ bool PlayingState::Initialize(std::string p_levelName)
 	POIGrapichalEffects::GetInstance().Initialize();
 
 	m_refreshSpectateText = false;
+	m_spectateTimer = 2.0f;
 	return true;
 }
 
@@ -304,6 +305,11 @@ void PlayingState::ShutdownExit()
 
 GAMESTATESWITCH PlayingState::Update()
 	{
+	if (Network::GetInstance()->RoundRestarted())
+	{
+		ResetValuesAtRoundRestart();
+	}
+
 	// Check if a new level have started.
 	if (Network::GetInstance()->IsConnected() && Network::GetInstance()->NewLevel())
 	{
@@ -398,22 +404,33 @@ GAMESTATESWITCH PlayingState::Update()
 	}
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE)
 	{
-		std::vector<Player*> tempList = m_playerManager->GetMyTeamPlayers(m_playerManager->GetPlayerTeam());
-		if (m_spectateIndex > ((int)tempList.size() - 1) || m_spectateIndex < 0)
+		if (m_spectateTimer < 0.0f)
 		{
-			m_spectateIndex = 0;
+			std::vector<Player*> tempList = m_playerManager->GetMyTeamPlayers(m_playerManager->GetPlayerTeam());
+			if (m_spectateIndex > ((int)tempList.size() - 1) || m_spectateIndex < 0)
+			{
+				m_spectateIndex = 0;
+			}
+			if (tempList.size() != 0)
+			{
+				player = tempList[m_spectateIndex]->GetPosition();
+				m_camera->FollowCharacter(player);
+			}
+			if (m_refreshSpectateText)
+			{
+				if (tempList.size() > 0)
+				{
+					std::string tempString = "Spectating " + tempList[m_spectateIndex]->GetName();
+					m_spectateText->SetText(tempString);
+					m_spectateText->SetColor(0xffffffff);
+					m_refreshSpectateText = false;
+				}
+			}
+			
 		}
-		if (tempList.size() != 0)
+		else
 		{
-			player = tempList[m_spectateIndex]->GetPosition();
-			m_camera->FollowCharacter(player);
-		}
-		if (m_refreshSpectateText)
-		{
-			std::string tempString = "Sprectating " + tempList[m_spectateIndex]->GetName();
-			m_spectateText->SetText(tempString);
-			m_spectateText->SetColor(0xffffffff);
-			m_refreshSpectateText = false;
+			m_spectateTimer -= (float)GLOBAL::GetInstance().GetDeltaTime();
 		}
 	}
 
@@ -955,4 +972,9 @@ void PlayingState::UpdatePOIEffects()
 		}
 		
 	}
+}
+void PlayingState::ResetValuesAtRoundRestart()
+{
+	m_refreshSpectateText = false;
+	m_spectateTimer = 2.0f;
 }

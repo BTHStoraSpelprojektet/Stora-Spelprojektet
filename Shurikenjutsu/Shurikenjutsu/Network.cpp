@@ -2701,7 +2701,7 @@ void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 	}
 }
 
-PlayerNet Network::GetPlayer(RakNet::RakNetGUID p_guid)
+PlayerNet Network::GetPlayerByGuid(RakNet::RakNetGUID p_guid)
 {
 	if (p_guid == GetMyGUID())
 	{

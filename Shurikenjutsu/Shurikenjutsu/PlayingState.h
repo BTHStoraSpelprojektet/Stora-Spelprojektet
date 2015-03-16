@@ -50,6 +50,8 @@ public:
 
 	void EscapeIsPressed();
 
+	void ResetValuesAtRoundRestart();
+
 private:
 	void BasicPicking();
 	DirectX::XMFLOAT3 Pick(Point p_point);
@@ -104,5 +106,6 @@ private:
 	Sound* m_sound;
 
 	bool m_scoreBoardIsActive;
+	float m_spectateTimer;
 };
 #endif PLAYINGSTATE

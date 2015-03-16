@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <Windows.h>
+#include <ctime>
 
 // Constants
 const std::string path = "../Shurikenjutsu/Settings/Settings.cfg";
@@ -95,7 +96,7 @@ void Settings::GenerateDefaultSettings()
 	names.push_back("Hiromu");
 	names.push_back("Hiakri");
 	names.push_back("Itsuki");
-
+	srand((int)std::time(0));
 	int random = rand() % names.size();
 	
 	m_name = names[random];
