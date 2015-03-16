@@ -170,6 +170,7 @@ void TeamStatusBar::Update()
 			}
 			else
 			{
+				m_redColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 				m_redColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
 			}
 		}
@@ -181,6 +182,7 @@ void TeamStatusBar::Update()
 			}
 			else
 			{
+				m_blueColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 				m_blueColorPlayers[player.guid]->SetTexture(TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
 			}
 		}
