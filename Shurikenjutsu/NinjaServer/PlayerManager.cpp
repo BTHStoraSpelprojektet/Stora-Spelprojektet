@@ -1027,7 +1027,7 @@ void PlayerManager::SendVisiblePlayers()
 					redTeamVision.push_back(it->second[i]);
 				}
 			}
-}
+		}
 		else if (team == 2)
 		{
 			for (unsigned int i = 0; i < it->second.size(); i++)
