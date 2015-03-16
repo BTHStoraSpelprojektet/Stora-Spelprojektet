@@ -56,7 +56,7 @@ void Spikes::Update()
 		float y = m_speed * m_timer * sinf(m_angle) - 0.5f * 9.82f * m_timer * m_timer;
 		float z = m_speed * m_timer * cosf(m_angle) * m_percentZ;
 
-		m_spikeBag->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 10 * y, m_startPosition.z + z));
+		m_spikeBag->SetPosition(DirectX::XMFLOAT3(m_startPosition.x + x, m_startPosition.y + 30 * y, m_startPosition.z + z));
 
 		m_trail->Update(m_spikeBag->GetPosition(), m_angle);
 

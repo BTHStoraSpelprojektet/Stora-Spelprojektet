@@ -722,7 +722,7 @@ void PlayingState::OutliningRays()
 	DirectX::XMStoreFloat3(&rayDir,	DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
 
 	Ray* ray = new Ray(rayPos, rayDir);
-	rayDistObjects = CollisionManager::GetInstance()->CalculateRayLengthFloat(ray);
+	rayDistObjects = CollisionManager::GetInstance()->CalculateOutliningRayDistance(ray);
 	if (Collisions::RayOBBCollision(ray, m_playerManager->GetPlayerBoundingBox()))
 	{
 		if (ray->m_distance != 0)
@@ -748,7 +748,7 @@ void PlayingState::OutliningRays()
 		DirectX::XMStoreFloat3(&rayDir, DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&enemiesBoundingBoxes[i].m_center), DirectX::XMLoadFloat3(&rayPos)));
 		DirectX::XMStoreFloat3(&rayDir, DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&rayDir)));
 		ray->m_direction = DirectX::XMFLOAT4(rayDir.x, rayDir.y, rayDir.z, 1);
-		rayDistObjects = CollisionManager::GetInstance()->CalculateRayLengthFloat(ray);
+		rayDistObjects = CollisionManager::GetInstance()->CalculateOutliningRayDistance(ray);
 		if (Collisions::RayOBBCollision(ray, enemiesBoundingBoxes[i]))
 		{
 			if (ray->m_distance != 0)

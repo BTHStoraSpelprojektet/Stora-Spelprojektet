@@ -13,7 +13,7 @@ bool RenderTarget::Initialize(ID3D11Device* p_device, int p_width, int p_height)
 	textureDescription.Height = p_height;
 	textureDescription.MipLevels = 1;
 	textureDescription.ArraySize = 1;
-	textureDescription.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDescription.Format = DXGI_FORMAT_R32_FLOAT;
 	textureDescription.SampleDesc.Count = 1;
 	textureDescription.Usage = D3D11_USAGE_DEFAULT;
 	textureDescription.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
