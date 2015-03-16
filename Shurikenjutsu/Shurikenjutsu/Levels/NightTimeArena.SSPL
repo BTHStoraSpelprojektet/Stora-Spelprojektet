@@ -63,12 +63,8 @@ Hedge_01__21 -3.657 0 -5.063 0 -4.44089e-016 0
 Hedge_01__22 5.06284 0 3.381 0 1.5708 0
 Hedge_01__23 3.38063 0 5.063 0 3.14159 0
 LampPost_Animated_3 2 0 40 0 4.71239 0
-LampPost_Animated_3 2 0 40 0 4.71239 0
-LampPost_Animated_4 -3 0 -39 0 1.5708 0
 LampPost_Animated_4 -3 0 -39 0 1.5708 0
 LampPost_Animated_5 2 0 27 0 4.71239 0
-LampPost_Animated_5 2 0 27 0 4.71239 0
-LampPost_Animated_6 -3 0 -27 0 1.5708 0
 LampPost_Animated_6 -3 0 -27 0 1.5708 0
 POI_Heal_1 0 0 0 0 0 0
 POI_Invisible_1 29.0323 0 36.0899 0 0 0
@@ -452,6 +448,10 @@ pillar_2 32.2262 0 39.1608 0 0.785398 0
 sakuraTree_ 13.5 0 28 0 0.349066 0
 sakuraTree_1 -13.5 0 -28 0 5.93412 0
 sakuraTree_2 -29.0922 0 -44.446 0 5.93412 0
+shrineLantern_Animated_1 -4.43157 3.1061 18.8745 0 0 0
+shrineLantern_Animated_2 4.432 3.1061 18.8745 0 0 0
+shrineLantern_Animated_3 4.432 3.1061 -18.875 0 0 0
+shrineLantern_Animated_4 -4.432 3.1061 -18.875 0 0 0
 spawnPoint_1_team_1 -40.4168 0 38.0826 0 0 0
 spawnPoint_1_team_2 40.4168 0 -38.0826 0 0 0
 spawnPoint_2_team_1 -37.7553 0 41.4886 0 0 0

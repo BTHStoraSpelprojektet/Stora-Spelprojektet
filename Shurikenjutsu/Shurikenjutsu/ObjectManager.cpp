@@ -810,7 +810,6 @@ void ObjectManager::Render()
 
 	for (unsigned int i = 0; i < m_bloodParticles.size(); i++)
 	{
-
 		m_bloodParticles[i]->Render();
 	}
 
@@ -1349,7 +1348,7 @@ void ObjectManager::AddBloodSpots(DirectX::XMFLOAT3 p_pos)
 {
 	ParticleEmitter* temp = new ParticleEmitter();
 	p_pos.y += 2;
-	temp->Initialize(GraphicsEngine::GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
+	temp->Initialize(GraphicsEngine::GetDevice(), p_pos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BLOODHIT);
 	temp->SetEmitParticleState(true);
 	m_bloodParticles.push_back(temp); 
 

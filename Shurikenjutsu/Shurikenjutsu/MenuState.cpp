@@ -15,6 +15,7 @@
 #include <shellapi.h>
 #include <Windows.h>
 #include "..\CommonLibs\Flags.h"
+#include "ObjectManager.h"
 
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
