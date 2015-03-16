@@ -2254,6 +2254,30 @@ void Network::SpawnBloodParticles(RakNet::RakNetGUID p_guid)
 	}
 }
 
+void Network::SpawnBloodParticlesOnPlayers(RakNet::RakNetGUID p_guid)
+{
+	// Check if spawn blood on player or enemies
+	if (m_myPlayer.guid == p_guid)
+	{
+		m_bloodParticlesIndex.push_back(-1);
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				m_bloodParticlesIndex.push_back(i);
+			}
+		}
+	}	
+}
+
+std::vector<int> Network::GetBloodParticlesOnPlayers()
+{
+	return m_bloodParticlesIndex;
+}
+
 int Network::GetTeam(RakNet::RakNetGUID p_guid)
 {
 	if (m_myPlayer.guid == p_guid)

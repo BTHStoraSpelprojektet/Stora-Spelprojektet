@@ -153,9 +153,12 @@ void PlayerManager::RenderOutliningPassOne()
 	{
 		if (m_renderOutlingingEnemies[i])
 		{
-			if (GraphicsEngine::IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
-			{				
-				m_enemyList[i]->RenderDepthOutlining();
+			if (!m_enemyList[i]->IsInvis())
+			{
+				if (GraphicsEngine::IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+				{
+					m_enemyList[i]->RenderDepthOutlining();
+				}
 			}
 		}
 	}
@@ -199,21 +202,24 @@ void PlayerManager::RenderOutliningPassTwo()
 	{
 		if (m_renderOutlingingEnemies[i])
 		{
-			switch (m_enemyList[i]->GetTeam())
+			if (!m_enemyList[i]->IsInvis())
 			{
-			case 1:
-				color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-				break;
-			case 2:
-				color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
-				break;
-			default:
-				break;
-			}
+				switch (m_enemyList[i]->GetTeam())
+				{
+				case 1:
+					color = DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
+					break;
+				case 2:
+					color = DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+					break;
+				default:
+					break;
+				}
 
-			if (GraphicsEngine::IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
-			{
-				m_enemyList[i]->RenderOutlining(color);
+				if (GraphicsEngine::IsVisibilityPointVisible(Point(m_enemyList[i]->GetPosition().x, m_enemyList[i]->GetPosition().z)))
+				{
+					m_enemyList[i]->RenderOutlining(color);
+				}
 			}
 		}
 	}
