@@ -74,6 +74,8 @@ private:
 	GUIText* m_startText;
 	GUIText* m_poiText;
 	GUIText* m_playerJoinedText;
+	GUIText* m_spectateText;
+	bool m_refreshSpectateText;
 
 	void PlayerJoinedText();
 
@@ -102,5 +104,6 @@ private:
 	Sound* m_sound;
 
 	bool m_scoreBoardIsActive;
+	float m_spectateTimer;
 };
 #endif PLAYINGSTATE

@@ -123,7 +123,9 @@ bool PlayingState::Initialize(std::string p_levelName)
 	m_poiText = new GUIText();
 	m_poiText->Initialize(" ", 50.0f, 0.0f, 0.0f, 0xffffffff);
 	m_playerJoinedText = new GUIText();
-	m_playerJoinedText->Initialize("", 50.0f, 0.0f, 250.0f, 0xffffffff);
+	m_playerJoinedText->Initialize("", 50.0f, 0.0f, 250.0f, 0xffffffff); 
+	m_spectateText = new GUIText();
+	m_spectateText->Initialize("", 50.0f, 0.0f, 250.0f, 0xffffffff);
 
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
@@ -179,6 +181,8 @@ bool PlayingState::Initialize(std::string p_levelName)
 
 	POIGrapichalEffects::GetInstance().Initialize();
 
+	m_refreshSpectateText = false;
+	m_spectateTimer = 2.0f;
 	return true;
 }
 
@@ -255,6 +259,12 @@ void PlayingState::Shutdown()
 		delete m_playerJoinedText;
 		m_playerJoinedText = nullptr;
 	}
+	if (m_spectateText != nullptr)
+	{
+		m_spectateText->Shutdown();
+		delete m_spectateText;
+		m_spectateText = nullptr;
+	}
 
 	if (m_poiText != nullptr)
 	{
@@ -308,8 +318,9 @@ GAMESTATESWITCH PlayingState::Update()
 	for (unsigned int i = 0; i < 3; i++)
 	{
 		DecreaseTextOpacity(m_startText);
-		DecreaseTextOpacity(m_poiText);
+		DecreaseTextOpacity(m_poiText); 
 		DecreaseTextOpacity(m_playerJoinedText);
+		DecreaseTextOpacity(m_spectateText);
 	}
 
 	// Update global delta time.
@@ -388,15 +399,32 @@ GAMESTATESWITCH PlayingState::Update()
 	}
 	else if (GLOBAL::GetInstance().CAMERA_SPECTATE)
 	{
-		std::vector<Player*> tempList = m_playerManager->GetMyTeamPlayers(m_playerManager->GetPlayerTeam());
-		if (m_spectateIndex > ((int)tempList.size() - 1) || m_spectateIndex < 0)
+		if (m_spectateTimer < 0.0f)
 		{
-			m_spectateIndex = 0;
+			std::vector<Player*> tempList = m_playerManager->GetMyTeamPlayers(m_playerManager->GetPlayerTeam());
+			if (m_spectateIndex > ((int)tempList.size() - 1) || m_spectateIndex < 0)
+			{
+				m_spectateIndex = 0;
+			}
+			if (tempList.size() != 0)
+			{
+				player = tempList[m_spectateIndex]->GetPosition();
+				m_camera->FollowCharacter(player);
+			}
+			if (m_refreshSpectateText)
+			{
+				if (tempList.size() > 0)
+				{
+					std::string tempString = "Spectating " + tempList[m_spectateIndex]->GetName();
+					m_spectateText->SetText(tempString);
+					m_spectateText->SetColor(0xffffffff);
+					m_refreshSpectateText = false;
+				}
+			}
 		}
-		if (tempList.size() != 0)
+		else
 		{
-			player = tempList[m_spectateIndex]->GetPosition();
-			m_camera->FollowCharacter(player);
+			m_spectateTimer -= (float)GLOBAL::GetInstance().GetDeltaTime();
 		}
 	}
 
@@ -408,6 +436,7 @@ GAMESTATESWITCH PlayingState::Update()
 	if (InputManager::GetInstance()->IsLeftMouseClicked() && GLOBAL::GetInstance().CAMERA_SPECTATE)
 	{
 		m_spectateIndex += 1;
+		m_refreshSpectateText = true;
 	}
 
 	// Update every scene object.
@@ -646,6 +675,7 @@ void PlayingState::Render()
 	}
 
 	m_playerJoinedText->Render();
+	m_spectateText->Render();
 
 	GraphicsEngine::ResetRenderTarget();
 }
