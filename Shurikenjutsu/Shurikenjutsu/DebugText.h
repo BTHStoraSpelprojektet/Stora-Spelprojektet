@@ -35,6 +35,7 @@ private:
 	static DebugText* m_instance;
 
 	bool m_renderText;
+	bool m_renderNetworkText;
 	DirectX::XMFLOAT3 m_originPos;
 	float m_size;
 
@@ -44,8 +45,8 @@ private:
 	GUIText* m_pingText;
 	GUIText* m_inMessagesText;
 	GUIText* m_outMessagesText;
-
-
+	GUIText* m_inNrMessages;
+	GUIText* m_outNrMessages;
 };
 
 #endif
