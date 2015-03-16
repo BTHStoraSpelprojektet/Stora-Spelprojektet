@@ -413,10 +413,13 @@ GAMESTATESWITCH PlayingState::Update()
 			}
 			if (m_refreshSpectateText)
 			{
-				std::string tempString = "Sprectating " + tempList[m_spectateIndex]->GetName();
-				m_spectateText->SetText(tempString);
-				m_spectateText->SetColor(0xffffffff);
-				m_refreshSpectateText = false;
+				if (tempList.size() > 0)
+				{
+					std::string tempString = "Spectating " + tempList[m_spectateIndex]->GetName();
+					m_spectateText->SetText(tempString);
+					m_spectateText->SetColor(0xffffffff);
+					m_refreshSpectateText = false;
+				}
 			}
 		}
 		else
