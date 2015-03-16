@@ -18,6 +18,7 @@
 #include "MenuButton.h"
 #include "ScoreBoard.h"
 #include "TeamTable.h"
+#include "InputManager.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -69,23 +70,10 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_prevRandomNumber = 0;
 	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
 	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
-	
-	GUIText temp;
-	temp.Initialize("M1", 25.0f, -126.0f, -50.0f, 0xff000000);
-	m_keyBinds.push_back(temp);
-	GUIText temp2;
-	temp.Initialize("M2", 25.0f, -42.0f, -50.0f, 0xff000000);
-	m_keyBinds.push_back(temp2);
-	GUIText temp3;
-	temp.Initialize("Q", 25.0f, 42.0f, -50.0f, 0xff000000);
-	m_keyBinds.push_back(temp3);
-	GUIText temp4;
-	temp.Initialize("E", 25.0f, 126.0f, -50.0f, 0xff000000);
-	m_keyBinds.push_back(temp4);
 
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f +offset;
-	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-120.0f;
+	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-140.0f;
 	float portraitYPos = 110.0f;//ninjaCycleHeight;//ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
 	float toolButtonSize = 60.0f;//m_screenHeight / 20.48f;
 	float toolButtonXPos = 70.0f;
@@ -347,6 +335,25 @@ ObjectManager* ChooseState::GetObjectManager()
 
 GAMESTATESWITCH ChooseState::Update()
 {
+	float xPos = (float)InputManager::GetInstance()->GetMousePositionX();
+	float yPos = (float)InputManager::GetInstance()->GetMousePositionY();
+
+	//+((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f)
+	//	- ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f)
+	
+	if (xPos > (m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) || xPos < (-m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) ||
+		yPos >(m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 140.0f || yPos < (-m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 140.0f)
+	{
+		m_abilityDescription[0]->SetRenderKeybinds(true);
+		m_abilityDescription[1]->SetRenderKeybinds(true);
+		m_abilityDescription[2]->SetRenderKeybinds(true);
+	}
+	else
+	{
+		m_abilityDescription[0]->SetRenderKeybinds(false);
+		m_abilityDescription[1]->SetRenderKeybinds(false);
+		m_abilityDescription[2]->SetRenderKeybinds(false);
+	}
 	// Update Camera position
 	m_camera->MenuCameraRotation();
 
@@ -512,11 +519,11 @@ void ChooseState::Render()
 	GraphicsEngine::BeginRenderToShadowMap();
 	GraphicsEngine::PrepareRenderAnimatedDepth();
 	m_objectManager->RenderAnimatedDepth();
-	m_playerManager->RenderDepth(true);	
+	m_playerManager->RenderDepth(true);
 
 	m_objectManager->RenderInstancedDepth();
 	GraphicsEngine::PrepareRenderDepth();
-	m_objectManager->RenderDepth();	
+	m_objectManager->RenderDepth();
 	GraphicsEngine::SetShadowMap();
 
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
@@ -531,7 +538,7 @@ void ChooseState::Render()
 
 	m_objectManager->RenderInstanced();
 	GraphicsEngine::PrepareRenderScene();
-	m_objectManager->Render();	
+	m_objectManager->Render();
 
 	GraphicsEngine::RenderFoliage();
 	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
@@ -554,16 +561,13 @@ void ChooseState::Render()
 	m_ninjas[m_currentNinja]->Render();
 	m_tools[m_currentTool]->Render();
 	//m_ninjaPortBorder->Render();
+
 	m_abilityDescription[m_currentNinja]->Render();
 	//m_redTeamScore->Render();
 	//m_blueTeamScore->Render();
 	m_redTeam->Render();
 	m_blueTeam->Render();
 	m_questionMark->Render();
-	/*for (unsigned int i = 0; i < m_keyBinds.size(); i++)
-	{
-	m_keyBinds[i].Render();
-	}*/
 	m_toolDescription[m_currentTool]->Render();
 	m_title->Render();
 
