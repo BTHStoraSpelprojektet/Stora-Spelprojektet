@@ -5,6 +5,8 @@
 #include "..\CommonLibs\DirectXTex\WICTextureLoader\WICTextureLoader.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 
+#include <fstream>
+
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
 	// Set variables to initial values.
@@ -16,30 +18,54 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ID3D10Blob* lineVertexShader = 0;
 	ID3D10Blob*	errorMessage = 0;
 
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	std::vector<byte> FileData;
+
+	// open the file
+	std::ifstream VertexFile("../Release/Shaders/Scene/VertexShader.cso", std::ios::in | std::ios::binary | std::ios::ate);
+
+	// if open was successful
+	if (VertexFile.is_open())
 	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
-			return false;
-		}
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-	else
-	{
-		m_VSVersion = "5.0";
+		// find the length of the file
+		int Length = (int)VertexFile.tellg();
+
+		// collect the file data
+		FileData.resize(Length);
+		VertexFile.seekg(0, std::ios::beg);
+		VertexFile.read(reinterpret_cast<char*>(&FileData[0]), Length);
+		VertexFile.close();
 	}
 
-	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	if (FAILED(p_device->CreateVertexShader(FileData.data(), FileData.size(), 0, &m_vertexShader)))
 	{
-		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
-		return false;
+		int hej = 3;
 	}
+	int doif = 4;
+
+	// Compile the vertex shader.
+	//if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	//{
+	//	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
+	//	{
+	//		ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
+	//		return false;
+	//	}
+	//	else
+	//	{
+	//		m_VSVersion = "4.0";
+	//	}
+	//}
+	//else
+	//{
+	//	m_VSVersion = "5.0";
+	//}
+
+	//// Create the vertex shader.
+	//if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	//{
+	//	ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
+	//	return false;
+	//}
 
 	// Compile the vertex shader.
 	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReverseVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &sSReverseVertexShader, &errorMessage)))
@@ -197,7 +223,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	size = sizeof(layout) / sizeof(layout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	if (FAILED(p_device->CreateInputLayout(layout, size, FileData.data(), FileData.size(), &m_layout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex input layout.");
 		return false;
@@ -410,8 +436,8 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
 	// Release useless local shaders.
-	vertexShader->Release();
-	vertexShader = 0;
+	/*vertexShader->Release();
+	vertexShader = 0;*/
 	sSReverseVertexShader->Release();
 	sSReverseVertexShader = 0;
 	instanceShader->Release();
