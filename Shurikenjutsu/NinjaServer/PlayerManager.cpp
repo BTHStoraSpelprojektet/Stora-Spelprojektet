@@ -614,6 +614,7 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 				// Shield active
 				// Play Shield sound, now it will play hurt sound
 				m_players[i].shield = 0.0f;
+				SendShieldValue(m_players[i].guid, m_players[i].shield);
 			}
 
 			else
@@ -1027,7 +1028,7 @@ void PlayerManager::SendVisiblePlayers()
 					redTeamVision.push_back(it->second[i]);
 				}
 			}
-}
+		}
 		else if (team == 2)
 		{
 			for (unsigned int i = 0; i < it->second.size(); i++)
@@ -1135,4 +1136,14 @@ void PlayerManager::ResetPOIEffects()
 
 		SendHasPOIHealing(m_players[i].guid);
 	}
+}
+
+void PlayerManager::SendShieldValue(RakNet::RakNetGUID p_guid, float p_shield)
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_SHIELD_UPDATE);
+	bitStream.Write(p_guid);
+	bitStream.Write(p_shield);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

@@ -23,7 +23,6 @@ class ScoreBoard;
 class SuddenDeathState;
 class GUIText;
 
-
 class PlayingState : public GameState
 {
 public:
@@ -49,6 +48,8 @@ public:
 	void SetSound(Sound* p_sound);
 
 	void EscapeIsPressed();
+
+	void ResetValuesAtRoundRestart();
 
 private:
 	void BasicPicking();
@@ -104,5 +105,6 @@ private:
 	Sound* m_sound;
 
 	bool m_scoreBoardIsActive;
+	float m_spectateTimer;
 };
 #endif PLAYINGSTATE

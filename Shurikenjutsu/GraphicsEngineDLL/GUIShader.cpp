@@ -236,7 +236,7 @@ void GUIShader::Shutdown()
 	}
 }
 
-void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, float p_currentScreenWidth, float p_currentScreenHeight)
+void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_worldMatrix, ID3D11ShaderResourceView* p_texture, float p_currentScreenWidth, float p_currentScreenHeight, float p_opacity)
 {
 	unsigned int stride;
 	unsigned int offset;
@@ -255,8 +255,8 @@ void GUIShader::Render(ID3D11DeviceContext* p_context, DirectX::XMFLOAT4X4 p_wor
 	matrixBuffer = (MatrixBuffer*)mappedBuffer.pData;
 
 	matrixBuffer->m_worldMatrix = p_worldMatrix;
-
 	DirectX::XMStoreFloat4x4(&matrixBuffer->m_projectionMatrix, DirectX::XMMatrixOrthographicLH(p_currentScreenWidth, p_currentScreenHeight, 1.0f, 2.0f));
+	matrixBuffer->m_opacity = p_opacity;
 
 	p_context->Unmap(m_matrixBuffer, 0);
 
