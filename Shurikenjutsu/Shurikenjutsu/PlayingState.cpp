@@ -20,6 +20,7 @@
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "..\CommonLibs\ModelNames.h"
 #include "TrailRenderer.h"
+#include "FlashBang.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -183,6 +184,9 @@ bool PlayingState::Initialize(std::string p_levelName)
 
 	m_refreshSpectateText = false;
 	m_spectateTimer = 2.0f;
+
+	FlashBang::GetInstance().Initialize();
+
 	return true;
 }
 
@@ -451,6 +455,10 @@ GAMESTATESWITCH PlayingState::Update()
 	m_objectManager->Update();
 	OBB playerOBB = m_playerManager->GetPlayerBoundingBox();
 
+	// Update flash bangs.
+	FlashBang::GetInstance().UpdateFlashBangs();
+	FlashBang::GetInstance().UpdateEffect();
+
 	// Update health bars.
 	m_playerManager->UpdateHealthbars(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
 
@@ -465,6 +473,11 @@ GAMESTATESWITCH PlayingState::Update()
 		if (GetAsyncKeyState(VK_BACK))
 		{
 			m_updateFrustum = true;
+		}
+
+		if (GetAsyncKeyState(VK_DELETE))
+		{
+			FlashBang::GetInstance().GetFlashed();
 		}
 	}
 
@@ -594,6 +607,7 @@ void PlayingState::Render()
 	// Render to the scene normally.
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
+	FlashBang::GetInstance().RenderEffect();
 	UpdatePOIEffects();
 
 	GraphicsEngine::PrepareRenderAnimated();

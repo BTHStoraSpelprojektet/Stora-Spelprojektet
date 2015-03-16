@@ -96,7 +96,8 @@ void Settings::GenerateDefaultSettings()
 	names.push_back("Hiromu");
 	names.push_back("Hiakri");
 	names.push_back("Itsuki");
-	srand((int)std::time(0));
+
+	srand((unsigned int)time(NULL));
 	int random = rand() % names.size();
 	
 	m_name = names[random];

@@ -12,6 +12,7 @@ bool GUIElement::Initialize(DirectX::XMFLOAT3 p_position, float p_width, float p
 	m_size = DirectX::XMFLOAT2((float)p_width, (float)p_height);
 	m_texture = nullptr;
 	SetTexture(p_texture);
+	m_opacity = 1.0f;
 	return true;
 }
 
@@ -60,5 +61,15 @@ void GUIElement::SetTexture(ID3D11ShaderResourceView* p_texture)
 // For cursor :)
 void GUIElement::Render()
 {
-	GraphicsEngine::RenderGUI(GetWorldMatrix(), m_texture);
+	GraphicsEngine::RenderGUI(GetWorldMatrix(), m_texture, m_opacity);
+}
+
+void GUIElement::SetOpacity(float p_opacity)
+{
+	m_opacity = p_opacity;
+}
+
+float GUIElement::GetOpacity()
+{
+	return m_opacity;
 }
