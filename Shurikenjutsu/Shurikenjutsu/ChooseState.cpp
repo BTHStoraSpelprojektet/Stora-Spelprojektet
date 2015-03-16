@@ -488,12 +488,13 @@ void ChooseState::Render()
 {
 	// Draw to the shadowmap.
 	GraphicsEngine::BeginRenderToShadowMap();
-	GraphicsEngine::PrepareRenderDepth();
-	m_objectManager->RenderDepth();
-
 	GraphicsEngine::PrepareRenderAnimatedDepth();
 	m_objectManager->RenderAnimatedDepth();
-	m_playerManager->RenderDepth(true);
+	m_playerManager->RenderDepth(true);	
+
+	m_objectManager->RenderInstancedDepth();
+	GraphicsEngine::PrepareRenderDepth();
+	m_objectManager->RenderDepth();	
 	GraphicsEngine::SetShadowMap();
 
 	GraphicsEngine::SetSceneDirectionalLight(m_directionalLight);
@@ -502,13 +503,13 @@ void ChooseState::Render()
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 
-	m_objectManager->RenderInstanced();
-	GraphicsEngine::PrepareRenderScene();
-	m_objectManager->Render();
-
 	GraphicsEngine::PrepareRenderAnimated();
 	m_objectManager->RenderAnimated();
 	m_playerManager->Render(true);
+
+	m_objectManager->RenderInstanced();
+	GraphicsEngine::PrepareRenderScene();
+	m_objectManager->Render();	
 
 	GraphicsEngine::RenderFoliage();
 	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
