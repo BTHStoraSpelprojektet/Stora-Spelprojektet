@@ -5,9 +5,10 @@
 #include "GraphicsEngine.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "Trail.h"
+#include "PointLights.h"
 
 bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, unsigned int p_spikeBombID, int p_team)
-{
+{ 
 	m_spikeBag = new Object();
 	m_spikeBag->Initialize("../Shurikenjutsu/Models/CaltropBagShape.SSP", p_startPosition);
 
@@ -107,10 +108,17 @@ void Spikes::Render()
 			m_trail->Render();
 		}
 	}
-
 	else
 	{
 		m_spikesTrap->Render();
+
+		PointLight newLight;
+		newLight.m_ambient = DirectX::XMVectorSet(0.2f, 0.2f, 0.2f, 0.0f);
+		newLight.m_diffuse = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+		newLight.m_specular = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+		newLight.m_position = m_spikeSphere.m_position;
+		newLight.m_range = 2.0f;
+		GraphicsEngine::AddNewPointLight(newLight);
 	}
 }
 
