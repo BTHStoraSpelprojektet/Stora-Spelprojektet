@@ -15,6 +15,8 @@ bool FalshBang::Initialize()
 	m_opacity = 0.0f;
 
 	// TODO, initialisera m_flashEffect.
+
+	return true;
 }
 
 void FalshBang::Shutdown()

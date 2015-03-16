@@ -27,7 +27,5 @@ private:
 	Settings();
 	~Settings();
 
-	
 };
-
 #endif
