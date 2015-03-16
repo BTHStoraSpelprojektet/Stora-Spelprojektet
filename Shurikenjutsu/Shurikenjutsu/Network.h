@@ -155,7 +155,7 @@ public:
 	RakNet::RakString GetJustJoinedPlayerName();
 	int GetJustJoinedPlayerTeam();
 
-	PlayerNet GetPlayer(RakNet::RakNetGUID p_guid);
+	PlayerNet GetPlayerByGuid(RakNet::RakNetGUID p_guid);
 
 private:
 	void ClearListsAtNewRound();
