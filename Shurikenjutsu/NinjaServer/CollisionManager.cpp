@@ -1206,7 +1206,7 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 	{
 		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
 		{
-			if (ray->m_distance != 0)
+			if (ray->m_distance > 0)
 			{
 				rayLengths.push_back(ray->m_distance);
 			}
