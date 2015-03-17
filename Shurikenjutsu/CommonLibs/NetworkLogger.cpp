@@ -115,13 +115,13 @@ void NetworkLogger::OnInternalPacket(RakNet::InternalPacket *internalPacket, uns
 		//std::cout << "Message out: " << IDTOString(internalPacket->data[0]) << std::endl;
 		m_frameBitsOut += internalPacket->dataBitLength;
 
-		if (m_nrPacketsOut.find(message) != m_nrPacketsOut.end())
-		{
-			m_nrPacketsOut[message]++;
-		}
-		else
+		if (m_nrPacketsOut.size() == 0 || m_nrPacketsOut.find(message) == m_nrPacketsOut.end())
 		{
 			m_nrPacketsOut[message] = 1;
+		}
+		else
+		{			
+			m_nrPacketsOut[message]++;
 		}
 	}
 	else
@@ -129,13 +129,13 @@ void NetworkLogger::OnInternalPacket(RakNet::InternalPacket *internalPacket, uns
 		//std::cout << "Message in: " << IDTOString(internalPacket->data[0]) << std::endl;
 		m_frameBitsIn += internalPacket->dataBitLength;
 
-		if (m_nrPacketsIn.find(message) != m_nrPacketsIn.end())
-		{
-			m_nrPacketsIn[message]++;
-		}
-		else
+		if (m_nrPacketsIn.size() == 0 || m_nrPacketsIn.find(message) == m_nrPacketsIn.end())
 		{
 			m_nrPacketsIn[message] = 1;
+		}
+		else
+		{			
+			m_nrPacketsIn[message]++;
 		}
 	}
 

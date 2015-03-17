@@ -18,9 +18,9 @@ bool Server::Initialize()
 	m_serverPeer->Startup(MAX_CLIENTS, &m_socketDesc, 1);
 	m_serverPeer->SetMaximumIncomingConnections(MAX_CLIENTS);
 
-	//m_networkLogger = NetworkLogger();
-	//m_networkLogger.Initialize();
-	//m_serverPeer->AttachPlugin(&m_networkLogger);
+	m_networkLogger = NetworkLogger();
+	m_networkLogger.Initialize();
+	m_serverPeer->AttachPlugin(&m_networkLogger);
 
 	m_nrOfConnections = 0;
 
