@@ -443,7 +443,6 @@ void Network::ReceviePacket()
 
 				UpdatePlayerHP(guid, currentHP, isAlive);
 				UpdatePlayerInvis(guid, false);
-				SpawnBloodParticles(guid);
 				break;
 			}
 			case ID_ROUND_OVER:
@@ -2245,26 +2244,6 @@ void Network::UpdateFanLifeTime(unsigned int p_id, float p_lifeTime)
 		}
 	}
 }
-
-void Network::SpawnBloodParticles(RakNet::RakNetGUID p_guid)
-{
-	/*// Check if spawn blood on player or enemies
-	if (m_myPlayer.guid == p_guid)
-	{
-		m_objectManager->AddBloodSpots(DirectX::XMFLOAT3(m_myPlayer.x, m_myPlayer.y, m_myPlayer.z));
-	}
-	else
-	{
-		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-		{
-			if (m_enemyPlayers[i].guid == p_guid)
-			{
-				m_objectManager->AddBloodSpots(DirectX::XMFLOAT3(m_enemyPlayers[i].x, m_enemyPlayers[i].y, m_enemyPlayers[i].z));
-			} 
-		}
-	}*/
-}
-
 
 int Network::GetTeam(RakNet::RakNetGUID p_guid)
 {

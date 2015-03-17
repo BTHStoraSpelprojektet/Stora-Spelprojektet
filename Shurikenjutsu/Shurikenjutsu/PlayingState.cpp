@@ -872,13 +872,13 @@ void PlayingState::OnScreenResize()
 	DirectX::XMFLOAT3 pickedPlayer = Pick(Point(width * 0.5f, height * 0.5f));
 
 	m_quadWidth = pickedPlayer.x - pickedTopLeft.x;
-	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
-	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
+	m_quadHeightTop = pickedTopLeft.z * 1.1f - pickedPlayer.z;
 
 	// Update projection matrix.
 	DirectX::XMFLOAT4X4 projection;
-	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 100.0f));
+	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop * 2.0f, 0.1f, 1000.0f));
 	GraphicsEngine::SetVisibilityProjectionPolygonMatrix(projection);
+
 	// Tell the graphics engine that changes have been handled.
 	GraphicsEngine::ScreenChangeHandled();
 }
