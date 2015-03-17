@@ -217,6 +217,7 @@ void TrailRenderer::RenderTrails()
 	ID3D11DeviceContext* context = GraphicsEngine::GetContext();
 
 	GraphicsEngine::TurnOffBackfaceCulling();
+	GraphicsEngine::TurnOnAlphaBlending();
 
 	// Set vertex buffer stride and offset.		
 	unsigned int stride = sizeof(TrailPoint);
@@ -244,6 +245,7 @@ void TrailRenderer::RenderTrails()
 		context->Draw(m_trails[i]->GetSize(), 0);
 	}
 
+	GraphicsEngine::TurnOffAlphaBlending();
 	GraphicsEngine::TurnOnBackfaceCulling();
 
 	m_trails.clear();

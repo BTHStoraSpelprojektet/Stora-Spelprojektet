@@ -36,7 +36,7 @@ bool Spikes::Initialize(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_e
 	m_angle = asinf((9.82f * length) / (m_speed * m_speed)) * 0.5f;
 
 	DirectX::XMFLOAT4 color;
-	p_team == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE;
+	p_team == 1 ? color = GLOBAL::GetInstance().TEAMCOLOR_RED_TRAIL : color = GLOBAL::GetInstance().TEAMCOLOR_BLUE_TRAIL;
 
 	m_trail = new Trail();
 	if (!m_trail->Initialize(50.0f, 0.2f, 0.2f, color, "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
