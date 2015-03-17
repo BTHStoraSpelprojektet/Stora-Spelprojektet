@@ -268,26 +268,13 @@ void ScoreBoard::Render()
 	// Render background
 	m_background.QueueRender();
 
+	unsigned int index = 0;
 	// Render red team
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
 	{
 		it->second.portrait.QueueRender();
 		it->second.ninjaText.Render();
 		it->second.name.Render();
-	}
-
-	// Render blue team
-	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
-	{
-		it->second.portrait.QueueRender();
-		it->second.ninjaText.Render();
-		it->second.name.Render();
-	}
-
-	unsigned int index = 0;
-	index = 0;
-	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
-	{
 		if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
 		{
 			m_deadRedPlayers[index]->QueueRender();
@@ -295,9 +282,13 @@ void ScoreBoard::Render()
 		index++;
 	}
 
+	// Render blue team
 	index = 0;
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
 	{
+		it->second.portrait.QueueRender();
+		it->second.ninjaText.Render();
+		it->second.name.Render();
 		if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
 		{
 			m_deadBluePlayers[index]->QueueRender();
