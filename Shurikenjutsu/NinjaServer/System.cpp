@@ -33,6 +33,10 @@ void System::Run()
 			DispatchMessage(&message);
 		}
 
+		if (GetAsyncKeyState(VK_ESCAPE) && GetAsyncKeyState(VK_F1))
+		{
+			PostQuitMessage(0);
+		}
 		else
 		{
 			Update();

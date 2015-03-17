@@ -42,6 +42,7 @@ private:
 	void operator=(TrailRenderer const&);
 
 	void UpdateMatrixes();
+	std::vector<unsigned char> ReadShaderData(std::string p_fileName);
 
 	std::string m_VSVersion;
 	std::string m_GSVersion;

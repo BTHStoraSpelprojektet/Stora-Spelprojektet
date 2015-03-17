@@ -7,6 +7,8 @@
 #include "..\CommonLibs\TextureLibrary.h"
 #include "Camera.h"
 #include <vector>
+#include "..\GraphicsEngineDLL\ShaderGlobals.h"
+#include <fstream>
 
 SuddenDeathState::SuddenDeathState(){}
 SuddenDeathState::~SuddenDeathState(){}
@@ -197,31 +199,11 @@ void SuddenDeathState::Initialize()
 	// Create the matrix buffer.
 	GraphicsEngine::GetDevice()->CreateBuffer(&matrixBuffer, &matrixData, &m_matrixBuffer);
 
-	// Set variables to initial values.
-	ID3D10Blob*	vertexShader = 0;
-	ID3D10Blob*	errorMessage = 0;
-
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SuddenDeath/SDVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SuddenDeath/SDVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile sudden death vertex shader from file.");
-		}
-
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_VSVersion = "5.0";
-	}
+	std::string shaderPath = SHADER_PATH;
 
 	// Create the vertex shader.
-	if (FAILED(GraphicsEngine::GetDevice()->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	std::vector<unsigned char> compiledVertexShader = ReadShaderData(shaderPath + "Shaders/SuddenDeath/SDVertexShader.cso");
+	if (FAILED(GraphicsEngine::GetDevice()->CreateVertexShader(compiledVertexShader.data(), compiledVertexShader.size(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create sudden death vertex shader.");
 	}
@@ -250,7 +232,7 @@ void SuddenDeathState::Initialize()
 	size = sizeof(layout) / sizeof(layout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(GraphicsEngine::GetDevice()->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	if (FAILED(GraphicsEngine::GetDevice()->CreateInputLayout(layout, size, compiledVertexShader.data(), compiledVertexShader.size(), &m_layout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create sudden death vertex input layout.");
 	}
@@ -258,45 +240,15 @@ void SuddenDeathState::Initialize()
 	ConsolePrintSuccess("Sudden death vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
-	// Release useless local shaders.
-	vertexShader->Release();
-	vertexShader = 0;
-
-	// Set variables to initial values.
-	ID3D10Blob*	pixelShader = 0;
-	errorMessage = 0;
-
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SuddenDeath/SDPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SuddenDeath/SDPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile sudden death pixel shader from file.");
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(GraphicsEngine::GetDevice()->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	std::vector<unsigned char> compiledPixelShader = ReadShaderData(shaderPath + "Shaders/SuddenDeath/SDPixelShader.cso");
+	if (FAILED(GraphicsEngine::GetDevice()->CreatePixelShader(compiledPixelShader.data(), compiledPixelShader.size(), NULL, &m_pixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create sudden death pixel shader");
 	}
 
 	ConsolePrintSuccess("Sudden death pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-
-	// Release useless local variables.
-	pixelShader->Release();
-	pixelShader = 0;
 
 	if (!m_texture)
 	{
@@ -445,4 +397,27 @@ void SuddenDeathState::Render(Camera* p_camera)
 
 	GraphicsEngine::TurnOnBackfaceCulling();
 	GraphicsEngine::TurnOffAlphaBlending();
+}
+
+std::vector<unsigned char> SuddenDeathState::ReadShaderData(std::string p_fileName)
+{
+	std::vector<unsigned char> fileData;
+
+	// open the file
+	std::ifstream vertexFile(p_fileName, std::ios::in | std::ios::binary | std::ios::ate);
+
+	// if open was successful
+	if (vertexFile.is_open())
+	{
+		// find the length of the file
+		int Length = (int)vertexFile.tellg();
+
+		// collect the file data
+		fileData.resize(Length);
+		vertexFile.seekg(0, std::ios::beg);
+		vertexFile.read(reinterpret_cast<char*>(&fileData[0]), Length);
+		vertexFile.close();
+	}
+
+	return fileData;
 }

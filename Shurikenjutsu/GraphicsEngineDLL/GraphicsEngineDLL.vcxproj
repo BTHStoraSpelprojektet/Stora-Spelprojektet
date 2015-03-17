@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="buffer.h" />
+    <ClInclude Include="CompiledShaderReader.h" />
     <ClInclude Include="DebugBox.h" />
     <ClInclude Include="DebugCircle.h" />
     <ClInclude Include="DebugDot.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="SceneShader.h" />
     <ClInclude Include="ScreenSpace.h" />
+    <ClInclude Include="ShaderGlobals.h" />
     <ClInclude Include="ShadowShapes.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -117,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="CompiledShaderReader.cpp" />
     <ClCompile Include="DebugBox.cpp" />
     <ClCompile Include="DebugCircle.cpp" />
     <ClCompile Include="DebugDot.cpp" />
