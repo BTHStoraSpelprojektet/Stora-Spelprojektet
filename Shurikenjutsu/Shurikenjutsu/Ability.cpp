@@ -5,8 +5,9 @@
 #include "AnimatedObject.h"
 #include "Sound.h"
 
-Ability::Ability(){}
+Ability::Ability(){} 
 Ability::~Ability(){}
+
 bool Ability::Initialize()
 {
 	SetDamage(0);
@@ -17,8 +18,9 @@ bool Ability::Initialize()
 	m_stacks = -1;
 	return true;
 }
-
+ 
 void Ability::Shutdown(){}
+
 void Ability::Update()
 {
 	if (m_cooldown > 0.00)
@@ -92,6 +94,7 @@ int Ability::GetStacks()
 	return m_stacks;
 }
 
-void Ability::setSound(Sound* p_sound){
+void Ability::SetSound(Sound* p_sound)
+{
 	m_sound = p_sound;
 }

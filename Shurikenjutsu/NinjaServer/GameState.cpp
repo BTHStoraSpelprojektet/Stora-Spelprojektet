@@ -172,6 +172,7 @@ void GameState::Update(double p_deltaTime)
 void GameState::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team)
 {
 	m_playerManager->AddPlayer(p_guid, p_name, p_charNr, p_toolNr, p_team);
+	SendSuddenDeathMessage(m_isSuddenDeath);
 }
 
 void GameState::RemovePlayer(RakNet::RakNetGUID p_guid)
@@ -243,6 +244,7 @@ void GameState::UpdateTime(double p_deltaTime)
 		ResetTime();
 		m_POIManager->DespawnRunes();
 		m_playerManager->ResetPOIEffects();
+		
 		for (unsigned int i = 0; i < playerList.size(); i++)
 		{
 			SyncTime(playerList[i].guid);			
