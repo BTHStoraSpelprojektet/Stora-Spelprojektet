@@ -45,12 +45,19 @@ bool ScoreBoard::Initialize()
 	m_redColorPlayers = std::map<RakNet::RakNetGUID, Ninja>();
 	m_blueColorPlayers = std::map<RakNet::RakNetGUID, Ninja>();
 
+	// Initalize deadPlayers
+	m_deadRedPlayers = std::vector<GUIElement*>();
+	m_deadBluePlayers = std::vector<GUIElement*>();
+
 	return true;
 }
 
 void ScoreBoard::Shutdown()
 {
 	m_redColorPlayers.clear();
+	m_blueColorPlayers.clear();
+
+	m_deadRedPlayers.clear();
 	m_blueColorPlayers.clear();
 
 	m_playerName.Shutdown();
@@ -85,6 +92,9 @@ void ScoreBoard::Update()
 			GUIElement element = GUIElement();
 			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_redColorPlayers[player.guid].portrait = element;
+			GUIElement temp = GUIElement();
+			temp.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+			m_deadRedPlayers.push_back(&temp);
 			m_addedMyself = true;
 			m_myTeam = player.team;
 		}
@@ -103,6 +113,9 @@ void ScoreBoard::Update()
 			GUIElement element = GUIElement();
 			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_blueColorPlayers[player.guid].portrait = element;
+			GUIElement temp = GUIElement();
+			temp.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+			m_deadBluePlayers.push_back(&temp);
 			m_addedMyself = true;
 			m_myTeam = player.team;
 		}
@@ -149,6 +162,9 @@ void ScoreBoard::Update()
 				GUIElement element = GUIElement();
 				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_redColorPlayers[players[i].guid].portrait = element;
+				GUIElement temp = GUIElement();
+				temp.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+				m_deadRedPlayers.push_back(&temp);
 			}
 			if (m_blueColorPlayers.find(players[i].guid) != m_blueColorPlayers.end())
 			{
@@ -173,6 +189,9 @@ void ScoreBoard::Update()
 				GUIElement element = GUIElement();
 				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * (m_blueColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_blueColorPlayers[players[i].guid].portrait = element;
+				GUIElement temp = GUIElement();
+				temp.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+				m_deadBluePlayers.push_back(&temp);
 			}
 			if (m_redColorPlayers.find(players[i].guid) != m_redColorPlayers.end())
 			{
@@ -190,6 +209,9 @@ void ScoreBoard::Update()
 			// Found a disconnected player
 			it = m_redColorPlayers.erase(it);
 			ResizeRedColorList();
+
+			delete m_deadRedPlayers[m_deadRedPlayers.size() - 1];
+			m_deadRedPlayers.pop_back();
 		}
 		else
 		{
@@ -205,6 +227,9 @@ void ScoreBoard::Update()
 			// Found a disconnected player
 			it = m_blueColorPlayers.erase(it);
 			ResizeBlueColorList();
+			
+			delete m_deadBluePlayers[m_deadBluePlayers.size() - 1];
+			m_deadBluePlayers.pop_back();
 		}
 		else
 		{
@@ -257,6 +282,27 @@ void ScoreBoard::Render()
 		it->second.portrait.QueueRender();
 		it->second.ninjaText.Render();
 		it->second.name.Render();
+	}
+
+	unsigned int index = 0;
+	index = 0;
+	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
+	{
+		if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
+		{
+			m_deadRedPlayers[index]->QueueRender();
+		}
+		index++;
+	}
+
+	index = 0;
+	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
+	{
+		if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
+		{
+			m_deadBluePlayers[index]->QueueRender();
+		}
+		index++;
 	}
 }
 
