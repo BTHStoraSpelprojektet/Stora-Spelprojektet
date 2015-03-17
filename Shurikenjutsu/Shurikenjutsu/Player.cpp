@@ -114,9 +114,10 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_name = p_name;
 
 	m_onPressed = true;
-
+	m_bloodPos = m_position;
+	m_bloodPos.y += 1;
 	m_bloodParticles = new ParticleEmitter();
-	m_bloodParticles->Initialize(GraphicsEngine::GetDevice(), m_position, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BLOODHIT);
+	m_bloodParticles->Initialize(GraphicsEngine::GetDevice(), m_bloodPos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
 	m_bloodParticles->SetEmitParticleState(false);
 	m_bloodParticlesTimer = 0.0f;
 
@@ -614,7 +615,9 @@ void Player::Update()
 
 void Player::UpdateBlood()
 {
-	m_bloodParticles->SetPosition(m_position);
+	m_bloodPos = m_position;
+	m_bloodPos.y += 1;
+	m_bloodParticles->SetPosition(m_bloodPos);
 	m_bloodParticles->Update();
 	if (m_bloodParticlesTimer > 0.0f)
 	{
