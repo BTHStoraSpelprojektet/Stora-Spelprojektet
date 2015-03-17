@@ -92,9 +92,9 @@ void ScoreBoard::Update()
 			GUIElement element = GUIElement();
 			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_redColorPlayers[player.guid].portrait = element;
-			GUIElement temp = GUIElement();
-			temp.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
-			m_deadRedPlayers.push_back(&temp);
+			GUIElement* temp = new GUIElement();
+			temp->Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+			m_deadRedPlayers.push_back(temp);
 			m_addedMyself = true;
 			m_myTeam = player.team;
 		}
@@ -113,9 +113,9 @@ void ScoreBoard::Update()
 			GUIElement element = GUIElement();
 			element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(player.charNr)));
 			m_blueColorPlayers[player.guid].portrait = element;
-			GUIElement temp = GUIElement();
-			temp.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
-			m_deadBluePlayers.push_back(&temp);
+			GUIElement* temp = new GUIElement();
+			temp->Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+			m_deadBluePlayers.push_back(temp);
 			m_addedMyself = true;
 			m_myTeam = player.team;
 		}
@@ -162,9 +162,9 @@ void ScoreBoard::Update()
 				GUIElement element = GUIElement();
 				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_redColorPlayers[players[i].guid].portrait = element;
-				GUIElement temp = GUIElement();
-				temp.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
-				m_deadRedPlayers.push_back(&temp);
+				GUIElement* temp = new GUIElement();
+				temp->Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (offset * (m_redColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+				m_deadRedPlayers.push_back(temp);
 			}
 			if (m_blueColorPlayers.find(players[i].guid) != m_blueColorPlayers.end())
 			{
@@ -189,9 +189,9 @@ void ScoreBoard::Update()
 				GUIElement element = GUIElement();
 				element.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * (m_blueColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(GetTextureName(players[i].charNr)));
 				m_blueColorPlayers[players[i].guid].portrait = element;
-				GUIElement temp = GUIElement();
-				temp.Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f, 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
-				m_deadBluePlayers.push_back(&temp);
+				GUIElement* temp = new GUIElement();
+				temp->Initialize(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (offset * (m_blueColorPlayers.size() - 1)), 0.0f), 50.0f, 50.0f, TextureLibrary::GetInstance()->GetTexture(TEAM_STATUS_DEAD_PLAYER));
+				m_deadBluePlayers.push_back(temp);
 			}
 			if (m_redColorPlayers.find(players[i].guid) != m_redColorPlayers.end())
 			{
