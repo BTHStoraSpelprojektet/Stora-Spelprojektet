@@ -55,11 +55,11 @@ bool DebugText::Initialize()
 	m_outMessagesText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	m_inNrMessages = new GUIText();
-	m_inNrMessages->InitializeCalibri("In/Nr", m_size, m_originPos.x + 100.0f, m_originPos.y - 75.0f, 0xFFFFFFFF);
+	m_inNrMessages->InitializeCalibri("In/Nr", m_size, m_originPos.x + 125.0f, m_originPos.y - 75.0f, 0xFFFFFFFF);
 	m_inNrMessages->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	m_outNrMessages = new GUIText();
-	m_outNrMessages->InitializeCalibri("Out/Nr", m_size, m_originPos.x + 100.0f, m_originPos.y - 200.0f, 0xFFFFFFFF);
+	m_outNrMessages->InitializeCalibri("Out/Nr", m_size, m_originPos.x + 125.0f, m_originPos.y - 200.0f, 0xFFFFFFFF);
 	m_outNrMessages->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	return true;
