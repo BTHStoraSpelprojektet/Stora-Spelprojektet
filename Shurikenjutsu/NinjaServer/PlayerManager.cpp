@@ -367,7 +367,7 @@ LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(RakNet::RakNetGUID p_guid
 			}
 
 			if (taken)
-		{
+			{
 				continue;
 			}
 			m_takenSpawnPoints[p_guid] = i;

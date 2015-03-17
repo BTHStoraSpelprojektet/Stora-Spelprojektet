@@ -419,7 +419,6 @@ void Network::ReceviePacket()
 				bitStream.Read(z);
 
 				RespawnPlayer(x, y, z);
-				UpdatePlayerInvisAll(false);
 
 				break;
 			}
@@ -2500,16 +2499,6 @@ std::string Network::GetPlayerName(RakNet::RakNetGUID p_guid)
 		}
 	}
 	return "";
-}
-
-void Network::UpdatePlayerInvisAll(bool p_invis)
-{
-	m_myPlayer.invis = p_invis;
-
-	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-	{
-		m_enemyPlayers[i].invis = p_invis;
-	}
 }
 
 int Network::GetCharNr(RakNet::RakNetGUID p_guid)
