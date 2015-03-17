@@ -131,8 +131,9 @@ public:
 	void SetSound(Sound* p_sound);
 
 	void SpawnBloodParticles(RakNet::RakNetGUID p_guid);
-	std::vector<DirectX::XMFLOAT3*> BloodParticlesLocations();
-	bool IsBloodParticlesUpdated();
+	void SpawnBloodParticlesOnPlayers(RakNet::RakNetGUID p_guid);
+	std::vector<int> GetBloodParticlesOnPlayers();
+
 	bool IsSuddenDeath();
 	int GetSuddenDeathBoxIndex();
 
@@ -154,6 +155,8 @@ public:
 	bool GetNewPlayerJoined();
 	RakNet::RakString GetJustJoinedPlayerName();
 	int GetJustJoinedPlayerTeam();
+
+	PlayerNet GetPlayerByGuid(RakNet::RakNetGUID p_guid);
 
 private:
 	void ClearListsAtNewRound();
@@ -207,6 +210,7 @@ private:
 	void SpawnRune(POINTOFINTERESTTYPE p_poiType, float p_x, float p_y, float p_z, bool p_makeSound);
 	void DespawnRune(POINTOFINTERESTTYPE p_poiType);
 	void RunePickedUp(POINTOFINTERESTTYPE p_poiType, RakNet::RakNetGUID p_guid);
+	void UpdateShieldValue(RakNet::RakNetGUID p_guid, float p_shieldValue);
 
 	RakNet::RakPeerInterface *m_clientPeer;
 	RakNet::SocketDescriptor m_socketDesc;
@@ -281,5 +285,7 @@ private:
 
 	std::vector<int> m_visibleEnemies;
 	std::vector<int> m_teamVisibleEnemies;
+
+	std::vector<int> m_bloodParticlesIndex;
 };
 #endif

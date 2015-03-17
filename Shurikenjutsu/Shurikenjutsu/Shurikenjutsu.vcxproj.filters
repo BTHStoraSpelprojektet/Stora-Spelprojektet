@@ -458,6 +458,9 @@
     <ClCompile Include="POIGrapichalEffects.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="FlashBang.cpp">
+      <Filter>Source Files\Object\Tools</Filter>
+    </ClCompile>
     <ClCompile Include="FanMelee.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
@@ -600,9 +603,6 @@
     </ClInclude>
     <ClInclude Include="ChooseState.h">
       <Filter>Header Files\GameState</Filter>
-    </ClInclude>
-    <ClInclude Include="QuadTree.h">
-      <Filter>Header Files\Utility</Filter>
     </ClInclude>
     <ClInclude Include="DirectXTex\WICTextureLoader\WICTextureLoader.h">
       <Filter>Header Files\Graphics</Filter>
@@ -753,6 +753,9 @@
     </ClInclude>
     <ClInclude Include="POIGrapichalEffects.h">
       <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="FlashBang.h">
+      <Filter>Header Files\Object\Tools</Filter>
     </ClInclude>
     <ClInclude Include="FanMelee.h">
       <Filter>Header Files\Abilities</Filter>

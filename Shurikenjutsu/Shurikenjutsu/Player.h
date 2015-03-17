@@ -96,6 +96,9 @@ protected:
 	void SetInterpolatingPos(DirectX::XMFLOAT3 p_pos);
 	void SetInterpolatingAttackDir(DirectX::XMFLOAT3 p_dir);
 
+	void SpawnBlood();
+	void UpdateBlood();
+
 	float m_health; // Player health
 	float m_maxHealth; // Max player health
 	bool m_isAlive; // bool to check if the player should render and update itself
@@ -162,5 +165,10 @@ protected:
 	bool m_interpolateAttackDir;
 
 	bool m_onPressed;
+
+	ParticleEmitter* m_bloodParticles;
+	float m_bloodParticlesTimer;
+	DirectX::XMFLOAT3 m_bloodPos;
+
 };
 #endif PLAYER

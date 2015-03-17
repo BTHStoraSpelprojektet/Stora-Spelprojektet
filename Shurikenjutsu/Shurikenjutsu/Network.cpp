@@ -84,7 +84,7 @@ void Network::InitValues()
 	m_timeToPing = m_pingTimer;
 	m_dealtDamage = 0;
 
-	m_posTimer = 0.02;
+	m_posTimer = 0.04;
 	m_timeToSendPos = 0.0;
 }
 
@@ -443,7 +443,6 @@ void Network::ReceviePacket()
 
 				UpdatePlayerHP(guid, currentHP, isAlive);
 				UpdatePlayerInvis(guid, false);
-				SpawnBloodParticles(guid);
 				break;
 			}
 			case ID_ROUND_OVER:
@@ -1303,7 +1302,6 @@ void Network::ReceviePacket()
 			
 				break;
 			}
-
 			case ID_RUNE_INVIS_CANCEL:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
@@ -1311,7 +1309,6 @@ void Network::ReceviePacket()
 				CancelRune(POINTOFINTERESTTYPE_INVISIBLE);
 				break;
 			}
-
 			case ID_POI_HEALING_BOOL:
 			{
 				RakNet::RakNetGUID healingGuid;
@@ -1326,7 +1323,20 @@ void Network::ReceviePacket()
 
 				break;
 			}
+			case ID_SHIELD_UPDATE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				RakNet::RakNetGUID guid;
+				float shieldValue;
 
+				bitStream.Read(messageID);
+				bitStream.Read(guid);
+				bitStream.Read(shieldValue);
+
+				UpdateShieldValue(guid, shieldValue);
+
+				break;
+			}
 			default:
 			{
 				break;
@@ -2235,25 +2245,6 @@ void Network::UpdateFanLifeTime(unsigned int p_id, float p_lifeTime)
 	}
 }
 
-void Network::SpawnBloodParticles(RakNet::RakNetGUID p_guid)
-{
-	// Check if spawn blood on player or enemies
-	if (m_myPlayer.guid == p_guid)
-	{
-		m_objectManager->AddBloodSpots(DirectX::XMFLOAT3(m_myPlayer.x, m_myPlayer.y, m_myPlayer.z));
-	}
-	else
-	{
-		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-		{
-			if (m_enemyPlayers[i].guid == p_guid)
-			{
-				m_objectManager->AddBloodSpots(DirectX::XMFLOAT3(m_enemyPlayers[i].x, m_enemyPlayers[i].y, m_enemyPlayers[i].z));
-			} 
-		}
-	}
-}
-
 int Network::GetTeam(RakNet::RakNetGUID p_guid)
 {
 	if (m_myPlayer.guid == p_guid)
@@ -2685,6 +2676,44 @@ void Network::HandleHealingPOIBool(RakNet::RakNetGUID p_guid, bool p_value)
 			{
 				m_enemyPlayers[i].hasHealPOI = p_value;
 				break;
+			}
+		}
+	}
+}
+
+PlayerNet Network::GetPlayerByGuid(RakNet::RakNetGUID p_guid)
+{
+	if (p_guid == GetMyGUID())
+	{
+		return m_myPlayer;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				return m_enemyPlayers[i];
+			}
+		}
+	}
+
+	return PlayerNet();
+}
+
+void Network::UpdateShieldValue(RakNet::RakNetGUID p_guid, float p_shieldValue)
+{
+	if (p_guid == GetMyGUID())
+	{
+		m_myPlayer.shield = p_shieldValue;
+	}
+	else
+	{
+		for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
+		{
+			if (m_enemyPlayers[i].guid == p_guid)
+			{
+				m_enemyPlayers[i].shield = p_shieldValue;
 			}
 		}
 	}

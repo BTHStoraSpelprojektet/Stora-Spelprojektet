@@ -3,7 +3,7 @@
 
 const float ALL_AROUND_GLOBAL_COOLDOWN = 0.4f;
 
-const float TICK_RATE = 0.06f;
+const float TICK_RATE = 0.10f;
 
 
 const float ROUND_TIME_LIMIT_MINUTS = 2.0f;
@@ -18,7 +18,6 @@ const float SHURIKEN_DURATION = 3.0f;
 const int SHURIKEN_MAX_STACK = 3;
 const float SHURIKEN_ROTATION_SPEED = 15.70f;
 const float SHURIKEN_SPEED = 40.0f;
-
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
 // Kunai
@@ -39,7 +38,6 @@ const float WHIP_RANGE = 9.0f;
 const float WHIP_SP_DAMAGE = 25.0f;
 const float WHIP_SP_COOLDOWN = 5.0f;
 const float WHIP_SP_RANGE = 7.0f;
-
 
 ////////////////////////////////////////////////////////////////Ranged Attacks
 ////////////////////////////////////////////////////////////////Special Ranged Attacks
@@ -80,7 +78,6 @@ const float NAGINATA_DAMAGE = 30.0f;
 const float NAGINATA_RANGE = 3.0f;
 const float NAGINATA_COOLDOWN = 0.5f;
 
-
 ////////////////////////////////////////////////////////////////Special Melee Attacks
 //Dash
 const float DASH_MAX_RANGE = 10.0f;
@@ -100,7 +97,6 @@ const float NAGINATASTAB_BOXEXTENTX = 0.75f;
 const float NAGINATASTAB_BOXEXTENTY = 3.0f;
 const float NAGINATASTAB_BOXEXTENTZ = 4.0f;
 
-
 ////////////////////////////////////////////////////////////////Tools
 //Smoke bomb
 const float SMOKEBOMB_DURATION = 4.0f;
@@ -118,7 +114,8 @@ const float SMOKEBOMB_SIZE_Y = 3.0f;
 
 ////////////////////////////////////////////////////////////////Tools
 ////////////////////////////////////////////////////////////////Special Abilities
-//Spike Trap
+
+// Spike Trap
 const float SPIKE_DAMAGE = 3.0f;
 const float SPIKE_COOLDOWN = 6.0f;
 const float SPIKE_RANGE = 15.0f;
@@ -127,7 +124,7 @@ const float SPIKE_SPEED = 30.0f;
 const float SPIKE_SIZE_X = 3.0f;
 const float SPIKE_RADIUS = 1.5f;
 
-//Sticky Trap
+// Sticky Trap
 const float STICKY_TRAP_DAMAGE = 0.0f;
 const float STICKY_TRAP_COOLDOWN = 6.0f;
 const float STICKY_TRAP_RANGE = 15.0f;
@@ -136,6 +133,9 @@ const float STICKY_TRAP_SPEED = 30.0f;
 const float STICKY_TRAP_SIZE_X = 3.0f;
 const float STICKY_TRAP_RADIUS = 2.0f;
 const float STICKY_TRAP_SLOW_PRECENTAGE = 0.5f;
+
+// Flashbang.
+const float FLASHBANG_HOLD_TIME = 3.0f;
 
 ////////////////////////////////////////////////////////////////Special Abilities
 ////////////////////////////////////////////////////////////////Character Variables
@@ -185,7 +185,7 @@ const float CHARACTER_ENEMY_BOUNDINGSPHERE = 1.0f;
 
 // Runes
 const float LOTUS_HEALTICK = 10.0f;
-const float SHIELD_TIMER = 20.0f;
-const float INVIS_TIMER = 20.0f;
+const float SHIELD_TIMER = 30.0f;
+const float INVIS_TIMER = 30.0f;
 
 #endif

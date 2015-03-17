@@ -86,6 +86,7 @@ private:
 	int GetTeam(RakNet::RakNetGUID p_player);
 
 	void SendHasPOIHealing(RakNet::RakNetGUID p_guid);
+	void SendShieldValue(RakNet::RakNetGUID p_guid, float p_shield);
 
 	RakNet::RakPeerInterface *m_serverPeer;
 

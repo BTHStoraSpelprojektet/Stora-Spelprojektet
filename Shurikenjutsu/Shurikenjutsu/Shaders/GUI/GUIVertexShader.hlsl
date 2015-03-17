@@ -2,6 +2,7 @@ cbuffer cPerObject
 {
 	matrix world;
 	matrix projection;
+	float opacity;
 };
 
 struct Input
@@ -14,6 +15,7 @@ struct Output
 {
 	float4 m_position: SV_POSITION;
 	float2 m_textureCoordinate :TEXCOORD;
+	float m_opacity : OPACITY;
 };
 
 Output main(Input p_input)
@@ -24,6 +26,7 @@ Output main(Input p_input)
 	output.m_position = mul(float4(output.m_position), projection);
 	output.m_position.w = 1.0f;
 	output.m_textureCoordinate = p_input.m_textureCoordinate;
+	output.m_opacity = opacity;
 
 	return output;
 }
