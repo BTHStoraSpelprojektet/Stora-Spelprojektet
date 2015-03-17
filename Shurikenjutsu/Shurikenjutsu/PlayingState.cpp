@@ -456,7 +456,7 @@ GAMESTATESWITCH PlayingState::Update()
 	OBB playerOBB = m_playerManager->GetPlayerBoundingBox();
 
 	// Update flash bangs.
-	FlashBang::GetInstance().UpdateFlashBangs();
+	FlashBang::GetInstance().UpdateFlashbangs();
 	FlashBang::GetInstance().UpdateEffect();
 
 	// Update health bars.
@@ -608,6 +608,7 @@ void PlayingState::Render()
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 	FlashBang::GetInstance().RenderEffect();
+	FlashBang::GetInstance().RenderFlashbangs();
 	UpdatePOIEffects();
 
 	GraphicsEngine::PrepareRenderAnimated();
