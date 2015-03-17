@@ -2,8 +2,26 @@
 #define FLASHBANG_H_
 
 #include <DirectXMath.h>
+#include <vector>
 
 class GUIElement;
+class ParticleEmitter;
+class Trail;
+class GraphicsEngine;
+
+struct FlashBomb
+{
+	DirectX::XMFLOAT3 m_startPosition;
+	DirectX::XMFLOAT3 m_endPosition;
+
+	DirectX::XMFLOAT3 m_currentPosition;
+	DirectX::XMFLOAT3 m_direction;
+
+	ParticleEmitter* m_particles;
+	Trail* m_trail;
+
+	bool m_alive;
+};
 
 class FlashBang
 {
@@ -13,8 +31,9 @@ public:
 	bool Initialize();
 	void Shutdown();
 
-	void TrowFlash(DirectX::XMFLOAT3 p_position);
-	void UpdateFlashBangs();
+	void TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, DirectX::XMFLOAT3 p_direction);
+	void UpdateFlashbangs();
+	void RenderFlashbangs();
 
 	void GetFlashed();
 	void InterruptFlash();
@@ -25,6 +44,8 @@ private:
 	FlashBang(){};
 	FlashBang(FlashBang const&);
 	void operator=(FlashBang const&);
+
+	std::vector<FlashBomb> m_flashbangs;
 
 	bool m_flashed;
 	float m_opacity;

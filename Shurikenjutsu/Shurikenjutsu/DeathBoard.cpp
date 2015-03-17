@@ -201,7 +201,6 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 	m_background[m_nrOfDeaths].SetPosition(pos);
 	m_background[m_nrOfDeaths].SetSize(size);
 
-	int charNr;
 	switch (p_abilityUsed)
 	{
 	case ABILITIES_MELEESWING:
