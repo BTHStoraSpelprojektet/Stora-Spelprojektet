@@ -570,7 +570,7 @@ void AnimationControl::ChangeAnimationState(AnimationState p_newState)
 	{
 		m_isAlive = true;
 	}
-	else if (!m_attackAnimation && m_isAlive == true)
+	else if (m_isAlive == true) //(!m_attackAnimation && m_isAlive == true)
 	{
 		m_frameArms = 0.0f;
 		m_attackAnimation = true;
