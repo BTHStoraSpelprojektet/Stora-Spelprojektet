@@ -7,12 +7,15 @@
 class GUIElement;
 class ParticleEmitter;
 class Trail;
+class GraphicsEngine;
 
 struct FlashBomb
 {
-	DirectX::XMFLOAT3 m_position;
-	DirectX::XMFLOAT2 m_XYDirection;
-	float m_angle;
+	DirectX::XMFLOAT3 m_startPosition;
+	DirectX::XMFLOAT3 m_endPosition;
+
+	DirectX::XMFLOAT3 m_currentPosition;
+	DirectX::XMFLOAT3 m_direction;
 
 	ParticleEmitter* m_particles;
 	Trail* m_trail;
@@ -26,7 +29,7 @@ public:
 	bool Initialize();
 	void Shutdown();
 
-	void TrowFlash(DirectX::XMFLOAT3 p_position);
+	void TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, DirectX::XMFLOAT3 p_direction);
 	void UpdateFlashBangs();
 
 	void GetFlashed();

@@ -3,9 +3,11 @@
 #include "Globals.h"
 #include "ParticleEmitter.h"
 #include "Trail.h"
+#include "GraphicsEngine.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "../CommonLibs/TextureLibrary.h"
 #include "../CommonLibs/ConsoleFunctions.h"
+#include "../CommonLibs/CommonEnums.h"
 
 FlashBang& FlashBang::GetInstance()
 {
@@ -40,10 +42,20 @@ void FlashBang::Shutdown()
 	}
 }
 
-void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_position)
+void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, DirectX::XMFLOAT3 p_direction)
 {
-	// TODO, kasta ny modell.
 	FlashBomb newBomb;
+
+	newBomb.m_startPosition = p_startPosition;
+	newBomb.m_endPosition = p_endPosition;
+	newBomb.m_currentPosition = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	newBomb.m_direction = p_direction;
+
+	newBomb.m_particles = new ParticleEmitter();
+	if (!newBomb.m_particles->Initialize(GraphicsEngine::GetDevice(), p_startPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_FLASHBANG_SPARKS));
+	{
+		ConsolePrintErrorAndQuit("A flashbang particle emitter failed to initialize!");
+	}
 
 	newBomb.m_trail = new Trail();
 	if (!newBomb.m_trail->Initialize(50.0f, 0.2f, 0.2f, DirectX::XMFLOAT4(0.83f, 0.86f, 0.06f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
