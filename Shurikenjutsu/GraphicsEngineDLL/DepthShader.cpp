@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include "DepthShader.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
@@ -6,36 +5,16 @@
 #include <DirectXMath.h>
 #include "InstanceManager.h"
 #include "..\CommonLibs\CommonStructures.h"
+#include "CompiledShaderReader.h"
+#include "ShaderGlobals.h"
 
 bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
-	// Set variables to initial values.
-	ID3D10Blob*	vertexShader = 0;
-	ID3D10Blob*	instanceVertexShader = 0;
-	ID3D10Blob*	errorMessage = 0;
-
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile depth vertex shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_VSVersion = "5.0";
-	}
+	std::string shaderPath = SHADER_PATH;
 
 	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	std::vector<unsigned char> compiledVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Depth/DepthVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledVertexShader.data(), compiledVertexShader.size(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create depth vertex shader.");
 		return false;
@@ -65,7 +44,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	size = sizeof(layout) / sizeof(layout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	if (FAILED(p_device->CreateInputLayout(layout, size, compiledVertexShader.data(), compiledVertexShader.size(), &m_layout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create depth vertex input layout.");
 		return false;
@@ -74,28 +53,9 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("Depth vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/InstancingDepthVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceVertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/InstancingDepthVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceVertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile depth vertex shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_VSVersion = "5.0";
-	}
-
 	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(instanceVertexShader->GetBufferPointer(), instanceVertexShader->GetBufferSize(), NULL, &m_instanceShader)))
+	std::vector<unsigned char> compiledInstanceVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Depth/InstancingDepthVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledInstanceVertexShader.data(), compiledInstanceVertexShader.size(), NULL, &m_instanceShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create depth vertex shader.");
 		return false;
@@ -157,7 +117,7 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	instanceSize = sizeof(instancedLayout) / sizeof(instancedLayout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(instancedLayout, instanceSize, instanceVertexShader->GetBufferPointer(), instanceVertexShader->GetBufferSize(), &m_instanceLayout)))
+	if (FAILED(p_device->CreateInputLayout(instancedLayout, instanceSize, compiledInstanceVertexShader.data(), compiledInstanceVertexShader.size(), &m_instanceLayout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create instance depth vertex input layout.");
 		return false;
@@ -166,37 +126,9 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("Depth vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
-	vertexShader->Release();
-	vertexShader = 0;
-	instanceVertexShader->Release();
-	instanceVertexShader = 0;
-
-	// Set variables to initial values.
-	ID3D10Blob*	pixelShader = 0;
-	errorMessage = 0;
-
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile depth pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	std::vector<unsigned char> compiledPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Depth/DepthPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledPixelShader.data(), compiledPixelShader.size(), NULL, &m_pixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create depth pixel shader");
 		return false;
@@ -204,9 +136,6 @@ bool DepthShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	ConsolePrintSuccess("Depth pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-
-	pixelShader->Release();
-	pixelShader = 0;
 
 	// Create the rasterizer description.
 	D3D11_RASTERIZER_DESC rasterizer;

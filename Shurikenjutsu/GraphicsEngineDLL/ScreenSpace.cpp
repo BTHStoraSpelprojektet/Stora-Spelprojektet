@@ -4,6 +4,8 @@
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "PointLights.h"
 #include "..\CommonLibs\DirectXTex\WICTextureLoader\WICTextureLoader.h"
+#include "CompiledShaderReader.h"
+#include "ShaderGlobals.h"
 
 ScreenSpace::ScreenSpace(){}
 ScreenSpace::~ScreenSpace(){}
@@ -11,32 +13,11 @@ ScreenSpace::~ScreenSpace(){}
 
 bool ScreenSpace::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
-	// Set variables to initial values.
-	ID3D10Blob*	vertexShader = 0;
-	ID3D10Blob*	quadVertexShader = 0;
-	ID3D10Blob*	errorMessage = 0;
-
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/CompositionVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS | D3DCOMPILE_DEBUG, 0, &vertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/CompositionVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile vertex shader from file.");
-			return false;
-		}
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-	else
-	{
-		m_VSVersion = "5.0";
-	}
-
+	std::string shaderPath = SHADER_PATH;
 
 	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	std::vector<unsigned char> compiledVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Composition/CompositionVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledVertexShader.data(), compiledVertexShader.size(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create screen vertex shader.");
 		return false;
@@ -45,62 +26,17 @@ bool ScreenSpace::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("ScreenSpace.cpp: Vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingVS.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &quadVertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingVS.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &quadVertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile quadCulling vertex shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_VSVersion = "5.0";
-	}
-
 	// Create vertex shader from buffer.
-	if (FAILED(p_device->CreateVertexShader(quadVertexShader->GetBufferPointer(), quadVertexShader->GetBufferSize(), NULL, &m_quadVertexShader)))
+	std::vector<unsigned char> compiledQuadVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Composition/PointLightQuadCullingVS.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledQuadVertexShader.data(), compiledQuadVertexShader.size(), NULL, &m_quadVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create quadCulling vertex shader.");
 		return false;
 	}
 
-	// Release useless local shaders.
-	vertexShader->Release();
-	vertexShader = 0;
-	quadVertexShader->Release();
-	quadVertexShader = 0;
-
-	// Compile the geometry shader.
-	ID3D10Blob* geometryShader = 0;
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingGS.hlsl", NULL, NULL, "main", "gs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geometryShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingGS.hlsl", NULL, NULL, "main", "gs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geometryShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile quadCulling geometry shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_GSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_GSVersion = "5.0";
-	}
-
 	// Create geometry shader from buffer.
-	if (FAILED(p_device->CreateGeometryShader(geometryShader->GetBufferPointer(), geometryShader->GetBufferSize(), NULL, &m_quadGeometryShader)))
+	std::vector<unsigned char> compiledQuadGeometryShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Composition/PointLightQuadCullingGS.cso");
+	if (FAILED(p_device->CreateGeometryShader(compiledQuadGeometryShader.data(), compiledQuadGeometryShader.size(), NULL, &m_quadGeometryShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create quadCulling geometry vertex shader.");
 		return false;
@@ -109,74 +45,21 @@ bool ScreenSpace::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("ScreenSpace.cpp: QuadCulling geometry shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_GSVersion);
 
-	// Release pixel shader since it is no longer required.
-	geometryShader->Release();
-	geometryShader = 0;
-
-	// Set variables to initial values.
-	ID3D10Blob*	pixelShader = 0;
-	errorMessage = 0;
-
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/CompositionPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/CompositionPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	std::vector<unsigned char> compiledPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Composition/CompositionPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledPixelShader.data(), compiledPixelShader.size(), NULL, &m_pixelShader)))
 	{
 		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create pixel shader");
 		return false;
 	}
 
-	pixelShader->Release();
-	pixelShader = 0;
-
-	ID3D10Blob*	quadPixelShader = 0;
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingPS.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &quadPixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Composition/PointLightQuadCullingPS.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &quadPixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile quadCulling pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(quadPixelShader->GetBufferPointer(), quadPixelShader->GetBufferSize(), NULL, &m_quadPixelShader)))
+	std::vector<unsigned char> compiledQuadPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Composition/PointLightQuadCullingPS.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledQuadPixelShader.data(), compiledQuadPixelShader.size(), NULL, &m_quadPixelShader)))
 	{
 		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create quadCulling pixel shader");
 		return false;
 	}
-
-	quadPixelShader->Release();
-	quadPixelShader = 0;
 
 	// Create the cbuffer where "every frame" data is stored
 	D3D11_BUFFER_DESC frameBuffer;
