@@ -5,46 +5,49 @@
 #include "..\CommonLibs\DirectXTex\WICTextureLoader\WICTextureLoader.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "CompiledShaderReader.h"
+#include "ShaderGlobals.h"
 
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
 	// Create the vertex shaders.
-	std::vector<unsigned char> compiledVertexShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Scene/VertexShader.cso");
+	std::string shaderPath = SHADER_PATH;
+
+	std::vector<unsigned char> compiledVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/VertexShader.cso");
 	if (FAILED(p_device->CreateVertexShader(compiledVertexShader.data(), compiledVertexShader.size(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
 		return false;
 	}
 
-	std::vector<unsigned char> compiledSSReverseVertexShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/ShadowShapes/SSReverseVertexShader.cso");
+	std::vector<unsigned char> compiledSSReverseVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/ShadowShapes/SSReverseVertexShader.cso");
 	if (FAILED(p_device->CreateVertexShader(compiledSSReverseVertexShader.data(), compiledSSReverseVertexShader.size(), NULL, &m_reversedShadowVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create sSReverseVertexShader vertex shader.");
 		return false;
 	}
 
-	std::vector<unsigned char> compiledInstanceVertexShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Scene/InstanceShader.cso");
+	std::vector<unsigned char> compiledInstanceVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/InstanceShader.cso");
 	if (FAILED(p_device->CreateVertexShader(compiledInstanceVertexShader.data(), compiledInstanceVertexShader.size(), NULL, &m_instanceShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create instance vertex shader.");
 		return false;
 	}
 
-	std::vector<unsigned char> compiledAnimatedVertexShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Scene/AnimatedVertexShader.cso");
+	std::vector<unsigned char> compiledAnimatedVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/AnimatedVertexShader.cso");
 	if (FAILED(p_device->CreateVertexShader(compiledAnimatedVertexShader.data(), compiledAnimatedVertexShader.size(), NULL, &m_animatedVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene animated vertex shader.");
 		return false;
 	}
 
-	std::vector<unsigned char> compiledLineVertexShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Line/LineVertexShader.cso");
+	std::vector<unsigned char> compiledLineVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Line/LineVertexShader.cso");
 	if (FAILED(p_device->CreateVertexShader(compiledLineVertexShader.data(), compiledLineVertexShader.size(), NULL, &m_lineVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create line vertex shader.");
 		return false;
 	}
 
-	std::vector<unsigned char> compiledOutliningVertexShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Scene/VertexShaderOutlining.cso");
+	std::vector<unsigned char> compiledOutliningVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/VertexShaderOutlining.cso");
 	if (FAILED(p_device->CreateVertexShader(compiledOutliningVertexShader.data(), compiledOutliningVertexShader.size(), NULL, &m_vertexShaderOutlining)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
@@ -303,21 +306,21 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
 	// Create PixelShaders.
-	std::vector<unsigned char> compiledPixelShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Scene/PixelShader.cso");
+	std::vector<unsigned char> compiledPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/PixelShader.cso");
 	if (FAILED(p_device->CreatePixelShader(compiledPixelShader.data(), compiledPixelShader.size(), NULL, &m_pixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene pixel shader");
 		return false;
 	}
 
-	std::vector<unsigned char> compiledForwardPixelShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Scene/PixelShaderForward.cso");
+	std::vector<unsigned char> compiledForwardPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/PixelShaderForward.cso");
 	if (FAILED(p_device->CreatePixelShader(compiledForwardPixelShader.data(), compiledForwardPixelShader.size(), NULL, &m_pixelShaderForward)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene pixel shader");
 		return false;
 	}
 
-	std::vector<unsigned char> compiledReversePixelShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/ShadowShapes/SSReversePixelShader.cso");
+	std::vector<unsigned char> compiledReversePixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/ShadowShapes/SSReversePixelShader.cso");
 	if (FAILED(p_device->CreatePixelShader(compiledReversePixelShader.data(), compiledReversePixelShader.size(), NULL, &m_reversedShadowPixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create reversed shadow pixel shader");
@@ -327,14 +330,14 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("Reversed shadow pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
 
-	std::vector<unsigned char> compiledLinePixelShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Line/LinePixelShader.cso");
+	std::vector<unsigned char> compiledLinePixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Line/LinePixelShader.cso");
 	if (FAILED(p_device->CreatePixelShader(compiledLinePixelShader.data(), compiledLinePixelShader.size(), NULL, &m_linePixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create line pixel shader");
 		return false;
 	}
 
-	std::vector<unsigned char> compiledOutliningPixelShader = CompiledShaderReader::ReadShaderData("../Release/Shaders/Scene/PixelShaderOutlining.cso");
+	std::vector<unsigned char> compiledOutliningPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/PixelShaderOutlining.cso");
 	if (FAILED(p_device->CreatePixelShader(compiledOutliningPixelShader.data(), compiledOutliningPixelShader.size(), NULL, &m_pixelShaderOutlining)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create line pixel shader");
