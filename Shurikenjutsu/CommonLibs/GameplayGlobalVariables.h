@@ -77,6 +77,7 @@ const float FANBOOMERANG_SPEED = 17.0f;
 const float WHIP_SP_DAMAGE = 25.0f;
 const float WHIP_SP_COOLDOWN = 5.0f;
 const float WHIP_SP_RANGE = 7.0f;
+const float WHIP_SP_GLOBAL_COOLDOWN = 1.0f;
 
 
 ///////////////////////////////////////////////////////////////////
