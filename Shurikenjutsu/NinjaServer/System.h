@@ -5,6 +5,7 @@
 #include "..\CommonLibs\RakNet\WindowsIncludes.h"
 #include "..\CommonLibs\Timer.h"
 #include "MemoryChecker.h"
+//#include <vld.h>
 
 class System
 {
