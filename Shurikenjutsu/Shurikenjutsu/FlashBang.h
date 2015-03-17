@@ -2,8 +2,21 @@
 #define FLASHBANG_H_
 
 #include <DirectXMath.h>
+#include <vector>
 
 class GUIElement;
+class ParticleEmitter;
+class Trail;
+
+struct FlashBomb
+{
+	DirectX::XMFLOAT3 m_position;
+	DirectX::XMFLOAT2 m_XYDirection;
+	float m_angle;
+
+	ParticleEmitter* m_particles;
+	Trail* m_trail;
+};
 
 class FlashBang
 {
@@ -25,6 +38,8 @@ private:
 	FlashBang(){};
 	FlashBang(FlashBang const&);
 	void operator=(FlashBang const&);
+
+	std::vector<FlashBomb> m_flashbangs;
 
 	bool m_flashed;
 	float m_opacity;

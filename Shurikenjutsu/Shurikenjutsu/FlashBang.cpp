@@ -1,8 +1,11 @@
 #include "FlashBang.h"
 #include "GUIElement.h"
 #include "Globals.h"
+#include "ParticleEmitter.h"
+#include "Trail.h"
 #include "../CommonLibs/GameplayGlobalVariables.h"
 #include "../CommonLibs/TextureLibrary.h"
+#include "../CommonLibs/ConsoleFunctions.h"
 
 FlashBang& FlashBang::GetInstance()
 {
@@ -13,6 +16,8 @@ FlashBang& FlashBang::GetInstance()
 
 bool FlashBang::Initialize()
 {
+	m_flashbangs.clear();
+
 	m_flashed = false;
 	m_opacityState = OPACITY_NONE;
 	m_opacity = 0.0f;
@@ -38,6 +43,15 @@ void FlashBang::Shutdown()
 void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_position)
 {
 	// TODO, kasta ny modell.
+	FlashBomb newBomb;
+
+	newBomb.m_trail = new Trail();
+	if (!newBomb.m_trail->Initialize(50.0f, 0.2f, 0.2f, DirectX::XMFLOAT4(0.83f, 0.86f, 0.06f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
+	{
+		ConsolePrintErrorAndQuit("A flashbang trail failed to initialize!");
+	}
+
+	m_flashbangs.push_back(newBomb);
 }
 
 void FlashBang::UpdateFlashBangs()
