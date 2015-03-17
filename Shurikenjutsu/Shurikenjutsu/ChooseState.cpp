@@ -342,7 +342,7 @@ GAMESTATESWITCH ChooseState::Update()
 	//	- ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f)
 	
 	if (xPos > (m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) || xPos < (-m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) ||
-		yPos >(m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 120.0f || yPos < (-m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 120.0f)
+		yPos >(m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 140.0f || yPos < (-m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 140.0f)
 	{
 		m_abilityDescription[0]->SetRenderKeybinds(true);
 		m_abilityDescription[1]->SetRenderKeybinds(true);

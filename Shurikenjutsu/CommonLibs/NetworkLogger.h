@@ -5,6 +5,8 @@
 #include "..\CommonLibs\RakNet\InternalPacket.h"
 #include <string>
 #include <iostream>
+#include <map>
+#include <algorithm>
 
 class NetworkLogger : public RakNet::PacketLogger
 {
@@ -27,6 +29,9 @@ protected:
 private:
 	RakNet::BitSize_t m_frameBitsIn, m_frameBitsOut;
 	double m_time;
+
+	std::map<std::string, int> m_nrPacketsIn;
+	std::map<std::string, int> m_nrPacketsOut;
 };
 
 #endif

@@ -1,6 +1,6 @@
 #ifndef SERVERGLOBALS_H_
 #define SERVERGLOBALS_H_
-
+#include <string>
 #define MAX_CLIENTS 8
 #define SERVER_PORT 60000
 #define SERVER_ADDRESS "194.47.150.130"
@@ -18,6 +18,8 @@ public:
 
 	static int BYTES_IN;
 	static int BYTES_OUT;
+	static std::string MESSAGES_IN;
+	static std::string MESSAGES_OUT;
 
 };
 
