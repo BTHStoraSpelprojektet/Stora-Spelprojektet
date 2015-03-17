@@ -185,7 +185,7 @@ const float CHARACTER_ENEMY_BOUNDINGSPHERE = 1.0f;
 
 // Runes
 const float LOTUS_HEALTICK = 10.0f;
-const float SHIELD_TIMER = 20.0f;
-const float INVIS_TIMER = 20.0f;
+const float SHIELD_TIMER = 30.0f;
+const float INVIS_TIMER = 30.0f;
 
 #endif
