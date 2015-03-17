@@ -115,7 +115,7 @@ const float NAGINATASTAB_DURATION = 1.5f;
 // Volley E
 const float VOLLEY_DAMAGE = 40.0f;
 const float VOLLEY_COOLDOWN = 4.0f;
-const float VOLLEY_RANGE = 15.0f;
+const float VOLLEY_RANGE = 20.0f;
 const float VOLLEY_RADIUS = 0.5f;
 const float VOLLEY_GRAVITY = 3.5f;
 const float VOLLEY_HEIGHT = 15.0f;
@@ -131,7 +131,7 @@ const float SMOKEBOMB_DAMAGE = 0.0f;
 const float SMOKEBOMB_COOLDOWN = 6.0f;
 const float SMOKEBOMB_SPEED = 30.0f;
 
-const float SMOKEBOMB_RANGE = 15.0f;
+const float SMOKEBOMB_RANGE = 20.0f;
 const float SMOKEBOMB_POSITION_Y = 4.0f;
 const float SMOKEBOMB_DIRECTION_X = 0.0f;
 const float SMOKEBOMB_DIRECTION_Y = 1.0f;
@@ -142,7 +142,7 @@ const float SMOKEBOMB_SIZE_Y = 3.0f;
 // Spike Trap
 const float SPIKE_DAMAGE = 3.0f;
 const float SPIKE_COOLDOWN = 6.0f;
-const float SPIKE_RANGE = 15.0f;
+const float SPIKE_RANGE = 20.0f;
 const float SPIKE_DURATION = 20.0f;
 const float SPIKE_SPEED = 30.0f;
 const float SPIKE_SIZE_X = 3.0f;
@@ -151,7 +151,7 @@ const float SPIKE_RADIUS = 1.3f;
 // Sticky Trap
 const float STICKY_TRAP_DAMAGE = 0.0f;
 const float STICKY_TRAP_COOLDOWN = 6.0f;
-const float STICKY_TRAP_RANGE = 15.0f;
+const float STICKY_TRAP_RANGE = 20.0f;
 const float STICKY_TRAP_DURATION = 20.0f;
 const float STICKY_TRAP_SPEED = 30.0f;
 const float STICKY_TRAP_SIZE_X = 3.0f;
