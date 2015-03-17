@@ -19,6 +19,8 @@ struct FlashBomb
 
 	ParticleEmitter* m_particles;
 	Trail* m_trail;
+
+	bool m_alive;
 };
 
 class FlashBang
@@ -30,7 +32,8 @@ public:
 	void Shutdown();
 
 	void TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, DirectX::XMFLOAT3 p_direction);
-	void UpdateFlashBangs();
+	void UpdateFlashbangs();
+	void RenderFlashbangs();
 
 	void GetFlashed();
 	void InterruptFlash();

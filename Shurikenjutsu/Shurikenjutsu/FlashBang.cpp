@@ -62,13 +62,56 @@ void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p
 	{
 		ConsolePrintErrorAndQuit("A flashbang trail failed to initialize!");
 	}
+	newBomb.m_trail->StartEmiting();
+
+	newBomb.m_alive = true;
 
 	m_flashbangs.push_back(newBomb);
 }
 
-void FlashBang::UpdateFlashBangs()
+void FlashBang::UpdateFlashbangs()
 {
-	// TODO, uppdatera modeller.
+	float angle = 0.0f;
+
+	for (unsigned int i = 0; i < m_flashbangs.size(); i++)
+	{
+		// TODO, uppdatera positioner och angle.
+
+		m_flashbangs[i].m_particles->SetPosition(m_flashbangs[i].m_currentPosition);
+		m_flashbangs[i].m_particles->Update();
+		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, angle);
+
+		if (m_flashbangs[i].m_currentPosition.y < 0.0f)
+		{
+			m_flashbangs[i].m_alive = false;
+		}
+	}
+
+	bool keepDeleting = true;
+	while (keepDeleting)
+	{
+		for (unsigned int i = 0; i < m_flashbangs.size(); i++)
+		{
+			if (!m_flashbangs[i].m_alive)
+			{
+				m_flashbangs.erase(m_flashbangs.begin() + i);
+				keepDeleting = true;
+
+				break;
+			}
+
+			keepDeleting = false;
+		}
+	}
+}
+
+void FlashBang::RenderFlashbangs()
+{
+	for (unsigned int i = 0; i < m_flashbangs.size(); i++)
+	{
+		m_flashbangs[i].m_particles->Render();
+		m_flashbangs[i].m_trail->Render();
+	}
 }
 
 void FlashBang::GetFlashed()
