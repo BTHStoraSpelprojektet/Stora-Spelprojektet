@@ -281,6 +281,9 @@ void Player::UpdateMe()
 		}
 	}
 
+
+	UpdateBlood();
+
 	// Don't update player if he is dead
 	if (!m_isAlive || Network::GetInstance()->GetMatchOver())
 	{
@@ -486,7 +489,6 @@ void Player::UpdateMe()
 	m_floatingText->SetDealtDamageText(temp.m_position ,temp.m_damage);
 	UpdateAbilityBar();
 
-	UpdateBlood();
 }
 
 void Player::CheckForSpecialAttack()

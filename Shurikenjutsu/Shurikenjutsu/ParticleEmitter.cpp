@@ -103,12 +103,12 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_BLOODHIT) :
 		{
-			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f), 0.5f, 1.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/BloodParticle.png"));
+			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 0.8f, 2.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/BloodParticle.png"));
 			break;
 		}
 		case(PARTICLE_PATTERN_HEALING) :
 		{
-			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 3.0f, 1.0f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/HealingSparkle.png"));
+			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.6f, 0.5f, 0.6f), 3.0f, 1.0f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/HealingSparkle.png"));
 
 			break;
 		}
