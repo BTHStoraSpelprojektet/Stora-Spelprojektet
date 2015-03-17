@@ -25,7 +25,7 @@ const float CHARACTER_KATANA_SHURIKEN_SPEED = 10.0f;
 // Katana M1
 const float KATANA_DAMAGE = 30.0f;
 const float KATANA_RANGE = 3.0f;
-const float KATANA_COOLDOWN = 0.5f;
+const float KATANA_COOLDOWN = 0.7f;
 
 //Shuriken M2
 const float SHURIKEN_DAMAGE = 15.0f;

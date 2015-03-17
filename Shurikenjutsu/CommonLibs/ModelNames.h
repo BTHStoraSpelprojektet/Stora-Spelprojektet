@@ -83,7 +83,7 @@
 #define DEATHBOARD_N3Q "../Shurikenjutsu/2DTextures/DeathBoard/n3q.png"
 #define DEATHBOARD_N3E "../Shurikenjutsu/2DTextures/DeathBoard/n3e.png"
 
-#define DEATHBOARD_CALPTROPS "../Shurikenjutsu/2DTextures/DeathBoard/TB_Caltrops.png"
+#define DEATHBOARD_CALPTROPS "../Shurikenjutsu/2DTextures/DeathBoard/caltrop.png"
 #define DEATHBOARD_KILLARROW "../Shurikenjutsu/2DTextures/DeathBoard/Unknown.png"
 
 // Runes

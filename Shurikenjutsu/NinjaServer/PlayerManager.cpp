@@ -367,7 +367,7 @@ LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(RakNet::RakNetGUID p_guid
 			}
 
 			if (taken)
-		{
+			{
 				continue;
 			}
 			m_takenSpawnPoints[p_guid] = i;
@@ -603,6 +603,8 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 		{
 			// STop healing POI, and send message to stop effect.
 			m_players[i].hotHeal = 0.0f;
+			m_players[i].invis = false;
+
 			if (m_players[i].hasHealPOI)
 			{
 				m_players[i].hasHealPOI = false;
@@ -616,7 +618,6 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 				m_players[i].shield = 0.0f;
 				SendShieldValue(m_players[i].guid, m_players[i].shield);
 			}
-
 			else
 			{
 				m_players[i].currentHP -= p_damage;
@@ -682,6 +683,7 @@ void PlayerManager::HealPlayer()
 		{
 			if (m_players[i].hotHeal > 0.0)
 			{
+				m_players[i].invis = false;
 				m_players[i].currentHP += m_players[i].hotHeal;
 
 				if (m_players[i].currentHP > m_players[i].maxHP)

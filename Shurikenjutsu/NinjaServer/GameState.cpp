@@ -243,6 +243,7 @@ void GameState::UpdateTime(double p_deltaTime)
 		ResetTime();
 		m_POIManager->DespawnRunes();
 		m_playerManager->ResetPOIEffects();
+		
 		for (unsigned int i = 0; i < playerList.size(); i++)
 		{
 			SyncTime(playerList[i].guid);			
