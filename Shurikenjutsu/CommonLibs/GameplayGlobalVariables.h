@@ -23,8 +23,8 @@ const float CHARACTER_KATANA_SHURIKEN_SPEED = 10.0f;
 
 //_____________ABILITIES__________________________
 // Katana M1
-const float KATANA_DAMAGE = 25.0f;
-const float KATANA_RANGE = 2.0f;
+const float KATANA_DAMAGE = 30.0f;
+const float KATANA_RANGE = 3.0f;
 const float KATANA_COOLDOWN = 0.5f;
 
 //Shuriken M2
@@ -38,7 +38,7 @@ const float SHURIKEN_SPEED = 40.0f;
 //Dash Q
 const float DASH_MAX_RANGE = 13.0f;
 const float DASH_COOLDOWN = 7.0f;
-const float DASH_DAMAGE = 0.0f;
+const float DASH_DAMAGE = 10.0f;
 const float DASH_SPEED = 8.0f;
 
 // Megashuriken E
@@ -53,13 +53,13 @@ const float MEGASHURIKEN_SPEED = 25.0f;
 ///////////////////////////////////////////////////////////////////
 
 //_____________STATS______________________________
-const float CHARACTER_TESSEN_HEALTH = 110.0f;
+const float CHARACTER_TESSEN_HEALTH = 100.0f;
 const float CHARACTER_TESSEN_SPEED = 11.0f;
 
 //_____________ABILITIES__________________________
 // Fan Melee M1
 const float FANMELEE_DAMAGE = 25.0f;
-const float FANMELEE_RANGE = 2.0f;
+const float FANMELEE_RANGE = 3.0f;
 const float FANMELEE_COOLDOWN = 0.5f;
 
 //Whip M2
@@ -69,7 +69,7 @@ const float WHIP_RANGE = 9.0f;
 
 // Fan Boomerang Q
 const float FANBOOMERANG_DAMAGE = 75.0f;
-const float FANBOOMERANG_COOLDOWN = 4.0f;
+const float FANBOOMERANG_COOLDOWN = 2.0f;
 const float FANBOOMERANG_DURATION = 1.5f;
 const float FANBOOMERANG_SPEED = 17.0f;
 
@@ -89,8 +89,8 @@ const float CHARACTER_NAGINATA_SPEED = 10.5f;
 
 //_____________ABILITIES__________________________
 // Naginata M1
-const float NAGINATA_DAMAGE = 20.0f;
-const float NAGINATA_RANGE = 2.0f;
+const float NAGINATA_DAMAGE = 25.0f;
+const float NAGINATA_RANGE = 3.0f;
 const float NAGINATA_COOLDOWN = 0.5f;
 
 // Kunai M2
@@ -104,7 +104,7 @@ const float KUNAI_SPEED = 50.0f;
 // Naginata stab Q
 const float NAGINATASTAB_DAMAGE = 30.0f;
 const float NAGINATASTAB_RANGE = 2.4f;
-const float NAGINATASTAB_COOLDOWN = 2.0f;
+const float NAGINATASTAB_COOLDOWN = 4.0f;
 const float NAGINATASTAB_GLOBAL_COOLDOWN = 1.5f;
 const float NAGINATASTAB_DURATION = 1.5f;
 	// Bounding Box
