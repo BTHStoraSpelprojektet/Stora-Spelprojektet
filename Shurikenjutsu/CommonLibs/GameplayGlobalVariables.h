@@ -79,17 +79,9 @@ const float WHIP_SP_COOLDOWN = 5.0f;
 const float WHIP_SP_RANGE = 7.0f;
 
 
-<<<<<<< HEAD
 ///////////////////////////////////////////////////////////////////
 //			NINJA 3
 ///////////////////////////////////////////////////////////////////
-=======
-// Fan Boomerang
-const float FANBOOMERANG_DAMAGE = 75.0f;
-const float FANBOOMERANG_COOLDOWN = 4.0f;
-const float FANBOOMERANG_DURATION = 1.5f;
-const float FANBOOMERANG_SPEED = 17.0f;
->>>>>>> origin/master
 
 //_____________STATS______________________________
 const float CHARACTER_NAGINATA_HEALTH = 100.0f;
@@ -129,36 +121,9 @@ const float VOLLEY_GRAVITY = 3.5f;
 const float VOLLEY_HEIGHT = 15.0f;
 
 
-
-<<<<<<< HEAD
 ///////////////////////////////////////////////////////////////////
 //			TOOLS
 ///////////////////////////////////////////////////////////////////
-=======
-// Naginata
-const float NAGINATA_DAMAGE = 30.0f;
-const float NAGINATA_RANGE = 3.0f;
-const float NAGINATA_COOLDOWN = 0.5f;
-
-////////////////////////////////////////////////////////////////Special Melee Attacks
-//Dash
-const float DASH_MAX_RANGE = 13.0f;
-const float DASH_COOLDOWN = 6.0f;
-//const float DASH_DAMAGE = 10.0f;
-const float DASH_SPEED = 8.0f;
-
-////////////////////////////////////////////////////////////////Special Melee Attacks
-// Naginata stab
-const float NAGINATASTAB_DAMAGE = 30.0f;
-const float NAGINATASTAB_RANGE = 2.4f;
-const float NAGINATASTAB_COOLDOWN = 2.0f;
-const float NAGINATASTAB_GLOBAL_COOLDOWN = 1.5f;
-const float NAGINATASTAB_DURATION = 1.5f;
-// Bounding Box
-const float NAGINATASTAB_BOXEXTENTX = 0.7f;
-const float NAGINATASTAB_BOXEXTENTY = 1.0f;
-const float NAGINATASTAB_BOXEXTENTZ = 2.0f;
->>>>>>> origin/master
 
 //Smoke bomb
 const float SMOKEBOMB_DURATION = 4.0f;
