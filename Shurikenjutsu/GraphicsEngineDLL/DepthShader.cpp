@@ -366,31 +366,11 @@ void DepthShader::RenderInstance(ID3D11DeviceContext* p_context, ID3D11Buffer* p
 }
 bool DepthShader::InitializeAnimatedDepth(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
-	ID3D10Blob*	animatedVertexShader = 0;
-	ID3D10Blob*	errorMessage = 0;
-
-	// Compile animated vertex shader
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthAnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Depth/DepthAnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile depth animated vertex shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_VSVersion = "5.0";
-	}
+	std::string shaderPath = SHADER_PATH;
 
 	// Create the animated vertex shader.
-	if (FAILED(p_device->CreateVertexShader(animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), NULL, &m_animatedVertexShader)))
+	std::vector<unsigned char> compiledAnimatedVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Depth/DepthAnimatedVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledAnimatedVertexShader.data(), compiledAnimatedVertexShader.size(), NULL, &m_animatedVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create depth animated vertex shader.");
 		return false;
@@ -436,14 +416,11 @@ bool DepthShader::InitializeAnimatedDepth(ID3D11Device* p_device, ID3D11DeviceCo
 	animationSize = sizeof(animationLayout) / sizeof(animationLayout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(animationLayout, animationSize, animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), &m_animatedLayout)))
+	if (FAILED(p_device->CreateInputLayout(animationLayout, animationSize, compiledAnimatedVertexShader.data(), compiledAnimatedVertexShader.size(), &m_animatedLayout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create depth animated vertex input layout.");
 		return false;
 	}
-
-	animatedVertexShader->Release();
-	animatedVertexShader = 0;
 
 	// Create the animated matrix buffer description.
 	D3D11_BUFFER_DESC animatedMatrixBuffer;

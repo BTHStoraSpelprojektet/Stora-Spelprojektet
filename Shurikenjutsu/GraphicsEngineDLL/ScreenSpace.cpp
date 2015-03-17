@@ -86,92 +86,31 @@ bool ScreenSpace::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 bool ScreenSpace::InitializeSSAO(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
-	ID3D10Blob*	pixelShader = 0;
-	ID3D10Blob* errorMessage = 0;
-
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SSAO/SSAOPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SSAO/SSAOPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile SSAO pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
+	std::string shaderPath = SHADER_PATH;
 
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderSSAO)))
+	std::vector<unsigned char> compiledSSAOPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/SSAO/SSAOPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledSSAOPixelShader.data(), compiledSSAOPixelShader.size(), NULL, &m_pixelShaderSSAO)))
 	{
 		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create SSAO pixel shader");
 		return false;
 	}
 
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SSAO/SSAOBlurHPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SSAO/SSAOBlurHPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile SSAO BlurH pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderSSAOBlurH)))
+	std::vector<unsigned char> compiledBlurHSSAOPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/SSAO/SSAOBlurHPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledBlurHSSAOPixelShader.data(), compiledBlurHSSAOPixelShader.size(), NULL, &m_pixelShaderSSAOBlurH)))
 	{
 		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create SSAO Blur H pixel shader");
 		return false;
 	}
 
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SSAO/SSAOBlurVPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/SSAO/SSAOBlurVPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile SSAO Blur V pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderSSAOBlurV)))
+	std::vector<unsigned char> compiledBlurVSSAOPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/SSAO/SSAOBlurVPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledBlurVSSAOPixelShader.data(), compiledBlurVSSAOPixelShader.size(), NULL, &m_pixelShaderSSAOBlurV)))
 	{
 		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create SSAO pixel shader");
 		return false;
 	}
-
-	pixelShader->Release();
-	pixelShader = 0;
 
 	// Create the cbuffer where "every frame" data is stored
 	D3D11_BUFFER_DESC frameBuffer;
@@ -242,58 +181,19 @@ bool ScreenSpace::InitializeSSAO(ID3D11Device* p_device, ID3D11DeviceContext* p_
 
 bool ScreenSpace::InitializeDOF(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
-	ID3D10Blob*	pixelShader = 0;
-	ID3D10Blob* errorMessage = 0;
-
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/DOF/DOFBlurHPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/DOF/DOFBlurHPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile DOF Blur H pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
+	std::string shaderPath = SHADER_PATH;
 
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderDOFBlurH)))
+	std::vector<unsigned char> compiledDOFBlurHPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/DOF/DOFBlurHPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledDOFBlurHPixelShader.data(), compiledDOFBlurHPixelShader.size(), NULL, &m_pixelShaderDOFBlurH)))
 	{
 		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create DOF Blur H pixel shader");
 		return false;
 	}
 
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/DOF/DOFBlurVPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/DOF/DOFBlurVPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to compile DOF Blur V pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderDOFBlurV)))
+	std::vector<unsigned char> compiledDOFBlurVPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/DOF/DOFBlurVPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledDOFBlurVPixelShader.data(), compiledDOFBlurVPixelShader.size(), NULL, &m_pixelShaderDOFBlurV)))
 	{
 		ConsolePrintErrorAndQuit("ScreenSpace.cpp: Failed to create DOF Blur V pixel shader");
 		return false;
