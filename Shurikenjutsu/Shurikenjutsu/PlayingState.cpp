@@ -308,7 +308,32 @@ void PlayingState::ShutdownExit()
 }
 
 GAMESTATESWITCH PlayingState::Update()
+{
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('m')))
 	{
+		if (GLOBAL::GetInstance().VOLUME_ON)
+		{
+			GLOBAL::GetInstance().VOLUME_ON = false;
+			m_sound->MuteEverything();
+		}
+		else
+		{
+			GLOBAL::GetInstance().VOLUME_ON = true;
+			m_sound->UnMuteEverything();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('o')))
+	{
+		if (!GLOBAL::GetInstance().CAMERA_MOVING)
+		{
+			GLOBAL::GetInstance().CAMERA_MOVING = true;
+		}
+		else
+		{
+			GLOBAL::GetInstance().CAMERA_MOVING = false;
+		}
+	}
+
 	if (Network::GetInstance()->RoundRestarted())
 	{
 		ResetValuesAtRoundRestart();

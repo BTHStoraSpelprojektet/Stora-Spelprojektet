@@ -61,7 +61,6 @@ private:
 	int m_ssaoIndex;
 	int m_soundMuteIndex;
 	int m_cameraModeIndex;
-	int m_apeMode;
 
 	//Background
 	ObjectManager* m_objectManager;

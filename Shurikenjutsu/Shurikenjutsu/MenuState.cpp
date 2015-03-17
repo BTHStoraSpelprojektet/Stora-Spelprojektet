@@ -39,18 +39,18 @@ bool MenuState::Initialize(std::string p_levelName)
 	const float BUTTONWIDTH = 301.0f;
 	const float BUTTONHEIGHT = 98.0f;
 	const float CHECKBOXSIZE = 50.0f;
-	const float VSYNCWIDTH = 254.0f;
-	const float VSYNCHEIGHT = 59.0f;
-	const float FULLSCREENWIDTH = 173.0f;
-	const float FULLSCREENHEIGHT = 58.0f;
-	const float MUTEWIDTH = 0;
-	const float MUTEHEIGHT = 0;
-	const float CAMERAMODEWIDTH = 0;
-	const float CAMERAMODEHEIGHT = 0;
-	const float SSAOWIDTH = 0;
-	const float SSAOHEIGHT = 0;
-	const float DOFWIDTH = 0;
-	const float DOFHEIGHT = 0;
+	const float VSYNCWIDTH = 263.0f;
+	const float VSYNCHEIGHT = 68.0f;
+	const float FULLSCREENWIDTH = 188.0f;
+	const float FULLSCREENHEIGHT = 55.0f;
+	const float MUTEWIDTH = 216.0f;
+	const float MUTEHEIGHT = 54.0f;
+	const float CAMERAMODEWIDTH = 243.0f;
+	const float CAMERAMODEHEIGHT = 56.0f;
+	const float SSAOWIDTH = 106.0f;
+	const float SSAOHEIGHT = 56.0f;
+	const float DOFWIDTH = 251.0f;
+	const float DOFHEIGHT = 68.0f;
 	const float LOGOPOSX = 0.0f;
 	const float LOGOPOSY = 250.0f;
 	const float LOGOWIDTH = 900.0f;
@@ -77,19 +77,19 @@ bool MenuState::Initialize(std::string p_levelName)
 
 	// SSAO
 	m_soundMuteIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 2.0f * (-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_ssao);
-	m_options->AddTexture(-375.0f + SSAOWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), SSAOWIDTH, SSAOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+	m_options->AddTexture(-375.0f + SSAOWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), SSAOWIDTH, SSAOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/ssao_text.png"));
 
 	// DOF
 	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_EMPTY, settings->m_dof);
-	m_options->AddTexture(25.0f + DOFWIDTH*0.5f, 0.0f, DOFWIDTH, DOFHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+	m_options->AddTexture(25.0f + DOFWIDTH*0.5f, 0.0f, DOFWIDTH, DOFHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/dof_text.png"));
 
 	// Mute sound
 	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, MENUACTION_EMPTY, settings->m_muteSound);
-	m_options->AddTexture(25.0f + MUTEWIDTH*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, DOFWIDTH, DOFHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+	m_options->AddTexture(25.0f + MUTEWIDTH*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, MUTEWIDTH, MUTEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/mute_text.png"));
 
 	// Camera Mode
 	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_cameraMode);
-	m_options->AddTexture(25.0f + CAMERAMODEWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), CAMERAMODEWIDTH, CAMERAMODEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+	m_options->AddTexture(25.0f + CAMERAMODEWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), CAMERAMODEWIDTH, CAMERAMODEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/camera_text.png"));
 
 	// Options Buttons
 	m_options->AddButton(BUTTONWIDTH*0.5f + 10.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
@@ -289,6 +289,11 @@ GAMESTATESWITCH MenuState::Update()
 			m_menues.push(m_options);
 			m_options->SetCheckboxState(m_vsyncIndex, settings->m_vsync);
 			m_options->SetCheckboxState(m_fullscreenIndex, settings->m_fullscreen);
+			m_options->SetCheckboxState(m_dofIndex, settings->m_dof);
+			m_options->SetCheckboxState(m_ssaoIndex, settings->m_ssao);
+			m_options->SetCheckboxState(m_cameraModeIndex, settings->m_cameraMode);
+			m_options->SetCheckboxState(m_soundMuteIndex, settings->m_muteSound);
+
 			break;
 
 		case MENUACTION_CONNECT:
@@ -505,6 +510,18 @@ void MenuState::OptionsApply()
 
 	temp = m_options->GetCheckboxState(m_fullscreenIndex);
 	settings->m_fullscreen = temp;
+
+	temp = m_options->GetCheckboxState(m_dofIndex);
+	settings->m_dof = temp;
+
+	temp = m_options->GetCheckboxState(m_ssaoIndex);
+	settings->m_ssao = temp;
+
+	temp = m_options->GetCheckboxState(m_soundMuteIndex);
+	settings->m_muteSound = temp;
+
+	temp = m_options->GetCheckboxState(m_cameraModeIndex);
+	settings->m_cameraMode = temp;
 
 	if (!temp)
 	{
