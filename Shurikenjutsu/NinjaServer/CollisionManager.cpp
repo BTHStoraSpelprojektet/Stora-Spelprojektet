@@ -53,12 +53,12 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 	case ABILITIES_MELEESWING:
 		range = KATANA_RANGE;
 		damage = KATANA_DAMAGE;
-		attackAngle = 0.9f;
+		attackAngle = 0.74f;
 		break;
 	case ABILITIES_FANMELEE:
 		range = FANMELEE_RANGE;
 		damage = FANMELEE_DAMAGE;
-		attackAngle = 0.9f;
+		attackAngle = 0.74f;
 		break;
 	case ABILITIES_NAGINATASLASH:
 		range = NAGINATA_RANGE;
@@ -1206,7 +1206,7 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 	{
 		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
 		{
-			if (ray->m_distance != 0)
+			if (ray->m_distance > 0)
 			{
 				rayLengths.push_back(ray->m_distance);
 			}

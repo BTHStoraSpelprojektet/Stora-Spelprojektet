@@ -10,7 +10,7 @@ Dash::~Dash(){}
 
 bool Dash::Initialize()
 {
-	SetDamage(DASH_DAMAGE);
+	SetDamage(0.0f);
 	SetTime(0.0);
 	SetStatusEffect(&StatusEffect());
 	SetCooldown(0.0f);

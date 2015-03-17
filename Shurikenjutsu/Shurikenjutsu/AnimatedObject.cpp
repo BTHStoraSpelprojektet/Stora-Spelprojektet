@@ -38,7 +38,7 @@ bool AnimatedObject::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos,
 	m_animationController.HandleInput(p_dir);
 
 	m_trail = new Trail();
-	m_trail->Initialize(1000.0f, 0.50f, 0.2f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png");
+	m_trail->Initialize(1000.0f, 0.50f, 0.1f, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png");
 
 	return true;
 }
