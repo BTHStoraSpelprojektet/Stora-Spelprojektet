@@ -40,6 +40,18 @@ void FlashBang::Shutdown()
 		delete m_flashEffect;
 		m_flashEffect = nullptr;
 	}
+
+	for (unsigned int i = 0; i < m_flashbangs.size(); i++)
+	{
+		m_flashbangs[i].m_particles->Shutdown();
+		delete m_flashbangs[i].m_particles;
+		m_flashbangs[i].m_particles = nullptr;
+
+		m_flashbangs[i].m_trail->Shutdown();
+		delete m_flashbangs[i].m_trail;
+		m_flashbangs[i].m_trail = nullptr;
+	}
+	m_flashbangs.clear();
 }
 
 void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, DirectX::XMFLOAT3 p_direction)
@@ -109,6 +121,8 @@ void FlashBang::RenderFlashbangs()
 {
 	for (unsigned int i = 0; i < m_flashbangs.size(); i++)
 	{
+		// TODO, updatera en matris och rendera alla bombs.
+
 		m_flashbangs[i].m_particles->Render();
 		m_flashbangs[i].m_trail->Render();
 	}
