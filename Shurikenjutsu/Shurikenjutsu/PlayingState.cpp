@@ -309,9 +309,11 @@ void PlayingState::ShutdownExit()
 }
 
 GAMESTATESWITCH PlayingState::Update()
-	{
+{
 	if (Network::GetInstance()->RoundRestarted())
 	{
+		FlashBang::GetInstance().InterruptFlash();
+
 		ResetValuesAtRoundRestart();
 	}
 
@@ -510,7 +512,6 @@ GAMESTATESWITCH PlayingState::Update()
 
 	if (Network::GetInstance()->GetNewPlayerJoined())
 	{
-		
 		PlayerJoinedText();
 	}
 

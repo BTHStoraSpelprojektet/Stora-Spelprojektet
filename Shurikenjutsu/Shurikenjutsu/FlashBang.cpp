@@ -83,7 +83,7 @@ void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p
 	{
 		ConsolePrintErrorAndQuit("A flashbang fuse emitter failed to initialize!");
 	}
-	newBomb.m_particles->SetEmitParticleState(true);
+	newBomb.m_particles->SetEmitParticleState(false);
 
 	newBomb.m_trail = new Trail();
 	if (!newBomb.m_trail->Initialize(50.0f, 0.2f, 0.05f, DirectX::XMFLOAT4(0.83f, 0.86f, 0.06f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
@@ -159,7 +159,7 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 	{
 		for (unsigned int i = 0; i < m_flashbangBangs.size(); i++)
 		{
-			if (m_flashbangBangs[i].m_particles->GetParticleCount() >= 0)
+			if (m_flashbangBangs[i].m_particles->GetParticleCount() <= 0)
 			{
 				m_flashbangBangs[i].m_particles->Shutdown();
 				delete m_flashbangBangs[i].m_particles;
@@ -293,9 +293,9 @@ void FlashBang::Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_i
 
 	FlashbangExplosions explosion;
 	explosion.m_timePassed = 0.0f;
-	explosion.m_timeToLive = 1.0f;
+	explosion.m_timeToLive = 0.1f;
 	explosion.m_particles = new ParticleEmitter();
-	if (!explosion.m_particles->Initialize(GraphicsEngine::GetDevice(), p_impactPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(5.0f, 5.0f), PARTICLE_PATTERN_FLASHBANG_SPARKS))
+	if (!explosion.m_particles->Initialize(GraphicsEngine::GetDevice(), p_impactPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(1.5f, 1.5f), PARTICLE_PATTERN_FLASHBANG_SPARKS))
 	{
 		ConsolePrintErrorAndQuit("A flashbang explosion emitter failed to initialize!");
 	}
