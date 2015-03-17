@@ -53,7 +53,7 @@ const float MEGASHURIKEN_SPEED = 25.0f;
 ///////////////////////////////////////////////////////////////////
 
 //_____________STATS______________________________
-const float CHARACTER_TESSEN_HEALTH = 110.0f;
+const float CHARACTER_TESSEN_HEALTH = 100.0f;
 const float CHARACTER_TESSEN_SPEED = 11.0f;
 
 //_____________ABILITIES__________________________
@@ -69,7 +69,7 @@ const float WHIP_RANGE = 9.0f;
 
 // Fan Boomerang Q
 const float FANBOOMERANG_DAMAGE = 75.0f;
-const float FANBOOMERANG_COOLDOWN = 4.0f;
+const float FANBOOMERANG_COOLDOWN = 2.0f;
 const float FANBOOMERANG_DURATION = 1.5f;
 const float FANBOOMERANG_SPEED = 17.0f;
 
@@ -104,7 +104,7 @@ const float KUNAI_SPEED = 50.0f;
 // Naginata stab Q
 const float NAGINATASTAB_DAMAGE = 30.0f;
 const float NAGINATASTAB_RANGE = 2.4f;
-const float NAGINATASTAB_COOLDOWN = 2.0f;
+const float NAGINATASTAB_COOLDOWN = 4.0f;
 const float NAGINATASTAB_GLOBAL_COOLDOWN = 1.5f;
 const float NAGINATASTAB_DURATION = 1.5f;
 	// Bounding Box

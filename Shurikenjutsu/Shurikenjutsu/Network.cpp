@@ -1748,7 +1748,7 @@ void Network::AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dir
 	temp.id = p_id;
 	temp.guid = p_guid;
 	temp.speed = p_speed;
-	temp.lifeTime = FANBOOMERANG_COOLDOWN;
+	temp.lifeTime = FANBOOMERANG_DURATION;
 
 	for (unsigned int i = 0; i < m_fanList.size(); i++)
 	{
