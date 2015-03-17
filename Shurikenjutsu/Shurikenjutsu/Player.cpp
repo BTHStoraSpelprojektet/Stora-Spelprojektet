@@ -114,9 +114,10 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	m_name = p_name;
 
 	m_onPressed = true;
-
+	m_bloodPos = m_position;
+	m_bloodPos.y += 1;
 	m_bloodParticles = new ParticleEmitter();
-	m_bloodParticles->Initialize(GraphicsEngine::GetDevice(), m_position, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_BLOODHIT);
+	m_bloodParticles->Initialize(GraphicsEngine::GetDevice(), m_bloodPos, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.1f, 0.1f), PARTICLE_PATTERN_BLOODHIT);
 	m_bloodParticles->SetEmitParticleState(false);
 	m_bloodParticlesTimer = 0.0f;
 
@@ -279,6 +280,9 @@ void Player::UpdateMe()
 			break;
 		}
 	}
+
+
+	UpdateBlood();
 
 	// Don't update player if he is dead
 	if (!m_isAlive || Network::GetInstance()->GetMatchOver())
@@ -485,7 +489,6 @@ void Player::UpdateMe()
 	m_floatingText->SetDealtDamageText(temp.m_position ,temp.m_damage);
 	UpdateAbilityBar();
 
-	UpdateBlood();
 }
 
 void Player::CheckForSpecialAttack()
@@ -614,7 +617,9 @@ void Player::Update()
 
 void Player::UpdateBlood()
 {
-	m_bloodParticles->SetPosition(m_position);
+	m_bloodPos = m_position;
+	m_bloodPos.y += 1;
+	m_bloodParticles->SetPosition(m_bloodPos);
 	m_bloodParticles->Update();
 	if (m_bloodParticlesTimer > 0.0f)
 	{
@@ -657,10 +662,13 @@ void Player::SetHealth(float p_health)
 
 	if (m_health > p_health)
 	{
-		m_floatingText->SetReceivedDamageText(p_health-m_health);
+		if (m_health > 0)
+		{
+			m_floatingText->SetReceivedDamageText(p_health - m_health);
 
-		// Spawn blood, dmg taken
-		SpawnBlood();
+			// Spawn blood, dmg taken
+			SpawnBlood();
+		}
 	}
 	else
 	{
@@ -1430,5 +1438,5 @@ std::string Player::GetName()
 void Player::SpawnBlood()
 {
 	m_bloodParticles->SetEmitParticleState(true);
-	m_bloodParticlesTimer = 1.0f;
+	m_bloodParticlesTimer = 0.5f;
 }

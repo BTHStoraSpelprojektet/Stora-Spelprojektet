@@ -256,10 +256,6 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 	// Update the mesh.
 	D3D11_MAPPED_SUBRESOURCE resource;
 	HRESULT temp = DLLGraphicsEngine::GE::GetInstance()->GetContext()->Map(m_mesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	if (FAILED(temp))
-	{
-		int a = 0;
-	}
 	memcpy(resource.pData, m_vertices.data(), sizeof(DirectX::XMFLOAT3) * m_vertices.size());
 	DLLGraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_mesh, 0);
 }
