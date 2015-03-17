@@ -9,18 +9,28 @@ class ParticleEmitter;
 class Trail;
 class GraphicsEngine;
 
-struct FlashBomb
+struct FlashbangBomb
 {
 	DirectX::XMFLOAT3 m_startPosition;
-	DirectX::XMFLOAT3 m_endPosition;
-
 	DirectX::XMFLOAT3 m_currentPosition;
-	DirectX::XMFLOAT3 m_direction;
 
 	ParticleEmitter* m_particles;
 	Trail* m_trail;
 
+	float m_percentX;
+	float m_percentZ;
+	float m_angle;
+
+	float m_timePassed;
+	float m_speed;
 	bool m_alive;
+};
+
+struct FlashbangExplosions
+{
+	ParticleEmitter* m_particles;
+	float m_timePassed;
+	float m_timeToLive;
 };
 
 class FlashBang
@@ -31,8 +41,8 @@ public:
 	bool Initialize();
 	void Shutdown();
 
-	void TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition, DirectX::XMFLOAT3 p_direction);
-	void UpdateFlashbangs();
+	void TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p_endPosition);
+	void UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3 p_playerDirection);
 	void RenderFlashbangs();
 
 	void GetFlashed();
@@ -45,13 +55,14 @@ private:
 	FlashBang(FlashBang const&);
 	void operator=(FlashBang const&);
 
-	std::vector<FlashBomb> m_flashbangs;
+	void Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_impactPosition, DirectX::XMFLOAT3 p_playerDirection);
+
+	std::vector<FlashbangBomb> m_flashbangs;
+	std::vector<FlashbangExplosions> m_flashbangBangs;
 
 	bool m_flashed;
 	float m_opacity;
 	float m_holdTime;
-	float m_sizeVariation;
-	float m_sizeDirection;
 	enum OPACITY_STATE
 	{
 		OPACITY_INCREASE, 

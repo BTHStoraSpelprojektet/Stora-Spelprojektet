@@ -297,6 +297,7 @@ void PlayingState::Shutdown()
 	}
 	
 	POIGrapichalEffects::GetInstance().Shutdown();
+	FlashBang::GetInstance().Shutdown();
 }
 
 void PlayingState::ShutdownExit()
@@ -308,9 +309,11 @@ void PlayingState::ShutdownExit()
 }
 
 GAMESTATESWITCH PlayingState::Update()
-	{
+{
 	if (Network::GetInstance()->RoundRestarted())
 	{
+		FlashBang::GetInstance().InterruptFlash();
+
 		ResetValuesAtRoundRestart();
 	}
 
@@ -456,7 +459,7 @@ GAMESTATESWITCH PlayingState::Update()
 	OBB playerOBB = m_playerManager->GetPlayerBoundingBox();
 
 	// Update flash bangs.
-	FlashBang::GetInstance().UpdateFlashbangs();
+	FlashBang::GetInstance().UpdateFlashbangs(m_playerManager->GetPlayerPosition(), m_playerManager->GetAttackDirection());
 	FlashBang::GetInstance().UpdateEffect();
 
 	// Update health bars.
@@ -474,11 +477,17 @@ GAMESTATESWITCH PlayingState::Update()
 		{
 			m_updateFrustum = true;
 		}
+	}
 
-		if (GetAsyncKeyState(VK_DELETE))
-		{
-			FlashBang::GetInstance().GetFlashed();
-		}
+	// TODO, move back up.
+	if (GetAsyncKeyState(VK_DELETE))
+	{
+		FlashBang::GetInstance().GetFlashed();
+	}
+
+	if (GetAsyncKeyState(VK_END))
+	{
+		FlashBang::GetInstance().TrowFlash(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(25.0f, 0.0f, 5.0f));
 	}
 
 	// Update the frustum.
@@ -503,7 +512,6 @@ GAMESTATESWITCH PlayingState::Update()
 
 	if (Network::GetInstance()->GetNewPlayerJoined())
 	{
-		
 		PlayerJoinedText();
 	}
 

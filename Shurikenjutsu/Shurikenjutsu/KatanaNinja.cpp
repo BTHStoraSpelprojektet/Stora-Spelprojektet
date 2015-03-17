@@ -38,19 +38,19 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	SetSpeed(CHARACTER_KATANA_SHURIKEN_SPEED);
 
 	m_meleeAttack = new MeleeSwing();
-	m_meleeAttack->setSound(m_sound);
+	m_meleeAttack->SetSound(m_sound);
 	m_meleeAttack->Initialize();
 
 	m_meleeSpecialAttack = new Dash();
-	m_meleeSpecialAttack->setSound(m_sound);
+	m_meleeSpecialAttack->SetSound(m_sound);
 	m_meleeSpecialAttack->Initialize();
 
 	m_rangeAttack = new ShurikenAbility();
-	m_rangeAttack->setSound(m_sound);
+	m_rangeAttack->SetSound(m_sound);
 	m_rangeAttack->Initialize();
 
 	m_rangeSpecialAttack = new MegaShuriken();
-	m_rangeSpecialAttack->setSound(m_sound);
+	m_rangeSpecialAttack->SetSound(m_sound);
 	m_rangeSpecialAttack->Initialize();
 
 	/*m_toolAbility = new SmokeBombAbility();
