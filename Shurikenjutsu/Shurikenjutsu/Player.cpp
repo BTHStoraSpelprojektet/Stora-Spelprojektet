@@ -657,10 +657,13 @@ void Player::SetHealth(float p_health)
 
 	if (m_health > p_health)
 	{
-		m_floatingText->SetReceivedDamageText(p_health-m_health);
+		if (m_health > 0)
+		{
+			m_floatingText->SetReceivedDamageText(p_health - m_health);
 
-		// Spawn blood, dmg taken
-		SpawnBlood();
+			// Spawn blood, dmg taken
+			SpawnBlood();
+		}
 	}
 	else
 	{
@@ -1430,5 +1433,5 @@ std::string Player::GetName()
 void Player::SpawnBlood()
 {
 	m_bloodParticles->SetEmitParticleState(true);
-	m_bloodParticlesTimer = 1.0f;
+	m_bloodParticlesTimer = 0.5f;
 }
