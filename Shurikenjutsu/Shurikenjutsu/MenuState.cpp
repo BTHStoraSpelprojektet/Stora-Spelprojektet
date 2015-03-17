@@ -17,28 +17,6 @@
 #include "..\CommonLibs\Flags.h"
 #include "ObjectManager.h"
 
-// BUTTON
-const float BUTTONWIDTH = 301.0f;
-const float BUTTONHEIGHT = 98.0f;
-const float BUTTONOFFSET = 10.0f;
-
-// CHECKBOX
-const float CHECKBOXSIZE = 100.0f;
-
-// VSYNC
-const float VSYNCWIDTH = 254.0f;
-const float VSYNCHEIGHT = 59.0f;
-
-// FULLSCREEN
-const float FULLSCREENWIDTH = 173.0f;
-const float FULLSCREENHEIGHT = 58.0f;
-
-// LOGO
-const float LOGOPOSX = 0.0f;
-const float LOGOPOSY = 250.0f;
-const float LOGOWIDTH = 900.0f;
-const float LOGOHEIGHT = 307.0f;
-
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
 
@@ -58,6 +36,28 @@ bool MenuState::Initialize(){
 
 bool MenuState::Initialize(std::string p_levelName)
 {
+	const float BUTTONWIDTH = 301.0f;
+	const float BUTTONHEIGHT = 98.0f;
+	const float CHECKBOXSIZE = 50.0f;
+	const float VSYNCWIDTH = 254.0f;
+	const float VSYNCHEIGHT = 59.0f;
+	const float FULLSCREENWIDTH = 173.0f;
+	const float FULLSCREENHEIGHT = 58.0f;
+	const float MUTEWIDTH = 0;
+	const float MUTEHEIGHT = 0;
+	const float CAMERAMODEWIDTH = 0;
+	const float CAMERAMODEHEIGHT = 0;
+	const float SSAOWIDTH = 0;
+	const float SSAOHEIGHT = 0;
+	const float DOFWIDTH = 0;
+	const float DOFHEIGHT = 0;
+	const float LOGOPOSX = 0.0f;
+	const float LOGOPOSY = 250.0f;
+	const float LOGOWIDTH = 900.0f;
+	const float LOGOHEIGHT = 307.0f;
+	const float BUTTONOFFSET = 10.0f;
+	const float OPTIONSMARGIN = 15.0f;
+
 	Settings* settings = Settings::GetInstance();
 
 	// Initialize logo
@@ -67,14 +67,33 @@ bool MenuState::Initialize(std::string p_levelName)
 	// Initialize options menu
 	m_options = new Menu();
 	
-	m_vsyncIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_VSYNC, settings->m_vsync);
-	m_options->AddTexture(-BUTTONWIDTH + VSYNCWIDTH*0.5f, 0.0f, VSYNCWIDTH, VSYNCHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/vs_text.png"));
+	// Vsync
+	m_vsyncIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_VSYNC, settings->m_vsync);
+	m_options->AddTexture(-375.0f + VSYNCWIDTH*0.5f, 0.0f, VSYNCWIDTH, VSYNCHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/vs_text.png"));
 
-	m_fullscreenIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - BUTTONOFFSET, MENUACTION_FULLSCREEN, settings->m_fullscreen);
-	m_options->AddTexture(-BUTTONWIDTH + FULLSCREENWIDTH*0.5f, -CHECKBOXSIZE, FULLSCREENWIDTH, FULLSCREENHEIGHT - BUTTONOFFSET, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+	// Fullscreen
+	m_fullscreenIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, MENUACTION_FULLSCREEN, settings->m_fullscreen);
+	m_options->AddTexture(-375.0f + FULLSCREENWIDTH*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, FULLSCREENWIDTH, FULLSCREENHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
 
-	m_options->AddButton(BUTTONWIDTH*0.5f + 10.0f, -3.0f * CHECKBOXSIZE, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
-	m_options->AddButton(-BUTTONWIDTH*0.5f - 10.0f, -3.0f * CHECKBOXSIZE, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/apply.png"), MENUACTION_OPTIONAPPLY);
+	// SSAO
+	m_soundMuteIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 2.0f * (-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_ssao);
+	m_options->AddTexture(-375.0f + SSAOWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), SSAOWIDTH, SSAOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+
+	// DOF
+	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_EMPTY, settings->m_dof);
+	m_options->AddTexture(25.0f + DOFWIDTH*0.5f, 0.0f, DOFWIDTH, DOFHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+
+	// Mute sound
+	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, MENUACTION_EMPTY, settings->m_muteSound);
+	m_options->AddTexture(25.0f + MUTEWIDTH*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, DOFWIDTH, DOFHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+
+	// Camera Mode
+	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_cameraMode);
+	m_options->AddTexture(25.0f + CAMERAMODEWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), CAMERAMODEWIDTH, CAMERAMODEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+
+	// Options Buttons
+	m_options->AddButton(BUTTONWIDTH*0.5f + 10.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
+	m_options->AddButton(-BUTTONWIDTH*0.5f - 10.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/apply.png"), MENUACTION_OPTIONAPPLY);
 
 	// Initialize main menu
 	m_main = new Menu();
