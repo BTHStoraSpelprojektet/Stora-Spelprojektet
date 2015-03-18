@@ -13,7 +13,7 @@ bool SpikeAbility::Initialize()
 	SetCooldown(0.0f);
 	m_totalCooldown = SPIKE_COOLDOWN;
 	m_stacks = -1;
-	m_radius = SPIKE_RADIUS;
+	m_radius = 2.3f;
 	m_range = SPIKE_RANGE;
 	return true;
 }
