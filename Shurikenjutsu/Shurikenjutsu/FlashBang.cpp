@@ -21,7 +21,7 @@ FlashBang& FlashBang::GetInstance()
 bool FlashBang::Initialize()
 {
 	m_model = new Object();
-	m_model->Initialize(SMOKE_BOMB, p_startPosition);
+	m_model->Initialize("../Shurikenjutsu/Models/flashbang_Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 
 	m_flashbangs.clear();
 	m_flashbangBangs.clear();
@@ -38,6 +38,13 @@ bool FlashBang::Initialize()
 
 void FlashBang::Shutdown()
 {
+	if (m_model != nullptr)
+	{
+		m_model->Shutdown();
+		delete m_model;
+		m_model = nullptr;
+	}
+
 	if (m_flashEffect != nullptr)
 	{
 		delete m_flashEffect;
@@ -123,7 +130,7 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 		m_flashbangs[i].m_particles->Update();*/
 		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, atan2(m_flashbangs[i].m_percentZ, m_flashbangs[i].m_percentX));
 
-		if (m_flashbangs[i].m_currentPosition.y < 0.0f)
+		if (m_flashbangs[i].m_currentPosition.y < 0.0f && m_flashbangs[i].m_alive)
 		{
 			m_flashbangs[i].m_alive = false;
 
