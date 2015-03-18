@@ -161,7 +161,7 @@ void AnimatedObject::RenderDepthOutlining()
 
 void AnimatedObject::RenderOutlining(DirectX::XMFLOAT4 p_color)
 {
-	GraphicsEngine::RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaledForOutlining(1.2f), m_animationController.GetBoneTransforms(), p_color);
+	GraphicsEngine::RenderAnimatedOutlining(m_model->GetMesh(), m_model->GetVertexCount(), GetWorldMatrixScaledForOutlining(1.1f), m_animationController.GetBoneTransforms(), p_color);
 }
 
 void AnimatedObject::ChangeAnimationState(AnimationState p_newState)

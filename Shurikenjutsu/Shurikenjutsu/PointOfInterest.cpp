@@ -64,6 +64,7 @@ void PointOfInterest::SetPosition(DirectX::XMFLOAT3 p_pos)
 	if (m_sparkles != nullptr)
 	{
 		m_sparkles->SetPosition(p_pos);
+		m_positionLight = p_pos;
 	}
 }
 

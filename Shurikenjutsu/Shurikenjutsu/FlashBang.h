@@ -8,6 +8,7 @@ class GUIElement;
 class ParticleEmitter;
 class Trail;
 class GraphicsEngine;
+class Object;
 
 struct FlashbangBomb
 {
@@ -24,6 +25,8 @@ struct FlashbangBomb
 	float m_timePassed;
 	float m_speed;
 	bool m_alive;
+
+	DirectX::XMFLOAT4X4 m_worldMatrix;
 };
 
 struct FlashbangExplosions
@@ -50,12 +53,16 @@ public:
 	void UpdateEffect();
 	void RenderEffect();
 
+	bool IsPlayerFlashed();
+
 private:
 	FlashBang(){};
 	FlashBang(FlashBang const&);
 	void operator=(FlashBang const&);
 
 	void Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_impactPosition, DirectX::XMFLOAT3 p_playerDirection);
+
+	Object* m_model;
 
 	std::vector<FlashbangBomb> m_flashbangs;
 	std::vector<FlashbangExplosions> m_flashbangBangs;

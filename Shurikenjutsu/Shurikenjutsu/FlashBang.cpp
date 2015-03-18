@@ -9,6 +9,7 @@
 #include "../CommonLibs/ConsoleFunctions.h"
 #include "../CommonLibs/CommonEnums.h"
 #include "CollisionManager.h"
+#include "Object.h"
 
 FlashBang& FlashBang::GetInstance()
 {
@@ -19,6 +20,9 @@ FlashBang& FlashBang::GetInstance()
 
 bool FlashBang::Initialize()
 {
+	m_model = new Object();
+	m_model->Initialize("../Shurikenjutsu/Models/flashbang_Shape.SSP", DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+
 	m_flashbangs.clear();
 	m_flashbangBangs.clear();
 
@@ -34,6 +38,13 @@ bool FlashBang::Initialize()
 
 void FlashBang::Shutdown()
 {
+	if (m_model != nullptr)
+	{
+		m_model->Shutdown();
+		delete m_model;
+		m_model = nullptr;
+	}
+
 	if (m_flashEffect != nullptr)
 	{
 		delete m_flashEffect;
@@ -94,6 +105,8 @@ void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p
 		ConsolePrintErrorAndQuit("A flashbang trail failed to initialize!");
 	}
 
+	DirectX::XMStoreFloat4x4(&newBomb.m_worldMatrix, DirectX::XMMatrixIdentity());
+
 	m_flashbangs.push_back(newBomb);
 }
 
@@ -117,7 +130,7 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 		m_flashbangs[i].m_particles->Update();*/
 		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, atan2(m_flashbangs[i].m_percentZ, m_flashbangs[i].m_percentX));
 
-		if (m_flashbangs[i].m_currentPosition.y < 0.0f)
+		if (m_flashbangs[i].m_currentPosition.y < 0.0f && m_flashbangs[i].m_alive)
 		{
 			m_flashbangs[i].m_alive = false;
 
@@ -254,6 +267,8 @@ void FlashBang::UpdateEffect()
 
 				if (m_opacity <= 0.0f)
 				{
+					m_flashed = false;
+
 					m_opacity = 0.0f;
 					m_opacityState = OPACITY_NONE;
 				}
@@ -289,16 +304,25 @@ void FlashBang::Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_i
 	float x = p_impactPosition.x - p_playerPosition.x;
 	float z = p_impactPosition.z - p_playerPosition.z;
 
-	float playerDirLeangth = sqrt(p_playerDirection.x * p_playerDirection.x + p_playerDirection.z * p_playerDirection.z);
-	float playerToFlahLeangth = sqrt(x * x + z * z);
 	if (!CollisionManager::GetInstance()->IntersectingObjectWhenAttacking(p_playerPosition, p_impactPosition, true))
 	{
-		float dotProduct = p_playerDirection.x * x + p_playerDirection.z * z;
-		float angle = acos(dotProduct / (playerDirLeangth* playerToFlahLeangth));
-
-		if (angle < DirectX::XM_PIDIV2)
+		float distance = sqrt(x * x + z * z);
+		if (distance <= FLASHBANG_INNER_RADIUS)
 		{
 			GetFlashed();
+		}
+		else if (distance <= FLASHBANG_RADIUS)
+		{
+			float playerDirLeangth = sqrt(p_playerDirection.x * p_playerDirection.x + p_playerDirection.z * p_playerDirection.z);
+			float playerToFlahLeangth = sqrt(x * x + z * z);
+
+			float dotProduct = p_playerDirection.x * x + p_playerDirection.z * z;
+			float angle = acos(dotProduct / (playerDirLeangth* playerToFlahLeangth));
+
+			if (angle < DirectX::XM_PIDIV2)
+			{
+				GetFlashed();
+			}
 		}
 	}
 
@@ -313,4 +337,9 @@ void FlashBang::Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_i
 	explosion.m_particles->SetEmitParticleState(true);
 	
 	m_flashbangBangs.push_back(explosion);
+}
+
+bool FlashBang::IsPlayerFlashed()
+{
+	return m_flashed;
 }

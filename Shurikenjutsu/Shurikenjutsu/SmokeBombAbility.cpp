@@ -13,7 +13,7 @@ bool SmokeBombAbility::Initialize()
 	SetCooldown(0.0f);
 	m_totalCooldown = SMOKEBOMB_COOLDOWN;
 	m_stacks = -1;
-	m_radius = SMOKEBOMB_SIZE_Y;
+	m_radius = 3.0f;
 	m_range = SMOKEBOMB_RANGE;
 	return true;
 }

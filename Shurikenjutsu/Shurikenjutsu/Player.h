@@ -14,6 +14,7 @@ class StickyTrap;
 class AttackPredictionEditor;
 class FloatingText;
 class ParticleEmitter;
+class FlashBang;
 
 class Player : public AnimatedObject
 {
@@ -29,7 +30,7 @@ public:
 	void UpdateMe();
 	void Update();
 	void UpdateAbilities();
-	void Render();
+	void Render(bool p_playingState);
 	virtual void RenderAttackLocations();
 	void RenderDepth();
 	void RenderDepthOutlining();

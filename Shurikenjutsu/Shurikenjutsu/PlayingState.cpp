@@ -21,6 +21,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "TrailRenderer.h"
 #include "FlashBang.h"
+#include "Settings.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -310,6 +311,31 @@ void PlayingState::ShutdownExit()
 
 GAMESTATESWITCH PlayingState::Update()
 {
+	if (InputManager::GetInstance()->IsKeyPressed(VK_CONTROL) && InputManager::GetInstance()->IsKeyClicked(VkKeyScan('s')))
+	{
+		if (GLOBAL::GetInstance().VOLUME_ON)
+		{
+			GLOBAL::GetInstance().VOLUME_ON = false;
+			m_sound->MuteEverything();
+		}
+		else
+		{
+			GLOBAL::GetInstance().VOLUME_ON = true;
+			m_sound->UnMuteEverything();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('o')))
+	{
+		if (!GLOBAL::GetInstance().CAMERA_MOVING)
+		{
+			GLOBAL::GetInstance().CAMERA_MOVING = true;
+		}
+		else
+		{
+			GLOBAL::GetInstance().CAMERA_MOVING = false;
+		}
+	}
+
 	if (Network::GetInstance()->RoundRestarted())
 	{
 		FlashBang::GetInstance().InterruptFlash();
@@ -618,15 +644,26 @@ void PlayingState::Render()
 	
 	GraphicsEngine::RenderFoliage();
 	
-	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::RenderSSAO();
+	if (Settings::GetInstance()->m_ssao)
+	{
+		GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
+		GraphicsEngine::RenderSSAO();
+	}
 
 	// Composition
 	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
 
-	GraphicsEngine::Composition();
-	GraphicsEngine::ApplyDOF();
+	if (Settings::GetInstance()->m_dof)
+	{
+		GraphicsEngine::Composition();
+		GraphicsEngine::ApplyDOF();
+	}
+
+	else
+	{
+		GraphicsEngine::CompositionForward();
+	}
 
 	GraphicsEngine::SetForwardRenderTarget();
 	GraphicsEngine::TurnOnAlphaBlending();
@@ -648,7 +685,10 @@ void PlayingState::Render()
 	}
 
 	// Render the UI.
-	m_minimap->Render();
+	if (!FlashBang::GetInstance().IsPlayerFlashed())
+	{
+		m_minimap->Render();
+	}
 	m_teamStatusBar->Render();
 	m_countdown->Render();
 	DeathBoard::GetInstance()->Render();

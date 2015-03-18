@@ -81,23 +81,24 @@ bool DirectXWrapper::Initialize(HWND p_handle, float p_maxWindowHeight,	float p_
 	{
 		return false;
 	}
-
+	// Keep 0 and 1 to get prefer user desktop settings
 	unsigned int numerator = 0;
 	unsigned int denominator = 1;
 
-	// Now go through all the display modes and find the one that matches the screen width and height.
-	// When a match is found store the numerator and denominator of the refresh rate for that monitor.
-	for (unsigned int i = 0; i<numModes; i++)
-	{
-		if (displayModeList[i].Width == (unsigned int)m_maxWindowWidth)
-		{
-			if (displayModeList[i].Height == (unsigned int)m_maxWindowHeight)
-			{
-				numerator = displayModeList[i].RefreshRate.Numerator;
-				denominator = displayModeList[i].RefreshRate.Denominator;
-			}
-		}
-	}
+	//// Now go through all the display modes and find the one that matches the screen width and height.
+	//// When a match is found store the numerator and denominator of the refresh rate for that monitor.
+	//for (unsigned int i = 0; i<numModes; i++)
+	//{
+	//	if (displayModeList[i].Width == (unsigned int)m_maxWindowWidth)
+	//	{
+	//		if (displayModeList[i].Height == (unsigned int)m_maxWindowHeight)
+	//		{
+	//			numerator = displayModeList[i].RefreshRate.Numerator;
+	//			denominator = displayModeList[i].RefreshRate.Denominator;
+	//			break;
+	//		}
+	//	}
+	//}
 
 	// Initialize swap chain.
 	DXGI_SWAP_CHAIN_DESC swapChainDescription;
@@ -996,6 +997,17 @@ ID3D11ShaderResourceView* DirectXWrapper::GetPPSRV1()
 ID3D11ShaderResourceView* DirectXWrapper::GetPPSRV2()
 {
 	return m_pPSRV[1];
+}
+
+void DirectXWrapper::ClearPPSRV()
+{
+	FLOAT cc[4];
+	cc[0] = 1.0f;
+	cc[1] = 1.0f;
+	cc[2] = 1.0f;
+	cc[3] = 1.0f;
+	m_context->ClearRenderTargetView(m_pPRTV[0], cc);
+	m_context->ClearRenderTargetView(m_pPRTV[1], cc);
 }
 
 void DirectXWrapper::SetDebugName(ID3D11DeviceChild* child, const std::string& name)

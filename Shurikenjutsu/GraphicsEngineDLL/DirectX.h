@@ -56,6 +56,7 @@ public:
 	void SetRenderTargetsForPP2();
 	ID3D11ShaderResourceView* GetPPSRV1();
 	ID3D11ShaderResourceView* GetPPSRV2();
+	void ClearPPSRV();
 
 	// Composition
 	bool InitializeComposition();

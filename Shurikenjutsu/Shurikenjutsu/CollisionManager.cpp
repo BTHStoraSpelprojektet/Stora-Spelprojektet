@@ -214,7 +214,17 @@ bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attac
 	{
 		if (RayOBBTest(ray, m_staticBoxList[i]))
 		{
-			listOfDistances.push_back(ray->m_distance);
+			if (p_isThrowing)
+			{
+				if (m_staticBoxList[i].m_extents.y > 1.8f)
+				{
+					listOfDistances.push_back(ray->m_distance);
+				}
+			}
+			else
+			{
+				listOfDistances.push_back(ray->m_distance);
+			}
 		}
 	}
 	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)

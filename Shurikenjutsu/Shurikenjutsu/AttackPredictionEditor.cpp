@@ -124,7 +124,7 @@ void AttackPredictionEditor::ThrowSphere(Object *p_object, DirectX::XMFLOAT3 p_p
 	}
 
 	p_object->SetPosition(DirectX::XMFLOAT3(p_playerPosition.x + vectorToMouseNorm.x * distance, 0.03f, p_playerPosition.z + vectorToMouseNorm.z * distance));
-	p_object->SetScale(DirectX::XMFLOAT3(p_radius, p_object->GetScale().y, p_radius));
+	p_object->SetScale(DirectX::XMFLOAT3(p_radius * 2.0f, p_object->GetScale().y, p_radius * 2.0f));
 }
 void AttackPredictionEditor::SpinAttackBigSphere(Object *p_object, DirectX::XMFLOAT3 p_playerPosition, float p_radius)
 {

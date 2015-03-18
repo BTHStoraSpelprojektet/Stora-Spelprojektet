@@ -352,6 +352,11 @@ void GraphicsEngine::Composition()
 	DLLGraphicsEngine::GE::GetInstance()->Composition();
 }
 
+void GraphicsEngine::CompositionForward()
+{
+	DLLGraphicsEngine::GE::GetInstance()->CompositionForward();
+}
+
 void GraphicsEngine::SetForwardRenderTarget()
 {
 	DLLGraphicsEngine::GE::GetInstance()->SetForwardRenderTarget();
@@ -365,6 +370,11 @@ void GraphicsEngine::RenderSSAO()
 void GraphicsEngine::SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection)
 {
 	DLLGraphicsEngine::GE::GetInstance()->SetSSAOBuffer(p_projection);
+}
+
+void GraphicsEngine::ClearSSAO()
+{
+	DLLGraphicsEngine::GE::GetInstance()->ClearSSAO();
 }
 
 void GraphicsEngine::ApplyDOF()
