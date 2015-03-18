@@ -509,11 +509,11 @@ void ChooseState::UpdateTeams()
 	{
 		if (tempPlayerList[i].team == 1)
 		{
-			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr);
+			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String());
 		}
 		else
 		{
-			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr);
+			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String());
 		}
 	}
 }
