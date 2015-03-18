@@ -646,8 +646,8 @@ void PlayingState::Render()
 	
 	if (Settings::GetInstance()->m_ssao)
 	{
-	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::RenderSSAO();
+		GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
+		GraphicsEngine::RenderSSAO();
 	}
 
 	// Composition
@@ -656,8 +656,8 @@ void PlayingState::Render()
 
 	if (Settings::GetInstance()->m_dof)
 	{
-	GraphicsEngine::Composition();
-	GraphicsEngine::ApplyDOF();
+		GraphicsEngine::Composition();
+		GraphicsEngine::ApplyDOF();
 	}
 
 	else

@@ -53,6 +53,8 @@ public:
 	void UpdateEffect();
 	void RenderEffect();
 
+	bool IsPlayerFlashed();
+
 private:
 	FlashBang(){};
 	FlashBang(FlashBang const&);

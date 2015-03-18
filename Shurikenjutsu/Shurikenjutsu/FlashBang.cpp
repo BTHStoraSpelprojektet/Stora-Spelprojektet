@@ -333,3 +333,8 @@ void FlashBang::Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_i
 	
 	m_flashbangBangs.push_back(explosion);
 }
+
+bool FlashBang::IsPlayerFlashed()
+{
+	return m_flashed;
+}
