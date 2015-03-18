@@ -16,6 +16,10 @@ public:
 	bool Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direction, int p_charNr, std::string p_name, UINT32 p_color);
 	void Shutdown();
 	void RenderAttackLocations();
+	void UpdateAbilityBar();
+	void CheckForSpecialAttack();
+
+private:
 };
 
 #endif
