@@ -9,6 +9,7 @@
 #include "../CommonLibs/ConsoleFunctions.h"
 #include "../CommonLibs/CommonEnums.h"
 #include "CollisionManager.h"
+#include "Object.h"
 
 FlashBang& FlashBang::GetInstance()
 {
@@ -19,6 +20,9 @@ FlashBang& FlashBang::GetInstance()
 
 bool FlashBang::Initialize()
 {
+	m_model = new Object();
+	m_model->Initialize(SMOKE_BOMB, p_startPosition);
+
 	m_flashbangs.clear();
 	m_flashbangBangs.clear();
 
@@ -93,6 +97,8 @@ void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p
 	{
 		ConsolePrintErrorAndQuit("A flashbang trail failed to initialize!");
 	}
+
+	DirectX::XMStoreFloat4x4(&newBomb.m_worldMatrix, DirectX::XMMatrixIdentity());
 
 	m_flashbangs.push_back(newBomb);
 }

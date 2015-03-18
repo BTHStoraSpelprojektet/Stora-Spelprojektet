@@ -39,5 +39,4 @@ private:
 
 	Trail* m_trail;
 };
-
 #endif
