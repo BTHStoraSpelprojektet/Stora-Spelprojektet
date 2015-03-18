@@ -1114,11 +1114,14 @@ void Player::UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_p
 
 void Player::UpdateAbilityBar(){}
 
-void Player::Render()
+void Player::Render(bool p_playingState)
 {
 	if (m_isAlive)
 	{
-		m_healthbar->Render();
+		if (p_playingState)
+		{
+			m_healthbar->Render();
+		}
 		if (Network::GetInstance()->GetMyPlayer().guid == m_guid && !Network::GetInstance()->GetMatchOver())
 		{
 			RenderAttackLocations();

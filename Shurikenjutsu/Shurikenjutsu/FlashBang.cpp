@@ -306,7 +306,7 @@ void FlashBang::Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_i
 	{
 		float distance = sqrt(x * x + z * z);
 
-		if (distance <= FLASHBANG_RADIUS * 0.5f)
+		if (distance <= FLASHBANG_RADIUS)
 		{
 			float playerDirLeangth = sqrt(p_playerDirection.x * p_playerDirection.x + p_playerDirection.z * p_playerDirection.z);
 			float playerToFlahLeangth = sqrt(x * x + z * z);
