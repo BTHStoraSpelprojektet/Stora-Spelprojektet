@@ -202,32 +202,71 @@ std::vector<Sphere> CollisionManager::CalculateLocalPlayerCollisionWithStaticSph
 	return collisionList;
 }
 
-//float CollisionManager::CalculateDashLength(Ray* p_ray)
-//{
-//	Ray* ray = p_ray;
-//	float dashLength = 10.0f;
-//	std::vector<float> rayLengths;
-//
-//	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
-//	{
-//		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
-//		{
-//			if (ray->m_distance != 0)
-//			{
-//				rayLengths.push_back(ray->m_distance);
-//			}
-//		}
-//	}
-//	for (unsigned int i = 0; i < rayLengths.size(); i++)
-//	{
-//		if (rayLengths[i] < dashLength)
-//		{
-//			dashLength = rayLengths[i];
-//		}
-//	}
-//
-//	return dashLength;
-//}
+bool CollisionManager::IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos, bool p_isThrowing)
+{
+	DirectX::XMFLOAT3 vectorFromA2B = DirectX::XMFLOAT3(p_defendingPlayerPos.x - p_attackingPlayerPos.x, 0.0f, p_defendingPlayerPos.z - p_attackingPlayerPos.z);
+	float distance = sqrt(vectorFromA2B.x * vectorFromA2B.x + vectorFromA2B.z * vectorFromA2B.z);
+
+	Ray* ray = new Ray(p_attackingPlayerPos, vectorFromA2B);
+	std::vector<float> listOfDistances;
+
+	for (unsigned int i = 0; i < m_staticBoxList.size(); i++)
+	{
+		if (RayOBBTest(ray, m_staticBoxList[i]))
+		{
+			listOfDistances.push_back(ray->m_distance);
+		}
+	}
+	for (unsigned int i = 0; i < m_staticSphereList.size(); i++)
+	{
+		if (RaySphereTest(ray, m_staticSphereList[i]))
+		{
+			listOfDistances.push_back(ray->m_distance);
+		}
+	}
+
+	if (ray != nullptr)
+	{
+		delete ray;
+		ray = nullptr;
+	}
+
+	for (unsigned int i = 0; i < listOfDistances.size(); i++)
+	{
+		if (distance > listOfDistances[i])
+		{
+			return true;
+		}
+	}
+	return false;
+}
+bool CollisionManager::RayOBBTest(Ray *p_ray, OBB p_Obb)
+{
+	float temp = 0;
+	if (IntersectionTests::Intersections::RayOBBCollision(p_ray->m_position, DirectX::XMFLOAT3(p_ray->m_direction.x, p_ray->m_direction.y, p_ray->m_direction.z), p_Obb.m_center, p_Obb.m_extents, p_Obb.m_direction, temp))
+	{
+		p_ray->m_distance = temp;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+bool CollisionManager::RaySphereTest(Ray *p_ray, Sphere p_sphere)
+{
+	float temp = 0;
+	if (IntersectionTests::Intersections::RaySphereCollision(p_ray->m_position, p_ray->m_direction, p_sphere.m_position, p_sphere.m_radius, temp))
+	{
+		p_ray->m_distance = temp;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 
 bool CollisionManager::CalculateRayLength(Ray* p_ray, float p_rayDistance)
 {
