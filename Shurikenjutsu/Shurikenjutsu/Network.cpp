@@ -7,6 +7,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "ScoreBoard.h"
 #include "POIGrapichalEffects.h"
+#include "FlashBang.h"
 
 Network* Network::m_instance;
 
@@ -1333,6 +1334,22 @@ void Network::ReceviePacket()
 				bitStream.Read(shieldValue);
 
 				UpdateShieldValue(guid, shieldValue);
+
+				break;
+			}
+			case ID_THROW_FLASHGRENADE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				float startX = 0.0f, startZ = 0.0f;
+				float endX = 0.0f, endZ = 0.0f;
+
+				bitStream.Read(messageID);
+				bitStream.Read(startX);
+				bitStream.Read(startZ);
+				bitStream.Read(endX);
+				bitStream.Read(endZ);
+
+				FlashBang::GetInstance().TrowFlash(DirectX::XMFLOAT3(startX, 0.0f, startZ), DirectX::XMFLOAT3(endX, 0.0f, endZ));
 
 				break;
 			}

@@ -54,7 +54,7 @@ void NetworkLogger::Update(double p_deltaTime)
 			if (ServerGlobals::IS_SERVER)
 			{
 				#ifdef _DEBUG
-					std::cout << "InMessage: " << rit->second << "  Nr: " << rit->first << std::endl;
+					//std::cout << "InMessage: " << rit->second << "  Nr: " << rit->first << std::endl;
 				#endif			
 			}
 			messagesIn += "InMessage: " + rit->second + "  Nr: " + std::to_string(rit->first) + "\n";
@@ -75,7 +75,7 @@ void NetworkLogger::Update(double p_deltaTime)
 			if (ServerGlobals::IS_SERVER)
 			{
 				#ifdef _DEBUG
-					std::cout << "OutMessage: " << rit->second << "  Nr: " << rit->first << std::endl;
+					//std::cout << "OutMessage: " << rit->second << "  Nr: " << rit->first << std::endl;
 				#endif			
 			}
 			messagesOut += "OutMessage: " + rit->second + "  Nr: " + std::to_string(rit->first) + "\n";
@@ -115,13 +115,16 @@ void NetworkLogger::OnInternalPacket(RakNet::InternalPacket *internalPacket, uns
 		//std::cout << "Message out: " << IDTOString(internalPacket->data[0]) << std::endl;
 		m_frameBitsOut += internalPacket->dataBitLength;
 
-		if (m_nrPacketsOut.size() == 0 || m_nrPacketsOut.find(message) == m_nrPacketsOut.end())
+		if (!ServerGlobals::IS_SERVER) // This keep on crashin on the server, dunno why so put an if statement to not run it on the server
 		{
-			m_nrPacketsOut[message] = 1;
-		}
-		else
-		{			
-			m_nrPacketsOut[message]++;
+			if (m_nrPacketsOut.size() == 0 || m_nrPacketsOut.find(message) == m_nrPacketsOut.end())
+			{
+				m_nrPacketsOut[message] = 1;
+			}
+			else
+			{
+				m_nrPacketsOut[message]++;
+			}
 		}
 	}
 	else
@@ -129,13 +132,16 @@ void NetworkLogger::OnInternalPacket(RakNet::InternalPacket *internalPacket, uns
 		//std::cout << "Message in: " << IDTOString(internalPacket->data[0]) << std::endl;
 		m_frameBitsIn += internalPacket->dataBitLength;
 
-		if (m_nrPacketsIn.size() == 0 || m_nrPacketsIn.find(message) == m_nrPacketsIn.end())
+		if (!ServerGlobals::IS_SERVER) // This keep on crashin on the server, dunno why so put an if statement to not run it on the server
 		{
-			m_nrPacketsIn[message] = 1;
-		}
-		else
-		{			
-			m_nrPacketsIn[message]++;
+			if (m_nrPacketsIn.size() == 0 || m_nrPacketsIn.find(message) == m_nrPacketsIn.end())
+			{
+				m_nrPacketsIn[message] = 1;
+			}
+			else
+			{
+				m_nrPacketsIn[message]++;
+			}
 		}
 	}
 

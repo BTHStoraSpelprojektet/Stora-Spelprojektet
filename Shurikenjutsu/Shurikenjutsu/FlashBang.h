@@ -14,7 +14,7 @@ struct FlashbangBomb
 	DirectX::XMFLOAT3 m_startPosition;
 	DirectX::XMFLOAT3 m_currentPosition;
 
-	ParticleEmitter* m_particles;
+	//ParticleEmitter* m_particles;
 	Trail* m_trail;
 
 	float m_percentX;
