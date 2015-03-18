@@ -685,7 +685,10 @@ void PlayingState::Render()
 	}
 
 	// Render the UI.
-	m_minimap->Render();
+	if (!FlashBang::GetInstance().IsPlayerFlashed())
+	{
+		m_minimap->Render();
+	}
 	m_teamStatusBar->Render();
 	m_countdown->Render();
 	DeathBoard::GetInstance()->Render();
