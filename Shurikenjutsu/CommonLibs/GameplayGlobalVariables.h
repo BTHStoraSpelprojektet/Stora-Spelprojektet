@@ -161,6 +161,8 @@ const float STICKY_TRAP_SLOW_PRECENTAGE = 0.5f;
 
 // Flashbang.
 const float FLASHBANG_HOLD_TIME = 3.0f;
+const float FLASHBANG_COOLDOWN = 3.0f;
+const float FLASHBANG_DAMAGE = 0.0f;
 
 
 ///////////////////////////////////////////////////////////////////
