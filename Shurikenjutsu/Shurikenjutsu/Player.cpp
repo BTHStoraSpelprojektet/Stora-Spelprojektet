@@ -15,6 +15,7 @@
 #include "StickyTrapAbility.h"
 #include "SmokeBombAbility.h"
 #include "SpikeAbility.h"
+#include "FlashBangAbility.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include "GraphicsEngine.h"
 #include "Network.h"
@@ -1306,7 +1307,7 @@ void Player::ChooseTool()
 		}
 		case 3:
 		{
-			m_toolAbility = new ();
+			m_toolAbility = new FlashBangAbility();
 			m_toolAbility->Initialize();
 			break;
 		}
