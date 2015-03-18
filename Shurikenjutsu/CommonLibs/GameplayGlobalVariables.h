@@ -160,8 +160,8 @@ const float STICKY_TRAP_RADIUS = 2.3f;
 const float STICKY_TRAP_SLOW_PRECENTAGE = 0.5f;
 
 // Flashbang.
-const float FLASHBANG_HOLD_TIME = 3.0f;
-const float FLASHBANG_COOLDOWN = 3.0f;
+const float FLASHBANG_HOLD_TIME = 2.0f;
+const float FLASHBANG_COOLDOWN = 8.0f;
 const float FLASHBANG_DAMAGE = 0.0f;
 const float FLASHBANG_RANGE = 20.0f;
 const float FLASHBANG_RADIUS = 7.0f;
