@@ -41,9 +41,9 @@ void FlashBang::Shutdown()
 
 	for (unsigned int i = 0; i < m_flashbangs.size(); i++)
 	{
-		m_flashbangs[i].m_particles->Shutdown();
+		/*m_flashbangs[i].m_particles->Shutdown();
 		delete m_flashbangs[i].m_particles;
-		m_flashbangs[i].m_particles = nullptr;
+		m_flashbangs[i].m_particles = nullptr;*/
 
 		m_flashbangs[i].m_trail->Shutdown();
 		delete m_flashbangs[i].m_trail;
@@ -78,12 +78,12 @@ void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p
 	newBomb.m_percentZ = newBomb.m_currentPosition.z / length;
 	newBomb.m_angle = asinf((9.82f * length) / (newBomb.m_speed * newBomb.m_speed)) * 0.5f;
 	
-	newBomb.m_particles = new ParticleEmitter();
+	/*newBomb.m_particles = new ParticleEmitter();
 	if (!newBomb.m_particles->Initialize(GraphicsEngine::GetDevice(), p_startPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_FIRE_TORCH))
 	{
 		ConsolePrintErrorAndQuit("A flashbang fuse emitter failed to initialize!");
 	}
-	newBomb.m_particles->SetEmitParticleState(false);
+	newBomb.m_particles->SetEmitParticleState(true);*/
 
 	newBomb.m_trail = new Trail();
 	if (!newBomb.m_trail->Initialize(50.0f, 0.2f, 0.05f, DirectX::XMFLOAT4(0.83f, 0.86f, 0.06f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
@@ -107,8 +107,8 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 		m_flashbangs[i].m_currentPosition.z = m_flashbangs[i].m_speed * m_flashbangs[i].m_timePassed * cosf(m_flashbangs[i].m_angle) * m_flashbangs[i].m_percentZ;
 		m_flashbangs[i].m_currentPosition.y *= 3.5f;
 
-		m_flashbangs[i].m_particles->SetPosition(m_flashbangs[i].m_currentPosition);
-		m_flashbangs[i].m_particles->Update();
+		/*m_flashbangs[i].m_particles->SetPosition(m_flashbangs[i].m_currentPosition);
+		m_flashbangs[i].m_particles->Update();*/
 		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, m_flashbangs[i].m_angle);
 
 		if (m_flashbangs[i].m_currentPosition.y < 0.0f)
@@ -137,9 +137,9 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 		{
 			if (!m_flashbangs[i].m_alive)
 			{
-				m_flashbangs[i].m_particles->Shutdown();
+				/*m_flashbangs[i].m_particles->Shutdown();
 				delete m_flashbangs[i].m_particles;
-				m_flashbangs[i].m_particles = nullptr;
+				m_flashbangs[i].m_particles = nullptr;*/
 
 				m_flashbangs[i].m_trail->Shutdown();
 				delete m_flashbangs[i].m_trail;
@@ -181,7 +181,7 @@ void FlashBang::RenderFlashbangs()
 	{
 		// TODO, updatera världsmatrisen och rendera alla bombs.
 
-		m_flashbangs[i].m_particles->Render();
+		/*m_flashbangs[i].m_particles->Render();*/
 		m_flashbangs[i].m_trail->Render();
 	}
 
