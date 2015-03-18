@@ -206,7 +206,7 @@ void GameState::ExecuteAbility(RakNet::RakNetGUID p_guid, ABILITIES p_ability, f
 	m_spikeManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_stickyTrapManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
 	m_volleyManager->SetCurrentDistanceFromPlayer(p_distanceFromPlayer);
-	m_playerManager->ExecuteAbility(m_deltaTime, p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager, *m_stickyTrapManager, *m_volleyManager);
+	m_playerManager->ExecuteAbility(m_deltaTime, p_guid, p_ability, *m_collisionManager, *m_shurikenManager, *m_smokeBombManager, *m_spikeManager, *m_fanBoomerangManager, *m_projectileManager, *m_stickyTrapManager, *m_volleyManager, p_distanceFromPlayer);
 	AbilityUsedCancelInvis(p_guid);
 }
 

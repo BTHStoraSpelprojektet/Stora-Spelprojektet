@@ -480,11 +480,6 @@ GAMESTATESWITCH PlayingState::Update()
 	}
 
 	// TODO, move back up.
-	if (GetAsyncKeyState(VK_DELETE))
-	{
-		FlashBang::GetInstance().GetFlashed();
-	}
-
 	if (GetAsyncKeyState(VK_END))
 	{
 		FlashBang::GetInstance().TrowFlash(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f), DirectX::XMFLOAT3(25.0f, 0.0f, 5.0f));

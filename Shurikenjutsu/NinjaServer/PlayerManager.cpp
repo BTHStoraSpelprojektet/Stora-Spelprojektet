@@ -420,7 +420,7 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	return boundingBoxes;
 }
 
-void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager)
+void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager, float p_distanceFromPlayer)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
 	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
@@ -563,6 +563,21 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 
 			SendPlaySound(PLAYSOUND::PLAYSOUND_VOLLEY_THROW_SOUND, m_players[index].x, m_players[index].y, m_players[index].z);
 			p_volleyManager.Add(p_guid, m_players[index].x, m_players[index].z, m_players[index].x + m_players[index].dirX * volleyDistance, m_players[index].z + m_players[index].dirZ * volleyDistance);
+			break;
+		}
+
+		case ID_THROW_FLASHGRENADE:
+		{
+			RakNet::BitStream bitStream2;
+			bitStream2.Write((RakNet::MessageID)ID_THROW_FLASHGRENADE);
+
+			player = GetPlayer(p_guid);
+			bitStream2.Write(player.x);
+			bitStream2.Write(player.z);
+			bitStream2.Write(player.x + player.dirX * p_distanceFromPlayer);
+			bitStream2.Write(player.z + player.dirZ * p_distanceFromPlayer);
+
+			m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			break;
 		}
 
