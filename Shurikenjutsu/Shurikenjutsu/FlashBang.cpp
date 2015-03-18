@@ -65,9 +65,9 @@ void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p
 	FlashbangBomb newBomb;
 
 	newBomb.m_startPosition = p_startPosition;
-	newBomb.m_currentPosition.x = (p_endPosition.x - p_startPosition.x);
+	newBomb.m_currentPosition.x = (p_startPosition.x);
 	newBomb.m_currentPosition.y = 1.0f;
-	newBomb.m_currentPosition.z = (p_endPosition.z - p_startPosition.z);
+	newBomb.m_currentPosition.z = ( p_startPosition.z);
 
 	newBomb.m_timePassed = 0.0f;
 	newBomb.m_speed = 20.0f;
