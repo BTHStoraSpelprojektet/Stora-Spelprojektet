@@ -625,7 +625,7 @@ void ChooseState::EscapeIsPressed()
 void ChooseState::RandomNinja()
 {
 	std::srand((unsigned int)std::time(0));
-	int randomNumber = std::rand() % 9;
+	int randomNumber = std::rand() % 12;
 	while (m_prevRandomNumber == randomNumber)
 	{
 		randomNumber = std::rand() % 9;
@@ -674,6 +674,21 @@ void ChooseState::RandomNinja()
 	{
 		m_currentNinja = 2;
 		m_currentTool = 2;
+	}
+	else if (randomNumber == 9)
+	{
+		m_currentNinja = 0;
+		m_currentTool = 3;
+	}
+	else if (randomNumber == 10)
+	{
+		m_currentNinja = 1;
+		m_currentTool = 3;
+	}
+	else if (randomNumber == 11)
+	{
+		m_currentNinja = 2;
+		m_currentTool = 3;
 	}
 	m_prevRandomNumber = randomNumber;
 }

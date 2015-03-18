@@ -8,6 +8,7 @@
 #include "../CommonLibs/TextureLibrary.h"
 #include "../CommonLibs/ConsoleFunctions.h"
 #include "../CommonLibs/CommonEnums.h"
+#include "CollisionManager.h"
 
 FlashBang& FlashBang::GetInstance()
 {
@@ -288,12 +289,17 @@ void FlashBang::Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_i
 	float x = p_impactPosition.x - p_playerPosition.x;
 	float z = p_impactPosition.z - p_playerPosition.z;
 
-	float dotProduct = p_playerDirection.x * x + p_playerDirection.z * z;
-	float angle = acos(dotProduct / (sqrt(p_playerDirection.x * p_playerDirection.x + p_playerDirection.z * p_playerDirection.z) * sqrt(x * x + z * z)));
-
-	if (angle < DirectX::XM_PIDIV2)
+	float playerDirLeangth = sqrt(p_playerDirection.x * p_playerDirection.x + p_playerDirection.z * p_playerDirection.z);
+	float playerToFlahLeangth = sqrt(x * x + z * z);
+	if (!CollisionManager::GetInstance()->IntersectingObjectWhenAttacking(p_playerPosition, p_impactPosition, false))
 	{
-		GetFlashed();
+		float dotProduct = p_playerDirection.x * x + p_playerDirection.z * z;
+		float angle = acos(dotProduct / (playerDirLeangth* playerToFlahLeangth));
+
+		if (angle < DirectX::XM_PIDIV2)
+		{
+			GetFlashed();
+		}
 	}
 
 	FlashbangExplosions explosion;
