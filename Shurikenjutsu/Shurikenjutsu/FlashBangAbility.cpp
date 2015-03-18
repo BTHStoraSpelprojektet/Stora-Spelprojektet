@@ -14,7 +14,7 @@ bool FlashBangAbility::Initialize()
 	SetCooldown(0.0f);
 	m_totalCooldown = FLASHBANG_COOLDOWN;
 	m_stacks = -1;
-	m_radius = 7.5f;
+	m_radius = 10.0f;
 	m_range = FLASHBANG_RANGE;
 	return true;
 }
