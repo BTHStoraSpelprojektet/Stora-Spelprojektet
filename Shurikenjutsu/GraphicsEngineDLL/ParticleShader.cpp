@@ -2,7 +2,8 @@
 #include "ParticleShader.h"
 #include <D3Dcompiler.h>
 #include "..\CommonLibs\ConsoleFunctions.h"
-
+#include "CompiledShaderReader.h"
+#include "ShaderGlobals.h"
 
 bool ParticleShader::Initialize(ID3D11Device* p_device)
 {
@@ -13,31 +14,11 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	m_matrixBuffer = 0;
 	m_samplerState = 0;
 
-	ID3D10Blob* errorMessage = 0;
-	ID3D10Blob* vertexShader = 0;
-	
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticleVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticleVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile particle vertex shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_VSVersion = "5.0";
-	}
+	std::string shaderPath = SHADER_PATH;
 
 	// Create vertex shader from buffer.
-	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	std::vector<unsigned char> compiledVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Particle/ParticleVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledVertexShader.data(), compiledVertexShader.size(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create particle vertex shader.");
 		return false;
@@ -81,7 +62,7 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	unsigned int numberOfElements = sizeof(layout) / sizeof(layout[0]);
 
 	// Create vertex layout.
-	if (FAILED(p_device->CreateInputLayout(layout, numberOfElements, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	if (FAILED(p_device->CreateInputLayout(layout, numberOfElements, compiledVertexShader.data(), compiledVertexShader.size(), &m_layout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create particle vertex layout.");
 		return false;
@@ -90,33 +71,9 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	ConsolePrintSuccess("Particle vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
-	// Release vertex shader since it is no longer required.
-	vertexShader->Release();
-	vertexShader = 0;
-
-	// Compile the geometry shader.
-	ID3D10Blob* geometryShader = 0;
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticleGeometryShader.hlsl", NULL, NULL, "main", "gs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geometryShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticleGeometryShader.hlsl", NULL, NULL, "main", "gs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &geometryShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile particle geometry shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_GSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_GSVersion = "5.0";
-	}
-
 	// Create geometry shader from buffer.
-	if (FAILED(p_device->CreateGeometryShader(geometryShader->GetBufferPointer(), geometryShader->GetBufferSize(), NULL, &m_geometryShader)))
+	std::vector<unsigned char> compiledGeometryShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Particle/ParticleGeometryShader.cso");
+	if (FAILED(p_device->CreateGeometryShader(compiledGeometryShader.data(), compiledGeometryShader.size(), NULL, &m_geometryShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create particle geometry vertex shader.");
 		return false;
@@ -125,61 +82,17 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 	ConsolePrintSuccess("Particle geometry shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_GSVersion);
 
-	// Release pixel shader since it is no longer required.
-	geometryShader->Release();
-	geometryShader = 0;
-
-	// Compile the pixel shader.
-	ID3D10Blob*	pixelShader = 0;
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticlePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticlePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile particle pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create pixel shader from buffer.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	std::vector<unsigned char> compiledPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Particle/ParticlePixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledPixelShader.data(), compiledPixelShader.size(), NULL, &m_pixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create particle pixel shader.");
 		return false;
 	}
 
-	// Compile the pixel shader.
-	pixelShader = 0;
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticlePixelShaderNotFire.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Particle/ParticlePixelShaderNotFire.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile particle pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create pixel shader from buffer.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderNotFire)))
+	std::vector<unsigned char> compiledPixelShaderNotFire = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Particle/ParticlePixelShaderNotFire.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledPixelShaderNotFire.data(), compiledPixelShaderNotFire.size(), NULL, &m_pixelShaderNotFire)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create particle pixel shader.");
 		return false;
@@ -187,10 +100,6 @@ bool ParticleShader::Initialize(ID3D11Device* p_device)
 
 	ConsolePrintSuccess("Particle pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-
-	// Release pixel shader since it is no longer required.
-	pixelShader->Release();
-	pixelShader = 0;
 
 	// Setup description of the matrix buffer.
 	D3D11_BUFFER_DESC matrixBufferDescription;

@@ -35,14 +35,10 @@ public:
 	void RenderDepthOutlining();
 	void RenderOutlining(DirectX::XMFLOAT4 p_color);
 	void RenderAbilityBar();
-	//void SetDamage(float p_damage);
-	//float GetDamage() const;	
 	void SetHealth(float p_health);
 	float GetHealth() const;
 	void SetMaxHealth(float p_maxHealth);
 	float GetMaxHealth() const;
-	//void SetAgility(float p_agility);
-	//float GetAgility() const;
 	void SetPosition(DirectX::XMFLOAT3 p_pos);	
 	void SendPosition(DirectX::XMFLOAT3 p_pos);
 	void InterpolatePos(DirectX::XMFLOAT3 p_pos);
@@ -62,7 +58,7 @@ public:
 	int GetTeam();
 
 	void UpdateHealthBar(DirectX::XMFLOAT4X4 p_view, DirectX::XMFLOAT4X4 p_projection);
-	void UpdateAbilityBar();
+	virtual	void UpdateAbilityBar();
 
 	void ResetCooldowns();
 
@@ -86,7 +82,7 @@ public:
 	std::string GetName();
 
 protected:
-	void CheckForSpecialAttack();
+	virtual	void CheckForSpecialAttack();
 	bool CalculateDirection();
 	void CalculateFacingAngle();
 	void CalculatePlayerCubeCollision(OBB p_collidingBoxes);

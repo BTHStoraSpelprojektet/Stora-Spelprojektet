@@ -298,6 +298,7 @@ void PlayingState::Shutdown()
 	}
 	
 	POIGrapichalEffects::GetInstance().Shutdown();
+	FlashBang::GetInstance().Shutdown();
 }
 
 void PlayingState::ShutdownExit()
@@ -310,7 +311,7 @@ void PlayingState::ShutdownExit()
 
 GAMESTATESWITCH PlayingState::Update()
 {
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('m')))
+	if (InputManager::GetInstance()->IsKeyPressed(VK_CONTROL) && InputManager::GetInstance()->IsKeyClicked(VkKeyScan('s')))
 	{
 		if (GLOBAL::GetInstance().VOLUME_ON)
 		{
@@ -337,6 +338,8 @@ GAMESTATESWITCH PlayingState::Update()
 
 	if (Network::GetInstance()->RoundRestarted())
 	{
+		FlashBang::GetInstance().InterruptFlash();
+
 		ResetValuesAtRoundRestart();
 	}
 
@@ -482,7 +485,7 @@ GAMESTATESWITCH PlayingState::Update()
 	OBB playerOBB = m_playerManager->GetPlayerBoundingBox();
 
 	// Update flash bangs.
-	FlashBang::GetInstance().UpdateFlashBangs();
+	FlashBang::GetInstance().UpdateFlashbangs(m_playerManager->GetPlayerPosition(), m_playerManager->GetAttackDirection());
 	FlashBang::GetInstance().UpdateEffect();
 
 	// Update health bars.
@@ -500,11 +503,12 @@ GAMESTATESWITCH PlayingState::Update()
 		{
 			m_updateFrustum = true;
 		}
+	}
 
-		if (GetAsyncKeyState(VK_DELETE))
+	// TODO, move back up.
+	if (GetAsyncKeyState(VK_END))
 		{
-			FlashBang::GetInstance().GetFlashed();
-		}
+		FlashBang::GetInstance().TrowFlash(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f), DirectX::XMFLOAT3(25.0f, 0.0f, 5.0f));
 	}
 
 	// Update the frustum.
@@ -529,7 +533,6 @@ GAMESTATESWITCH PlayingState::Update()
 
 	if (Network::GetInstance()->GetNewPlayerJoined())
 	{
-		
 		PlayerJoinedText();
 	}
 
@@ -634,6 +637,7 @@ void PlayingState::Render()
 	GraphicsEngine::ClearRenderTargetsForGBuffers();
 	GraphicsEngine::SetRenderTargetsForGBuffers();
 	FlashBang::GetInstance().RenderEffect();
+	FlashBang::GetInstance().RenderFlashbangs();
 	UpdatePOIEffects();
 
 	GraphicsEngine::PrepareRenderAnimated();
@@ -648,8 +652,8 @@ void PlayingState::Render()
 	
 	if (Settings::GetInstance()->m_ssao)
 	{
-		GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
-		GraphicsEngine::RenderSSAO();
+	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
+	GraphicsEngine::RenderSSAO();
 	}
 
 	// Composition
@@ -658,8 +662,8 @@ void PlayingState::Render()
 
 	if (Settings::GetInstance()->m_dof)
 	{
-		GraphicsEngine::Composition();
-		GraphicsEngine::ApplyDOF();
+	GraphicsEngine::Composition();
+	GraphicsEngine::ApplyDOF();
 	}
 
 	else
@@ -910,13 +914,13 @@ void PlayingState::OnScreenResize()
 	DirectX::XMFLOAT3 pickedPlayer = Pick(Point(width * 0.5f, height * 0.5f));
 
 	m_quadWidth = pickedPlayer.x - pickedTopLeft.x;
-	m_quadHeightTop = pickedTopLeft.z - pickedPlayer.z;
-	m_quadHeightBottom = pickedPlayer.z - pickedBottomRight.z;
+	m_quadHeightTop = pickedTopLeft.z * 1.1f - pickedPlayer.z;
 
 	// Update projection matrix.
 	DirectX::XMFLOAT4X4 projection;
-	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop + m_quadHeightBottom, 1.0f, 100.0f));
+	DirectX::XMStoreFloat4x4(&projection, DirectX::XMMatrixOrthographicLH(m_quadWidth * 2.0f, m_quadHeightTop * 2.0f, 0.1f, 1000.0f));
 	GraphicsEngine::SetVisibilityProjectionPolygonMatrix(projection);
+
 	// Tell the graphics engine that changes have been handled.
 	GraphicsEngine::ScreenChangeHandled();
 }

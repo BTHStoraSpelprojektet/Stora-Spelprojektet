@@ -11,6 +11,7 @@
 #include "ParticleRenderer.h"
 #include "GraphicsEngine.h"
 #include "Globals.h"
+#include "AbilityBar.h"
 
 KatanaNinja::KatanaNinja(){}
 KatanaNinja::~KatanaNinja(){}
@@ -38,19 +39,19 @@ bool KatanaNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	SetSpeed(CHARACTER_KATANA_SHURIKEN_SPEED);
 
 	m_meleeAttack = new MeleeSwing();
-	m_meleeAttack->setSound(m_sound);
+	m_meleeAttack->SetSound(m_sound);
 	m_meleeAttack->Initialize();
 
 	m_meleeSpecialAttack = new Dash();
-	m_meleeSpecialAttack->setSound(m_sound);
+	m_meleeSpecialAttack->SetSound(m_sound);
 	m_meleeSpecialAttack->Initialize();
 
 	m_rangeAttack = new ShurikenAbility();
-	m_rangeAttack->setSound(m_sound);
+	m_rangeAttack->SetSound(m_sound);
 	m_rangeAttack->Initialize();
 
 	m_rangeSpecialAttack = new MegaShuriken();
-	m_rangeSpecialAttack->setSound(m_sound);
+	m_rangeSpecialAttack->SetSound(m_sound);
 	m_rangeSpecialAttack->Initialize();
 
 	/*m_toolAbility = new SmokeBombAbility();
@@ -142,5 +143,111 @@ void KatanaNinja::RenderAttackLocations()
 			}
 		}
 		GraphicsEngine::TurnOffAlphaBlending();
+	}
+}
+
+void KatanaNinja::CheckForSpecialAttack()
+{
+	if (m_onPressed)
+	{
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+		{
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_rangeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
+		{
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+		{
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_toolAbility;
+			}
+		}
+	}
+	else
+	{
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('e')))
+		{
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_rangeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('q')))
+		{
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('r')))
+		{
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_toolAbility;
+			}
+		}
+	}
+}
+
+void KatanaNinja::UpdateAbilityBar()
+{
+	//if (Network::GetInstance()->CheckIfNaginataStabAttackIsPerformed())
+	//{
+	//	m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+	//	m_maxGlobalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
+	//	Network::GetInstance()->ResetNaginataStabBoolean();
+	//}
+	//else if (m_globalCooldown < 0)
+	//{
+	//	m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+	//}
+	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), m_meleeAttack->GetStacks(), 0);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
+	}
+	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
+	}
+	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
+	}
+	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
+	}
+	if ((float)m_toolAbility->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
 	}
 }

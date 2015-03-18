@@ -101,6 +101,7 @@
     <ClCompile Include="FanBoomerangAbility.cpp" />
     <ClCompile Include="FlashBang.cpp" />
     <ClCompile Include="FanMelee.cpp" />
+    <ClCompile Include="FlashBangAbility.cpp" />
     <ClCompile Include="FloatingText.cpp" />
     <ClCompile Include="GUIText.cpp" />
     <ClCompile Include="InGameMenu.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="FanBoomerangAbility.h" />
     <ClInclude Include="FlashBang.h" />
     <ClInclude Include="FanMelee.h" />
+    <ClInclude Include="FlashBangAbility.h" />
     <ClInclude Include="FloatingText.h" />
     <ClInclude Include="GUIText.h" />
     <ClInclude Include="CustomFont.h" />

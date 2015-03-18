@@ -13,6 +13,7 @@ void CollisionManager::Initialize(std::vector<OBB> p_staticBoxList, std::vector<
 	m_staticSphereList = std::vector<Sphere>();
 	SetLists(p_staticBoxList, p_staticSphereList);
 	m_deltaTime = 0;
+	m_doneDashDamage = false;
 }
 
 void CollisionManager::SetLists(std::vector<OBB> p_staticBoxList, std::vector<Sphere> p_staticSphereList)
@@ -53,12 +54,12 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 	case ABILITIES_MELEESWING:
 		range = KATANA_RANGE;
 		damage = KATANA_DAMAGE;
-		attackAngle = 0.9f;
+		attackAngle = 0.74f;
 		break;
 	case ABILITIES_FANMELEE:
 		range = FANMELEE_RANGE;
 		damage = FANMELEE_DAMAGE;
-		attackAngle = 0.9f;
+		attackAngle = 0.74f;
 		break;
 	case ABILITIES_NAGINATASLASH:
 		range = NAGINATA_RANGE;
@@ -681,6 +682,7 @@ void CollisionManager::FanCollisionChecks(double p_deltaTime, FanBoomerangManage
 
 float CollisionManager::CalculateDashRange(RakNet::RakNetGUID p_guid, PlayerNet p_attackingPlayer, PlayerManager* p_playerManager)
 {
+	m_doneDashDamage = false;
 	PlayerNet tempPlayer = p_attackingPlayer;
 	float returnValue = DashLengthCalculation(p_guid, tempPlayer, p_playerManager);
 
@@ -985,7 +987,7 @@ void CollisionManager::SuddenDeathDot(float p_deltaTime, PlayerManager* p_player
 				if (playerList[i].dotDamage > 2.0f && p_playerManager->CanSendDotDamage())
 				{
 					p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (SUDDEN_DEATH_DAMAGE * m_deltaTime));
-					p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, playerList[i].guid, ABILITIES_SMOKEBOMB, true);
+					p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, playerList[i].guid, ABILITIES_SD_SMOKE, true);
 					p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
 				}
 
@@ -1206,7 +1208,7 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 	{
 		if (Collisions::RayOBBCollision(ray, m_staticBoxList[i]))
 		{
-			if (ray->m_distance != 0)
+			if (ray->m_distance > 0)
 			{
 				rayLengths.push_back(ray->m_distance);
 			}
@@ -1226,33 +1228,6 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 		}
 	}
 
-	// Uncomment this to stop dash infront of players
-
-	//std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
-	//// Go through player list
-	//for (unsigned int i = 0; i < playerList.size(); i++)
-	//{
-	//	if (playerList[i].guid != p_guid)
-	//	{
-	//		// Get the players bounding boxes
-	//		std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
-	//		for (unsigned int j = 0; j < playerBoundingBoxes.size(); j++)
-	//		{
-	//			Box box = playerBoundingBoxes[j];
-	//			if (Collisions::RayBoxCollision(ray, box))
-	//			{
-	//				rayLengths.push_back(ray->m_distance);
-	//			}
-	//		}
-	//	}
-	//}
-
-	if (ray != nullptr)
-	{
-		delete ray;
-		ray = nullptr;
-	}
-
 	//Go through the shortest intersecting object
 	for (unsigned int i = 0; i < rayLengths.size(); i++)
 	{
@@ -1260,6 +1235,43 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 		{
 			dashLength = rayLengths[i];
 		}
+	}
+
+	
+	// Se if we dashed through a player
+	std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+	int team = p_playerManager->GetPlayer(p_guid).team;
+	// Go through player list
+	for (unsigned int i = 0; i < playerList.size(); i++)
+	{
+		if (playerList[i].guid != p_guid && playerList[i].team != team)
+		{
+			// Get the players bounding boxes
+			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
+			for (unsigned int j = 0; j < playerBoundingBoxes.size(); j++)
+			{
+				Box box = playerBoundingBoxes[j];
+				if (Collisions::RayBoxCollision(ray, box))
+				{
+					// Check so distance to player is smaller than the dash distance (we have dashed through a player)
+					if (ray->m_distance < dashLength)
+					{
+						if (!m_doneDashDamage)
+						{
+							// Damage player
+							p_playerManager->DamagePlayer(playerList[i].guid, DASH_DAMAGE, p_guid, ABILITIES_DASH, false);
+							m_doneDashDamage = true;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (ray != nullptr)
+	{
+		delete ray;
+		ray = nullptr;
 	}
 	return dashLength;
 }

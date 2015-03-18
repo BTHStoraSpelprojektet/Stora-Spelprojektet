@@ -3,35 +3,16 @@
 #include "..\CommonLibs\ConsoleFunctions.h"
 #include <D3Dcompiler.h>
 #include "..\CommonLibs\CommonStructures.h"
+#include "CompiledShaderReader.h"
+#include "ShaderGlobals.h"
 
 bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
-	// Set variables to initial values.
-	ID3D10Blob*	vertexShader = 0;
-	ID3D10Blob*	errorMessage = 0;
-
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile GUI vertex shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_VSVersion = "5.0";
-	}
+	std::string shaderPath = SHADER_PATH;
 
 	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	std::vector<unsigned char> compiledVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/GUI/GUIVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledVertexShader.data(), compiledVertexShader.size(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create GUI vertex shader.");
 		return false;
@@ -61,7 +42,7 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	size = sizeof(layout) / sizeof(layout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	if (FAILED(p_device->CreateInputLayout(layout, size, compiledVertexShader.data(), compiledVertexShader.size(), &m_layout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create GUI vertex input layout. @GUIShader");
 		return false;
@@ -70,35 +51,9 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 	ConsolePrintSuccess("GUI vertex shader compiled successfully.");
 	ConsolePrintText("GUI version: VS " + m_VSVersion);
 
-	vertexShader->Release();
-	vertexShader = 0;
-
-	// Set variables to initial values.
-	ID3D10Blob*	pixelShader = 0;
-	errorMessage = 0;
-
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIPixelShader.hlsl", NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/GUI/GUIPixelShader.hlsl", NULL, NULL, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile GUI pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	std::vector<unsigned char> compiledPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/GUI/GUIPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledPixelShader.data(), compiledPixelShader.size(), NULL, &m_pixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create GUI pixel shader @GUIShader");
 		return false;
@@ -106,9 +61,6 @@ bool GUIShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_contex
 
 	ConsolePrintSuccess("GUI pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-
-	pixelShader->Release();
-	pixelShader = 0;
 
 	std::vector<GUIVertex> quad;
 	

@@ -62,6 +62,9 @@ private:
 	std::map<RakNet::RakNetGUID, Ninja> m_redColorPlayers;
 	std::map<RakNet::RakNetGUID, Ninja> m_blueColorPlayers;
 
+	std::vector<GUIElement*> m_deadRedPlayers;
+	std::vector<GUIElement*> m_deadBluePlayers;
+
 	std::string GetTextureName(int p_charNr);
 };
 

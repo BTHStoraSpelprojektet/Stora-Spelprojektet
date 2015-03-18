@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <string>
-
+#include <vector>
 
 class GUIText;
 class Camera;
@@ -61,6 +61,8 @@ private:
 			_mm_free(p_p);
 		}
 	};
+
+	std::vector<unsigned char> ReadShaderData(std::string p_fileName);
 
 	GUIText* m_title;
 	std::string m_VSVersion;

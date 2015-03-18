@@ -7,6 +7,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "ScoreBoard.h"
 #include "POIGrapichalEffects.h"
+#include "FlashBang.h"
 
 Network* Network::m_instance;
 
@@ -419,7 +420,6 @@ void Network::ReceviePacket()
 				bitStream.Read(z);
 
 				RespawnPlayer(x, y, z);
-				UpdatePlayerInvisAll(false);
 
 				break;
 			}
@@ -1337,6 +1337,22 @@ void Network::ReceviePacket()
 
 				break;
 			}
+			case ID_THROW_FLASHGRENADE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				float startX = 0.0f, startZ = 0.0f;
+				float endX = 0.0f, endZ = 0.0f;
+
+				bitStream.Read(messageID);
+				bitStream.Read(startX);
+				bitStream.Read(startZ);
+				bitStream.Read(endX);
+				bitStream.Read(endZ);
+
+				FlashBang::GetInstance().TrowFlash(DirectX::XMFLOAT3(startX, 0.0f, startZ), DirectX::XMFLOAT3(endX, 0.0f, endZ));
+
+				break;
+			}
 			default:
 			{
 				break;
@@ -1748,7 +1764,7 @@ void Network::AddFans(float p_x, float p_y, float p_z, float p_dirX, float p_dir
 	temp.id = p_id;
 	temp.guid = p_guid;
 	temp.speed = p_speed;
-	temp.lifeTime = FANBOOMERANG_COOLDOWN;
+	temp.lifeTime = FANBOOMERANG_DURATION;
 
 	for (unsigned int i = 0; i < m_fanList.size(); i++)
 	{
@@ -2500,16 +2516,6 @@ std::string Network::GetPlayerName(RakNet::RakNetGUID p_guid)
 		}
 	}
 	return "";
-}
-
-void Network::UpdatePlayerInvisAll(bool p_invis)
-{
-	m_myPlayer.invis = p_invis;
-
-	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-	{
-		m_enemyPlayers[i].invis = p_invis;
-	}
 }
 
 int Network::GetCharNr(RakNet::RakNetGUID p_guid)

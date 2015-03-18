@@ -51,6 +51,7 @@
 #define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N3_Ranged.png"
 #define ABILITY_KUNAI_VOLLEY_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N3_E.png"
 #define ABILITY_STICKY_TRAP_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_T_StickyTARP.png"
+#define ABILITY_FLASHBANG_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_T_FlashBang.png"
 
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/Ninjas/"
@@ -83,7 +84,8 @@
 #define DEATHBOARD_N3Q "../Shurikenjutsu/2DTextures/DeathBoard/n3q.png"
 #define DEATHBOARD_N3E "../Shurikenjutsu/2DTextures/DeathBoard/n3e.png"
 
-#define DEATHBOARD_CALPTROPS "../Shurikenjutsu/2DTextures/DeathBoard/TB_Caltrops.png"
+#define DEATHBOARD_CALPTROPS "../Shurikenjutsu/2DTextures/DeathBoard/caltrop.png"
+#define DEATHBOARD_SD_SMOKE "../Shurikenjutsu/2DTextures/DeathBoard/n1q.png"
 #define DEATHBOARD_KILLARROW "../Shurikenjutsu/2DTextures/DeathBoard/Unknown.png"
 
 // Runes

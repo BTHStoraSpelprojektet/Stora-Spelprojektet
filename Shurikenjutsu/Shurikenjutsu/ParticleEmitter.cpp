@@ -103,18 +103,24 @@ bool ParticleEmitter::Initialize(ID3D11Device* p_device, DirectX::XMFLOAT3 p_pos
 		}
 		case(PARTICLE_PATTERN_BLOODHIT) :
 		{
-			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f), 0.5f, 1.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/BloodParticle.png"));
+			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f), 0.8f, 2.0f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/BloodParticle.png"));
 			break;
 		}
 		case(PARTICLE_PATTERN_HEALING) :
 		{
-			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.3f, 0.1f, 0.3f), 3.0f, 1.0f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/HealingSparkle.png"));
+			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.6f, 0.5f, 0.6f), 3.0f, 1.0f, 0.75f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/HealingSparkle.png"));
 
 			break;
 		}
 		case(PARTICLE_PATTERN_SHIELD) :
 		{
 			InitParticles(75.0f, 100, DirectX::XMFLOAT3(0.0f, 0.5f, 0.0f), 2.5f, 0.5f, 0.5f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/ShieldParticle.png"));
+
+			break;
+		}
+		case(PARTICLE_PATTERN_FLASHBANG_SPARKS) :
+		{
+			InitParticles(140.0f, 75, DirectX::XMFLOAT3(0.75f, 0.1f, 0.75f), 1.0f, 0.1f, 0.25f, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Particles/flashbang_texture.png"));
 
 			break;
 		}
@@ -546,6 +552,28 @@ void ParticleEmitter::EmitParticles()
 					break;
 				}
 
+				case(PARTICLE_PATTERN_FLASHBANG_SPARKS) :
+				{
+					// Set a random direction in xz.
+					float angle = (((float)rand() - (float)rand()) / RAND_MAX) * 6.283185f;
+					DirectX::XMFLOAT3 direction = DirectX::XMFLOAT3(cos(angle), 0.0f, sin(angle));
+
+					// Randomize a color.
+					float color = (((float)rand() - (float)rand()) / RAND_MAX) * 0.05f;
+
+					m_particleList[index].m_position = position;
+					m_particleList[index].m_direction = direction;
+					m_particleList[index].m_color = DirectX::XMFLOAT4(m_color.x - color, m_color.y - color, m_color.z - color, 1.0f);
+					m_particleList[index].m_velocity = velocity;
+					m_particleList[index].m_alive = true;
+					m_particleList[index].m_timeToLive = m_timeToLive;
+					m_particleList[index].m_timePassed = 0.0f;
+					m_particleList[index].m_rotation = 0.0f;
+					m_particleList[index].m_opacity = 1.0f;
+
+					break;
+				}
+
 				default:
 				{
 					break;
@@ -856,6 +884,30 @@ void ParticleEmitter::UpdateParticles()
 
 			break;
 		}
+
+		case(PARTICLE_PATTERN_FLASHBANG_SPARKS) :
+		{
+			if (m_particleList != nullptr)
+			{
+				for (int i = 0; i < m_currentParticles; i++)
+				{
+					float halfTime = m_particleList[i].m_timeToLive * 0.5f;
+					float angle = 30.0f * (float)3.14159265359 / 180;
+					float height = 0.5f;
+					float ySpeed = (height + 0.5f * 9.82f * halfTime * halfTime) / (halfTime * sinf(angle));
+
+					// Fly in an arc in the given xz direction.
+					m_particleList[i].m_position.x = m_particleList[i].m_position.x + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.x;
+					m_particleList[i].m_position.y = (ySpeed * m_particleList[i].m_timePassed * sinf(angle) - 0.5f * 9.82f * m_particleList[i].m_timePassed * m_particleList[i].m_timePassed);
+					m_particleList[i].m_position.z = m_particleList[i].m_position.z + m_particleList[i].m_velocity * (float)GLOBAL::GetInstance().GetDeltaTime() * m_particleList[i].m_direction.z;
+
+					// Add time passed.
+					m_particleList[i].m_timePassed += (float)GLOBAL::GetInstance().GetDeltaTime();
+				}
+			}
+
+			break;
+		}
 										
 		default:
 		{
@@ -1123,6 +1175,12 @@ void ParticleEmitter::UpdateBuffers()
 			{
 				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
 
+				break;
+			}
+
+			case PARTICLE_PATTERN_FLASHBANG_SPARKS:
+			{
+				m_particleList[i].m_opacity = FadeOut(&m_particleList[i], 0.5f);
 				break;
 			}
 

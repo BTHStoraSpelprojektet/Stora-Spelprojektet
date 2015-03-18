@@ -464,6 +464,9 @@
     <ClCompile Include="FanMelee.cpp">
       <Filter>Source Files\Abilities</Filter>
     </ClCompile>
+    <ClCompile Include="FlashBangAbility.cpp">
+      <Filter>Source Files\Abilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h">
@@ -758,6 +761,9 @@
       <Filter>Header Files\Object\Tools</Filter>
     </ClInclude>
     <ClInclude Include="FanMelee.h">
+      <Filter>Header Files\Abilities</Filter>
+    </ClInclude>
+    <ClInclude Include="FlashBangAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
   </ItemGroup>

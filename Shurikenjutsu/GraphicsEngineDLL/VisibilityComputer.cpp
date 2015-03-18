@@ -3,6 +3,8 @@
 #include "VisibilityComputer.h"
 #include "GraphicsEngineDLL.h"
 #include "RenderTarget.h"
+#include "CompiledShaderReader.h"
+#include "ShaderGlobals.h"
 
 VisibilityComputer& VisibilityComputer::GetInstance()
 {
@@ -25,32 +27,11 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 
 	m_boundingBox = BoundingShape(Point(0.0f, 0.0f), Point(0.0f, 0.0f));
 
-	// Set variables to initial values.
-	ID3D10Blob*	vertexShader = 0;
-	ID3D10Blob*	errorMessage = 0;
-
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-		{
-			//ConsolePrintErrorAndQuit("Failed to compile shadow shapes vertex shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_VSVersion = "5.0";
-	}
+	std::string shaderPath = SHADER_PATH;
 
 	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	std::vector<unsigned char> compiledVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/ShadowShapes/SSVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledVertexShader.data(), compiledVertexShader.size(), NULL, &m_vertexShader)))
 	{
 		//ConsolePrintErrorAndQuit("Failed to create shadow shapes vertex shader.");
 		return false;
@@ -72,7 +53,7 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	size = sizeof(layout) / sizeof(layout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	if (FAILED(p_device->CreateInputLayout(layout, size, compiledVertexShader.data(), compiledVertexShader.size(), &m_layout)))
 	{
 		//ConsolePrintErrorAndQuit("Failed to create shadow shapes vertex input layout.");
 		return false;
@@ -81,36 +62,9 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 	//ConsolePrintSuccess("Shadow shapes vertex shader compiled successfully.");
 	//ConsolePrintText("Shader version: VS " + m_VSVersion);
 
-	// Release useless local shaders.
-	vertexShader->Release();
-	vertexShader = 0;
-
-	// Set variables to initial values.
-	ID3D10Blob*	pixelShader = 0;
-	errorMessage = 0;
-
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSPixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			//ConsolePrintErrorAndQuit("Failed to compile shadow shapes pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
 	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	std::vector<unsigned char> compiledPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/ShadowShapes/SSPixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledPixelShader.data(), compiledPixelShader.size(), NULL, &m_pixelShader)))
 	{
 		//ConsolePrintErrorAndQuit("Failed to create shadow shapes pixel shader");
 		return false;
@@ -118,10 +72,6 @@ bool VisibilityComputer::Initialize(ID3D11Device* p_device, int p_currentScreenW
 
 	//ConsolePrintSuccess("Shadow shapes pixel shader compiled successfully.");
 	//ConsolePrintText("Shader version: PS " + m_PSVersion);
-
-	// Release useless local variables.
-	pixelShader->Release();
-	pixelShader = 0;
 
 	// Create the matrix buffer description.
 	D3D11_BUFFER_DESC matrixBuffer;
@@ -306,10 +256,6 @@ void VisibilityComputer::CalculateVisibilityPolygon(Point p_viewerPosition, ID3D
 	// Update the mesh.
 	D3D11_MAPPED_SUBRESOURCE resource;
 	HRESULT temp = DLLGraphicsEngine::GE::GetInstance()->GetContext()->Map(m_mesh, 0, D3D11_MAP_WRITE_DISCARD, 0, &resource);
-	if (FAILED(temp))
-	{
-		int a = 0;
-	}
 	memcpy(resource.pData, m_vertices.data(), sizeof(DirectX::XMFLOAT3) * m_vertices.size());
 	DLLGraphicsEngine::GE::GetInstance()->GetContext()->Unmap(m_mesh, 0);
 }

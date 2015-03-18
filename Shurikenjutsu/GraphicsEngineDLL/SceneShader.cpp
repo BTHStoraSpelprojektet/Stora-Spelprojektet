@@ -4,155 +4,51 @@
 #include "VisibilityComputer.h"
 #include "..\CommonLibs\DirectXTex\WICTextureLoader\WICTextureLoader.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
+#include "CompiledShaderReader.h"
+#include "ShaderGlobals.h"
 
 bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_context)
 {
-	// Set variables to initial values.
-	ID3D10Blob*	vertexShader = 0;
-	ID3D10Blob*	sSReverseVertexShader = 0;
-	ID3D10Blob*	animatedVertexShader = 0;
-	ID3D10Blob*	vertexShaderOutlining = 0;
-	ID3D10Blob*	instanceShader = 0;
-	ID3D10Blob* lineVertexShader = 0;
-	ID3D10Blob*	errorMessage = 0;
+	// Create the vertex shaders.
+	std::string shaderPath = SHADER_PATH;
 
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
-			return false;
-		}
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-	else
-	{
-		m_VSVersion = "5.0";
-	}
-
-	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), NULL, &m_vertexShader)))
+	std::vector<unsigned char> compiledVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/VertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledVertexShader.data(), compiledVertexShader.size(), NULL, &m_vertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
 		return false;
 	}
 
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReverseVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &sSReverseVertexShader, &errorMessage)))
+	std::vector<unsigned char> compiledSSReverseVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/ShadowShapes/SSReverseVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledSSReverseVertexShader.data(), compiledSSReverseVertexShader.size(), NULL, &m_reversedShadowVertexShader)))
 	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReverseVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &sSReverseVertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
-			return false;
-		}
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-	else
-	{
-		m_VSVersion = "5.0";
-	}
-
-	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(sSReverseVertexShader->GetBufferPointer(), sSReverseVertexShader->GetBufferSize(), NULL, &m_reversedShadowVertexShader)))
-	{
-		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
+		ConsolePrintErrorAndQuit("Failed to create sSReverseVertexShader vertex shader.");
 		return false;
 	}
 
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/InstanceShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/InstanceShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &instanceShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile scene vertex shader from file.");
-			return false;
-		}
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-	else
-	{
-		m_VSVersion = "5.0";
-	}
-
-	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(instanceShader->GetBufferPointer(), instanceShader->GetBufferSize(), NULL, &m_instanceShader)))
+	std::vector<unsigned char> compiledInstanceVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/InstanceShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledInstanceVertexShader.data(), compiledInstanceVertexShader.size(), NULL, &m_instanceShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create instance vertex shader.");
 		return false;
 	}
 
-	// Compile the animated vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/AnimatedVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &animatedVertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile scene animated vertex shader from file.");
-			return false;
-		}
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-	else
-	{
-		m_VSVersion = "5.0";
-	}
-
-	// Create the animated vertex shader.
-	if (FAILED(p_device->CreateVertexShader(animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), NULL, &m_animatedVertexShader)))
+	std::vector<unsigned char> compiledAnimatedVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/AnimatedVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledAnimatedVertexShader.data(), compiledAnimatedVertexShader.size(), NULL, &m_animatedVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene animated vertex shader.");
 		return false;
 	}
 
-	// Compile the line vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LineVertexShader.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &lineVertexShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LineVertexShader.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &lineVertexShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile line vertex shader from file.");
-			return false;
-		}
-	}
-
-	// Create the line vertex shader.
-	if (FAILED(p_device->CreateVertexShader(lineVertexShader->GetBufferPointer(), lineVertexShader->GetBufferSize(), NULL, &m_lineVertexShader)))
+	std::vector<unsigned char> compiledLineVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Line/LineVertexShader.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledLineVertexShader.data(), compiledLineVertexShader.size(), NULL, &m_lineVertexShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create line vertex shader.");
 		return false;
 	}
 
-	// Compile the vertex shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/VertexShaderOutlining.hlsl", NULL, NULL, "main", "vs_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderOutlining, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile outlining vertex shader from file.");
-			return false;
-		}
-		else
-		{
-			m_VSVersion = "4.0";
-		}
-	}
-	else
-	{
-		m_VSVersion = "5.0";
-	}
-
-	// Create the vertex shader.
-	if (FAILED(p_device->CreateVertexShader(vertexShaderOutlining->GetBufferPointer(), vertexShaderOutlining->GetBufferSize(), NULL, &m_vertexShaderOutlining)))
+	std::vector<unsigned char> compiledOutliningVertexShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/VertexShaderOutlining.cso");
+	if (FAILED(p_device->CreateVertexShader(compiledOutliningVertexShader.data(), compiledOutliningVertexShader.size(), NULL, &m_vertexShaderOutlining)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex shader.");
 	}
@@ -197,7 +93,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	size = sizeof(layout) / sizeof(layout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(layout, size, vertexShader->GetBufferPointer(), vertexShader->GetBufferSize(), &m_layout)))
+	if (FAILED(p_device->CreateInputLayout(layout, size, compiledVertexShader.data(), compiledVertexShader.size(), &m_layout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex input layout.");
 		return false;
@@ -276,7 +172,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	instancedSize = sizeof(instanceLayout) / sizeof(instanceLayout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(instanceLayout, instancedSize, instanceShader->GetBufferPointer(), instanceShader->GetBufferSize(), &m_instanceLayout)))
+	if (FAILED(p_device->CreateInputLayout(instanceLayout, instancedSize, compiledInstanceVertexShader.data(), compiledInstanceVertexShader.size(), &m_instanceLayout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene vertex input layout.");
 		return false;
@@ -338,7 +234,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	animationSize = sizeof(animationLayout) / sizeof(animationLayout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(animationLayout, animationSize, animatedVertexShader->GetBufferPointer(), animatedVertexShader->GetBufferSize(), &m_animatedLayout)))
+	if (FAILED(p_device->CreateInputLayout(animationLayout, animationSize, compiledAnimatedVertexShader.data(), compiledAnimatedVertexShader.size(), &m_animatedLayout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene animated vertex input layout.");
 		return false;
@@ -359,7 +255,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	lineSize = sizeof(lineLayout) / sizeof(lineLayout[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(lineLayout, lineSize, lineVertexShader->GetBufferPointer(), lineVertexShader->GetBufferSize(), &m_lineLayout)))
+	if (FAILED(p_device->CreateInputLayout(lineLayout, lineSize, compiledLineVertexShader.data(), compiledLineVertexShader.size(), &m_lineLayout)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create line vertex input layout.");
 		return false;
@@ -400,7 +296,7 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	outlineSize = sizeof(layoutOutlining) / sizeof(layoutOutlining[0]);
 
 	// Create the vertex input layout.
-	if (FAILED(p_device->CreateInputLayout(layoutOutlining, outlineSize, vertexShaderOutlining->GetBufferPointer(), vertexShaderOutlining->GetBufferSize(), &m_layoutOutlining)))
+	if (FAILED(p_device->CreateInputLayout(layoutOutlining, outlineSize, compiledOutliningVertexShader.data(), compiledOutliningVertexShader.size(), &m_layoutOutlining)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create outline vertex input layout.");
 		return false;
@@ -409,103 +305,23 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("Outlining vertex shader compiled successfully.");
 	ConsolePrintText("Shader version: VS " + m_VSVersion);
 
-	// Release useless local shaders.
-	vertexShader->Release();
-	vertexShader = 0;
-	sSReverseVertexShader->Release();
-	sSReverseVertexShader = 0;
-	instanceShader->Release();
-	instanceShader = 0;
-	animatedVertexShader->Release();
-	animatedVertexShader = 0;
-	lineVertexShader->Release();
-	lineVertexShader = 0;
-	vertexShaderOutlining->Release();
-	vertexShaderOutlining = 0;
-
-	// Set variables to initial values.
-	ID3D10Blob*	pixelShader = 0;
-	ID3D10Blob*	reversePixelShader = 0;
-	ID3D10Blob*	linePixelShader = 0;
-	ID3D10Blob* pixelShaderOutlining = 0;
-	errorMessage = 0;
-
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile scene pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
-	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShader)))
+	// Create PixelShaders.
+	std::vector<unsigned char> compiledPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/PixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledPixelShader.data(), compiledPixelShader.size(), NULL, &m_pixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene pixel shader");
 		return false;
 	}
 
-	// Compile the pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShaderForward.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShaderForward.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile scene forward pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
-	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShader->GetBufferPointer(), pixelShader->GetBufferSize(), NULL, &m_pixelShaderForward)))
+	std::vector<unsigned char> compiledForwardPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/PixelShaderForward.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledForwardPixelShader.data(), compiledForwardPixelShader.size(), NULL, &m_pixelShaderForward)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create scene pixel shader");
 		return false;
 	}
 
-	// Compile the reversed shadow pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReversePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/ShadowShapes/SSReversePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &reversePixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile reversed shadow pixel shader from file.");
-			return false;
-		}
-
-		else
-		{
-			m_PSVersion = "4.0";
-		}
-	}
-
-	else
-	{
-		m_PSVersion = "5.0";
-	}
-
-	// Create the pixel shader.
-	if (FAILED(p_device->CreatePixelShader(reversePixelShader->GetBufferPointer(), reversePixelShader->GetBufferSize(), NULL, &m_reversedShadowPixelShader)))
+	std::vector<unsigned char> compiledReversePixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/ShadowShapes/SSReversePixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledReversePixelShader.data(), compiledReversePixelShader.size(), NULL, &m_reversedShadowPixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create reversed shadow pixel shader");
 		return false;
@@ -514,35 +330,15 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 	ConsolePrintSuccess("Reversed shadow pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
 
-	// Compile the line pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Line/LinePixelShader.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &linePixelShader, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile line pixel shader from file.");
-			return false;
-		}
-	}
-
-	// Create the line pixel shader.
-	if (FAILED(p_device->CreatePixelShader(linePixelShader->GetBufferPointer(), linePixelShader->GetBufferSize(), NULL, &m_linePixelShader)))
+	std::vector<unsigned char> compiledLinePixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Line/LinePixelShader.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledLinePixelShader.data(), compiledLinePixelShader.size(), NULL, &m_linePixelShader)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create line pixel shader");
 		return false;
 	}
 
-	// Compile the line pixel shader.
-	if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShaderOutlining.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderOutlining, &errorMessage)))
-	{
-		if (FAILED(D3DCompileFromFile(L"../Shurikenjutsu/Shaders/Scene/PixelShaderOutlining.hlsl", NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_4_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderOutlining, &errorMessage)))
-		{
-			ConsolePrintErrorAndQuit("Failed to compile line pixel shader from file.");
-			return false;
-		}
-	}
-
-	// Create the line pixel shader.
-	if (FAILED(p_device->CreatePixelShader(pixelShaderOutlining->GetBufferPointer(), pixelShaderOutlining->GetBufferSize(), NULL, &m_pixelShaderOutlining)))
+	std::vector<unsigned char> compiledOutliningPixelShader = CompiledShaderReader::ReadShaderData(shaderPath + "Shaders/Scene/PixelShaderOutlining.cso");
+	if (FAILED(p_device->CreatePixelShader(compiledOutliningPixelShader.data(), compiledOutliningPixelShader.size(), NULL, &m_pixelShaderOutlining)))
 	{
 		ConsolePrintErrorAndQuit("Failed to create line pixel shader");
 		return false;
@@ -550,15 +346,6 @@ bool SceneShader::Initialize(ID3D11Device* p_device, ID3D11DeviceContext* p_cont
 
 	ConsolePrintSuccess("Scene pixel shader compiled successfully.");
 	ConsolePrintText("Shader version: PS " + m_PSVersion);
-
-	pixelShader->Release();
-	pixelShader = 0;
-	reversePixelShader->Release();
-	reversePixelShader = 0;
-	linePixelShader->Release();
-	linePixelShader = 0;
-	pixelShaderOutlining->Release();
-	pixelShaderOutlining = 0;
 
 	// Create the rasterizer description.
 	D3D11_RASTERIZER_DESC rasterizer;
