@@ -32,9 +32,11 @@ public:
 	void SetObjectsInFrustumList(std::vector<Object*> p_objectsInFrustumList, std::vector<AnimatedObject*> p_animatedObjectList);
 	float CalculateOutliningRayDistance(Ray* p_ray);
 	float CalculatThrowDistanceChekcingOuterWalls(Ray* p_ray);
+	bool IntersectingObjectWhenAttacking(DirectX::XMFLOAT3 p_attackingPlayerPos, DirectX::XMFLOAT3 p_defendingPlayerPos, bool p_isThrowing);
 
-private:
-	//float CalculateDashLength(Ray* p_ray);
+private:	
+	bool RayOBBTest(Ray *p_ray, OBB p_Obb);
+	bool RaySphereTest(Ray *p_ray, Sphere p_sphere);
 	float AttackPredictionLengthCalculation(DirectX::XMFLOAT3 p_playerPos, DirectX::XMFLOAT3 p_direction, float p_lengthFromPlayer, bool p_throwStuff);
 
 	CollisionManager();

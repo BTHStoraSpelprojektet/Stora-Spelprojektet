@@ -566,16 +566,21 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 			break;
 		}
 
-		case ID_THROW_FLASHGRENADE:
+		case ABILITIES_THROW_FLASH:
 		{
 			RakNet::BitStream bitStream2;
 			bitStream2.Write((RakNet::MessageID)ID_THROW_FLASHGRENADE);
 
 			player = GetPlayer(p_guid);
+			float distance = p_distanceFromPlayer;
+			if (distance > FLASHBANG_RANGE)
+			{
+				distance = FLASHBANG_RANGE;
+			}
 			bitStream2.Write(player.x);
 			bitStream2.Write(player.z);
-			bitStream2.Write(player.x + player.dirX * p_distanceFromPlayer);
-			bitStream2.Write(player.z + player.dirZ * p_distanceFromPlayer);
+			bitStream2.Write(player.x + player.dirX * distance);
+			bitStream2.Write(player.z + player.dirZ * distance);
 
 			m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
 			break;

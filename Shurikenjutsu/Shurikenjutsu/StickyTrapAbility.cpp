@@ -14,6 +14,8 @@ bool StickyTrapAbility::Initialize()
 	SetCooldown(0.0f);
 	m_totalCooldown = STICKY_TRAP_COOLDOWN;
 	m_stacks = -1;
+	m_radius = STICKY_TRAP_RADIUS;
+	m_range = STICKY_TRAP_RANGE;
 	return true;
 }
 bool StickyTrapAbility::Execute(float p_distance)
@@ -26,4 +28,12 @@ bool StickyTrapAbility::Execute(float p_distance)
 	}
 
 	return false;
+}
+float StickyTrapAbility::GetRange()
+{
+	return m_range;
+}
+float StickyTrapAbility::GetRadius()
+{
+	return m_radius;
 }

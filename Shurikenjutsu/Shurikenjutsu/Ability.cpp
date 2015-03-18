@@ -98,3 +98,11 @@ void Ability::SetSound(Sound* p_sound)
 {
 	m_sound = p_sound;
 }
+float Ability::GetRange()
+{
+	return 0.0f;
+}
+float Ability::GetRadius()
+{
+	return 0.0f;
+}

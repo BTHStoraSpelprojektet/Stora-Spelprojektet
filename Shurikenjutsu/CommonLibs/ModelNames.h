@@ -51,6 +51,7 @@
 #define ABILITY_KUNAI_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N3_Ranged.png"
 #define ABILITY_KUNAI_VOLLEY_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_N3_E.png"
 #define ABILITY_STICKY_TRAP_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_T_StickyTARP.png"
+#define ABILITY_FLASHBANG_TEXTURE "../Shurikenjutsu/2DTextures/Abilities/TB_T_FlashBang.png"
 
 // Pictures
 #define NINJA_TEXTURE "../Shurikenjutsu/2DTextures/Ninjas/"
