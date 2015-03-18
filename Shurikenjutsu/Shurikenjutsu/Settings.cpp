@@ -110,7 +110,7 @@ void Settings::GenerateDefaultSettings()
 	names.push_back("Tamahi");
 	names.push_back("Sakae");
 	names.push_back("Hiromu");
-	names.push_back("Hiakri");
+	names.push_back("Hikari");
 	names.push_back("Itsuki");
 
 	srand((unsigned int)time(NULL));
