@@ -1244,7 +1244,10 @@ float CollisionManager::DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerN
 	// Go through player list
 	for (unsigned int i = 0; i < playerList.size(); i++)
 	{
-		if (playerList[i].guid != p_guid && playerList[i].team != team)
+		// Check so it isn't yourself
+		// Check so you are not on the same team
+		// Check so the player is still alive
+		if (playerList[i].guid != p_guid && playerList[i].team != team && playerList[i].isAlive)
 		{
 			// Get the players bounding boxes
 			std::vector<Box> playerBoundingBoxes = p_playerManager->GetBoundingBoxes(i);
