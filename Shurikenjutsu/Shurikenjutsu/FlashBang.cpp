@@ -114,7 +114,7 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 
 		/*m_flashbangs[i].m_particles->SetPosition(m_flashbangs[i].m_currentPosition);
 		m_flashbangs[i].m_particles->Update();*/
-		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, m_flashbangs[i].m_angle);
+		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, DirectX::XM_PIDIV2);
 
 		if (m_flashbangs[i].m_currentPosition.y < 0.0f)
 		{
