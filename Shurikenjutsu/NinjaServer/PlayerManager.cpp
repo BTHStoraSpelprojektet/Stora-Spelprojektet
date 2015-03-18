@@ -5,7 +5,6 @@
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
-
 #include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
@@ -14,7 +13,6 @@ PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
-//	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
 
 	m_serverPeer = p_serverPeer;
 
@@ -45,7 +43,6 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 
 	m_playerVisibility = std::map<RakNet::RakNetGUID, std::vector<int>>();
 	ResetTakenSpawnPoints();
-
 
 	return true;
 }
@@ -432,7 +429,7 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 	PlayerNet player;
 
 	int index = GetPlayerIndex(p_guid);
-	RakNet::BitStream l_bitStream;
+	RakNet::BitStream bitStream;
 
 	switch (p_readAbility)
 	{
@@ -450,11 +447,11 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 			SendPlaySound(PLAYSOUND::PLAYSOUND_DASH_STEPS_SOUND, player.x, player.y, player.z);
 			float dashDistance = p_collisionManager.CalculateDashRange(p_guid, player, this) - 1.0f;
 
-			l_bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
-			l_bitStream.Write(player.x + dashDistance * player.dirX);
-			l_bitStream.Write(player.y);
-			l_bitStream.Write(player.z + dashDistance * player.dirZ);
-			m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE, 3, p_guid, false);
+			bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
+			bitStream.Write(player.x + dashDistance * player.dirX);
+			bitStream.Write(player.y);
+			bitStream.Write(player.z + dashDistance * player.dirZ);
+			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, p_guid, false);
 			break;
 		}
 
@@ -575,11 +572,11 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 		}
 	}
 
-	RakNet::BitStream bitStream;
-	bitStream.Write((RakNet::MessageID)ID_ABILITY);
-	bitStream.Write(p_readAbility);
+	RakNet::BitStream bitStream2;
+	bitStream2.Write((RakNet::MessageID)ID_ABILITY);
+	bitStream2.Write(p_readAbility);
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 3, p_guid, false);
+	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 3, p_guid, false);
 }
 
 int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
