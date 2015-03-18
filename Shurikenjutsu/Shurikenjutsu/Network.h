@@ -158,6 +158,8 @@ public:
 
 	PlayerNet GetPlayerByGuid(RakNet::RakNetGUID p_guid);
 
+	void SendLobbyValues(int p_charNr, int p_toolNr, int p_team);
+	std::vector<LobbyPlayers> GetPlayersInLobby();
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
@@ -285,6 +287,6 @@ private:
 	std::vector<int> m_visibleEnemies;
 	std::vector<int> m_teamVisibleEnemies;
 
-	std::vector<int> m_bloodParticlesIndex;
+	std::vector<LobbyPlayers> m_lobbyPlayers;
 };
 #endif

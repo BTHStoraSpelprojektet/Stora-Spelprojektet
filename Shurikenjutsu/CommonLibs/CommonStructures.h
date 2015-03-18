@@ -394,4 +394,12 @@ struct DealtDamageStruct
 	float m_damage;
 	DirectX::XMFLOAT3 m_position;
 };
+
+struct LobbyPlayers
+{
+	int m_charNr;
+	int m_toolNr;
+	int m_team;
+	std::string m_name;
+};
 #endif

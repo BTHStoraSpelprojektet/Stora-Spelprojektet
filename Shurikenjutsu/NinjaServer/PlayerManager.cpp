@@ -44,6 +44,7 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 	m_playerVisibility = std::map<RakNet::RakNetGUID, std::vector<int>>();
 	ResetTakenSpawnPoints();
 
+	m_playersInLobby = std::map<RakNet::RakNetGUID, LobbyPlayers>();
 	return true;
 }
 
@@ -1163,6 +1164,46 @@ void PlayerManager::SendShieldValue(RakNet::RakNetGUID p_guid, float p_shield)
 	bitStream.Write((RakNet::MessageID)ID_SHIELD_UPDATE);
 	bitStream.Write(p_guid);
 	bitStream.Write(p_shield);
+
+	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void PlayerManager::SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team, std::string p_name)
+{
+	if (GetPlayerIndex(p_guid) != -1)
+	{
+		return;
+	}
+
+	LobbyPlayers lp;
+	lp.m_charNr = p_charNr;
+	lp.m_toolNr = p_toolNr;
+	lp.m_team = p_team;
+	lp.m_name = p_name;
+	
+	m_playersInLobby[p_guid] = lp;
+
+	SendPlayersInLobby();
+}
+
+void PlayerManager::SendPlayersInLobby()
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_LOBBY_CHOOSE);
+
+	unsigned int size = m_playersInLobby.size();
+	bitStream.Write(size);
+
+	for (std::map<RakNet::RakNetGUID, LobbyPlayers>::iterator it = m_playersInLobby.begin(); it != m_playersInLobby.end(); it++)
+	{
+		bitStream.Write(it->first);
+		bitStream.Write(it->second.m_charNr);
+		bitStream.Write(it->second.m_toolNr);
+		bitStream.Write(it->second.m_team);
+		
+		RakNet::RakString name = RakNet::RakString(it->second.m_name.c_str());
+		bitStream.Write(name);
+	}
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }

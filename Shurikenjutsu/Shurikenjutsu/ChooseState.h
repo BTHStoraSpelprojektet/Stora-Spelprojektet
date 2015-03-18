@@ -77,6 +77,7 @@ private:
 	float m_screenWidth;
 	bool m_isRandoming;
 	CurrentTeam m_currentTeam;
+	CurrentTeam m_prevTeam;
 	MenuButton* m_playButton;
 
 	Camera *m_camera;

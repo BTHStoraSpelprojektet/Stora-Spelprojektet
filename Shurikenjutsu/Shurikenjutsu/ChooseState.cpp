@@ -52,6 +52,7 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_questionMark = new MenuItem();
 
 	m_currentTeam = CURRENTTEAM_NONE;
+	m_prevTeam = CURRENTTEAM_NONE;
 	m_isRandoming = false;
 	m_screenHeight = (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT;
 	m_screenWidth = (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH;
@@ -391,6 +392,13 @@ GAMESTATESWITCH ChooseState::Update()
 		{
 			m_currentTeam = CURRENTTEAM_NONE;
 		}
+		else
+		{
+			if (m_currentTeam != m_prevTeam)
+			{
+				Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 1);
+			}
+		}
 	}
 	if (m_currentTeam == CURRENTTEAM_BLUE)
 	{
@@ -399,12 +407,24 @@ GAMESTATESWITCH ChooseState::Update()
 		{
 			m_currentTeam = CURRENTTEAM_NONE;
 		}
+		else
+		{
+			if (m_currentTeam != m_prevTeam)
+			{
+				Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 2);
+			}
+		}
 	}
 	if (m_currentTeam == CURRENTTEAM_NONE)
 	{
 		m_questionMark->SetPosition(0, m_screenHeight * 0.33f);
-	}
 
+		if (m_currentTeam != m_prevTeam)
+		{
+			Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 1);
+		}
+	}
+	m_prevTeam = m_currentTeam;
 
 	m_redTeamScore->SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
 	m_blueTeamScore->SetText(std::to_string(Network::GetInstance()->GetBlueTeamScore()));
@@ -513,6 +533,19 @@ void ChooseState::UpdateTeams()
 		else
 		{
 			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String());
+		}
+	}
+
+	std::vector<LobbyPlayers> tempLobbyList = Network::GetInstance()->GetPlayersInLobby();
+	for (unsigned int i = 0; i < tempLobbyList.size(); i++)
+	{
+		if (tempLobbyList[i].m_team == 1)
+		{
+			m_redTeam->AddTeamMate(tempLobbyList[i].m_charNr, tempLobbyList[i].m_toolNr, tempLobbyList[i].m_name);
+		}
+		else if(tempLobbyList[i].m_team == 2)
+		{
+			m_blueTeam->AddTeamMate(tempLobbyList[i].m_charNr, tempLobbyList[i].m_toolNr, tempLobbyList[i].m_name);
 		}
 	}
 }

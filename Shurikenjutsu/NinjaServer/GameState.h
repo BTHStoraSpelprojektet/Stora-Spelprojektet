@@ -46,6 +46,8 @@ public:
 
 	void SendCurrentRunes(RakNet::RakNetGUID p_guid);
 
+	void SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team, std::string p_name);
+
 protected:
 	void UpdateTime(double p_deltaTime);
 	void ResetTime();

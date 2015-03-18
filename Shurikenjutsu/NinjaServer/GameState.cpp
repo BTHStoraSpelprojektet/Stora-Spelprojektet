@@ -336,3 +336,8 @@ void GameState::SendCurrentRunes(RakNet::RakNetGUID p_guid)
 {
 	m_POIManager->DownloadRunes(p_guid);
 }
+
+void GameState::SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team, std::string p_name)
+{
+	m_playerManager->SetPlayerInLobby(p_guid, p_charNr, p_toolNr, p_team, p_name);
+}

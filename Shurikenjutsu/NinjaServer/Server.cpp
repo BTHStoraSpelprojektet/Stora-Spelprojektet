@@ -300,6 +300,23 @@ void Server::ReceviePacket()
 
 			break;
 		}
+		case ID_LOBBY_CHOOSE:
+		{
+			RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+			int charNr, toolNr, team;
+			RakNet::RakString name;
+
+			bitStream.Read(messageID);
+			bitStream.Read(charNr);
+			bitStream.Read(toolNr);
+			bitStream.Read(team);
+			bitStream.Read(name);
+
+			m_gameState->SetPlayerInLobby(m_packet->guid, charNr, toolNr, team, name.C_String());
+
+			break;
+		}
 		default:
 			break;
 		}

@@ -8,6 +8,7 @@
 #include "..\CommonLibs\Level.h"
 #include "..\CommonLibs\ModelLibrary.h"
 #include "..\CommonLibs\CommonEnums.h"
+#include "..\CommonLibs\CommonStructures.h"
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "CollisionManager.h"
 #include "ShurikenManager.h"
@@ -73,7 +74,11 @@ public:
 	bool GetInvis(RakNet::RakNetGUID p_guid);
 
 	void ResetPOIEffects();
+
+	void SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team, std::string p_name);
+	void SendPlayersInLobby();
 private:	
+
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
 	LevelImporter::SpawnPoint GetSpawnPoint(RakNet::RakNetGUID p_guid, int p_team);
 	void UpdateHealth(RakNet::RakNetGUID p_guid, float p_health, bool p_isAlive);
@@ -116,8 +121,8 @@ private:
 	bool m_haveSentHotDamage;
 
 	std::map<RakNet::RakNetGUID, std::vector<int>> m_playerVisibility;
-
 	std::map<RakNet::RakNetGUID, int> m_takenSpawnPoints;
+	std::map<RakNet::RakNetGUID, LobbyPlayers> m_playersInLobby;
 };
 
 #endif

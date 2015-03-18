@@ -75,6 +75,7 @@ void Network::InitValues()
 	m_fanList = std::vector<FanNet>();
 	m_visibleEnemies = std::vector<int>();
 	m_teamVisibleEnemies = std::vector<int>();
+	m_lobbyPlayers = std::vector<LobbyPlayers>();
 
 	m_connectionCount = 0;
 	m_previousCount = 0;
@@ -1350,6 +1351,42 @@ void Network::ReceviePacket()
 				bitStream.Read(endZ);
 
 				FlashBang::GetInstance().TrowFlash(DirectX::XMFLOAT3(startX, 0.0f, startZ), DirectX::XMFLOAT3(endX, 0.0f, endZ));
+
+				break;
+			}
+			case ID_LOBBY_CHOOSE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+
+				unsigned int size;
+				int charNr, toolNr, team;
+				RakNet::RakString name;
+				RakNet::RakNetGUID guid;
+
+				m_lobbyPlayers.clear();
+
+				bitStream.Read(messageID);
+				bitStream.Read(size);
+
+				for (unsigned int i = 0; i < size; i++)
+				{
+					bitStream.Read(guid);
+					bitStream.Read(charNr);
+					bitStream.Read(toolNr);
+					bitStream.Read(team);
+					bitStream.Read(name);
+
+					LobbyPlayers lp;
+					lp.m_charNr = charNr;
+					lp.m_toolNr = toolNr;
+					lp.m_team = team;
+					lp.m_name = name.C_String();
+
+					if (guid != GetMyGUID())
+					{
+						m_lobbyPlayers.push_back(lp);
+					}
+				}
 
 				break;
 			}
@@ -2723,4 +2760,24 @@ void Network::UpdateShieldValue(RakNet::RakNetGUID p_guid, float p_shieldValue)
 			}
 		}
 	}
+}
+
+void Network::SendLobbyValues(int p_charNr, int p_toolNr, int p_team)
+{
+	RakNet::BitStream bitStream;
+
+	bitStream.Write((RakNet::MessageID)ID_LOBBY_CHOOSE);
+	bitStream.Write(p_charNr);
+	bitStream.Write(p_toolNr);
+	bitStream.Write(p_team);
+
+	RakNet::RakString name = RakNet::RakString(m_playerName.c_str());
+	bitStream.Write(name);
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+std::vector<LobbyPlayers> Network::GetPlayersInLobby()
+{
+	return m_lobbyPlayers;
 }
