@@ -294,7 +294,7 @@ void ScoreBoard::Render()
 		it->second.name.Render();
 		//if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
 		//{
-		m_deadRedPlayers[index]->SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * (index)), 0.0f));
+		m_deadBluePlayers[index]->SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * (index)), 0.0f));
 			m_deadBluePlayers[index]->QueueRender();
 		//}
 		index++;

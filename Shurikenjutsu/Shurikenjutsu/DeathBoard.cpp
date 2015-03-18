@@ -201,7 +201,7 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 	m_background[m_nrOfDeaths].SetPosition(pos);
 	m_background[m_nrOfDeaths].SetSize(size);
 
-	/*switch (p_abilityUsed)
+	switch (p_abilityUsed)
 	{
 	case ABILITIES_MELEESWING:
 		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_N1MELEE));	
@@ -248,7 +248,7 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 	default:
 		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
-	}*/
+	}
 
 }
 
