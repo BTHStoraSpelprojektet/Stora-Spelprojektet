@@ -71,7 +71,7 @@ private:
 	float m_emitBorderLeft;
 
 	float m_globalWindAngleDegree = 0;
-	float m_globalWindSpeed = 5.0f;
+	float m_globalWindSpeed = 50.0f;
 
 	struct Particle
 	{
