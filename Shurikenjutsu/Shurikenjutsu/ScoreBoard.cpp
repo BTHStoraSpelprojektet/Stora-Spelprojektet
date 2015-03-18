@@ -245,7 +245,7 @@ void ScoreBoard::ResizeBlueColorList()
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_blueColorPlayers.begin(); it != m_blueColorPlayers.end(); it++)
 	{
 		m_blueColorPlayers[it->first].portrait.SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index), 0.0f));
-		m_deadBluePlayers[index]->SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index), 0.0f));
+		m_deadBluePlayers[(unsigned int)index]->SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index), 0.0f));
 		m_blueColorPlayers[it->first].name.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index));
 		m_blueColorPlayers[it->first].ninjaText.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * index));
 		index++;
@@ -258,7 +258,7 @@ void ScoreBoard::ResizeRedColorList()
 	for (std::map<RakNet::RakNetGUID, Ninja>::iterator it = m_redColorPlayers.begin(); it != m_redColorPlayers.end(); it++)
 	{
 		m_redColorPlayers[it->first].portrait.SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * (index)), 0.0f));
-		m_deadRedPlayers[index]->SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * index), 0.0f));
+		m_deadRedPlayers[(unsigned int)index]->SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * index), 0.0f));
 		m_redColorPlayers[it->first].name.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 50.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * index));
 		m_redColorPlayers[it->first].ninjaText.SetPosition(-m_boardWidth / 2 + m_portraitWidth + 300.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * index));
 		index++;
@@ -277,10 +277,11 @@ void ScoreBoard::Render()
 		it->second.portrait.QueueRender();
 		it->second.ninjaText.Render();
 		it->second.name.Render();
-		if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
-		{
+		//if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
+		//{
+		m_deadRedPlayers[index]->SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 97.0f - (60.0f * (index)), 0.0f));
 			m_deadRedPlayers[index]->QueueRender();
-		}
+		//}
 		index++;
 	}
 
@@ -291,10 +292,11 @@ void ScoreBoard::Render()
 		it->second.portrait.QueueRender();
 		it->second.ninjaText.Render();
 		it->second.name.Render();
-		if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
-		{
+		//if (!Network::GetInstance()->GetPlayerByGuid(it->first).isAlive)
+		//{
+		m_deadRedPlayers[index]->SetPosition(DirectX::XMFLOAT3(-m_boardWidth / 2 + m_portraitWidth / 2 + 25.0f, m_boardHeight / 2 - m_portraitHeight / 2 - 367.0f - (60.0f * (index)), 0.0f));
 			m_deadBluePlayers[index]->QueueRender();
-		}
+		//}
 		index++;
 	}
 }

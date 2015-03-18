@@ -11,6 +11,7 @@
 #include "AttackPredictionEditor.h"
 #include "ParticleRenderer.h"
 #include "Globals.h"
+#include "AbilityBar.h"
 
 TessenNinja::TessenNinja(){}
 TessenNinja::~TessenNinja(){}
@@ -52,6 +53,7 @@ bool TessenNinja::Initialize(DirectX::XMFLOAT3 p_pos, DirectX::XMFLOAT3 p_direct
 	SetOriginalSpeed(GetSpeed());
 	SetHealth(CHARACTER_TESSEN_HEALTH);
 	SetMaxHealth(CHARACTER_TESSEN_HEALTH);
+	m_whipSpinPerformed = false;
 
 	return true;
 }
@@ -128,5 +130,111 @@ void TessenNinja::RenderAttackLocations()
 				StillCDText();
 			}
 		}
+	}
+}
+void TessenNinja::CheckForSpecialAttack()
+{
+	if (m_onPressed)
+	{
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+		{
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_rangeSpecialAttack;
+				m_whipSpinPerformed = true;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
+		{
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+		{
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_toolAbility;
+			}
+		}
+	}
+	else
+	{
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('e')))
+		{
+			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_rangeSpecialAttack;
+				m_whipSpinPerformed = true;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('q')))
+		{
+			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_meleeSpecialAttack;
+			}
+		}
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('r')))
+		{
+			if ((float)m_toolAbility->GetCooldown() <= 0.0f)
+			{
+				m_ability = m_toolAbility;
+			}
+		}
+	}
+}
+void TessenNinja::UpdateAbilityBar()
+{
+	if (m_whipSpinPerformed)
+	{
+		m_globalCooldown = WHIP_SP_GLOBAL_COOLDOWN;
+		m_maxGlobalCooldown = WHIP_SP_GLOBAL_COOLDOWN;
+		m_whipSpinPerformed = false;
+	}
+	else if (m_globalCooldown < 0)
+	{
+		m_maxGlobalCooldown = ALL_AROUND_GLOBAL_COOLDOWN;
+	}
+	if ((float)m_meleeAttack->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_meleeAttack->GetCooldown(), m_meleeAttack->GetTotalCooldown(), m_meleeAttack->GetStacks(), 0);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeAttack->GetStacks(), 0);
+	}
+	if ((float)m_rangeAttack->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_rangeAttack->GetCooldown(), m_rangeAttack->GetTotalCooldown(), m_rangeAttack->GetStacks(), 1);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeAttack->GetStacks(), 1);
+	}
+	if ((float)m_meleeSpecialAttack->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_meleeSpecialAttack->GetCooldown(), m_meleeSpecialAttack->GetTotalCooldown(), m_meleeSpecialAttack->GetStacks(), 2);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_meleeSpecialAttack->GetStacks(), 2);
+	}
+	if ((float)m_rangeSpecialAttack->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_rangeSpecialAttack->GetCooldown(), m_rangeSpecialAttack->GetTotalCooldown(), m_rangeSpecialAttack->GetStacks(), 3);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_rangeSpecialAttack->GetStacks(), 3);
+	}
+	if ((float)m_toolAbility->GetCooldown() > 0.0f)
+	{
+		m_abilityBar->Update((float)m_toolAbility->GetCooldown(), m_toolAbility->GetTotalCooldown(), m_toolAbility->GetStacks(), 4);
+	}
+	else
+	{
+		m_abilityBar->Update(m_globalCooldown, m_maxGlobalCooldown, m_toolAbility->GetStacks(), 4);
 	}
 }

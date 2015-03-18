@@ -7,6 +7,7 @@
 #include "..\CommonLibs\GameplayGlobalVariables.h"
 #include "ScoreBoard.h"
 #include "POIGrapichalEffects.h"
+#include "FlashBang.h"
 
 Network* Network::m_instance;
 
@@ -419,7 +420,6 @@ void Network::ReceviePacket()
 				bitStream.Read(z);
 
 				RespawnPlayer(x, y, z);
-				UpdatePlayerInvisAll(false);
 
 				break;
 			}
@@ -1334,6 +1334,22 @@ void Network::ReceviePacket()
 				bitStream.Read(shieldValue);
 
 				UpdateShieldValue(guid, shieldValue);
+
+				break;
+			}
+			case ID_THROW_FLASHGRENADE:
+			{
+				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
+				RakNet::RakNetGUID guid;
+				float startX, startZ;
+				float endX, endZ;
+
+				bitStream.Read(startX);
+				bitStream.Read(startZ);
+				bitStream.Read(endX);
+				bitStream.Read(endZ);
+
+				FlashBang::GetInstance().TrowFlash(DirectX::XMFLOAT3(startX, 0.0f, startZ), DirectX::XMFLOAT3(endX, 0.0f, endZ));
 
 				break;
 			}
@@ -2500,16 +2516,6 @@ std::string Network::GetPlayerName(RakNet::RakNetGUID p_guid)
 		}
 	}
 	return "";
-}
-
-void Network::UpdatePlayerInvisAll(bool p_invis)
-{
-	m_myPlayer.invis = p_invis;
-
-	for (unsigned int i = 0; i < m_enemyPlayers.size(); i++)
-	{
-		m_enemyPlayers[i].invis = p_invis;
-	}
 }
 
 int Network::GetCharNr(RakNet::RakNetGUID p_guid)

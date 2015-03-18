@@ -5,7 +5,6 @@
 #include "StickyTrapManager.h"
 #include "VolleyManager.h"
 #include "..\CommonLibs\ConsoleFunctions.h"
-
 #include "..\CommonLibs\ModelNames.h"
 
 PlayerManager::PlayerManager(){}
@@ -14,7 +13,6 @@ PlayerManager::~PlayerManager(){}
 bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::string p_levelName)
 {
 	m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
-//	m_gcd = ALL_AROUND_GLOBAL_COOLDOWN;
 
 	m_serverPeer = p_serverPeer;
 
@@ -45,7 +43,6 @@ bool PlayerManager::Initialize(RakNet::RakPeerInterface *p_serverPeer, std::stri
 
 	m_playerVisibility = std::map<RakNet::RakNetGUID, std::vector<int>>();
 	ResetTakenSpawnPoints();
-
 
 	return true;
 }
@@ -367,7 +364,7 @@ LevelImporter::SpawnPoint PlayerManager::GetSpawnPoint(RakNet::RakNetGUID p_guid
 			}
 
 			if (taken)
-		{
+			{
 				continue;
 			}
 			m_takenSpawnPoints[p_guid] = i;
@@ -423,7 +420,7 @@ std::vector<Box> PlayerManager::GetBoundingBoxes(int p_index)
 	return boundingBoxes;
 }
 
-void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager)
+void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid, ABILITIES p_readAbility, CollisionManager &p_collisionManager, ShurikenManager &p_shurikenManager, SmokeBombManager &p_smokebomb, SpikeManager &p_spikeTrap, FanBoomerangManager &p_fanBoomerang, ProjectileManager &p_projectileManager, StickyTrapManager &p_stickyTrapManager, VolleyManager &p_volleyManager, float p_distanceFromPlayer)
 {
 	float smokeBombDistance = p_smokebomb.GetCurrentDistanceFromPlayer();
 	float spikeTrapDistance = p_spikeTrap.GetCurrentDistanceFromPlayer();
@@ -432,7 +429,7 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 	PlayerNet player;
 
 	int index = GetPlayerIndex(p_guid);
-	RakNet::BitStream l_bitStream;
+	RakNet::BitStream bitStream;
 
 	switch (p_readAbility)
 	{
@@ -450,11 +447,11 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 			SendPlaySound(PLAYSOUND::PLAYSOUND_DASH_STEPS_SOUND, player.x, player.y, player.z);
 			float dashDistance = p_collisionManager.CalculateDashRange(p_guid, player, this) - 1.0f;
 
-			l_bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
-			l_bitStream.Write(player.x + dashDistance * player.dirX);
-			l_bitStream.Write(player.y);
-			l_bitStream.Write(player.z + dashDistance * player.dirZ);
-			m_serverPeer->Send(&l_bitStream, HIGH_PRIORITY, RELIABLE, 3, p_guid, false);
+			bitStream.Write((RakNet::MessageID)ID_DASH_TO_LOCATION);
+			bitStream.Write(player.x + dashDistance * player.dirX);
+			bitStream.Write(player.y);
+			bitStream.Write(player.z + dashDistance * player.dirZ);
+			m_serverPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE, 3, p_guid, false);
 			break;
 		}
 
@@ -569,17 +566,32 @@ void PlayerManager::ExecuteAbility(float p_deltaTime, RakNet::RakNetGUID p_guid,
 			break;
 		}
 
+		case ID_THROW_FLASHGRENADE:
+		{
+			RakNet::BitStream bitStream2;
+			bitStream2.Write((RakNet::MessageID)ID_THROW_FLASHGRENADE);
+
+			player = GetPlayer(p_guid);
+			bitStream2.Write(player.x);
+			bitStream2.Write(player.z);
+			bitStream2.Write(player.x + player.dirX * p_distanceFromPlayer);
+			bitStream2.Write(player.z + player.dirZ * p_distanceFromPlayer);
+
+			m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, RELIABLE, 3, RakNet::UNASSIGNED_RAKNET_GUID, true);
+			break;
+		}
+
 		default:
 		{
 			break;
 		}
 	}
 
-	RakNet::BitStream bitStream;
-	bitStream.Write((RakNet::MessageID)ID_ABILITY);
-	bitStream.Write(p_readAbility);
+	RakNet::BitStream bitStream2;
+	bitStream2.Write((RakNet::MessageID)ID_ABILITY);
+	bitStream2.Write(p_readAbility);
 
-	m_serverPeer->Send(&bitStream, HIGH_PRIORITY, UNRELIABLE, 3, p_guid, false);
+	m_serverPeer->Send(&bitStream2, HIGH_PRIORITY, UNRELIABLE, 3, p_guid, false);
 }
 
 int PlayerManager::GetPlayerIndex(RakNet::RakNetGUID p_guid)
@@ -603,6 +615,8 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 		{
 			// STop healing POI, and send message to stop effect.
 			m_players[i].hotHeal = 0.0f;
+			m_players[i].invis = false;
+
 			if (m_players[i].hasHealPOI)
 			{
 				m_players[i].hasHealPOI = false;
@@ -616,7 +630,6 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 				m_players[i].shield = 0.0f;
 				SendShieldValue(m_players[i].guid, m_players[i].shield);
 			}
-
 			else
 			{
 				m_players[i].currentHP -= p_damage;
@@ -682,6 +695,7 @@ void PlayerManager::HealPlayer()
 		{
 			if (m_players[i].hotHeal > 0.0)
 			{
+				m_players[i].invis = false;
 				m_players[i].currentHP += m_players[i].hotHeal;
 
 				if (m_players[i].currentHP > m_players[i].maxHP)

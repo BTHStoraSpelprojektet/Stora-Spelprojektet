@@ -26,7 +26,7 @@ public:
 	virtual StatusEffect* GetStatusEffect();
 	virtual void ResetCooldown();
 	virtual int GetStacks();
-	void Ability::setSound(Sound* p_sound);
+	void SetSound(Sound* p_sound);
 
 protected:
 	float m_damage;

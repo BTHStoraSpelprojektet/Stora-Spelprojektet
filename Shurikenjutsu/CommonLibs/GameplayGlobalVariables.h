@@ -25,7 +25,7 @@ const float CHARACTER_KATANA_SHURIKEN_SPEED = 10.0f;
 // Katana M1
 const float KATANA_DAMAGE = 30.0f;
 const float KATANA_RANGE = 3.0f;
-const float KATANA_COOLDOWN = 0.5f;
+const float KATANA_COOLDOWN = 0.7f;
 
 //Shuriken M2
 const float SHURIKEN_DAMAGE = 15.0f;
@@ -77,6 +77,7 @@ const float FANBOOMERANG_SPEED = 17.0f;
 const float WHIP_SP_DAMAGE = 25.0f;
 const float WHIP_SP_COOLDOWN = 5.0f;
 const float WHIP_SP_RANGE = 7.0f;
+const float WHIP_SP_GLOBAL_COOLDOWN = 1.0f;
 
 
 ///////////////////////////////////////////////////////////////////
@@ -115,7 +116,7 @@ const float NAGINATASTAB_DURATION = 1.5f;
 // Volley E
 const float VOLLEY_DAMAGE = 40.0f;
 const float VOLLEY_COOLDOWN = 4.0f;
-const float VOLLEY_RANGE = 15.0f;
+const float VOLLEY_RANGE = 20.0f;
 const float VOLLEY_RADIUS = 0.5f;
 const float VOLLEY_GRAVITY = 3.5f;
 const float VOLLEY_HEIGHT = 15.0f;
@@ -131,7 +132,7 @@ const float SMOKEBOMB_DAMAGE = 0.0f;
 const float SMOKEBOMB_COOLDOWN = 6.0f;
 const float SMOKEBOMB_SPEED = 30.0f;
 
-const float SMOKEBOMB_RANGE = 15.0f;
+const float SMOKEBOMB_RANGE = 20.0f;
 const float SMOKEBOMB_POSITION_Y = 4.0f;
 const float SMOKEBOMB_DIRECTION_X = 0.0f;
 const float SMOKEBOMB_DIRECTION_Y = 1.0f;
@@ -142,7 +143,7 @@ const float SMOKEBOMB_SIZE_Y = 3.0f;
 // Spike Trap
 const float SPIKE_DAMAGE = 3.0f;
 const float SPIKE_COOLDOWN = 6.0f;
-const float SPIKE_RANGE = 15.0f;
+const float SPIKE_RANGE = 20.0f;
 const float SPIKE_DURATION = 20.0f;
 const float SPIKE_SPEED = 30.0f;
 const float SPIKE_SIZE_X = 3.0f;
@@ -151,7 +152,7 @@ const float SPIKE_RADIUS = 1.3f;
 // Sticky Trap
 const float STICKY_TRAP_DAMAGE = 0.0f;
 const float STICKY_TRAP_COOLDOWN = 6.0f;
-const float STICKY_TRAP_RANGE = 15.0f;
+const float STICKY_TRAP_RANGE = 20.0f;
 const float STICKY_TRAP_DURATION = 20.0f;
 const float STICKY_TRAP_SPEED = 30.0f;
 const float STICKY_TRAP_SIZE_X = 3.0f;
@@ -160,6 +161,8 @@ const float STICKY_TRAP_SLOW_PRECENTAGE = 0.5f;
 
 // Flashbang.
 const float FLASHBANG_HOLD_TIME = 3.0f;
+const float FLASHBANG_COOLDOWN = 3.0f;
+const float FLASHBANG_DAMAGE = 0.0f;
 
 
 ///////////////////////////////////////////////////////////////////
