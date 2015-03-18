@@ -54,17 +54,17 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 	case ABILITIES_MELEESWING:
 		range = KATANA_RANGE;
 		damage = KATANA_DAMAGE;
-		attackAngle = 0.74f;
+		attackAngle = KATANA_ATTACKANGLE;
 		break;
 	case ABILITIES_FANMELEE:
 		range = FANMELEE_RANGE;
 		damage = FANMELEE_DAMAGE;
-		attackAngle = 0.74f;
+		attackAngle = FANMELEE_ATTACKANGLE;
 		break;
 	case ABILITIES_NAGINATASLASH:
 		range = NAGINATA_RANGE;
 		damage = NAGINATA_DAMAGE;
-		attackAngle = 0.74f;
+		attackAngle = NAGINATA_ATTACKANGLE;
 		break;
 	default:
 		range = 0;
@@ -101,8 +101,8 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerPos.x - attackingPlayerPos.x, 0.0f, defendingPlayerPos.z - attackingPlayerPos.z);
 		//Ta reda på den jävla vinkel hellvetet... -.-' om den är inom vissa parametrar så kör nästa beräkning
 		// Make collision test
-		if (IntersectionTests::Intersections::SphereBoxCollision(attackingPlayerPos, range, defendingPlayerPos, defendingPlayerBoxExtents))
-		{//IntersectionTests::Intersections::MeleeAttackCollision(attackingPlayerPos, range, attackDirection, defendingPlayerPos, defendingPlayerBoxExtents, range)
+		if (IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerPos, range, defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE))
+		{
 			DirectX::XMFLOAT3 A = attackDirection;
 			float aLength = sqrt(A.x * A.x + A.z * A.z);
 			DirectX::XMFLOAT3 B = vectorFromAttackerToDefender;
@@ -113,7 +113,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 
 			if (angle < attackAngle)
 			{
-				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos, true))
+				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos, false))
 				{
 					// Damage the player
 					p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid, p_ability, false);
