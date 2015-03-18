@@ -66,8 +66,10 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_toolHeight = 50.0f;
 	m_nrOfNinjas = 3;
 	m_currentNinja = 0;
+	m_prevNinja = 0;
 	m_nrOfTools = 4;
 	m_currentTool = 0;
+	m_prevTool = 0;
 	m_prevRandomNumber = 0;
 	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
 	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
@@ -394,7 +396,7 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		else
 		{
-			if (m_currentTeam != m_prevTeam)
+			if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool)
 			{
 				Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 1);
 			}
@@ -409,7 +411,7 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		else
 		{
-			if (m_currentTeam != m_prevTeam)
+			if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool)
 			{
 				Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 2);
 			}
@@ -419,12 +421,14 @@ GAMESTATESWITCH ChooseState::Update()
 	{
 		m_questionMark->SetPosition(0, m_screenHeight * 0.33f);
 
-		if (m_currentTeam != m_prevTeam)
+		if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool)
 		{
-			Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 1);
+			Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 0);
 		}
 	}
 	m_prevTeam = m_currentTeam;
+	m_prevNinja = m_currentNinja;
+	m_prevTool = m_currentTool;
 
 	m_redTeamScore->SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
 	m_blueTeamScore->SetText(std::to_string(Network::GetInstance()->GetBlueTeamScore()));

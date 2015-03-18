@@ -70,8 +70,10 @@ private:
 	GUIText* m_blueTeamScore;
 	std::vector<GUIText*> m_keyBinds;
 	int m_currentNinja;
+	int m_prevNinja;
 	int m_nrOfNinjas;
 	int m_currentTool;
+	int m_prevTool;
 	int m_nrOfTools;
 	float m_screenHeight;
 	float m_screenWidth;

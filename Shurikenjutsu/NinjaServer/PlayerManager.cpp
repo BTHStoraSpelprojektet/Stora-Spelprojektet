@@ -105,6 +105,8 @@ std::vector<PlayerNet> PlayerManager::GetPlayers()
 
 void PlayerManager::AddPlayer(RakNet::RakNetGUID p_guid, RakNet::RakString p_name, int p_charNr, int p_toolNr, int p_team)
 {
+	RemovePlayerInLobby(p_guid);
+
 	if (p_charNr == 0)
 	{
 		m_playerHealth = CHARACTER_KATANA_SHURIKEN_HEALTH;
@@ -258,6 +260,8 @@ void PlayerManager::RemovePlayer(RakNet::RakNetGUID p_guid)
 			break;
 		}
 	}
+
+	RemovePlayerInLobby(p_guid);
 }
 
 void PlayerManager::BroadcastPlayers()
@@ -1183,6 +1187,15 @@ void PlayerManager::SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, in
 	
 	m_playersInLobby[p_guid] = lp;
 
+	SendPlayersInLobby();
+}
+
+void PlayerManager::RemovePlayerInLobby(RakNet::RakNetGUID p_guid)
+{
+	if (m_playersInLobby.find(p_guid) != m_playersInLobby.end())
+	{
+		m_playersInLobby.erase(p_guid);
+	}
 	SendPlayersInLobby();
 }
 
