@@ -88,7 +88,7 @@ void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p
 	newBomb.m_particles->SetEmitParticleState(true);*/
 
 	newBomb.m_trail = new Trail();
-	if (!newBomb.m_trail->Initialize(50.0f, 0.2f, 0.05f, DirectX::XMFLOAT4(0.83f, 0.86f, 0.06f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
+	if (!newBomb.m_trail->Initialize(50.0f, 0.2f, 0.1f, DirectX::XMFLOAT4(0.83f, 0.86f, 0.06f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
 	{
 		ConsolePrintErrorAndQuit("A flashbang trail failed to initialize!");
 	}
@@ -109,12 +109,12 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 		float z = m_flashbangs[i].m_speed * m_flashbangs[i].m_timePassed * cosf(m_flashbangs[i].m_angle) * m_flashbangs[i].m_percentZ;
 
 		m_flashbangs[i].m_currentPosition.x = m_flashbangs[i].m_startPosition.x + x;
-		m_flashbangs[i].m_currentPosition.y = m_flashbangs[i].m_startPosition.y + 3.5f * y;
+		m_flashbangs[i].m_currentPosition.y = m_flashbangs[i].m_startPosition.y + 5.0f * y;
 		m_flashbangs[i].m_currentPosition.z = m_flashbangs[i].m_startPosition.z + z;
 
 		/*m_flashbangs[i].m_particles->SetPosition(m_flashbangs[i].m_currentPosition);
 		m_flashbangs[i].m_particles->Update();*/
-		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, DirectX::XM_PIDIV2);
+		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, atan2(m_flashbangs[i].m_percentZ, m_flashbangs[i].m_percentX));
 
 		if (m_flashbangs[i].m_currentPosition.y < 0.0f)
 		{
