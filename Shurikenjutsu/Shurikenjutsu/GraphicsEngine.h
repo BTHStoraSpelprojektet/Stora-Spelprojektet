@@ -133,12 +133,14 @@ public:
 	static void SetRenderTargetsForGBuffers();
 
 	static void Composition();
+	static void CompositionForward();
 	static void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
 
 	static void SetForwardRenderTarget();
 
 	static void RenderSSAO();
 	static void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
+	static void ClearSSAO();
 
 	static void ApplyDOF();
 

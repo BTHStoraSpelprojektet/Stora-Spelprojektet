@@ -54,6 +54,18 @@ void Settings::LoadSettingsFile()
 		std::getline(myfile, line);
 		m_vsync = atoi(line.c_str()) ? 1 : 0;
 
+		std::getline(myfile, line);
+		m_muteSound = atoi(line.c_str()) ? 1 : 0;
+
+		std::getline(myfile, line);
+		m_ssao = atoi(line.c_str()) ? 1 : 0;
+
+		std::getline(myfile, line);
+		m_dof = atoi(line.c_str()) ? 1 : 0;
+
+		std::getline(myfile, line);
+		m_cameraMode = atoi(line.c_str()) ? 1 : 0;
+
 		myfile.close();
 	}
 	else
@@ -74,6 +86,10 @@ void Settings::SaveSettingsFile()
 		myfile << m_ip << std::endl;
 		myfile << m_fullscreen << std::endl;
 		myfile << m_vsync << std::endl;
+		myfile << m_muteSound << std::endl;
+		myfile << m_ssao << std::endl;
+		myfile << m_dof << std::endl;
+		myfile << m_cameraMode << std::endl;
 		myfile.close();
 	}
 }
@@ -94,7 +110,7 @@ void Settings::GenerateDefaultSettings()
 	names.push_back("Tamahi");
 	names.push_back("Sakae");
 	names.push_back("Hiromu");
-	names.push_back("Hiakri");
+	names.push_back("Hikari");
 	names.push_back("Itsuki");
 
 	srand((unsigned int)time(NULL));
@@ -104,4 +120,9 @@ void Settings::GenerateDefaultSettings()
 	m_ip = "194.47.150.130";
 	m_fullscreen = false;
 	m_vsync = false;
+	m_muteSound = false;
+	m_ssao = true;
+	m_dof = true;
+	m_cameraMode = false;
+
 }

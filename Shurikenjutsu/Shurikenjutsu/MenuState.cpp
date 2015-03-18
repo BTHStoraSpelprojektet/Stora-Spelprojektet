@@ -17,28 +17,6 @@
 #include "..\CommonLibs\Flags.h"
 #include "ObjectManager.h"
 
-// BUTTON
-const float BUTTONWIDTH = 301.0f;
-const float BUTTONHEIGHT = 98.0f;
-const float BUTTONOFFSET = 10.0f;
-
-// CHECKBOX
-const float CHECKBOXSIZE = 100.0f;
-
-// VSYNC
-const float VSYNCWIDTH = 254.0f;
-const float VSYNCHEIGHT = 59.0f;
-
-// FULLSCREEN
-const float FULLSCREENWIDTH = 173.0f;
-const float FULLSCREENHEIGHT = 58.0f;
-
-// LOGO
-const float LOGOPOSX = 0.0f;
-const float LOGOPOSY = 250.0f;
-const float LOGOWIDTH = 900.0f;
-const float LOGOHEIGHT = 307.0f;
-
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
 
@@ -58,8 +36,27 @@ bool MenuState::Initialize(){
 
 bool MenuState::Initialize(std::string p_levelName)
 {
-	m_lastvsync = false;
-	m_lastfullscreen = false;
+	const float BUTTONWIDTH = 301.0f;
+	const float BUTTONHEIGHT = 98.0f;
+	const float CHECKBOXSIZE = 50.0f;
+	const float VSYNCWIDTH = 263.0f;
+	const float VSYNCHEIGHT = 68.0f;
+	const float FULLSCREENWIDTH = 188.0f;
+	const float FULLSCREENHEIGHT = 55.0f;
+	const float MUTEWIDTH = 216.0f;
+	const float MUTEHEIGHT = 54.0f;
+	const float CAMERAMODEWIDTH = 243.0f;
+	const float CAMERAMODEHEIGHT = 56.0f;
+	const float SSAOWIDTH = 106.0f;
+	const float SSAOHEIGHT = 56.0f;
+	const float DOFWIDTH = 251.0f;
+	const float DOFHEIGHT = 68.0f;
+	const float LOGOPOSX = 0.0f;
+	const float LOGOPOSY = 250.0f;
+	const float LOGOWIDTH = 900.0f;
+	const float LOGOHEIGHT = 307.0f;
+	const float BUTTONOFFSET = 10.0f;
+	const float OPTIONSMARGIN = 15.0f;
 
 	Settings* settings = Settings::GetInstance();
 
@@ -69,16 +66,34 @@ bool MenuState::Initialize(std::string p_levelName)
 
 	// Initialize options menu
 	m_options = new Menu();
-	m_vsyncIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_VSYNC, settings->m_vsync);
-	m_lastvsync = settings->m_vsync;
-	m_options->AddTexture(-BUTTONWIDTH + VSYNCWIDTH*0.5f, 0.0f, VSYNCWIDTH, VSYNCHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/vs_text.png"));
+	
+	// Vsync
+	m_vsyncIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_VSYNC, settings->m_vsync);
+	m_options->AddTexture(-375.0f + VSYNCWIDTH*0.5f, 0.0f, VSYNCWIDTH, VSYNCHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/vs_text.png"));
 
-	m_fullscreenIndex = m_options->AddCheckbox(BUTTONWIDTH - CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - BUTTONOFFSET, MENUACTION_FULLSCREEN, settings->m_fullscreen);
-	m_lastfullscreen = settings->m_fullscreen;
-	m_options->AddTexture(-BUTTONWIDTH + FULLSCREENWIDTH*0.5f, -CHECKBOXSIZE, FULLSCREENWIDTH, FULLSCREENHEIGHT - BUTTONOFFSET, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
+	// Fullscreen
+	m_fullscreenIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, MENUACTION_FULLSCREEN, settings->m_fullscreen);
+	m_options->AddTexture(-375.0f + FULLSCREENWIDTH*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, FULLSCREENWIDTH, FULLSCREENHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
 
-	m_options->AddButton(BUTTONWIDTH*0.5f + 10.0f, -3.0f * CHECKBOXSIZE, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
-	m_options->AddButton(-BUTTONWIDTH*0.5f - 10.0f, -3.0f * CHECKBOXSIZE, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/apply.png"), MENUACTION_OPTIONAPPLY);
+	// SSAO
+	m_ssaoIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 2.0f * (-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_ssao);
+	m_options->AddTexture(-375.0f + SSAOWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), SSAOWIDTH, SSAOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/ssao_text.png"));
+
+	// DOF
+	m_dofIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_EMPTY, settings->m_dof);
+	m_options->AddTexture(25.0f + DOFWIDTH*0.5f, 0.0f, DOFWIDTH, DOFHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/dof_text.png"));
+
+	// Mute sound
+	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, MENUACTION_EMPTY, settings->m_muteSound);
+	m_options->AddTexture(25.0f + MUTEWIDTH*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, MUTEWIDTH, MUTEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/mute_text.png"));
+
+	// Camera Mode
+	m_cameraModeIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_cameraMode);
+	m_options->AddTexture(25.0f + CAMERAMODEWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), CAMERAMODEWIDTH, CAMERAMODEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/camera_text.png"));
+
+	// Options Buttons
+	m_options->AddButton(BUTTONWIDTH*0.5f + 10.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
+	m_options->AddButton(-BUTTONWIDTH*0.5f - 10.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/apply.png"), MENUACTION_OPTIONAPPLY);
 
 	// Initialize main menu
 	m_main = new Menu();
@@ -234,6 +249,7 @@ void MenuState::ShutdownExit()
 
 GAMESTATESWITCH MenuState::Update()
 {
+	Settings* settings = Settings::GetInstance();
 	MenuActionData action = m_menues.top()->Update();
 	if (!m_hideIpBox)
 	{
@@ -271,15 +287,20 @@ GAMESTATESWITCH MenuState::Update()
 
 		case MENUACTION_OPTIONS:
 			m_menues.push(m_options);
-			m_options->SetCheckboxState(m_vsyncIndex, m_lastvsync);
-			m_options->SetCheckboxState(m_fullscreenIndex, m_lastfullscreen);
+			m_options->SetCheckboxState(m_vsyncIndex, settings->m_vsync);
+			m_options->SetCheckboxState(m_fullscreenIndex, settings->m_fullscreen);
+			m_options->SetCheckboxState(m_dofIndex, settings->m_dof);
+			m_options->SetCheckboxState(m_ssaoIndex, settings->m_ssao);
+			m_options->SetCheckboxState(m_cameraModeIndex, settings->m_cameraMode);
+			m_options->SetCheckboxState(m_soundMuteIndex, settings->m_muteSound);
+
 			break;
 
 		case MENUACTION_CONNECT:
 			m_menues.push(m_connecting);
 			m_hideIpBox = true;
-			Settings::GetInstance()->m_name = m_namebox->GetText();
-			Settings::GetInstance()->m_ip = m_ipbox->GetText();
+			settings->m_name = m_namebox->GetText();
+			settings->m_ip = m_ipbox->GetText();
 			Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 			Network::GetInstance()->Connect((std::string)m_ipbox->GetText());
 			Network::GetInstance()->SetNetworkStatusConnecting();
@@ -291,7 +312,7 @@ GAMESTATESWITCH MenuState::Update()
 				{
 					m_menues.push(m_connecting);
 					m_hideIpBox = true;
-					Settings::GetInstance()->m_name = m_namebox->GetText();
+					settings->m_name = m_namebox->GetText();
 					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 					Network::GetInstance()->Connect("127.0.0.1");
 					Network::GetInstance()->SetNetworkStatusConnecting();
@@ -301,7 +322,7 @@ GAMESTATESWITCH MenuState::Update()
 					GraphicsEngine::ToggleFullscreen(false, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
 					m_menues.push(m_connecting);
 					m_hideIpBox = true;
-					Settings::GetInstance()->m_name = m_namebox->GetText();
+					settings->m_name = m_namebox->GetText();
 					Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
 					Network::GetInstance()->Connect("127.0.0.1");
 					Network::GetInstance()->SetNetworkStatusConnecting();
@@ -310,35 +331,7 @@ GAMESTATESWITCH MenuState::Update()
 			}
 			break;
 		case MENUACTION_OPTIONAPPLY:
-			bool temp = m_options->GetCheckboxState(m_vsyncIndex);
-			m_lastvsync = temp;
-			GraphicsEngine::SetVsync(temp);
-			Settings::GetInstance()->m_vsync = temp;
-
-			temp = m_options->GetCheckboxState(m_fullscreenIndex);
-			m_lastfullscreen = temp;
-			Settings::GetInstance()->m_fullscreen = temp;
-
-			if (!temp)
-			{
-				GLOBAL::GetInstance().FULLSCREEN = false;
-				GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
-				GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
-			}
-			else
-			{
-				GLOBAL::GetInstance().FULLSCREEN = true;
-				GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
-				GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
-			}
-			GraphicsEngine::ToggleFullscreen(temp, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
-			std::string tempstring = m_ipbox->GetText();
-			m_ipbox->Shutdown();
-			m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -15.0f, 394.0f, 67.0f, 15, tempstring);
-			m_hideIpBox = true;
-			tempstring = m_namebox->GetText();
-			m_namebox->Shutdown();
-			m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 57.0f, 394.0f, 67.0f, 15, tempstring);
+			OptionsApply();
 			break;
 
 	}
@@ -441,14 +434,17 @@ void MenuState::Render()
 	GraphicsEngine::RenderFoliage();
 
 	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::RenderSSAO();
+
+	if (Settings::GetInstance()->m_ssao)
+	{
+		GraphicsEngine::RenderSSAO();
+	}
 
 	// Composition
 	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
 
-	GraphicsEngine::Composition();
-	GraphicsEngine::ApplyDOF();
+	GraphicsEngine::CompositionForward();
 	GraphicsEngine::ResetRenderTarget();
 	GraphicsEngine::TurnOnDepthStencil();
 }
@@ -505,4 +501,67 @@ bool MenuState::StartLocalServer()
 		return false;
 	}
 	return true;
+}
+
+void MenuState::OptionsApply()
+{
+	Settings* settings = Settings::GetInstance();
+
+	bool temp = m_options->GetCheckboxState(m_vsyncIndex);
+	GraphicsEngine::SetVsync(temp);
+	settings->m_vsync = temp;
+
+	temp = m_options->GetCheckboxState(m_dofIndex);
+	settings->m_dof = temp;
+
+	temp = m_options->GetCheckboxState(m_ssaoIndex);
+	settings->m_ssao = temp;
+	if (!temp)
+	{
+		GraphicsEngine::ClearSSAO();
+	}
+
+	temp = m_options->GetCheckboxState(m_soundMuteIndex);
+	settings->m_muteSound = temp;
+
+	if (temp)
+	{
+		GLOBAL::GetInstance().VOLUME_ON = false;
+		m_sound->MuteEverything();
+	}
+
+	else
+	{
+		GLOBAL::GetInstance().VOLUME_ON = true;
+		m_sound->UnMuteEverything();
+	}
+
+	temp = m_options->GetCheckboxState(m_cameraModeIndex);
+	settings->m_cameraMode = temp;
+
+	GLOBAL::GetInstance().CAMERA_MOVING = !temp;
+
+	temp = m_options->GetCheckboxState(m_fullscreenIndex);
+	settings->m_fullscreen = temp;
+
+	if (!temp)
+	{
+		GLOBAL::GetInstance().FULLSCREEN = false;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MIN_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
+	}
+	else
+	{
+		GLOBAL::GetInstance().FULLSCREEN = true;
+		GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH = GLOBAL::GetInstance().MAX_SCREEN_WIDTH;
+		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MAX_SCREEN_HEIGHT;
+	}
+	GraphicsEngine::ToggleFullscreen(temp, (float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH, (float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT);
+	std::string tempstring = m_ipbox->GetText();
+	m_ipbox->Shutdown();
+	m_ipbox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/IPBox.png"), 0, -15.0f, 394.0f, 67.0f, 15, tempstring);
+	m_hideIpBox = true;
+	tempstring = m_namebox->GetText();
+	m_namebox->Shutdown();
+	m_namebox->Initialize(TextureLibrary::GetInstance()->GetTexture("../Shurikenjutsu/2DTextures/GUI/namebox.png"), 0, 57.0f, 394.0f, 67.0f, 15, tempstring);
 }

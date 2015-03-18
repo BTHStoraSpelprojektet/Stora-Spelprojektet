@@ -145,12 +145,14 @@ namespace DLLGraphicsEngine
 		GRAPHICSENGINEDLL_API void SetRenderTargetsForGBuffers();
 
 		GRAPHICSENGINEDLL_API void Composition();
+		GRAPHICSENGINEDLL_API void CompositionForward();
 		GRAPHICSENGINEDLL_API void SetScreenBuffer(DirectionalLight& p_dLight, DirectX::XMFLOAT4X4 p_projection, DirectX::XMFLOAT4X4 p_view);
 
 		GRAPHICSENGINEDLL_API void SetForwardRenderTarget();
 
 		GRAPHICSENGINEDLL_API void RenderSSAO();
 		GRAPHICSENGINEDLL_API void SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection);
+		GRAPHICSENGINEDLL_API void ClearSSAO();
 
 		GRAPHICSENGINEDLL_API void ApplyDOF();
 		GRAPHICSENGINEDLL_API std::string CreateTitle(D3D_FEATURE_LEVEL p_version);

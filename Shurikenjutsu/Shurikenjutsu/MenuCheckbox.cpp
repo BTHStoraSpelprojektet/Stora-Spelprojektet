@@ -7,7 +7,7 @@ MenuCheckbox::~MenuCheckbox(){}
 
 bool MenuCheckbox::Initialize(float p_x, float p_y, MENUACTION p_action, bool p_state)
 {
-	MenuItem::Initialize(p_x, p_y, 100.0f, NULL);
+	MenuItem::Initialize(p_x, p_y, 50.0f, NULL);
 
 	m_action = p_action;
 	SetState(p_state);
