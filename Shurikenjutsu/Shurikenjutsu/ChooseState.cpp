@@ -65,7 +65,7 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_toolHeight = 50.0f;
 	m_nrOfNinjas = 3;
 	m_currentNinja = 0;
-	m_nrOfTools = 3;
+	m_nrOfTools = 4;
 	m_currentTool = 0;
 	m_prevRandomNumber = 0;
 	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
@@ -124,9 +124,11 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_tools[0] = new MenuItem();
 	m_tools[1] = new MenuItem();
 	m_tools[2] = new MenuItem();
+	m_tools[3] = new MenuItem();
 	m_tools[0]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_Caltrops.png"));
 	m_tools[1]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_SmokeBomb.png"));
 	m_tools[2]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_StickyTARP.png"));
+	m_tools[3]->Initialize(0.0f, toolCycleHeight, m_toolWidth, m_toolHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_FlashBang.png"));
 
 	m_ninjaPortBorder = new MenuItem();
 	m_ninjaPortBorder->Initialize(0.0f, portraitYPos, 240, 240, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/portBG.png"));
@@ -139,9 +141,11 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_toolDescription[0] = new ToolTipPopUp();
 	m_toolDescription[1] = new ToolTipPopUp();
 	m_toolDescription[2] = new ToolTipPopUp();
+	m_toolDescription[3] = new ToolTipPopUp();
 	m_toolDescription[0]->Initialize(0.0f, toolCycleHeight, SPIKES_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
 	m_toolDescription[1]->Initialize(0.0f, toolCycleHeight, SMOKEBOMB_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
 	m_toolDescription[2]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
+	m_toolDescription[3]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
 	
 	m_abilityDescription[0] = new CharacterAbilityDescription();
 	m_abilityDescription[1] = new CharacterAbilityDescription();
@@ -266,7 +270,7 @@ void ChooseState::Shutdown()
 		}
 	}
 
-	for (unsigned int i = 0; i < 3; i++)
+	for (unsigned int i = 0; i < 4; i++)
 	{
 		if (m_toolDescription[i] != nullptr)
 		{
@@ -276,7 +280,7 @@ void ChooseState::Shutdown()
 		}
 	}
 
-	for (unsigned int i = 0; i < 3; i++)
+	for (unsigned int i = 0; i < 4; i++)
 	{
 		if (m_tools[i] != nullptr)
 		{
