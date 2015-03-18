@@ -1304,6 +1304,12 @@ void Player::ChooseTool()
 			m_toolAbility->Initialize();
 			break;
 		}
+		case 3:
+		{
+			m_toolAbility = new ();
+			m_toolAbility->Initialize();
+			break;
+		}
 		default:
 			break;
 	}

@@ -145,7 +145,7 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_toolDescription[0]->Initialize(0.0f, toolCycleHeight, SPIKES_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
 	m_toolDescription[1]->Initialize(0.0f, toolCycleHeight, SMOKEBOMB_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
 	m_toolDescription[2]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
-	m_toolDescription[3]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
+	m_toolDescription[3]->Initialize(0.0f, toolCycleHeight, FLASH_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
 	
 	m_abilityDescription[0] = new CharacterAbilityDescription();
 	m_abilityDescription[1] = new CharacterAbilityDescription();
