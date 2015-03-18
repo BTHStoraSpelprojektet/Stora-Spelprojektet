@@ -114,7 +114,7 @@ void NaginataNinja::RenderAttackLocations()
 		{
 			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
-				m_ape->ThrowSphere(m_aimSphere, m_position, 3.5f, VOLLEY_RANGE);
+				m_ape->ThrowSphere(m_aimSphere, m_position, 2.0f, VOLLEY_RANGE);
 				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
 			}
 			else
