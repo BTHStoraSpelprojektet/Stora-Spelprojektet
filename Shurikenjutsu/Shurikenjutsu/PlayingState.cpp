@@ -21,6 +21,7 @@
 #include "..\CommonLibs\ModelNames.h"
 #include "TrailRenderer.h"
 #include "FlashBang.h"
+#include "Settings.h"
 
 ParticleEmitter* TEST_POIemitter;
 
@@ -645,15 +646,27 @@ void PlayingState::Render()
 	
 	GraphicsEngine::RenderFoliage();
 	
-	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::RenderSSAO();
+	if (Settings::GetInstance()->m_ssao)
+	{
+		GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
+		GraphicsEngine::RenderSSAO();
+	}
 
 	// Composition
 	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
 
-	GraphicsEngine::Composition();
-	GraphicsEngine::ApplyDOF();
+	if (Settings::GetInstance()->m_dof)
+	{
+		GraphicsEngine::Composition();
+		GraphicsEngine::ApplyDOF();
+	}
+
+	else
+	{
+		GraphicsEngine::CompositionForward();
+	}
+	
 
 	GraphicsEngine::SetForwardRenderTarget();
 	GraphicsEngine::TurnOnAlphaBlending();

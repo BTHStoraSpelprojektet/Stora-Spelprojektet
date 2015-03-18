@@ -53,7 +53,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT = GLOBAL::GetInstance().MIN_SCREEN_HEIGHT;
 	}
 
-	GLOBAL::GetInstance().CAMERA_MOVING = true;
+	GLOBAL::GetInstance().CAMERA_MOVING = !Settings::GetInstance()->m_cameraMode;
 	GLOBAL::GetInstance().CAMERA_SPECTATE = false;
 
 	ConsolePrintSuccess("Application initialized.");
@@ -129,6 +129,18 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		m_sound->StartMusic();
 		m_playingState->SetSound(m_sound);
 		m_menuState->setSound(m_sound);
+
+		/*if (Settings::GetInstance()->m_muteSound)
+		{
+			GLOBAL::GetInstance().VOLUME_ON = false;
+			m_sound->MuteEverything();
+		}
+
+		else
+		{
+			GLOBAL::GetInstance().VOLUME_ON = true;
+			m_sound->UnMuteEverything();
+		}*/
 	}
 
 	// Initialize current GameState
@@ -192,8 +204,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		return false;
 	}
 
-	GLOBAL::GetInstance().VOLUME_ON = true;
-
+	GraphicsEngine::ClearSSAO();
 	return true;
 }
 
@@ -207,8 +218,6 @@ void System::Shutdown()
 
 	// Shutdown texture lib
 	TextureLibrary::GetInstance()->Shutdown();
-
-
 
 	if (m_sound)
 	{
@@ -325,19 +334,6 @@ void System::Run()
 // Update game logic here.
 void System::Update()
 {
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('m')))
-	{
-		if (GLOBAL::GetInstance().VOLUME_ON)
-		{
-			GLOBAL::GetInstance().VOLUME_ON = false;
-			m_sound->MuteEverything();
-		}
-		else
-		{
-			GLOBAL::GetInstance().VOLUME_ON = true;
-			m_sound->UnMuteEverything();
-		}
-	}
 	// Update the timer to enable delta time and FPS measurements.
 	m_timer->Update();
 
@@ -363,17 +359,6 @@ void System::Update()
 		}
 	}
 
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('o')))
-	{
-		if (!GLOBAL::GetInstance().CAMERA_MOVING)
-		{
-			GLOBAL::GetInstance().CAMERA_MOVING = true;
-		}
-		else
-		{
-			GLOBAL::GetInstance().CAMERA_MOVING = false;
-		}
-	}
 	std::string levelName;
 	switch (m_gameState->Update())
 	{

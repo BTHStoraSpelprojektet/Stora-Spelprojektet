@@ -76,11 +76,11 @@ bool MenuState::Initialize(std::string p_levelName)
 	m_options->AddTexture(-375.0f + FULLSCREENWIDTH*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, FULLSCREENWIDTH, FULLSCREENHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/fullscreen_text.png"));
 
 	// SSAO
-	m_soundMuteIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 2.0f * (-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_ssao);
+	m_ssaoIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 2.0f * (-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_ssao);
 	m_options->AddTexture(-375.0f + SSAOWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), SSAOWIDTH, SSAOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/ssao_text.png"));
 
 	// DOF
-	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_EMPTY, settings->m_dof);
+	m_dofIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_EMPTY, settings->m_dof);
 	m_options->AddTexture(25.0f + DOFWIDTH*0.5f, 0.0f, DOFWIDTH, DOFHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/dof_text.png"));
 
 	// Mute sound
@@ -88,7 +88,7 @@ bool MenuState::Initialize(std::string p_levelName)
 	m_options->AddTexture(25.0f + MUTEWIDTH*0.5f, -CHECKBOXSIZE - OPTIONSMARGIN, MUTEWIDTH, MUTEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/mute_text.png"));
 
 	// Camera Mode
-	m_soundMuteIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_cameraMode);
+	m_cameraModeIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_cameraMode);
 	m_options->AddTexture(25.0f + CAMERAMODEWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), CAMERAMODEWIDTH, CAMERAMODEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/camera_text.png"));
 
 	// Options Buttons
@@ -434,14 +434,17 @@ void MenuState::Render()
 	GraphicsEngine::RenderFoliage();
 
 	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::RenderSSAO();
+
+	if (Settings::GetInstance()->m_ssao)
+	{
+		GraphicsEngine::RenderSSAO();
+	}
 
 	// Composition
 	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
 
-	GraphicsEngine::Composition();
-	GraphicsEngine::ApplyDOF();
+	GraphicsEngine::CompositionForward();
 	GraphicsEngine::ResetRenderTarget();
 	GraphicsEngine::TurnOnDepthStencil();
 }
@@ -508,20 +511,38 @@ void MenuState::OptionsApply()
 	GraphicsEngine::SetVsync(temp);
 	settings->m_vsync = temp;
 
-	temp = m_options->GetCheckboxState(m_fullscreenIndex);
-	settings->m_fullscreen = temp;
-
 	temp = m_options->GetCheckboxState(m_dofIndex);
 	settings->m_dof = temp;
 
 	temp = m_options->GetCheckboxState(m_ssaoIndex);
 	settings->m_ssao = temp;
+	if (!temp)
+	{
+		GraphicsEngine::ClearSSAO();
+	}
 
 	temp = m_options->GetCheckboxState(m_soundMuteIndex);
 	settings->m_muteSound = temp;
 
+	if (temp)
+	{
+		GLOBAL::GetInstance().VOLUME_ON = false;
+		m_sound->MuteEverything();
+	}
+
+	else
+	{
+		GLOBAL::GetInstance().VOLUME_ON = true;
+		m_sound->UnMuteEverything();
+	}
+
 	temp = m_options->GetCheckboxState(m_cameraModeIndex);
 	settings->m_cameraMode = temp;
+
+	GLOBAL::GetInstance().CAMERA_MOVING = !temp;
+
+	temp = m_options->GetCheckboxState(m_fullscreenIndex);
+	settings->m_fullscreen = temp;
 
 	if (!temp)
 	{

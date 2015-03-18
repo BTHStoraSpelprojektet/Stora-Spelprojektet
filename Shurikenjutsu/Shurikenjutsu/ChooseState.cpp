@@ -19,6 +19,7 @@
 #include "ScoreBoard.h"
 #include "TeamTable.h"
 #include "InputManager.h"
+#include "Settings.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -542,13 +543,16 @@ void ChooseState::Render()
 
 	GraphicsEngine::RenderFoliage();
 	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::RenderSSAO();
+	if (Settings::GetInstance()->m_ssao)
+	{
+		GraphicsEngine::RenderSSAO();
+	}
+
 
 	// Composition
 	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
-	GraphicsEngine::Composition();
-	GraphicsEngine::ApplyDOF();
+	GraphicsEngine::CompositionForward();
 
 	GraphicsEngine::TurnOnDepthStencil();
 

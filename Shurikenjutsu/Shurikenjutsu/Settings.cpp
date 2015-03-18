@@ -123,6 +123,6 @@ void Settings::GenerateDefaultSettings()
 	m_muteSound = false;
 	m_ssao = true;
 	m_dof = true;
-	m_cameraMode = true;
+	m_cameraMode = false;
 
 }
