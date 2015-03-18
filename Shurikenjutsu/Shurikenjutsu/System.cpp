@@ -157,6 +157,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 	InputManager::GetInstance()->RegisterKey(VK_F1);
 	InputManager::GetInstance()->RegisterKey(VK_F2);
 	InputManager::GetInstance()->RegisterKey(VK_SPACE);
+	InputManager::GetInstance()->RegisterKey(VK_CONTROL);
 	ConsolePrintSuccess("Input keys registered.");
 	ConsoleSkipLines(1);
 
@@ -325,7 +326,7 @@ void System::Run()
 // Update game logic here.
 void System::Update()
 {
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('m')))
+	if (InputManager::GetInstance()->IsKeyPressed(VK_CONTROL) && InputManager::GetInstance()->IsKeyClicked(VkKeyScan('s')))
 	{
 		if (GLOBAL::GetInstance().VOLUME_ON)
 		{

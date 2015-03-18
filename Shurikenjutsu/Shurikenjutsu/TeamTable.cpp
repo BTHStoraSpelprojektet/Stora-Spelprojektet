@@ -83,9 +83,13 @@ void TeamTable::AddTeamMate(int p_ninja, int p_tool)
 	{
 		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_SmokeBomb.png"));
 	}
-	else
+	else if (p_tool == 2)
 	{
 		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_StickyTARP.png"));
+	}
+	else
+	{
+		temp.m_tool->Initialize(m_startXPos + m_portraitOffset + m_toolOffset, m_startYPos, TOOLWIDTH, TOOLHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/Abilities/TB_T_FlashBang.png"));
 	}
 
 	m_startYPos -= PORTRAITHEIGHT * 1.1f;

@@ -1340,10 +1340,10 @@ void Network::ReceviePacket()
 			case ID_THROW_FLASHGRENADE:
 			{
 				RakNet::BitStream bitStream(m_packet->data, m_packet->length, false);
-				RakNet::RakNetGUID guid;
-				float startX, startZ;
-				float endX, endZ;
+				float startX = 0.0f, startZ = 0.0f;
+				float endX = 0.0f, endZ = 0.0f;
 
+				bitStream.Read(messageID);
 				bitStream.Read(startX);
 				bitStream.Read(startZ);
 				bitStream.Read(endX);

@@ -195,6 +195,10 @@ std::string AbilityBar::GetAbility5Name()
 			return ABILITY_STICKY_TRAP_TEXTURE;
 			break;
 		}
+		case 3:
+		{
+			return ABILITY_FLASHBANG_TEXTURE;
+		}
 	}
 
 	return ABILITY_CD_TEXTURE;
