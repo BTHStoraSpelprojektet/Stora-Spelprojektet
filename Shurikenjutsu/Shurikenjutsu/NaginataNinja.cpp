@@ -191,7 +191,7 @@ void NaginataNinja::CheckForSpecialAttack()
 }
 void NaginataNinja::UpdateAbilityBar()
 {
-	if (m_stabAttackPerformed)
+	if (m_stabAttackPerformed && m_globalCooldown < 0)
 	{
 		m_globalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;
 		m_maxGlobalCooldown = NAGINATASTAB_GLOBAL_COOLDOWN;

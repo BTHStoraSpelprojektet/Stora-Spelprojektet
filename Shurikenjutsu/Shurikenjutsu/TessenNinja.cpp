@@ -187,7 +187,7 @@ void TessenNinja::CheckForSpecialAttack()
 }
 void TessenNinja::UpdateAbilityBar()
 {
-	if (m_whipSpinPerformed)
+	if (m_whipSpinPerformed && m_globalCooldown < 0)
 	{
 		m_globalCooldown = WHIP_SP_GLOBAL_COOLDOWN;
 		m_maxGlobalCooldown = WHIP_SP_GLOBAL_COOLDOWN;
