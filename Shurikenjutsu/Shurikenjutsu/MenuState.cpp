@@ -16,6 +16,7 @@
 #include <Windows.h>
 #include "..\CommonLibs\Flags.h"
 #include "ObjectManager.h"
+#include <ctime>
 
 MenuState::MenuState(){}
 MenuState::~MenuState(){}
@@ -301,7 +302,36 @@ GAMESTATESWITCH MenuState::Update()
 			m_hideIpBox = true;
 			settings->m_name = m_namebox->GetText();
 			settings->m_ip = m_ipbox->GetText();
-			Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
+
+			if (m_namebox->GetText().size() <= 0)
+			{
+				std::vector<std::string> names;
+				names.push_back("Akira");
+				names.push_back("Kei");
+				names.push_back("Mikoto");
+				names.push_back("Jun");
+				names.push_back("Ryou");
+				names.push_back("Sora");
+				names.push_back("Yuki");
+				names.push_back("Mitsuki");
+				names.push_back("Minato");
+				names.push_back("Hachi");
+				names.push_back("Tamahi");
+				names.push_back("Sakae");
+				names.push_back("Hiromu");
+				names.push_back("Hikari");
+				names.push_back("Itsuki");
+
+				srand((unsigned int)time(NULL));
+				int random = rand() % names.size();
+
+				Network::GetInstance()->SetPlayerName(names[random]);
+			}
+			else
+			{
+				Network::GetInstance()->SetPlayerName((std::string)m_namebox->GetText());
+			}
+
 			Network::GetInstance()->Connect((std::string)m_ipbox->GetText());
 			Network::GetInstance()->SetNetworkStatusConnecting();
 			break;
