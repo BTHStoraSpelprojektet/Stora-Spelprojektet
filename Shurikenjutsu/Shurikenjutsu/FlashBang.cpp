@@ -289,16 +289,22 @@ void FlashBang::Impact(DirectX::XMFLOAT3 p_playerPosition, DirectX::XMFLOAT3 p_i
 	float x = p_impactPosition.x - p_playerPosition.x;
 	float z = p_impactPosition.z - p_playerPosition.z;
 
-	float playerDirLeangth = sqrt(p_playerDirection.x * p_playerDirection.x + p_playerDirection.z * p_playerDirection.z);
-	float playerToFlahLeangth = sqrt(x * x + z * z);
 	if (!CollisionManager::GetInstance()->IntersectingObjectWhenAttacking(p_playerPosition, p_impactPosition, true))
 	{
-		float dotProduct = p_playerDirection.x * x + p_playerDirection.z * z;
-		float angle = acos(dotProduct / (playerDirLeangth* playerToFlahLeangth));
+		float distance = sqrt(x * x + z * z);
 
-		if (angle < DirectX::XM_PIDIV2)
+		if (distance <= FLASHBANG_RADIUS * 0.5f)
 		{
-			GetFlashed();
+			float playerDirLeangth = sqrt(p_playerDirection.x * p_playerDirection.x + p_playerDirection.z * p_playerDirection.z);
+			float playerToFlahLeangth = sqrt(x * x + z * z);
+
+			float dotProduct = p_playerDirection.x * x + p_playerDirection.z * z;
+			float angle = acos(dotProduct / (playerDirLeangth* playerToFlahLeangth));
+
+			if (angle < DirectX::XM_PIDIV2)
+			{
+				GetFlashed();
+			}
 		}
 	}
 
