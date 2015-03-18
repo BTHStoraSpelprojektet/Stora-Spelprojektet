@@ -932,8 +932,8 @@ void ParticleEmitter::FallingLeafUpdate()
 
 				float xWindOffset = GetWindOffsetX(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
 				float zWindOffset = GetWindOffsetZ(m_particleList[i].m_timePassed, m_particleList[i].m_timeToLive);
-				m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset;
-				m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset;
+				m_particleList[i].m_position.x = m_particleList[i].m_position.x + xWindOffset * (float)GLOBAL::GetInstance().GetDeltaTime();
+				m_particleList[i].m_position.z = m_particleList[i].m_position.z + zWindOffset * (float)GLOBAL::GetInstance().GetDeltaTime();
 			}
 
 			// Add time passed.
