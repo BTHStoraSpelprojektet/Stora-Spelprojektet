@@ -74,6 +74,8 @@ private:
 	std::vector<NaginataStabAttacks> m_performingStabAttackList;
 
 	float DashLengthCalculation(RakNet::RakNetGUID p_guid, PlayerNet p_attackingPlayer, PlayerManager* p_playerManager);
+
+	bool m_doneDashDamage;
 };
 #endif
 
