@@ -133,7 +133,7 @@ void KatanaNinja::RenderAttackLocations()
 		{
 			if ((float)m_toolAbility->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 			{
-				m_ape->ThrowSphere(m_aimSphere, m_position, 7.0f, SMOKEBOMB_RANGE);
+				m_ape->ThrowSphere(m_aimSphere, m_position, m_toolAbility->GetRadius(), m_toolAbility->GetRange());
 				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
 
 			}

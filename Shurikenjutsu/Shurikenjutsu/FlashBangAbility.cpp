@@ -14,6 +14,8 @@ bool FlashBangAbility::Initialize()
 	SetCooldown(0.0f);
 	m_totalCooldown = FLASHBANG_COOLDOWN;
 	m_stacks = -1;
+	m_radius = FLASHBANG_RADIUS;
+	m_range = FLASHBANG_RANGE;
 	return true;
 }
 bool FlashBangAbility::Execute(float p_distance)
@@ -26,4 +28,12 @@ bool FlashBangAbility::Execute(float p_distance)
 	}
 
 	return false;
+}
+float FlashBangAbility::GetRange()
+{
+	return m_range;
+}
+float FlashBangAbility::GetRadius()
+{
+	return m_radius;
 }
