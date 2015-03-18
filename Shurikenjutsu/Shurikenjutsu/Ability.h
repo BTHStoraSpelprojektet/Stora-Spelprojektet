@@ -26,6 +26,8 @@ public:
 	virtual StatusEffect* GetStatusEffect();
 	virtual void ResetCooldown();
 	virtual int GetStacks();
+	virtual float GetRange();
+	virtual float GetRadius();
 	void SetSound(Sound* p_sound);
 
 protected:

@@ -13,6 +13,8 @@ bool SpikeAbility::Initialize()
 	SetCooldown(0.0f);
 	m_totalCooldown = SPIKE_COOLDOWN;
 	m_stacks = -1;
+	m_radius = 2.3f;
+	m_range = SPIKE_RANGE;
 	return true;
 }
 bool SpikeAbility::Execute(float p_distance)
@@ -25,4 +27,12 @@ bool SpikeAbility::Execute(float p_distance)
 	}
 
 	return false;
+}
+float SpikeAbility::GetRange()
+{
+	return m_range;
+}
+float SpikeAbility::GetRadius()
+{
+	return m_radius;
 }

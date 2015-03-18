@@ -998,6 +998,17 @@ ID3D11ShaderResourceView* DirectXWrapper::GetPPSRV2()
 	return m_pPSRV[1];
 }
 
+void DirectXWrapper::ClearPPSRV()
+{
+	FLOAT cc[4];
+	cc[0] = 1.0f;
+	cc[1] = 1.0f;
+	cc[2] = 1.0f;
+	cc[3] = 1.0f;
+	m_context->ClearRenderTargetView(m_pPRTV[0], cc);
+	m_context->ClearRenderTargetView(m_pPRTV[1], cc);
+}
+
 void DirectXWrapper::SetDebugName(ID3D11DeviceChild* child, const std::string& name)
 {
 	//if (child != nullptr)

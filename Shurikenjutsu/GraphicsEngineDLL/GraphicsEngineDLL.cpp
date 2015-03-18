@@ -759,6 +759,17 @@ namespace DLLGraphicsEngine
 		TurnOffAlphaBlending();
 	}
 
+	void GE::CompositionForward()
+	{
+		m_directX->SetRenderTargetForDOF2();
+		m_directX->TurnOnPointLightAlphaBlending();
+		m_screenSpace->Render(m_directX->GetContext(), m_directX->GetGBufferSRV2(), m_directX->GetGBufferSRV1(), m_directX->GetDepthSRV(), m_directX->GetPPSRV1());
+
+
+		m_screenSpace->RenderLights(m_directX->GetContext());
+		TurnOffAlphaBlending();
+	}
+
 	void GE::SetForwardRenderTarget()
 	{
 		m_directX->SetRenderTargetForForwardRendering();
@@ -780,6 +791,11 @@ namespace DLLGraphicsEngine
 	void GE::SetSSAOBuffer(DirectX::XMFLOAT4X4 p_projection)
 	{
 		m_screenSpace->UpdateSSAOBuffer(m_directX->GetContext(), p_projection);
+	}
+
+	void GE::ClearSSAO()
+	{
+		m_directX->ClearPPSRV();
 	}
 
 	void GE::ApplyDOF()

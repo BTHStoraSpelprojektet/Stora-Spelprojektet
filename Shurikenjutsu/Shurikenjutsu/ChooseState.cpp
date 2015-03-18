@@ -19,6 +19,7 @@
 #include "ScoreBoard.h"
 #include "TeamTable.h"
 #include "InputManager.h"
+#include "Settings.h"
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -508,11 +509,11 @@ void ChooseState::UpdateTeams()
 	{
 		if (tempPlayerList[i].team == 1)
 		{
-			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr);
+			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String());
 		}
 		else
 		{
-			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr);
+			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String());
 		}
 	}
 }
@@ -546,13 +547,16 @@ void ChooseState::Render()
 
 	GraphicsEngine::RenderFoliage();
 	GraphicsEngine::SetSSAOBuffer(m_camera->GetProjectionMatrix());
-	GraphicsEngine::RenderSSAO();
+	if (Settings::GetInstance()->m_ssao)
+	{
+		GraphicsEngine::RenderSSAO();
+	}
+
 
 	// Composition
 	GraphicsEngine::SetScreenBuffer(m_directionalLight, m_camera->GetProjectionMatrix(), m_camera->GetViewMatrix());
 	GraphicsEngine::SetPointLightLightBuffer(m_camera->GetViewMatrix());
-	GraphicsEngine::Composition();
-	GraphicsEngine::ApplyDOF();
+	GraphicsEngine::CompositionForward();
 
 	GraphicsEngine::TurnOnDepthStencil();
 
@@ -625,7 +629,7 @@ void ChooseState::EscapeIsPressed()
 void ChooseState::RandomNinja()
 {
 	std::srand((unsigned int)std::time(0));
-	int randomNumber = std::rand() % 9;
+	int randomNumber = std::rand() % 12;
 	while (m_prevRandomNumber == randomNumber)
 	{
 		randomNumber = std::rand() % 9;
@@ -674,6 +678,21 @@ void ChooseState::RandomNinja()
 	{
 		m_currentNinja = 2;
 		m_currentTool = 2;
+	}
+	else if (randomNumber == 9)
+	{
+		m_currentNinja = 0;
+		m_currentTool = 3;
+	}
+	else if (randomNumber == 10)
+	{
+		m_currentNinja = 1;
+		m_currentTool = 3;
+	}
+	else if (randomNumber == 11)
+	{
+		m_currentNinja = 2;
+		m_currentTool = 3;
 	}
 	m_prevRandomNumber = randomNumber;
 }
