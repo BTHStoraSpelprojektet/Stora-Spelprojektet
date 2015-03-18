@@ -664,7 +664,6 @@ void PlayingState::Render()
 	{
 		GraphicsEngine::CompositionForward();
 	}
-	
 
 	GraphicsEngine::SetForwardRenderTarget();
 	GraphicsEngine::TurnOnAlphaBlending();

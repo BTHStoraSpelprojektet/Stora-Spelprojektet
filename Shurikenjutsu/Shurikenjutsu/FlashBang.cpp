@@ -267,6 +267,8 @@ void FlashBang::UpdateEffect()
 
 				if (m_opacity <= 0.0f)
 				{
+					m_flashed = false;
+
 					m_opacity = 0.0f;
 					m_opacityState = OPACITY_NONE;
 				}

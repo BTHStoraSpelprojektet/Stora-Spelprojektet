@@ -14,6 +14,7 @@ class StickyTrap;
 class AttackPredictionEditor;
 class FloatingText;
 class ParticleEmitter;
+class FlashBang;
 
 class Player : public AnimatedObject
 {
