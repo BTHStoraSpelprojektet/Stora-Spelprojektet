@@ -121,7 +121,7 @@ void PlayerManager::Render(bool p_inMenu)
 {
 	if (!p_inMenu)
 	{
-		m_player->Render();
+		m_player->Render(!p_inMenu);
 		m_player->RenderAbilityBar();
 	}
 
@@ -135,13 +135,13 @@ void PlayerManager::Render(bool p_inMenu)
 				{
 					if (!m_enemyList[i]->IsInvis())
 					{
-						m_enemyList[i]->Render();
+						m_enemyList[i]->Render(!p_inMenu);
 					}
 				}
 			}
 			else
 			{
-				m_enemyList[i]->Render();
+				m_enemyList[i]->Render(!p_inMenu);
 			}
 		}
 	}

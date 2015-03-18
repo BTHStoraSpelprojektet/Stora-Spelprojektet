@@ -29,7 +29,7 @@ public:
 	void UpdateMe();
 	void Update();
 	void UpdateAbilities();
-	void Render();
+	void Render(bool p_playingState);
 	virtual void RenderAttackLocations();
 	void RenderDepth();
 	void RenderDepthOutlining();
