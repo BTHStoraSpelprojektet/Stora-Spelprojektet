@@ -41,9 +41,9 @@ void FlashBang::Shutdown()
 
 	for (unsigned int i = 0; i < m_flashbangs.size(); i++)
 	{
-		m_flashbangs[i].m_particles->Shutdown();
+		/*m_flashbangs[i].m_particles->Shutdown();
 		delete m_flashbangs[i].m_particles;
-		m_flashbangs[i].m_particles = nullptr;
+		m_flashbangs[i].m_particles = nullptr;*/
 
 		m_flashbangs[i].m_trail->Shutdown();
 		delete m_flashbangs[i].m_trail;
@@ -65,25 +65,27 @@ void FlashBang::TrowFlash(DirectX::XMFLOAT3 p_startPosition, DirectX::XMFLOAT3 p
 	FlashbangBomb newBomb;
 
 	newBomb.m_startPosition = p_startPosition;
-	newBomb.m_currentPosition.x = (p_startPosition.x);
+	newBomb.m_currentPosition.x = p_startPosition.x;
 	newBomb.m_currentPosition.y = 1.0f;
-	newBomb.m_currentPosition.z = ( p_startPosition.z);
+	newBomb.m_currentPosition.z = p_startPosition.z;
 
 	newBomb.m_timePassed = 0.0f;
 	newBomb.m_speed = 20.0f;
 	newBomb.m_alive = true;
 
-	float length = sqrtf(newBomb.m_currentPosition.x * newBomb.m_currentPosition.x + newBomb.m_currentPosition.z * newBomb.m_currentPosition.z);
-	newBomb.m_percentX = newBomb.m_currentPosition.x / length;
-	newBomb.m_percentZ = newBomb.m_currentPosition.z / length;
+	float x = (p_endPosition.x - p_startPosition.x);
+	float z = (p_endPosition.z - p_startPosition.z);
+	float length = sqrtf(x * x + z * z);
+	newBomb.m_percentX = x / length;
+	newBomb.m_percentZ = z / length;
 	newBomb.m_angle = asinf((9.82f * length) / (newBomb.m_speed * newBomb.m_speed)) * 0.5f;
 	
-	newBomb.m_particles = new ParticleEmitter();
+	/*newBomb.m_particles = new ParticleEmitter();
 	if (!newBomb.m_particles->Initialize(GraphicsEngine::GetDevice(), p_startPosition, DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f), DirectX::XMFLOAT2(0.2f, 0.2f), PARTICLE_PATTERN_FIRE_TORCH))
 	{
 		ConsolePrintErrorAndQuit("A flashbang fuse emitter failed to initialize!");
 	}
-	newBomb.m_particles->SetEmitParticleState(false);
+	newBomb.m_particles->SetEmitParticleState(true);*/
 
 	newBomb.m_trail = new Trail();
 	if (!newBomb.m_trail->Initialize(50.0f, 0.2f, 0.05f, DirectX::XMFLOAT4(0.83f, 0.86f, 0.06f, 1.0f), "../Shurikenjutsu/2DTextures/Particles/Trail.png"))
@@ -102,13 +104,16 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 	{
 		m_flashbangs[i].m_timePassed += dt;
 
-		m_flashbangs[i].m_currentPosition.x = m_flashbangs[i].m_speed * m_flashbangs[i].m_timePassed * cosf(m_flashbangs[i].m_angle) * m_flashbangs[i].m_percentX;
-		m_flashbangs[i].m_currentPosition.y = m_flashbangs[i].m_speed * m_flashbangs[i].m_timePassed * sinf(m_flashbangs[i].m_angle) - 4.91f * m_flashbangs[i].m_timePassed * m_flashbangs[i].m_timePassed;
-		m_flashbangs[i].m_currentPosition.z = m_flashbangs[i].m_speed * m_flashbangs[i].m_timePassed * cosf(m_flashbangs[i].m_angle) * m_flashbangs[i].m_percentZ;
-		m_flashbangs[i].m_currentPosition.y *= 3.5f;
+		float x = m_flashbangs[i].m_speed * m_flashbangs[i].m_timePassed * cosf(m_flashbangs[i].m_angle) * m_flashbangs[i].m_percentX;
+		float y = m_flashbangs[i].m_speed * m_flashbangs[i].m_timePassed * sinf(m_flashbangs[i].m_angle) - 4.91f * m_flashbangs[i].m_timePassed * m_flashbangs[i].m_timePassed;
+		float z = m_flashbangs[i].m_speed * m_flashbangs[i].m_timePassed * cosf(m_flashbangs[i].m_angle) * m_flashbangs[i].m_percentZ;
 
-		m_flashbangs[i].m_particles->SetPosition(m_flashbangs[i].m_currentPosition);
-		m_flashbangs[i].m_particles->Update();
+		m_flashbangs[i].m_currentPosition.x = m_flashbangs[i].m_startPosition.x + x;
+		m_flashbangs[i].m_currentPosition.y = m_flashbangs[i].m_startPosition.y + 3.5f * y;
+		m_flashbangs[i].m_currentPosition.z = m_flashbangs[i].m_startPosition.z + z;
+
+		/*m_flashbangs[i].m_particles->SetPosition(m_flashbangs[i].m_currentPosition);
+		m_flashbangs[i].m_particles->Update();*/
 		m_flashbangs[i].m_trail->Update(m_flashbangs[i].m_currentPosition, m_flashbangs[i].m_angle);
 
 		if (m_flashbangs[i].m_currentPosition.y < 0.0f)
@@ -137,9 +142,9 @@ void FlashBang::UpdateFlashbangs(DirectX::XMFLOAT3 p_position, DirectX::XMFLOAT3
 		{
 			if (!m_flashbangs[i].m_alive)
 			{
-				m_flashbangs[i].m_particles->Shutdown();
+				/*m_flashbangs[i].m_particles->Shutdown();
 				delete m_flashbangs[i].m_particles;
-				m_flashbangs[i].m_particles = nullptr;
+				m_flashbangs[i].m_particles = nullptr;*/
 
 				m_flashbangs[i].m_trail->Shutdown();
 				delete m_flashbangs[i].m_trail;
@@ -181,7 +186,7 @@ void FlashBang::RenderFlashbangs()
 	{
 		// TODO, updatera världsmatrisen och rendera alla bombs.
 
-		m_flashbangs[i].m_particles->Render();
+		/*m_flashbangs[i].m_particles->Render();*/
 		m_flashbangs[i].m_trail->Render();
 	}
 
