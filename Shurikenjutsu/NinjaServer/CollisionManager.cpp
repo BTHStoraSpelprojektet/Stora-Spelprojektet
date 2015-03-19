@@ -100,7 +100,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		float attackingPlayerExtraCircleRadius = 1.0f;
 		DirectX::XMFLOAT3 attackingPlayerExtraCircle = DirectX::XMFLOAT3(playerList[i].x - (attackDirection.x * attackingPlayerExtraCircleRadius), playerList[i].y, playerList[i].z - (attackDirection.z * attackingPlayerExtraCircleRadius));
 
-		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(attackingPlayerExtraCircle.x - attackingPlayerPos.x, 0.0f, attackingPlayerExtraCircle.z - attackingPlayerPos.z);
+		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerPos.x - attackingPlayerExtraCircle.x, 0.0f, defendingPlayerPos.z - attackingPlayerExtraCircle.z);
 		//Ta reda på den jävla vinkel hellvetet... -.-' om den är inom vissa parametrar så kör nästa beräkning
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerPos, range, defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE))
