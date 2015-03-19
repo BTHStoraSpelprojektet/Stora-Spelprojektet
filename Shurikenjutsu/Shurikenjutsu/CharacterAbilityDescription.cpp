@@ -27,6 +27,9 @@ void CharacterAbilityDescription::Initialize(int p_ninjaIndex)
 	GUIText* temp4 = new GUIText();
 	temp4->Initialize("E", 25.0f, 126.0f, -80.0f, 0xff000000);
 	m_keyBinds.push_back(temp4);
+	GUIText* temp5 = new GUIText();
+	temp5->Initialize("R", 25.0f, 0.0f, -170.0f, 0xff000000);
+	m_keyBinds.push_back(temp5);
 
 	m_FirstText = new ToolTipPopUp();
 	m_FirstPic = new MenuItem();

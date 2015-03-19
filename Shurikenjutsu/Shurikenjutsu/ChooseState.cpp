@@ -77,7 +77,7 @@ bool ChooseState::Initialize(std::string p_levelName)
 
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f +offset;
-	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-140.0f;
+	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-125.0f;
 	float portraitYPos = 110.0f;//ninjaCycleHeight;//ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
 	float toolButtonSize = 60.0f;//m_screenHeight / 20.48f;
 	float toolButtonXPos = 70.0f;
