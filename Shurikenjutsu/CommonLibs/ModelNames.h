@@ -99,8 +99,8 @@
 // Ready button
 #define READYBUTTON_READY "../Shurikenjutsu/2DTextures/GUI/ready.png"
 #define READYBUTTON_UNREADY "../Shurikenjutsu/2DTextures/GUI/unready.png"
-#define READYBUTTON_DISABLED "../Shurikenjutsu/2DTextures/GUI/readydisabled.png"
+#define READYBUTTON_DISABLED "../Shurikenjutsu/2DTextures/GUI/ready_baw.png"
 #define PLAYBUTTON "../Shurikenjutsu/2DTextures/GUI/play.png"
-#define PLAYBUTTON_DISABLED "../Shurikenjutsu/2DTextures/GUI/playdisabled.png"
+#define PLAYBUTTON_DISABLED "../Shurikenjutsu/2DTextures/GUI/play_baw.png"
 
 #endif
