@@ -57,8 +57,16 @@ void ScoreBoard::Shutdown()
 	m_redColorPlayers.clear();
 	m_blueColorPlayers.clear();
 
+	for (unsigned int i = 0; i < m_deadRedPlayers.size(); i++)
+	{
+		delete m_deadRedPlayers[i];
+	}
 	m_deadRedPlayers.clear();
-	m_blueColorPlayers.clear();
+	for (unsigned int i = 0; i < m_deadBluePlayers.size(); i++)
+	{
+		delete m_deadBluePlayers[i];
+	}
+	m_deadBluePlayers.clear();
 
 	m_playerName.Shutdown();
 	m_killDeathNumber.Shutdown();

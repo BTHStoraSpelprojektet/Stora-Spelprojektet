@@ -138,10 +138,16 @@ void TeamTable::ClearList()
 	{
 		m_teamList[i].m_ninja->Shutdown();
 		m_teamList[i].m_tool->Shutdown();
+		m_teamList[i].m_name->Shutdown();
+		m_teamList[i].m_ready->Shutdown();
 		delete m_teamList[i].m_ninja;
 		delete m_teamList[i].m_tool;
+		delete m_teamList[i].m_name;
+		delete m_teamList[i].m_ready;
 		m_teamList[i].m_ninja = nullptr;
 		m_teamList[i].m_tool = nullptr;
+		m_teamList[i].m_name = nullptr;
+		m_teamList[i].m_ready = nullptr;
 	}
 	m_teamList.clear();
 	m_startXPos = m_initialStartXPos;
