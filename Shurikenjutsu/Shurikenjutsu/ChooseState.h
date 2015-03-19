@@ -81,6 +81,7 @@ private:
 	CurrentTeam m_currentTeam;
 	CurrentTeam m_prevTeam;
 	MenuButton* m_playButton;
+	MenuButton* m_readyButton;
 
 	Camera *m_camera;
 	ObjectManager* m_objectManager;
@@ -100,6 +101,8 @@ private:
 	float m_toolHeight;
 
 	int m_prevRandomNumber;
+	bool m_isReady;
+	bool m_isPrevReady;
 };
 
 

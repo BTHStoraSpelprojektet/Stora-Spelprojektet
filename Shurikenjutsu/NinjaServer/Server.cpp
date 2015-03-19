@@ -306,15 +306,22 @@ void Server::ReceviePacket()
 
 			int charNr, toolNr, team;
 			RakNet::RakString name;
+			bool isReady;
 
 			bitStream.Read(messageID);
 			bitStream.Read(charNr);
 			bitStream.Read(toolNr);
 			bitStream.Read(team);
 			bitStream.Read(name);
+			bitStream.Read(isReady);
 
-			m_gameState->SetPlayerInLobby(m_packet->guid, charNr, toolNr, team, name.C_String());
+			m_gameState->SetPlayerInLobby(m_packet->guid, charNr, toolNr, team, name.C_String(), isReady);
 
+			break;
+		}
+		case ID_START_GAME:
+		{
+			m_gameState->SendStartGame();
 			break;
 		}
 		default:

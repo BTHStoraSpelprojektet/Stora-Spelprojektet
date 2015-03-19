@@ -1177,7 +1177,7 @@ void PlayerManager::SendShieldValue(RakNet::RakNetGUID p_guid, float p_shield)
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
 }
 
-void PlayerManager::SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team, std::string p_name)
+void PlayerManager::SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team, std::string p_name, bool p_isReady)
 {
 	if (GetPlayerIndex(p_guid) != -1)
 	{
@@ -1189,6 +1189,7 @@ void PlayerManager::SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, in
 	lp.m_toolNr = p_toolNr;
 	lp.m_team = p_team;
 	lp.m_name = p_name;
+	lp.m_isReady = p_isReady;
 	
 	m_playersInLobby[p_guid] = lp;
 
@@ -1217,11 +1218,22 @@ void PlayerManager::SendPlayersInLobby()
 		bitStream.Write(it->first);
 		bitStream.Write(it->second.m_charNr);
 		bitStream.Write(it->second.m_toolNr);
-		bitStream.Write(it->second.m_team);
-		
+		bitStream.Write(it->second.m_team);		
 		RakNet::RakString name = RakNet::RakString(it->second.m_name.c_str());
 		bitStream.Write(name);
+		bitStream.Write(it->second.m_isReady);
 	}
 
 	m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::UNASSIGNED_RAKNET_GUID, true);
+}
+
+void PlayerManager::SendStartGame()
+{
+	for (std::map<RakNet::RakNetGUID, LobbyPlayers>::iterator it = m_playersInLobby.begin(); it != m_playersInLobby.end(); it++)
+	{
+		RakNet::BitStream bitStream;
+		bitStream.Write((RakNet::MessageID)ID_START_GAME);
+
+		m_serverPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, it->first, false);
+	}
 }

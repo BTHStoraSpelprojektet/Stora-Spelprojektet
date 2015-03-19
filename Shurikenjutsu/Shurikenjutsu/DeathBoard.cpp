@@ -157,6 +157,11 @@ void DeathBoard::DeathEverywhere()
 
 void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetGUID p_ninjaKilled, ABILITIES p_abilityUsed)
 {
+	if (Network::GetInstance()->GetMyPlayerIsInLobby())
+	{
+		return;
+	}
+	
 	DeathEverywhere();
 	
 	int team;

@@ -370,6 +370,7 @@ void System::Update()
 		m_gameState->Initialize(levelName);
 		Network::GetInstance()->SetObjectManager(m_chooseNinjaState->GetObjectManager());
 		Network::GetInstance()->SetSound(m_sound);
+		Network::GetInstance()->SetMyPlayerIsInLobby(true);
 		m_cursor->LargeSize();
 		break;
 	case GAMESTATESWITCH_PLAY:
