@@ -166,6 +166,5 @@ protected:
 	ParticleEmitter* m_bloodParticles;
 	float m_bloodParticlesTimer;
 	DirectX::XMFLOAT3 m_bloodPos;
-
 };
 #endif PLAYER
