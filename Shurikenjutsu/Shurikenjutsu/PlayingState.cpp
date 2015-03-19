@@ -69,7 +69,14 @@ void PlayingState::EscapeIsPressed()
 bool PlayingState::Initialize(std::string p_levelName)
 {
 	// Set pressed or release
-	GLOBAL::GetInstance().APE_ON = false;
+	if (Settings::GetInstance()->m_apeEnabled)
+	{
+		GLOBAL::GetInstance().APE_ON = true;
+	}
+	else
+	{
+		GLOBAL::GetInstance().APE_ON = false;
+	}
 
 	// Initialize the camera.
 	m_camera = new Camera();

@@ -130,7 +130,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		m_playingState->SetSound(m_sound);
 		m_menuState->setSound(m_sound);
 
-		/*if (Settings::GetInstance()->m_muteSound)
+		if (Settings::GetInstance()->m_muteSound)
 		{
 			GLOBAL::GetInstance().VOLUME_ON = false;
 			m_sound->MuteEverything();
@@ -140,7 +140,7 @@ bool System::Initialize(int p_argc, _TCHAR* p_argv[])
 		{
 			GLOBAL::GetInstance().VOLUME_ON = true;
 			m_sound->UnMuteEverything();
-		}*/
+		}
 	}
 
 	// Initialize current GameState

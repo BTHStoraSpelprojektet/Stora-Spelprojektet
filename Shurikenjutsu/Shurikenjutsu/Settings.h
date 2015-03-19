@@ -23,6 +23,8 @@ public:
 	bool m_ssao;
 	bool m_dof;
 	bool m_cameraMode;
+	bool m_apeToggle;
+	bool m_apeEnabled;
 
 private:
 	void GenerateDefaultSettings();
