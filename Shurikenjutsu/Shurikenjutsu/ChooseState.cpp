@@ -20,6 +20,7 @@
 #include "TeamTable.h"
 #include "InputManager.h"
 #include "Settings.h"
+#include <dwrite.h>
 
 ChooseState::ChooseState(){}
 ChooseState::~ChooseState(){}
@@ -192,6 +193,12 @@ bool ChooseState::Initialize(std::string p_levelName)
 	// Initialize the score board
 	ScoreBoard::GetInstance()->Initialize();
 
+	// Waiting text
+	m_waitingText = new GUIText();
+	m_waitingText->Initialize("", 50.0f, 0.0f, m_screenHeight * 0.3f, 0xFFFFFFFF);
+	m_waitingText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+	m_waitingText->SetText("Waiting for other players!");
+
 	return true;
 }
 
@@ -336,6 +343,13 @@ void ChooseState::Shutdown()
 		m_readyButton->Shutdown();
 		delete m_readyButton;
 		m_readyButton = nullptr;
+	}
+
+	if (m_waitingText != nullptr)
+	{
+		m_waitingText->Shutdown();
+		delete m_waitingText;
+		m_waitingText = nullptr;
 	}
 
 	ScoreBoard::GetInstance()->Shutdown();
@@ -653,6 +667,11 @@ void ChooseState::Render()
 	{
 		m_playButton->Render();
 		m_readyButton->Render();
+	}
+
+	if (m_isReady && !Network::GetInstance()->IsEveryoneElseReady())
+	{
+		m_waitingText->Render();
 	}
 }
 
