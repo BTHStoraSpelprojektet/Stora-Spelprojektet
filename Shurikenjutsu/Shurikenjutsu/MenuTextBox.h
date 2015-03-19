@@ -28,6 +28,7 @@ private:
 	int m_counter;
 	int m_maxChars;
 	GUIText* m_guiText;
-
+	bool m_marker;
+	float m_markerTimer;
 };
 #endif
