@@ -318,7 +318,7 @@ void PlayingState::ShutdownExit()
 
 GAMESTATESWITCH PlayingState::Update()
 {
-	if (InputManager::GetInstance()->IsKeyPressed(VK_CONTROL) && InputManager::GetInstance()->IsKeyClicked(VkKeyScan('s')))
+	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan('m')))
 	{
 		if (GLOBAL::GetInstance().VOLUME_ON)
 		{
