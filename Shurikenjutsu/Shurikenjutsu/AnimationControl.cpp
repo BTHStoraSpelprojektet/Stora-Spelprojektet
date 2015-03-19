@@ -40,8 +40,8 @@ std::vector<DirectX::XMFLOAT4X4> AnimationControl::UpdateAnimation()
 	m_frameArms += deltaTime * 20;
 	m_frameLegs += deltaTime * 20;
 	
-	m_blendWeightArms = (float)(m_frameArms - (int)m_frameArms) / 2;	//24.0f
-	m_blendWeightLegs = (float)(m_frameLegs - (int)m_frameLegs) / 2;
+	m_blendWeightArms = (float)(m_frameArms - (int)m_frameArms);// / 2;	//24.0f
+	m_blendWeightLegs = (float)(m_frameLegs - (int)m_frameLegs);// / 2;
 
 	if (m_frameArms >= (m_currentArms->m_endFrame - 1))
 	{
