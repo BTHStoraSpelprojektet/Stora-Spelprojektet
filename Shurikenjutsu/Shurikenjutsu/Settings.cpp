@@ -66,6 +66,12 @@ void Settings::LoadSettingsFile()
 		std::getline(myfile, line);
 		m_cameraMode = atoi(line.c_str()) ? 1 : 0;
 
+		std::getline(myfile, line);
+		m_apeToggle = atoi(line.c_str()) ? 1 : 0;
+
+		std::getline(myfile, line);
+		m_apeEnabled = atoi(line.c_str()) ? 1 : 0;
+
 		myfile.close();
 	}
 	else
@@ -90,6 +96,8 @@ void Settings::SaveSettingsFile()
 		myfile << m_ssao << std::endl;
 		myfile << m_dof << std::endl;
 		myfile << m_cameraMode << std::endl;
+		myfile << m_apeToggle << std::endl;
+		myfile << m_apeEnabled << std::endl;
 		myfile.close();
 	}
 }
@@ -124,5 +132,6 @@ void Settings::GenerateDefaultSettings()
 	m_ssao = true;
 	m_dof = true;
 	m_cameraMode = false;
-
+	m_apeToggle = true;
+	m_apeEnabled = false;
 }

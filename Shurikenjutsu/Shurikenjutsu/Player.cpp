@@ -21,6 +21,7 @@
 #include "Network.h"
 #include "Trail.h"
 #include "FlashBang.h"
+#include "Settings.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -115,7 +116,15 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	}
 	m_name = p_name;
 
-	m_onPressed = true;
+	if (Settings::GetInstance()->m_apeEnabled)
+	{
+		m_onPressed = false;
+	}
+	else
+	{
+		m_onPressed = true;
+	}
+	
 	m_bloodPos = m_position;
 	m_bloodPos.y += 1;
 	m_bloodParticles = new ParticleEmitter();
@@ -407,10 +416,42 @@ void Player::UpdateMe()
 		m_updateVisibility = true;
 	}
 
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan(VK_SPACE)))
+	if (Settings::GetInstance()->m_apeToggle)
 	{
-		m_onPressed = !m_onPressed;
-		GLOBAL::GetInstance().APE_ON = !m_onPressed;
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan(VK_SPACE)))
+		{
+			m_onPressed = !m_onPressed;
+			GLOBAL::GetInstance().APE_ON = !m_onPressed;
+		}
+	}
+	else
+	{
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
+		{
+			if (Settings::GetInstance()->m_apeEnabled)
+			{
+				m_onPressed = false;
+				GLOBAL::GetInstance().APE_ON = true;
+			}
+			else
+			{
+				m_onPressed = true;
+				GLOBAL::GetInstance().APE_ON = false;
+			}
+		}
+		else
+		{
+			if (Settings::GetInstance()->m_apeEnabled)
+			{
+				m_onPressed = true;
+				GLOBAL::GetInstance().APE_ON = false;
+			}
+			else
+			{
+				m_onPressed = false;
+				GLOBAL::GetInstance().APE_ON = true;
+			}
+		}
 	}
 
 	m_ability = m_noAbility;
