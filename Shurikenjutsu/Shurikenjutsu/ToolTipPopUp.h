@@ -13,7 +13,7 @@ public:
 	~ToolTipPopUp();
 	void Initialize(float p_xPos, float p_yPos, std::string p_text, float p_size, float p_backGroundWidth, float p_backGroundHeight, float p_bgOffset);
 	void Render();
-	void Update();
+	void Update(float p_xPos, float p_yPos, float p_size);
 	void Shutdown();
 
 private:

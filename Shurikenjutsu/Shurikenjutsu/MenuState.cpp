@@ -52,6 +52,10 @@ bool MenuState::Initialize(std::string p_levelName)
 	const float SSAOHEIGHT = 56.0f;
 	const float DOFWIDTH = 251.0f;
 	const float DOFHEIGHT = 68.0f;
+	const float SCTOGGLEWIDTH = 200.0f;
+	const float SCTOGGLEHEIGHT = 88.0f;
+	const float SMARTCASTWIDTH = 295.0f;
+	const float SMARTCASTHEIGHT = 58.0f;
 	const float LOGOPOSX = 0.0f;
 	const float LOGOPOSY = 250.0f;
 	const float LOGOWIDTH = 900.0f;
@@ -80,6 +84,10 @@ bool MenuState::Initialize(std::string p_levelName)
 	m_ssaoIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 2.0f * (-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_ssao);
 	m_options->AddTexture(-375.0f + SSAOWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), SSAOWIDTH, SSAOHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/ssao_text.png"));
 
+	// Ape Enabled
+	m_apeEnabledIndex = m_options->AddCheckbox(-75.0f + CHECKBOXSIZE*0.5f, 3.0f * (-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_apeEnabled);
+	m_options->AddTexture(-375.0f + SMARTCASTWIDTH*0.5f, 3.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), SMARTCASTWIDTH, SMARTCASTHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/smartcast_text.png"));
+
 	// DOF
 	m_dofIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 0.0f, MENUACTION_EMPTY, settings->m_dof);
 	m_options->AddTexture(25.0f + DOFWIDTH*0.5f, 0.0f, DOFWIDTH, DOFHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/dof_text.png"));
@@ -91,6 +99,10 @@ bool MenuState::Initialize(std::string p_levelName)
 	// Camera Mode
 	m_cameraModeIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_cameraMode);
 	m_options->AddTexture(25.0f + CAMERAMODEWIDTH*0.5f, 2.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), CAMERAMODEWIDTH, CAMERAMODEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/camera_text.png"));
+
+	// Ape Toggle
+	m_apeToggleIndex = m_options->AddCheckbox(375.0f - CHECKBOXSIZE*0.5f, 3.0f * (-CHECKBOXSIZE - OPTIONSMARGIN), MENUACTION_EMPTY, settings->m_apeToggle);
+	m_options->AddTexture(25.0f + SCTOGGLEWIDTH*0.5f, 3.0f *(-CHECKBOXSIZE - OPTIONSMARGIN), SCTOGGLEWIDTH, SCTOGGLEHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/sctoggle_text.png"));
 
 	// Options Buttons
 	m_options->AddButton(BUTTONWIDTH*0.5f + 10.0f, -3.0f * BUTTONHEIGHT - 4.0f*BUTTONOFFSET, BUTTONWIDTH, BUTTONHEIGHT, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/back.png"), MENUACTION_BACK);
@@ -540,6 +552,12 @@ void MenuState::OptionsApply()
 	bool temp = m_options->GetCheckboxState(m_vsyncIndex);
 	GraphicsEngine::SetVsync(temp);
 	settings->m_vsync = temp;
+
+	temp = m_options->GetCheckboxState(m_apeEnabledIndex);
+	settings->m_apeEnabled = temp;
+
+	temp = m_options->GetCheckboxState(m_apeToggleIndex);
+	settings->m_apeToggle = temp;
 
 	temp = m_options->GetCheckboxState(m_dofIndex);
 	settings->m_dof = temp;

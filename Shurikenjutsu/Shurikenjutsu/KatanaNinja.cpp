@@ -71,78 +71,73 @@ void KatanaNinja::Shutdown()
 
 void KatanaNinja::RenderAttackLocations()
 {
-	if (!InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
+	if (InputManager::GetInstance()->IsLeftMousePressed())
 	{
-		GraphicsEngine::TurnOnAlphaBlending();
-		if (InputManager::GetInstance()->IsLeftMousePressed())
+		if ((float)m_meleeAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 		{
-			if ((float)m_meleeAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
-			{
-				m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
+			m_ape->NormalMeleeAttackCone(m_aimFrustrum, m_attackDir, m_position, KATANA_RANGE);
 
-				ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
-			}
-			else
-			{
-				StillCDText();
-			}
+			ParticleRenderer::GetInstance()->QueueRender(m_aimFrustrum);
 		}
-		if (InputManager::GetInstance()->IsRightMousePressed())
+		else
 		{
-			if ((m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1) && GLOBAL::GetInstance().APE_ON)
-			{
-				m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
-
-				ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
-				ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
-			}
-			else
-			{
-				StillCDText();
-			}
+			StillCDText();
 		}
-		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
+	}
+	if (InputManager::GetInstance()->IsRightMousePressed())
+	{
+		if ((m_rangeAttack->GetStacks() > 0 || m_rangeAttack->GetStacks() == -1) && GLOBAL::GetInstance().APE_ON)
 		{
-			if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
-			{
-				m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, DASH_MAX_RANGE, false);
+			m_ape->ThinArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
 
-				ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
-				ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
-			}
-			else
-			{
-				StillCDText();
-			}
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
 		}
-		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+		else
 		{
-			if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
-			{
-				m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
-
-				ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
-				ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);;
-			}
-			else
-			{
-				StillCDText();
-			}
+			StillCDText();
 		}
-		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('q')))
+	{
+		if ((float)m_meleeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
 		{
-			if ((float)m_toolAbility->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
-			{
-				m_ape->ThrowSphere(m_aimSphere, m_position, m_toolAbility->GetRadius(), m_toolAbility->GetRange());
-				ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
+			m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, DASH_MAX_RANGE, false);
 
-			}
-			else
-			{
-				StillCDText();
-			}
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);
 		}
-		GraphicsEngine::TurnOffAlphaBlending();
+		else
+		{
+			StillCDText();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('e')))
+	{
+		if ((float)m_rangeSpecialAttack->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
+		{
+			m_ape->ThickArrowPrediction(m_aimArrow, m_aimPole, m_attackDir, m_position, true);
+
+			ParticleRenderer::GetInstance()->QueueRender(m_aimPole);
+			ParticleRenderer::GetInstance()->QueueRender(m_aimArrow);;
+		}
+		else
+		{
+			StillCDText();
+		}
+	}
+	if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan('r')))
+	{
+		if ((float)m_toolAbility->GetCooldown() <= 0.0f && GLOBAL::GetInstance().APE_ON)
+		{
+			m_ape->ThrowSphere(m_aimSphere, m_position, m_toolAbility->GetRadius(), m_toolAbility->GetRange());
+			ParticleRenderer::GetInstance()->QueueRender(m_aimSphere);
+
+		}
+		else
+		{
+			StillCDText();
+		}
 	}
 }
 

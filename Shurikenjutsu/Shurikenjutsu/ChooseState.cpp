@@ -79,7 +79,7 @@ bool ChooseState::Initialize(std::string p_levelName)
 
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f +offset;
-	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-140.0f;
+	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-125.0f;
 	float portraitYPos = 110.0f;//ninjaCycleHeight;//ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
 	float toolButtonSize = 60.0f;//m_screenHeight / 20.48f;
 	float toolButtonXPos = 70.0f;
@@ -152,10 +152,10 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_toolDescription[1] = new ToolTipPopUp();
 	m_toolDescription[2] = new ToolTipPopUp();
 	m_toolDescription[3] = new ToolTipPopUp();
-	m_toolDescription[0]->Initialize(0.0f, toolCycleHeight, SPIKES_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
-	m_toolDescription[1]->Initialize(0.0f, toolCycleHeight, SMOKEBOMB_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
-	m_toolDescription[2]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
-	m_toolDescription[3]->Initialize(0.0f, toolCycleHeight, FLASH_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
+	m_toolDescription[0]->Initialize(0.0f, -330.0f, SPIKES_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, 0.0f);
+	m_toolDescription[1]->Initialize(0.0f, -330.0f, SMOKEBOMB_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, 0.0f);
+	m_toolDescription[2]->Initialize(0.0f, -330.0f, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, 0.0f);
+	m_toolDescription[3]->Initialize(0.0f, -330.0f, FLASH_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, 0.0f);
 	
 	m_abilityDescription[0] = new CharacterAbilityDescription();
 	m_abilityDescription[1] = new CharacterAbilityDescription();
@@ -362,19 +362,6 @@ GAMESTATESWITCH ChooseState::Update()
 	//+((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f)
 	//	- ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f)
 	
-	if (xPos > (m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) || xPos < (-m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) ||
-		yPos >(m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 140.0f || yPos < (-m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 140.0f)
-	{
-		m_abilityDescription[0]->SetRenderKeybinds(true);
-		m_abilityDescription[1]->SetRenderKeybinds(true);
-		m_abilityDescription[2]->SetRenderKeybinds(true);
-	}
-	else
-	{
-		m_abilityDescription[0]->SetRenderKeybinds(false);
-		m_abilityDescription[1]->SetRenderKeybinds(false);
-		m_abilityDescription[2]->SetRenderKeybinds(false);
-	}
 	// Update Camera position
 	m_camera->MenuCameraRotation();
 
@@ -397,7 +384,7 @@ GAMESTATESWITCH ChooseState::Update()
 	else
 	{
 		m_abilityDescription[m_currentNinja]->Update();
-		m_toolDescription[m_currentTool]->Update();
+		m_toolDescription[m_currentTool]->Update(0.0f, -140.0f, 50.0f);
 	}
 	UpdateTeams();
 

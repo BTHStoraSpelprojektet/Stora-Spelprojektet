@@ -156,7 +156,7 @@ public:
 	static bool IsVisibilityPointVisible(Point p_point);
 	static ID3D11Buffer* CreateBuffer(BUFFERTYPE p_type, std::vector<Vertex> p_mesh, std::vector<VertexAnimated> p_meshAnimated);
 	static void SS_AddStaticLine(Line p_line);
-	static 	void SS_Update(float p_deltaTime);
+	static void SS_Update(float p_deltaTime);
 	static void SS_DebugRender();
 	static void SS_AddSmokeBomb(Point p_point, float p_deltaTime);
 	static void SS_ClearStaticLines();
