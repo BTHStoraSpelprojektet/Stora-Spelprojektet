@@ -17,6 +17,8 @@ const float TOOLHEIGHT = 50.0f;
 // BUTTON
 const float BUTTONWIDTH = 301.0f;
 const float BUTTONHEIGHT = 98.0f;
+// Checkbox
+const float CHECKBOXSIZE = 50.0f;
 // OFFSET
 const float OFFSET = 10.0f;
 
@@ -31,7 +33,7 @@ void TeamTable::Initialize(float p_startXPos, float p_startYPos, int p_team)
 	{
 		m_portraitOffset *= -1;
 	}
-	m_toolOffset = PORTRAITWIDTH * 2.0f;
+	m_toolOffset = PORTRAITWIDTH;
 	if (p_team == 2)
 	{
 		m_toolOffset *= -1;
@@ -50,12 +52,15 @@ void TeamTable::Shutdown()
 		m_teamList[i].m_ninja->Shutdown();
 		m_teamList[i].m_tool->Shutdown();
 		m_teamList[i].m_name->Shutdown();
+		m_teamList[i].m_ready->Shutdown();
 		delete m_teamList[i].m_ninja;
 		delete m_teamList[i].m_tool;
 		delete m_teamList[i].m_name;
+		delete m_teamList[i].m_ready;
 		m_teamList[i].m_ninja = nullptr;
 		m_teamList[i].m_tool = nullptr;
 		m_teamList[i].m_name = nullptr;
+		m_teamList[i].m_ready = nullptr;
 	}
 	m_teamList.clear();
 }
@@ -66,14 +71,16 @@ void TeamTable::Render()
 		m_teamList[i].m_ninja->Render();
 		m_teamList[i].m_tool->Render();
 		m_teamList[i].m_name->Render();
+		m_teamList[i].m_ready->Render();
 	}
 }
-void TeamTable::AddTeamMate(int p_ninja, int p_tool, std::string p_name)
+void TeamTable::AddTeamMate(int p_ninja, int p_tool, std::string p_name, bool p_isReady)
 {
 	CharacterToolWrapper temp;
 	temp.m_tool = new MenuItem();
 	temp.m_ninja = new MenuItem();
 	temp.m_name = new GUIText();
+	temp.m_ready = new MenuItem();
 
 	// Ninja
 	if (p_ninja == 0)
@@ -110,6 +117,16 @@ void TeamTable::AddTeamMate(int p_ninja, int p_tool, std::string p_name)
 	temp.m_name->Initialize(p_name, 40.0f, m_startXPos + m_portraitOffset * 0.75f, m_startYPos - PORTRAITHEIGHT + 15.0f, 0xFFFFFFFF);
 	temp.m_name->SetTextAlignment(m_nameAlignment);
 	temp.m_name->SetText(p_name);
+
+	// Ready
+	if (p_isReady)
+	{
+		temp.m_ready->Initialize(m_startXPos + m_portraitOffset + m_toolOffset * 2.0f, m_startYPos, CHECKBOXSIZE, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/checkbox_checked.png"));
+	}
+	else
+	{
+		temp.m_ready->Initialize(m_startXPos + m_portraitOffset + m_toolOffset * 2.0f, m_startYPos, CHECKBOXSIZE, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/checkbox_empty.png"));
+	}
 
 	m_startYPos -= PORTRAITHEIGHT * 2.0f;
 	

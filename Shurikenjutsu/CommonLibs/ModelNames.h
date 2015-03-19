@@ -96,4 +96,8 @@
 // Scoreboard
 #define SCOREBOARD_BACKGROUND "../Shurikenjutsu/2DTextures/GUI/scoreboard_bg.png"
 
+// Ready button
+#define READYBUTTON_READY "../Shurikenjutsu/2DTextures/GUI/apply.png"
+#define READYBUTTON_UNREADY "../Shurikenjutsu/2DTextures/GUI/back.png"
+
 #endif

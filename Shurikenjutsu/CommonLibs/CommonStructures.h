@@ -401,5 +401,6 @@ struct LobbyPlayers
 	int m_toolNr;
 	int m_team;
 	std::string m_name;
+	bool m_isReady;
 };
 #endif
