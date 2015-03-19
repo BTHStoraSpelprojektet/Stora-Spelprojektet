@@ -420,10 +420,10 @@ dirtPile__02 37.76 0.01 -42.832 0 0.707068 0
 groundTorch__1 -32.511 0.455909 37.9776 0.244535 -0.90166 2.23724e-017
 groundTorch__2 32.9684 0.455909 -36.2018 0.228841 2.02875 0
 path_dirtISemi__ 15 0.01 7.5 0 0 0
-path_dirtISemi__1 -15 0.01 -7.5 0 3.14159 0
-path_dirtISemi__10 -15 0.01 7.5 0 3.14159 0
+path_dirtISemi__1 -15 0.01 -7.5 0 0 0
+path_dirtISemi__10 -15 0.01 7.5 0 0 0
 path_dirtISemi__11 -22.5 0.01 0 0 1.5708 0
-path_dirtISemi__2 15 0.01 -7.5 0 3.14159 0
+path_dirtISemi__2 15 0.01 -7.5 0 0 0
 path_dirtISemi__3 7.5 0.01 -15 0 1.5708 0
 path_dirtISemi__6 -7.5 0.01 15 0 1.5708 0
 path_dirtISemi__7 7.5 0.01 15 0 1.5708 0
@@ -434,7 +434,7 @@ path_dirtIToGates__1 1.04225 0.01 -56.03 0 0 0
 path_dirtIToShrine__ -0.92189 0.01 24.152 0 0 0
 path_dirtIToShrine__1 0.00120518 0.01 -23.6 0 0 0
 path_dirtL__2 -15 0.01 -15 0 1.5708 0
-path_dirtL__3 15 0.01 -15 0 0 0
+path_dirtL__3 15 0.01 -15 0 6.28319 0
 path_dirtL__4 -15 0.01 15 0 3.14159 0
 path_dirtL__5 15 0.01 15 0 4.71239 0
 path_dirtT__ 1.0415 0.01 -32.7521 0 3.14159 0
