@@ -194,12 +194,7 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 		m_killer[m_nrOfDeaths].SetColor(m_blueColor);
 	}
 
-	// Background
-	DirectX::XMFLOAT2 size = DirectX::XMFLOAT2(m_deadGuy[m_nrOfDeaths].GetWidth() + 85.0f + m_killer[m_nrOfDeaths].GetWidth(), m_background[m_nrOfDeaths].GetSize().y);
-	DirectX::XMFLOAT3 pos = position;
-	pos.x = m_originalPos.x - size.x * 0.5f + 10.0f;
-	m_background[m_nrOfDeaths].SetPosition(pos);
-	m_background[m_nrOfDeaths].SetSize(size);
+	
 
 	switch (p_abilityUsed)
 	{
@@ -244,12 +239,19 @@ void DeathBoard::KillHappened(RakNet::RakNetGUID p_ninjaKilling, RakNet::RakNetG
 		break;
 	case ABILITIES_SD_SMOKE:
 		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_SD_SMOKE));
+		m_killer[m_nrOfDeaths].SetText(std::string("Evil Mist Demon"));
 		break;
 	default:
 		m_killAbility[m_nrOfDeaths].SetTexture(TextureLibrary::GetInstance()->GetTexture(DEATHBOARD_KILLARROW));
 		break;
 	}
 
+	// Background
+	DirectX::XMFLOAT2 size = DirectX::XMFLOAT2(m_deadGuy[m_nrOfDeaths].GetWidth() + 85.0f + m_killer[m_nrOfDeaths].GetWidth(), m_background[m_nrOfDeaths].GetSize().y);
+	DirectX::XMFLOAT3 pos = position;
+	pos.x = m_originalPos.x - size.x * 0.5f + 10.0f;
+	m_background[m_nrOfDeaths].SetPosition(pos);
+	m_background[m_nrOfDeaths].SetSize(size);
 }
 
 void DeathBoard::ChangeOrder(int p_index)

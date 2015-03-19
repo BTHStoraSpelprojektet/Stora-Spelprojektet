@@ -623,9 +623,14 @@ void PlayerManager::DamagePlayer(RakNet::RakNetGUID p_defendingGuid, float p_dam
 	{
 		if (m_players[i].guid == p_defendingGuid)
 		{
-			// STop healing POI, and send message to stop effect.
+			// Stop healing POI, and send message to stop effect.
 			m_players[i].hotHeal = 0.0f;
 			m_players[i].invis = false;
+
+			if (!m_players[i].isAlive)
+			{
+				return;
+			}
 
 			if (m_players[i].hasHealPOI)
 			{

@@ -500,6 +500,8 @@ GAMESTATESWITCH ChooseState::Update()
 				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
 			}
 			Network::GetInstance()->SetHaveUpdateNewLevel();
+			//Network::GetInstance()->SetMyPlayerIsInLobby(false);
+
 			return GAMESTATESWITCH_PLAY;
 		}
 		else

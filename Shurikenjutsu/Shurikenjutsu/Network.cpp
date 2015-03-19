@@ -1045,8 +1045,6 @@ void Network::ReceviePacket()
 				}
 				}
 
-				//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
-
 				break;
 			}
 			case ID_PLAY_SOUND:
@@ -1076,8 +1074,6 @@ void Network::ReceviePacket()
 				if (m_sound != NULL){
 				m_sound->CreateDefaultSound(sound, x, y, z);
 				}
-
-				//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 				break;
 			}
