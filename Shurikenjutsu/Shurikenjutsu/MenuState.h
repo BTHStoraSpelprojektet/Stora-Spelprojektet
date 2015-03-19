@@ -15,7 +15,7 @@ class Camera;
 class MenuItem;
 class CreaditsScreen;
 class Sound;
-
+class MenuItem;
 
 class MenuState : public GameState
 {
@@ -53,6 +53,9 @@ private:
 	MenuTextBox* m_ipbox;
 	MenuTextBox* m_namebox;
 	bool m_hideIpBox;
+	bool m_optionsChanged;
+
+	MenuItem* m_applyDisabled;
 
 	// Checkbox Indexes
 	int m_vsyncIndex;

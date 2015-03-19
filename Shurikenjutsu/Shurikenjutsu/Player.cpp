@@ -935,12 +935,6 @@ void Player::SetCalculatePlayerPosition()
 	// Check collision between player and static spheres
 	for (unsigned int i = 0; i < collidingSpheres.size(); i++)
 	{
-		//if (CheckSidesIfMultipleCollisions() == true)
-		//{
-		//	SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-		//}
-		//else
-		//{
 		float r = collidingSpheres[i].m_radius;
 		float deltaZ = m_position.z - collidingSpheres[i].m_position.z;
 		float deltaX = m_position.x - collidingSpheres[i].m_position.x;
@@ -986,22 +980,12 @@ void Player::SetCalculatePlayerPosition()
 		dir.x = dir.x / length;
 		dir.z = dir.z / length;
 		SetDirection(dir);
-		/*}*/
-
 	}
 	if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
 	{
 		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 
-
-	//if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
-	//{
-	//	SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	//}
-
-
-	//float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speedXDeltaTime, m_position.y + m_direction.y * speedXDeltaTime, m_position.z + m_direction.z * speedXDeltaTime));
 }
 
