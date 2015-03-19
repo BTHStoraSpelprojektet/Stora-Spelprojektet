@@ -98,14 +98,14 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 defendingPlayerPos = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		//DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
 		float attackingPlayerExtraCircleRadius = 1.0f;
-		DirectX::XMFLOAT3 attackingPlayerExtraCircle = DirectX::XMFLOAT3(playerList[i].x - (attackDirection.x * attackingPlayerExtraCircleRadius), playerList[i].y, playerList[i].z - (attackDirection.z * attackingPlayerExtraCircleRadius));
+		DirectX::XMFLOAT3 attackingPlayerExtraCircle = DirectX::XMFLOAT3(attackingPlayerPos.x - (attackDirection.x * attackingPlayerExtraCircleRadius), attackingPlayerPos.y, attackingPlayerPos.z - (attackDirection.z * attackingPlayerExtraCircleRadius));
 
 		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerPos.x - attackingPlayerExtraCircle.x, 0.0f, defendingPlayerPos.z - attackingPlayerExtraCircle.z);
 		//Ta reda på den jävla vinkel hellvetet... -.-' om den är inom vissa parametrar så kör nästa beräkning
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerPos, range, defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE))
 		{
-			if (!IntersectionTests::Intersections::SphereSphereCollision(defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE, attackingPlayerExtraCircle, attackingPlayerExtraCircleRadius))
+			if (!IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerExtraCircle, attackingPlayerExtraCircleRadius, defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE))
 			{
 				DirectX::XMFLOAT3 A = attackDirection;
 				float aLength = sqrt(A.x * A.x + A.z * A.z);
