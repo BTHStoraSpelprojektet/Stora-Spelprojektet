@@ -378,7 +378,7 @@ GAMESTATESWITCH ChooseState::Update()
 	if (m_currentTeam == CURRENTTEAM_RED)
 	{
 		m_questionMark->SetPosition(m_redTeam->GetXPos(), m_redTeam->GetNextYPos());
-		if (m_redTeam->GetNumberOfPlayers() == 4)
+		if (m_redTeam->GetNumberOfPlayers() >= 4)
 		{
 			m_currentTeam = CURRENTTEAM_NONE;
 		}
@@ -393,7 +393,7 @@ GAMESTATESWITCH ChooseState::Update()
 	if (m_currentTeam == CURRENTTEAM_BLUE)
 	{
 		m_questionMark->SetPosition(m_blueTeam->GetXPos(), m_blueTeam->GetNextYPos());
-		if (m_blueTeam->GetNumberOfPlayers() == 4)
+		if (m_blueTeam->GetNumberOfPlayers() >= 4)
 		{
 			m_currentTeam = CURRENTTEAM_NONE;
 		}

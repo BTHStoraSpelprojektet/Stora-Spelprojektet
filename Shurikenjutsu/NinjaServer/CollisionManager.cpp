@@ -96,28 +96,33 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 attackingPlayerPos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, 0.0f, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 defendingPlayerPos = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
-		DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		//DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		float attackingPlayerExtraCircleRadius = 1.0f;
+		DirectX::XMFLOAT3 attackingPlayerExtraCircle = DirectX::XMFLOAT3(attackingPlayerPos.x - (attackDirection.x * attackingPlayerExtraCircleRadius), attackingPlayerPos.y, attackingPlayerPos.z - (attackDirection.z * attackingPlayerExtraCircleRadius));
 
-		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerPos.x - attackingPlayerPos.x, 0.0f, defendingPlayerPos.z - attackingPlayerPos.z);
+		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerPos.x - attackingPlayerExtraCircle.x, 0.0f, defendingPlayerPos.z - attackingPlayerExtraCircle.z);
 		//Ta reda på den jävla vinkel hellvetet... -.-' om den är inom vissa parametrar så kör nästa beräkning
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerPos, range, defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE))
 		{
-			DirectX::XMFLOAT3 A = attackDirection;
-			float aLength = sqrt(A.x * A.x + A.z * A.z);
-			DirectX::XMFLOAT3 B = vectorFromAttackerToDefender;
-			float bLength = sqrt(B.x * B.x + B.z * B.z);
-			float dotProduct = A.x * B.x + A.z * B.z;
-			//A*B = |A| * |B| * cos(vinkel)
-			float angle = acos(dotProduct / (aLength * bLength));
-
-			if (angle < attackAngle)
+			if (!IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerExtraCircle, attackingPlayerExtraCircleRadius, defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE))
 			{
-				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos, false))
+				DirectX::XMFLOAT3 A = attackDirection;
+				float aLength = sqrt(A.x * A.x + A.z * A.z);
+				DirectX::XMFLOAT3 B = vectorFromAttackerToDefender;
+				float bLength = sqrt(B.x * B.x + B.z * B.z);
+				float dotProduct = A.x * B.x + A.z * B.z;
+				//A*B = |A| * |B| * cos(vinkel)
+				float angle = acos(dotProduct / (aLength * bLength));
+
+				if (angle < attackAngle)
 				{
-					// Damage the player
-					p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid, p_ability, false);
-					break;
+					if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos, false))
+					{
+						// Damage the player
+						p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid, p_ability, false);
+						break;
+					}
 				}
 			}
 		}
@@ -900,67 +905,70 @@ void CollisionManager::NaginataStbDot(PlayerManager* p_playerManager)
 		if (m_performingStabAttackList[j].m_performNaginataStabAttack)
 		{
 			PlayerNet attackingPlayer = p_playerManager->GetPlayer(m_performingStabAttackList[j].m_guid);
-			std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
-			DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
-			for (unsigned int i = 0; i < playerList.size(); i++)
+			if (attackingPlayer.isAlive)
 			{
-				// So you don't collide with yourself.
-				if (playerList[i].guid == attackingPlayer.guid)
+				std::vector<PlayerNet> playerList = p_playerManager->GetPlayers();
+				DirectX::XMFLOAT3 attackPosition = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
+				for (unsigned int i = 0; i < playerList.size(); i++)
 				{
-					continue;
-				}
-
-				// Check so you are not on the same team
-				if (playerList[i].team == attackingPlayer.team)
-				{
-					continue;
-				}
-
-				// Check so the player aren't already dead
-				if (!playerList[i].isAlive)
-				{
-					continue;
-				}
-
-				DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(NAGINATASTAB_BOXEXTENTX, NAGINATASTAB_BOXEXTENTY, NAGINATASTAB_BOXEXTENTZ);
-				DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
-				DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
-
-				float faceAngle = atan2(attackDirection.x, attackDirection.z);
-
-				// Rotate around y axis
-				DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
-
-				// Update rec location.
-				DirectX::XMFLOAT4 rotationQuaternion;
-				DirectX::XMStoreFloat4(&rotationQuaternion, DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
-
-				attackPosition = DirectX::XMFLOAT3(attackPosition.x + attackDirection.x * boxExtent.z, attackPosition.y, attackPosition.z + attackDirection.z * boxExtent.z);
-
-				// Make collision test
-				if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
-				{
-					if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z), true))
+					// So you don't collide with yourself.
+					if (playerList[i].guid == attackingPlayer.guid)
 					{
-						// Damage the player
-						if (playerList[i].dotDamage > 1.0f && p_playerManager->CanSendDotDamage())
+						continue;
+					}
+
+					// Check so you are not on the same team
+					if (playerList[i].team == attackingPlayer.team)
+					{
+						continue;
+					}
+
+					// Check so the player aren't already dead
+					if (!playerList[i].isAlive)
+					{
+						continue;
+					}
+
+					DirectX::XMFLOAT3 boxExtent = DirectX::XMFLOAT3(NAGINATASTAB_BOXEXTENTX, NAGINATASTAB_BOXEXTENTY, NAGINATASTAB_BOXEXTENTZ);
+					DirectX::XMFLOAT3 spherePosition = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
+					DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, attackingPlayer.dirY, attackingPlayer.dirZ);
+
+					float faceAngle = atan2(attackDirection.x, attackDirection.z);
+
+					// Rotate around y axis
+					DirectX::XMFLOAT3 rotatinAxis = DirectX::XMFLOAT3(0.0f, 1.0f, 0.0f);
+
+					// Update rec location.
+					DirectX::XMFLOAT4 rotationQuaternion;
+					DirectX::XMStoreFloat4(&rotationQuaternion, DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&rotatinAxis), faceAngle));
+
+					attackPosition = DirectX::XMFLOAT3(attackPosition.x + attackDirection.x * boxExtent.z, attackPosition.y, attackPosition.z + attackDirection.z * boxExtent.z);
+
+					// Make collision test
+					if (IntersectionTests::Intersections::OBBSphereCollision(attackPosition, boxExtent, rotationQuaternion, spherePosition, CHARACTER_ENEMY_BOUNDINGSPHERE))
+					{
+						if (!IntersectingObjectWhenAttacking(DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z), DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z), true))
 						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));
-							p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, attackingPlayer.guid, ABILITIES_NAGAINATASTAB, false);
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
-						}
-						else
-						{
-							p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));
+							// Damage the player
+							if (playerList[i].dotDamage > 1.0f && p_playerManager->CanSendDotDamage())
+							{
+								p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));
+								p_playerManager->DamagePlayer(playerList[i].guid, playerList[i].dotDamage, attackingPlayer.guid, ABILITIES_NAGAINATASTAB, false);
+								p_playerManager->SetPlayerDotDamage(playerList[i].guid, 0.0f);
+							}
+							else
+							{
+								p_playerManager->SetPlayerDotDamage(playerList[i].guid, playerList[i].dotDamage + (NAGINATASTAB_DAMAGE * m_deltaTime));
+							}
 						}
 					}
 				}
-			}
-			if (m_performingStabAttackList[j].m_timer > NAGINATASTAB_DURATION)
-			{
-				m_performingStabAttackList[j].m_timer = 0;
-				m_performingStabAttackList[j].m_performNaginataStabAttack = false;
-				m_performingStabAttackList.erase(m_performingStabAttackList.begin() + j);
+				if (m_performingStabAttackList[j].m_timer > NAGINATASTAB_DURATION)
+				{
+					m_performingStabAttackList[j].m_timer = 0;
+					m_performingStabAttackList[j].m_performNaginataStabAttack = false;
+					m_performingStabAttackList.erase(m_performingStabAttackList.begin() + j);
+				}
 			}
 		}
 	}
