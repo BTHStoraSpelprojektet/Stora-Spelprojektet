@@ -97,15 +97,15 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, 0.0f, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 defendingPlayerPos = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		//DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-		float defendingPlayerExtraCircleRadius = 1.0f;
-		DirectX::XMFLOAT3 defendingPlayerExtraCircle = DirectX::XMFLOAT3(playerList[i].x - (attackDirection.x * defendingPlayerExtraCircleRadius), playerList[i].y, playerList[i].z - (attackDirection.z * defendingPlayerExtraCircleRadius));
+		float attackingPlayerExtraCircleRadius = 1.0f;
+		DirectX::XMFLOAT3 attackingPlayerExtraCircle = DirectX::XMFLOAT3(playerList[i].x - (attackDirection.x * attackingPlayerExtraCircleRadius), playerList[i].y, playerList[i].z - (attackDirection.z * attackingPlayerExtraCircleRadius));
 
-		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerExtraCircle.x - attackingPlayerPos.x, 0.0f, defendingPlayerExtraCircle.z - attackingPlayerPos.z);
+		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(attackingPlayerExtraCircle.x - attackingPlayerPos.x, 0.0f, attackingPlayerExtraCircle.z - attackingPlayerPos.z);
 		//Ta reda på den jävla vinkel hellvetet... -.-' om den är inom vissa parametrar så kör nästa beräkning
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerPos, range, defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE))
 		{
-			if (!IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerPos, range, defendingPlayerExtraCircle, defendingPlayerExtraCircleRadius))
+			if (!IntersectionTests::Intersections::SphereSphereCollision(defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE, attackingPlayerExtraCircle, attackingPlayerExtraCircleRadius))
 			{
 				DirectX::XMFLOAT3 A = attackDirection;
 				float aLength = sqrt(A.x * A.x + A.z * A.z);
