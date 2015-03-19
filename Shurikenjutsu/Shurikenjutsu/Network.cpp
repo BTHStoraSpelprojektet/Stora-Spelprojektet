@@ -69,6 +69,7 @@ void Network::InitValues()
 	m_matchWinningTeam = 0;
 	m_suddenDeath = false;
 	m_suddenDeathBoxIndex = 99;
+	m_startGame = false;
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
@@ -1362,6 +1363,7 @@ void Network::ReceviePacket()
 				int charNr, toolNr, team;
 				RakNet::RakString name;
 				RakNet::RakNetGUID guid;
+				bool isReady;
 
 				m_lobbyPlayers.clear();
 
@@ -1375,12 +1377,14 @@ void Network::ReceviePacket()
 					bitStream.Read(toolNr);
 					bitStream.Read(team);
 					bitStream.Read(name);
+					bitStream.Read(isReady);
 
 					LobbyPlayers lp;
 					lp.m_charNr = charNr;
 					lp.m_toolNr = toolNr;
 					lp.m_team = team;
 					lp.m_name = name.C_String();
+					lp.m_isReady = isReady;
 
 					if (guid != GetMyGUID())
 					{
@@ -1388,6 +1392,11 @@ void Network::ReceviePacket()
 					}
 				}
 
+				break;
+			}
+			case ID_START_GAME:
+			{
+				m_startGame = true;
 				break;
 			}
 			default:
@@ -2762,7 +2771,7 @@ void Network::UpdateShieldValue(RakNet::RakNetGUID p_guid, float p_shieldValue)
 	}
 }
 
-void Network::SendLobbyValues(int p_charNr, int p_toolNr, int p_team)
+void Network::SendLobbyValues(int p_charNr, int p_toolNr, int p_team, bool p_isReady)
 {
 	RakNet::BitStream bitStream;
 
@@ -2770,9 +2779,9 @@ void Network::SendLobbyValues(int p_charNr, int p_toolNr, int p_team)
 	bitStream.Write(p_charNr);
 	bitStream.Write(p_toolNr);
 	bitStream.Write(p_team);
-
 	RakNet::RakString name = RakNet::RakString(m_playerName.c_str());
 	bitStream.Write(name);
+	bitStream.Write(p_isReady);
 
 	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
 }
@@ -2780,4 +2789,32 @@ void Network::SendLobbyValues(int p_charNr, int p_toolNr, int p_team)
 std::vector<LobbyPlayers> Network::GetPlayersInLobby()
 {
 	return m_lobbyPlayers;
+}
+
+bool Network::IsEveryoneElseReady()
+{
+	for (unsigned int i = 0; i < m_lobbyPlayers.size(); i++)
+	{
+		if (!m_lobbyPlayers[i].m_isReady)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void Network::SendStartGame()
+{
+	RakNet::BitStream bitStream;
+	bitStream.Write((RakNet::MessageID)ID_START_GAME);
+
+	m_clientPeer->Send(&bitStream, MEDIUM_PRIORITY, RELIABLE, 1, RakNet::SystemAddress(m_ip.c_str(), SERVER_PORT), false);
+}
+
+bool Network::GetStartGame()
+{
+	bool temp = m_startGame;
+	m_startGame = false;
+	return temp;
 }

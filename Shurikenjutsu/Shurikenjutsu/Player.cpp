@@ -21,6 +21,7 @@
 #include "Network.h"
 #include "Trail.h"
 #include "FlashBang.h"
+#include "Settings.h"
 
 Player::Player(){}
 Player::~Player(){}
@@ -115,7 +116,15 @@ bool Player::Initialize(const char* p_filepath, DirectX::XMFLOAT3 p_pos, DirectX
 	}
 	m_name = p_name;
 
-	m_onPressed = true;
+	if (Settings::GetInstance()->m_apeEnabled)
+	{
+		m_onPressed = false;
+	}
+	else
+	{
+		m_onPressed = true;
+	}
+	
 	m_bloodPos = m_position;
 	m_bloodPos.y += 1;
 	m_bloodParticles = new ParticleEmitter();
@@ -407,10 +416,42 @@ void Player::UpdateMe()
 		m_updateVisibility = true;
 	}
 
-	if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan(VK_SPACE)))
+	if (Settings::GetInstance()->m_apeToggle)
 	{
-		m_onPressed = !m_onPressed;
-		GLOBAL::GetInstance().APE_ON = !m_onPressed;
+		if (InputManager::GetInstance()->IsKeyClicked(VkKeyScan(VK_SPACE)))
+		{
+			m_onPressed = !m_onPressed;
+			GLOBAL::GetInstance().APE_ON = !m_onPressed;
+		}
+	}
+	else
+	{
+		if (InputManager::GetInstance()->IsKeyPressed(VkKeyScan(VK_SPACE)))
+		{
+			if (Settings::GetInstance()->m_apeEnabled)
+			{
+				m_onPressed = false;
+				GLOBAL::GetInstance().APE_ON = true;
+			}
+			else
+			{
+				m_onPressed = true;
+				GLOBAL::GetInstance().APE_ON = false;
+			}
+		}
+		else
+		{
+			if (Settings::GetInstance()->m_apeEnabled)
+			{
+				m_onPressed = true;
+				GLOBAL::GetInstance().APE_ON = false;
+			}
+			else
+			{
+				m_onPressed = false;
+				GLOBAL::GetInstance().APE_ON = true;
+			}
+		}
 	}
 
 	m_ability = m_noAbility;
@@ -877,6 +918,7 @@ void Player::SetCalculatePlayerPosition()
 			if (CheckSidesIfMultipleCollisions() == true)
 			{
 				SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
+				//SetPosition(DirectX::XMFLOAT3(m_position.x - m_direction.x * (float)GLOBAL::GetInstance().GetDeltaTime(), m_position.y, m_position.z - m_direction.z * (float)GLOBAL::GetInstance().GetDeltaTime()));
 			}
 			else
 			{
@@ -893,12 +935,6 @@ void Player::SetCalculatePlayerPosition()
 	// Check collision between player and static spheres
 	for (unsigned int i = 0; i < collidingSpheres.size(); i++)
 	{
-		//if (CheckSidesIfMultipleCollisions() == true)
-		//{
-		//	SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-		//}
-		//else
-		//{
 		float r = collidingSpheres[i].m_radius;
 		float deltaZ = m_position.z - collidingSpheres[i].m_position.z;
 		float deltaX = m_position.x - collidingSpheres[i].m_position.x;
@@ -944,29 +980,19 @@ void Player::SetCalculatePlayerPosition()
 		dir.x = dir.x / length;
 		dir.z = dir.z / length;
 		SetDirection(dir);
-		/*}*/
-
 	}
 	if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
 	{
 		SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
 	}
 
-
-	//if (collidingSpheres.size() > 1 || collidingSpheres.size() >= 1 && collidingBoxes.size() >= 1)
-	//{
-	//	SetDirection(DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f));
-	//}
-
-
-	//float speed_X_Delta = (float)GLOBAL::GetInstance().GetDeltaTime() * m_speed;
 	SendPosition(DirectX::XMFLOAT3(m_position.x + m_direction.x * speedXDeltaTime, m_position.y + m_direction.y * speedXDeltaTime, m_position.z + m_direction.z * speedXDeltaTime));
 }
 
 bool Player::CheckSidesIfMultipleCollisions()
 {
 	float speedXDeltaTime = m_speed * (float)GLOBAL::GetInstance().GetDeltaTime();
-	Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.1f);
+	Sphere playerSphere = Sphere(m_position, m_playerSphere.m_radius - 0.15f);
 	playerSphere.m_position.x = m_position.x;
 	playerSphere.m_position.z = m_position.z - 1.0f * speedXDeltaTime;
 	bool down = CollisionManager::GetInstance()->CheckCollisionWithAllStaticObjects(playerSphere);
@@ -1015,11 +1041,13 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 
 	float x = m_direction.x;
 	float z = m_direction.z;
+	float dt = (float)GLOBAL::GetInstance().GetDeltaTime();
 	if (x < 0 && z < 0)//down left
 	{
 		if (rightOfBox && aboveBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
+			SetPosition(DirectX::XMFLOAT3(m_position.x - x * dt, m_position.y, m_position.z - z * dt));
+			//SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z + p_collidingBoxes.m_extents.z + m_playerSphere.m_radius*1.1f));
 			x = -1;
 			z = 0;
 		}
@@ -1041,7 +1069,8 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	{
 		if (leftOfBox && aboveBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			SetPosition(DirectX::XMFLOAT3(m_position.x - x * dt, m_position.y, m_position.z - z * dt));
+			//SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x - p_collidingBoxes.m_extents.x - m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 			x = 0;
 			z = -1;
 		}
@@ -1063,7 +1092,8 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	{
 		if (rightOfBox && belowBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
+			SetPosition(DirectX::XMFLOAT3(m_position.x - x * dt, m_position.y, m_position.z - z * dt));
+			//SetPosition(DirectX::XMFLOAT3(p_collidingBoxes.m_center.x + p_collidingBoxes.m_extents.x + m_playerSphere.m_radius*1.1f, m_position.y, m_position.z));
 			x = 0;
 			z = 1;
 		}
@@ -1085,7 +1115,8 @@ void Player::CalculatePlayerCubeCollision(OBB p_collidingBoxes)
 	{
 		if (leftOfBox && belowBox)
 		{
-			SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f));
+			SetPosition(DirectX::XMFLOAT3(m_position.x - x * dt, m_position.y, m_position.z - z * dt));
+			//SetPosition(DirectX::XMFLOAT3(m_position.x, m_position.y, p_collidingBoxes.m_center.z - p_collidingBoxes.m_extents.z - m_playerSphere.m_radius*1.1f));
 			x = 1;
 			z = 0;
 		}

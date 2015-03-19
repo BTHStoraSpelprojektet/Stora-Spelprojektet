@@ -72,12 +72,14 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_currentTool = 0;
 	m_prevTool = 0;
 	m_prevRandomNumber = 0;
+	m_isReady = false;
+	m_isPrevReady = true;
 	m_redTeamScore->Initialize("0",  50.0f, -m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xff0000ff);
 	m_blueTeamScore->Initialize("0",  50.0f, m_screenWidth * 0.33f, m_screenHeight * 0.5f - 50.0f, 0xffff0000);
 
 	float offset = 30.0f;
 	float ninjaCycleHeight = -m_buttonHeight*0.5f +offset;
-	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-140.0f;
+	float toolCycleHeight = /*m_toolHeight*0.5f - m_buttonHeight*0.5f */-125.0f;
 	float portraitYPos = 110.0f;//ninjaCycleHeight;//ninjaCycleHeight + m_portraitHeight*0.5f - m_buttonHeight* 0.5f;
 	float toolButtonSize = 60.0f;//m_screenHeight / 20.48f;
 	float toolButtonXPos = 70.0f;
@@ -102,6 +104,10 @@ bool ChooseState::Initialize(std::string p_levelName)
 	// Play button
 	m_playButton = new MenuButton();
 	m_playButton->Initialize(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/play.png"), MENUACTION_PLAY);
+
+	// Ready button
+	m_readyButton = new MenuButton();
+	m_readyButton->Initialize(m_screenWidth * 0.5f - m_buttonWidth * 0.5f - offset, -m_screenHeight * 0.5f + m_buttonHeight*1.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture(READYBUTTON_READY), MENUACTION_PLAY);
 
 	// Random Ninja button
 	m_chooseNinja->AddButton(0.0f, -m_screenHeight * 0.5f + m_buttonHeight*0.5f + offset, m_buttonWidth, m_buttonHeight, TextureLibrary::GetInstance()->GetTexture((std::string)"../Shurikenjutsu/2DTextures/GUI/randomButton.png"), MENUACTION_RANDOM_NINJA);
@@ -146,10 +152,10 @@ bool ChooseState::Initialize(std::string p_levelName)
 	m_toolDescription[1] = new ToolTipPopUp();
 	m_toolDescription[2] = new ToolTipPopUp();
 	m_toolDescription[3] = new ToolTipPopUp();
-	m_toolDescription[0]->Initialize(0.0f, toolCycleHeight, SPIKES_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
-	m_toolDescription[1]->Initialize(0.0f, toolCycleHeight, SMOKEBOMB_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
-	m_toolDescription[2]->Initialize(0.0f, toolCycleHeight, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
-	m_toolDescription[3]->Initialize(0.0f, toolCycleHeight, FLASH_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, -25.0f);
+	m_toolDescription[0]->Initialize(0.0f, -330.0f, SPIKES_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, 0.0f);
+	m_toolDescription[1]->Initialize(0.0f, -330.0f, SMOKEBOMB_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, 0.0f);
+	m_toolDescription[2]->Initialize(0.0f, -330.0f, STICKY_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, 0.0f);
+	m_toolDescription[3]->Initialize(0.0f, -330.0f, FLASH_DESCRIPTION, m_toolHeight, bgWidth, bgHeight, 0.0f);
 	
 	m_abilityDescription[0] = new CharacterAbilityDescription();
 	m_abilityDescription[1] = new CharacterAbilityDescription();
@@ -325,6 +331,13 @@ void ChooseState::Shutdown()
 		m_questionMark = nullptr;
 	}
 
+	if (m_readyButton != nullptr)
+	{
+		m_readyButton->Shutdown();
+		delete m_readyButton;
+		m_readyButton = nullptr;
+	}
+
 	ScoreBoard::GetInstance()->Shutdown();
 }
 
@@ -349,19 +362,6 @@ GAMESTATESWITCH ChooseState::Update()
 	//+((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f)
 	//	- ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f)
 	
-	if (xPos > (m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) || xPos < (-m_toolWidth * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f) ||
-		yPos >(m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 140.0f || yPos < (-m_toolHeight * 0.5f) + ((float)GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f) + 140.0f)
-	{
-		m_abilityDescription[0]->SetRenderKeybinds(true);
-		m_abilityDescription[1]->SetRenderKeybinds(true);
-		m_abilityDescription[2]->SetRenderKeybinds(true);
-	}
-	else
-	{
-		m_abilityDescription[0]->SetRenderKeybinds(false);
-		m_abilityDescription[1]->SetRenderKeybinds(false);
-		m_abilityDescription[2]->SetRenderKeybinds(false);
-	}
 	// Update Camera position
 	m_camera->MenuCameraRotation();
 
@@ -384,7 +384,7 @@ GAMESTATESWITCH ChooseState::Update()
 	else
 	{
 		m_abilityDescription[m_currentNinja]->Update();
-		m_toolDescription[m_currentTool]->Update();
+		m_toolDescription[m_currentTool]->Update(0.0f, -140.0f, 50.0f);
 	}
 	UpdateTeams();
 
@@ -397,9 +397,9 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		else
 		{
-			if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool)
+			if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool || m_isReady != m_isPrevReady)
 			{
-				Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 1);
+				Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 1, m_isReady);
 			}
 		}
 	}
@@ -412,9 +412,9 @@ GAMESTATESWITCH ChooseState::Update()
 		}
 		else
 		{
-			if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool)
+			if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool || m_isReady != m_isPrevReady)
 			{
-				Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 2);
+				Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 2, m_isReady);
 			}
 		}
 	}
@@ -422,14 +422,15 @@ GAMESTATESWITCH ChooseState::Update()
 	{
 		m_questionMark->SetPosition(0, m_screenHeight * 0.33f);
 
-		if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool)
+		if (m_currentTeam != m_prevTeam || m_currentNinja != m_prevNinja || m_currentTool != m_prevTool || m_isReady != m_isPrevReady)
 		{
-			Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 0);
+			Network::GetInstance()->SendLobbyValues(m_currentNinja, m_currentTool, 0, m_isReady);
 		}
 	}
 	m_prevTeam = m_currentTeam;
 	m_prevNinja = m_currentNinja;
 	m_prevTool = m_currentTool;
+	m_isPrevReady = m_isReady;
 
 	m_redTeamScore->SetText(std::to_string(Network::GetInstance()->GetRedTeamScore()));
 	m_blueTeamScore->SetText(std::to_string(Network::GetInstance()->GetBlueTeamScore()));
@@ -496,29 +497,40 @@ GAMESTATESWITCH ChooseState::Update()
 
 	ScoreBoard::GetInstance()->Update();
 
-	if (m_playButton->IsClicked())
+	// Play button
+	if (Network::GetInstance()->IsEveryoneElseReady() && m_isReady && m_playButton->IsClicked())
 	{
 		if (!Network::GetInstance()->GetMatchOver())
 		{
-			if (m_currentTeam == CURRENTTEAM_RED)
-			{
-				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 1);
-			}
-			else if (m_currentTeam == CURRENTTEAM_BLUE)
-			{
-				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 2);
-			}
-			else
-			{
-				Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
-			}
-			Network::GetInstance()->SetHaveUpdateNewLevel();
-			return GAMESTATESWITCH_PLAY;
+			Network::GetInstance()->SendStartGame();
+		}
+	}
+
+	// Ready button
+	if (m_readyButton->IsClicked())
+	{
+		m_isReady = !m_isReady;
+		std::string buttonName = (m_isReady ? READYBUTTON_UNREADY : READYBUTTON_READY);
+		m_readyButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(buttonName));
+	}
+
+	// Game started (someone pressed play)
+	if (Network::GetInstance()->GetStartGame())
+	{
+		if (m_currentTeam == CURRENTTEAM_RED)
+		{
+			Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 1);
+		}
+		else if (m_currentTeam == CURRENTTEAM_BLUE)
+		{
+			Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 2);
 		}
 		else
 		{
-			return GAMESTATESWITCH_NONE;
+			Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
 		}
+		Network::GetInstance()->SetHaveUpdateNewLevel();
+		return GAMESTATESWITCH_PLAY;
 	}
 
 	return GAMESTATESWITCH_NONE;
@@ -533,11 +545,11 @@ void ChooseState::UpdateTeams()
 	{
 		if (tempPlayerList[i].team == 1)
 		{
-			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String());
+			m_redTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String(), true);
 		}
 		else
 		{
-			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String());
+			m_blueTeam->AddTeamMate(tempPlayerList[i].charNr, tempPlayerList[i].toolNr, tempPlayerList[i].name.C_String(), true);
 		}
 	}
 
@@ -546,11 +558,11 @@ void ChooseState::UpdateTeams()
 	{
 		if (tempLobbyList[i].m_team == 1)
 		{
-			m_redTeam->AddTeamMate(tempLobbyList[i].m_charNr, tempLobbyList[i].m_toolNr, tempLobbyList[i].m_name);
+			m_redTeam->AddTeamMate(tempLobbyList[i].m_charNr, tempLobbyList[i].m_toolNr, tempLobbyList[i].m_name, tempLobbyList[i].m_isReady);
 		}
 		else if(tempLobbyList[i].m_team == 2)
 		{
-			m_blueTeam->AddTeamMate(tempLobbyList[i].m_charNr, tempLobbyList[i].m_toolNr, tempLobbyList[i].m_name);
+			m_blueTeam->AddTeamMate(tempLobbyList[i].m_charNr, tempLobbyList[i].m_toolNr, tempLobbyList[i].m_name, tempLobbyList[i].m_isReady);
 		}
 	}
 }
@@ -618,7 +630,11 @@ void ChooseState::Render()
 
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-		m_playButton->Render();
+		if (m_isReady && Network::GetInstance()->IsEveryoneElseReady())
+		{
+			m_playButton->Render();
+		}
+		m_readyButton->Render();
 	}
 }
 

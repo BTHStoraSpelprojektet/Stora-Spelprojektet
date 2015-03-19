@@ -85,7 +85,7 @@
 #define DEATHBOARD_N3E "../Shurikenjutsu/2DTextures/DeathBoard/n3e.png"
 
 #define DEATHBOARD_CALPTROPS "../Shurikenjutsu/2DTextures/DeathBoard/caltrop.png"
-#define DEATHBOARD_SD_SMOKE "../Shurikenjutsu/2DTextures/DeathBoard/n1q.png"
+#define DEATHBOARD_SD_SMOKE "../Shurikenjutsu/2DTextures/DeathBoard/Unknown.png"
 #define DEATHBOARD_KILLARROW "../Shurikenjutsu/2DTextures/DeathBoard/Unknown.png"
 
 // Runes
@@ -95,5 +95,9 @@
 
 // Scoreboard
 #define SCOREBOARD_BACKGROUND "../Shurikenjutsu/2DTextures/GUI/scoreboard_bg.png"
+
+// Ready button
+#define READYBUTTON_READY "../Shurikenjutsu/2DTextures/GUI/ready.png"
+#define READYBUTTON_UNREADY "../Shurikenjutsu/2DTextures/GUI/unready.png"
 
 #endif

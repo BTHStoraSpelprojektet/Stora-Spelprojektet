@@ -12,6 +12,7 @@ struct CharacterToolWrapper
 	MenuItem *m_ninja;
 	MenuItem *m_tool;
 	GUIText* m_name;
+	MenuItem* m_ready;
 };
 class TeamTable
 {
@@ -22,7 +23,7 @@ public:
 	void Initialize(float p_startXPos, float p_startYPos, int p_team);
 	void Shutdown();
 	void Render();
-	void AddTeamMate(int p_ninja, int p_tool, std::string p_name);
+	void AddTeamMate(int p_ninja, int p_tool, std::string p_name, bool p_isReady);
 	void ClearList();
 	int GetNumberOfPlayers();
 	float GetXPos();

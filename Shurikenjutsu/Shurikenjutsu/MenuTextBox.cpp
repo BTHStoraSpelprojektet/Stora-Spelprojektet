@@ -43,7 +43,8 @@ bool MenuTextBox::Initialize(float p_x, float p_y, float p_width, float p_height
 
 	m_guiText = new GUIText;
 	m_guiText->Initialize(GetText(), 36.0f, p_x, p_y, 0xff333333);
-
+	m_markerTimer = 0.0f;
+	m_marker = false;
 	return true;
 }
 
@@ -124,11 +125,12 @@ bool MenuTextBox::IsClicked()
 		if (MenuButton::IsClicked())
 		{
 			m_active = true;
+			m_markerTimer += 0.5f;
 			return true;
 		}
 		else
 		{
-			
+			m_guiText->SetText(GetText());
 			m_active = false;
 		}
 	}
@@ -140,14 +142,23 @@ void MenuTextBox::GetInput()
 {
 	if (m_active)
 	{
-		char temp = InputManager::GetInstance()->GetLastCharRead();
+		bool updateText = false;
+		m_markerTimer += (float)GLOBAL::GetInstance().GetDeltaTime();
+		if (m_markerTimer > 0.5f)
+		{
+			m_marker = !m_marker;
+			m_markerTimer = 0.0f;
+			updateText = true;
+		}
 
+		char temp = InputManager::GetInstance()->GetLastCharRead();
 		// Is not nothing?
 		if (temp != '\0')
 		{
 			//'Enter' / 'Return'
 			if (temp == '\r')
 			{
+				m_marker = false;
 				m_active = false;
 			}
 			else if (temp == '\b')
@@ -155,18 +166,28 @@ void MenuTextBox::GetInput()
 				if (m_counter > 0)
 				{
 					m_text[--m_counter] = '\0';
-					m_guiText->SetText(GetText());
 				}
 			}
-
 			else
 			{
 				if (m_counter < m_maxChars)
 				{
 					m_text[m_counter++] = temp;
-					m_guiText->SetText(GetText());
 				}
 			}
+			updateText = true;
+			
+		}
+		if (updateText)
+		{
+			std::string tempString = GetText();
+
+			if (m_marker)
+			{
+				tempString.append("|");
+			}
+
+			m_guiText->SetText(tempString);
 		}
 	}
 }

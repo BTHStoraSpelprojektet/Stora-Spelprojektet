@@ -75,9 +75,10 @@ public:
 
 	void ResetPOIEffects();
 
-	void SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team, std::string p_name);
+	void SetPlayerInLobby(RakNet::RakNetGUID p_guid, int p_charNr, int p_toolNr, int p_team, std::string p_name, bool p_isReady);
 	void RemovePlayerInLobby(RakNet::RakNetGUID p_guid);
 	void SendPlayersInLobby();
+	void SendStartGame();
 private:	
 
 	void SendInvalidMessage(RakNet::RakNetGUID p_guid);
