@@ -163,6 +163,10 @@ public:
 	bool IsEveryoneElseReady();
 	void SendStartGame();
 	bool GetStartGame();
+
+	void SetMyPlayerIsInLobby(bool p_state);
+	bool GetMyPlayerIsInLobby();
+
 private:
 	void ClearListsAtNewRound();
 	void UpdateSpikeTrap(RakNet::RakNetGUID p_guid, unsigned int p_spikeTrapId, float p_startPosX, float p_startPosZ, float p_endPosX, float p_endPosZ, float p_lifetime, int p_team);
@@ -292,5 +296,7 @@ private:
 
 	std::vector<LobbyPlayers> m_lobbyPlayers;
 	bool m_startGame;
+
+	bool m_myPlayerIsInLobby;
 };
 #endif

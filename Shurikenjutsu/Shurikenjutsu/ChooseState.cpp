@@ -522,11 +522,11 @@ GAMESTATESWITCH ChooseState::Update()
 	{
 		m_playButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(PLAYBUTTON));
 		if (m_playButton->IsClicked())
+	{
+		if (!Network::GetInstance()->GetMatchOver())
 		{
-			if (!Network::GetInstance()->GetMatchOver())
-			{
-				Network::GetInstance()->SendStartGame();
-			}
+			Network::GetInstance()->SendStartGame();
+		}
 		}
 	}
 	else
@@ -537,12 +537,12 @@ GAMESTATESWITCH ChooseState::Update()
 	// Ready button
 	if (m_currentTeam != CURRENTTEAM_NONE)
 	{
-		if (m_readyButton->IsClicked())
-		{
-			m_isReady = !m_isReady;
-			std::string buttonName = (m_isReady ? READYBUTTON_UNREADY : READYBUTTON_READY);
-			m_readyButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(buttonName));
-		}		
+	if (m_readyButton->IsClicked())
+	{
+		m_isReady = !m_isReady;
+		std::string buttonName = (m_isReady ? READYBUTTON_UNREADY : READYBUTTON_READY);
+		m_readyButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(buttonName));
+	}
 	}
 	else
 	{
@@ -565,6 +565,8 @@ GAMESTATESWITCH ChooseState::Update()
 			Network::GetInstance()->ChooseChar(m_currentNinja, m_currentTool, 0);
 		}
 		Network::GetInstance()->SetHaveUpdateNewLevel();
+			Network::GetInstance()->SetMyPlayerIsInLobby(false);
+
 		return GAMESTATESWITCH_PLAY;
 	}
 
@@ -665,9 +667,9 @@ void ChooseState::Render()
 
 	if (!Network::GetInstance()->GetMatchOver())
 	{
-		m_playButton->Render();
+			m_playButton->Render();
 		m_readyButton->Render();
-	}
+		}
 
 	if (m_isReady && !Network::GetInstance()->IsEveryoneElseReady())
 	{

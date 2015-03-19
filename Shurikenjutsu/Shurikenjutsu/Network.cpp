@@ -70,6 +70,7 @@ void Network::InitValues()
 	m_suddenDeath = false;
 	m_suddenDeathBoxIndex = 99;
 	m_startGame = false;
+	m_myPlayerIsInLobby = true;
 
 	m_enemyPlayers = std::vector<PlayerNet>();
 	m_shurikensList = std::vector<ShurikenNet>();
@@ -1046,8 +1047,6 @@ void Network::ReceviePacket()
 				}
 				}
 
-				//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
-
 				break;
 			}
 			case ID_PLAY_SOUND:
@@ -1077,8 +1076,6 @@ void Network::ReceviePacket()
 				if (m_sound != NULL){
 				m_sound->CreateDefaultSound(sound, x, y, z);
 				}
-
-				//DeathBoard::GetInstance()->KillHappened(killerNinja, takerNinja, murderWeapon);
 
 				break;
 			}
@@ -2817,4 +2814,14 @@ bool Network::GetStartGame()
 	bool temp = m_startGame;
 	m_startGame = false;
 	return temp;
+}
+
+void Network::SetMyPlayerIsInLobby(bool p_state)
+{
+	m_myPlayerIsInLobby = p_state;
+}
+
+bool Network::GetMyPlayerIsInLobby()
+{
+	return m_myPlayerIsInLobby;
 }

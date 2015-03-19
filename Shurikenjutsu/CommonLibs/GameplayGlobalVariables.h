@@ -24,7 +24,7 @@ const float CHARACTER_KATANA_SHURIKEN_SPEED = 10.0f;
 //_____________ABILITIES__________________________
 // Katana M1
 const float KATANA_DAMAGE = 30.0f;
-const float KATANA_RANGE = 2.0f;
+const float KATANA_RANGE = 3.0f;
 const float KATANA_COOLDOWN = 0.7f;
 const float KATANA_ATTACKANGLE = 0.785398163f; // Radians, 45 degrees
 
@@ -60,7 +60,7 @@ const float CHARACTER_TESSEN_SPEED = 11.0f;
 //_____________ABILITIES__________________________
 // Fan Melee M1
 const float FANMELEE_DAMAGE = 25.0f;
-const float FANMELEE_RANGE = 2.0f;
+const float FANMELEE_RANGE = 3.0f;
 const float FANMELEE_COOLDOWN = 0.5f;
 const float FANMELEE_ATTACKANGLE = 0.785398163f; // Radians, 45 degrees
 
@@ -93,7 +93,7 @@ const float CHARACTER_NAGINATA_SPEED = 10.5f;
 //_____________ABILITIES__________________________
 // Naginata M1
 const float NAGINATA_DAMAGE = 25.0f;
-const float NAGINATA_RANGE = 2.0f;
+const float NAGINATA_RANGE = 3.0f;
 const float NAGINATA_COOLDOWN = 0.5f;
 const float NAGINATA_ATTACKANGLE = 0.785398163f; // Radians, 45 degrees
 
