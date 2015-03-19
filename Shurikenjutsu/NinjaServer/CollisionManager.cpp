@@ -96,28 +96,33 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 attackingPlayerPos = DirectX::XMFLOAT3(attackingPlayer.x, attackingPlayer.y, attackingPlayer.z);
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, 0.0f, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 defendingPlayerPos = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
-		DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		//DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+		float defendingPlayerExtraCircleRadius = 1.0f;
+		DirectX::XMFLOAT3 defendingPlayerExtraCircle = DirectX::XMFLOAT3(playerList[i].x - (attackDirection.x * defendingPlayerExtraCircleRadius), playerList[i].y, playerList[i].z - (attackDirection.z * defendingPlayerExtraCircleRadius));
 
-		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerPos.x - attackingPlayerPos.x, 0.0f, defendingPlayerPos.z - attackingPlayerPos.z);
+		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerExtraCircle.x - attackingPlayerPos.x, 0.0f, defendingPlayerExtraCircle.z - attackingPlayerPos.z);
 		//Ta reda på den jävla vinkel hellvetet... -.-' om den är inom vissa parametrar så kör nästa beräkning
 		// Make collision test
 		if (IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerPos, range, defendingPlayerPos, CHARACTER_ENEMY_BOUNDINGSPHERE))
 		{
-			DirectX::XMFLOAT3 A = attackDirection;
-			float aLength = sqrt(A.x * A.x + A.z * A.z);
-			DirectX::XMFLOAT3 B = vectorFromAttackerToDefender;
-			float bLength = sqrt(B.x * B.x + B.z * B.z);
-			float dotProduct = A.x * B.x + A.z * B.z;
-			//A*B = |A| * |B| * cos(vinkel)
-			float angle = acos(dotProduct / (aLength * bLength));
-
-			if (angle < attackAngle)
+			if (!IntersectionTests::Intersections::SphereSphereCollision(attackingPlayerPos, range, defendingPlayerExtraCircle, defendingPlayerExtraCircleRadius))
 			{
-				if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos, false))
+				DirectX::XMFLOAT3 A = attackDirection;
+				float aLength = sqrt(A.x * A.x + A.z * A.z);
+				DirectX::XMFLOAT3 B = vectorFromAttackerToDefender;
+				float bLength = sqrt(B.x * B.x + B.z * B.z);
+				float dotProduct = A.x * B.x + A.z * B.z;
+				//A*B = |A| * |B| * cos(vinkel)
+				float angle = acos(dotProduct / (aLength * bLength));
+
+				if (angle < attackAngle)
 				{
-					// Damage the player
-					p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid, p_ability, false);
-					break;
+					if (!IntersectingObjectWhenAttacking(attackingPlayerPos, defendingPlayerPos, false))
+					{
+						// Damage the player
+						p_playerManager->DamagePlayer(playerList[i].guid, damage, attackingPlayer.guid, p_ability, false);
+						break;
+					}
 				}
 			}
 		}
