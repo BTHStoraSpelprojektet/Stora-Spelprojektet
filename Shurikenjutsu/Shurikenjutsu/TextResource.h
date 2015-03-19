@@ -33,13 +33,13 @@ const std::string KUNAI_SECONDARY_ATTACK =
 "The character throws several Kunai up\n in the air which land in the location of the mouse \ndamaging enemies in a ring around the hit location.";
 
 const std::string SMOKEBOMB_DESCRIPTION =
-"\n\nThe character throws a smokebomb at\n the mouse location. The smokebomb obscures \nthe view of all characters.";
+"The character throws a smokebomb at\n the mouse location. The smokebomb obscures \nthe view of all characters.";
 const std::string SPIKES_DESCRIPTION =
-"\n\nThe character throws a bag full of \ncaltrops, at the mouse location, damaging\n all enemies that stand in it's radius.";
+"The character throws a bag full of \ncaltrops, at the mouse location, damaging\n all enemies that stand in it's radius.";
 const std::string STICKY_DESCRIPTION =
-"\n\nThe character throws a vial of sticky\n fluids on the ground, at the mouse location.\n This liquid will slow all players within the its radius.";
+"The character throws a vial of sticky\n fluids on the ground, at the mouse location.\n This liquid will slow all players within the its radius.";
 const std::string FLASH_DESCRIPTION =
-"\n\nThe character throws a stun bomb on the ground,\nblinding everyone that looks at it";
+"The character throws a stun bomb on the ground,\nblinding everyone that looks at it";
 
 const std::string CREDITS_DEVELOPERS = "Developers: \n Alexander Petrini \n Johan Almeflo \n Henrik Forslin\n Jonas Axelsson \n Viktor Lundkvist \n Gustav During\n Anna Olsson\n Michael Jansson \n Cecilia Carlsson";
 const std::string CREDITS_MUSIC_TITLE = "Music: \n ";

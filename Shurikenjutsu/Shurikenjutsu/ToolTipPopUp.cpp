@@ -14,12 +14,6 @@ void ToolTipPopUp::Initialize(float p_xPos, float p_yPos, std::string p_text , f
 	
 	m_text->InitializeCalibri(p_text, 20.0f, p_xPos, p_yPos + p_size, 0xff000000);
 	m_visible = false;
-	
-
-	m_xMin = p_xPos - (p_size * 0.5f);
-	m_xMax = p_xPos + (p_size * 0.5f);
-	m_yMin = p_yPos - (p_size * 0.5f);
-	m_yMax = p_yPos + (p_size * 0.5f);
 
 	m_halfScreenX = GLOBAL::GetInstance().CURRENT_SCREEN_WIDTH * 0.5f - GLOBAL::GetInstance().BORDER_SIZE;
 	m_halfScreenY = GLOBAL::GetInstance().CURRENT_SCREEN_HEIGHT * 0.5f - (GLOBAL::GetInstance().BORDER_SIZE + GLOBAL::GetInstance().TITLE_BORDER_SIZE) * 0.5f;
@@ -37,11 +31,16 @@ void ToolTipPopUp::Render()
 		m_text->Render();
 	}
 }
-void ToolTipPopUp::Update()
+void ToolTipPopUp::Update(float p_xPos, float p_yPos, float p_size)
 {
 	InputManager *tIM = InputManager::GetInstance();
 	float mouseX = tIM->GetMousePositionX() - m_halfScreenX;
 	float mouseY = (tIM->GetMousePositionY() - m_halfScreenY)*-1;
+
+	m_xMin = p_xPos - (p_size * 0.5f);
+	m_xMax = p_xPos + (p_size * 0.5f);
+	m_yMin = p_yPos - (p_size * 0.5f);
+	m_yMax = p_yPos + (p_size * 0.5f);
 
 	if (mouseX > m_xMin && mouseX < m_xMax)
 	{
