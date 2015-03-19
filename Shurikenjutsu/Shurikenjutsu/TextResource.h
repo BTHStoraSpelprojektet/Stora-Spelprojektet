@@ -2,44 +2,25 @@
 #define TEXTRESOURCE_H_
 
 #include <string>
-const std::string KATANA_PRIMARY_ATTACK = 
-"The character\n performs a close range attack in his \nfacing direction.";
-const std::string KATANA_SECONDARY_ATTACK = 
-"The character performs\n a dash in the his facing direction of a maximum \nof 10 units.";
+const std::string KATANA_PRIMARY_ATTACK =		"The ninja makes a quick forward attack with his katana.";
+const std::string KATANA_SECONDARY_ATTACK =		"The ninja dashes forwards a short distance,\ndamaging enemies that he passes through.";
+const std::string SHURIKEN_PRIMARY_ATTACK =		"The ninja throws a shuriken straight ahead.\n\nThis ability has 3 charges,\nallowing for a rapid flurry of shurikens.";
+const std::string SHURIKEN_SECONDARY_ATTACK =	"The ninja hurls an absurdly large shuriken,\ndoing heavy damage to enemies struck by it.";
 
-const std::string SHURIKEN_PRIMARY_ATTACK = 
-"The character\n throws a shuriken in his facing direction. \nHe has a maximum of 3 stacks, \nthat gets replenished over time.";
-const std::string SHURIKEN_SECONDARY_ATTACK = 
-"The character throws\n an extra large shuriken, in his facing direction,\n that does extra damage";
+const std::string TESSEN_PRIMARY_ATTACK =		"The ninja swings her metal tessen in an arc in front of her.";
+const std::string TESSEN_SECONDARY_ATTACK =		"The ninja throws her tessen like a boomerang,\nwhich returns to her if it strikes an enemy or object.";
+const std::string WHIP_PRIMARY_ATTACK =			"The ninja attacks forward with her chain whip.";
+const std::string WHIP_SECONDARY_ATTACK =		"The ninja spins her whip in a wide circle around her,\ndamaging enemies caught in its path.";
 
-const std::string TESSEN_PRIMARY_ATTACK =
-"The character\n performs a close range attack in \nher facing direction.";
-const std::string TESSEN_SECONDARY_ATTACK = 
-"The character throws a fan in\n her facing direction. This fan will return if it hits\n  an object or a player, or reaches its max distance.\n It will disappear if it hits an object on the way back";
+const std::string NAGINATA_PRIMARY_ATTACK =		"The ninja swings his spear in front of him,\ndealing damage in a small arc.";
+const std::string NAGINATA_SECONDARY_ATTACK =	"The ninja performs a flurry of stabs with his spear,\nover a short period of time.";
+const std::string KUNAI_PRIMARY_ATTACK =		"The ninja throws a kunai forwards.\n\nThis ability has 5 charges,\nallowing for a barrage of kunai.";
+const std::string KUNAI_SECONDARY_ATTACK =		"The ninja throws several kunai into the air,\nsending them in a high arc towards a small target.\nThis requires a precise aim, but deals massive damage.";
 
-const std::string WHIP_PRIMARY_ATTACK = 
-"The\n character performs a whip in her facing direction.";
-const std::string WHIP_SECONDARY_ATTACK = 
-"The character performs\n a spin with her whip damaging everyone that\n is within the whips range.";
-
-const std::string NAGINATA_PRIMARY_ATTACK =
-"The character \nperforms a close range attack in his\n facing direction.";
-const std::string NAGINATA_SECONDARY_ATTACK = 
-"The character performs \nstab infront of him for 1.5 seconds.";
-
-const std::string KUNAI_PRIMARY_ATTACK = 
-"The character\n throws a Kunai in his facing direction.";
-const std::string KUNAI_SECONDARY_ATTACK = 
-"The character throws several Kunai up\n in the air which land in the location of the mouse \ndamaging enemies in a ring around the hit location.";
-
-const std::string SMOKEBOMB_DESCRIPTION =
-"\n\nThe character throws a smokebomb at\n the mouse location. The smokebomb obscures \nthe view of all characters.";
-const std::string SPIKES_DESCRIPTION =
-"\n\nThe character throws a bag full of \ncaltrops, at the mouse location, damaging\n all enemies that stand in it's radius.";
-const std::string STICKY_DESCRIPTION =
-"\n\nThe character throws a vial of sticky\n fluids on the ground, at the mouse location.\n This liquid will slow all players within the its radius.";
-const std::string FLASH_DESCRIPTION =
-"\n\nThe character throws a stun bomb on the ground,\nblinding everyone that looks at it";
+const std::string SMOKEBOMB_DESCRIPTION =		"The ninja lobs a smoke bomb at the target,\nobscuring vision for everyone in the area.";
+const std::string SPIKES_DESCRIPTION =			"The ninja scatter pointy caltrops over the area,\ndamaging enemies who enter the zone.";
+const std::string STICKY_DESCRIPTION =			"The ninja shatters a vial of sticky sludge against the ground,\nhampering the movement of anyone who steps in the contents.";
+const std::string FLASH_DESCRIPTION =			"The ninja throws a stun grenade,\nblinding anyone who stands to close to\nor looks towards its point of impact";
 
 const std::string CREDITS_DEVELOPERS = "Developers: \n Alexander Petrini \n Johan Almeflo \n Henrik Forslin\n Jonas Axelsson \n Viktor Lundkvist \n Gustav During\n Anna Olsson\n Michael Jansson \n Cecilia Carlsson";
 const std::string CREDITS_MUSIC_TITLE = "Music: \n ";
