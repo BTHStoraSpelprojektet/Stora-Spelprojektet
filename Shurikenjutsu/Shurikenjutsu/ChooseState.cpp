@@ -476,6 +476,7 @@ GAMESTATESWITCH ChooseState::Update()
 		if (m_currentTeam == CURRENTTEAM_RED)
 		{
 			m_currentTeam = CURRENTTEAM_NONE;
+			m_isReady = false;
 			m_readyButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(READYBUTTON_DISABLED));
 		}
 		else if (m_redTeam->GetNumberOfPlayers() < 4)
