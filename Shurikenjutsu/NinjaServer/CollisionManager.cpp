@@ -97,7 +97,7 @@ void CollisionManager::NormalMeleeAttack(RakNet::RakNetGUID p_guid, PlayerManage
 		DirectX::XMFLOAT3 attackDirection = DirectX::XMFLOAT3(attackingPlayer.dirX, 0.0f, attackingPlayer.dirZ);
 		DirectX::XMFLOAT3 defendingPlayerPos = DirectX::XMFLOAT3(playerList[i].x, playerList[i].y, playerList[i].z);
 		//DirectX::XMFLOAT3 defendingPlayerBoxExtents = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-		float attackingPlayerExtraCircleRadius = 0.8f;
+		float attackingPlayerExtraCircleRadius = 0.3f;
 		DirectX::XMFLOAT3 attackingPlayerExtraCircle = DirectX::XMFLOAT3(attackingPlayerPos.x - (attackDirection.x /* * attackingPlayerExtraCircleRadius */), attackingPlayerPos.y, attackingPlayerPos.z - (attackDirection.z/* * attackingPlayerExtraCircleRadius */));
 
 		DirectX::XMFLOAT3 vectorFromAttackerToDefender = DirectX::XMFLOAT3(defendingPlayerPos.x - attackingPlayerExtraCircle.x, 0.0f, defendingPlayerPos.z - attackingPlayerExtraCircle.z);
