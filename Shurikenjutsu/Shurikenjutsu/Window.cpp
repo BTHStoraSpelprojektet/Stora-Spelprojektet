@@ -15,7 +15,7 @@ bool Window::Initialize(WindowRectangle p_window)
 	description.cbClsExtra = 0;
 	description.cbWndExtra = 0;
 	description.hInstance = GetModuleHandle(NULL);
-	description.hIcon = LoadIcon(0, IDI_APPLICATION);
+	description.hIcon = LoadIcon(description.hInstance, MAKEINTRESOURCE(101));
 	description.hCursor = LoadCursor(0, IDC_ARROW);
 	description.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	description.lpszMenuName = 0;
@@ -28,9 +28,9 @@ bool Window::Initialize(WindowRectangle p_window)
 		result = false;
 	}
 	
-	// Create the window.
-	
+	// Create the window.	
 	m_handle = CreateWindow(description.lpszClassName, "Window Created.", WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX, p_window.x, p_window.y, p_window.width, p_window.height, 0, 0, GetModuleHandle(NULL), 0);
+	
 	
 	// Show and update the window.
 	if (m_handle != 0)

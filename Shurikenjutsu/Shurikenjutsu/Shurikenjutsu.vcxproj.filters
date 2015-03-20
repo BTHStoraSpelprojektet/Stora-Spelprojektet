@@ -177,6 +177,9 @@
     <Filter Include="Source Files\Abilities">
       <UniqueIdentifier>{b0c8a535-7d03-4685-94fc-456b01c98d3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Icon">
+      <UniqueIdentifier>{bdcb16b3-c837-45fa-b283-3fa4ef414e36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -766,6 +769,9 @@
     <ClInclude Include="FlashBangAbility.h">
       <Filter>Header Files\Abilities</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Icon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Scene\PixelShader.hlsl">
@@ -911,5 +917,15 @@
     <None Include="Shaders\Scene\LightCalculation.hlsli">
       <Filter>Shaders\Scene</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="2DTextures\icon.ico">
+      <Filter>Icon</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Shurikenjutsu.rc">
+      <Filter>Icon</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

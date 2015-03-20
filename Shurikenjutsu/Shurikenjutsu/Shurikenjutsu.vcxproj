@@ -205,6 +205,7 @@
     <ClInclude Include="PointOfInterest.h" />
     <ClInclude Include="PointOfInterestManager.h" />
     <ClInclude Include="MemoryChecker.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ScoreBoard.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SuddenDeathState.h" />
@@ -642,6 +643,12 @@
     <ProjectReference Include="..\Physics\Physics.vcxproj">
       <Project>{097e6f6b-bac8-441e-858c-ca9fab82c07a}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Shurikenjutsu.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="2DTextures\icon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
