@@ -5,6 +5,7 @@
 	#define SHADER_PATH "../Debug/"
 #else
 	#define SHADER_PATH "../Release/"
+	//#define SHADER_PATH "./"
 #endif
 
 #endif

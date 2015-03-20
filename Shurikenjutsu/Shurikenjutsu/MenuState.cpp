@@ -546,6 +546,7 @@ bool MenuState::StartLocalServer()
 	}
 	else
 	{
+		//LPCSTR path = ".\\NinjaServer.exe";
 		hRet = ShellExecute(
 			HWND_DESKTOP, //Parent window
 			"open",       //Operation to perform
