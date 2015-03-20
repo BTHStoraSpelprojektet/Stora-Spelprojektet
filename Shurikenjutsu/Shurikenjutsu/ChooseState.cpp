@@ -483,7 +483,8 @@ GAMESTATESWITCH ChooseState::Update()
 		else if (m_blueTeam->GetNumberOfPlayers() < 4)
 		{
 			m_currentTeam = CURRENTTEAM_BLUE;
-			m_readyButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(READYBUTTON_READY));
+			std::string buttonName = m_isReady ? READYBUTTON_UNREADY : READYBUTTON_READY;
+			m_readyButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(buttonName));
 		}
 		break;
 	case MENUACTION_PICK_RED_TEAM:
@@ -496,7 +497,8 @@ GAMESTATESWITCH ChooseState::Update()
 		else if (m_redTeam->GetNumberOfPlayers() < 4)
 		{
 			m_currentTeam = CURRENTTEAM_RED;
-			m_readyButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(READYBUTTON_READY));
+			std::string buttonName = m_isReady ? READYBUTTON_UNREADY : READYBUTTON_READY;
+			m_readyButton->SetBackgroundTexture(TextureLibrary::GetInstance()->GetTexture(buttonName));
 		}
 		break;
 	case MENUACTION_RANDOM_NINJA:
