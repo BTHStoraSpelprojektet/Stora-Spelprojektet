@@ -115,6 +115,7 @@
     <ClInclude Include="PlayerManager.h" />
     <ClInclude Include="PointOfInterestManager.h" />
     <ClInclude Include="ProjectileManager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Server.h" />
     <ClInclude Include="ShurikenManager.h" />
     <ClInclude Include="SmokeBombManager.h" />
@@ -127,6 +128,12 @@
     <ProjectReference Include="..\Physics\Physics.vcxproj">
       <Project>{097e6f6b-bac8-441e-858c-ca9fab82c07a}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NinjaServer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Shurikenjutsu\2DTextures\iconServer.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
