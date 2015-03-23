@@ -40,7 +40,7 @@ private:
 	float m_size;
 
 	GUIText* m_fpsText;
-	GUIText* m_virtualMemText;
+	//GUIText* m_virtualMemText;
 	GUIText* m_physicalMemText;
 	GUIText* m_pingText;
 	GUIText* m_inMessagesText;

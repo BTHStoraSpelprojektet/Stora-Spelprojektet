@@ -34,24 +34,24 @@ bool DebugText::Initialize()
 	m_fpsText->InitializeCalibri("0 fps", m_size, m_originPos.x, m_originPos.y, 0xFFFFFFFF);
 	m_fpsText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
-	m_virtualMemText = new GUIText();
-	m_virtualMemText->InitializeCalibri("VRAM: 0 MB", m_size, m_originPos.x, m_originPos.y - 25.0f, 0xFFFFFFFF);
-	m_virtualMemText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	//m_virtualMemText = new GUIText();
+	//m_virtualMemText->InitializeCalibri("VRAM: 0 MB", m_size, m_originPos.x, m_originPos.y - 25.0f, 0xFFFFFFFF);
+	//m_virtualMemText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	m_physicalMemText = new GUIText();
-	m_physicalMemText->InitializeCalibri("RAM: 0 MB", m_size, m_originPos.x, m_originPos.y - 50.0f, 0xFFFFFFFF);
+	m_physicalMemText->InitializeCalibri("RAM: 0 MB", m_size, m_originPos.x, m_originPos.y - 25.0f, 0xFFFFFFFF);
 	m_physicalMemText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	m_pingText = new GUIText();
-	m_pingText->InitializeCalibri("0 ms", m_size, m_originPos.x, m_originPos.y - 75.0f, 0xFFFFFFFF);
+	m_pingText->InitializeCalibri("0 ms", m_size, m_originPos.x, m_originPos.y - 50.0f, 0xFFFFFFFF);
 	m_pingText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	m_inMessagesText = new GUIText();
-	m_inMessagesText->InitializeCalibri("In: 0 B/s", m_size, m_originPos.x, m_originPos.y - 100.0f, 0xFFFFFFFF);
+	m_inMessagesText->InitializeCalibri("In: 0 B/s", m_size, m_originPos.x, m_originPos.y - 75.0f, 0xFFFFFFFF);
 	m_inMessagesText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	m_outMessagesText = new GUIText();
-	m_outMessagesText->InitializeCalibri("Out: 0 B/s", m_size, m_originPos.x, m_originPos.y - 125.0f, 0xFFFFFFFF);
+	m_outMessagesText->InitializeCalibri("Out: 0 B/s", m_size, m_originPos.x, m_originPos.y - 100.0f, 0xFFFFFFFF);
 	m_outMessagesText->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 
 	m_inNrMessages = new GUIText();
@@ -74,12 +74,12 @@ void DebugText::Shutdown()
 		m_fpsText = nullptr;
 	}
 
-	if (m_virtualMemText != nullptr)
-	{
-		m_virtualMemText->Shutdown();
-		delete m_virtualMemText;
-		m_virtualMemText = nullptr;
-	}
+	//if (m_virtualMemText != nullptr)
+	//{
+	//	m_virtualMemText->Shutdown();
+	//	delete m_virtualMemText;
+	//	m_virtualMemText = nullptr;
+	//}
 
 	if (m_physicalMemText != nullptr)
 	{
@@ -161,7 +161,7 @@ void DebugText::Render()
 	if (m_renderText)
 	{
 		m_fpsText->Render();
-		m_virtualMemText->Render();
+		//m_virtualMemText->Render();
 		m_physicalMemText->Render();
 		m_pingText->Render();		
 	}
@@ -191,16 +191,16 @@ void DebugText::SetFPSText(std::string p_fps)
 
 void DebugText::SetVRAMText(int p_vramMBUsed)
 {
-	m_virtualMemText->SetText("VRAM: " + std::to_string(p_vramMBUsed) + " MB");
+	//m_virtualMemText->SetText("VRAM: " + std::to_string(p_vramMBUsed) + " MB");
 
-	if (p_vramMBUsed > 256)
-	{
-		m_fpsText->SetColor(0xFF0000FF);
-	}
-	else
-	{
-		m_fpsText->SetColor(0xFFFFFFFF);
-	}
+	//if (p_vramMBUsed > 256)
+	//{
+	//	m_virtualMemText->SetColor(0xFF0000FF);
+	//}
+	//else
+	//{
+	//	m_virtualMemText->SetColor(0xFFFFFFFF);
+	//}
 }
 
 void DebugText::SetRAMText(int p_ramMBUsed)
@@ -209,11 +209,11 @@ void DebugText::SetRAMText(int p_ramMBUsed)
 
 	if (p_ramMBUsed > 256)
 	{
-		m_fpsText->SetColor(0xFF0000FF);
+		m_physicalMemText->SetColor(0xFF0000FF);
 	}
 	else
 	{
-		m_fpsText->SetColor(0xFFFFFFFF);
+		m_physicalMemText->SetColor(0xFFFFFFFF);
 	}
 }
 
