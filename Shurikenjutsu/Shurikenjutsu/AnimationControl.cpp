@@ -25,6 +25,11 @@ bool AnimationControl::CreateNewStack(AnimationStack p_newStack)
 
 	m_showTrail = false;
 
+	for (unsigned int i = 0; i < m_boneTransforms.size(); i++ )
+	{
+		DirectX::XMStoreFloat4x4(&m_boneTransforms[i], DirectX::XMMatrixIdentity());
+	}
+
 	return true;
 }
 
