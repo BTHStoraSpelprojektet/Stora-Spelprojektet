@@ -550,7 +550,7 @@ bool MenuState::StartLocalServer()
 		hRet = ShellExecute(
 			HWND_DESKTOP, //Parent window
 			"open",       //Operation to perform
-			"..\\Release\\NinjaServer.exe",       //Path to program
+			"NinjaServer.exe",       //Path to program
 			NULL,         //Parameters
 			NULL,         //Default directory
 			SW_SHOW);     //How to open

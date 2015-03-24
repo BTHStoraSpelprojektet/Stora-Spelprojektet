@@ -125,7 +125,7 @@ void Settings::GenerateDefaultSettings()
 	int random = rand() % names.size();
 	
 	m_name = names[random];
-	m_ip = "194.47.150.130";
+	m_ip = "";
 	m_fullscreen = false;
 	m_vsync = false;
 	m_muteSound = false;
